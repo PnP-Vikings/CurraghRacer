@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{003e228a-b098-40aa-820b-8c11fc173715}">
+		<property name="assetPath">
+			<value>Countryside Ambience with Birds, insects and bells (422581) V2.wav</value>
+		</property>
+		<property name="isStreaming">
+			<value>true</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>48</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>30.883875</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
+		</relationship>
+	</object>
+</objects>

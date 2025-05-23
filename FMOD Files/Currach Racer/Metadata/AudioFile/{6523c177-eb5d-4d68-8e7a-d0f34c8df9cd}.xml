@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{6523c177-eb5d-4d68-8e7a-d0f34c8df9cd}">
+		<property name="assetPath">
+			<value>Rudder Damaged 2.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>1.1772108843537414</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
+		</relationship>
+	</object>
+</objects>
