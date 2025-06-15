@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: a1d6f8dd1374e40a99de7ae3bc9cb9bc
+NativeFormatImporter:
+  externalObjects: {}
+  mainObjectFileID: 11400000
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+AssetOrigin:
+  serializedVersion: 1
+  productId: 231178
+  packageName: Dragon Crashers - UI Toolkit Sample project
+  packageVersion: 1.692
+  assetPath: Assets/UI/PanelSettings/MainMenuPanelSettingsPortrait.asset
+  uploadId: 714966

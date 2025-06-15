@@ -1,0 +1,15 @@
+.LabelStyle {
+    align-self: center;
+    -unity-font-definition: url("project://database/Assets/UI/Fonts/ChelaOne-Regular.ttf?fileID=12800000&guid=8c2226f5768e49f4ca5f58858a57cb7a&type=3#ChelaOne-Regular");
+    font-size: 119px;
+}
+
+.increase_btn {
+    background-color: rgb(233, 233, 233);
+}
+
+.increase_btn:hover {
+    -unity-background-image-tint-color: rgb(253, 13, 13);
+    scale: 1.1 1;
+    background-color: rgb(255, 0, 0);
+}

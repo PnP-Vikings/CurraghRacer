@@ -1,0 +1,12 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=bf052adeea50dc442adcabdc1dcda2f6&amp;type=3#MainMenuStyle" />
+    <ui:VisualElement name="Container" style="flex-grow: 1;">
+        <ui:VisualElement name="MainMenu" style="flex-grow: 1; align-items: center; width: 512px; height: 173px; background-image: none; background-size: cover; -unity-background-scale-mode: stretch-to-fill; min-height: -77px; max-height: 691px; top: 114px; background-position-y: center 0; background-position-x: center 0; background-repeat: no-repeat no-repeat; background-color: rgba(130, 75, 48, 0.93); border-top-left-radius: 65px; border-top-right-radius: 65px; border-bottom-right-radius: 65px; border-bottom-left-radius: 65px; left: 0; align-self: center;">
+            <ui:Label text="RACE Menu" name="Header" class="header" style="height: 43px; width: 463px;" />
+            <ui:Button text="Race" name="StartRaceButton" class="button" />
+            <ui:Button text="Training Button" name="TrainingButton" class="button" style="top: -31px;" />
+            <ui:Button text="Work Button" name="WorkButton" class="button" style="top: -52px;" />
+            <ui:Button text="Sleep Button" name="SleepButton" class="button" style="top: -75px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

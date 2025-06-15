@@ -1,0 +1,171 @@
+/* Assets/UI Toolkit/MiniGameStyle.uss */
+
+.panel {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+}
+
+.title {
+    font-size: 32px;
+    color: white;
+    -unity-text-align: middle-center;
+    margin-bottom: 20px;
+    -unity-font-style: bold;
+}
+
+.content-area {
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    flex-grow: 1;
+    margin: 20px;
+}
+
+.activity-grid {
+    width: 45%;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-content: flex-start;
+}
+
+.activity-button {
+    width: 200px;
+    height: 100px;
+    margin: 10px;
+    background-color: rgba(139, 69, 19, 0.8);
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: rgb(160, 82, 45);
+}
+
+.activity-button:hover {
+    background-color: rgba(160, 82, 45, 0.9);
+    border-color: rgb(205, 133, 63);
+}
+
+.button-content {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+
+.activity-icon {
+    width: 40px;
+    height: 40px;
+    margin-bottom: 5px;
+}
+
+.activity-label {
+    color: white;
+    font-size: 14px;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    flex-wrap: wrap;
+}
+
+.stats-container {
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 20px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.stat-display {
+    color: white;
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    background-color: rgba(34, 139, 34, 0.6);
+    padding: 10px;
+    border-radius: 5px;
+    margin: 0 5px;
+}
+
+.button-container {
+    flex-direction: row;
+    justify-content: center;
+    margin: 20px;
+}
+
+.primary-button {
+    background-color: rgb(34, 139, 34);
+    color: white;
+    font-size: 18px;
+    padding: 15px 30px;
+    margin: 0 10px;
+    border-radius: 8px;
+    border-width: 0;
+}
+
+.primary-button:hover {
+    background-color: rgb(50, 205, 50);
+}
+
+.secondary-button {
+    background-color: rgb(139, 34, 34);
+    color: white;
+    font-size: 16px;
+    padding: 12px 25px;
+    margin: 0 10px;
+    border-radius: 8px;
+    border-width: 0;
+}
+
+.secondary-button:hover {
+    background-color: rgb(205, 50, 50);
+}
+
+.instructions {
+    color: white;
+    font-size: 16px;
+    -unity-text-align: middle-center;
+    margin: 20px;
+    background-color: rgba(0, 0, 0, 0.6);
+    padding: 15px;
+    border-radius: 5px;
+    white-space: normal;
+}
+
+.result-text {
+    color: white;
+    font-size: 20px;
+    -unity-text-align: middle-center;
+    margin: 10px 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    padding: 10px;
+    border-radius: 5px;
+}
+
+.quote-text {
+    color: rgb(255, 215, 0);
+    font-size: 18px;
+    -unity-text-align: middle-center;
+    margin: 15px;
+    font-style: italic;
+    white-space: normal;
+}
+
+.quotes-overlay {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    display: none;
+}
+
+.quote-container {
+    background-color: rgba(139, 69, 19, 0.9);
+    padding: 30px;
+    border-radius: 15px;
+    border-width: 3px;
+    border-color: rgb(160, 82, 45);
+    max-width: 600px;
+}
