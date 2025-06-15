@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1539091530887075933
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 4155108299724904071}
+  - component: {fileID: 3057036325611874231}
+  - component: {fileID: 1471334263890786786}
+  - component: {fileID: 6042894620679886366}
+  m_Layer: 0
+  m_Name: GameManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &4155108299724904071
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -147.23541, y: -5.007133, z: -85.802086}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &3057036325611874231
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 65b951c9213322b4da22d2ad35c880f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isRewarded: 0
+  cameraStartPosition: {fileID: 0}
+  racesTillNextAd: 3
+  sleepsTillNextAd: 3
+  miniGameWorkScenes:
+  - BeerPourMinigame
+  - DishWashingMinigame
+--- !u!114 &1471334263890786786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e1d0fbf9a3d68942b374afde34b7f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  mainCamera: {fileID: 0}
+  isRaceStarted: 0
+  difficulty: 0.8
+  raceStartPositions:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  startRace:
+    m_PersistentCalls:
+      m_Calls: []
+  shipPrefab: {fileID: 3038203907543405209, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+  ships: []
+  RaceMovementPositions: []
+  playerShip: {fileID: 0}
+  finishMenu: {fileID: 0}
+  waitingForAd: 0
+--- !u!114 &6042894620679886366
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3ea6c83fd44964fbdb6a64f7dd3c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerStats:
+    strength: 0
+    stamina: 0
+    technique: 0
+    teamWork: 0
+  energy: 100
+  coins: 50
+  playerStatsView: {fileID: 0}
