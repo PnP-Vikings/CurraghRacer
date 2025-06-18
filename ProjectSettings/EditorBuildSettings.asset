@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/SampleScene.unity
     guid: 99c9720ab356a0642a771bea13969a05
+  - enabled: 1
+    path: Assets/Scenes/BeerPourMinigame.unity
+    guid: c00e22e7495bad0458852f21c9a8ba00
+  - enabled: 1
+    path: Assets/Scenes/RaceScene.unity
+    guid: d3d207ad9d882024d9ca7382ed0f9a73
+  - enabled: 1
+    path: Assets/Scenes/DishWashingMinigame.unity
+    guid: 684d0156ce3b8224baf6a0a22d0d48e4
   m_configObjects:
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 9227e98e4b6e046c5b175924d7b5d070, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

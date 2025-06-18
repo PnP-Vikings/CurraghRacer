@@ -1,0 +1,14 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/UI%20Toolkit/MainMenuStyle.uss?fileID=7433441132597879392&amp;guid=bf052adeea50dc442adcabdc1dcda2f6&amp;type=3#MainMenuStyle" />
+    <ui:VisualElement name="Container" style="flex-grow: 1;">
+        <ui:VisualElement name="TrainingMenu" style="flex-grow: 1; align-items: center; width: 597px; height: 173px; background-image: none; background-size: cover; -unity-background-scale-mode: stretch-to-fill; min-height: -77px; max-height: 691px; top: 114px; background-position-y: center 0; background-position-x: center 0; background-repeat: no-repeat no-repeat; background-color: rgba(130, 75, 48, 0.93); border-top-left-radius: 65px; border-top-right-radius: 65px; border-bottom-right-radius: 65px; border-bottom-left-radius: 65px; left: 0; align-self: center;">
+            <ui:Label text="Finish Results" name="Header" class="header" style="height: 8px; width: 463px; -unity-text-align: middle-center; justify-content: center; align-items: center; align-self: flex-end; left: -45px;" />
+            <ui:Label text="Label" name="pos1" class="FinalResults" />
+            <ui:Label text="Label" name="pos2" class="FinalResults" />
+            <ui:Label text="Label" name="pos3" class="FinalResults" />
+            <ui:Label text="Label" name="pos4" class="FinalResults" />
+            <ui:Label text="Label" name="playerMessage" class="FinalResults" />
+            <ui:Button text="Back Button" name="BackButton" class="button" style="height: 38px; left: 62px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>
