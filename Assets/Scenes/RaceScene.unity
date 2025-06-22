@@ -1456,10 +1456,6 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 1521782915}
     - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: raceStartPositions.Array.size
-      value: 4
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'raceStartPositions.Array.data[0]'
       value: 
       objectReference: {fileID: 1568105859}
@@ -1475,26 +1471,6 @@ PrefabInstance:
       propertyPath: 'raceStartPositions.Array.data[3]'
       value: 
       objectReference: {fileID: 1751713335}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[4]'
-      value: 
-      objectReference: {fileID: 90265233}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[5]'
-      value: 
-      objectReference: {fileID: 1568105859}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[6]'
-      value: 
-      objectReference: {fileID: 1160524112}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[7]'
-      value: 
-      objectReference: {fileID: 1751713335}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[8]'
-      value: 
-      objectReference: {fileID: 90265233}
     - target: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: m_Name
       value: GameManager
