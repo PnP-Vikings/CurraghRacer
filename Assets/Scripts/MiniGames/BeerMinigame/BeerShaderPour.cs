@@ -3,7 +3,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 
 [RequireComponent(typeof(MeshFilter), typeof(Renderer))]
-public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
+public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler,Holdable
 {
     [Tooltip("Assign the BeerCutoff material asset here")]
     public Material beerMaterialAsset;
@@ -71,4 +71,15 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     public void OnPointerDown(PointerEventData e) => isPouring = true;
     public void OnPointerUp  (PointerEventData e) => isPouring = false;
+    public void SetPositionOnHold(Vector3 position)
+    {
+        transform.parent.position  = position;
+    }
+    public Vector3 GetPositionOnHold(out Vector3 position)
+    {
+        position = transform.parent.position;
+        return position;
+    }
+
+
 }
