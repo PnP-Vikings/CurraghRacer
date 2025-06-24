@@ -99,6 +99,11 @@ public class BeerGameController : MonoBehaviour
                     Completedbeers.Add(beer); // Add the completed beer to the completed list
                     beers.Remove(beer); // Remove the completed beer from the list
                     MoveNextBeer();
+
+                    FMOD.Studio.EventInstance SetPintDown;
+                    SetPintDown = FMODUnity.RuntimeManager.CreateInstance("event:/Bar/Set Pint Down");
+                    SetPintDown.start();
+
                     break; // Exit the loop after processing the first completed beer
                 }
             }
