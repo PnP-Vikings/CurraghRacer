@@ -205,6 +205,69 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d2ae20d00ea09394881980123e4c861c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &378355272
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 378355274}
+  - component: {fileID: 378355275}
+  m_Layer: 0
+  m_Name: RaceAmbience
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &378355274
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378355272}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.5768652, y: 0.22543335, z: -0.70160866}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &378355275
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 378355272}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -326265635
+      Data2: 1113471282
+      Data3: 935601334
+      Data4: -1223710487
+    Path: event:/Race/RaceAmbience
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1001 &550233183
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1087,9 +1150,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1521782916}
   - component: {fileID: 1521782915}
-  - component: {fileID: 1521782914}
   - component: {fileID: 1521782917}
   - component: {fileID: 1521782918}
+  - component: {fileID: 1521782919}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1097,14 +1160,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1521782914
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1521782913}
-  m_Enabled: 1
 --- !u!20 &1521782915
 Camera:
   m_ObjectHideFlags: 0
@@ -1234,6 +1289,20 @@ MonoBehaviour:
   followPlayer: 0
   followOffset: {fileID: 0}
   isMiniGame: 0
+--- !u!114 &1521782919
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1521782913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 1521782913}
 --- !u!4 &1568105859 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 8065554138043434250, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
@@ -2102,3 +2171,4 @@ SceneRoots:
   - {fileID: 1970164018}
   - {fileID: 1686614135}
   - {fileID: 1130639115}
+  - {fileID: 378355274}
