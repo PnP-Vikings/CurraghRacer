@@ -140,6 +140,10 @@ PrefabInstance:
       propertyPath: 'm_Materials.Array.data[0]'
       value: 
       objectReference: {fileID: 10308, guid: 0000000000000000f000000000000000, type: 0}
+    - target: {fileID: 6150416688050231228, guid: 4e1f965ab5e21a54e82baad6f9535aa9, type: 3}
+      propertyPath: finishMenu
+      value: 
+      objectReference: {fileID: 735625006}
     - target: {fileID: 7100385806179441472, guid: 4e1f965ab5e21a54e82baad6f9535aa9, type: 3}
       propertyPath: m_LocalScale.y
       value: 7.1069074
@@ -854,6 +858,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1182626487}
+  - component: {fileID: 1182626488}
   m_Layer: 0
   m_Name: Camera Start Position
   m_TagString: Untagged
@@ -876,6 +881,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 259.59, z: 0}
+--- !u!114 &1182626488
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182626486}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3e1cac266dde4a443932d9270c6c9a84, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1430678140
 GameObject:
   m_ObjectHideFlags: 0
