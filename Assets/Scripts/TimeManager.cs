@@ -36,6 +36,7 @@ public class TimeManager : MonoBehaviour
     [SerializeField] private int currentMonth = 0; // 0-based index (0 = January)
     [SerializeField] private int currentYear = 1980; // Starting year
     [SerializeField] private int currentDayOfWeek = 0; // 0-based index (0 = Sunday)
+    [SerializeField] internal int daysInCurrentMonth = 31; // Default to 31 days for January
     
     [Serializable]
     public class DateChangedEvent : UnityEvent<int, int, int> { } // day, month, year
@@ -63,6 +64,10 @@ public class TimeManager : MonoBehaviour
         }
         
         timeOfDay = 6f; // Start at 6 AM
+        daysPassed = 0;
+        
+        daysInCurrentMonth = GetDaysInCurrentMonth();
+        
     }
     
     // Update the time of day based on the time multiplier
@@ -96,7 +101,7 @@ public class TimeManager : MonoBehaviour
             {
                 currentDay = 1;
                 currentMonth++;
-                
+                daysInCurrentMonth = GetDaysInCurrentMonth(); // Update days in current month
                 // Check if we need to move to the next year
                 if (currentMonth >= 12)
                 {
