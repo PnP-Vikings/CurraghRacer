@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{789ed7bb-c6a4-4a54-9bad-74aad7e4ce63}">
 		<property name="name">
-			<value>KitchenAmbience</value>
+			<value>Kitchen Ambience</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -284,7 +284,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{53612174-5218-4115-9f81-79b142beb061}">
 		<property name="volume">
-			<value>-16.5</value>
+			<value>-19.5</value>
 		</property>
 		<property name="name">
 			<value>Dish Washer</value>

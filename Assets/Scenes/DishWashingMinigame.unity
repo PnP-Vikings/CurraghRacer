@@ -1064,7 +1064,7 @@ MonoBehaviour:
       Data2: 1247069860
       Data3: -1435193957
       Data4: 1674503383
-    Path: event:/Kitchen/KitchenAmbience
+    Path: event:/Kitchen/Kitchen Ambience
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2

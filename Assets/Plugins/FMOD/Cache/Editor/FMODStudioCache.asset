@@ -1,6 +1,6 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!114 &-9172234949005158438
+--- !u!114 &-8966558056930675073
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -10,23 +10,50 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Kitchen/MovePlate
+  m_Name: event:/Race/Race Ambience
   m_EditorClassIdentifier: 
-  Path: event:/Kitchen/MovePlate
+  Path: event:/Race/Race Ambience
   Guid:
-    Data1: -858745159
-    Data2: 1230734754
-    Data3: 2137916821
-    Data4: -1231789719
+    Data1: -326265635
+    Data2: 1113471282
+    Data3: 935601334
+    Data4: -1223710487
   Banks:
   - {fileID: -4365254110052270684}
-  IsStream: 0
+  IsStream: 1
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 3000
+  Length: 30883
+--- !u!114 &-8222264240576259642
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Kitchen/Kitchen Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Kitchen/Kitchen Ambience
+  Guid:
+    Data1: 2023675835
+    Data2: 1247069860
+    Data3: -1435193957
+    Data4: 1674503383
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 43102
 --- !u!114 &-7484279424585771792
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -108,6 +135,61 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &-6668476389276057025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Garage/Garage Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Garage/Garage Ambience
+  Guid:
+    Data1: -261686116
+    Data2: 1258717626
+    Data3: 571930299
+    Data4: -1423150328
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 5205683574485413279}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 28993
+--- !u!114 &-6566153548840508995
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bar/Bar Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Bar/Bar Ambience
+  Guid:
+    Data1: 641337609
+    Data2: 1301618563
+    Data3: 300212627
+    Data4: 1048038975
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 58000
 --- !u!114 &-6490149974885402788
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -150,9 +232,36 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638863952353974188
+  lastModified: 638868201019849125
   FileSizes: []
   Exists: 1
+--- !u!114 &-3890573300518132453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Kitchen/Move Plate
+  m_EditorClassIdentifier: 
+  Path: event:/Kitchen/Move Plate
+  Guid:
+    Data1: -858745159
+    Data2: 1230734754
+    Data3: 2137916821
+    Data4: -1231789719
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3000
 --- !u!114 &-3046809840892768022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -207,33 +316,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 980
---- !u!114 &-1848747926680984280
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Kitchen/KitchenAmbience
-  m_EditorClassIdentifier: 
-  Path: event:/Kitchen/KitchenAmbience
-  Guid:
-    Data1: 2023675835
-    Data2: 1247069860
-    Data3: -1435193957
-    Data4: 1674503383
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 43102
 --- !u!114 &-1757233097622919889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -249,10 +331,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638863952353999297
+  lastModified: 638868201019864169
   FileSizes:
   - Name: 
-    Value: 1268
+    Value: 1386
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -271,51 +353,25 @@ MonoBehaviour:
   - {fileID: -4365254110052270684}
   EditorEvents:
   - {fileID: -7172221576809808135}
-  - {fileID: 2545379296171342163}
   - {fileID: 3030399942059162582}
   - {fileID: 4634745327960995208}
   - {fileID: -6951462803765077591}
   - {fileID: -6490149974885402788}
   - {fileID: -3046809840892768022}
-  - {fileID: -9172234949005158438}
-  - {fileID: -1848747926680984280}
   - {fileID: -2268902792387724148}
-  - {fileID: 8837628939592279270}
   - {fileID: -7484279424585771792}
+  - {fileID: -6668476389276057025}
+  - {fileID: -6566153548840508995}
+  - {fileID: -3890573300518132453}
+  - {fileID: -8222264240576259642}
+  - {fileID: -8966558056930675073}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638863952353999297
+  cacheTime: 638868201019864169
   cacheVersion: 131624
---- !u!114 &2545379296171342163
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Bar/BarAmbience
-  m_EditorClassIdentifier: 
-  Path: event:/Bar/BarAmbience
-  Guid:
-    Data1: 641337609
-    Data2: 1301618563
-    Data3: 300212627
-    Data4: 1048038975
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 58000
 --- !u!114 &3030399942059162582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -370,7 +426,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1531
---- !u!114 &8837628939592279270
+--- !u!114 &5205683574485413279
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -379,21 +435,18 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Race/RaceAmbience
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Garage Ambience/Mute Garage Ambience
   m_EditorClassIdentifier: 
-  Path: event:/Race/RaceAmbience
-  Guid:
-    Data1: -326265635
-    Data2: 1113471282
-    Data3: 935601334
-    Data4: -1223710487
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 30883
+  Name: Mute Garage Ambience
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 943522264
+    data2: 659524014
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
