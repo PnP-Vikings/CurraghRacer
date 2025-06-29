@@ -248,7 +248,7 @@ MonoBehaviour:
       Data2: 1301618563
       Data3: 300212627
       Data4: 1048038975
-    Path: event:/Bar/BarAmbience
+    Path: event:/Bar/Bar Ambience
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2

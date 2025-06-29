@@ -85,7 +85,7 @@ public class DishwashingController : MonoBehaviour
     //public void PlaykaSpongeAudio()
     //{
     //    FMOD.Studio.EventInstance kaSponge;
-    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Mini Games/kaSponge");
+    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
     //    kaSponge.start();
     //}
     //IEnumerator PlaySpongeAudio()
@@ -131,7 +131,7 @@ public class DishwashingController : MonoBehaviour
         MovePlateToCleanPosition(); // Move the next plate to the clean position
 
         FMOD.Studio.EventInstance MovePlateAudio;
-        MovePlateAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/MovePlate");
+        MovePlateAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
         MovePlateAudio.start();
 
         MinigameFinished();
