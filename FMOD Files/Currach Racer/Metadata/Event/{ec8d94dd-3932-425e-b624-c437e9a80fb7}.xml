@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{ec8d94dd-3932-425e-b624-c437e9a80fb7}">
 		<property name="name">
-			<value>Ambience</value>
+			<value>Race Ambience</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{44de3512-29ca-485c-bef6-08ea3ca6d36e}</destination>
+			<destination>{0c3f948a-125e-41a2-8d29-557f0eebdcd6}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{081d85b1-f7a7-4b00-8e79-158b474bb1d5}</destination>
@@ -70,8 +70,14 @@
 		<relationship name="modules">
 			<destination>{d5788c71-9b8c-4afd-ad0b-63eab6a6fbc5}</destination>
 		</relationship>
+		<relationship name="markers">
+			<destination>{ee1cb45a-b453-45ec-b67b-0089dbf573c0}</destination>
+		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{7657cda6-a618-4f3c-9d2c-0cc42c336073}">
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{f717dd95-edb8-45f4-bbc0-347b6d518955}</destination>
 		</relationship>
@@ -97,9 +103,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{757db452-232f-49b3-9f0f-33621f3551e8}">
-		<property name="volume">
-			<value>-2</value>
-		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>
@@ -111,6 +114,20 @@
 		</relationship>
 		<relationship name="output">
 			<destination>{7657cda6-a618-4f3c-9d2c-0cc42c336073}</destination>
+		</relationship>
+	</object>
+	<object class="LoopRegion" id="{ee1cb45a-b453-45ec-b67b-0089dbf573c0}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="length">
+			<value>30.883875</value>
+		</property>
+		<relationship name="timeline">
+			<destination>{99238f5b-3d35-4132-ac22-6256a0f0cf8a}</destination>
+		</relationship>
+		<relationship name="markerTrack">
+			<destination>{da73295f-86cd-4db6-8936-89606b07a303}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{f717dd95-edb8-45f4-bbc0-347b6d518955}">

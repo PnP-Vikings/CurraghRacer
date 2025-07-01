@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{789ed7bb-c6a4-4a54-9bad-74aad7e4ce63}">
 		<property name="name">
-			<value>Cleaning Dishes</value>
+			<value>Kitchen Ambience</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{b6c89b97-c3b4-492f-a8ee-1d5987d7a895}</destination>
+			<destination>{04574293-1ed2-402e-9555-41b03160172b}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{ad665d2b-df77-4d9c-8bca-6fe98e5e5cc5}</destination>
@@ -36,6 +36,9 @@
 		</relationship>
 		<relationship name="timeline">
 			<destination>{5b523f97-4472-4227-8d0d-a3c10eb1af4e}</destination>
+		</relationship>
+		<relationship name="banks">
+			<destination>{011f741e-96fd-4906-9cbc-ed3ad1af43d5}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{ad665d2b-df77-4d9c-8bca-6fe98e5e5cc5}">
@@ -209,6 +212,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{7bb94de0-6721-4a47-9fc6-c56acf243fac}">
+		<property name="volume">
+			<value>-80</value>
+		</property>
 		<property name="name">
 			<value>Plate Dunk</value>
 		</property>
@@ -235,7 +241,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{72e3ad26-80b2-48a1-81fe-47d7178c5c7c}">
 		<property name="volume">
-			<value>1</value>
+			<value>-80</value>
 		</property>
 		<property name="name">
 			<value>Plates</value>
@@ -261,10 +267,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>42000</value>
+			<value>21500</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>75000</value>
+			<value>36000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -278,7 +284,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{53612174-5218-4115-9f81-79b142beb061}">
 		<property name="volume">
-			<value>-20.5</value>
+			<value>-19.5</value>
 		</property>
 		<property name="name">
 			<value>Dish Washer</value>
@@ -318,7 +324,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{7add4faa-18e7-44fc-9c1a-eb44a0fe7843}">
 		<property name="volume">
-			<value>-3</value>
+			<value>-24.5</value>
 		</property>
 		<property name="name">
 			<value>Whisk</value>
@@ -355,7 +361,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{c9991e59-e950-4c09-a4ed-ae236193a87c}">
 		<property name="volume">
-			<value>-5</value>
+			<value>-24.5</value>
 		</property>
 		<property name="name">
 			<value>Peeling Carrots</value>
@@ -378,13 +384,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>40000</value>
+			<value>24500</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>60000</value>
-		</property>
-		<property name="spawnRate">
-			<value>74.5</value>
+			<value>30000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -398,7 +401,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{3cdeb49d-c9bb-4468-aaa2-5fc14f16296d}">
 		<property name="volume">
-			<value>-2</value>
+			<value>-14</value>
 		</property>
 		<property name="name">
 			<value>Microwave</value>

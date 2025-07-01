@@ -1,3 +1,4 @@
+//using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -29,6 +30,8 @@ public class DishwashingController : MonoBehaviour
     public Transform spawnPoint,cleanPosition,finishClean; // Point where the sponge is spawned
 
     [SerializeField] private int spawnCount = 5;
+
+    //Coroutine SpongeAudioCoroutine;
     
     void OnEnable()
     {
@@ -65,6 +68,10 @@ public class DishwashingController : MonoBehaviour
             Vector3 targetPos = hit.point;
             targetPos.y += hoverHeight;
             spongeInstance.transform.position = targetPos;
+
+            //PlaySpongeAudio();
+            //SpongeAudioCoroutine = StartCoroutine(PlaySpongeAudio());
+            //PlaykaSpongeAudio();
         }
         else
         {
@@ -74,6 +81,20 @@ public class DishwashingController : MonoBehaviour
             spongeInstance.transform.position = fallback;
         }
     }
+
+    //public void PlaykaSpongeAudio()
+    //{
+    //    FMOD.Studio.EventInstance kaSponge;
+    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
+    //    kaSponge.start();
+    //}
+    //IEnumerator PlaySpongeAudio()
+    //{
+    //    FMOD.Studio.EventInstance kaSponge;
+    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Mini Games/kaSponge");
+    //    kaSponge.start();
+    //    yield return new WaitForSeconds(1f);
+    //}
 
     public void MovePlateToCleanPosition()
     {
@@ -108,6 +129,11 @@ public class DishwashingController : MonoBehaviour
         plates.Remove(plateCleanPosition.plateLogic); // Remove the cleaned plate from the plates list
         plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
         MovePlateToCleanPosition(); // Move the next plate to the clean position
+
+        FMOD.Studio.EventInstance MovePlateAudio;
+        MovePlateAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
+        MovePlateAudio.start();
+
         MinigameFinished();
     }
     

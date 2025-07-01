@@ -33,8 +33,12 @@ public class MainMenuEvents : MonoBehaviour
     private void OnStartButtonClicked()
     {
         Debug.Log("Start Game Button Clicked");
-        
-        if(_gameUi != null)
+
+        FMOD.Studio.EventInstance UIClick1;
+        UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
+        UIClick1.start();
+
+        if (_gameUi != null)
         {
             _gameUi.SetActive(true);
         }

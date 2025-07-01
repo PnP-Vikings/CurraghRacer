@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{0cdd7086-90e1-4da7-a995-601434c1074b}">
+		<property name="name">
+			<value>Mute Garage Ambience</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{dc6ca032-754d-4869-a993-6eb9a6742b95}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{dc6ca032-754d-4869-a993-6eb9a6742b95}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

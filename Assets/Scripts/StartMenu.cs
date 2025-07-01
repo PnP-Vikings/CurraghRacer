@@ -53,7 +53,10 @@ public class StartMenu : MonoBehaviour
     public void OnTrainingButtonClicked()
     {
        trainingMenuPrefab.SetActive(true);
-      
+        FMOD.Studio.EventInstance GymBagZipUp;
+        GymBagZipUp = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
+        GymBagZipUp.start();
+
     }
     
     public void OnWorkButtonClicked()
