@@ -148,12 +148,6 @@ public class RaceManager : MonoBehaviour
     {
         if (RaceFinished())
         {
-            if(finishMenu == null)
-            {
-                finishMenu = FindObjectOfType<FinishLine>().finishMenu;
-            }
-            
-            
             finishMenu.gameObject.SetActive(true);
             
             string firstPlaceShip = RaceMovementPositions[0].shipName;
@@ -162,10 +156,8 @@ public class RaceManager : MonoBehaviour
             string forthPlaceShip = RaceMovementPositions.Count > 3 ? RaceMovementPositions[3].shipName : "N/A";
             finishMenu.UpdatePositions( firstPlaceShip, secondPlaceShip, thirdPlaceShip, forthPlaceShip);
             
-            Transform cameraStartPosition = GameManager.Instance.GetCameraStartPosition();
-            
-            mainCamera.transform.position = cameraStartPosition.position;
-            mainCamera.transform.rotation = cameraStartPosition.rotation;
+            mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
+            mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
 
             if (RaceMovementPositions[0].isPlayerShip)
             {
