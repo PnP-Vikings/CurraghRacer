@@ -112,15 +112,5 @@ public class GameManager : MonoBehaviour
         PlayerStatsView.Instance.DisplayInfo("You Worked and Earned 50 Coins", 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
     }
-    
-    public Transform GetCameraStartPosition()
-    {
-        
-        if (cameraStartPosition == null)
-        {
-          cameraStartPosition =  FindObjectOfType<cameraStartPosition>().transform;
-        }
-        return cameraStartPosition;
-    }
    
 }

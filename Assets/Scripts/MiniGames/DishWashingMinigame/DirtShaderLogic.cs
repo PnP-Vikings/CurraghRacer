@@ -62,7 +62,7 @@ public class DirtShaderLogic : MonoBehaviour,
     
     public void CleanDirt()
     {
-        dirtLevel -= .35f;
+        dirtLevel -= .15f;
     }
 
     
