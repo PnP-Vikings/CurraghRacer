@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class FinishLine : MonoBehaviour
 {
-    public FinishMenu finishMenu;
+    
     
     private void OnTriggerEnter(Collider other)
     {
