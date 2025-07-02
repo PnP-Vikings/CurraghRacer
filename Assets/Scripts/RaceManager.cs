@@ -33,8 +33,6 @@ public class RaceManager : MonoBehaviour
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
-    //FMOD.Studio.EventInstance MuteGarageAmbience;
-    //FMOD.Studio.EventInstance MuteRaceAmbience;
 
     private void Awake()
     {
@@ -96,8 +94,8 @@ public class RaceManager : MonoBehaviour
 
         //FMOD.Studio.EventInstance GarageAmbience;
         //GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        ////GarageAmbience.start();
-        //GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        ////GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
 
         FMOD.Studio.EventInstance RaceAmbience;
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
