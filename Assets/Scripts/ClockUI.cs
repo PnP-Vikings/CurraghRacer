@@ -47,7 +47,7 @@ public class ClockUI : MonoBehaviour
         // Get the current day number from the TimeManager
         int dayNumber = TimeManager.Instance.DaysPassed;
         // Calculate the day of the week using the modulo operator
-        string dayOfWeek = TimeManager.Instance.daysOfWeek[dayNumber % 7];
+        string dayOfWeek = TimeManager.Instance.GetCurrentDayOfWeekString();
         // Update the day number text
         //dayNumberText.text = $"Day {dayNumber + 1}";
         // Update the day of the week text

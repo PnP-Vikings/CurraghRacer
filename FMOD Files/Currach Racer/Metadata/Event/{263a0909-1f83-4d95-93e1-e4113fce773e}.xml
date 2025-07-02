@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{263a0909-1f83-4d95-93e1-e4113fce773e}">
 		<property name="name">
-			<value>Pulling Pints</value>
+			<value>Bar Ambience</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{b6c89b97-c3b4-492f-a8ee-1d5987d7a895}</destination>
+			<destination>{afa7a6e8-87a6-4139-9402-cd28d4ba93c4}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{d0482562-5dcb-4711-b9d4-a45e965e05ac}</destination>
@@ -35,6 +35,9 @@
 		</relationship>
 		<relationship name="timeline">
 			<destination>{d31672b9-ec71-4b69-90e6-ed9ca6495bab}</destination>
+		</relationship>
+		<relationship name="banks">
+			<destination>{011f741e-96fd-4906-9cbc-ed3ad1af43d5}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixer" id="{d0482562-5dcb-4711-b9d4-a45e965e05ac}">

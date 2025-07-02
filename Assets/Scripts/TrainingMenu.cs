@@ -35,6 +35,10 @@ public class TrainingMenu : MonoBehaviour
        
             PlayerManager.Instance.ModifyPlayerStrength(amountGain);
             PlayerStatsView.Instance.DisplayInfo($"You gained {amountGain} Strength", 3);
+
+            FMOD.Studio.EventInstance Dumbbell;
+            Dumbbell = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Dumbbell");
+            Dumbbell.start();
         }
         
      
@@ -84,7 +88,10 @@ public class TrainingMenu : MonoBehaviour
     {
         startingMenuPrefab.SetActive(true);
         uiDoc.gameObject.SetActive(false);
-        
+
+        FMOD.Studio.EventInstance UIClick2;
+        UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
+        UIClick2.start();
     }
     
     public bool CanTrain(int energyCost, int currencyCost)

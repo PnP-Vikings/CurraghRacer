@@ -27,7 +27,7 @@ public class BeerGameController : MonoBehaviour
         }
        StartGameSpawn();
        beerEnterBoxCollider.onBeerCompleted.AddListener(BeerDone); // Subscribe to the BeerDone event
-       MoveNextBeer();
+      // MoveNextBeer();
     }
 
     public void StartGameSpawn()
@@ -98,7 +98,7 @@ public class BeerGameController : MonoBehaviour
                     Debug.Log("Beer is complete: " + beer.name);
                     Completedbeers.Add(beer); // Add the completed beer to the completed list
                     beers.Remove(beer); // Remove the completed beer from the list
-                    MoveNextBeer();
+                  //  MoveNextBeer();
                     break; // Exit the loop after processing the first completed beer
                 }
             }

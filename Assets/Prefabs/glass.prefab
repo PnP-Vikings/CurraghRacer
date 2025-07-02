@@ -68,6 +68,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: BeerMesh
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
+      propertyPath: m_Layer
+      value: 9
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -81,6 +85,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2969290805533931446}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2646605662466873552}
   m_SourcePrefab: {fileID: 100100000, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
 --- !u!1 &261422671759852309 stripped
 GameObject:
@@ -152,6 +159,37 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &2646605662466873552
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 261422671759852309}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 61219eb693e5bc543b34cbe848bb42c1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  canBeHeld: 1
+  followSpeed: 10
+  maxHoldDistance: 5
+  usePhysicsWhenHeld: 1
+  heldDrag: 5
+  heldAngularDrag: 10
+  interactionLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  triggerInteractionsWhenHeld: 1
+  OnPickedUp:
+    m_PersistentCalls:
+      m_Calls: []
+  OnReleased:
+    m_PersistentCalls:
+      m_Calls: []
+  OnInteractWithCollider:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!4 &642627319617984943 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
@@ -224,6 +262,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
       propertyPath: m_Name
       value: glass
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: e9d2792857bf07f4996c96e6efd9a25b, type: 3}
+      propertyPath: m_Layer
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

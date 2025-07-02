@@ -32,8 +32,8 @@ public class RaceManager : MonoBehaviour
     
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
-   
-    
+
+
     private void Awake()
     {
         if (Instance == null)
@@ -44,7 +44,10 @@ public class RaceManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
+
+        FMOD.Studio.EventInstance GarageAmbience;
+        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+        GarageAmbience.start();
     }
 
 
@@ -88,6 +91,16 @@ public class RaceManager : MonoBehaviour
     {
         yield return new WaitForSeconds(1f);
         startRace.Invoke();
+
+        //FMOD.Studio.EventInstance GarageAmbience;
+        //GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+        ////GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+
+        FMOD.Studio.EventInstance RaceAmbience;
+        RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
+        RaceAmbience.start();
+
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
     }
@@ -133,6 +146,12 @@ public class RaceManager : MonoBehaviour
     {
         if (RaceFinished())
         {
+            if(finishMenu == null)
+            {
+                finishMenu = FindObjectOfType<FinishLine>().finishMenu;
+            }
+            
+            
             finishMenu.gameObject.SetActive(true);
             
             string firstPlaceShip = RaceMovementPositions[0].shipName;
@@ -141,8 +160,10 @@ public class RaceManager : MonoBehaviour
             string forthPlaceShip = RaceMovementPositions.Count > 3 ? RaceMovementPositions[3].shipName : "N/A";
             finishMenu.UpdatePositions( firstPlaceShip, secondPlaceShip, thirdPlaceShip, forthPlaceShip);
             
-            mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
-            mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
+            Transform cameraStartPosition = GameManager.Instance.GetCameraStartPosition();
+            
+            mainCamera.transform.position = cameraStartPosition.position;
+            mainCamera.transform.rotation = cameraStartPosition.rotation;
 
             if (RaceMovementPositions[0].isPlayerShip)
             {

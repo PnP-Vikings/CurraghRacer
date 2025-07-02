@@ -35,6 +35,10 @@ public class FinishMenu : MonoBehaviour
         RaceManager.Instance.EndRace();
         uiDoc.gameObject.SetActive(false);
 
+        //FMOD.Studio.EventInstance UIClick2;
+        //UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
+        //UIClick2.start();
+
     }
     
     public void UpdatePositions(string pos1, string pos2, string pos3, string pos4)
