@@ -171,6 +171,11 @@ public class RaceManager : MonoBehaviour
                 finishMenu.UpdatePlayerMessage(true, "You are the champion!");
                 PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
                 difficulty += .3f;
+
+                FMOD.Studio.EventInstance ClappingAndCheering;
+                ClappingAndCheering = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
+                ClappingAndCheering.start();
+
             }
             else
             {
