@@ -33,6 +33,8 @@ public class RaceManager : MonoBehaviour
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
+    FMOD.Studio.EventInstance GarageAmbience;
+    FMOD.Studio.EventInstance RaceAmbience;
 
     private void Awake()
     {
@@ -45,7 +47,6 @@ public class RaceManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        FMOD.Studio.EventInstance GarageAmbience;
         GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
         GarageAmbience.start();
     }
@@ -92,19 +93,15 @@ public class RaceManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         startRace.Invoke();
 
-        //FMOD.Studio.EventInstance GarageAmbience;
-        //GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        ////GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
-
-        FMOD.Studio.EventInstance RaceAmbience;
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         RaceAmbience.start();
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
+
+        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
     }
-    
+
     public void ShipFinished(ShipMovement ship)
     {
         RaceMovementPositions.Add(ship);
