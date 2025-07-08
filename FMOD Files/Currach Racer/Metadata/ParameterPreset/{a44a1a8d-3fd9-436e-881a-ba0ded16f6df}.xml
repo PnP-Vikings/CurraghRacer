@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{a44a1a8d-3fd9-436e-881a-ba0ded16f6df}">
 		<property name="name">
-			<value>RaceAmbienceVolume</value>
+			<value>Mute Race Ambience</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
@@ -14,6 +14,9 @@
 	<object class="GameParameter" id="{8876119f-b103-44b1-8685-78bd2cca3358}">
 		<property name="initialValue">
 			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.55000001192092896</value>
 		</property>
 	</object>
 </objects>

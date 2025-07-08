@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -35,6 +36,7 @@ public class RaceManager : MonoBehaviour
 
     FMOD.Studio.EventInstance GarageAmbience;
     FMOD.Studio.EventInstance RaceAmbience;
+    public FMOD.Studio.EventInstance CheeringAndClapping;
 
     private void Awake()
     {
@@ -169,9 +171,8 @@ public class RaceManager : MonoBehaviour
                 PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
                 difficulty += .3f;
 
-                FMOD.Studio.EventInstance ClappingAndCheering;
-                ClappingAndCheering = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
-                ClappingAndCheering.start();
+                CheeringAndClapping = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
+                CheeringAndClapping.start();
 
             }
             else
@@ -206,7 +207,9 @@ public class RaceManager : MonoBehaviour
         
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
-        
+
+        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+        RaceAmbience.setParameterByName("Mute Race Ambience", 0f);
     }
     
     IEnumerator ShowAd()
