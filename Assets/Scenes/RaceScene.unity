@@ -2149,6 +2149,17 @@ MonoBehaviour:
   m_LightCookieSize: {x: 1, y: 1}
   m_LightCookieOffset: {x: 0, y: 0}
   m_SoftShadowQuality: 0
+--- !u!114 &1683863234 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+  m_PrefabInstance: {fileID: 1934896994}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e1d0fbf9a3d68942b374afde34b7f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1686614135
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2353,6 +2364,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: FinishMenu
       objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: raceManager
+      value: 
+      objectReference: {fileID: 1683863234}
     - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
       propertyPath: startingMenuPrefab
       value: 

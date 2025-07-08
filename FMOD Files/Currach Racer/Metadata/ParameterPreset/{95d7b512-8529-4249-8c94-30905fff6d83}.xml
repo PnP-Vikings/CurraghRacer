@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="ParameterPreset" id="{0cdd7086-90e1-4da7-a995-601434c1074b}">
+	<object class="ParameterPreset" id="{95d7b512-8529-4249-8c94-30905fff6d83}">
 		<property name="name">
-			<value>Mute Garage Ambience</value>
+			<value>Mute Cheering and Clapping</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
 		</relationship>
 		<relationship name="parameter">
-			<destination>{dc6ca032-754d-4869-a993-6eb9a6742b95}</destination>
+			<destination>{cd1596f7-cf53-443b-b117-064a26d2dbac}</destination>
 		</relationship>
 	</object>
-	<object class="GameParameter" id="{dc6ca032-754d-4869-a993-6eb9a6742b95}">
+	<object class="GameParameter" id="{cd1596f7-cf53-443b-b117-064a26d2dbac}">
 		<property name="initialValue">
 			<value>1</value>
 		</property>
 		<property name="seekSpeed">
-			<value>0.55000001192092896</value>
+			<value>0.87999999523162842</value>
 		</property>
 	</object>
 </objects>

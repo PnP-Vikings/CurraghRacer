@@ -9,7 +9,9 @@ public class StartMenu : MonoBehaviour
     [SerializeField] CameraController cameraController;
     
     public GameObject trainingMenuPrefab;
-    
+
+    FMOD.Studio.EventInstance GymBagZipUp;
+
     void OnEnable()
     {
         uiDoc = GetComponent<UIDocument>();
@@ -53,7 +55,7 @@ public class StartMenu : MonoBehaviour
     public void OnTrainingButtonClicked()
     {
        trainingMenuPrefab.SetActive(true);
-        FMOD.Studio.EventInstance GymBagZipUp;
+        
         GymBagZipUp = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
         GymBagZipUp.start();
 
