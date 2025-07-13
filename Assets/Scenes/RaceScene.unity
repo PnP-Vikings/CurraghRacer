@@ -2913,6 +2913,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1136343185180799014, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
+      propertyPath: calendarEvents
+      value: 
+      objectReference: {fileID: 11400000, guid: 454b31a26fe91c0479401781f8a35026, type: 2}
     - target: {fileID: 1221166454965930985, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
       propertyPath: m_Pivot.x
       value: 0
