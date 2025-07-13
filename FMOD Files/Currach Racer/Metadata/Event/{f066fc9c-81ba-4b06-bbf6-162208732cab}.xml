@@ -146,7 +146,7 @@
 			<value>-2</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Layer 1</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{b21b3c19-9fae-48c8-a5ff-8cc37d188de0}</destination>
@@ -168,7 +168,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{bcb8135d-9897-4354-9fe8-3b098aa76640}">
 		<property name="name">
-			<value>Audio 2</value>
+			<value>Layer 2</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{98b1c6f3-345e-4d0c-ad93-bd1eabef026b}</destination>
@@ -193,7 +193,7 @@
 			<value>-6</value>
 		</property>
 		<property name="name">
-			<value>Audio 3</value>
+			<value>Clock Loop (Layer 3)</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{9068688a-efa9-4c1a-8f6a-17fe1bff1315}</destination>

@@ -25,9 +25,37 @@ MonoBehaviour:
   IsOneShot: 0
   Parameters:
   - {fileID: 496546100732942899}
+  - {fileID: -3140071954010244658}
   MinDistance: 1
   MaxDistance: 20
   Length: 30883
+--- !u!114 &-8541651289697230892
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/TV Button Push In
+  m_EditorClassIdentifier: 
+  Path: event:/UI/TV Button Push In
+  Guid:
+    Data1: 1499201385
+    Data2: 1138229223
+    Data3: -667997514
+    Data4: 2050445109
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 359
 --- !u!114 &-8222264240576259642
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,7 +234,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638880044093759969
+  lastModified: 638880347344918377
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -236,6 +264,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3000
+--- !u!114 &-3140071954010244658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Race Ambience/Mute Rowing
+  m_EditorClassIdentifier: 
+  Name: Mute Rowing
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3522030092
+    data2: 3465320899
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-3046809840892768022
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -332,10 +384,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638880044093769979
+  lastModified: 638880347344938480
   FileSizes:
   - Name: 
-    Value: 1612
+    Value: 1708
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -366,14 +418,15 @@ MonoBehaviour:
   - {fileID: -8222264240576259642}
   - {fileID: -8966558056930675073}
   - {fileID: -1975231195295424296}
-  - {fileID: 2504384673942445289}
   - {fileID: 7096334772225381524}
+  - {fileID: -8541651289697230892}
+  - {fileID: 7321747427095314458}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638880044093769979
+  cacheTime: 638880347344938480
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -399,33 +452,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &2504384673942445289
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/UI/TV Button Push
-  m_EditorClassIdentifier: 
-  Path: event:/UI/TV Button Push
-  Guid:
-    Data1: 1499201385
-    Data2: 1138229223
-    Data3: -667997514
-    Data4: 2050445109
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 363
 --- !u!114 &3030399942059162582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -556,3 +582,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 5670
+--- !u!114 &7321747427095314458
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/TV Button Push Out
+  m_EditorClassIdentifier: 
+  Path: event:/UI/TV Button Push Out
+  Guid:
+    Data1: 229334989
+    Data2: 1309413319
+    Data3: 911501728
+    Data4: -987103747
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 363

@@ -190,7 +190,7 @@
 			<value>-8</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Machine Hum</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{c084206b-e84a-439b-85ed-94ba1340aae9}</destination>

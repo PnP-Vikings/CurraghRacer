@@ -103,7 +103,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{f8b952f4-d464-4fe2-9644-b06531918804}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Flip Through Calander</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{3ccded4e-60d0-4187-a092-9452fcc1baff}</destination>

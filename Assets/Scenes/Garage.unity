@@ -228,6 +228,30 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &349890885 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5756363676705492282, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+  m_PrefabInstance: {fileID: 1833765157515246728}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &349890890
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 349890885}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event:
+    Guid:
+      Data1: 229334989
+      Data2: 1309413319
+      Data3: 911501728
+      Data4: -987103747
+    Path: event:/UI/TV Button Push Out
 --- !u!1 &466763351
 GameObject:
   m_ObjectHideFlags: 0
@@ -1624,7 +1648,7 @@ MonoBehaviour:
       Data2: 1138229223
       Data3: -667997514
       Data4: 2050445109
-    Path: event:/UI/TV Button Push
+    Path: event:/UI/TV Button Push In
 --- !u!1001 &1681291528
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1875,9 +1899,41 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Mode
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 
       objectReference: {fileID: 1215768657}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
+      value: 
+      objectReference: {fileID: 349890890}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_MethodName
+      value: PlayOneShot
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_TargetAssemblyTypeName
+      value: UIAudio, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2413940225296835319, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
     - target: {fileID: 4135010898109541528, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
       propertyPath: m_Name
       value: SettingsTV
@@ -2005,7 +2061,10 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5756363676705492282, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 349890890}
   m_SourcePrefab: {fileID: 100100000, guid: 2e194fb6045018c4db13a24044dc8980, type: 3}
 --- !u!1 &1833765157515246729 stripped
 GameObject:
