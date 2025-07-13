@@ -131,20 +131,6 @@ namespace Calendar
                 }
             }
             
-            /*// Check racing events
-            if (includeRacingEvents)
-            {
-                if (IsWeeklyRace(date))
-                {
-                    ApplyEventToCell(cell, "Weekly Race", "Regular weekly racing competition", new Color(0f, 0.8f, 0f), Color.white);
-                    return;
-                }
-                if (IsChampionshipRace(date))
-                {
-                    ApplyEventToCell(cell, "Championship Race", "High-stakes championship event", new Color(1f, 0.8f, 0f), Color.black);
-                    return;
-                }
-            }*/
         }
         
         private void ApplyEventToCell(DayEventHandler cell, string eventName, string description, Color bgColor, Color textColor)
