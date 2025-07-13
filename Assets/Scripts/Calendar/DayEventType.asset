@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44df0415477b43f4eb256cb46b584f7b, type: 3}
-  m_Name: Race Day
+  m_Name: DayEventType
   m_EditorClassIdentifier: 
-  eventName: Race Day
-  description: Big Sunday Races
+  eventName: 
+  description: 
   icon: {fileID: 0}
-  color: {r: 0.7264151, g: 0.6720769, b: 0, a: 1}
+  color: {r: 1, g: 1, b: 1, a: 1}
   textColor: {r: 0, g: 0, b: 0, a: 1}
   isSpecialEvent: 0
-  recurrenceType: 2
-  dayOfMonth: 0
-  month: 0
+  recurrenceType: 0
+  dayOfMonth: 1
+  month: 1
   year: 0
   dayOfWeek: 0
   intervalDays: 1

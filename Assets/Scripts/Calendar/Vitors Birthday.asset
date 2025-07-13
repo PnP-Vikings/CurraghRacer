@@ -10,17 +10,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44df0415477b43f4eb256cb46b584f7b, type: 3}
-  m_Name: Race Day
+  m_Name: Vitors Birthday
   m_EditorClassIdentifier: 
-  eventName: Race Day
-  description: Big Sunday Races
+  eventName: 'Vitors Birthday '
+  description: 'Vitors Birthday '
   icon: {fileID: 0}
-  color: {r: 0.7264151, g: 0.6720769, b: 0, a: 1}
+  color: {r: 0.114650205, g: 0.9433962, b: 0, a: 1}
   textColor: {r: 0, g: 0, b: 0, a: 1}
   isSpecialEvent: 0
-  recurrenceType: 2
-  dayOfMonth: 0
-  month: 0
-  year: 0
+  recurrenceType: 4
+  dayOfMonth: 24
+  month: 8
+  year: 1981
   dayOfWeek: 0
   intervalDays: 1
