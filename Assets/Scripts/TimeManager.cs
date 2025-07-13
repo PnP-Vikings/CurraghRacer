@@ -34,7 +34,7 @@ public class TimeManager : MonoBehaviour
     // Calendar variables
     [SerializeField] private int currentDay = 1;
     [SerializeField] private int currentMonth = 0; // 0-based index (0 = January)
-    [SerializeField] private int currentYear = 1981; // Starting year
+    [SerializeField] private int currentYear = 2008; // Starting year
     [SerializeField] private int currentDayOfWeek = 0; // 0-based index (0 = Sunday)
     [SerializeField] internal int daysInCurrentMonth = 31; // Default to 31 days for January
     
