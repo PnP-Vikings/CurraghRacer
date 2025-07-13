@@ -173,6 +173,8 @@ public class RaceManager : MonoBehaviour
 
                 CheeringAndClapping = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
                 CheeringAndClapping.start();
+                RaceAmbience.setParameterByName("Mute Rowing", 0f);
+
 
             }
             else

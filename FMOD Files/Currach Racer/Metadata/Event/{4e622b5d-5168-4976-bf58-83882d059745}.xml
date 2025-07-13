@@ -112,7 +112,7 @@
 			<value>-6</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Click 1</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{21020d31-3bbb-40ee-b58e-93d26216b5a4}</destination>
