@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
+using System.Threading;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
@@ -33,6 +34,9 @@ public class RaceManager : MonoBehaviour
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
+    FMOD.Studio.EventInstance GarageAmbience;
+    FMOD.Studio.EventInstance RaceAmbience;
+    public FMOD.Studio.EventInstance CheeringAndClapping;
 
     private void Awake()
     {
@@ -45,7 +49,6 @@ public class RaceManager : MonoBehaviour
             Destroy(gameObject);
         }
 
-        FMOD.Studio.EventInstance GarageAmbience;
         GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
         GarageAmbience.start();
     }
@@ -92,19 +95,15 @@ public class RaceManager : MonoBehaviour
         yield return new WaitForSeconds(1f);
         startRace.Invoke();
 
-        //FMOD.Studio.EventInstance GarageAmbience;
-        //GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-        ////GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
-
-        FMOD.Studio.EventInstance RaceAmbience;
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         RaceAmbience.start();
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
+
+        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
     }
-    
+
     public void ShipFinished(ShipMovement ship)
     {
         RaceMovementPositions.Add(ship);
@@ -171,6 +170,10 @@ public class RaceManager : MonoBehaviour
                 finishMenu.UpdatePlayerMessage(true, "You are the champion!");
                 PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
                 difficulty += .3f;
+
+                CheeringAndClapping = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
+                CheeringAndClapping.start();
+
             }
             else
             {
@@ -204,7 +207,9 @@ public class RaceManager : MonoBehaviour
         
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
-        
+
+        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+        RaceAmbience.setParameterByName("Mute Race Ambience", 0f);
     }
     
     IEnumerator ShowAd()

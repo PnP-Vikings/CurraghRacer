@@ -109,6 +109,9 @@
 		<relationship name="automators">
 			<destination>{8c1cc7bb-32b9-4373-9b5d-cc317a706e28}</destination>
 		</relationship>
+		<relationship name="modulators">
+			<destination>{65e1b495-9264-4478-8071-5178c923ae29}</destination>
+		</relationship>
 		<relationship name="effectChain">
 			<destination>{2dc7e6ae-e3a0-49e3-86f6-e8694860c983}</destination>
 		</relationship>
@@ -224,8 +227,26 @@
 			<destination>{da391835-67fe-404c-a19b-56d5eb56dd3d}</destination>
 		</relationship>
 	</object>
+	<object class="ADSRModulator" id="{65e1b495-9264-4478-8071-5178c923ae29}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>300</value>
+		</property>
+		<property name="releaseTime">
+			<value>500</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="MixerBusEffectChain" id="{2dc7e6ae-e3a0-49e3-86f6-e8694860c983}">
 		<relationship name="effects">
+			<destination>{c959bfaf-32c7-4b6a-a45f-d1f8c27cf7b3}</destination>
 			<destination>{3d63c792-7669-4237-a3df-b21cb2d6a7e1}</destination>
 		</relationship>
 	</object>
@@ -258,6 +279,17 @@
 			<destination>{178b30ed-2643-4de7-b13f-dee44c913925}</destination>
 		</relationship>
 	</object>
+	<object class="MultibandEqEffect" id="{c959bfaf-32c7-4b6a-a45f-d1f8c27cf7b3}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="frequencyA">
+			<value>20</value>
+		</property>
+		<property name="qualityA">
+			<value>0.179999992</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{3d63c792-7669-4237-a3df-b21cb2d6a7e1}" />
 	<object class="MixerBusFader" id="{0abe5d74-58ae-4681-a819-8beb20c7e4aa}" />
 	<object class="MixerBusFader" id="{91c1c612-0a41-4c2d-8b41-1986101097db}" />
@@ -267,7 +299,7 @@
 			<value>1</value>
 		</property>
 		<property name="value">
-			<value>0</value>
+			<value>-1</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{178b30ed-2643-4de7-b13f-dee44c913925}">

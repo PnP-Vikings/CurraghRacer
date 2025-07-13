@@ -23,7 +23,8 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: 496546100732942899}
   MinDistance: 1
   MaxDistance: 20
   Length: 30883
@@ -190,33 +191,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 58000
---- !u!114 &-6490149974885402788
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/UI/Button Push
-  m_EditorClassIdentifier: 
-  Path: event:/UI/Button Push
-  Guid:
-    Data1: 1499201385
-    Data2: 1138229223
-    Data3: -667997514
-    Data4: 2050445109
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 363
 --- !u!114 &-4365254110052270684
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -232,7 +206,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638870608773508544
+  lastModified: 638875812277477073
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -358,10 +332,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638870608773529373
+  lastModified: 638875812277507434
   FileSizes:
   - Name: 
-    Value: 1436
+    Value: 1612
   Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
@@ -383,7 +357,6 @@ MonoBehaviour:
   - {fileID: 3030399942059162582}
   - {fileID: 4634745327960995208}
   - {fileID: -6951462803765077591}
-  - {fileID: -6490149974885402788}
   - {fileID: -3046809840892768022}
   - {fileID: -2268902792387724148}
   - {fileID: -7484279424585771792}
@@ -393,13 +366,66 @@ MonoBehaviour:
   - {fileID: -8222264240576259642}
   - {fileID: -8966558056930675073}
   - {fileID: -1975231195295424296}
+  - {fileID: 2504384673942445289}
+  - {fileID: 7096334772225381524}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638870608773529373
+  cacheTime: 638875812277507434
   cacheVersion: 131624
+--- !u!114 &496546100732942899
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Race Ambience/Mute Race Ambience
+  m_EditorClassIdentifier: 
+  Name: Mute Race Ambience
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3675934434
+    data2: 3267869078
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2504384673942445289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/TV Button Push
+  m_EditorClassIdentifier: 
+  Path: event:/UI/TV Button Push
+  Guid:
+    Data1: 1499201385
+    Data2: 1138229223
+    Data3: -667997514
+    Data4: 2050445109
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 363
 --- !u!114 &3030399942059162582
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -478,3 +504,55 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &6382212892858319547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Cheering and Clapping/Mute Cheering and Clapping
+  m_EditorClassIdentifier: 
+  Name: Mute Cheering and Clapping
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3764134494
+    data2: 3844021382
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &7096334772225381524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Race/Cheering and Clapping
+  m_EditorClassIdentifier: 
+  Path: event:/Race/Cheering and Clapping
+  Guid:
+    Data1: -1326313933
+    Data2: 1253497893
+    Data3: -1646270336
+    Data4: -1852699166
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 6382212892858319547}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5670
