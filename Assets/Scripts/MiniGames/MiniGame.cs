@@ -1,10 +1,12 @@
-using UnityEngine.UIElements;
+using UnityEngine;
 
-public interface  MiniGame 
+namespace MiniGames
 {
-    void Initialize(MiniGameManager manager, MiniGameData gameData);
-    void StartGame();
-    void UpdateGame();
-    void EndGame();
-    VisualElement CreateGameUI(); // Optional: for games that need custom UI
+    public interface MiniGame 
+    {
+        void Initialize(MiniGameManager manager, MiniGameData gameData);
+        void StartGame();
+        void UpdateGame();
+        void EndGame();
+    }
 }

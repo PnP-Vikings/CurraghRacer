@@ -65,10 +65,25 @@ public class StartMenu : MonoBehaviour
     {
         if (PlayerManager.Instance.playerHasEnoughEnergy(25))
         {
-            int randomValue = Random.Range(0, GameManager.Instance.miniGameWorkScenes.Count);
-            string selectedScene = GameManager.Instance.miniGameWorkScenes[randomValue];
-            
-            SceneManager.LoadScene(selectedScene);
+            // Use MiniGameManager instead of loading separate scenes
+            if (MiniGames.MiniGameManager.Instance != null)
+            {
+                // Start a random work minigame through the manager
+                MiniGames.MiniGameManager.Instance.StartRandomWorkActivity();
+                
+                // Hide the start menu UI
+                uiDoc.gameObject.SetActive(false);
+                
+                // Deduct energy cost
+                PlayerManager.Instance.ModifyPlayerEnergy(-25);
+            }
+            else
+            {
+                // Fallback to old system if MiniGameManager not available
+                int randomValue = Random.Range(0, GameManager.Instance.miniGameWorkScenes.Count);
+                string selectedScene = GameManager.Instance.miniGameWorkScenes[randomValue];
+                SceneManager.LoadScene(selectedScene);
+            }
         }
         else
         {

@@ -1159,6 +1159,10 @@ PrefabInstance:
       propertyPath: currentYear
       value: 2008
       objectReference: {fileID: 0}
+    - target: {fileID: 5925614133511598973, guid: ae207ed792dae004996b867015b8dc50, type: 3}
+      propertyPath: currentDayOfWeek
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -2154,7 +2158,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
   m_PrefabInstance: {fileID: 1934896994}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1934896995}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e1d0fbf9a3d68942b374afde34b7f5b, type: 3}
@@ -2350,8 +2354,33 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1934896996}
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+--- !u!1 &1934896995 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+  m_PrefabInstance: {fileID: 1934896994}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1934896996
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1934896995}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c9af5a3d507ce847b7b292e877e3ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  workActivities:
+  - {fileID: 11400000, guid: beb7e351b3c2fe748bbf7f531f212aec, type: 2}
+  - {fileID: 11400000, guid: b7b9fcb0677f88742b3ded18b143506e, type: 2}
+  trainingActivities: []
+  audioSource: {fileID: 0}
 --- !u!1001 &1970164018
 PrefabInstance:
   m_ObjectHideFlags: 0

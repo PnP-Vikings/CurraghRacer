@@ -1,0 +1,106 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 292ecdd5e13c76f4d834ec68fcb98098, type: 3}
+  m_Name: BeerDrinkingGame
+  m_EditorClassIdentifier: 
+  gameName: Beer Pouring
+  description: 
+  funnyQuote: 
+  gameType: 8
+  category: 0
+  baseDifficulty: 1
+  trainingAttribute: 5
+  attributeGainMultiplier: 1
+  sceneName: BeerPourMinigame
+  useSceneLoading: 1
+  returnSceneName: RaceScene
+  baseEarnings: 50
+  baseGain: 0
+  difficultyMultiplier: 1
+  perfectBonus: 1.5
+  minimumPerformanceForReward: 0.3
+  timeLimit: 60
+  perfectScore: 100
+  hasTimeBonus: 1
+  timeBonusMultiplier: 1
+  energyCost: 25
+  difficultyScoreMultiplier:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.5
+      inSlope: 0
+      outSlope: 0.75
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 2
+      value: 2
+      inSlope: 0.75
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  difficultyRewardMultiplier:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0.7
+      inSlope: 0
+      outSlope: 0.4
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 2
+      value: 1.5
+      inSlope: 0.4
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  gameIcon: {fileID: 0}
+  gameUIPrefab: {fileID: 0}
+  backgroundMusic: {fileID: 0}
+  startSound: {fileID: 0}
+  successSound: {fileID: 0}
+  failureSound: {fileID: 0}
+  ambientSounds: []
+  primaryColor: {r: 1, g: 1, b: 1, a: 1}
+  secondaryColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  backgroundImage: {fileID: 0}
+  successParticleEffect: {fileID: 0}
+  startQuote: 
+  successQuote: 
+  failureQuote: 
+  perfectQuote: 
+  timeoutQuote: 
+  minimumLevel: 1
+  minimumCoins: 0
+  prerequisites: []
+  maxPlaysPerDay: -1
+  cooldownMinutes: 0
+  customControllerPrefab: {fileID: 0}
+  gameplayModifiers: []
