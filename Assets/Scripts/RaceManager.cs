@@ -1,10 +1,14 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Threading;
+using Calendar;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Rendering.Universal;
+using EventType = UnityEngine.EventType;
+using Random = UnityEngine.Random;
 
 public class RaceManager : MonoBehaviour
 {
@@ -17,7 +21,9 @@ public class RaceManager : MonoBehaviour
     // 0.5 = easy crews, 1 = normal, 2 = monster crews
     public List<Transform> raceStartPositions;
     public UnityEvent startRace;
-    
+    public bool isRaceDay;
+
+
     public GameObject shipPrefab;
     
     
@@ -53,6 +59,33 @@ public class RaceManager : MonoBehaviour
         GarageAmbience.start();
     }
 
+
+    public void OnEnable()
+    {
+        TimeManager.Instance.todaysEvents.AddListener(CheckForRaceDay);
+    }
+
+    
+    // Listener receives today's events list
+    public void CheckForRaceDay(List<DayEventType> todaysEvents)
+    {
+
+        if (todaysEvents != null && todaysEvents.Count > 0)
+        {
+            todaysEvents.ForEach(eventType =>
+            {
+                if (eventType.OccasionType == Calendar.OccasionType.Race)
+                {
+                    isRaceDay = true;
+                }
+                else
+                {
+                   isRaceDay = false;
+                }
+                
+            });
+        }
+    }
 
     public void SpawnShips()
     {
@@ -164,13 +197,26 @@ public class RaceManager : MonoBehaviour
             mainCamera.transform.position = cameraStartPosition.position;
             mainCamera.transform.rotation = cameraStartPosition.rotation;
 
+
+            if (isRaceDay)
+            {
+                PlayerManager.Instance.ModifyPlayerEnergy(-50);
+            }
+            else
+            {
+                PlayerManager.Instance.ModifyPlayerEnergy(-25);
+            }
+
+
             if (RaceMovementPositions[0].isPlayerShip)
             {
                 Debug.Log("Player finished first!");
                 finishMenu.UpdatePlayerMessage(true, "You are the champion!");
-                PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
-                difficulty += .3f;
-
+                if (isRaceDay)
+                {
+                    PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
+                    difficulty += .3f;
+                }
                 CheeringAndClapping = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
                 CheeringAndClapping.start();
 
@@ -179,6 +225,8 @@ public class RaceManager : MonoBehaviour
             {
                 Debug.Log("Player did not finish first.");
                 finishMenu.UpdatePlayerMessage(false, "Better luck next time!");
+                if(!isRaceDay) return; // No coins deducted
+                
                 if( PlayerManager.Instance.GetPlayerCoins () < 50f)
                 {
                     PlayerManager.Instance.ModifyPlayerCoins(0f);
@@ -227,7 +275,12 @@ public class RaceManager : MonoBehaviour
         }
       return true;
     }
-    
-    
-    
+
+    public void OnDisable()
+    {
+        TimeManager.Instance.todaysEvents.RemoveListener(CheckForRaceDay);
+    }
+
+
+
 }

@@ -1,8 +1,9 @@
 using UnityEngine;
-// Add this at the beginning of the TimeManager script
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using System;
+using System.Collections.Generic;
+using Calendar;
 
 public class TimeManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class TimeManager : MonoBehaviour
     internal string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
     internal int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-   
+    public CalendarEvents calendarEvents;
     
 
     [SerializeField] internal UnityEvent timeChangedEvent;
@@ -41,8 +42,13 @@ public class TimeManager : MonoBehaviour
     [Serializable]
     public class DateChangedEvent : UnityEvent<int, int, int> { } // day, month, year
     
+ 
+    
     public DateChangedEvent onDateChanged;
-
+    
+    public class TodaysEvents : UnityEvent<List<DayEventType>> { } // List of events for today
+    [SerializeField] public TodaysEvents todaysEvents = new TodaysEvents();
+    
     // Properties
     public float TimeOfDay { get => timeOfDay; }
     public float TimeMultiplier { get => timeMultiplier; set => timeMultiplier = Mathf.Max(value, 0f); }
@@ -72,6 +78,10 @@ public class TimeManager : MonoBehaviour
         currentDayOfWeek = calculatedDayOfWeek;
         
         daysInCurrentMonth = GetDaysInCurrentMonth();
+        HasEventToday();
+        
+        onNewDay.Invoke(); // Raise the OnNewDay event
+        timeChangedEvent.Invoke(); // Raise the time changed event
         
     }
     
@@ -115,6 +125,8 @@ public class TimeManager : MonoBehaviour
                 }
             }
         }
+
+        HasEventToday();
         // Trigger the date changed event
         if (onDateChanged != null)
             onDateChanged.Invoke(currentDay, currentMonth, currentYear);
@@ -225,8 +237,18 @@ public class TimeManager : MonoBehaviour
     public int GetCurrentDay() { return currentDay; }
     public int GetCurrentMonth() { return currentMonth; }
     public int GetCurrentYear() { return currentYear; }
-    public int GetCurrentDayOfWeek() { return currentDayOfWeek; }
     
+ 
+    public int GetCurrentDayOfWeek() { return currentDayOfWeek; }
+
+    /// <summary>
+    /// Gets the current date as a System.DateTime
+    /// </summary>
+    public DateTime GetCurrentDate()
+    {
+        // currentMonth is 0-based (0 = January), DateTime expects 1-12
+        return new DateTime(currentYear, currentMonth + 1, currentDay);
+    }
     
     public void UpdateTime()
     {
@@ -261,6 +283,25 @@ public class TimeManager : MonoBehaviour
     public bool IsNight()
     {
         return timeOfDay >= 19 && timeOfDay <= 24;
+    }
+    
+    /// <summary>
+    /// Returns all calendar events occurring on the current date
+    /// </summary>
+    public List<DayEventType> GetEventsToday()
+    {
+       var events = calendarEvents.GetEventsOnDate(GetCurrentDate());
+       todaysEvents?.Invoke(events);
+       return events;
+    }
+
+    /// <summary>
+    /// Returns true if there is at least one event today
+    /// </summary>
+    public bool HasEventToday()
+    {
+        Debug.Log("Checking for events today"+ " " + GetCurrentDate() + " " + GetEventsToday().Count);
+        return GetEventsToday().Count > 0;
     }
 
 }

@@ -19,6 +19,7 @@ public class PlayerStatsView : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
     
     void OnEnable()
@@ -34,7 +35,7 @@ public class PlayerStatsView : MonoBehaviour
         _playerCurrencyLabel.text = "Player Currency: " + PlayerManager.Instance.GetPlayerCurrency();
         
         PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
-        
+      
         
     }
     

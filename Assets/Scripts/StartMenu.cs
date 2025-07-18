@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using Calendar;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -7,10 +9,11 @@ public class StartMenu : MonoBehaviour
     [SerializeField] private UIDocument uiDoc;
     private Button _startRaceButton,_trainButton,_workButton,_sleepButton;
     [SerializeField] CameraController cameraController;
-    
     public GameObject trainingMenuPrefab;
 
     FMOD.Studio.EventInstance GymBagZipUp;
+    
+    
 
     void OnEnable()
     {
@@ -27,7 +30,27 @@ public class StartMenu : MonoBehaviour
         _trainButton.clicked += OnTrainingButtonClicked;
         _workButton.clicked += OnWorkButtonClicked;
         _sleepButton.clicked +=OnSleepButtonClicked;
+        UpdateRaceDayStatus();
+        
+        TimeManager.Instance.onNewDay.AddListener(UpdateRaceDayStatus); 
     }
+    
+   
+    public void UpdateRaceDayStatus()
+    {
+        
+        if (RaceManager.Instance.isRaceDay)
+        {     _startRaceButton.text = "Start Race";
+        }
+        else
+        {
+            _startRaceButton.text = "Practice Race";
+        }
+    }
+    
+    
+    
+    
 
     public void OnStartRaceButtonClicked()
     {
@@ -47,7 +70,7 @@ public class StartMenu : MonoBehaviour
             RaceManager.Instance.SpawnShips();
             uiDoc.gameObject.SetActive(false);
             cameraController.MoveCameraToPosition(0);
-            PlayerManager.Instance.ModifyPlayerEnergy(-50);
+            TimeManager.Instance.UpdateTime();
        
 
     }
@@ -58,6 +81,7 @@ public class StartMenu : MonoBehaviour
         
         GymBagZipUp = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
         GymBagZipUp.start();
+        
 
     }
     
@@ -106,6 +130,8 @@ public class StartMenu : MonoBehaviour
     {
         _startRaceButton.clicked -= OnStartRaceButtonClicked;
         _trainButton.clicked -= OnTrainingButtonClicked;
+        TimeManager.Instance.onNewDay.RemoveListener(UpdateRaceDayStatus);
+     
     }
 
 }

@@ -17,7 +17,7 @@ MonoBehaviour:
   icon: {fileID: 0}
   color: {r: 0.114650205, g: 0.9433962, b: 0, a: 1}
   textColor: {r: 0, g: 0, b: 0, a: 1}
-  isSpecialEvent: 0
+  OccasionType: 1
   recurrenceType: 4
   dayOfMonth: 24
   month: 8

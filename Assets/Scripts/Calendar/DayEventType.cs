@@ -25,6 +25,16 @@ namespace Calendar
         Saturday = 6
     }
 
+    public enum OccasionType
+    {
+        None,
+        Holiday,
+        Work,
+        SpecialEvent
+        ,Race,
+        Custom
+    }
+
     [CreateAssetMenu(fileName = "DayEventType", menuName = "Scriptable Objects/DayEventType")]
     public class DayEventType : ScriptableObject
     {
@@ -34,8 +44,9 @@ namespace Calendar
         public Image icon;
         public Color color = Color.white;
         public Color textColor = Color.black;
-        public bool isHoliday;
-        public bool isSpecialEvent;
+        
+        [Header("Event Type")]
+        public OccasionType OccasionType = OccasionType.None; // Type of the event (e.g., Holiday, Work, Special)
         
         [Header("Date Configuration")]
         public RecurrenceType recurrenceType = RecurrenceType.None;
