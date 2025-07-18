@@ -1,0 +1,27 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44df0415477b43f4eb256cb46b584f7b, type: 3}
+  m_Name: New Year's Day
+  m_EditorClassIdentifier: 
+  eventName: New Year's Day
+  description: Start of the new year
+  icon: {fileID: 0}
+  color: {r: 0.9150943, g: 0.7311619, b: 0, a: 1}
+  textColor: {r: 0, g: 0, b: 0, a: 1}
+  isHoliday: 1
+  isSpecialEvent: 0
+  recurrenceType: 4
+  dayOfMonth: 1
+  month: 1
+  year: 1981
+  dayOfWeek: 0
+  intervalDays: 1

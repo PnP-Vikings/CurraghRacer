@@ -15,3 +15,8 @@ MonoBehaviour:
   calendarDayEvents:
   - {fileID: 11400000, guid: f508003ca98e95e4c8db89f9159dd30e, type: 2}
   - {fileID: 11400000, guid: 11ca6a867295c1743a568bda8d0a7104, type: 2}
+  commonHolidays:
+  - {fileID: 11400000, guid: a65839161d2822d47af908c5f0b5deae, type: 2}
+  - {fileID: 11400000, guid: 69b3f7cb6aeeabc4c8ce7947475c04fc, type: 2}
+  - {fileID: 11400000, guid: 504d34ca69c128948943aa76ca8ce2e1, type: 2}
+  - {fileID: 11400000, guid: d154d1a084d9bad44a6048ca5f761699, type: 2}

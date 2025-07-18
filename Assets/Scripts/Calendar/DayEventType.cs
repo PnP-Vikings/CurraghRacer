@@ -34,6 +34,7 @@ namespace Calendar
         public Image icon;
         public Color color = Color.white;
         public Color textColor = Color.black;
+        public bool isHoliday;
         public bool isSpecialEvent;
         
         [Header("Date Configuration")]
@@ -82,6 +83,8 @@ namespace Calendar
                     return false;
             }
         }
+        
+      
         
         /// <summary>
         /// Gets the next occurrence of this event after the given date

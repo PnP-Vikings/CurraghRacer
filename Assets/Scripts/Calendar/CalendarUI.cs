@@ -44,7 +44,8 @@ namespace Calendar
                 
                 // Set default styling
                 SetDefaultCellStyling(cell, i);
-                
+                // Check for events on this date
+                CheckAndApplyEvents(cell, currentDate);
                 // Highlight current day
                 if (IsCurrentDay(i))
                 {
@@ -52,8 +53,7 @@ namespace Calendar
                     cell.SetAllTextColor(Color.black);
                 }
                 
-                // Check for events on this date
-                CheckAndApplyEvents(cell, currentDate);
+            
             }
         }
         
@@ -109,26 +109,15 @@ namespace Calendar
             // Check holidays
             if (includeCommonHolidays)
             {
-                if (IsChristmas(date))
+                foreach (var eventType in calendarEvents.commonHolidays)
                 {
-                    ApplyEventToCell(cell, "Christmas", "Christmas Day celebration", Color.red, Color.white);
-                    return;
+                    if (eventType.OccursOnDate(date))
+                    {
+                        cell.SetEvent(eventType);
+                        return; // Event found, no need to check common events
+                    }
                 }
-                if (IsNewYear(date))
-                {
-                    ApplyEventToCell(cell, "New Year's Day", "Start of the new year", Color.yellow, Color.black);
-                    return;
-                }
-                if (IsHalloween(date))
-                {
-                    ApplyEventToCell(cell, "Halloween", "Spooky Halloween night", new Color(1f, 0.5f, 0f), Color.black);
-                    return;
-                }
-                if (IsValentinesDay(date))
-                {
-                    ApplyEventToCell(cell, "Valentine's Day", "Day of love and romance", new Color(1f, 0.4f, 0.7f), Color.white);
-                    return;
-                }
+            
             }
             
         }
@@ -143,17 +132,7 @@ namespace Calendar
             if (cell.descriptionText != null)
                 cell.descriptionText.text = description;
         }
-        
-        // Holiday check methods
-        private bool IsChristmas(DateTime date) => date.Month == 12 && date.Day == 25;
-        private bool IsNewYear(DateTime date) => date.Month == 1 && date.Day == 1;
-        private bool IsHalloween(DateTime date) => date.Month == 10 && date.Day == 31;
-        private bool IsValentinesDay(DateTime date) => date.Month == 2 && date.Day == 14;
-        
-        // Racing event check methods
-        private bool IsWeeklyRace(DateTime date) => date.DayOfWeek == System.DayOfWeek.Sunday;
-        private bool IsChampionshipRace(DateTime date) => date.DayOfWeek == System.DayOfWeek.Saturday;
-        
+     
         public void NextMonth()
         {
             Debug.Log("Next Month");
