@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{0dab5fcd-0fc7-4e0c-a069-5436fdfd29c5}">
 		<property name="name">
 			<value>TV Button Push Out</value>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{ccd096b9-85a2-495b-9505-6e7f696194b6}">
 		<property name="name">
 			<value>Move Plate</value>

@@ -9,7 +9,6 @@ public class FinishMenu : MonoBehaviour
     [SerializeField] private GameObject startingMenuPrefab;
 
     FMOD.Studio.EventInstance UIClick2;
-    FMOD.Studio.EventInstance GarageAmbience;
     public RaceManager raceManager;
 
     void OnEnable()
@@ -40,9 +39,8 @@ public class FinishMenu : MonoBehaviour
         UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
         UIClick2.start();
 
-        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        GarageAmbience.start();
         raceManager.CheeringAndClapping.setParameterByName("Mute Cheering and Clapping", 0f);
+        raceManager.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
     }
 
     public void UpdatePositions(string pos1, string pos2, string pos3, string pos4)

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{789ed7bb-c6a4-4a54-9bad-74aad7e4ce63}">
 		<property name="name">
 			<value>Kitchen Ambience</value>
@@ -66,9 +66,9 @@
 	<object class="MarkerTrack" id="{849d3775-e9bb-4be0-b0b9-983c98bac3b6}" />
 	<object class="GroupTrack" id="{46b1cd8f-c42c-4820-850e-fa7ae7a65508}">
 		<relationship name="modules">
-			<destination>{6ea946be-361c-4369-a9e1-9227bfb57410}</destination>
-			<destination>{7c78ddfe-4063-486f-852f-8d1dff7d981b}</destination>
 			<destination>{17038fa8-6f22-4b66-8b16-0e27430f0194}</destination>
+			<destination>{7c78ddfe-4063-486f-852f-8d1dff7d981b}</destination>
+			<destination>{6ea946be-361c-4369-a9e1-9227bfb57410}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{9679eef5-e262-4298-a8a6-df8d9956a774}</destination>
@@ -124,6 +124,7 @@
 	</object>
 	<object class="Timeline" id="{5b523f97-4472-4227-8d0d-a3c10eb1af4e}">
 		<relationship name="modules">
+			<destination>{17038fa8-6f22-4b66-8b16-0e27430f0194}</destination>
 			<destination>{4e40349f-3c37-45d6-9f04-a3845ff321bf}</destination>
 			<destination>{b93bed53-b180-447e-8903-cc264ce57732}</destination>
 			<destination>{fe21470e-5aad-47c5-abf6-d45788c3b8b3}</destination>
@@ -131,7 +132,6 @@
 			<destination>{baf66672-018c-41c5-87ab-6db76e680893}</destination>
 			<destination>{6ea946be-361c-4369-a9e1-9227bfb57410}</destination>
 			<destination>{7c78ddfe-4063-486f-852f-8d1dff7d981b}</destination>
-			<destination>{17038fa8-6f22-4b66-8b16-0e27430f0194}</destination>
 			<destination>{34d60a83-a35a-4001-8df6-e7b33291dbed}</destination>
 		</relationship>
 		<relationship name="markers">
@@ -155,7 +155,10 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{1c2b0532-95ce-4625-bd14-81472a0a5b8f}" />
-	<object class="SingleSound" id="{6ea946be-361c-4369-a9e1-9227bfb57410}">
+	<object class="SingleSound" id="{17038fa8-6f22-4b66-8b16-0e27430f0194}">
+		<property name="start">
+			<value>28.734708333333334</value>
+		</property>
 		<property name="length">
 			<value>14.367354166666667</value>
 		</property>
@@ -174,10 +177,7 @@
 			<destination>{e510115b-bf5f-4fe8-a11d-5f1763383ef4}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{17038fa8-6f22-4b66-8b16-0e27430f0194}">
-		<property name="start">
-			<value>28.734708333333334</value>
-		</property>
+	<object class="SingleSound" id="{6ea946be-361c-4369-a9e1-9227bfb57410}">
 		<property name="length">
 			<value>14.367354166666667</value>
 		</property>

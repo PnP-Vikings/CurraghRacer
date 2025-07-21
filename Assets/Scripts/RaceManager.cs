@@ -34,7 +34,7 @@ public class RaceManager : MonoBehaviour
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
-    FMOD.Studio.EventInstance GarageAmbience;
+    public FMOD.Studio.EventInstance GarageAmbience;
     FMOD.Studio.EventInstance RaceAmbience;
     public FMOD.Studio.EventInstance CheeringAndClapping;
 
@@ -43,14 +43,14 @@ public class RaceManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
+
+            GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+            GarageAmbience.start();
         }
         else
         {
             Destroy(gameObject);
         }
-
-        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        GarageAmbience.start();
     }
 
 
@@ -97,11 +97,11 @@ public class RaceManager : MonoBehaviour
 
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         RaceAmbience.start();
+        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
-
-        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
     }
 
     public void ShipFinished(ShipMovement ship)
@@ -210,8 +210,7 @@ public class RaceManager : MonoBehaviour
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
 
-        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
-        RaceAmbience.setParameterByName("Mute Race Ambience", 0f);
+        RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
     
     IEnumerator ShowAd()

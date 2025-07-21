@@ -171,6 +171,9 @@
 		<property name="length">
 			<value>17.339645833333332</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{6b8e5d63-3bae-443d-9d6d-8bc15477db1c}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{5b314563-e954-4042-9328-b4fa83e4d139}</destination>
 		</relationship>
@@ -236,10 +239,10 @@
 			<value>-80</value>
 		</property>
 		<property name="attackTime">
-			<value>300</value>
+			<value>200</value>
 		</property>
 		<property name="releaseTime">
-			<value>500</value>
+			<value>200</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>
@@ -258,6 +261,20 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{21affec1-9f13-48c8-a59b-d8f621a9ef83}" />
+	<object class="ADSRModulator" id="{6b8e5d63-3bae-443d-9d6d-8bc15477db1c}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>volume</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>480</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="FadeCurve" id="{95a3c942-2ff6-460c-bbbd-a7dda3f24bfa}">
 		<relationship name="startPoint">
 			<destination>{3b092265-b330-423e-a056-988a593ec942}</destination>
