@@ -37,6 +37,7 @@ public class RaceManager : MonoBehaviour
     public FMOD.Studio.EventInstance GarageAmbience;
     FMOD.Studio.EventInstance RaceAmbience;
     public FMOD.Studio.EventInstance CheeringAndClapping;
+    FMOD.Studio.EventInstance NegativeEncouragement;
 
     private void Awake()
     {
@@ -173,6 +174,7 @@ public class RaceManager : MonoBehaviour
 
                 CheeringAndClapping = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
                 CheeringAndClapping.start();
+                RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);
                 RaceAmbience.setParameterByName("Mute Rowing", 0f);
 
 
@@ -186,6 +188,11 @@ public class RaceManager : MonoBehaviour
                     PlayerManager.Instance.ModifyPlayerCoins(0f);
                 }
                 PlayerManager.Instance.ModifyPlayerCoins(-50f); // Deduct coins for not winning
+
+                RaceAmbience.setParameterByName("Mute Rowing", 0f);
+                RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);
+                NegativeEncouragement = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Negative Encouragement");
+                NegativeEncouragement.start();
             }
           
             
