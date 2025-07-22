@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{99692873-8a33-4226-9a20-06c7de69ad48}">
 		<property name="name">
 			<value>Set Pint Down</value>
@@ -100,7 +100,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{d0355934-4454-41db-9e5a-5c5fdc48cd54}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Set Down Pint</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{cda6babc-7550-4c53-b848-b504e9cbf95e}</destination>

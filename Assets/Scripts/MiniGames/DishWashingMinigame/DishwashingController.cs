@@ -31,8 +31,9 @@ public class DishwashingController : MonoBehaviour
 
     [SerializeField] private int spawnCount = 5;
 
+    FMOD.Studio.EventInstance MovePlateAudio;
     //Coroutine SpongeAudioCoroutine;
-    
+
     void OnEnable()
     {
         if (spongePrefab == null)
@@ -130,7 +131,6 @@ public class DishwashingController : MonoBehaviour
         plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
         MovePlateToCleanPosition(); // Move the next plate to the clean position
 
-        FMOD.Studio.EventInstance MovePlateAudio;
         MovePlateAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
         MovePlateAudio.start();
 

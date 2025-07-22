@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{4086fab7-afe0-44d6-b01e-410fe5d1fde2}">
 		<property name="name">
 			<value>Gym Bag Zip Up</value>
@@ -100,7 +100,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{cde9e4f1-1988-4b70-a259-eaf1aed97243}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Gym Bad Zip Up</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{92277ed4-55cd-4017-902f-b1c4af879f6b}</destination>

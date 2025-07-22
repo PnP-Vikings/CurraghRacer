@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{35be8857-9ccd-47c0-9c2f-b54fef5426f8}">
 		<property name="name">
 			<value>Calender</value>
@@ -103,7 +103,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{f8b952f4-d464-4fe2-9644-b06531918804}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Flip Through Calander</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{3ccded4e-60d0-4187-a092-9452fcc1baff}</destination>

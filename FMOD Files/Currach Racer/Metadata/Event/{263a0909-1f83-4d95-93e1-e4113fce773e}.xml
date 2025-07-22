@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{263a0909-1f83-4d95-93e1-e4113fce773e}">
 		<property name="name">
 			<value>Bar Ambience</value>
@@ -114,11 +114,11 @@
 	<object class="Timeline" id="{d31672b9-ec71-4b69-90e6-ed9ca6495bab}">
 		<relationship name="modules">
 			<destination>{d0668829-c666-4aea-a865-d3e02bd9038b}</destination>
-			<destination>{30ff7a62-2c5c-4c68-860b-b53b39afc7f3}</destination>
-			<destination>{5d0f4fde-ecd1-48f1-978d-1a47b751b801}</destination>
-			<destination>{88d74d3b-fff9-495c-9c19-ea675783f5f9}</destination>
 			<destination>{1f838871-c234-4277-a66d-dadac79111fe}</destination>
+			<destination>{88d74d3b-fff9-495c-9c19-ea675783f5f9}</destination>
+			<destination>{5d0f4fde-ecd1-48f1-978d-1a47b751b801}</destination>
 			<destination>{671bf61a-7a8d-40a9-88b5-832613629f00}</destination>
+			<destination>{30ff7a62-2c5c-4c68-860b-b53b39afc7f3}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{d1f39eaa-300e-4d9a-a336-e0b292e23d65}</destination>

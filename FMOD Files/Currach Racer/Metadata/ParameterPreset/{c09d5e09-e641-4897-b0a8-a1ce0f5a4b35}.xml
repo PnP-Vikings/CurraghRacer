@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{c09d5e09-e641-4897-b0a8-a1ce0f5a4b35}">
+		<property name="name">
+			<value>Mute Rowing</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{6f7af8ca-e28a-4ae9-9528-02fe238532c6}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{6f7af8ca-e28a-4ae9-9528-02fe238532c6}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.47999998927116394</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{fccdee26-10c1-4443-b566-350608803d7d}</destination>
+		</relationship>
+	</object>
+</objects>

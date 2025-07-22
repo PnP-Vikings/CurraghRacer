@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{e510115b-bf5f-4fe8-a11d-5f1763383ef4}">
 		<property name="assetPath">
 			<value>Machine Hum.wav</value>

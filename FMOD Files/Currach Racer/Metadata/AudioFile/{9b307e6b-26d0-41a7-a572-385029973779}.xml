@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{9b307e6b-26d0-41a7-a572-385029973779}">
 		<property name="assetPath">
 			<value>Pint Glass Slide On Bar.wav</value>

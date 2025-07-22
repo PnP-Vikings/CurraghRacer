@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{bedf0790-0495-4583-9b99-e4ca6c5e3dd0}">
 		<property name="assetPath">
 			<value>Whisk 1.wav</value>

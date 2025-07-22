@@ -16,7 +16,10 @@
 			<value>1</value>
 		</property>
 		<property name="seekSpeed">
-			<value>0.87999999523162842</value>
+			<value>0.91999995708465576</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{c395143d-3056-4d00-9e3a-96ad998a2be5}</destination>
+		</relationship>
 	</object>
 </objects>

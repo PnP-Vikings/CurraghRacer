@@ -40,23 +40,24 @@ public class RaceManager : MonoBehaviour
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
-    FMOD.Studio.EventInstance GarageAmbience;
+    public FMOD.Studio.EventInstance GarageAmbience;
     FMOD.Studio.EventInstance RaceAmbience;
     public FMOD.Studio.EventInstance CheeringAndClapping;
+    FMOD.Studio.EventInstance NegativeEncouragement;
 
     private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
+
+            GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+            GarageAmbience.start();
         }
         else
         {
             Destroy(gameObject);
         }
-
-        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        GarageAmbience.start();
     }
 
 
@@ -130,11 +131,11 @@ public class RaceManager : MonoBehaviour
 
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         RaceAmbience.start();
+        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
-
-        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
     }
 
     public void ShipFinished(ShipMovement ship)
@@ -219,6 +220,9 @@ public class RaceManager : MonoBehaviour
                 }
                 CheeringAndClapping = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Cheering and Clapping");
                 CheeringAndClapping.start();
+                RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);
+                RaceAmbience.setParameterByName("Mute Rowing", 0f);
+
 
             }
             else
@@ -232,6 +236,11 @@ public class RaceManager : MonoBehaviour
                     PlayerManager.Instance.ModifyPlayerCoins(0f);
                 }
                 PlayerManager.Instance.ModifyPlayerCoins(-50f); // Deduct coins for not winning
+
+                RaceAmbience.setParameterByName("Mute Rowing", 0f);
+                RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);
+                NegativeEncouragement = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Negative Encouragement");
+                NegativeEncouragement.start();
             }
           
             
@@ -256,8 +265,7 @@ public class RaceManager : MonoBehaviour
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
 
-        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
-        RaceAmbience.setParameterByName("Mute Race Ambience", 0f);
+        RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
     
     IEnumerator ShowAd()

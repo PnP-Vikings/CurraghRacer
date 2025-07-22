@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{6523c177-eb5d-4d68-8e7a-d0f34c8df9cd}">
 		<property name="assetPath">
 			<value>Rudder Damaged 2.wav</value>

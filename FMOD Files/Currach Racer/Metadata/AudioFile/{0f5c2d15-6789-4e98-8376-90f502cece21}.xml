@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="AudioFile" id="{0f5c2d15-6789-4e98-8376-90f502cece21}">
 		<property name="assetPath">
 			<value>Pub Ambience 1 (Quiet Dance Music).wav</value>
