@@ -26,6 +26,7 @@ MonoBehaviour:
   Parameters:
   - {fileID: 496546100732942899}
   - {fileID: -3140071954010244658}
+  - {fileID: 4932352448969056289}
   MinDistance: 1
   MaxDistance: 20
   Length: 30883
@@ -234,7 +235,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638882842498525495
+  lastModified: 638887517820925184
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -384,11 +385,38 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638882842498590554
+  lastModified: 638887517820951774
   FileSizes:
   - Name: 
-    Value: 1708
+    Value: 1814
   Exists: 1
+--- !u!114 &-861806321422844360
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Race/Negative Encouragement
+  m_EditorClassIdentifier: 
+  Path: event:/Race/Negative Encouragement
+  Guid:
+    Data1: 230308729
+    Data2: 1272572464
+    Data3: -84470392
+    Data4: -931591754
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4149
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -421,12 +449,13 @@ MonoBehaviour:
   - {fileID: 7096334772225381524}
   - {fileID: -8541651289697230892}
   - {fileID: 7321747427095314458}
+  - {fileID: -861806321422844360}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638882842498590554
+  cacheTime: 638887517820951774
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -506,6 +535,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1531
+--- !u!114 &4932352448969056289
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Race Ambience/Mute Positive Encouragement
+  m_EditorClassIdentifier: 
+  Name: Mute Positive Encouragement
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3512589262
+    data2: 2225278466
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &5205683574485413279
 MonoBehaviour:
   m_ObjectHideFlags: 0

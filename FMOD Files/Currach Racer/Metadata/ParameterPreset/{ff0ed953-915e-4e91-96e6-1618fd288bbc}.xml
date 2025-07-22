@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{ff0ed953-915e-4e91-96e6-1618fd288bbc}">
+		<property name="name">
+			<value>Mute Positive Encouragement</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e62934b8-c9e4-4d28-b68c-6443aec2ffe0}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e62934b8-c9e4-4d28-b68c-6443aec2ffe0}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.85999995470046997</value>
+		</property>
+	</object>
+</objects>
