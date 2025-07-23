@@ -111,6 +111,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 793
+--- !u!114 &-7355683689810480613
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Scribble On Bulletin Board
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Scribble On Bulletin Board
+  Guid:
+    Data1: -254137824
+    Data2: 1293020733
+    Data3: 1186285489
+    Data4: 1211512992
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 289
 --- !u!114 &-7172221576809808135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -235,7 +262,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638887867580766396
+  lastModified: 638888818322102039
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -385,10 +412,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638887867580791625
+  lastModified: 638888818322122919
   FileSizes:
   - Name: 
-    Value: 1814
+    Value: 1914
   Exists: 1
 --- !u!114 &-861806321422844360
 MonoBehaviour:
@@ -450,12 +477,14 @@ MonoBehaviour:
   - {fileID: -8541651289697230892}
   - {fileID: 7321747427095314458}
   - {fileID: -861806321422844360}
+  - {fileID: -7355683689810480613}
+  - {fileID: 2894686220253667848}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638887867580791625
+  cacheTime: 638888818322122919
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -481,6 +510,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &2894686220253667848
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Pencil Drop
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Pencil Drop
+  Guid:
+    Data1: -362326193
+    Data2: 1160006354
+    Data3: 897519014
+    Data4: 1944541105
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 675
 --- !u!114 &3030399942059162582
 MonoBehaviour:
   m_ObjectHideFlags: 0

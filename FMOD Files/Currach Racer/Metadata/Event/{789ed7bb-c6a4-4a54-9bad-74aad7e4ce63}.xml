@@ -418,10 +418,7 @@
 			<value>6500</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>12000</value>
-		</property>
-		<property name="spawnRate">
-			<value>90</value>
+			<value>9000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -804,7 +801,6 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{123d2435-7fbb-4d96-99d9-1e9094fb496f}">
-		<property name="name" />
 		<relationship name="audioFile">
 			<destination>{9f691a2c-3795-4f9e-8635-194d26eedc87}</destination>
 		</relationship>
