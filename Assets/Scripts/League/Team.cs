@@ -1,14 +1,39 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 
+
 [Serializable]
-public struct SeasonStats
+public class SeasonStats
 {
-    public int wins;
-    public int draws;
-    public int losses;
-    public int Points => wins * 3 + draws;
+    [Tooltip("List of finishing positions for the season.")]
+    public List<int> finishes;
+
+    // Points distribution similar to F1: 1st to 10th
+    private static readonly int[] PointsDistribution = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
+
+    public SeasonStats()
+    {
+        finishes = new List<int>();
+    }
+
+    public int Points
+    {
+        get
+        {
+            int total = 0;
+            foreach (var pos in finishes)
+            {
+                if (pos >= 1 && pos <= PointsDistribution.Length)
+                    total += PointsDistribution[pos - 1];
+            }
+            return total;
+        }
+    }
+
+    public int Wins => finishes.Count(f => f == 1);
 }
 
 [CreateAssetMenu(fileName = "NewTeam", menuName = "League/Team")]
@@ -20,10 +45,10 @@ public class Team : ScriptableObject
     public Sprite teamLogo;
     public Color teamColor;
     public int teamQuality;
-   
+
     [Header("Team Members")]
-    public TeamMember[] teamMembers; 
-   
+    public TeamMember[] teamMembers;
+
     [Header("Current Season Stats")]
     [Tooltip("Wins, draws, losses, and points for the current season.")]
     public SeasonStats currentSeasonStats;
@@ -33,28 +58,20 @@ public class Team : ScriptableObject
     public SeasonStats lifetimeStats;
 
     /// <summary>
-    /// Records a match result, updating both season and lifetime stats.
+    /// Records a race finish position, updating both season and lifetime stats.
     /// </summary>
-    public void RecordMatchResult(bool isWin, bool isDraw)
+    public void RecordRaceFinish(int position)
     {
-        if (isWin) {
-            currentSeasonStats.wins++;
-            lifetimeStats.wins++;
-        } else if (isDraw) {
-            currentSeasonStats.draws++;
-            lifetimeStats.draws++;
-        } else {
-            currentSeasonStats.losses++;
-            lifetimeStats.losses++;
-        }
+        currentSeasonStats.finishes.Add(position);
+        lifetimeStats.finishes.Add(position);
     }
 
     /// <summary>
     /// Resets only the current season stats (e.g. at season start).
     /// </summary>
-    public void ResetSeasonStats()
+    public void ResetCurrentSeasonStats()
     {
         currentSeasonStats = new SeasonStats();
     }
-
 }
+
