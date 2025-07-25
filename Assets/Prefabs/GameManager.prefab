@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 3057036325611874231}
   - component: {fileID: 1471334263890786786}
   - component: {fileID: 6042894620679886366}
+  - component: {fileID: 2191016002663425716}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -76,6 +77,7 @@ MonoBehaviour:
   startRace:
     m_PersistentCalls:
       m_Calls: []
+  isRaceDay: 0
   shipPrefab: {fileID: 3038203907543405209, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
   ships: []
   RaceMovementPositions: []
@@ -102,3 +104,20 @@ MonoBehaviour:
   energy: 100
   coins: 50
   playerStatsView: {fileID: 0}
+--- !u!114 &2191016002663425716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c9af5a3d507ce847b7b292e877e3ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  workActivities:
+  - {fileID: 11400000, guid: beb7e351b3c2fe748bbf7f531f212aec, type: 2}
+  - {fileID: 11400000, guid: b7b9fcb0677f88742b3ded18b143506e, type: 2}
+  trainingActivities: []
+  audioSource: {fileID: 0}

@@ -1157,7 +1157,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5925614133511598973, guid: ae207ed792dae004996b867015b8dc50, type: 3}
       propertyPath: currentDay
-      value: 0
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5925614133511598973, guid: ae207ed792dae004996b867015b8dc50, type: 3}
       propertyPath: currentYear
@@ -2365,14 +2365,14 @@ PrefabInstance:
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1934896996}
+      addedObject: {fileID: 1934896997}
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
 --- !u!1 &1934896995 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
   m_PrefabInstance: {fileID: 1934896994}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &1934896996
+--- !u!114 &1934896997
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2381,14 +2381,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1934896995}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0c9af5a3d507ce847b7b292e877e3ab8, type: 3}
+  m_Script: {fileID: 11500000, guid: b7da84d8b61ab9f40a06307c18a5c343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  workActivities:
-  - {fileID: 11400000, guid: beb7e351b3c2fe748bbf7f531f212aec, type: 2}
-  - {fileID: 11400000, guid: b7b9fcb0677f88742b3ded18b143506e, type: 2}
-  trainingActivities: []
-  audioSource: {fileID: 0}
+  currentLeague: {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
+  leagues:
+  - {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
 --- !u!1001 &1970164018
 PrefabInstance:
   m_ObjectHideFlags: 0

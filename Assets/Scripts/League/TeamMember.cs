@@ -26,11 +26,14 @@ public class TeamMember : ScriptableObject
     public string memberName;
 
     public Sprite memberIcon;
+    
+    [Tooltip("The in-game model or avatar for this member.")]
+    public GameObject memberPrefab; // Prefab for in-game representation
 
     [Tooltip("A short biography or backstory for this member.")]
     public string memberDescription;
 
-    public int age;
+    public int age =23; // Default age
 
     [Tooltip("The general attitude of this member during races/events.")]
     public Attitude attitude = Attitude.Neutral;
@@ -52,4 +55,9 @@ public class TeamMember : ScriptableObject
     [Header("Economy")]
     [Tooltip("Base salary or cost for hiring this member.")]
     public int salary = 50;
+    
+    public CharacterStats GetStats()
+    {
+        return characterStats;
+    }
 }
