@@ -91,9 +91,52 @@ namespace League
         {
             if (league?.raceDays == null || league.currentRace >= league.raceDays.Length)
                 return;
-
-            // Simulate ALL AI-only races for this week, not just the current race
-            SimulateAllAIRacesForWeek(league);
+        
+            var currentRaceDay = league.raceDays[league.currentRace];
+    
+            // Find player race (if any)
+            Race playerRace = null;
+            foreach (var race in currentRaceDay.races)
+            {
+                if (!race.processed && race.teams.Any(t => t.teamType == TeamType.Player))
+                {
+                    playerRace = race;
+                    break;
+                }
+            }
+    
+            // Process all other races that aren't the player's race
+            foreach (var race in currentRaceDay.races)
+            {
+                if (!race.processed && race != playerRace)
+                {
+                    var results = SimulateRace(race.teams);
+            
+                    // Initialize positions array if not already done
+                    if (race.positions == null || race.positions.Length != race.teams.Length)
+                    {
+                        race.positions = new int[race.teams.Length];
+                    }
+                    
+                    // Update race positions
+                    for (int i = 0; i < race.teams.Length; i++)
+                    {
+                        if (results.ContainsKey(race.teams[i]))
+                        {
+                            race.positions[i] = results[race.teams[i]];
+                        }
+                    }
+            
+                    race.processed = true;
+                    Debug.Log($"Simulated AI race: {string.Join(", ", results.Select(r => $"{r.Key.teamName}: {r.Value}"))}");
+                }
+            }
+    
+            // If all races are processed, mark the day as processed
+            if (currentRaceDay.races.All(r => r.processed))
+            {
+                currentRaceDay.processed = true;
+            }
         }
 
         /// <summary>
@@ -112,12 +155,18 @@ namespace League
             
             if (playerTeam == null) return;
 
-            // Get current player race
+            // Get current player race day
             var currentRaceDay = league.raceDays[league.currentRace];
-            var teamsInPlayerRace = currentRaceDay.teams?.ToList() ?? new List<Team>();
+            var teamsInPlayerRaces = new List<Team>();
+            
+            // Collect all teams already in races for this race day
+            foreach (var race in currentRaceDay.races)
+            {
+                teamsInPlayerRaces.AddRange(race.teams);
+            }
 
-            // Find teams NOT in the player's race - these need to race in their own heats
-            var teamsNotRacing = allTeams.Where(t => !teamsInPlayerRace.Contains(t) && t != playerTeam).ToList();
+            // Find teams NOT in any race this day - these need to race in their own heats
+            var teamsNotRacing = allTeams.Where(t => !teamsInPlayerRaces.Contains(t)).ToList();
 
             // Create exactly ONE heat for the remaining teams
             if (teamsNotRacing.Count >= 2)
@@ -149,24 +198,23 @@ namespace League
 
             // Handle scheduled AI-only races (if any exist in the race days)
             var currentRaceDay2 = league.raceDays[league.currentRace];
-            if (currentRaceDay2.teams != null)
+            foreach (var race in currentRaceDay2.races)
             {
-                bool playerInRace = currentRaceDay2.teams.Any(t => t.teamType == TeamType.Player);
+                bool playerInRace = race.teams.Any(t => t.teamType == TeamType.Player);
 
-                if (!playerInRace)
+                if (!playerInRace && !race.processed)
                 {
                     // This is a scheduled AI-only race - simulate it
-                    var results = SimulateRace(currentRaceDay2.teams);
+                    var results = SimulateRace(race.teams);
                     
-                    // Update the race day with results
-                    var positions = new int[currentRaceDay2.teams.Length];
-                    for (int i = 0; i < currentRaceDay2.teams.Length; i++)
+                    // Update the race with results
+                    race.positions = new int[race.teams.Length];
+                    for (int i = 0; i < race.teams.Length; i++)
                     {
-                        if (results.ContainsKey(currentRaceDay2.teams[i]))
-                            positions[i] = results[currentRaceDay2.teams[i]];
+                        if (results.ContainsKey(race.teams[i]))
+                            race.positions[i] = results[race.teams[i]];
                     }
-                    currentRaceDay2.positions = positions;
-                    league.raceDays[league.currentRace] = currentRaceDay2;
+                    race.processed = true;
                     
                     Debug.Log($"Simulated scheduled AI race - Results: {string.Join(", ", results.Select(r => $"{r.Key.teamName}: {r.Value}"))}");
                 }

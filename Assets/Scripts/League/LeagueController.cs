@@ -50,21 +50,51 @@ namespace League
 
         private void Start()
         {
-            // Generate raw schedule and enforce repeat and limit
-            var rawSchedule = currentLeague.GenerateRaceSchedule(currentLeague.teams, currentLeague.maxNumberOfBoatsPerRace, currentLeague.repeatCount).ToList();
-            if (rawSchedule.Count > currentLeague.maxRaces)
-                rawSchedule = rawSchedule.Take(currentLeague.maxRaces).ToList();
-            // Initialize race days array
-            currentLeague.raceDays = new RaceDayFormation[rawSchedule.Count];
-            for (int i = 0; i < rawSchedule.Count; i++)
+            if (currentLeague != null)
             {
-                currentLeague.raceDays[i] = new RaceDayFormation
+                // Generate complete race schedule
+                currentLeague.raceDays = currentLeague.GenerateRaceSchedule(
+                    currentLeague.teams,
+                    currentLeague.maxNumberOfBoatsPerRace,
+                    currentLeague.repeatCount).ToArray();
+
+                // Limit to max races if needed
+                int totalRaces = currentLeague.raceDays.Sum(day => day.races.Count);
+                if (totalRaces > currentLeague.maxRaces)
                 {
-                    teams = rawSchedule[i],
-                    positions = new int[rawSchedule[i].Length]
-                };
+                    // Trim excess races
+                    int racesToKeep = currentLeague.maxRaces;
+                    List<RaceDayFormation> trimmedDays = new List<RaceDayFormation>();
+
+                    foreach (var day in currentLeague.raceDays)
+                    {
+                        if (day.races.Count <= racesToKeep)
+                        {
+                            trimmedDays.Add(day);
+                            racesToKeep -= day.races.Count;
+                        }
+                        else if (racesToKeep > 0)
+                        {
+                            // Take partial day
+                            RaceDayFormation partialDay = new RaceDayFormation();
+                            partialDay.races = day.races.Take(racesToKeep).ToList();
+                            trimmedDays.Add(partialDay);
+                            break;
+                        }
+                        else
+                        {
+                            break;
+                        }
+                    }
+
+                    currentLeague.raceDays = trimmedDays.ToArray();
+                }
+
+                Debug.Log(
+                    $"Generated {currentLeague.raceDays.Length} race days with {totalRaces} total races for {currentLeague.leagueName}");
             }
         }
+
 
         /// <summary>
         /// Advances to the next race in the league schedule.
@@ -98,7 +128,7 @@ namespace League
         /// Gets the current race that the player should participate in.
         /// Returns null if no player races remaining.
         /// </summary>
-        public RaceDayFormation? GetCurrentPlayerRace()
+        public Race GetCurrentPlayerRace()
         {
             if (currentLeague?.raceDays == null) return null;
             
@@ -106,9 +136,12 @@ namespace League
             for (int i = currentLeague.currentRace; i < currentLeague.raceDays.Length; i++)
             {
                 var raceDay = currentLeague.raceDays[i];
-                if (raceDay.teams?.Any(t => t.teamType == TeamType.Player) == true)
+                foreach (var race in raceDay.races)
                 {
-                    return raceDay;
+                    if (race.teams?.Any(t => t.teamType == TeamType.Player) == true && !race.processed)
+                    {
+                        return race;
+                    }
                 }
             }
             
@@ -122,10 +155,17 @@ namespace League
         {
             if (currentLeague?.raceDays == null) return;
             
-            // Find and update the current race day
+            // Find the current player race and update it
             var currentRaceDay = currentLeague.raceDays[currentLeague.currentRace];
-            currentRaceDay.positions = allPositions;
-            currentLeague.raceDays[currentLeague.currentRace] = currentRaceDay;
+            foreach (var race in currentRaceDay.races)
+            {
+                if (race.teams?.Any(t => t.teamType == TeamType.Player) == true && !race.processed)
+                {
+                    race.positions = allPositions;
+                    race.processed = true;
+                    break;
+                }
+            }
             
             // Record results for all teams in this race
             for (int i = 0; i < raceTeams.Length && i < allPositions.Length; i++)

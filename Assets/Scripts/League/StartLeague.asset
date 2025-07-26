@@ -13,37 +13,37 @@ MonoBehaviour:
   m_Name: StartLeague
   m_EditorClassIdentifier: 
   standings:
-  - team: {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    points: 68
-    wins: 2
-    position: 1
   - team: {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    points: 50
-    wins: 2
-    position: 2
-  - team: {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-    points: 48
-    wins: 0
-    position: 3
-  - team: {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-    points: 42
-    wins: 0
-    position: 4
-  - team: {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    points: 33
-    wins: 0
-    position: 5
-  - team: {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-    points: 30
-    wins: 0
-    position: 6
-  - team: {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    points: 30
-    wins: 0
-    position: 7
-  - team: {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
     points: 25
     wins: 1
+    position: 1
+  - team: {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
+    points: 25
+    wins: 1
+    position: 2
+  - team: {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
+    points: 18
+    wins: 0
+    position: 3
+  - team: {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
+    points: 18
+    wins: 0
+    position: 4
+  - team: {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
+    points: 15
+    wins: 0
+    position: 5
+  - team: {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
+    points: 15
+    wins: 0
+    position: 6
+  - team: {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
+    points: 12
+    wins: 0
+    position: 7
+  - team: {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
+    points: 0
+    wins: 0
     position: 8
   leagueName: Start League
   description: Start League
@@ -61,71 +61,27 @@ MonoBehaviour:
   leagueAbove: {fileID: 0}
   leagueBelow: {fileID: 0}
   maxRaces: 10
-  currentRace: 2
+  currentRace: 1
   currentSeason: 1
   isActive: 1
-  isFinished: 0
+  isFinished: 1
   isPromotionRelegation: 1
   maxNumberOfBoatsPerRace: 4
   repeatCount: 1
   raceDays:
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    positions: 01000000000000000200000003000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-    - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    positions: 01000000000000000200000003000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-    - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-    - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-    - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-    - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    positions: 00000000000000000000000000000000
-  - teams:
-    - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-    - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-    - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-    positions: 00000000000000000000000000000000
+  - races:
+    - teams:
+      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
+      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
+      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
+      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
+      positions: 01000000000000000200000003000000
+      processed: 1
+    - teams:
+      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
+      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
+      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
+      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
+      positions: 01000000020000000300000004000000
+      processed: 1
+    processed: 1

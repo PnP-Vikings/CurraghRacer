@@ -96,14 +96,14 @@ public class RaceManager : MonoBehaviour
         
         // Get the teams scheduled for this race from the league
         var currentRace = LeagueController.Instance?.GetCurrentPlayerRace();
-        if (!currentRace.HasValue)
+        if (currentRace == null)
         {
             Debug.LogWarning("No current race found in league - using fallback ship spawning");
             SpawnShipsWithFallback();
             return;
         }
 
-        var raceTeams = currentRace.Value.teams;
+        var raceTeams = currentRace.teams;
         
         // Ensure we don't spawn more ships than we have start positions
         int shipsToSpawn = Mathf.Min(raceTeams.Length, raceStartPositions.Count);
@@ -263,7 +263,7 @@ public class RaceManager : MonoBehaviour
         {
             if(finishMenu == null)
             {
-                finishMenu = FindObjectOfType<FinishLine>().finishMenu;
+                finishMenu = FindFirstObjectByType<FinishLine>().finishMenu;
             }
             
             
@@ -387,16 +387,16 @@ public class RaceManager : MonoBehaviour
 
         // Get current player race from league
         var currentRace = LeagueController.Instance.GetCurrentPlayerRace();
-        if (!currentRace.HasValue)
+        if (currentRace == null)
         {
             Debug.LogWarning("No current player race found in league");
             return;
         }
 
-        var raceDay = currentRace.Value;
+        var race = currentRace;
         
         // Create arrays to store teams and their positions
-        Team[] raceTeams = raceDay.teams;
+        Team[] raceTeams = race.teams;
         int[] allPositions = new int[raceTeams.Length];
         
         // Map ship names to team positions
