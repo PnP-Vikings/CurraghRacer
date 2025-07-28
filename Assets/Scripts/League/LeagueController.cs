@@ -57,13 +57,12 @@ namespace League
                     currentLeague.teams,
                     currentLeague.maxNumberOfBoatsPerRace,
                     currentLeague.repeatCount).ToArray();
-
-                // Limit to max races if needed
-                int totalRaces = currentLeague.raceDays.Sum(day => day.races.Count);
-                if (totalRaces > currentLeague.maxRaces)
+                
+                
+                if ( currentLeague.raceDays.Length > currentLeague.maxRaceDays)
                 {
                     // Trim excess races
-                    int racesToKeep = currentLeague.maxRaces;
+                    int racesToKeep = currentLeague.maxRaceDays;
                     List<RaceDayFormation> trimmedDays = new List<RaceDayFormation>();
 
                     foreach (var day in currentLeague.raceDays)
@@ -90,8 +89,7 @@ namespace League
                     currentLeague.raceDays = trimmedDays.ToArray();
                 }
 
-                Debug.Log(
-                    $"Generated {currentLeague.raceDays.Length} race days with {totalRaces} total races for {currentLeague.leagueName}");
+             
             }
         }
 

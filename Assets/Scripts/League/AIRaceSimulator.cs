@@ -131,6 +131,7 @@ namespace League
                     Debug.Log($"Simulated AI race: {string.Join(", ", results.Select(r => $"{r.Key.teamName}: {r.Value}"))}");
                 }
             }
+            
     
             // If all races are processed, mark the day as processed
             if (currentRaceDay.races.All(r => r.processed))

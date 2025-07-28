@@ -22,7 +22,7 @@ namespace League
         public League leagueAbove;
         [Tooltip("League below this one, if any.")]
         public League leagueBelow;
-        public int maxRaces = 10;
+        public int maxRaceDays = 10;
         public int currentRace; // Current race index
         public int currentSeason = 1; // Current season number
         public bool isActive = true;
@@ -57,79 +57,92 @@ namespace League
                 raceCount[team] = 0;
             }
 
-            for (int round = 0; round < repeatCount; round++)
+            // Continue generating race days until we reach maxRaceDays
+            while (raceDays.Count < maxRaceDays)
             {
-                // Create race days until all teams have raced in this round
-                List<Team> teamsInRound = new List<Team>(teams);
-                
-                while (teamsInRound.Count >= boatsPerRace)
+                // Create race days for each round
+                for (int round = 0; round < repeatCount && raceDays.Count < maxRaceDays; round++)
                 {
-                    // Create a new race day
-                    RaceDayFormation raceDay = new RaceDayFormation();
+                    // Create race days until all teams have raced in this round
+                    List<Team> teamsInRound = new List<Team>(teams);
                     
-                    // Keep creating races until we can't form any more full races
-                    while (teamsInRound.Count >= boatsPerRace)
+                    while (teamsInRound.Count >= boatsPerRace && raceDays.Count < maxRaceDays)
                     {
-                        // Create a balanced race
-                        List<Team> raceTeams = new List<Team>();
+                        // Create a new race day
+                        RaceDayFormation raceDay = new RaceDayFormation();
                         
-                        // Prioritize player team if available
-                        if (playerTeam != null && teamsInRound.Contains(playerTeam))
+                        // Keep creating races until we can't form any more full races
+                        while (teamsInRound.Count >= boatsPerRace)
                         {
-                            raceTeams.Add(playerTeam);
-                            teamsInRound.Remove(playerTeam);
-                        }
-                        
-                        // Add teams that have faced current teams the least
-                        while (raceTeams.Count < boatsPerRace && teamsInRound.Count > 0)
-                        {
-                            Team nextTeam = null;
-                            int lowestFaceCount = int.MaxValue;
+                            // Create a balanced race
+                            List<Team> raceTeams = new List<Team>();
                             
-                            foreach (var candidate in teamsInRound)
+                            // Prioritize player team if available
+                            if (playerTeam != null && teamsInRound.Contains(playerTeam))
                             {
-                                int totalFaceCount = 0;
-                                foreach (var teamInRace in raceTeams)
+                                raceTeams.Add(playerTeam);
+                                teamsInRound.Remove(playerTeam);
+                            }
+                            
+                            // Add teams that have faced current teams the least
+                            while (raceTeams.Count < boatsPerRace && teamsInRound.Count > 0)
+                            {
+                                Team nextTeam = null;
+                                int lowestFaceCount = int.MaxValue;
+                                
+                                foreach (var candidate in teamsInRound)
                                 {
-                                    totalFaceCount += faceCount[candidate][teamInRace];
+                                    int totalFaceCount = 0;
+                                    foreach (var teamInRace in raceTeams)
+                                    {
+                                        totalFaceCount += faceCount[candidate][teamInRace];
+                                    }
+                                    
+                                    if (totalFaceCount < lowestFaceCount ||
+                                        (totalFaceCount == lowestFaceCount && raceCount[candidate] < raceCount[nextTeam ?? candidate]))
+                                    {
+                                        lowestFaceCount = totalFaceCount;
+                                        nextTeam = candidate;
+                                    }
                                 }
                                 
-                                if (totalFaceCount < lowestFaceCount ||
-                                    (totalFaceCount == lowestFaceCount && raceCount[candidate] < raceCount[nextTeam ?? candidate]))
+                                raceTeams.Add(nextTeam);
+                                teamsInRound.Remove(nextTeam);
+                            }
+                            
+                            // Update face count tracking
+                            for (int i = 0; i < raceTeams.Count; i++)
+                            {
+                                raceCount[raceTeams[i]]++;
+                                for (int j = i + 1; j < raceTeams.Count; j++)
                                 {
-                                    lowestFaceCount = totalFaceCount;
-                                    nextTeam = candidate;
+                                    faceCount[raceTeams[i]][raceTeams[j]]++;
+                                    faceCount[raceTeams[j]][raceTeams[i]]++;
                                 }
                             }
                             
-                            raceTeams.Add(nextTeam);
-                            teamsInRound.Remove(nextTeam);
-                        }
-                        
-                        // Update face count tracking
-                        for (int i = 0; i < raceTeams.Count; i++)
-                        {
-                            raceCount[raceTeams[i]]++;
-                            for (int j = i + 1; j < raceTeams.Count; j++)
+                            // Add this race to the race day
+                            raceDay.races.Add(new Race
                             {
-                                faceCount[raceTeams[i]][raceTeams[j]]++;
-                                faceCount[raceTeams[j]][raceTeams[i]]++;
-                            }
+                                teams = raceTeams.ToArray(),
+                                positions = new int[raceTeams.Count]
+                            });
                         }
                         
-                        // Add this race to the race day
-                        raceDay.races.Add(new Race
+                        // Only add non-empty race days
+                        if (raceDay.races.Count > 0)
                         {
-                            teams = raceTeams.ToArray(),
-                            positions = new int[raceTeams.Count]
-                        });
+                            raceDays.Add(raceDay);
+                        }
                     }
-                    
-                    // Only add non-empty race days
-                    if (raceDay.races.Count > 0)
-                    {
-                        raceDays.Add(raceDay);
-                    }
+                }
+                
+                // If we've completed all rounds but still need more race days,
+                // continue with additional rounds until we reach maxRaceDays
+                if (raceDays.Count < maxRaceDays)
+                {
+                    // Reset for additional rounds if needed
+                    continue;
                 }
             }
             
