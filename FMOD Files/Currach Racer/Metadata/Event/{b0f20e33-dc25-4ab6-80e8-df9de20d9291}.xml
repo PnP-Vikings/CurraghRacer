@@ -126,6 +126,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{0365aab7-fffd-4776-b4ea-3b3c3d91befa}">
+		<property name="volume">
+			<value>-1</value>
+		</property>
 		<property name="name">
 			<value>Cheering And Clapping</value>
 		</property>
