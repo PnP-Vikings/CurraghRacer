@@ -442,6 +442,7 @@ GameObject:
   m_Component:
   - component: {fileID: 445076261}
   - component: {fileID: 445076262}
+  - component: {fileID: 445076263}
   m_Layer: 0
   m_Name: BeerPourController
   m_TagString: Untagged
@@ -483,6 +484,18 @@ MonoBehaviour:
   beerEnterBoxCollider: {fileID: 109084334}
   beers: []
   Completedbeers: []
+--- !u!114 &445076263
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 445076260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1024a4680aa8472d9720578576b2b04e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &482275932
 GameObject:
   m_ObjectHideFlags: 0

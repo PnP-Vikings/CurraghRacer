@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
     {
         PlayerManager.Instance.ModifyPlayerCoins(rewardedCoins);
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
-        PlayerStatsView.Instance.DisplayInfo("You Worked and Earned 50 Coins", 3);
+        PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
     }
     

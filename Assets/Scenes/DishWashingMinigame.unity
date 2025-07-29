@@ -872,6 +872,7 @@ GameObject:
   m_Component:
   - component: {fileID: 860012950}
   - component: {fileID: 860012951}
+  - component: {fileID: 860012952}
   m_Layer: 6
   m_Name: DishWashingController
   m_TagString: Untagged
@@ -920,6 +921,18 @@ MonoBehaviour:
   cleanPosition: {fileID: 96751308}
   finishClean: {fileID: 77460296}
   spawnCount: 5
+--- !u!114 &860012952
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 860012949}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 532927169f254527a2b3b3bc958ab286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1022409519
 GameObject:
   m_ObjectHideFlags: 0

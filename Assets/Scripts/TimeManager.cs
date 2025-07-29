@@ -1,8 +1,9 @@
 using UnityEngine;
-// Add this at the beginning of the TimeManager script
 using UnityEngine.Events;
 using UnityEngine.Serialization;
 using System;
+using System.Collections.Generic;
+using Calendar;
 
 public class TimeManager : MonoBehaviour
 {
@@ -12,7 +13,7 @@ public class TimeManager : MonoBehaviour
     internal string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
     internal int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
-   
+    public CalendarEvents calendarEvents;
     
 
     [SerializeField] internal UnityEvent timeChangedEvent;
@@ -35,14 +36,19 @@ public class TimeManager : MonoBehaviour
     [SerializeField] private int currentDay = 1;
     [SerializeField] private int currentMonth = 0; // 0-based index (0 = January)
     [SerializeField] private int currentYear = 2008; // Starting year
-    [SerializeField] private int currentDayOfWeek = 0; // 0-based index (0 = Sunday)
+    [SerializeField] private int currentDayOfWeek = 2; // 0-based index (0 = Sunday)
     [SerializeField] internal int daysInCurrentMonth = 31; // Default to 31 days for January
     
     [Serializable]
     public class DateChangedEvent : UnityEvent<int, int, int> { } // day, month, year
     
+ 
+    
     public DateChangedEvent onDateChanged;
-
+    
+    public class TodaysEvents : UnityEvent<List<DayEventType>> { } // List of events for today
+    [SerializeField] public TodaysEvents todaysEvents = new TodaysEvents();
+    
     // Properties
     public float TimeOfDay { get => timeOfDay; }
     public float TimeMultiplier { get => timeMultiplier; set => timeMultiplier = Mathf.Max(value, 0f); }
@@ -66,7 +72,16 @@ public class TimeManager : MonoBehaviour
         timeOfDay = 6f; // Start at 6 AM
         daysPassed = 0;
         
+        // Calculate the correct day of the week for the starting date (January 1st, 2008 = Tuesday)
+        int calculatedDayOfWeek = GetDayOfWeekIndex(currentDay, currentMonth, currentYear);
+     
+        currentDayOfWeek = calculatedDayOfWeek;
+        
         daysInCurrentMonth = GetDaysInCurrentMonth();
+        HasEventToday();
+        
+        onNewDay.Invoke(); // Raise the OnNewDay event
+        timeChangedEvent.Invoke(); // Raise the time changed event
         
     }
     
@@ -110,6 +125,8 @@ public class TimeManager : MonoBehaviour
                 }
             }
         }
+
+        HasEventToday();
         // Trigger the date changed event
         if (onDateChanged != null)
             onDateChanged.Invoke(currentDay, currentMonth, currentYear);
@@ -126,23 +143,60 @@ public class TimeManager : MonoBehaviour
     
     public string GetDayOfWeek(int day, int month, int year)
     {
-        // Calculate the day of the week using Zeller's Congruence
-        int k = day;
-        int m = month + 1; // January and February are treated as months 13 and 14 of the previous year
-        if (m < 3)
+        // For Zeller's Congruence, January and February are counted as months 13 and 14 of the previous year
+        int adjustedMonth = month + 1; // Convert from 0-based to 1-based
+        int adjustedYear = year;
+        
+        if (adjustedMonth < 3)
         {
-            m += 12;
-            year--;
+            adjustedMonth += 12;
+            adjustedYear--;
         }
-        int D = year % 100;
-        int C = year / 100;
         
-        int f = k + (13 * m + 1) / 5 + D + D / 4 + C / 4 - 2 * C;
-        f = f % 7; // Result is in the range [0, 6]
+        // Zeller's Congruence formula
+        int q = day;
+        int m = adjustedMonth;
+        int k = adjustedYear % 100;
+        int j = adjustedYear / 100;
         
-        return daysOfWeek[(f + 5) % 7]; // Adjust to match Sunday = 0
+        int h = (q + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
+        
+        // Convert Zeller's result (Saturday=0) to our format (Sunday=0)
+        // Zeller: Sat=0, Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6
+        // Ours:   Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
+        int dayOfWeekIndex = (h + 6) % 7;
+        
+        return daysOfWeek[dayOfWeekIndex];
     }
     
+    public int GetDayOfWeekIndex(int day, int month, int year)
+    {
+        // For Zeller's Congruence, January and February are counted as months 13 and 14 of the previous year
+        int adjustedMonth = month + 1; // Convert from 0-based to 1-based
+        int adjustedYear = year;
+        
+        if (adjustedMonth < 3)
+        {
+            adjustedMonth += 12;
+            adjustedYear--;
+        }
+        
+        // Zeller's Congruence formula
+        int q = day;
+        int m = adjustedMonth;
+        int k = adjustedYear % 100;
+        int j = adjustedYear / 100;
+        
+        int h = (q + (13 * (m + 1)) / 5 + k + k / 4 + j / 4 - 2 * j) % 7;
+        
+        // Convert Zeller's result (Saturday=0) to our format (Sunday=0)
+        // Zeller: Sat=0, Sun=1, Mon=2, Tue=3, Wed=4, Thu=5, Fri=6
+        // Ours:   Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
+        int dayOfWeek = (h + 6) % 7;
+        
+       
+        return dayOfWeek;
+    }
     
     internal int GetDaysInMonth(int month, int year)
     {
@@ -183,8 +237,18 @@ public class TimeManager : MonoBehaviour
     public int GetCurrentDay() { return currentDay; }
     public int GetCurrentMonth() { return currentMonth; }
     public int GetCurrentYear() { return currentYear; }
-    public int GetCurrentDayOfWeek() { return currentDayOfWeek; }
     
+ 
+    public int GetCurrentDayOfWeek() { return currentDayOfWeek; }
+
+    /// <summary>
+    /// Gets the current date as a System.DateTime
+    /// </summary>
+    public DateTime GetCurrentDate()
+    {
+        // currentMonth is 0-based (0 = January), DateTime expects 1-12
+        return new DateTime(currentYear, currentMonth + 1, currentDay);
+    }
     
     public void UpdateTime()
     {
@@ -219,6 +283,25 @@ public class TimeManager : MonoBehaviour
     public bool IsNight()
     {
         return timeOfDay >= 19 && timeOfDay <= 24;
+    }
+    
+    /// <summary>
+    /// Returns all calendar events occurring on the current date
+    /// </summary>
+    public List<DayEventType> GetEventsToday()
+    {
+       var events = calendarEvents.GetEventsOnDate(GetCurrentDate());
+       todaysEvents?.Invoke(events);
+       return events;
+    }
+
+    /// <summary>
+    /// Returns true if there is at least one event today
+    /// </summary>
+    public bool HasEventToday()
+    {
+        Debug.Log("Checking for events today"+ " " + GetCurrentDate() + " " + GetEventsToday().Count);
+        return GetEventsToday().Count > 0;
     }
 
 }

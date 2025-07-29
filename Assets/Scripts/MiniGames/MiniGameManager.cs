@@ -1,607 +1,339 @@
 // Assets/Scripts/MiniGames/IrishMiniGameManager.cs
 using UnityEngine;
-using UnityEngine.UIElements;
 using System.Collections.Generic;
 using System.Collections;
+using MiniGames.DishWashingMinigame;
+using MiniGames.BeerMinigame;
+using UnityEngine.SceneManagement;
 
-public class MiniGameManager : MonoBehaviour
+namespace MiniGames
 {
-    [Header("Game Collections")]
-    [SerializeField] private List<MiniGameData> workActivities;
-    [SerializeField] private List<MiniGameData> trainingActivities;
-    
-    [Header("UI Documents")]
-    [SerializeField] private UIDocument uiDocument;
-    [SerializeField] private VisualTreeAsset miniGameSelectionTemplate;
-    [SerializeField] private VisualTreeAsset gameplayTemplate;
-    [SerializeField] private VisualTreeAsset resultsTemplate;
-    [SerializeField] private VisualTreeAsset activityButtonTemplate;
-    
-    [Header("Audio")]
-    [SerializeField] private AudioSource audioSource;
-    
-    // UI Elements
-    private VisualElement root;
-    private VisualElement activitySelectionPanel;
-    private VisualElement gameplayPanel;
-    private VisualElement resultsPanel;
-    private VisualElement quotesPanel;
-    
-    // Selection UI
-    private Label categoryTitle;
-    private VisualElement workContentContainer;
-    private VisualElement trainingContentContainer;
-    private Button backToMenuButton;
-    
-    // Gameplay UI
-    private Label gameTitle;
-    private Label gameInstructions;
-    private Label timeDisplay;
-    private Label scoreDisplay;
-    private Label progressDisplay;
-    private Button startGameButton;
-    private Button quitGameButton;
-    
-    // Results UI
-    private Label resultsTitle;
-    private Label performanceText;
-    private Label earningsText;
-    private Label staminaGainText;
-    private Label quotesText;
-    private Button playAgainButton;
-    private Button selectNewGameButton;
-    private Button exitToMainButton;
-    
-    // Game state
-    private MiniGameData currentGame;
-    private MiniGame currentGameInstance;
-    private float gameTimer;
-    private bool gameActive;
-    private int currentScore;
-    private PlayerManager playerManager; // Changed from PlayerStats to PlayerManager
-    
-    public static MiniGameManager Instance { get; private set; }
-    
-    void Awake()
+    public class MiniGameManager : MonoBehaviour
     {
-        if (Instance == null)
+        [Header("Game Collections")]
+        [SerializeField] private List<MiniGameData> workActivities;
+        [SerializeField] private List<MiniGameData> trainingActivities;
+        
+        [Header("Audio")]
+        [SerializeField] private AudioSource audioSource;
+        
+        // Game state
+        private MiniGameData currentGame;
+        private MiniGame currentGameInstance;
+        private float gameTimer;
+        private bool gameActive;
+        private int currentScore;
+        private PlayerManager playerManager;
+        
+        public static MiniGameManager Instance { get; private set; }
+        
+        void Awake()
         {
-            Instance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else
-        {
-            Destroy(gameObject);
-        }
-    }
-    
-    void Start()
-    {
-        SetupUI();
-        playerManager = PlayerManager.Instance; // Use PlayerManager.Instance
-        if (playerManager == null)
-        {
-            playerManager = FindFirstObjectByType<PlayerManager>();
-        }
-    }
-    
-    void Update()
-    {
-        if (gameActive)
-        {
-            gameTimer -= Time.deltaTime;
-            UpdateTimeDisplay();
-            
-            if (gameTimer <= 0)
+            if (Instance == null)
             {
-                EndGame();
-            }
-            
-            currentGameInstance?.UpdateGame();
-        }
-    }
-    
-    private void SetupUI()
-    {
-        if (uiDocument == null)
-        {
-            Debug.LogError("UI Document not assigned!");
-            return;
-        }
-        
-        root = uiDocument.rootVisualElement;
-        CreateUIStructure();
-        BindUIElements();
-        RegisterCallbacks();
-        HideAllPanels();
-    }
-    
-    private void CreateUIStructure()
-    {
-        // Create main containers
-        activitySelectionPanel = new VisualElement();
-        activitySelectionPanel.name = "activity-selection-panel";
-        activitySelectionPanel.AddToClassList("panel");
-        
-        gameplayPanel = new VisualElement();
-        gameplayPanel.name = "gameplay-panel";
-        gameplayPanel.AddToClassList("panel");
-        
-        resultsPanel = new VisualElement();
-        resultsPanel.name = "results-panel";
-        resultsPanel.AddToClassList("panel");
-        
-        quotesPanel = new VisualElement();
-        quotesPanel.name = "quotes-panel";
-        quotesPanel.AddToClassList("quotes-overlay");
-        
-        // Add panels to root
-        root.Add(activitySelectionPanel);
-        root.Add(gameplayPanel);
-        root.Add(resultsPanel);
-        root.Add(quotesPanel);
-        
-        CreateSelectionPanel();
-        CreateGameplayPanel();
-        CreateResultsPanel();
-        CreateQuotesPanel();
-    }
-    
-    private void CreateSelectionPanel()
-    {
-        // Title
-        categoryTitle = new Label("Select Activity");
-        categoryTitle.name = "category-title";
-        categoryTitle.AddToClassList("title");
-        activitySelectionPanel.Add(categoryTitle);
-        
-        // Content containers
-        var contentArea = new VisualElement();
-        contentArea.name = "content-area";
-        contentArea.AddToClassList("content-area");
-        
-        workContentContainer = new VisualElement();
-        workContentContainer.name = "work-content";
-        workContentContainer.AddToClassList("activity-grid");
-        
-        trainingContentContainer = new VisualElement();
-        trainingContentContainer.name = "training-content";
-        trainingContentContainer.AddToClassList("activity-grid");
-        
-        contentArea.Add(workContentContainer);
-        contentArea.Add(trainingContentContainer);
-        activitySelectionPanel.Add(contentArea);
-        
-        // Back button
-        backToMenuButton = new Button();
-        backToMenuButton.text = "Back to Menu";
-        backToMenuButton.name = "back-button";
-        backToMenuButton.AddToClassList("secondary-button");
-        activitySelectionPanel.Add(backToMenuButton);
-    }
-    
-    private void CreateGameplayPanel()
-    {
-        // Game info
-        gameTitle = new Label();
-        gameTitle.name = "game-title";
-        gameTitle.AddToClassList("title");
-        gameplayPanel.Add(gameTitle);
-        
-        gameInstructions = new Label();
-        gameInstructions.name = "game-instructions";
-        gameInstructions.AddToClassList("instructions");
-        gameplayPanel.Add(gameInstructions);
-        
-        // Game stats
-        var statsContainer = new VisualElement();
-        statsContainer.name = "stats-container";
-        statsContainer.AddToClassList("stats-container");
-        
-        timeDisplay = new Label();
-        timeDisplay.name = "time-display";
-        timeDisplay.AddToClassList("stat-display");
-        
-        scoreDisplay = new Label();
-        scoreDisplay.name = "score-display";
-        scoreDisplay.AddToClassList("stat-display");
-        
-        progressDisplay = new Label();
-        progressDisplay.name = "progress-display";
-        progressDisplay.AddToClassList("stat-display");
-        
-        statsContainer.Add(timeDisplay);
-        statsContainer.Add(scoreDisplay);
-        statsContainer.Add(progressDisplay);
-        gameplayPanel.Add(statsContainer);
-        
-        // Game buttons
-        var buttonContainer = new VisualElement();
-        buttonContainer.name = "button-container";
-        buttonContainer.AddToClassList("button-container");
-        
-        startGameButton = new Button();
-        startGameButton.text = "Start Game";
-        startGameButton.name = "start-button";
-        startGameButton.AddToClassList("primary-button");
-        
-        quitGameButton = new Button();
-        quitGameButton.text = "Quit Game";
-        quitGameButton.name = "quit-button";
-        quitGameButton.AddToClassList("secondary-button");
-        
-        buttonContainer.Add(startGameButton);
-        buttonContainer.Add(quitGameButton);
-        gameplayPanel.Add(buttonContainer);
-    }
-    
-    private void CreateResultsPanel()
-    {
-        resultsTitle = new Label();
-        resultsTitle.name = "results-title";
-        resultsTitle.AddToClassList("title");
-        resultsPanel.Add(resultsTitle);
-        
-        performanceText = new Label();
-        performanceText.name = "performance-text";
-        performanceText.AddToClassList("result-text");
-        resultsPanel.Add(performanceText);
-        
-        earningsText = new Label();
-        earningsText.name = "earnings-text";
-        earningsText.AddToClassList("result-text");
-        resultsPanel.Add(earningsText);
-        
-        staminaGainText = new Label();
-        staminaGainText.name = "stamina-text";
-        staminaGainText.AddToClassList("result-text");
-        resultsPanel.Add(staminaGainText);
-        
-        quotesText = new Label();
-        quotesText.name = "quotes-text";
-        quotesText.AddToClassList("quote-text");
-        resultsPanel.Add(quotesText);
-        
-        // Result buttons
-        var resultButtonContainer = new VisualElement();
-        resultButtonContainer.name = "result-buttons";
-        resultButtonContainer.AddToClassList("button-container");
-        
-        playAgainButton = new Button();
-        playAgainButton.text = "Play Again";
-        playAgainButton.name = "play-again-button";
-        playAgainButton.AddToClassList("primary-button");
-        
-        selectNewGameButton = new Button();
-        selectNewGameButton.text = "Select New Game";
-        selectNewGameButton.name = "select-new-button";
-        selectNewGameButton.AddToClassList("secondary-button");
-        
-        exitToMainButton = new Button();
-        exitToMainButton.text = "Exit to Main";
-        exitToMainButton.name = "exit-button";
-        exitToMainButton.AddToClassList("secondary-button");
-        
-        resultButtonContainer.Add(playAgainButton);
-        resultButtonContainer.Add(selectNewGameButton);
-        resultButtonContainer.Add(exitToMainButton);
-        resultsPanel.Add(resultButtonContainer);
-    }
-    
-    private void CreateQuotesPanel()
-    {
-        var quoteContainer = new VisualElement();
-        quoteContainer.name = "quote-container";
-        quoteContainer.AddToClassList("quote-container");
-        
-        var quoteText = new Label();
-        quoteText.name = "quote-text";
-        quoteText.AddToClassList("quote-text");
-        
-        quoteContainer.Add(quoteText);
-        quotesPanel.Add(quoteContainer);
-    }
-    
-    private void BindUIElements()
-    {
-        // UI elements are already created and referenced above
-    }
-    
-    private void RegisterCallbacks()
-    {
-        startGameButton.clicked += StartSelectedGame;
-        quitGameButton.clicked += QuitCurrentGame;
-        backToMenuButton.clicked += CloseActivitySelection;
-        playAgainButton.clicked += RestartCurrentGame;
-        selectNewGameButton.clicked += BackToSelection;
-        exitToMainButton.clicked += ExitToMainMenu;
-    }
-    
-    public void ShowWorkActivities()
-    {
-        ShowActivitySelection(ActivityCategory.Work, "Work Activities - Earn Some Pounds!");
-    }
-    
-    public void ShowTrainingActivities()
-    {
-        ShowActivitySelection(ActivityCategory.Training, "Training Activities - Build That Rowing Strength!");
-    }
-    
-    private void ShowActivitySelection(ActivityCategory category, string title)
-    {
-        HideAllPanels();
-        activitySelectionPanel.style.display = DisplayStyle.Flex;
-        categoryTitle.text = title;
-        
-        ClearActivityButtons();
-        
-        List<MiniGameData> activitiesToShow = category == ActivityCategory.Work ? 
-            workActivities : trainingActivities;
-        
-        VisualElement targetContainer = category == ActivityCategory.Work ? 
-            workContentContainer : trainingContentContainer;
-        
-        foreach (MiniGameData activity in activitiesToShow)
-        {
-            CreateActivityButton(activity, targetContainer);
-        }
-    }
-    
-    private void ClearActivityButtons()
-    {
-        workContentContainer.Clear();
-        trainingContentContainer.Clear();
-    }
-    
-    private void CreateActivityButton(MiniGameData activity, VisualElement container)
-    {
-        var activityButton = new Button();
-        activityButton.name = $"activity-{activity.gameType}";
-        activityButton.AddToClassList("activity-button");
-        
-        // Create button content
-        var buttonContent = new VisualElement();
-        buttonContent.name = "button-content";
-        buttonContent.AddToClassList("button-content");
-        
-        // Icon (if available)
-        if (activity.gameIcon != null)
-        {
-            var icon = new VisualElement();
-            icon.name = "activity-icon";
-            icon.AddToClassList("activity-icon");
-            icon.style.backgroundImage = new StyleBackground(activity.gameIcon);
-            buttonContent.Add(icon);
-        }
-        
-        // Text
-        var label = new Label(activity.gameName);
-        label.name = "activity-label";
-        label.AddToClassList("activity-label");
-        buttonContent.Add(label);
-        
-        activityButton.Add(buttonContent);
-        activityButton.clicked += () => SelectActivity(activity);
-        
-        container.Add(activityButton);
-    }
-    
-    private void SelectActivity(MiniGameData activity)
-    {
-        currentGame = activity;
-        
-        HideAllPanels();
-        gameplayPanel.style.display = DisplayStyle.Flex;
-        
-        // Display game info
-        gameTitle.text = activity.gameName;
-        gameInstructions.text = activity.description;
-        
-        // Show funny quote
-        if (!string.IsNullOrEmpty(activity.startQuote))
-        {
-            StartCoroutine(ShowQuote(activity.startQuote, 3f));
-        }
-        
-        // Reset game state
-        gameTimer = activity.timeLimit;
-        currentScore = 0;
-        gameActive = false;
-        
-        UpdateDisplays();
-        startGameButton.style.display = DisplayStyle.Flex;
-    }
-    
-    private void StartSelectedGame()
-    {
-        if (currentGame == null) return;
-        
-        gameActive = true;
-        startGameButton.style.display = DisplayStyle.None;
-        
-        // Play start sound
-        if (currentGame.startSound != null && audioSource != null)
-        {
-            audioSource.PlayOneShot(currentGame.startSound);
-        }
-        
-        // Create and start the specific mini game
-        currentGameInstance = CreateMiniGameInstance(currentGame.gameType);
-        currentGameInstance?.Initialize(this, currentGame);
-        currentGameInstance?.StartGame();
-    }
-    
-    private MiniGame CreateMiniGameInstance(MiniGameType gameType)
-    {
-        // Remove any existing game instance
-        if (currentGameInstance != null)
-        {
-            Destroy((MonoBehaviour)currentGameInstance);
-        }
-        
-        switch (gameType)
-        {
-          
-            default:
-                Debug.LogWarning($"Mini game {gameType} not implemented yet!");
-                return null;
-        }
-    }
-    
-    public void UpdateScore(int score)
-    {
-        currentScore = score;
-        UpdateDisplays();
-    }
-    
-    public void EndGame(bool forceEnd = false)
-    {
-        gameActive = false;
-        
-        if (currentGameInstance != null)
-        {
-            currentGameInstance.EndGame();
-        }
-        
-        CalculateAndShowResults();
-    }
-    
-    private void CalculateAndShowResults()
-    {
-        HideAllPanels();
-        resultsPanel.style.display = DisplayStyle.Flex;
-        
-        // Calculate performance
-        float scorePercentage = (float)currentScore / currentGame.perfectScore;
-        bool isSuccess = scorePercentage >= 0.6f;
-        
-        // Calculate rewards
-        float earnings = 0;
-        int staminaGain = 0;
-        
-        if (isSuccess)
-        {
-            if (currentGame.category == ActivityCategory.Work)
-            {
-                earnings = currentGame.baseEarnings * scorePercentage * currentGame.difficultyMultiplier;
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
             }
             else
             {
-                staminaGain = Mathf.RoundToInt(currentGame.baseGain * scorePercentage * currentGame.difficultyMultiplier);
+                Destroy(gameObject);
             }
         }
         
-        // Update player stats using PlayerManager
-        if (playerManager != null)
+        void Start()
         {
-            if (earnings > 0) 
+            playerManager = PlayerManager.Instance;
+            if (playerManager == null)
             {
-                playerManager.ModifyPlayerCoins(earnings);
+                playerManager = FindFirstObjectByType<PlayerManager>();
+            }
+        }
+        
+        void Update()
+        {
+            if (gameActive)
+            {
+                gameTimer -= Time.deltaTime;
+                
+                if (gameTimer <= 0)
+                {
+                    EndGame();
+                }
+                
+                currentGameInstance?.UpdateGame();
+            }
+        }
+        
+        public void StartRandomWorkActivity()
+        {
+            if (workActivities == null || workActivities.Count == 0)
+            {
+                Debug.LogError("No work activities available!");
+                return;
             }
             
-            if (staminaGain > 0) 
+            // Randomly select a work activity
+            int randomIndex = Random.Range(0, workActivities.Count);
+            MiniGameData selectedActivity = workActivities[randomIndex];
+            
+            Debug.Log($"Starting random work activity: {selectedActivity.gameName}");
+            
+            // Start the selected activity directly
+            StartActivityDirectly(selectedActivity);
+        }
+        
+        public void StartRandomTrainingActivity()
+        {
+            if (trainingActivities == null || trainingActivities.Count == 0)
             {
-                playerManager.ModifyPlayerStamina(staminaGain);
+                Debug.LogError("No training activities available!");
+                return;
+            }
+            
+            // Randomly select a training activity
+            int randomIndex = Random.Range(0, trainingActivities.Count);
+            MiniGameData selectedActivity = trainingActivities[randomIndex];
+            
+            Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
+            
+            // Start the selected activity directly
+            StartActivityDirectly(selectedActivity);
+        }
+        
+        private void StartActivityDirectly(MiniGameData activity)
+        {
+            currentGame = activity;
+            
+            // Check if we need to load a different scene
+            if (activity.CanLoadScene)
+            {
+                Debug.Log($"Loading scene: {activity.sceneName} for {activity.gameName}");
+                
+                // Store the current game data before scene transition
+                DontDestroyOnLoad(gameObject);
+                
+                // Load the minigame scene
+                SceneManager.LoadScene(activity.sceneName);
+                
+                // The game will continue in the new scene via OnSceneLoaded
+                return;
+            }
+            
+            // Start the minigame in current scene
+            StartMiniGameInCurrentScene(activity);
+        }
+        
+        private void StartMiniGameInCurrentScene(MiniGameData activity)
+        {
+            // Show start quote if available
+            if (!string.IsNullOrEmpty(activity.startQuote))
+            {
+                Debug.Log($"Quote: {activity.startQuote}");
+            }
+            
+            // Check energy cost
+            if (playerManager != null && !playerManager.playerHasEnoughEnergy(activity.energyCost))
+            {
+                Debug.LogWarning($"Not enough energy! Need {activity.energyCost} energy to play {activity.gameName}");
+                return;
+            }
+            
+            /*// Deduct energy cost
+            if (playerManager != null)
+            {
+                playerManager.ModifyPlayerEnergy(-activity.energyCost);
+            }*/
+            
+            // Reset game state
+            gameTimer = activity.timeLimit;
+            currentScore = 0;
+            gameActive = true;
+            
+            // Play start sound and background music
+            if (activity.startSound != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(activity.startSound);
+            }
+            
+            if (activity.HasBackgroundMusic && audioSource != null)
+            {
+                audioSource.clip = activity.backgroundMusic;
+                audioSource.loop = true;
+                audioSource.Play();
+            }
+            
+            // Instantiate custom controller if specified
+            if (activity.HasCustomController)
+            {
+                GameObject customController = Instantiate(activity.customControllerPrefab);
+                Debug.Log($"Instantiated custom controller: {customController.name}");
+            }
+            
+            // Create and start the specific mini game
+            currentGameInstance = CreateMiniGameInstance(activity.gameType);
+            currentGameInstance?.Initialize(this, activity);
+            currentGameInstance?.StartGame();
+        }
+        
+        void OnEnable()
+        {
+            SceneManager.sceneLoaded += OnSceneLoaded;
+        }
+        
+        void OnDisable()
+        {
+            SceneManager.sceneLoaded -= OnSceneLoaded;
+        }
+        
+        private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+        {
+            // If we have a current game and we're in the right scene, continue the minigame
+            if (currentGame != null && currentGame.CanLoadScene && scene.name == currentGame.sceneName)
+            {
+                Debug.Log($"Scene {scene.name} loaded, starting minigame: {currentGame.gameName}");
+                StartMiniGameInCurrentScene(currentGame);
             }
         }
         
-        // Display results
-        resultsTitle.text = isSuccess ? "Grand Job!" : "Ah, Feck!";
-        performanceText.text = $"Performance: {scorePercentage:P0}";
-        earningsText.text = $"Earnings: £{earnings:F0}";
-        staminaGainText.text = $"Stamina Gained: {staminaGain}";
-        
-        // Show appropriate quote
-        string resultQuote = isSuccess ? currentGame.successQuote : currentGame.failureQuote;
-        quotesText.text = !string.IsNullOrEmpty(resultQuote) ? $"\"{resultQuote}\"" : "";
-        
-        // Play result sound
-        AudioClip soundToPlay = isSuccess ? currentGame.successSound : currentGame.failureSound;
-        if (soundToPlay != null && audioSource != null)
+        private MiniGame CreateMiniGameInstance(MiniGameType gameType)
         {
-            audioSource.PlayOneShot(soundToPlay);
-        }
-    }
-    
-    private IEnumerator ShowQuote(string quote, float duration)
-    {
-        quotesPanel.style.display = DisplayStyle.Flex;
-        var quoteLabel = quotesPanel.Q<Label>("quote-text");
-        if (quoteLabel != null)
-        {
-            quoteLabel.text = $"\"{quote}\"";
+            // Remove any existing game instance
+            if (currentGameInstance != null)
+            {
+                Destroy((MonoBehaviour)currentGameInstance);
+            }
+            
+            switch (gameType)
+            {
+                case MiniGameType.WashingDishes:
+                    return gameObject.AddComponent<DishwashingMiniGame>();
+                
+                case MiniGameType.PouringPint:
+                    return gameObject.AddComponent<BeerPouringMiniGame>();
+              
+                default:
+                    Debug.LogWarning($"Mini game {gameType} not implemented yet!");
+                    return null;
+            }
         }
         
-        yield return new WaitForSeconds(duration);
-        
-        quotesPanel.style.display = DisplayStyle.None;
-    }
-    
-    private void UpdateDisplays()
-    {
-        UpdateTimeDisplay();
-        scoreDisplay.text = $"Score: {currentScore}";
-        
-        if (currentGame != null)
+        public void UpdateScore(int score)
         {
-            float progress = (float)currentScore / currentGame.perfectScore;
-            progressDisplay.text = $"Progress: {progress:P0}";
+            currentScore = score;
+            Debug.Log($"Score updated: {currentScore}");
         }
-    }
-    
-    private void UpdateTimeDisplay()
-    {
-        int minutes = Mathf.FloorToInt(gameTimer / 60);
-        int seconds = Mathf.FloorToInt(gameTimer % 60);
-        timeDisplay.text = $"Time: {minutes:00}:{seconds:00}";
-    }
-    
-    private void HideAllPanels()
-    {
-        activitySelectionPanel.style.display = DisplayStyle.None;
-        gameplayPanel.style.display = DisplayStyle.None;
-        resultsPanel.style.display = DisplayStyle.None;
-        quotesPanel.style.display = DisplayStyle.None;
-    }
-    
-    // Button event handlers
-    private void QuitCurrentGame()
-    {
-        if (gameActive)
+        
+        public void UpdateProgress(string progressText)
+        {
+            Debug.Log($"Progress: {progressText}");
+        }
+        
+        public void CompleteGame(int finalScore)
+        {
+            currentScore = finalScore;
+            EndGame();
+        }
+        
+        public void EndGame(bool forceEnd = false)
         {
             gameActive = false;
-            currentGameInstance?.EndGame();
+            
+            if (currentGameInstance != null)
+            {
+                currentGameInstance.EndGame();
+            }
+            
+            CalculateAndShowResults();
         }
-        BackToSelection();
-    }
-    
-    private void RestartCurrentGame()
-    {
-        if (currentGame != null)
+        
+        private void CalculateAndShowResults()
         {
-            SelectActivity(currentGame);
-        }
-    }
-    
-    private void BackToSelection()
-    {
-        HideAllPanels();
-        if (currentGame != null)
-        {
-            if (currentGame.category == ActivityCategory.Work)
-                ShowWorkActivities();
+            // Use the enhanced calculation methods from MiniGameData
+            bool timedOut = gameTimer <= 0;
+            float timeRemaining = Mathf.Max(0, gameTimer);
+            
+            // Calculate final score with time bonuses and difficulty scaling
+            int finalScore = currentGame.CalculateFinalScore(currentScore, timeRemaining);
+            float scorePercentage = (float)finalScore / currentGame.perfectScore;
+            
+            // Use the enhanced reward calculation
+            var (earnings, stamina) = currentGame.CalculateRewards(scorePercentage);
+            
+           // Call GameManager.PlayerWorked() to handle additional logic like time updates and energy costs
+            if (GameManager.Instance != null)
+            {
+                if (currentGame.category == ActivityCategory.Work)
+                {
+                    // For work activities, use the GameManager method but with our calculated earnings
+                    // This ensures time updates and proper energy deduction
+                    GameManager.Instance.PlayerWorked((int)earnings, 0); // 0 energy cost since we already deducted it
+                }
+                else
+                {
+                    // For training activities, still update time
+                    TimeManager.Instance.UpdateTime();
+                }
+            }
+            
+            // Get appropriate quote based on performance
+            string resultQuote = currentGame.GetQuoteForPerformance(scorePercentage, timedOut);
+            
+            // Determine result title
+            string resultTitle;
+            if (scorePercentage >= 1f)
+                resultTitle = "Perfect Job!";
+            else if (scorePercentage >= 0.8f)
+                resultTitle = "Grand Job!";
+            else if (scorePercentage >= 0.6f)
+                resultTitle = "Not Bad!";
             else
-                ShowTrainingActivities();
+                resultTitle = "Ah, Feck!";
+            
+            // Display results
+            Debug.Log($"=== {currentGame.gameName} Results ===");
+            Debug.Log($"{resultTitle}");
+            Debug.Log($"Final Score: {finalScore} (Base: {currentScore})");
+            Debug.Log($"Performance: {scorePercentage:P0}");
+            Debug.Log($"Time Remaining: {timeRemaining:F1}s");
+            Debug.Log($"Earnings: £{earnings:F0}");
+            Debug.Log($"Stamina Gained: {stamina}");
+            if (!string.IsNullOrEmpty(resultQuote))
+            {
+                Debug.Log($"Quote: \"{resultQuote}\"");
+            }
+            
+            // Play result sound and particle effects
+            AudioClip soundToPlay = scorePercentage >= 0.6f ? currentGame.successSound : currentGame.failureSound;
+            if (soundToPlay != null && audioSource != null)
+            {
+                audioSource.PlayOneShot(soundToPlay);
+            }
+            
+            // Spawn success particle effect if available and performance was good
+            if (scorePercentage >= 0.8f && currentGame.successParticleEffect != null)
+            {
+                GameObject particles = Instantiate(currentGame.successParticleEffect, transform.position, Quaternion.identity);
+                Destroy(particles, 5f); // Clean up after 5 seconds
+            }
+            
+            // If we loaded a scene for this minigame, return to the main scene
+            if (currentGame.CanLoadScene && !string.IsNullOrEmpty(currentGame.returnSceneName))
+            {
+                StartCoroutine(ReturnToMainSceneAfterDelay(2f)); // Give time to see results
+            }
         }
-    }
-    
-    private void CloseActivitySelection()
-    {
-        HideAllPanels();
-    }
-    
-    private void ExitToMainMenu()
-    {
-        HideAllPanels();
+        
+        private IEnumerator ReturnToMainSceneAfterDelay(float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            
+            Debug.Log($"Returning to scene: {currentGame.returnSceneName}");
+            SceneManager.LoadScene(currentGame.returnSceneName);
+            
+            // Clean up after returning
+            currentGame = null;
+            currentGameInstance = null;
+            gameActive = false;
+        }
     }
 }

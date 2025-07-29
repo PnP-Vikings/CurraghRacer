@@ -141,11 +141,13 @@ public class DishwashingController : MonoBehaviour
     {
        if(platesCleaned.Count == spawnCount)
        {
-           SceneManager.LoadScene("RaceScene"); 
-           if(GameManager.Instance != null)
-           {
-               GameManager.Instance.PlayerWorked();
-           }
+           Debug.Log("Dishwashing minigame completed!");
+           // Let MiniGameManager handle the completion instead of loading scene directly
+           // SceneManager.LoadScene("RaceScene"); 
+           // if(GameManager.Instance != null)
+           // {
+           //     GameManager.Instance.PlayerWorked();
+           // }
        }
       
     }

@@ -116,12 +116,12 @@ public class BeerGameController : MonoBehaviour
         if (Completedbeers.Count >= 5) // Check if 5 beers are completed
         {
             Debug.Log("All beers completed!");
-           //Load the next scene or trigger the end of the game
-           SceneManager.LoadScene("RaceScene"); 
-           if(GameManager.Instance != null)
-           {
-               GameManager.Instance.PlayerWorked();
-           }
+            // Let MiniGameManager handle the completion instead of loading scene directly
+            // SceneManager.LoadScene("RaceScene"); 
+            // if(GameManager.Instance != null)
+            // {
+            //     GameManager.Instance.PlayerWorked();
+            // }
         }
         
     }
