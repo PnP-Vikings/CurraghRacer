@@ -22,5 +22,6 @@ MonoBehaviour:
   dayOfMonth: 0
   month: 0
   year: 0
+  eventActive: 1
   dayOfWeek: 0
   intervalDays: 1

@@ -38,12 +38,12 @@ namespace Calendar
             List<DayEventType> events = new List<DayEventType>();
             foreach (var evt in calendarDayEvents)
             {
-                if (evt.OccursOnDate(date))
+                if (evt.OccursOnDate(date) && evt.eventActive)
                     events.Add(evt);
             }
             foreach (var hol in commonHolidays)
             {
-                if (hol.OccursOnDate(date))
+                if (hol.OccursOnDate(date) && hol.eventActive)
                     events.Add(hol);
             }
             return events;

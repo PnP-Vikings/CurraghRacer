@@ -55,6 +55,7 @@ namespace Calendar
         public int dayOfMonth = 1;
         public int month = 1; // 1-12
         public int year; // 0 for recurring events
+        public bool eventActive = true; // Whether this event is currently active
         
         [Header("Weekly Recurrence")]
         public DayOfWeek dayOfWeek = DayOfWeek.Sunday;

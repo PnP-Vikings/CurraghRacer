@@ -89,7 +89,7 @@ namespace Calendar
             {
                 foreach (var eventType in calendarEvents.calendarDayEvents)
                 {
-                    if (eventType.OccursOnDate(date))
+                    if (eventType.OccursOnDate(date) && eventType.eventActive)
                     {
                         cell.SetEvent(eventType);
                         return; // Event found, no need to check common events
