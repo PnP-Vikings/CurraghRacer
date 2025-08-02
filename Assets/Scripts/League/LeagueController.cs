@@ -40,6 +40,7 @@ namespace League
             {
                 ClearLeague();
                 RegenerateRaceSchedule();
+                currentLeague.RecalculateStandings();
             }
             else
             {

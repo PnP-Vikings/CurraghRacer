@@ -272,6 +272,8 @@ public class RaceManager : MonoBehaviour
             string firstPlaceShip = RaceMovementPositions[0].shipName;
             string secondPlaceShip = RaceMovementPositions[1].shipName;
             string thirdPlaceShip = RaceMovementPositions[2].shipName;
+            
+            Debug.Log(firstPlaceShip + " finished first!" + secondPlaceShip + " finished second!" + thirdPlaceShip + " finished third!"); 
             string forthPlaceShip = RaceMovementPositions.Count > 3 ? RaceMovementPositions[3].shipName : "N/A";
             finishMenu.UpdatePositions( firstPlaceShip, secondPlaceShip, thirdPlaceShip, forthPlaceShip);
             
