@@ -246,6 +246,26 @@ public class TimeManager : MonoBehaviour
     /// </summary>
     public DateTime GetCurrentDate()
     {
+        // Validate parameters before creating DateTime
+        if (currentYear < 1 || currentYear > 9999)
+        {
+            Debug.LogError($"Invalid year: {currentYear}. Using default year 2008.");
+            currentYear = 2008;
+        }
+        
+        if (currentMonth < 0 || currentMonth > 11)
+        {
+            Debug.LogError($"Invalid month: {currentMonth}. Using default month 0 (January).");
+            currentMonth = 0;
+        }
+        
+        int daysInThisMonth = GetDaysInCurrentMonth();
+        if (currentDay < 1 || currentDay > daysInThisMonth)
+        {
+            Debug.LogError($"Invalid day: {currentDay} for month {currentMonth + 1}/{currentYear}. Days in month: {daysInThisMonth}. Using day 1.");
+            currentDay = 1;
+        }
+        
         // currentMonth is 0-based (0 = January), DateTime expects 1-12
         return new DateTime(currentYear, currentMonth + 1, currentDay);
     }

@@ -11,6 +11,7 @@ using UnityEngine.Rendering.Universal;
 using EventType = UnityEngine.EventType;
 using Random = UnityEngine.Random;
 using League;
+using UnityEngine.Rendering;
 
 public class RaceManager : MonoBehaviour
 {
@@ -104,15 +105,39 @@ public class RaceManager : MonoBehaviour
         }
 
         var raceTeams = currentRace.teams;
-        
+        var raceTeamsList = raceTeams.ToList();
         // Ensure we don't spawn more ships than we have start positions
         int shipsToSpawn = Mathf.Min(raceTeams.Length, raceStartPositions.Count);
         
+        Team playerTeamTemp = null; 
+        
+        for (int i = 0; i < raceTeams.Length; i++)
+        {
+            
+            if (raceTeams[i].teamType == TeamType.Player)
+            {
+                // If player team is in
+                playerTeamTemp = raceTeamsList[i];
+                raceTeamsList.RemoveAt(i);
+            }
+        }
+            
+        raceTeamsList.Add(playerTeamTemp);
+            
+            
+            
+        raceTeams = raceTeamsList.ToArray();
+
+        currentRace.teams = raceTeams;
+       
         for (int i = 0; i < shipsToSpawn; i++)
         {
             Transform racepos = raceStartPositions[i];
             Team team = raceTeams[i];
             
+           
+           
+
             Debug.Log($"Spawning ship for team: {team.teamName} at position: {racepos.position}");
             
             GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
@@ -131,8 +156,7 @@ public class RaceManager : MonoBehaviour
                 // Set up player ship on the last (closest to camera) position
                 movement.stats = PlayerManager.Instance.GetPlayerStats();
                 movement.isPlayerShip = true;
-                movement.shipName = "Player Ship";
-                ship.name = "PlayerShip";
+               
                 playerShip = movement;
             }
             else if (team.teamType == TeamType.Player)
@@ -150,6 +174,9 @@ public class RaceManager : MonoBehaviour
                 movement.isPlayerShip = false;
             }
             
+            movement.shipName = raceTeams[i].teamName;
+            ship.name = raceTeams[i].teamName;
+            
             ships.Add(ship);
         }
         
@@ -162,8 +189,6 @@ public class RaceManager : MonoBehaviour
             // Set up as player ship
             lastMovement.stats = PlayerManager.Instance.GetPlayerStats();
             lastMovement.isPlayerShip = true;
-            lastMovement.shipName = "Player Ship";
-            lastShip.name = "PlayerShip";
             playerShip = lastMovement;
         }
         
@@ -273,6 +298,8 @@ public class RaceManager : MonoBehaviour
             string secondPlaceShip = RaceMovementPositions[1].shipName;
             string thirdPlaceShip = RaceMovementPositions[2].shipName;
             string forthPlaceShip = RaceMovementPositions.Count > 3 ? RaceMovementPositions[3].shipName : "N/A";
+            
+            Debug.Log(firstPlaceShip + " finished first!" + secondPlaceShip + " finished second!" + thirdPlaceShip + " finished third!" + forthPlaceShip + " finished forth!"); 
             finishMenu.UpdatePositions( firstPlaceShip, secondPlaceShip, thirdPlaceShip, forthPlaceShip);
             
             Transform cameraStartPosition = GameManager.Instance.GetCameraStartPosition();
@@ -397,45 +424,72 @@ public class RaceManager : MonoBehaviour
         
         // Create arrays to store teams and their positions
         Team[] raceTeams = race.teams;
+
+        for (int i = 0; i < raceTeams.Length; i++)
+        {
+          Debug.Log("Race Teams Records" +  raceTeams[i].teamName);  
+        }
+        
         int[] allPositions = new int[raceTeams.Length];
         
-        // Map ship names to team positions
-        // For now, we'll use a simple mapping based on ship names
-        // This assumes the ships were spawned in the same order as the teams in the race
-        for (int i = 0; i < RaceMovementPositions.Count && i < raceTeams.Length; i++)
+        // Map ship finishing positions to team positions by matching ship names to team names
+        for (int i = 0; i < RaceMovementPositions.Count; i++)
         {
             ShipMovement ship = RaceMovementPositions[i];
             int position = i + 1; // Position is 1-based (1st, 2nd, 3rd, etc.)
             
-            // Find the corresponding team for this ship
-            // If it's the player ship, find the player team
+            // Find the corresponding team for this ship by matching names
             if (ship.isPlayerShip)
             {
+                // Find the player team and assign position
                 for (int j = 0; j < raceTeams.Length; j++)
                 {
                     if (raceTeams[j].teamType == TeamType.Player)
                     {
                         allPositions[j] = position;
+                        Debug.Log($"Player team {raceTeams[j].teamName} finished in position {position}");
                         break;
                     }
                 }
             }
             else
             {
-                // For AI ships, map them to AI teams in order
-                // This is a simplified mapping - in a more complex system you'd want
-                // to properly track which ship corresponds to which team
-                int aiTeamIndex = 0;
+                // For AI ships, find the team with matching name
                 for (int j = 0; j < raceTeams.Length; j++)
                 {
-                    if (raceTeams[j].teamType != TeamType.Player)
+                    if (raceTeams[j].teamType != TeamType.Player && raceTeams[j].teamName == ship.shipName)
                     {
-                        if (aiTeamIndex == (i - (ship.isPlayerShip ? 0 : GetPlayerShipIndex())))
+                        allPositions[j] = position;
+                        Debug.Log($"AI team {raceTeams[j].teamName} finished in position {position}");
+                        break;
+                    }
+                }
+            }
+        }
+        
+        // Verify all teams have been assigned positions
+        for (int i = 0; i < allPositions.Length; i++)
+        {
+            if (allPositions[i] == 0)
+            {
+                Debug.LogError($"Team {raceTeams[i].teamName} was not assigned a finishing position!");
+                // Assign remaining position as fallback
+                for (int pos = 1; pos <= raceTeams.Length; pos++)
+                {
+                    bool positionTaken = false;
+                    for (int j = 0; j < allPositions.Length; j++)
+                    {
+                        if (allPositions[j] == pos)
                         {
-                            allPositions[j] = position;
+                            positionTaken = true;
                             break;
                         }
-                        aiTeamIndex++;
+                    }
+                    if (!positionTaken)
+                    {
+                        allPositions[i] = pos;
+                        Debug.Log($"Fallback: Assigned position {pos} to team {raceTeams[i].teamName}");
+                        break;
                     }
                 }
             }

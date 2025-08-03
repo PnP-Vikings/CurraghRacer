@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.UI;
 
 [CreateAssetMenu(fileName = "NewTeam", menuName = "League/Team")]
 public class Team : ScriptableObject
@@ -9,7 +10,7 @@ public class Team : ScriptableObject
     [Header("Team Details")]
     public string teamName;
     public string teamDescription;
-    public Sprite teamLogo;
+    public Image teamLogo;
     public Color teamColor;
     public int teamQuality;
     public TeamType teamType = TeamType.AI; // Type of team (Player, AI, Custom)
