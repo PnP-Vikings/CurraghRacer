@@ -18,6 +18,10 @@ namespace Calendar
         [SerializeField] private bool includeCommonHolidays = true;
         [SerializeField] private bool includeRacingEvents = true;
 
+        // Public getters for displayed month/year
+        public int GetDisplayedMonth() => displayedMonth;
+        public int GetDisplayedYear() => displayedYear;
+
         void Start()
         {
             displayedMonth = TimeManager.Instance.GetCurrentMonth();
@@ -39,21 +43,21 @@ namespace Calendar
                 DayEventHandler cell = Instantiate(dayCellPrefab, gridParent);
                 
                 // Create the date for this cell
-                DateTime currentDate = new DateTime(displayedYear, displayedMonth + 1, i);
-                cell.SetupDay(currentDate);
+                DateTime cellDate = new DateTime(displayedYear, displayedMonth + 1, i);
+                cell.SetupDay(cellDate);
                 
-                // Set default styling
+                // Set default styling FIRST
                 SetDefaultCellStyling(cell, i);
-                // Check for events on this date
-                CheckAndApplyEvents(cell, currentDate);
-                // Highlight current day
+                
+                // Check for events on this date (this may override the styling)
+                CheckAndApplyEvents(cell, cellDate);
+                
+                // Highlight current day LAST (this overrides everything else)
                 if (IsCurrentDay(i))
                 {
                     cell.backgroundColorImage.color = Color.green;
                     cell.SetAllTextColor(Color.black);
                 }
-                
-            
             }
         }
         
@@ -84,6 +88,10 @@ namespace Calendar
         
         private void CheckAndApplyEvents(DayEventHandler cell, DateTime date)
         {
+            // Get current date for styling comparison
+            DateTime currentDate = TimeManager.Instance.GetCurrentDate();
+            DateTime eventDate = new DateTime(displayedYear, displayedMonth + 1, date.Day);
+            
             // Check manually added events first
             if (calendarEvents != null && calendarEvents.calendarDayEvents.Count > 0)
             {
@@ -91,17 +99,22 @@ namespace Calendar
                 {
                     if (eventType.OccursOnDate(date) && eventType.eventActive)
                     {
-                        cell.SetEvent(eventType);
+                        cell.SetEvent(eventType, currentDate,eventDate);
                         return; // Event found, no need to check common events
                     }
                 }
             }
             
             // Check common events if no manual event was found
-            CheckCommonEvents(cell, date);
+            CheckCommonEvents(cell, date, currentDate);
         }
         
         private void CheckCommonEvents(DayEventHandler cell, DateTime date)
+        {
+            CheckCommonEvents(cell, date, TimeManager.Instance.GetCurrentDate());
+        }
+        
+        private void CheckCommonEvents(DayEventHandler cell, DateTime date, DateTime currentDate)
         {
             // Only check events from 1981 onwards
             if (date.Year < 1981) return;
@@ -111,13 +124,13 @@ namespace Calendar
             {
                 foreach (var eventType in calendarEvents.commonHolidays)
                 {
+                    DateTime eventDate = new DateTime(displayedYear, displayedMonth + 1, date.Day);
                     if (eventType.OccursOnDate(date))
                     {
-                        cell.SetEvent(eventType);
-                        return; // Event found, no need to check common events
+                        cell.SetEvent(eventType, currentDate,eventDate);
+                        return; // Event found, no need to check more events
                     }
                 }
-            
             }
             
         }

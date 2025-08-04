@@ -33,19 +33,66 @@ namespace Calendar
             Initialize();
         }
         
+        public void SetEvent(DayEventType eventType, DateTime currentDate, DateTime eventDate)
+        {
+            dayEventType = eventType;
+            
+            if (eventNameText != null)
+                eventNameText.text = dayEventType.eventName;
+            
+            if (descriptionText != null)
+                descriptionText.text = dayEventType.description;
+            
+            // Use the appropriate icon based on whether this specific occurrence has passed
+            Image eventIcon = dayEventType.GetEventIcon(eventDate, currentDate);
+            if (imageRender != null && eventIcon != null)
+                imageRender.sprite = eventIcon.sprite;
+            
+            // Use the appropriate background color based on whether this specific occurrence has passed
+            if (backgroundColorImage != null)
+                backgroundColorImage.color = dayEventType.GetEventColor(eventDate, currentDate);
+
+            // Use the appropriate text color based on whether this specific occurrence has passed
+            Color textColor = dayEventType.GetEventTextColor(eventDate, currentDate);
+            if (textColor != Color.clear)
+            {
+                SetAllTextColor(textColor);
+            }
+        }
+        
         public void Initialize()
         {
             if (dayEventType == null) return;
             
-            UpdateUI();
+            // Use current game time if no specific date is provided
+            DateTime currentDate = TimeManager.Instance.GetCurrentDate();
+            Initialize();
+        }
+        
+        public void Initialize(DateTime currentDate,DateTime eventDate)
+        {
+            if (dayEventType == null) return;
             
-            if (dayEventType.textColor != Color.clear)
+            UpdateUI(currentDate,eventDate);
+            
+            // Use the appropriate text color based on whether event has passed
+            Color textColor = dayEventType.GetEventTextColor(currentDate,eventDate);
+            if (textColor != Color.clear)
             {
-                SetAllTextColor(dayEventType.textColor);
+                SetAllTextColor(textColor);
             }
         }
         
         public void UpdateUI()
+        {
+            if (dayEventType == null) return;
+            
+            // Use current game time if no specific date is provided
+            DateTime currentDate = TimeManager.Instance.GetCurrentDate();
+            UpdateUI();
+        }
+        
+        public void UpdateUI(DateTime currentDate,DateTime eventDate)
         {
             if (dayEventType == null) return;
             
@@ -55,11 +102,23 @@ namespace Calendar
             if (descriptionText != null)
                 descriptionText.text = dayEventType.description;
             
-            if (imageRender != null && dayEventType.icon != null)
-                imageRender.sprite = dayEventType.icon.sprite;
+
+            // Use the appropriate icon based on whether this specific occurrence has passed
+            Image eventIcon = dayEventType.GetEventIcon(eventDate, currentDate);
+            if (imageRender != null && eventIcon != null)
+                imageRender.sprite = eventIcon.sprite;
             
+         // Use the appropriate background color based on whether this specific occurrence has passed
             if (backgroundColorImage != null)
-                backgroundColorImage.color = dayEventType.color;
+                backgroundColorImage.color = dayEventType.GetEventColor(eventDate, currentDate);
+
+            if (eventNameText != null)
+            {
+                Color textColor = dayEventType.GetEventTextColor(eventDate,currentDate);
+                SetAllTextColor(textColor);
+            }
+
+
         }
         
         public void ClearEvent()
