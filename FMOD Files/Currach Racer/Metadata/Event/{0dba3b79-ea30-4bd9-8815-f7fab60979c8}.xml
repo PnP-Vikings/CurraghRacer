@@ -100,7 +100,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{1fb1d64f-f504-4e7c-8728-6a13d6a4e060}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Negative Encouragement</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{a37b5705-6edd-47a7-b2b4-c2d43b1fe8f5}</destination>

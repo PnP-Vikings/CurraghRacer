@@ -124,7 +124,7 @@
 			<value>-16.5</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Ambience</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{af0a3c31-6f94-4291-8f2d-b974ae79cc9d}</destination>
@@ -149,7 +149,7 @@
 			<value>-17</value>
 		</property>
 		<property name="name">
-			<value>Audio 2</value>
+			<value>River</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{a3255645-8d49-49f5-b461-6eb0f2ebf437}</destination>
@@ -195,7 +195,7 @@
 			<value>-5</value>
 		</property>
 		<property name="name">
-			<value>Audio 3</value>
+			<value>Cows</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{ee82f462-4901-46ce-951b-bd96736e275d}</destination>
@@ -226,6 +226,8 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{254dd652-184b-4650-b5bc-1fd7b12a1495}">
 		<relationship name="effects">
+			<destination>{ca2ba516-ba8e-479a-b9c3-66591a02810e}</destination>
+			<destination>{898f8da8-71eb-4c08-adbf-d862dd9d59a4}</destination>
 			<destination>{14bfdd6f-ceb4-45d7-a389-fca24db29e44}</destination>
 		</relationship>
 	</object>
@@ -273,6 +275,12 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{bf961114-11a1-4428-a1a6-f3d6b225272b}" />
+	<object class="GainEffect" id="{ca2ba516-ba8e-479a-b9c3-66591a02810e}" />
+	<object class="LimiterEffect" id="{898f8da8-71eb-4c08-adbf-d862dd9d59a4}">
+		<property name="boost">
+			<value>12</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{14bfdd6f-ceb4-45d7-a389-fca24db29e44}" />
 	<object class="MixerBusFader" id="{c94ee9b8-7031-430c-a7cc-c239bd8d8b84}" />
 	<object class="MixerBusFader" id="{84ed7507-ac94-4f3d-b8df-d37b8cb98e25}" />
