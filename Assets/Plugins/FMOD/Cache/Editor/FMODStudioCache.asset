@@ -289,7 +289,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638893113642003206
+  lastModified: 638901726670050869
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -439,10 +439,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638893113642034886
+  lastModified: 638901726670075924
   FileSizes:
   - Name: 
-    Value: 1964
+    Value: 2002
   Exists: 1
 --- !u!114 &-861806321422844360
 MonoBehaviour:
@@ -507,12 +507,13 @@ MonoBehaviour:
   - {fileID: -7355683689810480613}
   - {fileID: 2894686220253667848}
   - {fileID: -7557941198526423288}
+  - {fileID: 6230480119245175446}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638893113642034886
+  cacheTime: 638901726670075924
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -667,6 +668,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &6230480119245175446
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Angelus
+  m_EditorClassIdentifier: 
+  Path: event:/Angelus
+  Guid:
+    Data1: 300749926
+    Data2: 1190472757
+    Data3: -2142665843
+    Data4: -1305873293
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 67928
 --- !u!114 &6382212892858319547
 MonoBehaviour:
   m_ObjectHideFlags: 0

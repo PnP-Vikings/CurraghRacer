@@ -207,7 +207,7 @@
 			<value>-16</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Distant Crowd Ambience</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{f6c9c827-5663-49cd-9dc0-15c116f5fcea}</destination>
