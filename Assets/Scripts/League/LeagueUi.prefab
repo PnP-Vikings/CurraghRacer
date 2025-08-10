@@ -228,7 +228,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &491084733078764143
 RectTransform:
   m_ObjectHideFlags: 0
@@ -546,6 +546,7 @@ MonoBehaviour:
   teamCellPrefab: {fileID: 4844317866809182665, guid: 01abdb38346e97f419e0642da7091c2c, type: 3}
   gridParent: {fileID: 597184200816606228}
   leagueNameText: {fileID: 6228931649133805134}
+  leagueTablePanel: {fileID: 3370735862398723491}
 --- !u!1 &4535657237064300155
 GameObject:
   m_ObjectHideFlags: 0
@@ -668,10 +669,10 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 4008058371087091348}
-        m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
-        m_MethodName: SetActive
-        m_Mode: 6
+      - m_Target: {fileID: 4873959414827200616}
+        m_TargetAssemblyTypeName: LeagueUi, Assembly-CSharp
+        m_MethodName: HideLeagueTable
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine

@@ -16,7 +16,6 @@ public class LeagueUi : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-            DontDestroyOnLoad(gameObject);
         }
         else
         {
@@ -65,7 +64,11 @@ public class LeagueUi : MonoBehaviour
         foreach (var team in teams)
         {
             LeagueTeamUiHandler cell = Instantiate(teamCellPrefab, gridParent);
-            cell.SetTeamData(team.team.teamName, team.points.ToString(), team.wins.ToString(), team.position.ToString(), team.team.teamLogo);
+            cell.SetTeamData(team.team,
+                             team.points.ToString(), 
+                             team.wins.ToString(), 
+                             team.position.ToString());
+            
         }
     }
    

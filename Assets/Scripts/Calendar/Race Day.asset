@@ -23,5 +23,10 @@ MonoBehaviour:
   month: 0
   year: 0
   eventActive: 1
+  hasEndDate: 0
+  haspassed: 0
+  hasPassedicon: {fileID: 0}
+  hasPassedcolor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  hasPassedtextColor: {r: 0, g: 0, b: 0, a: 1}
   dayOfWeek: 0
   intervalDays: 1
