@@ -1,3 +1,4 @@
+using League;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -5,8 +6,9 @@ public class TeamUi : MonoBehaviour
 {
       public TeamMemberUiHandler teamMemberCellPrefab;
       public Transform gridParent;
-      public Team selctedTeam;
-      public TMPro.TMP_Text TeamNameText,TeamPointsText,TeamWinsText;
+      public Team selectedTeam;
+      public League.League selectedLeague;
+      public TMPro.TMP_Text TeamNameText,TeamPointsText,TeamWinsText,TeamPositionText;
       public GameObject TeamUiPanel;
       public Image teamLogo;
       public static TeamUi Instance { get; private set; }
@@ -17,7 +19,6 @@ public class TeamUi : MonoBehaviour
             if (Instance == null)
             {
                   Instance = this;
-                  DontDestroyOnLoad(gameObject);
             }
             else
             {
@@ -38,7 +39,7 @@ public class TeamUi : MonoBehaviour
                   return;
             }
 
-            selctedTeam = team;
+            selectedTeam = team;
             SetTeamData(team);
             TeamUiPanel.SetActive(true);
       }
@@ -73,6 +74,24 @@ public class TeamUi : MonoBehaviour
                   memberCell.SetMemberData(member);
             }
 
+            selectedLeague = LeagueController.Instance.currentLeague;
+            
+            if (selectedLeague != null)
+            {
+                  TeamPointsText.text = "Points: " + selectedLeague.GetTeamPoints(team);
+                  TeamWinsText.text = "Wins: " + selectedLeague.GetTeamWins(team);
+                  TeamPositionText.text = "Position: " +selectedLeague.GetTeamPosition(team);
+            }
+            else
+            {
+                  TeamPointsText.text = "Points: 0";
+                  TeamWinsText.text = "Wins: 0";
+                  TeamPositionText.text = "Position: N/A";
+            }
+
+            
+            
+            
             TeamUiPanel.SetActive(true);
       }
       

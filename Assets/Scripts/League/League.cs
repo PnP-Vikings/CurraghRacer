@@ -179,6 +179,54 @@ namespace League
             }
             standings = sorted.ToArray();
         }
+        
+        public int GetTeamPosition(Team team)
+        {
+            if (standings == null || standings.Length == 0)
+            {
+                return -1; // Not found
+            }
+            for (int i = 0; i < standings.Length; i++)
+            {
+                if (standings[i].team == team)
+                {
+                    return standings[i].position;
+                }
+            }
+            return -1; // Not found
+        }
+        
+        public int GetTeamPoints(Team team)
+        {
+            if (standings == null || standings.Length == 0)
+            {
+                return 0; // No points if standings are empty
+            }
+            for (int i = 0; i < standings.Length; i++)
+            {
+                if (standings[i].team == team)
+                {
+                    return standings[i].points;
+                }
+            }
+            return 0; // No points if team not found
+        }
+        
+        public int GetTeamWins(Team team)
+        {
+            if (standings == null || standings.Length == 0)
+            {
+                return 0; // No wins if standings are empty
+            }
+            for (int i = 0; i < standings.Length; i++)
+            {
+                if (standings[i].team == team)
+                {
+                    return standings[i].wins;
+                }
+            }
+            return 0; // No wins if team not found
+        }
     }
 
     [Serializable]

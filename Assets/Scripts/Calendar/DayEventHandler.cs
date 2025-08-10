@@ -59,7 +59,6 @@ namespace Calendar
                 SetAllTextColor(textColor);
             }
         }
-        
         public void Initialize()
         {
             if (dayEventType == null) return;
@@ -108,7 +107,7 @@ namespace Calendar
             if (imageRender != null && eventIcon != null)
                 imageRender.sprite = eventIcon.sprite;
             
-         // Use the appropriate background color based on whether this specific occurrence has passed
+            // Use the appropriate background color based on whether this specific occurrence has passed
             if (backgroundColorImage != null)
                 backgroundColorImage.color = dayEventType.GetEventColor(eventDate, currentDate);
 
