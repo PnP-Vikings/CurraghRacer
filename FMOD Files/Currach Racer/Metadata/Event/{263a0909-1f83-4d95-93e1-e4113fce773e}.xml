@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.03.00">
+<objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{263a0909-1f83-4d95-93e1-e4113fce773e}">
 		<property name="name">
 			<value>Bar Ambience</value>
@@ -191,7 +191,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{14cd96de-e967-432f-bed9-29009fc789bd}">
 		<property name="volume">
-			<value>-2</value>
+			<value>-3</value>
 		</property>
 		<property name="name">
 			<value>Ice In Glass</value>
