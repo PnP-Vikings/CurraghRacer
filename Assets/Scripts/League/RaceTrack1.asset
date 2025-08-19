@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 44b535daa90090d4ab05c903b9a3116b, type: 3}
+  m_Name: RaceTrack1
+  m_EditorClassIdentifier: 
+  raceName: The Shannon Showdown
+  raceDescription: 
+  raceIcon: {fileID: 0}
+  raceSceneName: RaceTrack1
+  maxParticipants: 4
+  numberOfLaps: 1
+  weatherCondition: 0
+  windStrength: 5
+  waveHeight: 1
+  finishTimes:
+  - 0
+  - 0
+  - 0
+  - 0
+  bestLapTimes:
+  - 0
+  - 0
+  - 0
+  - 0
+  raceDuration: 0
+  pointsAwarded: 00000000000000000000000000000000
+  prizeMoney: 00000000000000000000000000000000
+  raceEvents: []
+  trackName: 'The River Shannon '
+  raceCompleted: 0
+  incompletionReason: 0
