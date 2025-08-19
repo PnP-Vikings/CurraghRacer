@@ -36,7 +36,7 @@ namespace League
                 }
             }
             
-            if (currentLeague != null)
+            if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
                 ClearLeague();
                 RegenerateRaceSchedule();

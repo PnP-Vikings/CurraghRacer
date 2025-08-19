@@ -34,6 +34,9 @@ namespace League
         [Header("Schedule")]
         [Tooltip("All generated race days for this league season.")]
         public RaceDayFormation[] raceDays;
+        
+        [Tooltip("List of Tracks available for this league.")]
+        public RaceDetails[] raceTracks;
 
         public List<RaceDayFormation> GenerateRaceSchedule(Team[] teams, int boatsPerRace, int repeatCount)
         {

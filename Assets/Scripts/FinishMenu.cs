@@ -9,7 +9,6 @@ public class FinishMenu : MonoBehaviour
     [SerializeField] private GameObject startingMenuPrefab;
 
     FMOD.Studio.EventInstance UIClick2;
-    public RaceManager raceManager;
 
     void OnEnable()
     {
@@ -32,15 +31,17 @@ public class FinishMenu : MonoBehaviour
 
     public void OnCloseFinishMenuButtonClicked()
     {
-        startingMenuPrefab.SetActive(true);
-        RaceManager.Instance.EndRace();
-        uiDoc.gameObject.SetActive(false);
+       // startingMenuPrefab.SetActive(true);
+        
+      // uiDoc.gameObject.SetActive(false);
 
         UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
         UIClick2.start();
 
-        raceManager.CheeringAndClapping.setParameterByName("Mute Cheering and Clapping", 0f);
-        raceManager.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
+        RaceManager.Instance.CheeringAndClapping.setParameterByName("Mute Cheering and Clapping", 0f);
+        RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
+        
+        RaceManager.Instance.EndRace();
     }
 
     public void UpdatePositions(string pos1, string pos2, string pos3, string pos4)

@@ -11,7 +11,9 @@ using UnityEngine.Rendering.Universal;
 using EventType = UnityEngine.EventType;
 using Random = UnityEngine.Random;
 using League;
+using NUnit.Framework.Interfaces;
 using UnityEngine.Rendering;
+using UnityEngine.SceneManagement;
 
 public class RaceManager : MonoBehaviour
 {
@@ -25,6 +27,7 @@ public class RaceManager : MonoBehaviour
     public List<Transform> raceStartPositions;
     public UnityEvent startRace;
     public bool isRaceDay;
+    public bool LoadedRaceScene = false; // Flag to check
 
 
     public GameObject shipPrefab;
@@ -90,6 +93,34 @@ public class RaceManager : MonoBehaviour
             });
         }
     }
+
+    public void StartRace()
+    {
+        if (isRaceStarted) return; // Prevent starting multiple times
+
+        RaceDetails[] raceTracks = LeagueController.Instance?.currentLeague.raceTracks;
+        if (raceTracks != null && raceTracks.Length > 0 && !LoadedRaceScene)
+        {
+            Debug.Log("Starting Race with " + raceTracks.Length + " tracks available.");
+            SceneManager.LoadScene(raceTracks[Random.Range(0, raceTracks.Length)].raceSceneName ?? "DefaultRaceScene");
+            LoadedRaceScene = true; // Set flag to
+        }
+        else if (LoadedRaceScene)
+        {
+            SpawnShips();
+            Debug.Log("Spawning In Ships on New Scene");
+        }
+        else
+        {
+            if (LeagueController.Instance != null)
+            {
+                Debug.LogWarning("No Race Tracks found in current league -");
+            }
+        }
+        
+        
+    }
+
 
     public void SpawnShips()
     {
@@ -372,11 +403,13 @@ public class RaceManager : MonoBehaviour
         }
         ships.Clear();
         isRaceStarted = false;
+        LoadedRaceScene = false; // Reset flag when ending
         
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
 
         RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        SceneManager.LoadScene(GameManager.Instance.mainSceneName);
     }
     
     IEnumerator ShowAd()

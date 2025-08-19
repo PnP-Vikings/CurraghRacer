@@ -67,10 +67,11 @@ public class StartMenu : MonoBehaviour
         }
         
             GameManager.Instance.StartGame();
-            RaceManager.Instance.SpawnShips();
+            TimeManager.Instance.UpdateTime();
+            RaceManager.Instance.StartRace();
             uiDoc.gameObject.SetActive(false);
             cameraController.MoveCameraToPosition(0);
-            TimeManager.Instance.UpdateTime();
+            
        
 
     }

@@ -24,6 +24,24 @@ public class MainMenuEvents : MonoBehaviour
             // Register a callback for each button
             button.RegisterCallback<ClickEvent>(e => OnButtonClicked(button));
         }
+        if(GameManager.Instance != null)
+        {
+           if (GameManager.Instance.GetGameStarted())
+            {
+                if (_gameUi != null)
+                {
+                    _gameUi.SetActive(true);
+                }
+                if(playerStatsView != null)
+                {
+                    playerStatsView.SetActive(true);
+                }
+                
+                AdsManager.Instance.bannerAds.HideBannerAd();
+        
+                this.gameObject.SetActive(false);
+            }
+        }
     }
     
     private void OnButtonClicked(Button button)
@@ -51,6 +69,8 @@ public class MainMenuEvents : MonoBehaviour
         AdsManager.Instance.bannerAds.HideBannerAd();
         
         this.gameObject.SetActive(false);
+        
+        GameManager.Instance.StartGame(); // Set the game started state to true
         
       
     }

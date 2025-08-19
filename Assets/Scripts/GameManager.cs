@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour
    public bool GameStarted { get; private set; } = false;
    public Transform cameraStartPosition;
    public int racesTillNextAd = 3;
+   public string mainSceneName = "RaceScene";
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
    public List<String> miniGameWorkScenes = new List<string>
    {
