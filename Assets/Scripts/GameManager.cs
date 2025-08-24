@@ -2,17 +2,20 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
    public static GameManager Instance { get; private set; }
    public bool isRewarded = false;
-   public bool GameStarted { get; private set; } = false;
+   public bool GameStarted = false;
    public Transform cameraStartPosition;
    public int racesTillNextAd = 3;
    public string mainSceneName = "RaceScene";
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
+   public UnityEvent OnGameStarted;
+
    public List<String> miniGameWorkScenes = new List<string>
    {
        "BeerPourMinigame",
@@ -48,6 +51,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         GameStarted = true;
+        OnGameStarted?.Invoke();
     }
     
     public bool GetGameStarted()

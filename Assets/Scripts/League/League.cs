@@ -26,6 +26,7 @@ namespace League
         public int currentRace; // Current race index
         public int currentSeason = 1; // Current season number
         public bool isActive = true;
+        public bool playerHasJoined;
         public bool isFinished;
         public bool isPromotionRelegation = true; // If true, this league has promotion/relegation rules
         public int maxNumberOfBoatsPerRace = 4; // Maximum number of boats
@@ -34,6 +35,9 @@ namespace League
         [Header("Schedule")]
         [Tooltip("All generated race days for this league season.")]
         public RaceDayFormation[] raceDays;
+        
+        [Tooltip("Tournament start date - set when player joins tournament")]
+        public DateTime tournamentStartDate;
         
         [Tooltip("List of Tracks available for this league.")]
         public RaceDetails[] raceTracks;

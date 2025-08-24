@@ -2569,7 +2569,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
   m_PrefabInstance: {fileID: 1934896994}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934896995}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 1e1d0fbf9a3d68942b374afde34b7f5b, type: 3}
@@ -2762,34 +2762,15 @@ PrefabInstance:
       propertyPath: playerStatsView
       value: 
       objectReference: {fileID: 333810543}
+    - target: {fileID: 8150581909809056547, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: leagueInviteCardsUi
+      value: 
+      objectReference: {fileID: 6545524236131076258, guid: e7af4e1578bb16f42881e823255c1a23, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1934896997}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
---- !u!1 &1934896995 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-  m_PrefabInstance: {fileID: 1934896994}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1934896997
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1934896995}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b7da84d8b61ab9f40a06307c18a5c343, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  currentLeague: {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
-  leagues:
-  - {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
 --- !u!1001 &1970164018
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3572,10 +3553,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 2469533863809101887, guid: f0ba063b57b90544395e8d65027ed17a, type: 3}
-      propertyPath: m_SizeDelta.x
-      value: 2043.41
-      objectReference: {fileID: 0}
     - target: {fileID: 4008058371087091348, guid: f0ba063b57b90544395e8d65027ed17a, type: 3}
       propertyPath: m_Name
       value: LeagueUi
@@ -3677,10 +3654,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: LeagueTeamUi
       objectReference: {fileID: 0}
-    - target: {fileID: 564872841849332789, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 1805058556430525297, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
       propertyPath: m_Pivot.x
       value: 0
@@ -3759,22 +3732,6 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 1805058556430525297, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 2176712551072751135, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2265000376055105944, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
-      propertyPath: m_AnchoredPosition.x
-      value: 254
-      objectReference: {fileID: 0}
-    - target: {fileID: 5946980894686953218, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
-      propertyPath: m_HorizontalAlignment
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 8680867107614839404, guid: f831bee7ba43c364fb06b648e7638788, type: 3}
-      propertyPath: m_IsActive
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
