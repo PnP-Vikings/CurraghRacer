@@ -323,5 +323,35 @@ public class TimeManager : MonoBehaviour
         Debug.Log("Checking for events today"+ " " + GetCurrentDate() + " " + GetEventsToday().Count);
         return GetEventsToday().Count > 0;
     }
-
+    
+    public DateTime[] ReturnAllSundaysDuringTournament(DateTime startDate, int numOfWeeks)
+    {
+        List<DateTime> sundays = new List<DateTime>();
+        
+        // Find the first Sunday from the start date
+        DateTime currentDate = startDate;
+        
+        // If start date is not Sunday, find the next Sunday
+        while (currentDate.DayOfWeek != System.DayOfWeek.Sunday)
+        {
+            currentDate = currentDate.AddDays(1);
+        }
+        
+        // Add Sundays for the specified number of weeks
+        for (int week = 0; week < numOfWeeks; week++)
+        {
+            sundays.Add(currentDate);
+            currentDate = currentDate.AddDays(7); // Move to next Sunday
+        }
+        
+        return sundays.ToArray();
+    }
+    
+    /// <summary>
+    /// Alternative method using current date as start date
+    /// </summary>
+    public DateTime[] ReturnAllSundaysDuringTournament(int numOfWeeks)
+    {
+        return ReturnAllSundaysDuringTournament(GetCurrentDate(), numOfWeeks);
+    }
 }

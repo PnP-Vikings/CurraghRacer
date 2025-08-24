@@ -83,6 +83,8 @@ namespace Calendar
         [Tooltip("When the recurring pattern ends (leave default for no end date)")]
         public DateTime EndDate; // When the pattern ends, if applicable
         
+        public bool playerHasTakenPart = false; // Whether the player is involved in this event
+        
         /// <summary>
         /// Checks if this event occurs on the given date
         /// </summary>

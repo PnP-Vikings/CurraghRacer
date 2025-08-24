@@ -3,6 +3,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using League;
 
 namespace Calendar
 {
@@ -29,6 +30,7 @@ namespace Calendar
             UpdateCalendar();
             
             TimeManager.Instance.onNewDay.AddListener(UpdateCalendar); // Subscribe to time changes
+            LeagueController.Instance.onPlayerJoinedLeague.AddListener(UpdateCalendar);
         }
 
         public void UpdateCalendar()
@@ -92,20 +94,33 @@ namespace Calendar
             DateTime currentDate = TimeManager.Instance.GetCurrentDate();
             DateTime eventDate = new DateTime(displayedYear, displayedMonth + 1, date.Day);
             
+            // Get all events for this date (includes existing events + tournament races if applicable)
+            var allEvents = calendarEvents.GetEventsOnDate(date);
+            
             // Check manually added events first
             if (calendarEvents != null && calendarEvents.calendarDayEvents.Count > 0)
             {
                 foreach (var eventType in calendarEvents.calendarDayEvents)
                 {
-                    if (eventType.OccursOnDate(date) && eventType.eventActive)
+                    if (eventType.OccursOnDate(date) && eventType.eventActive && eventType.OccasionType != OccasionType.Race)
                     {
-                        cell.SetEvent(eventType, currentDate,eventDate);
-                        return; // Event found, no need to check common events
+                        cell.SetEvent(eventType, currentDate, eventDate);
+                        return; // Event found, no need to check more events
                     }
                 }
             }
             
-            // Check common events if no manual event was found
+            // Check for tournament race events from the enhanced GetEventsOnDate method
+            foreach (var eventType in allEvents)
+            {
+                if (eventType.OccasionType == OccasionType.Race && eventType.playerHasTakenPart)
+                {
+                    cell.SetEvent(eventType, currentDate, eventDate);
+                    return; // Race event found and displayed
+                }
+            }
+            
+            // Check common events if no manual event or race was found
             CheckCommonEvents(cell, date, currentDate);
         }
         

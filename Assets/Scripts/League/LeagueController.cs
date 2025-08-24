@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
+using UnityEngine.Events;
 
 namespace League
 {
@@ -9,7 +10,8 @@ namespace League
         public static LeagueController Instance { get; private set; }
         public League currentLeague;
         public League[] leagues;
-        
+        public LeagueInviteCardsUi leagueInviteCardsUi;
+        public UnityEvent onPlayerJoinedLeague;
         
         private void Awake()
         {
@@ -36,6 +38,10 @@ namespace League
                 }
             }
             
+        }
+
+        public void Start()
+        {
             if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
                 ClearLeague();
@@ -46,54 +52,85 @@ namespace League
             {
                 Debug.LogWarning("Current league is not set! Please assign a league in the inspector.");
             }
+
+            
+            
+            GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
         }
 
 
-        private void Start()
+
+        public void ShowLeagueInvite()
         {
             if (currentLeague != null)
             {
-                // Generate complete race schedule
-                currentLeague.raceDays = currentLeague.GenerateRaceSchedule(
-                    currentLeague.teams,
-                    currentLeague.maxNumberOfBoatsPerRace,
-                    currentLeague.repeatCount).ToArray();
-                
-                
-                if ( currentLeague.raceDays.Length > currentLeague.maxRaceDays)
+                if(leagueInviteCardsUi != null)
                 {
-                    // Trim excess races
-                    int racesToKeep = currentLeague.maxRaceDays;
-                    List<RaceDayFormation> trimmedDays = new List<RaceDayFormation>();
-
-                    foreach (var day in currentLeague.raceDays)
-                    {
-                        if (day.races.Count <= racesToKeep)
-                        {
-                            trimmedDays.Add(day);
-                            racesToKeep -= day.races.Count;
-                        }
-                        else if (racesToKeep > 0)
-                        {
-                            // Take partial day
-                            RaceDayFormation partialDay = new RaceDayFormation();
-                            partialDay.races = day.races.Take(racesToKeep).ToList();
-                            trimmedDays.Add(partialDay);
-                            break;
-                        }
-                        else
-                        {
-                            break;
-                        }
-                    }
-
-                    currentLeague.raceDays = trimmedDays.ToArray();
+                    LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
+                    leaguecard.gameObject.SetActive(true);
+                    leaguecard.SetLeagueData(currentLeague);
                 }
-
-             
+                else
+                {
+                    Debug.LogWarning("LeagueInviteCardsUi reference is not set in the inspector.");
+                    GenerateRaceSchedule();
+                    SetPlayerHasAcceptedInvite();
+                
+                }
             }
+        
         }
 
+        
+        public void SetPlayerHasAcceptedInvite()
+        {
+            currentLeague.playerHasJoined = true;
+            
+            // Set the tournament start date when player joins (this should be fixed and not change)
+            currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
+            onPlayerJoinedLeague?.Invoke();
+        }
+
+        public void GenerateRaceSchedule()
+        {
+            // Generate complete race schedule
+            currentLeague.raceDays = currentLeague.GenerateRaceSchedule(
+                currentLeague.teams,
+                currentLeague.maxNumberOfBoatsPerRace,
+                currentLeague.repeatCount).ToArray();
+                
+                
+            if ( currentLeague.raceDays.Length > currentLeague.maxRaceDays)
+            {
+                // Trim excess races
+                int racesToKeep = currentLeague.maxRaceDays;
+                List<RaceDayFormation> trimmedDays = new List<RaceDayFormation>();
+
+                foreach (var day in currentLeague.raceDays)
+                {
+                    if (day.races.Count <= racesToKeep)
+                    {
+                        trimmedDays.Add(day);
+                        racesToKeep -= day.races.Count;
+                    }
+                    else if (racesToKeep > 0)
+                    {
+                        // Take partial day
+                        RaceDayFormation partialDay = new RaceDayFormation();
+                        partialDay.races = day.races.Take(racesToKeep).ToList();
+                        trimmedDays.Add(partialDay);
+                        break;
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+
+                currentLeague.raceDays = trimmedDays.ToArray();
+            }
+
+        }
 
         /// <summary>
         /// Advances to the next race in the league schedule.
@@ -198,6 +235,9 @@ namespace League
                 currentLeague.isFinished = false;
                 currentLeague.raceDays = null;
                 currentLeague.standings = null;
+                currentLeague.playerHasJoined = false;
+                
+                currentLeague.tournamentStartDate = default;
                 
                 // Reset all team stats
                 if (currentLeague.teams != null)
@@ -228,7 +268,7 @@ namespace League
         {
             if (currentLeague != null)
             {
-                Start(); // Calls the race generation logic
+                GenerateRaceSchedule(); // Calls the race generation logic
                 Debug.Log($"Race schedule regenerated for '{currentLeague.leagueName}'!");
             }
             else
