@@ -316,7 +316,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638915876734897453
+  lastModified: 638920744793219995
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -493,11 +493,38 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638915876734917839
+  lastModified: 638920744793250024
   FileSizes:
   - Name: 
-    Value: 2182
+    Value: 2286
   Exists: 1
+--- !u!114 &-1702041834828596594
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Power Washer/Power Washer
+  m_EditorClassIdentifier: 
+  Path: event:/Power Washer/Power Washer
+  Guid:
+    Data1: 1263217716
+    Data2: 1156123357
+    Data3: 1638561941
+    Data4: -813293973
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4050
 --- !u!114 &-861806321422844360
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -592,12 +619,14 @@ MonoBehaviour:
   - {fileID: -5146918259261699225}
   - {fileID: 2884387597793963610}
   - {fileID: -671269332136601359}
+  - {fileID: -1702041834828596594}
+  - {fileID: 5916317957201816820}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638915876734917839
+  cacheTime: 638920744793250024
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -806,6 +835,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &5916317957201816820
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Power Washer/Power Washer Idling
+  m_EditorClassIdentifier: 
+  Path: event:/Power Washer/Power Washer Idling
+  Guid:
+    Data1: 50734331
+    Data2: 1157112146
+    Data3: -696911966
+    Data4: 123425972
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 27343
 --- !u!114 &6382212892858319547
 MonoBehaviour:
   m_ObjectHideFlags: 0
