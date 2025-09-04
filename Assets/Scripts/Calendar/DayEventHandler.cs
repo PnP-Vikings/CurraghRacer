@@ -18,8 +18,12 @@ namespace Calendar
         public Image imageRender; // Image for displaying the event icon
         public Image backgroundColorImage;
         
+        [Header("Date Information")]
+        public DateTime currentDate; // Store the current date for this day
+        
         public void SetupDay(DateTime date)
         {
+            currentDate = date; // Store the date so CalendarTooltip can access it
             dateText.text = date.Day.ToString();
             dayoftheweekText.text = date.DayOfWeek.ToString();
             
