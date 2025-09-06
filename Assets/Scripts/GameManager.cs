@@ -123,7 +123,7 @@ public class GameManager : MonoBehaviour
         
         if (cameraStartPosition == null)
         {
-          cameraStartPosition =  FindObjectOfType<cameraStartPosition>().transform;
+          cameraStartPosition =  FindFirstObjectByType<cameraStartPosition>().transform;
         }
         return cameraStartPosition;
     }

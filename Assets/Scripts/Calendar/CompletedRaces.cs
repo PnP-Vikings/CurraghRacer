@@ -18,6 +18,7 @@ namespace Calendar
         public string[] participantNames;
         public bool playerWon;
         
+        
         public CompletedRaceData(string leagueName, string raceName, DateTime raceDate, 
                                int playerPosition, int totalParticipants, string trackName, 
                                float raceTime, int pointsEarned, string[] participantNames)
@@ -48,6 +49,11 @@ namespace Calendar
             else if (playerPosition == 3) suffix = "rd";
             
             return $"{playerPosition}{suffix}";
+        }
+        
+        public string GetRaceWinner()
+        {
+            return participantNames != null && participantNames.Length >= 1 ? participantNames[0] : "N/A";
         }
     }
     
