@@ -47,6 +47,9 @@ namespace League
                 ClearLeague();
                 RegenerateRaceSchedule();
                 currentLeague.RecalculateStandings();
+                GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
+                
+              
             }
             else
             {
@@ -55,7 +58,7 @@ namespace League
 
             
             
-            GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
+           
         }
 
 
@@ -64,7 +67,7 @@ namespace League
         {
             if (currentLeague != null)
             {
-                if(leagueInviteCardsUi != null)
+                if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
                 {
                     LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
                     leaguecard.gameObject.SetActive(true);
