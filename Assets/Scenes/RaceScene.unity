@@ -788,7 +788,7 @@ MonoBehaviour:
   m_fontWeight: 400
   m_enableAutoSizing: 1
   m_fontSizeMin: 18
-  m_fontSizeMax: 36
+  m_fontSizeMax: 28
   m_fontStyle: 0
   m_HorizontalAlignment: 1
   m_VerticalAlignment: 256
@@ -1717,15 +1717,23 @@ MonoBehaviour:
   tooltipPanel: {fileID: 1336623614}
   tooltipText: {fileID: 521965904}
   tooltipBackground: {fileID: 1336623617}
+  parentCanvas: {fileID: 1101655675}
   backgroundColor: {r: 0.15, g: 0.15, b: 0.2, a: 0.95}
   borderColor: {r: 0.4, g: 0.6, b: 0.8, a: 1}
   textColor: {r: 0.9, g: 0.95, b: 1, a: 1}
   showDelay: 0.5
-  offset: {x: 10, y: 10}
-  maxTooltipWidth: 1500
+  offset: {x: 3, y: 3}
+  maxTooltipWidth: 500
   minTooltipWidth: 250
   paddingHorizontal: 12
   paddingVertical: 8
+  mask: {fileID: 0}
+  scrollRect: {fileID: 0}
+--- !u!223 &1101655675 stripped
+Canvas:
+  m_CorrespondingSourceObject: {fileID: 6754466150633396775, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
+  m_PrefabInstance: {fileID: 2290812596723951210}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1130639115
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -2906,7 +2914,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   calendarEvents: {fileID: 11400000, guid: 454b31a26fe91c0479401781f8a35026, type: 2}
-  enablePersistence: 1
+  enablePersistence: 0
   saveFileName: completed_races.json
   completedRaceObjects: []
 --- !u!1 &1851943023 stripped
@@ -3742,6 +3750,10 @@ PrefabInstance:
     - target: {fileID: 2274005156572017680, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
       propertyPath: m_BlockingMask.m_Bits
       value: 4294967295
+      objectReference: {fileID: 0}
+    - target: {fileID: 2274005156572017680, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
+      propertyPath: m_IgnoreReversedGraphics
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2401092208567404826, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
       propertyPath: m_IsActive

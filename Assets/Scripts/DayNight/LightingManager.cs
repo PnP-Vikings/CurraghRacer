@@ -72,7 +72,7 @@ public class LightingManager : MonoBehaviour
         // If the Directional Light is not set and there is no RenderSettings.sun, find the Directional Light in the scene
         else
         {
-            Light[] lights = GameObject.FindObjectsByType<Light>(FindObjectsSortMode.None);
+             Light[] lights = GameObject.FindObjectsByType<Light>(FindObjectsSortMode.None);
             foreach (Light light in lights)
             {
                 if (light.type == LightType.Directional)

@@ -2,30 +2,26 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.EventSystems;
 using TMPro;
-using System;
-using System.Collections.Generic;
-using Calendar;
 
 namespace Calendar
 {
     /// <summary>
-    /// Simple tooltip that appears when hovering over calendar events
+    /// Tooltip that auto-sizes to content, flips around the cursor near edges,
+    /// clamps inside the canvas, and enables vertical scrolling if content is too tall.
     /// </summary>
     public class CalendarTooltip : MonoBehaviour
     {
         [Header("Tooltip UI")]
-        public GameObject tooltipPanel;
-        public TextMeshProUGUI tooltipText;
-        public Image tooltipBackground;
-        
+        public GameObject tooltipPanel;          // Root object with an Image (background)
+        public TextMeshProUGUI tooltipText;      // TMP text child
+        public Image tooltipBackground;          // Background image
+        public Canvas parentCanvas;              // Canvas that contains this tooltip
+
         [Header("Tooltip Styling")]
-        [Tooltip("Background color for the tooltip")]
-        public Color backgroundColor = new Color(0.15f, 0.15f, 0.2f, 0.95f); // Darker blue-gray with high opacity
-        [Tooltip("Border color for the tooltip")]
-        public Color borderColor = new Color(0.4f, 0.6f, 0.8f, 1f); // Light blue border
-        [Tooltip("Text color for the tooltip")]
-        public Color textColor = new Color(0.9f, 0.95f, 1f, 1f); // Light blue-white text
-        
+        public Color backgroundColor = new Color(0.15f, 0.15f, 0.2f, 0.95f);
+        public Color borderColor = new Color(0.4f, 0.6f, 0.8f, 1f);  // (not used here but kept for future)
+        public Color textColor = new Color(0.9f, 0.95f, 1f, 1f);
+
         [Header("Settings")]
         public float showDelay = 0.3f;
         public Vector2 offset = new Vector2(15, 10);
@@ -33,216 +29,227 @@ namespace Calendar
         public float minTooltipWidth = 250f;
         public float paddingHorizontal = 12f;
         public float paddingVertical = 8f;
-        
+
+        // Internal state
         private bool isHovering = false;
         private string currentTooltipContent = "";
-        
-        // Static instance for easy access
+
+        // Optional scrolling helpers (added at runtime if needed)
+        [SerializeField] private RectMask2D mask;
+        [SerializeField] private ScrollRect scrollRect;
+
+        // Static access
         public static CalendarTooltip Instance { get; private set; }
-        
+
         private void Awake()
         {
-            Debug.Log("🔧 CalendarTooltip Awake() called - Setting up instance");
             Instance = this;
-            
-            Debug.Log($"🔧 tooltipPanel assigned: {tooltipPanel != null}");
-            Debug.Log($"🔧 tooltipText assigned: {tooltipText != null}");
-            
+
             if (tooltipPanel != null)
-            {
                 tooltipPanel.SetActive(false);
-                Debug.Log("✅ Tooltip panel hidden on startup");
-            }
-            else
-            {
-                Debug.LogError("❌ tooltipPanel is NULL in CalendarTooltip!");
-            }
         }
-        
-        /// <summary>
-        /// Show tooltip with content at mouse position
-        /// </summary>
+
+        /// <summary>Request to show a tooltip for given content (HTML-style TMP rich text allowed).</summary>
         public void ShowTooltip(string content)
         {
             if (string.IsNullOrEmpty(content)) return;
-            
+
             currentTooltipContent = content;
             isHovering = true;
-            
-            // Cancel any existing delayed show
+
             CancelInvoke(nameof(DisplayTooltip));
-            
-            // Show tooltip after delay
             Invoke(nameof(DisplayTooltip), showDelay);
         }
-        
-        /// <summary>
-        /// Hide the tooltip
-        /// </summary>
+
+        /// <summary>Hide the tooltip immediately.</summary>
         public void HideTooltip()
         {
             isHovering = false;
             CancelInvoke(nameof(DisplayTooltip));
-            
+
             if (tooltipPanel != null)
-            {
                 tooltipPanel.SetActive(false);
-            }
         }
-        
+
         private void DisplayTooltip()
         {
             if (!isHovering || string.IsNullOrEmpty(currentTooltipContent)) return;
-            
             if (tooltipPanel == null || tooltipText == null) return;
-            
-            // Set the text and apply initial styling
+
+            // Setup references
+            if (parentCanvas == null) parentCanvas = tooltipPanel.GetComponentInParent<Canvas>();
+            if (parentCanvas == null) return;
+
+            RectTransform canvasRect = parentCanvas.GetComponent<RectTransform>();
+            RectTransform tooltipRect = tooltipPanel.GetComponent<RectTransform>();
+            if (canvasRect == null || tooltipRect == null) return;
+
+            // Put content and base styles
             tooltipText.text = currentTooltipContent;
             tooltipText.color = textColor;
-            
-            // Configure text wrapping and sizing
             tooltipText.enableWordWrapping = true;
-            tooltipText.overflowMode = TextOverflowModes.Overflow; // Allow overflow to get proper height calculation
-            
-            // Get canvas and rect transforms
-            Canvas canvas = tooltipPanel.GetComponentInParent<Canvas>();
-            if (canvas == null) return;
-            
-            RectTransform canvasRect = canvas.GetComponent<RectTransform>();
-            RectTransform tooltipRect = tooltipPanel.GetComponent<RectTransform>();
-            
-            if (canvasRect == null || tooltipRect == null) return;
-            
-            // Convert mouse position to canvas space
-            Vector2 mousePos = Input.mousePosition;
-            Vector2 canvasMousePos;
-            
+            tooltipText.overflowMode = TextOverflowModes.Overflow;
+
+            // Convert mouse to canvas local space
+            Vector2 mouse = Input.mousePosition;
+            Vector2 mouseLocal;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                canvasRect, mousePos, canvas.worldCamera, out canvasMousePos)) return;
-            
-            // Calculate tooltip size based on content
+                    canvasRect, mouse, parentCanvas.worldCamera, out mouseLocal))
+                return;
+
+            // ---------- Auto-size ----------
             Vector2 canvasSize = canvasRect.sizeDelta;
-            
-            // Determine optimal width based on content and available space
-            float availableWidth = Mathf.Min(maxTooltipWidth, canvasSize.x * 0.4f); // Max 40% of screen width
-            float optimalWidth = Mathf.Max(minTooltipWidth, Mathf.Min(availableWidth, tooltipText.preferredWidth + paddingHorizontal * 2));
-            
-            // First, set the text width to calculate proper height
-            tooltipText.rectTransform.sizeDelta = new Vector2(optimalWidth - paddingHorizontal * 2, 0);
-            
-            // Force text to update its layout
+
+            float availableWidth = Mathf.Min(maxTooltipWidth, canvasSize.x * 0.9f);
+            float optimalWidth = Mathf.Max(
+                minTooltipWidth,
+                Mathf.Min(availableWidth, tooltipText.preferredWidth + paddingHorizontal * 2f)
+            );
+
+            // Constrain text width to compute preferred height
+            tooltipText.rectTransform.sizeDelta = new Vector2(optimalWidth - paddingHorizontal * 2f, 0f);
+
+            // Force TMP & layout to update before reading preferredHeight
+            tooltipText.ForceMeshUpdate(true, true);
             Canvas.ForceUpdateCanvases();
-            
-            // Now get the actual preferred height based on the constrained width
+
             float contentHeight = tooltipText.preferredHeight;
-            float totalHeight = contentHeight + paddingVertical * 2;
-            
-            // Ensure minimum height and cap maximum height to prevent huge tooltips
-            totalHeight = Mathf.Max(totalHeight, 50f); // Minimum height
-            totalHeight = Mathf.Min(totalHeight, canvasSize.y * 0.8f); // Max 80% of screen height
-            
-            // Set final tooltip size
+            float maxHeight = canvasSize.y * 0.9f;                       // allow up to 90% of canvas height
+            float totalHeight = Mathf.Clamp(contentHeight + paddingVertical * 2f, 50f, maxHeight);
+
+            // Apply final tooltip size
             Vector2 tooltipSize = new Vector2(optimalWidth, totalHeight);
             tooltipRect.sizeDelta = tooltipSize;
-            
-            // Set text rect to fit within padding with correct height
-            tooltipText.rectTransform.anchorMin = Vector2.zero;
-            tooltipText.rectTransform.anchorMax = Vector2.one;
-            tooltipText.rectTransform.offsetMin = new Vector2(paddingHorizontal, paddingVertical);
-            tooltipText.rectTransform.offsetMax = new Vector2(-paddingHorizontal, -paddingVertical);
-            
-            // Apply background styling
+
+            // Layout text inside (top anchored so it grows downward)
+            var textRect = tooltipText.rectTransform;
+            textRect.anchorMin = new Vector2(0f, 1f);
+            textRect.anchorMax = new Vector2(1f, 1f);
+            textRect.pivot     = new Vector2(0.5f, 1f);
+            // Offsets: top padding is -paddingVertical (because top-anchored),
+            // bottom offset is negative full content height minus padding.
+            textRect.offsetMax = new Vector2(-paddingHorizontal, -paddingVertical);
+            textRect.offsetMin = new Vector2( paddingHorizontal, -(contentHeight + paddingVertical));
+
+            // Background look & make sure it doesn't eat raycasts
             if (tooltipBackground != null)
             {
                 tooltipBackground.color = backgroundColor;
                 tooltipBackground.raycastTarget = false;
             }
-            
-            // Smart positioning based on screen position
-            Vector2 tooltipPos = CalculateSmartPosition(canvasMousePos, tooltipSize, canvasSize);
-            
-            // Set position
-            tooltipRect.localPosition = tooltipPos;
-            
-            // Ensure tooltip doesn't block raycasts
-            CanvasGroup tooltipCanvasGroup = tooltipPanel.GetComponent<CanvasGroup>();
-            if (tooltipCanvasGroup == null)
-            {
-                tooltipCanvasGroup = tooltipPanel.AddComponent<CanvasGroup>();
-            }
-            tooltipCanvasGroup.blocksRaycasts = false;
-            
-            // Show the tooltip
+
+            // Enable vertical scroll only if needed
+            EnsureScrollable(tooltipRect, textRect, contentHeight, totalHeight);
+
+            // ---------- Position ----------
+            Vector2 pos = CalculateSmartPosition(mouseLocal, tooltipSize, canvasSize, tooltipRect);
+            tooltipRect.localPosition = pos;
+
+            // Ensure the panel never blocks input
+            var cg = tooltipPanel.GetComponent<CanvasGroup>();
+            if (cg == null) cg = tooltipPanel.AddComponent<CanvasGroup>();
+            cg.blocksRaycasts = false;
+
             tooltipPanel.SetActive(true);
         }
-        
-        private Vector2 CalculateSmartPosition(Vector2 mousePos, Vector2 tooltipSize, Vector2 canvasSize)
+
+        /// <summary>
+        /// Picks a pivot & position based on free space around the cursor and clamps inside the canvas.
+        /// </summary>
+        private Vector2 CalculateSmartPosition(
+            Vector2 mouseLocal,
+            Vector2 tooltipSize,
+            Vector2 canvasSize,
+            RectTransform tooltipRect)
         {
-            Vector2 position;
-            
-            // Simple positioning: tooltip appears to the right of mouse by default
-            position.x = mousePos.x + offset.x;
-            position.y = mousePos.y + offset.y;
-            
-            // If tooltip would go off the right edge, position it to the left of mouse
-            if (position.x + tooltipSize.x > canvasSize.x * 0.5f)
-            {
-                position.x = mousePos.x - tooltipSize.x - offset.x;
-            }
-            
-            // If tooltip would go off the top edge, position it below mouse
-            if (position.y + tooltipSize.y > canvasSize.y * 0.5f)
-            {
-                position.y = mousePos.y - tooltipSize.y - offset.y;
-            }
-            
-            // If tooltip would go off the bottom edge, position it above mouse
-            if (position.y < -canvasSize.y * 0.5f)
-            {
-                position.y = mousePos.y + offset.y;
-            }
-            
-            // If tooltip would go off the left edge, position it to the right
-            if (position.x < -canvasSize.x * 0.5f)
-            {
-                position.x = mousePos.x + offset.x;
-            }
-            
-            // Final bounds clamping to ensure tooltip stays on screen
-            position.x = Mathf.Clamp(position.x, -canvasSize.x * 0.5f + 5f, canvasSize.x * 0.5f - tooltipSize.x - 5f);
-            position.y = Mathf.Clamp(position.y, -canvasSize.y * 0.5f + 5f, canvasSize.y * 0.5f - tooltipSize.y - 5f);
-            
-            return position;
+            Vector2 half = canvasSize * 0.5f;
+            const float pad = 8f;
+
+            float rightRoom  =  half.x - mouseLocal.x;
+            float leftRoom   =  half.x + mouseLocal.x;
+            float topRoom    =  half.y - mouseLocal.y;
+            float bottomRoom =  half.y + mouseLocal.y;
+
+            bool placeRight = rightRoom >= tooltipSize.x + offset.x + pad;
+            bool placeAbove = topRoom   >= tooltipSize.y + offset.y + pad;
+
+            // pivot matches the corner "touching" the cursor
+            tooltipRect.pivot = new Vector2(placeRight ? 0f : 1f, placeAbove ? 1f : 0f);
+
+            Vector2 pos = mouseLocal;
+            pos.x += placeRight ?  offset.x : -offset.x;
+            pos.y += placeAbove ?  offset.y : -offset.y;
+
+            if (!placeRight) pos.x -= tooltipSize.x;
+            if (!placeAbove) pos.y -= tooltipSize.y;
+
+            // clamp fully inside canvas
+            float minX = -half.x + pad;
+            float maxX =  half.x - tooltipSize.x - pad;
+            float minY = -half.y + pad;
+            float maxY =  half.y - tooltipSize.y - pad;
+
+            pos.x = Mathf.Clamp(pos.x, minX, maxX);
+            pos.y = Mathf.Clamp(pos.y, minY, maxY);
+
+            return pos;
         }
-        
+
+        /// <summary>
+        /// Adds/updates RectMask2D + ScrollRect to enable vertical scrolling when content is taller than the visible area.
+        /// </summary>
+        private void EnsureScrollable(RectTransform tooltipRect, RectTransform textRect, float contentHeight, float totalHeight)
+        {
+            bool needsScroll = contentHeight + paddingVertical * 2f > totalHeight;
+
+            if (needsScroll)
+            {
+                if (mask == null)
+                    mask = tooltipRect.GetComponent<RectMask2D>() ?? tooltipRect.gameObject.AddComponent<RectMask2D>();
+
+                if (scrollRect == null)
+                    scrollRect = tooltipRect.GetComponent<ScrollRect>() ?? tooltipRect.gameObject.AddComponent<ScrollRect>();
+
+                scrollRect.horizontal = false;
+                scrollRect.vertical = true;
+                scrollRect.viewport = tooltipRect;
+                scrollRect.content  = textRect;
+                scrollRect.movementType = ScrollRect.MovementType.Clamped;
+                scrollRect.scrollSensitivity = 25f;
+
+                // Make sure the content rect reports full height so ScrollRect can compute overflow
+                textRect.sizeDelta = new Vector2(textRect.sizeDelta.x, contentHeight);
+            }
+            else
+            {
+                if (scrollRect != null) scrollRect.vertical = false;
+                var m = tooltipRect.GetComponent<RectMask2D>();
+                if (m != null) Destroy(m);
+            }
+        }
+
         private void Update()
         {
-            // Update position if tooltip is visible and mouse moves
+            // Follow the mouse while visible
             if (tooltipPanel != null && tooltipPanel.activeInHierarchy && isHovering)
             {
-                // Get the canvas to convert mouse position properly
-                Canvas canvas = tooltipPanel.GetComponentInParent<Canvas>();
-                if (canvas == null) return;
-                
-                RectTransform canvasRect = canvas.GetComponent<RectTransform>();
+                if (parentCanvas == null) parentCanvas = tooltipPanel.GetComponentInParent<Canvas>();
+                if (parentCanvas == null) return;
+
+                RectTransform canvasRect = parentCanvas.GetComponent<RectTransform>();
                 RectTransform tooltipRect = tooltipPanel.GetComponent<RectTransform>();
-                
                 if (canvasRect == null || tooltipRect == null) return;
-                
-                // Convert mouse position to canvas space
-                Vector2 mousePos = Input.mousePosition;
-                Vector2 canvasMousePos;
-                
+
+                Vector2 mouse = Input.mousePosition;
+                Vector2 mouseLocal;
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
-                    canvasRect, mousePos, canvas.worldCamera, out canvasMousePos))
+                        canvasRect, mouse, parentCanvas.worldCamera, out mouseLocal))
                 {
-                    // Recalculate smart position for smooth following
-                    Vector2 tooltipSize = tooltipRect.sizeDelta;
                     Vector2 canvasSize = canvasRect.sizeDelta;
-                    Vector2 newPosition = CalculateSmartPosition(canvasMousePos, tooltipSize, canvasSize);
-                    
-                    // Smoothly move to new position
-                    tooltipRect.localPosition = Vector2.Lerp(tooltipRect.localPosition, newPosition, Time.deltaTime * 8f);
+                    Vector2 size = tooltipRect.sizeDelta;
+                    Vector2 target = CalculateSmartPosition(mouseLocal, size, canvasSize, tooltipRect);
+
+                    tooltipRect.localPosition = Vector2.Lerp(tooltipRect.localPosition, target, Time.deltaTime * 10f);
                 }
             }
         }

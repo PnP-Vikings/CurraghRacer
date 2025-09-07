@@ -3,9 +3,30 @@ using UnityEngine;
 public class SetUiActiveOnGameStart : MonoBehaviour
 {
     public GameObject[] uiElementsToActivate;
-    void Start()
+   
+
+    void OnEnable()
     {
-        GameManager.Instance.OnGameStarted.AddListener(ActivateUiElements);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStarted.AddListener(ActivateUiElements);
+            
+            if (GameManager.Instance != null)
+            {
+                if (GameManager.Instance.GetGameStarted())
+                {
+                    ActivateUiElements();
+                }
+            }
+        }
+    }    
+    
+    void OnDisable()
+    {
+        if(GameManager.Instance != null)
+        {
+            GameManager.Instance.OnGameStarted.RemoveListener(ActivateUiElements);
+        }
     }
     
     public void ActivateUiElements()
