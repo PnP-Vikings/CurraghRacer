@@ -14,6 +14,7 @@ public class Team : ScriptableObject
     public Color teamColor;
     public int teamQuality;
     public TeamType teamType = TeamType.AI; // Type of team (Player, AI, Custom)
+    public int teamExperience;
 
     [Header("Form & Performance")]
     [Tooltip("Current form rating (0-100). Higher form = better recent performance.")]
@@ -86,7 +87,36 @@ public class Team : ScriptableObject
         currentForm = 50f;
         recentResults.Clear();
     }
+    
+    
+    public void GiveExperience(int xp)
+    {
+        teamExperience += xp;
+        // Optionally, increase team quality based on experience thresholds
+        if (teamExperience >= 1000)
+        {
+            teamQuality = Mathf.Min(100, teamQuality + 1);
+            teamExperience = 0; // Reset experience after quality increase
+        }
+        
+        UseExperience();
+    }
 
+    public void UseExperience()
+    {
+        for (int i = 0; i < teamMembers.Length; i++)
+        {
+            if (teamMembers[i] != null)
+            {
+                teamMembers[i].UpdateExperience(teamExperience / teamMembers.Length);
+            }
+        }
+    }
+
+    public void ResetLifetimeStats()
+    {
+        lifetimeStats = new SeasonStats();
+    }
     /// <summary>
     /// Gets the team's combined stats from all team members.
     /// Returns average stats if team has members, otherwise generates stats based on team quality.

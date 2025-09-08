@@ -210,7 +210,10 @@ namespace League
             for (int i = 0; i < raceTeams.Length && i < allPositions.Length; i++)
             {
                 raceTeams[i].RecordRaceFinish(allPositions[i]);
+                raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace / allPositions[i]); // More experience for better positions
             }
+            
+            
             
             // Advance to next race
             AdvanceToNextRace();
@@ -250,6 +253,7 @@ namespace League
                         if (team != null)
                         {
                             team.ResetCurrentSeasonStats();
+                            team.ResetLifetimeStats();
                         }
                     }
                 }
