@@ -40,7 +40,9 @@ public class FinishMenu : MonoBehaviour
 
         RaceManager.Instance.CheeringAndClapping.setParameterByName("Mute Cheering and Clapping", 0f);
         RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
-        
+        //RaceManager.Instance.GarageAmbience.start();
+        RaceManager.Instance.Radio.start();
+
         RaceManager.Instance.EndRace();
     }
 

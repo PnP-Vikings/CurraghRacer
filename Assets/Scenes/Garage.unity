@@ -2886,6 +2886,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2093723885}
   - component: {fileID: 2093723886}
+  - component: {fileID: 2093723887}
   m_Layer: 0
   m_Name: GarageAmbience
   m_TagString: Untagged
@@ -2928,6 +2929,37 @@ MonoBehaviour:
       Data3: 571930299
       Data4: -1423150328
     Path: event:/Garage/Garage Ambience
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &2093723887
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2093723884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1631407570
+      Data2: 1266200538
+      Data3: 1622871474
+      Data4: 857866657
+    Path: event:/Garage/Radio
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
@@ -3284,7 +3316,6 @@ SceneRoots:
   - {fileID: 5166841709830490626}
   - {fileID: 1215768661}
   - {fileID: 1133315093}
-  - {fileID: 2093723885}
   - {fileID: 1403521960}
   - {fileID: 543745550}
   - {fileID: 1146619322}
@@ -3293,3 +3324,4 @@ SceneRoots:
   - {fileID: 1250476852}
   - {fileID: 858084231}
   - {fileID: 1369719521}
+  - {fileID: 2093723885}

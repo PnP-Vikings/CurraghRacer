@@ -13,7 +13,7 @@ namespace League
         public LeagueInviteCardsUi leagueInviteCardsUi;
         public UnityEvent onPlayerJoinedLeague;
         FMOD.Studio.EventInstance UIClick1;
-        FMOD.Studio.EventInstance ShowInvite;
+        //FMOD.Studio.EventInstance ShowInvite;
 
 
         private void Awake()
@@ -65,12 +65,10 @@ namespace League
 
         public void ShowLeagueInvite()
         {
-            ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
-            ShowInvite.start();
-
             if (currentLeague != null)
             {
-                if(leagueInviteCardsUi != null)
+
+                if (leagueInviteCardsUi != null)
                 {
                     LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
                     leaguecard.gameObject.SetActive(true);
@@ -83,8 +81,10 @@ namespace League
                     SetPlayerHasAcceptedInvite();
                 
                 }
+                //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
+                //ShowInvite.start();
             }
-        
+
         }
 
         

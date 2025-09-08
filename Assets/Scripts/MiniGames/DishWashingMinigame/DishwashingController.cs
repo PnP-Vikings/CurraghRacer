@@ -32,7 +32,9 @@ public class DishwashingController : MonoBehaviour
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovePlateAudio;
+    FMOD.Studio.EventInstance KitchenAmbience;
     //Coroutine SpongeAudioCoroutine;
+
 
     void OnEnable()
     {
@@ -51,7 +53,13 @@ public class DishwashingController : MonoBehaviour
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
         MovePlateToCleanPosition();
-        
+
+        //RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
+        RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
+        KitchenAmbience.start();
+
     }
 
     void Update()
@@ -142,12 +150,16 @@ public class DishwashingController : MonoBehaviour
        if(platesCleaned.Count == spawnCount)
        {
            Debug.Log("Dishwashing minigame completed!");
-           // Let MiniGameManager handle the completion instead of loading scene directly
-           // SceneManager.LoadScene("RaceScene"); 
-           // if(GameManager.Instance != null)
-           // {
-           //     GameManager.Instance.PlayerWorked();
-           // }
+            // Let MiniGameManager handle the completion instead of loading scene directly
+            // SceneManager.LoadScene("RaceScene"); 
+            // if(GameManager.Instance != null)
+            // {
+            //     GameManager.Instance.PlayerWorked();
+            // }
+
+            KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            RaceManager.Instance.GarageAmbience.start();
+            RaceManager.Instance.Radio.start();
        }
       
     }

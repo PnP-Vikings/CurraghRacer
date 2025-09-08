@@ -159,6 +159,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{5ed8e76d-5fa5-4445-917e-5694c81e6405}">
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{55b26315-b7ce-4e6c-abed-46357a03e4cf}</destination>
 		</relationship>
@@ -415,10 +418,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>6500</value>
+			<value>7550</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>9000</value>
+			<value>10000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -517,6 +520,7 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{55b26315-b7ce-4e6c-abed-46357a03e4cf}">
 		<relationship name="effects">
+			<destination>{7be1395d-00ae-4194-aaba-1500f29a36a8}</destination>
 			<destination>{ad1437bf-b2ea-499a-a68f-92006dd6175e}</destination>
 		</relationship>
 	</object>
@@ -664,6 +668,11 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{06841160-ae13-41a6-b034-912e719db36d}" />
+	<object class="GainEffect" id="{7be1395d-00ae-4194-aaba-1500f29a36a8}">
+		<relationship name="modulators">
+			<destination>{0266774a-a825-4299-b21d-0f327b54906c}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{ad1437bf-b2ea-499a-a68f-92006dd6175e}" />
 	<object class="MultibandEqEffect" id="{49a0faa2-fa24-442d-8603-a0a360a1229c}">
 		<property name="filterTypeA">
@@ -740,7 +749,7 @@
 	</object>
 	<object class="SingleSound" id="{0198a50d-6197-43dd-8897-118127653055}">
 		<property name="name">
-			<value>Is this subic</value>
+			<value>Is This Soobik</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{0d81ff2c-0019-4bd8-aaff-e364bc30d1d7}</destination>
@@ -751,7 +760,7 @@
 			<value>Gwan Now</value>
 		</property>
 		<property name="volume">
-			<value>3.5</value>
+			<value>5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{4860ac30-7a04-45cb-99ce-6ee82c51ad44}</destination>
@@ -801,11 +810,17 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{123d2435-7fbb-4d96-99d9-1e9094fb496f}">
+		<property name="name">
+			<value>Ye Soobik Chil Ye</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{9f691a2c-3795-4f9e-8635-194d26eedc87}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{c7facf37-2dee-4363-b48a-05c9ced46e62}">
+		<property name="name">
+			<value>Front Of House! (Chef Dialogue 6)</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{88f4bf2c-7fb1-48d6-9635-2bce00db16b6}</destination>
 		</relationship>
@@ -818,6 +833,20 @@
 	<object class="MixerBusFader" id="{d10e10f8-e6b3-4936-96bf-6dc9bc931b60}" />
 	<object class="MixerBusFader" id="{078e07bc-2792-43b0-83ff-9526ce2b842d}" />
 	<object class="MixerBusFader" id="{f02ec2b4-9b6c-43dc-a834-2c3db65bdbaa}" />
+	<object class="ADSRModulator" id="{0266774a-a825-4299-b21d-0f327b54906c}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>850</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="ADSRModulator" id="{048ff489-3c3c-45f3-9a86-cefa0ef9469b}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>gain</value>

@@ -285,10 +285,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>3500</value>
+			<value>6000</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>5000</value>
+			<value>8000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -423,6 +423,10 @@
 			<destination>{64c3ba93-5563-4543-bec4-63ca35f8351a}</destination>
 			<destination>{37f6bacf-482e-4f81-b567-c153ce335593}</destination>
 			<destination>{ddd546e6-2a73-4f9b-a84d-95919efa9833}</destination>
+			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
+		</relationship>
+		<relationship name="playPercentages">
+			<destination>{daca8fe2-f6ce-47b2-ad52-37c354454fc1}</destination>
 		</relationship>
 	</object>
 	<object class="Automator" id="{efa954df-c30b-4fc5-baad-8d35056e933f}">
@@ -435,6 +439,8 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{9488a378-0cb3-4698-986f-97552756a3d5}">
 		<relationship name="effects">
+			<destination>{bb09bbdf-f2b7-42ca-bd14-fe1fd1ba9c28}</destination>
+			<destination>{7ed5db40-9d7d-4402-9c3a-092714ff254c}</destination>
 			<destination>{feb1cd61-79a0-4736-875d-380bbc85321d}</destination>
 		</relationship>
 	</object>
@@ -481,7 +487,7 @@
 	</object>
 	<object class="GainEffect" id="{f3891836-50a3-472e-bc47-95df1aa0d317}">
 		<property name="gain">
-			<value>-1</value>
+			<value>-2</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{63362af0-9f45-4140-8ba8-7dbf4cd281c2}" />
@@ -515,6 +521,22 @@
 			<destination>{8c27e8df-e712-4a6a-a60f-1ee4205293d1}</destination>
 		</relationship>
 	</object>
+	<object class="SingleSound" id="{c147fc5d-d0d6-4c00-9504-5111acc63907}">
+		<property name="volume">
+			<value>6</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{a4cb717a-170a-44d5-a3ce-04c2cdd84dcb}</destination>
+		</relationship>
+	</object>
+	<object class="PlayPercentage" id="{daca8fe2-f6ce-47b2-ad52-37c354454fc1}">
+		<property name="percentage">
+			<value>100</value>
+		</property>
+		<relationship name="sound">
+			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
+		</relationship>
+	</object>
 	<object class="AutomationCurve" id="{0f4bf3cc-bc45-469d-9efc-99f32ae86ccb}">
 		<relationship name="parameter">
 			<destination>{e62934b8-c9e4-4d28-b68c-6443aec2ffe0}</destination>
@@ -522,6 +544,34 @@
 		<relationship name="automationPoints">
 			<destination>{9034b5f6-5745-4486-9060-7447df8e1dc7}</destination>
 			<destination>{4ceb32df-eaaa-48e6-b981-100bd55dfe3d}</destination>
+		</relationship>
+	</object>
+	<object class="MultibandEqEffect" id="{bb09bbdf-f2b7-42ca-bd14-fe1fd1ba9c28}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="filterTypeE">
+			<value>1</value>
+		</property>
+		<property name="frequencyA">
+			<value>240</value>
+		</property>
+		<property name="frequencyE">
+			<value>7000</value>
+		</property>
+		<property name="qualityA">
+			<value>0.340000004</value>
+		</property>
+		<property name="qualityE">
+			<value>0.479999989</value>
+		</property>
+	</object>
+	<object class="GainEffect" id="{7ed5db40-9d7d-4402-9c3a-092714ff254c}">
+		<property name="gain">
+			<value>2</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{69021a76-362b-4a7b-8ce2-61dabed272b1}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{feb1cd61-79a0-4736-875d-380bbc85321d}" />
@@ -570,6 +620,29 @@
 			<value>0</value>
 		</property>
 		<property name="value">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="ADSRModulator" id="{69021a76-362b-4a7b-8ce2-61dabed272b1}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>920</value>
+		</property>
+		<property name="attackShape">
+			<value>-0.587577224</value>
+		</property>
+		<property name="releaseTime">
+			<value>1400</value>
+		</property>
+		<property name="releaseShape">
+			<value>-0.271852672</value>
+		</property>
+		<property name="finalValue">
 			<value>-80</value>
 		</property>
 	</object>

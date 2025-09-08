@@ -316,7 +316,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638925047632019354
+  lastModified: 638929418988515113
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -493,10 +493,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638925047632054725
+  lastModified: 638929418988562529
   FileSizes:
   - Name: 
-    Value: 2340
+    Value: 2376
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -622,12 +622,13 @@ MonoBehaviour:
   - {fileID: -1702041834828596594}
   - {fileID: 5916317957201816820}
   - {fileID: 5769496863046401991}
+  - {fileID: 4552225702241423523}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638925047632054725
+  cacheTime: 638929418988562529
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -761,6 +762,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 374
+--- !u!114 &4552225702241423523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Garage/Radio
+  m_EditorClassIdentifier: 
+  Path: event:/Garage/Radio
+  Guid:
+    Data1: 1631407570
+    Data2: 1266200538
+    Data3: 1622871474
+    Data4: 857866657
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 37844
 --- !u!114 &4634745327960995208
 MonoBehaviour:
   m_ObjectHideFlags: 0

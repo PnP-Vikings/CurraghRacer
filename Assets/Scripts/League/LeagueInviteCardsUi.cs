@@ -12,12 +12,17 @@ public class LeagueInviteCardsUi : MonoBehaviour
   
   public static LeagueInviteCardsUi Instance { get; private set; }
   
+  //FMOD.Studio.EventInstance ShowInvite;
+
   private void Awake()
   {
     if (Instance == null)
     {
       Instance =this;
+      //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
+      //ShowInvite.start();
     }
+
     else
     {
       Destroy(gameObject);
