@@ -193,7 +193,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{31af8951-a5a6-4457-a1d5-11d765d7afd0}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-7</value>
 		</property>
 		<property name="name">
 			<value>Clock Loop (Layer 3)</value>

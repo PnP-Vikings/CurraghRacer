@@ -50,6 +50,7 @@ public class RaceManager : MonoBehaviour
     FMOD.Studio.EventInstance RaceAmbience;
     public FMOD.Studio.EventInstance CheeringAndClapping;
     FMOD.Studio.EventInstance NegativeEncouragement;
+    public FMOD.Studio.EventInstance Radio;
 
     private void Awake()
     {
@@ -59,6 +60,8 @@ public class RaceManager : MonoBehaviour
 
             GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
             GarageAmbience.start();
+            Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
+            Radio.start();
         }
         else
         {
@@ -271,6 +274,7 @@ public class RaceManager : MonoBehaviour
         RaceAmbience.start();
         GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
         //GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
