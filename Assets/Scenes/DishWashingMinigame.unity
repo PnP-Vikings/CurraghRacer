@@ -1168,6 +1168,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: -8162508261561357857, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 623.6
+      objectReference: {fileID: 0}
+    - target: {fileID: -8162508261561357857, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 1091.2999
+      objectReference: {fileID: 0}
+    - target: {fileID: -8162508261561357857, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 155.9
+      objectReference: {fileID: 0}
+    - target: {fileID: -8162508261561357857, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: -5912466594128183791, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
       propertyPath: m_Materials.Array.size
       value: 2
@@ -1211,6 +1227,22 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
       propertyPath: m_Name
       value: M_012.Kitchen Sink
+      objectReference: {fileID: 0}
+    - target: {fileID: 2489159159464621496, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 340.4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2489159159464621496, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 953.11993
+      objectReference: {fileID: 0}
+    - target: {fileID: 2489159159464621496, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 1361.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2489159159464621496, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
+      propertyPath: m_ConstrainProportionsScale
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 4198238668208200684, guid: 6ab0f93b342ccb04c8d8c18be0b6775e, type: 3}
       propertyPath: m_Materials.Array.size
