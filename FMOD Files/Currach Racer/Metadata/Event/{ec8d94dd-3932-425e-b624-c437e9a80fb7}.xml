@@ -361,6 +361,7 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{f717dd95-edb8-45f4-bbc0-347b6d518955}">
 		<relationship name="effects">
+			<destination>{58065cd7-1292-4e8e-9c32-ea7402eeb710}</destination>
 			<destination>{b0c5fb62-77cb-4720-9f33-5772c1ce9494}</destination>
 		</relationship>
 	</object>
@@ -425,9 +426,6 @@
 			<destination>{ddd546e6-2a73-4f9b-a84d-95919efa9833}</destination>
 			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
 		</relationship>
-		<relationship name="playPercentages">
-			<destination>{daca8fe2-f6ce-47b2-ad52-37c354454fc1}</destination>
-		</relationship>
 	</object>
 	<object class="Automator" id="{efa954df-c30b-4fc5-baad-8d35056e933f}">
 		<property name="nameOfPropertyBeingAutomated">
@@ -452,6 +450,14 @@
 		<relationship name="automationPoints">
 			<destination>{fd70491d-929b-42dc-8380-86ced365cb2c}</destination>
 			<destination>{d95af698-ad4a-44fc-bfa3-0113b472ba0e}</destination>
+		</relationship>
+	</object>
+	<object class="GainEffect" id="{58065cd7-1292-4e8e-9c32-ea7402eeb710}">
+		<property name="gain">
+			<value>2</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{cf2e5598-f4a6-4130-b2c8-8c4a2e46c735}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{b0c5fb62-77cb-4720-9f33-5772c1ce9494}" />
@@ -529,14 +535,6 @@
 			<destination>{a4cb717a-170a-44d5-a3ce-04c2cdd84dcb}</destination>
 		</relationship>
 	</object>
-	<object class="PlayPercentage" id="{daca8fe2-f6ce-47b2-ad52-37c354454fc1}">
-		<property name="percentage">
-			<value>100</value>
-		</property>
-		<relationship name="sound">
-			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
-		</relationship>
-	</object>
 	<object class="AutomationCurve" id="{0f4bf3cc-bc45-469d-9efc-99f32ae86ccb}">
 		<relationship name="parameter">
 			<destination>{e62934b8-c9e4-4d28-b68c-6443aec2ffe0}</destination>
@@ -567,6 +565,9 @@
 		</property>
 	</object>
 	<object class="GainEffect" id="{7ed5db40-9d7d-4402-9c3a-092714ff254c}">
+		<property name="bypass">
+			<value>true</value>
+		</property>
 		<property name="gain">
 			<value>2</value>
 		</property>
@@ -588,6 +589,29 @@
 			<value>0</value>
 		</property>
 		<property name="value">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="ADSRModulator" id="{cf2e5598-f4a6-4130-b2c8-8c4a2e46c735}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>920</value>
+		</property>
+		<property name="attackShape">
+			<value>-0.628728509</value>
+		</property>
+		<property name="releaseTime">
+			<value>1400</value>
+		</property>
+		<property name="releaseShape">
+			<value>-0.215306789</value>
+		</property>
+		<property name="finalValue">
 			<value>-80</value>
 		</property>
 	</object>

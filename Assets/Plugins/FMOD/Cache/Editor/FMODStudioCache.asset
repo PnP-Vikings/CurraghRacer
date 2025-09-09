@@ -316,7 +316,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638929418988515113
+  lastModified: 638930210799402890
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -397,6 +397,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
+--- !u!114 &-2624806273485465106
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Kitchen/Currach Dance Track
+  m_EditorClassIdentifier: 
+  Path: event:/Kitchen/Currach Dance Track
+  Guid:
+    Data1: -489040667
+    Data2: 1281603910
+    Data3: 927385729
+    Data4: -744031613
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 53333
 --- !u!114 &-2376005639705754878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -493,10 +520,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638929418988562529
+  lastModified: 638930210799450090
   FileSizes:
   - Name: 
-    Value: 2376
+    Value: 2426
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -623,12 +650,13 @@ MonoBehaviour:
   - {fileID: 5916317957201816820}
   - {fileID: 5769496863046401991}
   - {fileID: 4552225702241423523}
+  - {fileID: -2624806273485465106}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638929418988562529
+  cacheTime: 638930210799450090
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
