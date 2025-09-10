@@ -33,6 +33,7 @@ public class DishwashingController : MonoBehaviour
 
     FMOD.Studio.EventInstance MovePlateAudio;
     FMOD.Studio.EventInstance KitchenAmbience;
+    //FMOD.Studio.EventInstance CurrachDanceTrack;
     //Coroutine SpongeAudioCoroutine;
 
 
@@ -59,7 +60,8 @@ public class DishwashingController : MonoBehaviour
         RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         KitchenAmbience.start();
-
+        //CurrachDanceTrack = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Currach Dance Track");
+        //CurrachDanceTrack.start();
     }
 
     void Update()
@@ -158,6 +160,7 @@ public class DishwashingController : MonoBehaviour
             // }
 
             KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //CurrachDanceTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             RaceManager.Instance.GarageAmbience.start();
             RaceManager.Instance.Radio.start();
        }
