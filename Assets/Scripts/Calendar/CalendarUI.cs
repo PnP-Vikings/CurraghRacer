@@ -48,6 +48,9 @@ namespace Calendar
                 DateTime cellDate = new DateTime(displayedYear, displayedMonth + 1, i);
                 cell.SetupDay(cellDate);
                 
+                // IMPORTANT: Pass CalendarEvents reference to each cell for tooltip functionality
+                cell.calendarEvents = calendarEvents;
+                
                 // Set default styling FIRST
                 SetDefaultCellStyling(cell, i);
                 
@@ -61,6 +64,8 @@ namespace Calendar
                     cell.SetAllTextColor(Color.black);
                 }
             }
+            
+
         }
         
         private void SetDefaultCellStyling(DayEventHandler cell, int dayNumber)

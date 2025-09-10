@@ -60,6 +60,7 @@ public class LeagueInviteCardsUi : MonoBehaviour
   {
     LeagueController.Instance.GenerateRaceSchedule();
     LeagueController.Instance.SetPlayerHasAcceptedInvite();
+    Destroy(gameObject);
   }
   
 }

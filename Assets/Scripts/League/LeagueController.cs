@@ -50,6 +50,9 @@ namespace League
                 ClearLeague();
                 RegenerateRaceSchedule();
                 currentLeague.RecalculateStandings();
+                GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
+                
+              
             }
             else
             {
@@ -58,7 +61,7 @@ namespace League
 
             
             
-            GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
+           
         }
 
 
@@ -68,7 +71,7 @@ namespace League
             if (currentLeague != null)
             {
 
-                if (leagueInviteCardsUi != null)
+                if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
                 {
                     LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
                     leaguecard.gameObject.SetActive(true);
@@ -216,7 +219,10 @@ namespace League
             for (int i = 0; i < raceTeams.Length && i < allPositions.Length; i++)
             {
                 raceTeams[i].RecordRaceFinish(allPositions[i]);
+                raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace / allPositions[i]); // More experience for better positions
             }
+            
+            
             
             // Advance to next race
             AdvanceToNextRace();
@@ -256,6 +262,8 @@ namespace League
                         if (team != null)
                         {
                             team.ResetCurrentSeasonStats();
+                            team.ResetLifetimeStats();
+                            team.ResetAllPlayerStats();
                         }
                     }
                 }

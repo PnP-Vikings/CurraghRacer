@@ -42,6 +42,12 @@ namespace League
         [Tooltip("List of Tracks available for this league.")]
         public RaceDetails[] raceTracks;
 
+        [Tooltip("Max Experience Given per Race")]
+        public int maxExperienceGivenPerRace = 400;
+        
+        [Tooltip("Max Currency Given Per Race")]
+        public int maxCurrencyGivenPerRace = 125;
+        
         public List<RaceDayFormation> GenerateRaceSchedule(Team[] teams, int boatsPerRace, int repeatCount)
         {
             // Find player team if it exists
