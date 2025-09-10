@@ -12,7 +12,10 @@ namespace League
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
         public UnityEvent onPlayerJoinedLeague;
-        
+        FMOD.Studio.EventInstance UIClick1;
+        //FMOD.Studio.EventInstance ShowInvite;
+
+
         private void Awake()
         {
             if (Instance == null)
@@ -67,6 +70,7 @@ namespace League
         {
             if (currentLeague != null)
             {
+
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
                 {
                     LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
@@ -80,15 +84,20 @@ namespace League
                     SetPlayerHasAcceptedInvite();
                 
                 }
+                //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
+                //ShowInvite.start();
             }
-        
+
         }
 
         
         public void SetPlayerHasAcceptedInvite()
         {
             currentLeague.playerHasJoined = true;
-            
+
+            UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
+            UIClick1.start();
+
             // Set the tournament start date when player joins (this should be fixed and not change)
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
             onPlayerJoinedLeague?.Invoke();

@@ -97,7 +97,7 @@
 			<destination>{7eaa1301-1270-4fa2-a661-c0b9c1a231a5}</destination>
 		</relationship>
 		<relationship name="markers">
-			<destination>{95f754ea-7cdb-4f04-9af9-e1927ee8384a}</destination>
+			<destination>{1fec8145-a153-4ec0-ac05-e8a2a3ea88ef}</destination>
 		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{db2e31bb-67a4-4ac7-868e-e2504dabf802}">
@@ -193,7 +193,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{31af8951-a5a6-4457-a1d5-11d765d7afd0}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-7</value>
 		</property>
 		<property name="name">
 			<value>Clock Loop (Layer 3)</value>
@@ -208,7 +208,7 @@
 			<destination>{30269d9c-561e-4fae-a0f1-2e916976db00}</destination>
 		</relationship>
 	</object>
-	<object class="LoopRegion" id="{95f754ea-7cdb-4f04-9af9-e1927ee8384a}">
+	<object class="LoopRegion" id="{1fec8145-a153-4ec0-ac05-e8a2a3ea88ef}">
 		<property name="position">
 			<value>0</value>
 		</property>

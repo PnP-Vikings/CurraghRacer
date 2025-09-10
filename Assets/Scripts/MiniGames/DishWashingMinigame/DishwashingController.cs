@@ -32,7 +32,10 @@ public class DishwashingController : MonoBehaviour
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovePlateAudio;
+    FMOD.Studio.EventInstance KitchenAmbience;
+    //FMOD.Studio.EventInstance CurrachDanceTrack;
     //Coroutine SpongeAudioCoroutine;
+
 
     void OnEnable()
     {
@@ -51,7 +54,13 @@ public class DishwashingController : MonoBehaviour
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
         MovePlateToCleanPosition();
-        
+
+        RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
+        KitchenAmbience.start();
+        //CurrachDanceTrack = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Currach Dance Track");
+        //CurrachDanceTrack.start();
     }
 
     void Update()
@@ -142,12 +151,17 @@ public class DishwashingController : MonoBehaviour
        if(platesCleaned.Count == spawnCount)
        {
            Debug.Log("Dishwashing minigame completed!");
-           // Let MiniGameManager handle the completion instead of loading scene directly
-           // SceneManager.LoadScene("RaceScene"); 
-           // if(GameManager.Instance != null)
-           // {
-           //     GameManager.Instance.PlayerWorked();
-           // }
+            // Let MiniGameManager handle the completion instead of loading scene directly
+            // SceneManager.LoadScene("RaceScene"); 
+            // if(GameManager.Instance != null)
+            // {
+            //     GameManager.Instance.PlayerWorked();
+            // }
+
+            KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //CurrachDanceTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            RaceManager.Instance.GarageAmbience.start();
+            RaceManager.Instance.Radio.start();
        }
       
     }
