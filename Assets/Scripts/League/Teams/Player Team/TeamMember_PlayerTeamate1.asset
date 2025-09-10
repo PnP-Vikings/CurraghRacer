@@ -12,12 +12,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26edd04dcd6531745a76075084b8ddac, type: 3}
   m_Name: TeamMember_PlayerTeamate1
   m_EditorClassIdentifier: 
-  memberName: Player Teammate
+  memberName: 'Declan Kelly '
   memberIcon: {fileID: 0}
   memberPrefab: {fileID: 0}
   memberDescription: 
   age: 24
-  attitude: 1
+  attitude: 6
   characterStats:
     strength: 5
     stamina: 5

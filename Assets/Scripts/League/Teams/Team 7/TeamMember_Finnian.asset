@@ -17,12 +17,12 @@ MonoBehaviour:
   memberPrefab: {fileID: 0}
   memberDescription: 
   age: 23
-  attitude: 4
+  attitude: 7
   characterStats:
     strength: 5
     stamina: 5
-    technique: 5
-    teamWork: 5
+    technique: 6
+    teamWork: 8
   level: 1
   experience: 0
   xpToNextLevel: 100

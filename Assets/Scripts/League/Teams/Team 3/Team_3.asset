@@ -16,8 +16,9 @@ MonoBehaviour:
   teamDescription: 
   teamLogo: {fileID: 0}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
-  teamQuality: 5
+  teamQuality: 1
   teamType: 2
+  teamExperience: 100
   currentForm: 50
   recentResults: 
   teamMembers:
