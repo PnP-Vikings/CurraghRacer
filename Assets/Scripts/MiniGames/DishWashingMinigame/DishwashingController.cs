@@ -55,7 +55,6 @@ public class DishwashingController : MonoBehaviour
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
         MovePlateToCleanPosition();
 
-        //RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
         RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
