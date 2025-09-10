@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 26edd04dcd6531745a76075084b8ddac, type: 3}
   m_Name: TeamMember_PlayerTeamate3
   m_EditorClassIdentifier: 
-  memberName: Player Teammate
+  memberName: Tubs Delvin
   memberIcon: {fileID: 0}
   memberPrefab: {fileID: 0}
   memberDescription: 

@@ -17,7 +17,7 @@ MonoBehaviour:
   memberPrefab: {fileID: 0}
   memberDescription: 
   age: 24
-  attitude: 1
+  attitude: 7
   characterStats:
     strength: 5
     stamina: 5
