@@ -254,6 +254,7 @@ namespace League
                         {
                             team.ResetCurrentSeasonStats();
                             team.ResetLifetimeStats();
+                            team.ResetAllPlayerStats();
                         }
                     }
                 }

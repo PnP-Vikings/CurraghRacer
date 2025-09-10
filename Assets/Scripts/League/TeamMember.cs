@@ -61,12 +61,46 @@ public class TeamMember : ScriptableObject
         return characterStats;
     }
     
-    public void ResetAllStats()
+    
+    
+    public void ResetAllStats(int teamQuality = 1)
     {
-        characterStats = new CharacterStats(5f, 5f, 5f, 5f);
+        characterStats = GetDefaultStatsBasedOnAttitude(teamQuality);
         level = 1;
         experience = 0;
         xpToNextLevel = 100;
+    }
+    
+    public CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
+    {
+        switch (attitude)
+        {
+            case Attitude.Positive:
+                return new CharacterStats(6f * teamQuality, 5f * teamQuality, 6f * teamQuality, 7f * teamQuality);
+            case Attitude.Competitive:
+                return new CharacterStats(7f * teamQuality, 5f * teamQuality, 6f * teamQuality, 4f * teamQuality);
+            case Attitude.Cooperative:
+                return new CharacterStats(5f * teamQuality, 5f * teamQuality, 6f * teamQuality, 8f * teamQuality);
+            case Attitude.Aggressive:
+                return new CharacterStats(7f * teamQuality, 6f * teamQuality, 5f * teamQuality, 3f * teamQuality);
+            case Attitude.Energetic:
+                return new CharacterStats(6f * teamQuality, 7f * teamQuality, 5f * teamQuality, 5f * teamQuality);
+            case Attitude.Cautious:
+                return new CharacterStats(5f * teamQuality, 6f * teamQuality, 7f * teamQuality, 6f * teamQuality);
+            case Attitude.Lazy:
+                return new CharacterStats(4f * teamQuality, 4f * teamQuality, 5f * teamQuality, 5f * teamQuality);
+            case Attitude.Negative:
+                return new CharacterStats(5f * teamQuality, 5f * teamQuality, 5f * teamQuality, 3f * teamQuality);
+            case Attitude.Neutral:
+            default:
+                return new CharacterStats(5f * teamQuality, 5f * teamQuality, 5f * teamQuality, 5f * teamQuality);
+        }
+    }
+    
+    
+    public int ExperienceNeededForNextLevel()
+    {
+        return xpToNextLevel - experience;
     }
     
     public void UpdateExperience(int xpGained)

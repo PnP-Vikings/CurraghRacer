@@ -87,17 +87,30 @@ public class Team : ScriptableObject
         currentForm = 50f;
         recentResults.Clear();
     }
+
+    public void ResetAllPlayerStats()
+    {
+        for (int i = 0; i < teamMembers.Length; i++)
+        {
+            if (teamMembers[i] != null)
+            {
+                teamMembers[i].ResetAllStats(teamQuality);
+            }
+        }
+    }
     
     
     public void GiveExperience(int xp)
     {
         teamExperience += xp;
         // Optionally, increase team quality based on experience thresholds
+        /*
         if (teamExperience >= 1000)
         {
             teamQuality = Mathf.Min(100, teamQuality + 1);
             teamExperience = 0; // Reset experience after quality increase
         }
+        */
         
         UseExperience();
     }
@@ -106,11 +119,16 @@ public class Team : ScriptableObject
     {
         for (int i = 0; i < teamMembers.Length; i++)
         {
+
             if (teamMembers[i] != null)
             {
+                
                 teamMembers[i].UpdateExperience(teamExperience / teamMembers.Length);
+                teamExperience -= (teamExperience / teamMembers.Length);
             }
+
         }
+        
     }
 
     public void ResetLifetimeStats()
