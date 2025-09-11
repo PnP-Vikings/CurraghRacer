@@ -58,6 +58,9 @@ namespace MiniGames
                 if (gameTimer <= 0)
                 {
                     EndGame();
+                    RaceManager.Instance.GarageAmbience.start();
+                    RaceManager.Instance.Radio.start();
+                    //DishwashingController.Instance.KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 }
                 
                 currentGameInstance?.UpdateGame();
@@ -237,7 +240,7 @@ namespace MiniGames
         public void EndGame(bool forceEnd = false)
         {
             gameActive = false;
-            
+
             if (currentGameInstance != null)
             {
                 currentGameInstance.EndGame();

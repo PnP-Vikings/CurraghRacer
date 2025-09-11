@@ -1269,6 +1269,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: M_003.Modern Irish House 2 storey
       objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: b9b1ae8948af84243b163dbf66b579ae, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 2654713335656134247, guid: b9b1ae8948af84243b163dbf66b579ae, type: 3}
       propertyPath: m_IsActive
       value: 0
@@ -1498,6 +1502,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: eb91ef7e6a1eb58459c45f66d6ec2ce9, type: 3}
       propertyPath: m_Name
       value: M_002.Currach scene multiple plains
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: eb91ef7e6a1eb58459c45f66d6ec2ce9, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 2654713335656134247, guid: eb91ef7e6a1eb58459c45f66d6ec2ce9, type: 3}
       propertyPath: m_IsActive
@@ -2091,6 +2099,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 0c6f221b263552149afe78901086dddb, type: 3}
       propertyPath: m_Name
       value: M_001.Modern Irish Cottage
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 0c6f221b263552149afe78901086dddb, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6878276038103193739, guid: 0c6f221b263552149afe78901086dddb, type: 3}
       propertyPath: m_LocalPosition.x
