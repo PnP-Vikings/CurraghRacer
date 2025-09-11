@@ -418,10 +418,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>7550</value>
+			<value>8450</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>10000</value>
+			<value>16000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -763,7 +763,7 @@
 			<value>Gwan Now</value>
 		</property>
 		<property name="volume">
-			<value>5</value>
+			<value>10</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{4860ac30-7a04-45cb-99ce-6ee82c51ad44}</destination>

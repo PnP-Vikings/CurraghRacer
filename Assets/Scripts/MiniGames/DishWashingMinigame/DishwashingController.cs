@@ -32,10 +32,7 @@ public class DishwashingController : MonoBehaviour
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovePlateAudio;
-    FMOD.Studio.EventInstance KitchenAmbience;
-    //FMOD.Studio.EventInstance CurrachDanceTrack;
-    //Coroutine SpongeAudioCoroutine;
-
+    /*public*/ FMOD.Studio.EventInstance KitchenAmbience;
 
     void OnEnable()
     {
@@ -59,8 +56,6 @@ public class DishwashingController : MonoBehaviour
         RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         KitchenAmbience.start();
-        //CurrachDanceTrack = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Currach Dance Track");
-        //CurrachDanceTrack.start();
     }
 
     void Update()
@@ -78,10 +73,6 @@ public class DishwashingController : MonoBehaviour
             Vector3 targetPos = hit.point;
             targetPos.y += hoverHeight;
             spongeInstance.transform.position = targetPos;
-
-            //PlaySpongeAudio();
-            //SpongeAudioCoroutine = StartCoroutine(PlaySpongeAudio());
-            //PlaykaSpongeAudio();
         }
         else
         {
@@ -91,20 +82,6 @@ public class DishwashingController : MonoBehaviour
             spongeInstance.transform.position = fallback;
         }
     }
-
-    //public void PlaykaSpongeAudio()
-    //{
-    //    FMOD.Studio.EventInstance kaSponge;
-    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
-    //    kaSponge.start();
-    //}
-    //IEnumerator PlaySpongeAudio()
-    //{
-    //    FMOD.Studio.EventInstance kaSponge;
-    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Mini Games/kaSponge");
-    //    kaSponge.start();
-    //    yield return new WaitForSeconds(1f);
-    //}
 
     public void MovePlateToCleanPosition()
     {
@@ -159,7 +136,6 @@ public class DishwashingController : MonoBehaviour
             // }
 
             KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            //CurrachDanceTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             RaceManager.Instance.GarageAmbience.start();
             RaceManager.Instance.Radio.start();
        }
