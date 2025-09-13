@@ -381,7 +381,16 @@ public class RaceManager : MonoBehaviour
                 {
                     PlayerManager.Instance.ModifyPlayerCoins(0f);
                 }
-                PlayerManager.Instance.ModifyPlayerCoins(-50f); // Deduct coins for not winning
+
+                if (LeagueController.Instance.currentLeague)
+                {
+                    PlayerManager.Instance.ModifyPlayerCoins(-LeagueController.Instance.currentLeague
+                        .GetLeagueRaceEntryCost()); // Deduct coins for not winning
+                }
+                else
+                {
+                    PlayerManager.Instance.ModifyPlayerCoins(-25f);
+                }
 
                 RaceAmbience.setParameterByName("Mute Rowing", 0f);
                 RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);
@@ -476,33 +485,27 @@ public class RaceManager : MonoBehaviour
         for (int i = 0; i < RaceMovementPositions.Count; i++)
         {
             ShipMovement ship = RaceMovementPositions[i];
-            int position = i + 1; // Position is 1-based (1st, 2nd, 3rd, etc.)
+            int finishingPosition = i + 1; // Position is 1-based (1st, 2nd, 3rd, etc.)
             
-            // Find the corresponding team for this ship by matching names
-            if (ship.isPlayerShip)
+            // Find the corresponding team index for this ship
+            for (int j = 0; j < raceTeams.Length; j++)
             {
-                // Find the player team and assign position
-                for (int j = 0; j < raceTeams.Length; j++)
+                bool isMatch = false;
+                
+                if (ship.isPlayerShip && raceTeams[j].teamType == TeamType.Player)
                 {
-                    if (raceTeams[j].teamType == TeamType.Player)
-                    {
-                        allPositions[j] = position;
-                        Debug.Log($"Player team {raceTeams[j].teamName} finished in position {position}");
-                        break;
-                    }
+                    isMatch = true;
                 }
-            }
-            else
-            {
-                // For AI ships, find the team with matching name
-                for (int j = 0; j < raceTeams.Length; j++)
+                else if (!ship.isPlayerShip && raceTeams[j].teamType != TeamType.Player && raceTeams[j].teamName == ship.shipName)
                 {
-                    if (raceTeams[j].teamType != TeamType.Player && raceTeams[j].teamName == ship.shipName)
-                    {
-                        allPositions[j] = position;
-                        Debug.Log($"AI team {raceTeams[j].teamName} finished in position {position}");
-                        break;
-                    }
+                    isMatch = true;
+                }
+                
+                if (isMatch)
+                {
+                    allPositions[j] = finishingPosition;
+                    Debug.Log($"Team {raceTeams[j].teamName} finished in position {finishingPosition}");
+                    break;
                 }
             }
         }
