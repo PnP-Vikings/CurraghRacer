@@ -559,7 +559,6 @@ GameObject:
   - component: {fileID: 1786451193876665577}
   - component: {fileID: 4148817778595195856}
   - component: {fileID: 505899584713424104}
-  - component: {fileID: 5446060576609569524}
   m_Layer: 5
   m_Name: Hide League Table
   m_TagString: Untagged
@@ -681,7 +680,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 5446060576609569524}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CalenderButtons, Assembly-CSharp
         m_MethodName: PlayOneShot
         m_Mode: 1
@@ -693,25 +692,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &5446060576609569524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4535657237064300155}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c75cc78523a3eb45b1468c7984091cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event:
-    Guid:
-      Data1: 901679191
-      Data2: 1203805389
-      Data3: 1337274268
-      Data4: -131705617
-    Path: event:/UI/Calender
 --- !u!1 &4881265874076152528
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,4 +1,5 @@
 //using System.Collections;
+using MiniGames;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,7 +33,23 @@ public class DishwashingController : MonoBehaviour
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovePlateAudio;
-    /*public*/ FMOD.Studio.EventInstance KitchenAmbience;
+    public FMOD.Studio.EventInstance KitchenAmbience;
+
+    public MiniGameManager MiniGameManager;
+
+    //public static DishwashingController Instance { get; private set; }
+
+    //private void Awake()
+    //{
+    //    if (Instance == null)
+    //    {
+    //        Instance = this;
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
     void OnEnable()
     {
@@ -51,13 +68,15 @@ public class DishwashingController : MonoBehaviour
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
         MovePlateToCleanPosition();
+    }
 
+    private void Start()
+    {
         RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         KitchenAmbience.start();
     }
-
     void Update()
     {
         if (spongeInstance == null) return;
