@@ -57,11 +57,6 @@ public class RaceManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-
-            GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-            GarageAmbience.start();
-            Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
-            Radio.start();
         }
         else
         {
@@ -75,7 +70,14 @@ public class RaceManager : MonoBehaviour
         TimeManager.Instance.todaysEvents.AddListener(CheckForRaceDay);
     }
 
-    
+    private void Start()
+    {
+        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+        GarageAmbience.start();
+        Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
+        Radio.start();
+    }
+
     // Listener receives today's events list
     public void CheckForRaceDay(List<DayEventType> todaysEvents)
     {
