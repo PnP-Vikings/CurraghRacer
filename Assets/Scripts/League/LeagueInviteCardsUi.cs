@@ -12,15 +12,13 @@ public class LeagueInviteCardsUi : MonoBehaviour
   
   public static LeagueInviteCardsUi Instance { get; private set; }
   
-  //FMOD.Studio.EventInstance ShowInvite;
+  FMOD.Studio.EventInstance ShowInvite;
 
   private void Awake()
   {
     if (Instance == null)
     {
       Instance =this;
-      //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
-      //ShowInvite.start();
     }
 
     else
@@ -33,8 +31,13 @@ public class LeagueInviteCardsUi : MonoBehaviour
       Debug.LogError("One or more UI components are not assigned in the inspector!");
     }
   }
-  
-  public void SetLeagueData(League.League league)
+
+    private void Start()
+    {
+        ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
+        ShowInvite.start();
+    }
+    public void SetLeagueData(League.League league)
   {
     if (league == null)
     {
@@ -60,6 +63,7 @@ public class LeagueInviteCardsUi : MonoBehaviour
   {
     LeagueController.Instance.GenerateRaceSchedule();
     LeagueController.Instance.SetPlayerHasAcceptedInvite();
+    Destroy(gameObject);
   }
   
 }

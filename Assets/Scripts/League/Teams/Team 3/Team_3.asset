@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
+  m_Name: Team_3
+  m_EditorClassIdentifier: 
+  teamName: Portroe Rowing
+  teamDescription: 
+  teamLogo: {fileID: 0}
+  teamColor: {r: 0, g: 0, b: 0, a: 0}
+  teamQuality: 1
+  teamType: 2
+  teamExperience: 100
+  currentForm: 50
+  recentResults: 
+  teamMembers:
+  - {fileID: 11400000, guid: 52868e0edf957c14abe5214338ecece8, type: 2}
+  - {fileID: 11400000, guid: 9fddaa092e3d5e043a5ba215b9ba71c0, type: 2}
+  - {fileID: 11400000, guid: e1e83a60970eee148918272cccfc110e, type: 2}
+  - {fileID: 11400000, guid: 67f765fe3c21ca04ba3b070946b72294, type: 2}
+  currentSeasonStats:
+    finishes: 
+  lifetimeStats:
+    finishes: 

@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
+  m_Name: Team_7
+  m_EditorClassIdentifier: 
+  teamName: Number 9s
+  teamDescription: 
+  teamLogo: {fileID: 0}
+  teamColor: {r: 0, g: 0, b: 0, a: 0}
+  teamQuality: 1
+  teamType: 2
+  teamExperience: 100
+  currentForm: 50
+  recentResults: 
+  teamMembers:
+  - {fileID: 11400000, guid: 5d1b9059a14b20d48a5cb6d7538ed4a1, type: 2}
+  - {fileID: 11400000, guid: 0122cd51c96a184468c7131b1afe4c0d, type: 2}
+  - {fileID: 11400000, guid: a21e1e1e7e7d02147aac43d9c52f8d07, type: 2}
+  - {fileID: 11400000, guid: 0d15f72cc8ba84d4cbf3542379e1213a, type: 2}
+  currentSeasonStats:
+    finishes: 
+  lifetimeStats:
+    finishes: 

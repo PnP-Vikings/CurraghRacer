@@ -11,6 +11,9 @@ namespace Calendar
         
         [Header("Common Holidays")]
         public List<DayEventType> commonHolidays = new List<DayEventType>();
+        
+        [Header("Completed Races (for tracking)")]
+        public List<CompletedRaces> completedRaces = new List<CompletedRaces>();
 
         /// <summary>
         /// Add a custom event to the calendar
@@ -20,6 +23,14 @@ namespace Calendar
             if (!calendarDayEvents.Contains(eventType))
             {
                 calendarDayEvents.Add(eventType);
+            }
+        }
+        
+        public void AddCompletedRace(CompletedRaces completed)
+        {
+            if (!completedRaces.Contains(completed))
+            {
+                completedRaces.Add(completed);
             }
         }
         
@@ -52,6 +63,16 @@ namespace Calendar
                     events.Add(hol);
             }
             
+            // Check for persistent completed races
+            foreach (var completedRace in completedRaces)
+            {
+                if (completedRace != null && completedRace.dayEventType != null && 
+                    completedRace.dayEventType.OccursOnDate(date))
+                {
+                    events.Add(completedRace.dayEventType);
+                }
+            }
+            
             // Check for tournament race days (NEW: only if player has joined a tournament)
             var tournamentRaceEvent = CheckForTournamentRaceDay(date);
             if (tournamentRaceEvent != null)
@@ -60,6 +81,56 @@ namespace Calendar
             }
             
             return events;
+        }
+        
+        /// <summary>
+        /// Get detailed tooltip information for events on a specific date
+        /// </summary>
+        public string GetDetailedTooltipForDate(System.DateTime date)
+        {
+            var events = GetEventsOnDate(date);
+            if (events.Count == 0) return null;
+            
+            string tooltip = "";
+            
+            foreach (var evt in events)
+            {
+                if (evt == null || !evt.eventActive) continue;
+                
+                if (!string.IsNullOrEmpty(tooltip))
+                    tooltip += "\n\n---\n\n";
+                
+                // Check if this is a completed race event
+                var completedRace = completedRaces.Find(cr => cr != null && cr.dayEventType == evt);
+                if (completedRace != null)
+                {
+                    // For completed races, show detailed race information
+                    tooltip += completedRace.GetDetailedTooltip();
+                }
+                else
+                {
+                    // For regular events, only show if they're meaningful to the player
+                    // Skip generic holidays unless they're player-specific
+                    if (evt.playerHasTakenPart || evt.OccasionType == OccasionType.Race)
+                    {
+                        tooltip += $"<b>{evt.eventName}</b>\n";
+                        if (!string.IsNullOrEmpty(evt.description))
+                            tooltip += evt.description;
+                    }
+                }
+            }
+            
+            // Return null if no meaningful content was added
+            return string.IsNullOrEmpty(tooltip) ? null : tooltip;
+        }
+        
+        /// <summary>
+        /// Get completed race data for a specific date (for UI purposes)
+        /// </summary>
+        public CompletedRaces GetCompletedRaceForDate(System.DateTime date)
+        {
+            return completedRaces.Find(cr => cr != null && cr.raceData != null && 
+                                     cr.raceData.raceDate.Date == date.Date);
         }
         
         /// <summary>

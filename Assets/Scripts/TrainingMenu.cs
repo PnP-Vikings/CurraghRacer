@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -6,7 +7,13 @@ public class TrainingMenu : MonoBehaviour
     [SerializeField] private UIDocument uiDoc;
     private Button _trainStrengthButton, _trainTechniqueButton, _trainStaminaButton, _trainTeamWorkButton,_backButton;
     [SerializeField] private GameObject startingMenuPrefab;
-
+    public int strengthGainAmount = 2;
+    public int techniqueGainAmount = 2;
+    public int staminaGainAmount = 2;
+    public int teamWorkGainAmount = 2;
+    
+    
+    
     FMOD.Studio.EventInstance Dumbbell;
     FMOD.Studio.EventInstance UIClick2;
 
@@ -30,13 +37,12 @@ public class TrainingMenu : MonoBehaviour
 
     public void OnTrainStrengthButtonClicked()
     {
-        int amountGain = 10; // Define the  gain amount
-       if(CanTrain(15, 50))
+       if(CanTrain(30, 50))
         {
            
        
-            PlayerManager.Instance.ModifyPlayerStrength(amountGain);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {amountGain} Strength", 3);
+            PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
+            PlayerStatsView.Instance.DisplayInfo($"You gained {strengthGainAmount} Strength", 3);
 
             Dumbbell = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Dumbbell");
             Dumbbell.start();
@@ -45,29 +51,24 @@ public class TrainingMenu : MonoBehaviour
      
         
     }
+
     public void OnTrainTechniqueButtonClicked()
-    { int amountGain = 10; // Define the  gain amount
-        if(CanTrain(15, 50))
-        {
-            PlayerManager.Instance.ModifyPlayerTechnique(amountGain);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {amountGain} Technique", 3);
-        }
-
+    {
         
-       
-       
-       
-      
-    
+        if (CanTrain(30, 50))
+        {
+                PlayerManager.Instance.ModifyPlayerTechnique(techniqueGainAmount);
+                PlayerStatsView.Instance.DisplayInfo($"You gained {techniqueGainAmount} Technique", 3);
 
+        }
     }
+    
     public void OnTrainStaminaButtonClicked()
     {
-        int amountGain = 10; // Define the  gain amount
-        if(CanTrain(15, 50))
+        if(CanTrain(30, 50))
         {
-            PlayerManager.Instance.ModifyPlayerStamina(10);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {amountGain} Stamina", 3);
+            PlayerManager.Instance.ModifyPlayerStamina(staminaGainAmount);
+            PlayerStatsView.Instance.DisplayInfo($"You gained {staminaGainAmount} Stamina", 3);
         }
 
         
@@ -76,11 +77,10 @@ public class TrainingMenu : MonoBehaviour
     }
     public void OnTrainTeamWorkButtonClicked()
     { 
-        int amountGain = 10; // Define the  gain amount
-        if(CanTrain(15, 50))
+        if(CanTrain(30, 50))
         {
-            PlayerManager.Instance.ModifyPlayerTeamWork(10);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {amountGain} TeamWork", 3);
+            PlayerManager.Instance.ModifyPlayerTeamWork(teamWorkGainAmount);
+            PlayerStatsView.Instance.DisplayInfo($"You gained {teamWorkGainAmount} TeamWork", 3);
         }
             
     }
@@ -112,7 +112,7 @@ public class TrainingMenu : MonoBehaviour
 
         // Deduct the currency cost and allow training
         PlayerManager.Instance.ModifyPlayerEnergy(-energyCost);
-        Debug.Log("Player has enough energy and currency to train");
+        Debug.Log($"Player has enough energy {PlayerManager.Instance.energy}  and currency {PlayerManager.Instance.coins} to train");
         return true;
     }
     

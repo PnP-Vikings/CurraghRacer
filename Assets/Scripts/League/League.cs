@@ -27,6 +27,7 @@ namespace League
         public int currentSeason = 1; // Current season number
         public bool isActive = true;
         public bool playerHasJoined;
+        public int leagueRaceEntryCost = 25; // Cost tp enter each race
         public bool isFinished;
         public bool isPromotionRelegation = true; // If true, this league has promotion/relegation rules
         public int maxNumberOfBoatsPerRace = 4; // Maximum number of boats
@@ -42,6 +43,12 @@ namespace League
         [Tooltip("List of Tracks available for this league.")]
         public RaceDetails[] raceTracks;
 
+        [Tooltip("Max Experience Given per Race")]
+        public int maxExperienceGivenPerRace = 400;
+        
+        [Tooltip("Max Currency Given Per Race")]
+        public int maxCurrencyGivenPerRace = 125;
+        
         public List<RaceDayFormation> GenerateRaceSchedule(Team[] teams, int boatsPerRace, int repeatCount)
         {
             // Find player team if it exists
@@ -219,6 +226,18 @@ namespace League
             return 0; // No points if team not found
         }
         
+        public Team GetPlayerTeam()
+        {
+            foreach (var team in teams)
+            {
+                if (team.teamType == TeamType.Player)
+                {
+                    return team;
+                }
+            }
+            return null; // No player team found
+        }
+        
         public int GetTeamWins(Team team)
         {
             if (standings == null || standings.Length == 0)
@@ -233,6 +252,11 @@ namespace League
                 }
             }
             return 0; // No wins if team not found
+        }
+        
+        public int GetLeagueRaceEntryCost()
+        {
+            return leagueRaceEntryCost;
         }
     }
 

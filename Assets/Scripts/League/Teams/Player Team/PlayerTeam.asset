@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
+  m_Name: PlayerTeam
+  m_EditorClassIdentifier: 
+  teamName: PlayerTeam
+  teamDescription: Player's Team
+  teamLogo: {fileID: 0}
+  teamColor: {r: 0, g: 0, b: 0, a: 0}
+  teamQuality: 1
+  teamType: 1
+  teamExperience: 100
+  currentForm: 50
+  recentResults: 
+  teamMembers:
+  - {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
+  - {fileID: 11400000, guid: 09db92fe66966b14694b5f081a3c4907, type: 2}
+  - {fileID: 11400000, guid: f4185131cdbc08049a5171ae1fe8a296, type: 2}
+  - {fileID: 11400000, guid: f41743a69f03d8a47af17ea5e11fcb7f, type: 2}
+  currentSeasonStats:
+    finishes: 
+  lifetimeStats:
+    finishes: 

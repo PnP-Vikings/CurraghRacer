@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
+  m_Name: Team_2
+  m_EditorClassIdentifier: 
+  teamName: Holycross Ballycahill
+  teamDescription: 
+  teamLogo: {fileID: 0}
+  teamColor: {r: 0, g: 0, b: 0, a: 0}
+  teamQuality: 1
+  teamType: 2
+  teamExperience: 100
+  currentForm: 50
+  recentResults: 
+  teamMembers:
+  - {fileID: 11400000, guid: 543fbaf35214e3344ab0a459f13e4efc, type: 2}
+  - {fileID: 11400000, guid: 558b20ed80bcb1d41813fdfbf8c67711, type: 2}
+  - {fileID: 11400000, guid: 7d01a2a7d5179a44999d2df411d27546, type: 2}
+  - {fileID: 11400000, guid: 47df1ada007d1854980f6216ed8eb98f, type: 2}
+  currentSeasonStats:
+    finishes: 
+  lifetimeStats:
+    finishes: 

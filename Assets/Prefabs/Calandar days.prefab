@@ -366,19 +366,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dayEventType: {fileID: 0}
-  eventName: 
-  description: 
-  icon: {fileID: 0}
-  color: {r: 0, g: 0, b: 0, a: 0}
-  textColor: {r: 0, g: 0, b: 0, a: 0}
-  isRecurring: 0
-  isSpecialEvent: 0
   dayoftheweekText: {fileID: 9147518067050673129}
   dateText: {fileID: 6911604298908557471}
   eventNameText: {fileID: 8122925707200990918}
   descriptionText: {fileID: 7583070663754718168}
   imageRender: {fileID: 6679237830306954410}
   backgroundColorImage: {fileID: 8608986354410778643}
+  calendarEvents: {fileID: 0}
 --- !u!1 &3637102161385697558
 GameObject:
   m_ObjectHideFlags: 0

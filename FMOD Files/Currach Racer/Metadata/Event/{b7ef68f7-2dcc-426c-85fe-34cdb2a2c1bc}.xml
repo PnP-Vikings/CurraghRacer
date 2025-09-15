@@ -294,7 +294,7 @@
 	</object>
 	<object class="SingleSound" id="{7c31f0be-0c54-4c13-8738-6ac04aa03353}">
 		<property name="volume">
-			<value>4</value>
+			<value>5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{17483bbb-12b7-4923-9ca6-2492afbbcfff}</destination>

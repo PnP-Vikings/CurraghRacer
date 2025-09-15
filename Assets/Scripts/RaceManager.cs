@@ -57,11 +57,6 @@ public class RaceManager : MonoBehaviour
         if (Instance == null)
         {
             Instance = this;
-
-            GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-            GarageAmbience.start();
-            Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
-            Radio.start();
         }
         else
         {
@@ -75,7 +70,14 @@ public class RaceManager : MonoBehaviour
         TimeManager.Instance.todaysEvents.AddListener(CheckForRaceDay);
     }
 
-    
+    private void Start()
+    {
+        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+        GarageAmbience.start();
+        Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
+        Radio.start();
+    }
+
     // Listener receives today's events list
     public void CheckForRaceDay(List<DayEventType> todaysEvents)
     {
@@ -381,7 +383,16 @@ public class RaceManager : MonoBehaviour
                 {
                     PlayerManager.Instance.ModifyPlayerCoins(0f);
                 }
-                PlayerManager.Instance.ModifyPlayerCoins(-50f); // Deduct coins for not winning
+
+                if (LeagueController.Instance.currentLeague)
+                {
+                    PlayerManager.Instance.ModifyPlayerCoins(-LeagueController.Instance.currentLeague
+                        .GetLeagueRaceEntryCost()); // Deduct coins for not winning
+                }
+                else
+                {
+                    PlayerManager.Instance.ModifyPlayerCoins(-25f);
+                }
 
                 RaceAmbience.setParameterByName("Mute Rowing", 0f);
                 RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);
@@ -443,6 +454,9 @@ public class RaceManager : MonoBehaviour
     /// </summary>
     private void RecordRaceResults()
     {
+        if(!isRaceDay) return; // Only record results
+        
+        
         if (LeagueController.Instance?.currentLeague == null)
         {
             Debug.LogWarning("No active league found - race results not recorded");
@@ -473,33 +487,27 @@ public class RaceManager : MonoBehaviour
         for (int i = 0; i < RaceMovementPositions.Count; i++)
         {
             ShipMovement ship = RaceMovementPositions[i];
-            int position = i + 1; // Position is 1-based (1st, 2nd, 3rd, etc.)
+            int finishingPosition = i + 1; // Position is 1-based (1st, 2nd, 3rd, etc.)
             
-            // Find the corresponding team for this ship by matching names
-            if (ship.isPlayerShip)
+            // Find the corresponding team index for this ship
+            for (int j = 0; j < raceTeams.Length; j++)
             {
-                // Find the player team and assign position
-                for (int j = 0; j < raceTeams.Length; j++)
+                bool isMatch = false;
+                
+                if (ship.isPlayerShip && raceTeams[j].teamType == TeamType.Player)
                 {
-                    if (raceTeams[j].teamType == TeamType.Player)
-                    {
-                        allPositions[j] = position;
-                        Debug.Log($"Player team {raceTeams[j].teamName} finished in position {position}");
-                        break;
-                    }
+                    isMatch = true;
                 }
-            }
-            else
-            {
-                // For AI ships, find the team with matching name
-                for (int j = 0; j < raceTeams.Length; j++)
+                else if (!ship.isPlayerShip && raceTeams[j].teamType != TeamType.Player && raceTeams[j].teamName == ship.shipName)
                 {
-                    if (raceTeams[j].teamType != TeamType.Player && raceTeams[j].teamName == ship.shipName)
-                    {
-                        allPositions[j] = position;
-                        Debug.Log($"AI team {raceTeams[j].teamName} finished in position {position}");
-                        break;
-                    }
+                    isMatch = true;
+                }
+                
+                if (isMatch)
+                {
+                    allPositions[j] = finishingPosition;
+                    Debug.Log($"Team {raceTeams[j].teamName} finished in position {finishingPosition}");
+                    break;
                 }
             }
         }
@@ -545,6 +553,59 @@ public class RaceManager : MonoBehaviour
 
         // Record the results in the league system
         LeagueController.Instance.RecordPlayerRaceResult(playerPosition, raceTeams, allPositions);
+        
+        // Add completed race to persistent tracking system
+        if (Calendar.CompletedRacesManager.Instance != null)
+        {
+            string leagueName = LeagueController.Instance.currentLeague.leagueName;
+            string raceName = $"Race Day {(TimeManager.Instance?.GetCurrentDate().DayOfYear ?? System.DateTime.Now.DayOfYear)}";
+            DateTime raceDate = TimeManager.Instance?.GetCurrentDate() ?? DateTime.Now;
+            string trackName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
+            int totalParticipants = raceTeams.Length;
+            float playerRaceTime = Time.time; // Simple fallback - can be enhanced later
+            string[] participantNames = new string[RaceMovementPositions.Count];
+            
+            // Get participant names in finishing order
+            for (int i = 0; i < RaceMovementPositions.Count; i++)
+            {
+                participantNames[i] = RaceMovementPositions[i].shipName;
+            }
+
+            // Calculate points (F1-style scoring)
+            int pointsEarned = 0;
+            switch (playerPosition)
+            {
+                case 1: pointsEarned = 25; break;
+                case 2: pointsEarned = 18; break;
+                case 3: pointsEarned = 15; break;
+                case 4: pointsEarned = 12; break;
+                case 5: pointsEarned = 10; break;
+                case 6: pointsEarned = 8; break;
+                case 7: pointsEarned = 6; break;
+                case 8: pointsEarned = 4; break;
+                case 9: pointsEarned = 2; break;
+                case 10: pointsEarned = 1; break;
+                default: pointsEarned = 0; break;
+            }
+
+            Calendar.CompletedRacesManager.Instance.AddCompletedRace(
+                leagueName,
+                raceName,
+                raceDate,
+                playerPosition,
+                totalParticipants,
+                trackName,
+                playerRaceTime,
+                pointsEarned,
+                participantNames
+            );
+
+            Debug.Log($"Completed race tracked: {leagueName} - {raceName} (Position: {playerPosition})");
+        }
+        else
+        {
+            Debug.LogWarning("CompletedRacesManager not found - race not tracked for calendar!");
+        }
         
         Debug.Log($"Race results recorded - Player finished {playerPosition}");
     }
