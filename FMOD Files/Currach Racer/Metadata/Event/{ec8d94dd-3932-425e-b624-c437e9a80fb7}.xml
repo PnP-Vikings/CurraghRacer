@@ -425,6 +425,10 @@
 			<destination>{37f6bacf-482e-4f81-b567-c153ce335593}</destination>
 			<destination>{ddd546e6-2a73-4f9b-a84d-95919efa9833}</destination>
 			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
+			<destination>{6923acc1-6e0d-4580-b586-e379b91265bc}</destination>
+		</relationship>
+		<relationship name="playPercentages">
+			<destination>{6ed076b6-97f8-49db-8262-98f269f07f56}</destination>
 		</relationship>
 	</object>
 	<object class="Automator" id="{efa954df-c30b-4fc5-baad-8d35056e933f}">
@@ -529,10 +533,26 @@
 	</object>
 	<object class="SingleSound" id="{c147fc5d-d0d6-4c00-9504-5111acc63907}">
 		<property name="volume">
-			<value>6</value>
+			<value>4</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{a4cb717a-170a-44d5-a3ce-04c2cdd84dcb}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{6923acc1-6e0d-4580-b586-e379b91265bc}">
+		<property name="volume">
+			<value>2</value>
+		</property>
+		<relationship name="audioFile">
+			<destination>{1fe3ae4d-f02e-462f-9e4e-79b605696b6b}</destination>
+		</relationship>
+	</object>
+	<object class="PlayPercentage" id="{6ed076b6-97f8-49db-8262-98f269f07f56}">
+		<property name="percentage">
+			<value>0</value>
+		</property>
+		<relationship name="sound">
+			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationCurve" id="{0f4bf3cc-bc45-469d-9efc-99f32ae86ccb}">

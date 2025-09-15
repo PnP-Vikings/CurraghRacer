@@ -137,7 +137,6 @@ GameObject:
   - component: {fileID: 849660474830591791}
   - component: {fileID: 5779791147756195960}
   - component: {fileID: 4804379231224282337}
-  - component: {fileID: 4369058406819705797}
   m_Layer: 5
   m_Name: BackToLeagueBtn
   m_TagString: Untagged
@@ -259,7 +258,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-      - m_Target: {fileID: 4369058406819705797}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CalenderButtons, Assembly-CSharp
         m_MethodName: PlayOneShot
         m_Mode: 1
@@ -271,25 +270,6 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
---- !u!114 &4369058406819705797
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 724729759319985377}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7c75cc78523a3eb45b1468c7984091cf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Event:
-    Guid:
-      Data1: 901679191
-      Data2: 1203805389
-      Data3: 1337274268
-      Data4: -131705617
-    Path: event:/UI/Calender
 --- !u!1 &1533587354220108331
 GameObject:
   m_ObjectHideFlags: 0

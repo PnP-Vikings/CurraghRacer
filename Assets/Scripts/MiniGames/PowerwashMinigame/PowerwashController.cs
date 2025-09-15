@@ -9,7 +9,7 @@ public class PowerwashController : MonoBehaviour
     public GameObject powerwashPrefab;
 
     [Tooltip("Which layers count as 'walls'")]
-    public LayerMask wallLayerMask;
+    public LayerMask plateLayerMask;
 
     [Tooltip("Maximum distance (in world units) the powerwasher will follow the cursor")]
     public float maxDistance = 5f;
@@ -28,6 +28,8 @@ public class PowerwashController : MonoBehaviour
     public WallCleanPosition wallCleanPosition; // Reference to the WallCleanPosition script
     
     public Transform spawnPoint,cleanPosition,finishClean; // Point where the powerwash is spawned
+
+    public Camera powerwashCamera;
 
     [SerializeField] private int spawnCount = 5;
 
@@ -59,11 +61,11 @@ public class PowerwashController : MonoBehaviour
         if (powerwashInstance == null) return;
 
         // Ray from camera through cursor/touch
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = powerwashCamera.ScreenPointToRay(Input.mousePosition);
         RaycastHit hit;
 
         // Raycast against wall colliders, up to maxDistance
-        if (Physics.Raycast(ray, out hit, maxDistance, wallLayerMask))
+        if (Physics.Raycast(ray, out hit, maxDistance, plateLayerMask))
         {
             // Place powerwash at the hit point + hoverHeight
             Vector3 targetPos = hit.point;
