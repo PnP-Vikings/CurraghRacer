@@ -224,4 +224,83 @@ public class TeamMember : ScriptableObject
         Debug.Log($"{memberName} leveled up to {level}! Stats updated based on {attitude} attitude.");
         
     }
+    
+    public void ImproveStat(StatType statType, float amount)
+      {
+          float modifier = 1f;
+          switch (attitude)
+          {
+              case Attitude.Energetic:
+                  if (statType == StatType.Stamina) modifier = 1.3f;
+                  if (statType == StatType.Strength) modifier = 1.1f;
+                  break;
+              case Attitude.Competitive:
+                  if (statType == StatType.Strength) modifier = 1.2f;
+                  if (statType == StatType.Technique) modifier = 1.1f;
+                  break;
+              case Attitude.Cooperative:
+                  if (statType == StatType.TeamWork) modifier = 1.3f;
+                  break;
+              case Attitude.Aggressive:
+                  if (statType == StatType.Strength) modifier = 1.2f;
+                  break;
+              case Attitude.Cautious:
+                  if (statType == StatType.Technique) modifier = 1.2f;
+                  break;
+              case Attitude.Lazy:
+                  modifier = 0.7f;
+                  break;
+              case Attitude.Positive:
+                  if (statType == StatType.TeamWork) modifier = 1.2f;
+                  break;
+              case Attitude.Negative:
+                  if (statType == StatType.TeamWork) modifier = 0.7f;
+                  break;
+              // Neutral and default: no modifier
+          }
+      
+          float finalAmount = amount * modifier;
+          switch (statType)
+          {
+              case StatType.Strength:
+                  characterStats.strength += finalAmount;
+                  break;
+              case StatType.Stamina:
+                  characterStats.stamina += finalAmount;
+                  break;
+              case StatType.Technique:
+                  characterStats.technique += finalAmount;
+                  break;
+              case StatType.TeamWork:
+                  characterStats.teamWork += finalAmount;
+                  break;
+          }
+      }
+
+    public int GetTeamMemberStat(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Strength:
+                return Mathf.RoundToInt(characterStats.strength);
+            case StatType.Stamina:
+                return Mathf.RoundToInt(characterStats.stamina);
+            case StatType.Technique:
+                return Mathf.RoundToInt(characterStats.technique);
+            case StatType.TeamWork:
+                return Mathf.RoundToInt(characterStats.teamWork);
+            default:
+                Debug.LogWarning("Unknown stat type requested.");
+                return 0;
+        }
+    }
+
+
+    public enum StatType
+    {
+        Strength,
+        Stamina,
+        Technique,
+        TeamWork
+    }
 }

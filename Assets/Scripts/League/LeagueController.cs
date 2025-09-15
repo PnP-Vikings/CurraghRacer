@@ -146,13 +146,13 @@ namespace League
 
         /// <summary>
         /// Advances to the next race in the league schedule.
-        /// Automatically simulates AI-only races.
+        /// Simulates AI-only races for the current race day, then moves to next race.
         /// </summary>
         public void AdvanceToNextRace()
         {
             if (currentLeague == null || currentLeague.raceDays == null) return;
             
-            // Simulate current race if it's AI-only
+            // Simulate any remaining AI-only races for the current race day
             AIRaceSimulator.SimulateWeeklyAIRaces(currentLeague);
             
             // Move to next race
@@ -168,8 +168,8 @@ namespace League
             // Update standings after race results
             currentLeague.RecalculateStandings();
             
-            // Simulate next race if it's also AI-only (for multiple AI races per week)
-            AIRaceSimulator.SimulateWeeklyAIRaces(currentLeague);
+            // Do NOT simulate next race here - it will be simulated when that race day arrives
+            // This prevents AI teams from getting extra races
         }
 
         /// <summary>
