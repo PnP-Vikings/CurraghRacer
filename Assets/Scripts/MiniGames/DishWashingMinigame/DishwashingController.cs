@@ -1,4 +1,5 @@
 //using System.Collections;
+using MiniGames;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -32,10 +33,23 @@ public class DishwashingController : MonoBehaviour
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovePlateAudio;
-    FMOD.Studio.EventInstance KitchenAmbience;
-    //FMOD.Studio.EventInstance CurrachDanceTrack;
-    //Coroutine SpongeAudioCoroutine;
+    public FMOD.Studio.EventInstance KitchenAmbience;
 
+    public MiniGameManager MiniGameManager;
+
+    //public static DishwashingController Instance { get; private set; }
+
+    //private void Awake()
+    //{
+    //    if (Instance == null)
+    //    {
+    //        Instance = this;
+    //    }
+    //    else
+    //    {
+    //        Destroy(gameObject);
+    //    }
+    //}
 
     void OnEnable()
     {
@@ -54,15 +68,15 @@ public class DishwashingController : MonoBehaviour
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
         MovePlateToCleanPosition();
+    }
 
+    private void Start()
+    {
         RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         KitchenAmbience.start();
-        //CurrachDanceTrack = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Currach Dance Track");
-        //CurrachDanceTrack.start();
     }
-
     void Update()
     {
         if (spongeInstance == null) return;
@@ -78,10 +92,6 @@ public class DishwashingController : MonoBehaviour
             Vector3 targetPos = hit.point;
             targetPos.y += hoverHeight;
             spongeInstance.transform.position = targetPos;
-
-            //PlaySpongeAudio();
-            //SpongeAudioCoroutine = StartCoroutine(PlaySpongeAudio());
-            //PlaykaSpongeAudio();
         }
         else
         {
@@ -91,20 +101,6 @@ public class DishwashingController : MonoBehaviour
             spongeInstance.transform.position = fallback;
         }
     }
-
-    //public void PlaykaSpongeAudio()
-    //{
-    //    FMOD.Studio.EventInstance kaSponge;
-    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
-    //    kaSponge.start();
-    //}
-    //IEnumerator PlaySpongeAudio()
-    //{
-    //    FMOD.Studio.EventInstance kaSponge;
-    //    kaSponge = FMODUnity.RuntimeManager.CreateInstance("event:/Mini Games/kaSponge");
-    //    kaSponge.start();
-    //    yield return new WaitForSeconds(1f);
-    //}
 
     public void MovePlateToCleanPosition()
     {
@@ -159,7 +155,6 @@ public class DishwashingController : MonoBehaviour
             // }
 
             KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            //CurrachDanceTrack.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             RaceManager.Instance.GarageAmbience.start();
             RaceManager.Instance.Radio.start();
        }

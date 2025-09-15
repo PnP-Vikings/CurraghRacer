@@ -1176,6 +1176,7 @@ GameObject:
   - component: {fileID: 1844310566806654004}
   - component: {fileID: 725732874659256826}
   - component: {fileID: 7725625939705050984}
+  - component: {fileID: -8534826473537288028}
   m_Layer: 5
   m_Name: TeamMemberUiPrefab
   m_TagString: Untagged
@@ -1322,9 +1323,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: LeagueTeamUiHandler, Assembly-CSharp
-        m_MethodName: OnClick
+      - m_Target: {fileID: -8534826473537288028}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1334,3 +1335,22 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+--- !u!114 &-8534826473537288028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8598144522272698404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1

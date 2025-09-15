@@ -5,6 +5,7 @@ using System.Collections;
 using MiniGames.DishWashingMinigame;
 using MiniGames.BeerMinigame;
 using UnityEngine.SceneManagement;
+using UnityEngine.Events;
 
 namespace MiniGames
 {
@@ -24,6 +25,10 @@ namespace MiniGames
         private bool gameActive;
         private int currentScore;
         private PlayerManager playerManager;
+
+        //[SerializeField] private DishwashingController dishwashingController;
+
+        public UnityEvent MiniGameTimerRunsOutEvent;
         
         public static MiniGameManager Instance { get; private set; }
         
@@ -58,6 +63,13 @@ namespace MiniGames
                 if (gameTimer <= 0)
                 {
                     EndGame();
+                    RaceManager.Instance.GarageAmbience.start();
+                    RaceManager.Instance.Radio.start();
+
+                    //MiniGameTimerRunsOutEvent.Invoke();
+
+                    //dishwashingController.KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    //DishwashingController.Instance.KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 }
                 
                 currentGameInstance?.UpdateGame();
@@ -237,7 +249,7 @@ namespace MiniGames
         public void EndGame(bool forceEnd = false)
         {
             gameActive = false;
-            
+
             if (currentGameInstance != null)
             {
                 currentGameInstance.EndGame();
