@@ -1,0 +1,13 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: RowDUNNE
+  m_Controller: {fileID: 9100000, guid: 21e4096c7408b6c4eae1462aff493135, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: 4093556567926426822, guid: 89d845fdf55a48f4bab6e06e16b66374, type: 3}
+    m_OverrideClip: {fileID: 4093556567926426822, guid: 7346012caf244d6449bb8d966ce51c2e, type: 3}
