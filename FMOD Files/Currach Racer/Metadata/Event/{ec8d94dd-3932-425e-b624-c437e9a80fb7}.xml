@@ -305,7 +305,7 @@
 			<value>-11.5</value>
 		</property>
 		<property name="name">
-			<value>Positive Encouragement</value>
+			<value>Encouragement</value>
 		</property>
 		<relationship name="automators">
 			<destination>{efa954df-c30b-4fc5-baad-8d35056e933f}</destination>

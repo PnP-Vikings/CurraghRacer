@@ -274,6 +274,61 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 58000
+--- !u!114 &-6390802952839510384
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Race/Race Win
+  m_EditorClassIdentifier: 
+  Path: event:/Race/Race Win
+  Guid:
+    Data1: -1326313933
+    Data2: 1253497893
+    Data3: -1646270336
+    Data4: -1852699166
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 2697066490857347409}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7946
+--- !u!114 &-6377474762000497385
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Race/Race Lose
+  m_EditorClassIdentifier: 
+  Path: event:/Race/Race Lose
+  Guid:
+    Data1: 230308729
+    Data2: 1272572464
+    Data3: -84470392
+    Data4: -931591754
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 4149
 --- !u!114 &-5146918259261699225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -316,7 +371,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638934810072982647
+  lastModified: 638936290353222124
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -520,10 +575,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638934810073018414
+  lastModified: 638936290353257266
   FileSizes:
   - Name: 
-    Value: 2426
+    Value: 2376
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -552,33 +607,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4050
---- !u!114 &-861806321422844360
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Race/Negative Encouragement
-  m_EditorClassIdentifier: 
-  Path: event:/Race/Negative Encouragement
-  Guid:
-    Data1: 230308729
-    Data2: 1272572464
-    Data3: -84470392
-    Data4: -931591754
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 4149
 --- !u!114 &-671269332136601359
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,10 +663,8 @@ MonoBehaviour:
   - {fileID: -8222264240576259642}
   - {fileID: -8966558056930675073}
   - {fileID: -1975231195295424296}
-  - {fileID: 7096334772225381524}
   - {fileID: -8541651289697230892}
   - {fileID: 7321747427095314458}
-  - {fileID: -861806321422844360}
   - {fileID: -7355683689810480613}
   - {fileID: 2894686220253667848}
   - {fileID: -7557941198526423288}
@@ -651,12 +677,14 @@ MonoBehaviour:
   - {fileID: 5769496863046401991}
   - {fileID: 4552225702241423523}
   - {fileID: -2624806273485465106}
+  - {fileID: -6390802952839510384}
+  - {fileID: -6377474762000497385}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638934810073018414
+  cacheTime: 638936290353257266
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -678,6 +706,30 @@ MonoBehaviour:
   ID:
     data1: 3675934434
     data2: 3267869078
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2697066490857347409
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Race Win/Mute Race Win
+  m_EditorClassIdentifier: 
+  Name: Mute Race Win
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3764134494
+    data2: 3844021382
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -854,9 +906,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Race Ambience/Mute Positive Encouragement
+  m_Name: parameter:/Race Ambience/Mute Encouragement
   m_EditorClassIdentifier: 
-  Name: Mute Positive Encouragement
+  Name: Mute Encouragement
   StudioPath: 
   Min: 0
   Max: 1
@@ -946,30 +998,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 27343
---- !u!114 &6382212892858319547
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Cheering and Clapping/Mute Cheering and Clapping
-  m_EditorClassIdentifier: 
-  Name: Mute Cheering and Clapping
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 3764134494
-    data2: 3844021382
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &6644793927448986291
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -997,34 +1025,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 374
---- !u!114 &7096334772225381524
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Race/Cheering and Clapping
-  m_EditorClassIdentifier: 
-  Path: event:/Race/Cheering and Clapping
-  Guid:
-    Data1: -1326313933
-    Data2: 1253497893
-    Data3: -1646270336
-    Data4: -1852699166
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: 6382212892858319547}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 7946
 --- !u!114 &7321747427095314458
 MonoBehaviour:
   m_ObjectHideFlags: 0
