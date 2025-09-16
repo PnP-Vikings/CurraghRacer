@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{ff0ed953-915e-4e91-96e6-1618fd288bbc}">
 		<property name="name">
-			<value>Mute Positive Encouragement</value>
+			<value>Mute Encouragement</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>

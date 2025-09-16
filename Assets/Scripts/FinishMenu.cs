@@ -38,7 +38,7 @@ public class FinishMenu : MonoBehaviour
         UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
         UIClick2.start();
 
-        RaceManager.Instance.CheeringAndClapping.setParameterByName("Mute Cheering and Clapping", 0f);
+        RaceManager.Instance.RaceWin.setParameterByName("Mute Race Win", 0f);
         RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
         //RaceManager.Instance.GarageAmbience.start();
         RaceManager.Instance.Radio.start();
