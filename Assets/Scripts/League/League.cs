@@ -49,6 +49,9 @@ namespace League
         [Tooltip("Max Currency Given Per Race")]
         public int maxCurrencyGivenPerRace = 125;
         
+        [Tooltip("Max Currency Given Per Completion of Season")]
+        public int maxCurrencyGivenPerSeasonCompletion = 500;
+        
         public List<RaceDayFormation> GenerateRaceSchedule(Team[] teams, int boatsPerRace, int repeatCount)
         {
             // Find player team if it exists

@@ -168,8 +168,7 @@ namespace League
             // Update standings after race results
             currentLeague.RecalculateStandings();
             
-            // Do NOT simulate next race here - it will be simulated when that race day arrives
-            // This prevents AI teams from getting extra races
+            
         }
 
         /// <summary>
@@ -234,12 +233,12 @@ namespace League
             currentLeague.RecalculateStandings();
             Debug.Log($"Season {currentLeague.currentSeason} completed for {currentLeague.leagueName}!");
             
-            // TODO: Handle promotion/relegation, start new season, etc.
+            
+            
         }
 
         /// <summary>
         /// Clears the current league and resets all race data.
-        /// This method can be called from the inspector button.
         /// </summary>
         [ContextMenu("Clear League")]
         public void ClearLeague()

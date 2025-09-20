@@ -28,6 +28,7 @@ public class RaceManager : MonoBehaviour
     public UnityEvent startRace;
     public bool isRaceDay;
     public bool LoadedRaceScene = false; // Flag to check
+    public int raceStartDelaySeconds = 5; // Delay
 
 
     public GameObject shipPrefab;
@@ -269,7 +270,7 @@ public class RaceManager : MonoBehaviour
 
     IEnumerator StartShips()
     {
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(raceStartDelaySeconds);
         startRace.Invoke();
 
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
@@ -378,21 +379,6 @@ public class RaceManager : MonoBehaviour
                 Debug.Log("Player did not finish first.");
                 finishMenu.UpdatePlayerMessage(false, "Better luck next time!");
                 if(!isRaceDay) return; // No coins deducted
-                
-                if( PlayerManager.Instance.GetPlayerCoins () < 50f)
-                {
-                    PlayerManager.Instance.ModifyPlayerCoins(0f);
-                }
-
-                if (LeagueController.Instance.currentLeague)
-                {
-                    PlayerManager.Instance.ModifyPlayerCoins(-LeagueController.Instance.currentLeague
-                        .GetLeagueRaceEntryCost()); // Deduct coins for not winning
-                }
-                else
-                {
-                    PlayerManager.Instance.ModifyPlayerCoins(-25f);
-                }
 
                 RaceAmbience.setParameterByName("Mute Rowing", 0f);
                 RaceAmbience.setParameterByName("Mute Positive Encouragement", 0f);

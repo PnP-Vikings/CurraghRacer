@@ -97,7 +97,7 @@ public class TrainingMenu : MonoBehaviour
     public bool CanTrain(int energyCost, int currencyCost)
     {
         // Check if the player has enough energy
-        if (!PlayerManager.Instance.playerHasEnoughEnergy(energyCost))
+        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCost))
         {
             PlayerStatsView.Instance.DisplayInfo($"You must have at least {energyCost} Energy to train", 3);
             return false; // Not enough energy

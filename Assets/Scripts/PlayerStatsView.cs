@@ -46,6 +46,7 @@ public class PlayerStatsView : MonoBehaviour
     }
         
     
+    
     public void DisplayInfo(string info, float duration = 3)
     {
         _displayInfoBackground.style.display = DisplayStyle.Flex;
