@@ -3118,6 +3118,10 @@ PrefabInstance:
       propertyPath: leagueInviteCardsUi
       value: 
       objectReference: {fileID: 6545524236131076258, guid: e7af4e1578bb16f42881e823255c1a23, type: 3}
+    - target: {fileID: 8150581909809056547, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: leagueCompleteCardPrefab
+      value: 
+      objectReference: {fileID: 7250917615151901132, guid: 7d20fdd0532851e48983e0d7bf2e15f0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

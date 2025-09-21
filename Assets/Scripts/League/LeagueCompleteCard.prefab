@@ -1,80 +1,5 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &640428740136366388
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2235784825836357310}
-  - component: {fileID: 21015423104853638}
-  - component: {fileID: 6596445070977265838}
-  m_Layer: 5
-  m_Name: LeagueInviteImg
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2235784825836357310
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640428740136366388}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 3.922295, y: 3.4862375, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 2091124022436608327}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0.5, y: 0.5}
-  m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -571.9999, y: -33.99997}
-  m_SizeDelta: {x: 147.5, y: 128.5}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &21015423104853638
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640428740136366388}
-  m_CullTransparentMesh: 1
---- !u!114 &6596445070977265838
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 640428740136366388}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 0}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &1418149246627150968
 GameObject:
   m_ObjectHideFlags: 0
@@ -219,7 +144,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "Accept \nInvitation"
+  m_text: 'Accept '
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -246,7 +171,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 42.9
+  m_fontSize: 72
   m_fontSizeBase: 24
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -304,7 +229,7 @@ GameObject:
   - component: {fileID: 7431796821407216697}
   - component: {fileID: 839241707129764051}
   m_Layer: 5
-  m_Name: AcceptLeagueInvite
+  m_Name: 'AcceptLeagueCompletion '
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -412,9 +337,9 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 6545524236131076258}
-        m_TargetAssemblyTypeName: LeagueInviteCardsUi, Assembly-CSharp
-        m_MethodName: OnClickAcceptInvite
+      - m_Target: {fileID: 7250917615151901132}
+        m_TargetAssemblyTypeName: LeagueCompleteCard, Assembly-CSharp
+        m_MethodName: OnClickAcceptCompletion
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -479,7 +404,7 @@ GameObject:
   - component: {fileID: 3784016747607278882}
   - component: {fileID: 8703841949567639086}
   m_Layer: 5
-  m_Name: LeagueInviteLeagueName
+  m_Name: LeagueName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -615,7 +540,7 @@ GameObject:
   - component: {fileID: 4528267920709869022}
   - component: {fileID: 1775895617385630914}
   m_Layer: 5
-  m_Name: LeagueInviteLeagueDescription
+  m_Name: LeagueCompleteDescription
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -637,7 +562,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 55, y: -10}
+  m_AnchoredPosition: {x: 78, y: -10}
   m_SizeDelta: {x: 803.6, y: 400.5}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4528267920709869022
@@ -826,9 +751,9 @@ GameObject:
   - component: {fileID: 3925961957682454761}
   - component: {fileID: 2719202278761782625}
   - component: {fileID: 2492930005751008627}
-  - component: {fileID: 6545524236131076258}
+  - component: {fileID: 7250917615151901132}
   m_Layer: 5
-  m_Name: LeagueInviteCard
+  m_Name: LeagueCompleteCard
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -847,7 +772,6 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 295143064988439272}
-  - {fileID: 2235784825836357310}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
@@ -918,7 +842,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
---- !u!114 &6545524236131076258
+--- !u!114 &7250917615151901132
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -927,9 +851,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 5664502143122024280}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 94a4f225c85cc4b46b71785fd5333abb, type: 3}
+  m_Script: {fileID: 11500000, guid: 1f58684bef80a134bb2007666f61ca01, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   leagueNameText: {fileID: 8703841949567639086}
-  leagueDescriptionText: {fileID: 1775895617385630914}
-  leagueLogoImage: {fileID: 6596445070977265838}
+  leaguCompletionDescriptionText: {fileID: 1775895617385630914}

@@ -29,7 +29,11 @@ namespace League
         public bool playerHasJoined;
         public int leagueRaceEntryCost = 25; // Cost tp enter each race
         public bool isFinished;
+        [Tooltip("If true, this league has promotion/relegation rules.")]
         public bool isPromotionRelegation = true; // If true, this league has promotion/relegation rules
+        [Tooltip("Number of teams to promote/relegate at season end.")]
+        public int numberOfTeamsToPromoteRelegate = 2; 
+        [Tooltip("Maximum number of boats allowed per Race.")]
         public int maxNumberOfBoatsPerRace = 4; // Maximum number of boats
         [Tooltip("How many times to repeat each race combination.")]
         public int repeatCount = 1;
@@ -261,6 +265,67 @@ namespace League
         {
             return leagueRaceEntryCost;
         }
+        
+        public bool DidPlayerGetPromoted()
+        {
+            if (!isPromotionRelegation || leagueAbove == null)
+                return false;
+            
+            var playerTeam = GetPlayerTeam();
+            if (playerTeam == null)
+                return false;
+            
+            var position = GetTeamPosition(playerTeam);
+            if (position <= numberOfTeamsToPromoteRelegate && position > 0)
+                return true;
+            
+            return false;
+        }
+        
+        public bool DidPlayerGetRelegated()
+        {
+            if (!isPromotionRelegation || leagueBelow == null)
+                return false;
+            
+            var playerTeam = GetPlayerTeam();
+            if (playerTeam == null)
+                return false;
+            
+            var position = GetTeamPosition(playerTeam);
+            if (position > teams.Length - numberOfTeamsToPromoteRelegate && position > 0)
+                return true;
+            
+            return false;
+        }
+        
+        public League GetNextLeague()
+        {
+            if (DidPlayerGetPromoted())
+                return leagueAbove;
+            if (DidPlayerGetRelegated())
+                return leagueBelow;
+            return this; // Remain in current league
+        }
+        
+        
+
+        public void ResetLeagueForNewSeason()
+        {
+            currentSeason++;
+            currentRace = 0;
+            isFinished = false;
+            playerHasJoined = false;
+            raceDays = null;
+            standings = Array.Empty<TeamStanding>();
+            RecalculateStandings();
+            foreach (var team in teams)
+            {
+                team.ResetCurrentSeasonStats();
+            }
+            GenerateRaceSchedule(teams, maxNumberOfBoatsPerRace, repeatCount);
+        }
+
+
     }
 
     [Serializable]

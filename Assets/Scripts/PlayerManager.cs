@@ -142,10 +142,11 @@ public class PlayerManager : MonoBehaviour
     // Method to update player stats
     public void ModifyPlayerStrength(int strength)
     {
-        
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.Strength,strength);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {strength} Strength", 3);
             Debug.Log(member.memberName+" strength modified: " + member.GetTeamMemberStat(TeamMember.StatType.Strength));
         }
 
@@ -153,30 +154,34 @@ public class PlayerManager : MonoBehaviour
 
     public void ModifyPlayerStamina(int stamina)
     {
-        
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.Stamina,stamina);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {stamina} Strength", 3);
             Debug.Log(member.memberName+" stamina modified: " + member.GetTeamMemberStat(TeamMember.StatType.Stamina));
         }
 
     }
     public void ModifyPlayerTechnique(int technique)
     {
-        
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.Technique,technique);
+            
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {technique} Strength", 3);
             Debug.Log(member.memberName+" technique modified: " + member.GetTeamMemberStat(TeamMember.StatType.Technique));
         }
 
     }
     public void ModifyPlayerTeamWork(int teamWork)
     {
-        
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.TeamWork,teamWork);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {teamWork} Strength", 3);
             Debug.Log(member.memberName+" teamwork modified: " + member.GetTeamMemberStat(TeamMember.StatType.TeamWork));
         }
     }

@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
    public List<String> miniGameWorkScenes = new List<string>
    {
        "BeerPourMinigame",
-       "DishWashingMinigame"
+       "DishWashingMinigame" 
    };
    
    private void Awake()

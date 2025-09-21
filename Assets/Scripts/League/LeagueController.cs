@@ -11,7 +11,9 @@ namespace League
         public League currentLeague;
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
+        public LeagueCompleteCard leagueCompleteCardPrefab;
         public UnityEvent onPlayerJoinedLeague;
+        public  League nextLeague = null;
         FMOD.Studio.EventInstance UIClick1;
         //FMOD.Studio.EventInstance ShowInvite;
 
@@ -232,10 +234,63 @@ namespace League
             currentLeague.isFinished = true;
             currentLeague.RecalculateStandings();
             Debug.Log($"Season {currentLeague.currentSeason} completed for {currentLeague.leagueName}!");
+            Team playerTeam = currentLeague.GetPlayerTeam();
+            int playerFinalPosition = currentLeague.GetTeamPosition(playerTeam);
+            Debug.Log($"Player's final position: {playerFinalPosition}");
+
+            nextLeague =  currentLeague.GetNextLeague();
             
-            
+            LeagueCompleteCard leagueCompleteCard = Instantiate(leagueCompleteCardPrefab);
+            if (nextLeague != null && nextLeague != currentLeague)
+            {
+                bool playerWasRelegated = false;
+                bool playerWasPromoted = false;
+                
+              
+                playerWasPromoted = currentLeague.DidPlayerGetPromoted();
+                playerWasRelegated = currentLeague.DidPlayerGetRelegated();
+                
+                
+                leagueCompleteCard.SetLeagueCompeletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),playerWasRelegated,playerWasPromoted);
+            }
+            else
+            {
+                leagueCompleteCard.SetLeagueCompeletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),false,false);
+            }
             
         }
+        
+        public void StartNewSeason()
+        {
+            if (currentLeague == null)
+            {
+                Debug.LogWarning("No current league to start a new season in!");
+                return;
+            }
+            
+            if (!currentLeague.isFinished)
+            {
+                Debug.LogWarning("Current league season is not finished yet!");
+                return;
+            }
+
+            // Move to next league if applicable
+            if (nextLeague != null && nextLeague != currentLeague)
+            {
+                currentLeague = nextLeague;
+                nextLeague = null;
+            }
+
+            foreach (var league in leagues)
+            {
+                league.ResetLeagueForNewSeason();
+            }
+            currentLeague.standings = null;
+            RegenerateRaceSchedule();
+            
+            Debug.Log($"Starting new season {currentLeague.currentSeason} in league '{currentLeague.leagueName}'");
+        }
+        
 
         /// <summary>
         /// Clears the current league and resets all race data.
