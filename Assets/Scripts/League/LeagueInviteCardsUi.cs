@@ -61,7 +61,8 @@ public class LeagueInviteCardsUi : MonoBehaviour
   
   public void OnClickAcceptInvite()
   {
-    LeagueController.Instance.GenerateRaceSchedule();
+    LeagueController.Instance.RegenerateRaceSchedule();
+    LeagueController.Instance.currentLeague.RecalculateStandings();
     LeagueController.Instance.SetPlayerHasAcceptedInvite();
     Destroy(gameObject);
   }

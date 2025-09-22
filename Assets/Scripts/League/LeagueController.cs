@@ -82,7 +82,7 @@ namespace League
                 else
                 {
                     Debug.LogWarning("LeagueInviteCardsUi reference is not set in the inspector.");
-                    GenerateRaceSchedule();
+                    RegenerateRaceSchedule();
                     SetPlayerHasAcceptedInvite();
                 
                 }
@@ -103,6 +103,9 @@ namespace League
             // Set the tournament start date when player joins (this should be fixed and not change)
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
             onPlayerJoinedLeague?.Invoke();
+            
+            
+            
         }
 
         public void GenerateRaceSchedule()
@@ -251,11 +254,11 @@ namespace League
                 playerWasRelegated = currentLeague.DidPlayerGetRelegated();
                 
                 
-                leagueCompleteCard.SetLeagueCompeletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),playerWasRelegated,playerWasPromoted);
+                leagueCompleteCard.SetLeagueCompletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),playerWasRelegated,playerWasPromoted);
             }
             else
             {
-                leagueCompleteCard.SetLeagueCompeletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),false,false);
+                leagueCompleteCard.SetLeagueCompletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),false,false);
             }
             
         }
@@ -289,6 +292,8 @@ namespace League
             RegenerateRaceSchedule();
             
             Debug.Log($"Starting new season {currentLeague.currentSeason} in league '{currentLeague.leagueName}'");
+            
+            
         }
         
 

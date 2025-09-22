@@ -14,8 +14,20 @@ public class StartMenu : MonoBehaviour
 
     FMOD.Studio.EventInstance GymBagZipUp;
     
-    
+    public static StartMenu Instance { get; private set; }
 
+    public void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+    
     void OnEnable()
     {
         uiDoc = GetComponent<UIDocument>();
@@ -34,27 +46,63 @@ public class StartMenu : MonoBehaviour
         UpdateRaceDayStatus();
         
         TimeManager.Instance.onNewDay.AddListener(UpdateRaceDayStatus); 
+        LeagueController.Instance.onPlayerJoinedLeague.AddListener(UpdateRaceDayStatus);
     }
     
-   
+    public enum RaceDayStatus
+    {
+        CanRace,
+        NotInLeague,
+        NotRaceDay
+    }
+
     public void UpdateRaceDayStatus()
     {
-        
-        if (RaceManager.Instance.isRaceDay)
-        {     _startRaceButton.text = "Start Race";
+        RaceDayStatus status = GetRaceDayStatus();
+        switch (status)
+        {
+            case RaceDayStatus.CanRace:
+                _startRaceButton.SetEnabled(true);
+                _startRaceButton.text = RaceManager.Instance.isRaceDay ? "Start Race" : "Practice";
+                break;
+            case RaceDayStatus.NotInLeague:
+                _startRaceButton.SetEnabled(false);
+                _startRaceButton.text = "No Race Available";
+                
+                StartCoroutine(ShowLeagueJoinMessageAfterDelay(16f));
+                break;
+            case RaceDayStatus.NotRaceDay:
+            default:
+                _startRaceButton.SetEnabled(true);
+                _startRaceButton.text = "Practice";
+                break;
+        }
+    }
+
+    public RaceDayStatus GetRaceDayStatus()
+    {
+        if (LeagueController.Instance.currentLeague != null && RaceManager.Instance.isRaceDay)
+        {
+            if (!LeagueController.Instance.currentLeague.playerHasJoined)
+            {
+                return RaceDayStatus.NotInLeague;
+            }
+            else
+            {
+                return RaceDayStatus.CanRace;
+            }
         }
         else
         {
-            _startRaceButton.text = "Practice Race";
+            return RaceDayStatus.NotRaceDay;
         }
     }
-    
-    
-    
-    
+
 
     public void OnStartRaceButtonClicked()
     {
+        
+
         if (RaceManager.Instance.waitingForAd == true)
         {
             PlayerStatsView.Instance.DisplayInfo("Waiting for ad to show, please wait...", 3);
@@ -101,6 +149,14 @@ public class StartMenu : MonoBehaviour
 
     }
 
+    private System.Collections.IEnumerator ShowLeagueJoinMessageAfterDelay(float delaySeconds)
+    {
+        yield return new WaitForSeconds(delaySeconds/3);
+        PlayerStatsView.Instance.DisplayInfo("You are not in a league, join a league to proceed.", 3);
+        
+        yield return new WaitForSeconds(delaySeconds);
+        LeagueController.Instance.ShowLeagueInvite();
+    }
     public void OnTrainingButtonClicked()
     {
        trainingMenuPrefab.SetActive(true);
@@ -157,6 +213,7 @@ public class StartMenu : MonoBehaviour
         _startRaceButton.clicked -= OnStartRaceButtonClicked;
         _trainButton.clicked -= OnTrainingButtonClicked;
         TimeManager.Instance.onNewDay.RemoveListener(UpdateRaceDayStatus);
+        LeagueController.Instance.onPlayerJoinedLeague.RemoveListener(UpdateRaceDayStatus);
      
     }
 

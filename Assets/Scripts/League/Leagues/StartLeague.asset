@@ -30,64 +30,16 @@ MonoBehaviour:
   leagueBelow: {fileID: 0}
   maxRaceDays: 3
   currentRace: 0
-  currentSeason: 3
+  currentSeason: 2
   isActive: 1
-  playerHasJoined: 0
+  playerHasJoined: 1
   leagueRaceEntryCost: 25
   isFinished: 0
   isPromotionRelegation: 1
   numberOfTeamsToPromoteRelegate: 2
   maxNumberOfBoatsPerRace: 4
   repeatCount: 1
-  raceDays:
-  - races:
-    - teams:
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    - teams:
-      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    processed: 0
-  - races:
-    - teams:
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    - teams:
-      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    processed: 0
-  - races:
-    - teams:
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    - teams:
-      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    processed: 0
+  raceDays: []
   raceTracks:
   - {fileID: 11400000, guid: 3de2264d6430c25458f1ffe33b918b5b, type: 2}
   maxExperienceGivenPerRace: 400

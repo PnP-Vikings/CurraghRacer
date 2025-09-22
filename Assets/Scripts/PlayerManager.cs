@@ -158,7 +158,7 @@ public class PlayerManager : MonoBehaviour
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.Stamina,stamina);
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {stamina} Strength", 3);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {stamina} Stamina", 3);
             Debug.Log(member.memberName+" stamina modified: " + member.GetTeamMemberStat(TeamMember.StatType.Stamina));
         }
 
@@ -170,7 +170,7 @@ public class PlayerManager : MonoBehaviour
         {
             member.ImproveStat(TeamMember.StatType.Technique,technique);
             
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {technique} Strength", 3);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {technique} Technique", 3);
             Debug.Log(member.memberName+" technique modified: " + member.GetTeamMemberStat(TeamMember.StatType.Technique));
         }
 
@@ -181,7 +181,7 @@ public class PlayerManager : MonoBehaviour
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.TeamWork,teamWork);
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {teamWork} Strength", 3);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {teamWork} TeamWork", 3);
             Debug.Log(member.memberName+" teamwork modified: " + member.GetTeamMemberStat(TeamMember.StatType.TeamWork));
         }
     }

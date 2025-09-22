@@ -25,7 +25,7 @@ public class LeagueCompleteCard : MonoBehaviour
         }
     }
     
-    public void SetLeagueCompeletionData(League.League league , int position, int totalTeams, int points, int racesWon,bool playerWasRelegated ,bool playerWasPromoted)
+    public void SetLeagueCompletionData(League.League league , int position, int totalTeams, int points, int racesWon,bool playerWasRelegated ,bool playerWasPromoted)
     {
         if (league == null)
         {
@@ -66,15 +66,15 @@ public class LeagueCompleteCard : MonoBehaviour
         }
         else if (position == 3)
         {
-            leaguCompletionDescriptionText.text = "Great job! Your team finished in 3rd position out of " + totalTeams + ". You earned " + points + " points with " + racesWon;
+            leaguCompletionDescriptionText.text = "Great job! Your team finished in 3rd position out of " + totalTeams + ". You earned " + points + " points with " + racesWon + " Wins." ;
         }
         else if (playerWasPromoted)
         {
-            leaguCompletionDescriptionText.text = "Congratulations! Your team finished in position " + position + " out of " + totalTeams + " and has been promoted to a higher league. You earned " + points + " points with " + racesWon;
+            leaguCompletionDescriptionText.text = "Congratulations! Your team finished in position " + position + " out of " + totalTeams + " and has been promoted to a higher league. You earned " + points + " points with " + racesWon + " Wins." + " Keep up the great work!";
         }
         else
         {
-            leaguCompletionDescriptionText.text = "Great job! Your team finished in position " + position + " out of " + totalTeams + ". You earned " + points + " points with " + racesWon;
+            leaguCompletionDescriptionText.text = "Great job! Your team finished in position " + position + " out of " + totalTeams + ". You earned " + points + " points with " + racesWon + " Wins.";
         }
 
     }

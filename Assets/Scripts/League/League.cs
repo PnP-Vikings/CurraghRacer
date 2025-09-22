@@ -190,7 +190,7 @@ namespace League
                 list.Add(s);
             }
             var sorted = list.OrderByDescending(s => s.points)
-                             .ThenByDescending(s => s.wins)
+                             .ThenByDescending(s => s.wins).ThenByDescending(s => s.team.teamName)
                              .ToList();
             for (int i = 0; i < sorted.Count; i++)
             {
