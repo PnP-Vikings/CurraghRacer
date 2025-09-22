@@ -285,10 +285,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>6000</value>
+			<value>6500</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>8000</value>
+			<value>8500</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -429,6 +429,7 @@
 		</relationship>
 		<relationship name="playPercentages">
 			<destination>{6ed076b6-97f8-49db-8262-98f269f07f56}</destination>
+			<destination>{32746623-8500-46d0-b93a-d7ff9f991ea7}</destination>
 		</relationship>
 	</object>
 	<object class="Automator" id="{efa954df-c30b-4fc5-baad-8d35056e933f}">
@@ -502,6 +503,9 @@
 	</object>
 	<object class="MixerBusFader" id="{63362af0-9f45-4140-8ba8-7dbf4cd281c2}" />
 	<object class="SingleSound" id="{445e2d73-a6e2-460f-9016-fa8794f9e745}">
+		<property name="volume">
+			<value>1</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{299b8e39-2721-4b63-9b39-b9c9e62e1984}</destination>
 		</relationship>
@@ -522,11 +526,17 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{37f6bacf-482e-4f81-b567-c153ce335593}">
+		<property name="volume">
+			<value>1</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{1cf5bb20-4077-4a81-be6b-5b52527e5494}</destination>
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{ddd546e6-2a73-4f9b-a84d-95919efa9833}">
+		<property name="volume">
+			<value>1</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{8c27e8df-e712-4a6a-a60f-1ee4205293d1}</destination>
 		</relationship>
@@ -541,7 +551,7 @@
 	</object>
 	<object class="SingleSound" id="{6923acc1-6e0d-4580-b586-e379b91265bc}">
 		<property name="volume">
-			<value>2</value>
+			<value>4</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{1fe3ae4d-f02e-462f-9e4e-79b605696b6b}</destination>
@@ -553,6 +563,14 @@
 		</property>
 		<relationship name="sound">
 			<destination>{c147fc5d-d0d6-4c00-9504-5111acc63907}</destination>
+		</relationship>
+	</object>
+	<object class="PlayPercentage" id="{32746623-8500-46d0-b93a-d7ff9f991ea7}">
+		<property name="percentage">
+			<value>35</value>
+		</property>
+		<relationship name="sound">
+			<destination>{6923acc1-6e0d-4580-b586-e379b91265bc}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationCurve" id="{0f4bf3cc-bc45-469d-9efc-99f32ae86ccb}">

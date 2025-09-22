@@ -103,6 +103,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{1fb1d64f-f504-4e7c-8728-6a13d6a4e060}">
+		<property name="volume">
+			<value>-3</value>
+		</property>
 		<property name="name">
 			<value>Negative Encouragement</value>
 		</property>
@@ -134,6 +137,9 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{4bbf7d6d-e07d-42a1-977e-5e99bbbee727}">
+		<property name="volume">
+			<value>-3</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{0125a429-3a75-4c61-bc65-379113569b31}</destination>
 		</relationship>

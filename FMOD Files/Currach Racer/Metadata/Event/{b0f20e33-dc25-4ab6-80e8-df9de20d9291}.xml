@@ -157,19 +157,13 @@
 			<value>0.84692118226600999</value>
 		</property>
 		<property name="length">
-			<value>7.1000000000000005</value>
-		</property>
-		<property name="volume">
-			<value>1.5</value>
+			<value>1.5530788177339905</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{754e68c9-ac65-48d5-9f14-b4e793f97376}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{0ec4d27f-d7c0-48bd-a9ee-8cb7b0e4693e}">
-		<property name="volume">
-			<value>-80</value>
-		</property>
 		<property name="name">
 			<value>Race Win Dialogue</value>
 		</property>
