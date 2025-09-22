@@ -1,6 +1,7 @@
 //using System.Collections;
 using MiniGames;
 using System.Collections.Generic;
+using League;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -72,8 +73,11 @@ public class DishwashingController : MonoBehaviour
 
     private void Start()
     {
-        RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        if (RaceManager.Instance != null)
+        {
+            RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
         KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         KitchenAmbience.start();
     }
@@ -130,7 +134,11 @@ public class DishwashingController : MonoBehaviour
     }
     public void PlateCleaned()
     {
-        plateCleanPosition.plateLogic.transform.position = finishClean.position; // Move the plate to the finish clean position
+        float finishCleanPosX=finishClean.position.x; 
+        float finishCleanPosZ=finishClean.position.z; 
+        float finishCleanPosY=finishClean.position.y; 
+        plateCleanPosition.plateLogic.transform.position = new Vector3(finishCleanPosX,finishCleanPosY + (.03f*(platesCleaned.Count+1)),finishCleanPosZ); // Slightly raise the plate to avoid z-fighting
+        plateCleanPosition.plateLogic.transform.rotation= finishClean.transform.rotation; // Set the rotation to match the finish clean position
         platesCleaned.Add(plateCleanPosition.plateLogic); // Add the cleaned plate to the list
         plates.Remove(plateCleanPosition.plateLogic); // Remove the cleaned plate from the plates list
         plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
@@ -155,6 +163,11 @@ public class DishwashingController : MonoBehaviour
             // }
 
             KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
+            if (RaceManager.Instance == null)
+            {
+                return;
+            }
             RaceManager.Instance.GarageAmbience.start();
             RaceManager.Instance.Radio.start();
        }
