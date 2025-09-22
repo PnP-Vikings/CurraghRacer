@@ -1,0 +1,15 @@
+# Blender MTL File: 'stone_blocks.blend'
+# Material Count: 1
+
+newmtl stone_block
+Ns 0.074380
+Ka 1.000000 1.000000 1.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.500000 0.500000 0.500000
+Ke 0.0 0.0 0.0
+Ni 1.450000
+d 1.000000
+illum 2
+map_Bump /home/linux/Dokumente/Open_Projects/Duoban_source/stone_blocks/textures/stone_block_normal.png
+map_Kd /home/linux/Dokumente/Open_Projects/Duoban_source/stone_blocks/textures/stone_block_color.png
+map_Ns /home/linux/Dokumente/Open_Projects/Duoban_source/stone_blocks/textures/stone_block_roughness.png
