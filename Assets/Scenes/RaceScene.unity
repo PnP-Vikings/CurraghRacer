@@ -3111,6 +3111,14 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: coins
+      value: 200
+      objectReference: {fileID: 0}
+    - target: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: energy
+      value: 300
+      objectReference: {fileID: 0}
+    - target: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: playerStatsView
       value: 
       objectReference: {fileID: 333810543}
