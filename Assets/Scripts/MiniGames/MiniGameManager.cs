@@ -144,7 +144,7 @@ namespace MiniGames
             }
             
             // Check energy cost
-            if (playerManager != null && !playerManager.playerHasEnoughEnergy(activity.energyCost))
+            if (playerManager != null && !playerManager.PlayerHasEnoughEnergy(activity.energyCost))
             {
                 Debug.LogWarning($"Not enough energy! Need {activity.energyCost} energy to play {activity.gameName}");
                 return;

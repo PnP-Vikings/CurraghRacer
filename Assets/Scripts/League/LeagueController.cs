@@ -11,7 +11,9 @@ namespace League
         public League currentLeague;
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
+        public LeagueCompleteCard leagueCompleteCardPrefab;
         public UnityEvent onPlayerJoinedLeague;
+        public  League nextLeague = null;
         FMOD.Studio.EventInstance UIClick1;
         //FMOD.Studio.EventInstance ShowInvite;
 
@@ -80,7 +82,7 @@ namespace League
                 else
                 {
                     Debug.LogWarning("LeagueInviteCardsUi reference is not set in the inspector.");
-                    GenerateRaceSchedule();
+                    RegenerateRaceSchedule();
                     SetPlayerHasAcceptedInvite();
                 
                 }
@@ -101,6 +103,9 @@ namespace League
             // Set the tournament start date when player joins (this should be fixed and not change)
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
             onPlayerJoinedLeague?.Invoke();
+            
+            
+            
         }
 
         public void GenerateRaceSchedule()
@@ -168,8 +173,7 @@ namespace League
             // Update standings after race results
             currentLeague.RecalculateStandings();
             
-            // Do NOT simulate next race here - it will be simulated when that race day arrives
-            // This prevents AI teams from getting extra races
+            
         }
 
         /// <summary>
@@ -233,13 +237,68 @@ namespace League
             currentLeague.isFinished = true;
             currentLeague.RecalculateStandings();
             Debug.Log($"Season {currentLeague.currentSeason} completed for {currentLeague.leagueName}!");
+            Team playerTeam = currentLeague.GetPlayerTeam();
+            int playerFinalPosition = currentLeague.GetTeamPosition(playerTeam);
+            Debug.Log($"Player's final position: {playerFinalPosition}");
+
+            nextLeague =  currentLeague.GetNextLeague();
             
-            // TODO: Handle promotion/relegation, start new season, etc.
+            LeagueCompleteCard leagueCompleteCard = Instantiate(leagueCompleteCardPrefab);
+            if (nextLeague != null && nextLeague != currentLeague)
+            {
+                bool playerWasRelegated = false;
+                bool playerWasPromoted = false;
+                
+              
+                playerWasPromoted = currentLeague.DidPlayerGetPromoted();
+                playerWasRelegated = currentLeague.DidPlayerGetRelegated();
+                
+                
+                leagueCompleteCard.SetLeagueCompletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),playerWasRelegated,playerWasPromoted);
+            }
+            else
+            {
+                leagueCompleteCard.SetLeagueCompletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),false,false);
+            }
+            
         }
+        
+        public void StartNewSeason()
+        {
+            if (currentLeague == null)
+            {
+                Debug.LogWarning("No current league to start a new season in!");
+                return;
+            }
+            
+            if (!currentLeague.isFinished)
+            {
+                Debug.LogWarning("Current league season is not finished yet!");
+                return;
+            }
+
+            // Move to next league if applicable
+            if (nextLeague != null && nextLeague != currentLeague)
+            {
+                currentLeague = nextLeague;
+                nextLeague = null;
+            }
+
+            foreach (var league in leagues)
+            {
+                league.ResetLeagueForNewSeason();
+            }
+            currentLeague.standings = null;
+            RegenerateRaceSchedule();
+            
+            Debug.Log($"Starting new season {currentLeague.currentSeason} in league '{currentLeague.leagueName}'");
+            
+            
+        }
+        
 
         /// <summary>
         /// Clears the current league and resets all race data.
-        /// This method can be called from the inspector button.
         /// </summary>
         [ContextMenu("Clear League")]
         public void ClearLeague()

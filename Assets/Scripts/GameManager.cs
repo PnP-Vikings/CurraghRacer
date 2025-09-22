@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
    public List<String> miniGameWorkScenes = new List<string>
    {
        "BeerPourMinigame",
-       "DishWashingMinigame"
+       "DishWashingMinigame" 
    };
    
    private void Awake()
@@ -87,7 +87,7 @@ public class GameManager : MonoBehaviour
 
     public void Sleep(int sleepCost)
     {
-        if(PlayerManager.Instance.playerHasEnoughEnergy(100))
+        if(PlayerManager.Instance.PlayerHasEnoughEnergy(100))
         {
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
             return; // Not enough energy to sleep

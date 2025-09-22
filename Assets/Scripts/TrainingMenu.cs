@@ -39,11 +39,7 @@ public class TrainingMenu : MonoBehaviour
     {
        if(CanTrain(30, 50))
         {
-           
-       
             PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {strengthGainAmount} Strength", 3);
-
             Dumbbell = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Dumbbell");
             Dumbbell.start();
         }
@@ -58,8 +54,6 @@ public class TrainingMenu : MonoBehaviour
         if (CanTrain(30, 50))
         {
                 PlayerManager.Instance.ModifyPlayerTechnique(techniqueGainAmount);
-                PlayerStatsView.Instance.DisplayInfo($"You gained {techniqueGainAmount} Technique", 3);
-
         }
     }
     
@@ -68,7 +62,6 @@ public class TrainingMenu : MonoBehaviour
         if(CanTrain(30, 50))
         {
             PlayerManager.Instance.ModifyPlayerStamina(staminaGainAmount);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {staminaGainAmount} Stamina", 3);
         }
 
         
@@ -80,7 +73,6 @@ public class TrainingMenu : MonoBehaviour
         if(CanTrain(30, 50))
         {
             PlayerManager.Instance.ModifyPlayerTeamWork(teamWorkGainAmount);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {teamWorkGainAmount} TeamWork", 3);
         }
             
     }
@@ -97,7 +89,7 @@ public class TrainingMenu : MonoBehaviour
     public bool CanTrain(int energyCost, int currencyCost)
     {
         // Check if the player has enough energy
-        if (!PlayerManager.Instance.playerHasEnoughEnergy(energyCost))
+        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCost))
         {
             PlayerStatsView.Instance.DisplayInfo($"You must have at least {energyCost} Energy to train", 3);
             return false; // Not enough energy
