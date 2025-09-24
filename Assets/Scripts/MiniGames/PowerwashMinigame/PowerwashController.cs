@@ -31,6 +31,15 @@ public class PowerwashController : MonoBehaviour
 
     public Camera powerwashCamera;
 
+    List<GameObject> wallList = new List<GameObject>();
+
+    public GameObject WallPrefab1;
+
+    public GameObject WallPrefab2;
+
+    public GameObject WallPrefab3;
+
+
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovewallAudio;
@@ -48,8 +57,7 @@ public class PowerwashController : MonoBehaviour
         // Only create one powerwash
         if (powerwashInstance == null)
             powerwashInstance = Instantiate(powerwashPrefab);
-        
-        
+
         Spawnwalls();
         wallCleanPosition.onWallCleaned.AddListener(wallCleaned); // Subscribe to the BeerDone event
         MovewallToCleanPosition();
@@ -110,6 +118,14 @@ public class PowerwashController : MonoBehaviour
     
     public void Spawnwalls()
     {
+
+        //Select a random wall
+        wallList.Add(WallPrefab1);
+        wallList.Add(WallPrefab2);
+        wallList.Add(WallPrefab3);
+        int wallIndex = UnityEngine.Random.Range(0, 3);
+        Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.identity);
+
         for (int i = 0; i < spawnCount; i++) // Spawn 5 walls
         {
             GameObject wallObject = Instantiate(wallPrefab, spawnPoint.position, Quaternion.identity);
