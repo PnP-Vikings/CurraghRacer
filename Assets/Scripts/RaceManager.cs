@@ -68,7 +68,7 @@ public class RaceManager : MonoBehaviour
 
     public void OnEnable()
     {
-        TimeManager.Instance.todaysEvents.AddListener(CheckForRaceDay);
+      
     }
 
     private void Start()
@@ -85,6 +85,7 @@ public class RaceManager : MonoBehaviour
 
         if (todaysEvents != null && todaysEvents.Count > 0)
         {
+          
             todaysEvents.ForEach(eventType =>
             {
                 if (eventType.OccasionType == Calendar.OccasionType.Race)
@@ -95,8 +96,13 @@ public class RaceManager : MonoBehaviour
                 {
                    isRaceDay = false;
                 }
-                
+                Debug.Log("Checking today's events for Race Day..." + isRaceDay + " Event: " + eventType.eventName);
             });
+        }
+        else
+        {
+            isRaceDay = false;
+            Debug.Log("No events today - not Race Day");
         }
     }
 

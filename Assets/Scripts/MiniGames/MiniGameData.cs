@@ -35,7 +35,7 @@ namespace MiniGames
         [Tooltip("Should this minigame load a separate scene?")]
         public bool useSceneLoading = false;
         [Tooltip("Scene to return to after minigame completion")]
-        public string returnSceneName = "RaceScene";
+        public string returnSceneName = "Garage";
         
         [Header("Rewards")]
         [Tooltip("Base earnings for this minigame (applies to work activities)")]

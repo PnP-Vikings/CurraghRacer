@@ -55,11 +55,22 @@ public class LeagueUi : MonoBehaviour
 
     public void UpdateLeague(string leagueName, TeamStanding[] teams)
     {
+        if (leagueNameText == null || gridParent == null || teamCellPrefab == null)
+        {
+            Debug.LogError("LeagueUi is not properly set up in the inspector.");
+            return;
+        }
+        
         leagueNameText.text = leagueName;
         
         // Clear old cells
         foreach (Transform child in gridParent) Destroy(child.gameObject);
         
+        if (teams == null || teams.Length == 0)
+        {
+            Debug.LogWarning("No teams available to display in the league.");
+            return;
+        }
         // Create new cells for each team
         foreach (var team in teams)
         {

@@ -83,6 +83,41 @@ public class TimeManager : MonoBehaviour
         onNewDay.Invoke(); // Raise the OnNewDay event
         timeChangedEvent.Invoke(); // Raise the time changed event
         
+        if(RaceManager.Instance != null)
+            todaysEvents.AddListener(RaceManager.Instance.CheckForRaceDay);
+        
+    }
+    
+    public void AdvanceTimeByHours(float hours)
+    {
+        if (hours < 0) throw new ArgumentException("Hours to advance must be non-negative");
+        
+        float previousTimeOfDay = timeOfDay;
+        timeOfDay += hours * timeMultiplier;
+        timeOfDay %= 24f; // Clamp to 0-24
+
+        // Check if a new day has started
+        if (previousTimeOfDay > timeOfDay)
+        {
+            daysPassed++;
+            newItemSpawned = false;
+          //  onNewDay.Invoke(); // Raise the OnNewDay event
+        }
+
+        // Call SpawnItems method at the beginning of a new day
+        if (!newItemSpawned && timeOfDay >= 0 && timeOfDay <= 1)
+        {
+            Debug.Log("New day has started");
+           // onNewDay.Invoke(); // Raise the OnNewDay event
+            newItemSpawned = true;
+        }
+
+        if (IsNight())
+        {
+            onNightStart.Invoke(); // Raise the OnNightStart event
+        }
+        
+        timeChangedEvent.Invoke();
     }
     
     // Update the time of day based on the time multiplier
