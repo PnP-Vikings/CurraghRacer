@@ -9,6 +9,8 @@ public class StartMenu : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDoc;
     private Button _startRaceButton,_trainButton,_workButton,_sleepButton;
+    [SerializeField] private UnityEngine.UI.Button startRaceButtonGarage;
+    [SerializeField] private TMPro.TMP_Text _startRaceButtonText;
     [SerializeField] CameraController cameraController;
     public GameObject trainingMenuPrefab;
 
@@ -32,17 +34,20 @@ public class StartMenu : MonoBehaviour
     {
         uiDoc = GetComponent<UIDocument>();
 
-        var root = uiDoc.rootVisualElement;
-        _startRaceButton = root.Q<Button>("StartRaceButton");
-        _trainButton = root.Q<Button>("TrainingButton");
-        _workButton = root.Q<Button>("WorkButton");
-        _sleepButton = root.Q<Button>("SleepButton");
-        
+        if (uiDoc != null)
+        {
+            var root = uiDoc.rootVisualElement;
+            _startRaceButton = root.Q<Button>("StartRaceButton");
+            _trainButton = root.Q<Button>("TrainingButton");
+            _workButton = root.Q<Button>("WorkButton");
+            _sleepButton = root.Q<Button>("SleepButton");
 
-        _startRaceButton.clicked += OnStartRaceButtonClicked;
-        _trainButton.clicked += OnTrainingButtonClicked;
-        _workButton.clicked += OnWorkButtonClicked;
-        _sleepButton.clicked +=OnSleepButtonClicked;
+
+            _startRaceButton.clicked += OnStartRaceButtonClicked;
+            _trainButton.clicked += OnTrainingButtonClicked;
+            _workButton.clicked += OnWorkButtonClicked;
+            _sleepButton.clicked += OnSleepButtonClicked;
+        }
         UpdateRaceDayStatus();
         
         TimeManager.Instance.onNewDay.AddListener(UpdateRaceDayStatus); 
@@ -62,10 +67,23 @@ public class StartMenu : MonoBehaviour
         switch (status)
         {
             case RaceDayStatus.CanRace:
+                if (startRaceButtonGarage != null && _startRaceButtonText != null)
+                {
+                     startRaceButtonGarage.interactable = true;
+                    _startRaceButtonText.text = RaceManager.Instance.isRaceDay ? "Start Race" : "Practice";
+                    break;
+                }
                 _startRaceButton.SetEnabled(true);
                 _startRaceButton.text = RaceManager.Instance.isRaceDay ? "Start Race" : "Practice";
                 break;
             case RaceDayStatus.NotInLeague:
+                if (startRaceButtonGarage != null && _startRaceButtonText != null)
+                {
+                    startRaceButtonGarage.interactable = false;
+                    _startRaceButtonText.text = "No Race Available";
+                    StartCoroutine(ShowLeagueJoinMessageAfterDelay(16f));
+                    break;
+                }
                 _startRaceButton.SetEnabled(false);
                 _startRaceButton.text = "No Race Available";
                 
@@ -73,6 +91,12 @@ public class StartMenu : MonoBehaviour
                 break;
             case RaceDayStatus.NotRaceDay:
             default:
+                if (startRaceButtonGarage != null && _startRaceButtonText != null)
+                {
+                    startRaceButtonGarage.interactable = true;
+                    _startRaceButtonText.text = "Practice";
+                    break;
+                }
                 _startRaceButton.SetEnabled(true);
                 _startRaceButton.text = "Practice";
                 break;
@@ -142,8 +166,10 @@ public class StartMenu : MonoBehaviour
             GameManager.Instance.StartGame();
             TimeManager.Instance.UpdateTime();
             RaceManager.Instance.StartRace();
-            uiDoc.gameObject.SetActive(false);
-            cameraController.MoveCameraToPosition(0);
+            if(uiDoc != null)
+                uiDoc.gameObject.SetActive(false);
+            if(cameraController)
+                cameraController.MoveCameraToPosition(0);
             
        
 
@@ -178,7 +204,8 @@ public class StartMenu : MonoBehaviour
                 MiniGames.MiniGameManager.Instance.StartRandomWorkActivity();
                 
                 // Hide the start menu UI
-                uiDoc.gameObject.SetActive(false);
+                if(uiDoc != null)
+                    uiDoc.gameObject.SetActive(false);
                 
                 // Deduct energy cost
                 PlayerManager.Instance.ModifyPlayerEnergy(-25);
@@ -210,8 +237,14 @@ public class StartMenu : MonoBehaviour
     
     private void OnDisable()
     {
-        _startRaceButton.clicked -= OnStartRaceButtonClicked;
-        _trainButton.clicked -= OnTrainingButtonClicked;
+        if(_startRaceButton != null)
+          _startRaceButton.clicked -= OnStartRaceButtonClicked;
+        if(_workButton != null)
+          _workButton.clicked -= OnWorkButtonClicked;
+        if(_sleepButton != null)
+            _sleepButton.clicked -= OnSleepButtonClicked;
+        if(_trainButton != null)
+            _trainButton.clicked -= OnTrainingButtonClicked;
         TimeManager.Instance.onNewDay.RemoveListener(UpdateRaceDayStatus);
         LeagueController.Instance.onPlayerJoinedLeague.RemoveListener(UpdateRaceDayStatus);
      

@@ -20,19 +20,21 @@ public class TrainingMenu : MonoBehaviour
     void OnEnable()
     {
         uiDoc = GetComponent<UIDocument>();
+        if(uiDoc != null)
+        {
+            var root = uiDoc.rootVisualElement;
+            _trainStrengthButton = root.Q<Button>("TrainStrength");
+            _trainTechniqueButton = root.Q<Button>("TrainTechnique");
+            _trainStaminaButton = root.Q<Button>("TrainStamina");
+            _trainTeamWorkButton = root.Q<Button>("TrainTeamWork");
+            _backButton = root.Q<Button>("BackButton");
 
-        var root = uiDoc.rootVisualElement;
-        _trainStrengthButton = root.Q<Button>("TrainStrength");
-        _trainTechniqueButton = root.Q<Button>("TrainTechnique");
-        _trainStaminaButton = root.Q<Button>("TrainStamina");
-        _trainTeamWorkButton = root.Q<Button>("TrainTeamWork");
-        _backButton = root.Q<Button>("BackButton");
-
-        _trainStrengthButton.clicked += OnTrainStrengthButtonClicked;
-        _trainTechniqueButton.clicked += OnTrainTechniqueButtonClicked;
-        _trainStaminaButton.clicked += OnTrainStaminaButtonClicked;
-        _trainTeamWorkButton.clicked += OnTrainTeamWorkButtonClicked;
-        _backButton.clicked += OnCloseTrainingMenuButtonClicked;
+            _trainStrengthButton.clicked += OnTrainStrengthButtonClicked;
+            _trainTechniqueButton.clicked += OnTrainTechniqueButtonClicked;
+            _trainStaminaButton.clicked += OnTrainStaminaButtonClicked;
+            _trainTeamWorkButton.clicked += OnTrainTeamWorkButtonClicked;
+            _backButton.clicked += OnCloseTrainingMenuButtonClicked;
+        }
     }
 
     public void OnTrainStrengthButtonClicked()
@@ -80,8 +82,10 @@ public class TrainingMenu : MonoBehaviour
     public void OnCloseTrainingMenuButtonClicked()
     {
         startingMenuPrefab.SetActive(true);
-        uiDoc.gameObject.SetActive(false);
-
+        if (uiDoc != null)
+        {
+            uiDoc.gameObject.SetActive(false);
+        }
         UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
         UIClick2.start();
     }
@@ -104,12 +108,14 @@ public class TrainingMenu : MonoBehaviour
 
         // Deduct the currency cost and allow training
         PlayerManager.Instance.ModifyPlayerEnergy(-energyCost);
+        TimeManager.Instance.AdvanceTimeByHours(3); // Advance time by 3 hour
         Debug.Log($"Player has enough energy {PlayerManager.Instance.energy}  and currency {PlayerManager.Instance.coins} to train");
         return true;
     }
     
     private void OnDisable()
     {
+        if (uiDoc == null) return;
         _trainStrengthButton.clicked -= OnTrainStrengthButtonClicked;
         _trainTechniqueButton.clicked -= OnTrainTechniqueButtonClicked;
         _trainStaminaButton.clicked -= OnTrainStaminaButtonClicked;
