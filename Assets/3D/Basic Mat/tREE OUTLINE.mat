@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Shader Graphs_New Shader Graph
+  m_Name: tREE OUTLINE
   m_Shader: {fileID: -6465566751694194690, guid: c057d4348cd60604cab3e70c2b362dde, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -52,7 +52,7 @@ Material:
     m_Ints: []
     m_Floats:
     - _Fade_Distance: 75
-    - _Outline_Thickness: 0.0049
+    - _Outline_Thickness: 0
     - _QueueControl: 0
     - _QueueOffset: 0
     m_Colors:
