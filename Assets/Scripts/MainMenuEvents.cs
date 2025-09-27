@@ -72,7 +72,6 @@ public class MainMenuEvents : MonoBehaviour
         
         GameManager.Instance.StartGame(); // Set the game started state to true
         
-      
     }
     
     private void onDisable()

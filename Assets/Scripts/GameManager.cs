@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using League;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
@@ -14,6 +16,7 @@ public class GameManager : MonoBehaviour
    public int racesTillNextAd = 3;
    public string mainSceneName = "Garage";
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
+   public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
 
    public List<String> miniGameWorkScenes = new List<string>
@@ -52,12 +55,20 @@ public class GameManager : MonoBehaviour
     {
         GameStarted = true;
         OnGameStarted?.Invoke();
+        SceneManager.LoadScene(mainSceneName);
     }
     
     public bool GetGameStarted()
     {
         return GameStarted;
     }
+    
+    public void SetPlayerBusy(bool isBusy)
+    {
+        playerIsBusy = isBusy;
+    }
+    
+    
     
     public bool CanShowAd()
     {

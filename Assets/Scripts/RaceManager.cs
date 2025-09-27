@@ -116,6 +116,7 @@ public class RaceManager : MonoBehaviour
             Debug.Log("Starting Race with " + raceTracks.Length + " tracks available.");
             SceneManager.LoadScene(raceTracks[Random.Range(0, raceTracks.Length)].raceSceneName ?? "DefaultRaceScene");
             LoadedRaceScene = true; // Set flag to
+            GameManager.Instance.SetPlayerBusy(true);
         }
         else if (LoadedRaceScene)
         {
@@ -416,6 +417,7 @@ public class RaceManager : MonoBehaviour
 
         RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+        GameManager.Instance.SetPlayerBusy(false);
     }
     
     IEnumerator ShowAd()

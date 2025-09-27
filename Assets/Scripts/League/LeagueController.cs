@@ -52,25 +52,21 @@ namespace League
                 ClearLeague();
                 RegenerateRaceSchedule();
                 currentLeague.RecalculateStandings();
-                GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
-                
-              
             }
             else
             {
                 Debug.LogWarning("Current league is not set! Please assign a league in the inspector.");
             }
-
-            
-            
-           
         }
-
+        public void ShowLeagueInviteAfterDelay()
+        {
+                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+        }
 
 
         public void ShowLeagueInvite()
         {
-            if (currentLeague != null)
+            if (currentLeague != null && TimeManager.Instance != null)
             {
 
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
@@ -89,10 +85,41 @@ namespace League
                 //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
                 //ShowInvite.start();
             }
+           
 
         }
 
-        
+        public System.Collections.IEnumerator StartLeagueInviteMessageAfterDelay(float delaySeconds)
+        {
+            Debug.Log($"Waiting {delaySeconds} seconds before showing league invite message...");
+            if (!GameManager.Instance.playerIsBusy && TimeManager.Instance != null && currentLeague != null)
+            {
+                /*if (PlayerStatsView.Instance != null)
+                {
+                    yield return new WaitForSeconds(delaySeconds / 3);
+
+                //    PlayerStatsView.Instance.DisplayInfo("You are not in a league, join a league to proceed.", 3);
+                }*/
+                        
+                yield return new WaitForSeconds(delaySeconds);
+           
+                ShowLeagueInvite();
+            }
+            else
+            {
+                if (TimeManager.Instance == null)
+                    Debug.LogWarning("TimeManager instance is null, cannot show league invite message.");
+                if (currentLeague == null)
+                    Debug.LogWarning("Current league is null, cannot show league invite message.");
+                if (GameManager.Instance.playerIsBusy)
+                    Debug.Log("Player is busy, delaying league invite message.");
+                // Retry after some time
+                yield return new WaitForSeconds(10f);
+                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+            }
+        }
+
+
         public void SetPlayerHasAcceptedInvite()
         {
             currentLeague.playerHasJoined = true;
