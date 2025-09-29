@@ -4004,27 +4004,6 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 181377303}
   m_Mesh: {fileID: 10207, guid: 0000000000000000e000000000000000, type: 0}
---- !u!1 &189117179 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-  m_PrefabInstance: {fileID: 579750602}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &189117180
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 189117179}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 703a7567483149fba2334e1a48b02da2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  calendarEvents: {fileID: 11400000, guid: 454b31a26fe91c0479401781f8a35026, type: 2}
-  enablePersistence: 0
-  saveFileName: completed_races.json
-  completedRaceObjects: []
 --- !u!1 &192997223
 GameObject:
   m_ObjectHideFlags: 0
@@ -10674,57 +10653,9 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: finishMenu
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: mainCamera
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[0]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[1]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[2]'
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'raceStartPositions.Array.data[3]'
-      value: 
-      objectReference: {fileID: 0}
     - target: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: m_Name
       value: GameManager
-      objectReference: {fileID: 0}
-    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: MiniGameTimerRunsOutEvent.m_PersistentCalls.m_Calls.Array.size
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: MiniGameTimerRunsOutEvent.m_PersistentCalls.m_Calls.Array.data[0].m_Target
-      value: 
-      objectReference: {fileID: 11500000, guid: 1350a47e151571e45abd4180a2393f6f, type: 3}
-    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: MiniGameTimerRunsOutEvent.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: mainSceneName
-      value: Garage
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: startSceneName
-      value: Main Menu
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: cameraStartPosition
-      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 4155108299724904071, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: m_LocalPosition.x
@@ -10766,33 +10697,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    - target: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: coins
-      value: 200
-      objectReference: {fileID: 0}
-    - target: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: energy
-      value: 300
-      objectReference: {fileID: 0}
-    - target: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: playerStatsView
-      value: 
-      objectReference: {fileID: 0}
-    - target: {fileID: 8150581909809056547, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: leagueInviteCardsUi
-      value: 
-      objectReference: {fileID: 6545524236131076258, guid: e7af4e1578bb16f42881e823255c1a23, type: 3}
-    - target: {fileID: 8150581909809056547, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: leagueCompleteCardPrefab
-      value: 
-      objectReference: {fileID: 7250917615151901132, guid: 7d20fdd0532851e48983e0d7bf2e15f0, type: 3}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 189117180}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
 --- !u!4 &581684821 stripped
 Transform:
@@ -38203,7 +38111,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &2091071942
 MonoBehaviour:
   m_ObjectHideFlags: 0
