@@ -7,7 +7,7 @@ public class LeagueUi : MonoBehaviour
     public static LeagueUi Instance { get; private set; }
     public LeagueTeamUiHandler teamCellPrefab;
     public Transform gridParent;
-    public TMPro.TMP_Text leagueNameText;
+    public TMPro.TMP_Text leagueNameText,playerHasNotJoinedText;
     public GameObject leagueTablePanel;
     
 
@@ -61,6 +61,16 @@ public class LeagueUi : MonoBehaviour
             return;
         }
         
+        if (!LeagueController.Instance.currentLeague.playerHasJoined)
+        {
+            playerHasNotJoinedText.gameObject.SetActive(true);
+            return;
+        }
+        else
+        {
+            playerHasNotJoinedText.gameObject.SetActive(false);
+        }
+        
         leagueNameText.text = leagueName;
         
         // Clear old cells
@@ -71,6 +81,8 @@ public class LeagueUi : MonoBehaviour
             Debug.LogWarning("No teams available to display in the league.");
             return;
         }
+        
+        
         // Create new cells for each team
         foreach (var team in teams)
         {

@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using League;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
@@ -12,8 +14,10 @@ public class GameManager : MonoBehaviour
    public bool GameStarted = false;
    public Transform cameraStartPosition;
    public int racesTillNextAd = 3;
+   public string startSceneName = "Main Menu";
    public string mainSceneName = "Garage";
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
+   public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
 
    public List<String> miniGameWorkScenes = new List<string>
@@ -50,14 +54,41 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
+        AdsManager.Instance.bannerAds.HideBannerAd();
         GameStarted = true;
         OnGameStarted?.Invoke();
+        SceneManager.LoadScene(mainSceneName);
     }
     
     public bool GetGameStarted()
     {
         return GameStarted;
     }
+    
+    public void SetPlayerBusy(bool busy)
+    {
+        playerIsBusy = busy;
+    }
+    
+    public void SetGameStarted(bool started)
+    {
+        GameStarted = started;
+    }
+    
+    
+    /// <summary>
+    /// Trigger an auto-save at important game events
+    /// </summary>
+    public void TriggerAutoSave()
+    {
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, "Auto Save");
+            Debug.Log("Auto-save triggered");
+        }
+    }
+    
+    
     
     public bool CanShowAd()
     {

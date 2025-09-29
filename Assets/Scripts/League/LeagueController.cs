@@ -49,28 +49,74 @@ namespace League
         {
             if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
-                ClearLeague();
-                RegenerateRaceSchedule();
-                currentLeague.RecalculateStandings();
-                GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
-                
-              
+                // Only clear and regenerate if this is a fresh game start (not loaded from save)
+                if (!IsGameLoadedFromSave())
+                {
+                    ClearLeague();
+                    RegenerateRaceSchedule();
+                    currentLeague.RecalculateStandings();
+                }
+                else
+                {
+                    Debug.Log("Game loaded from save - preserving existing league data");
+                }
             }
-            else
+            else if (currentLeague == null)
             {
                 Debug.LogWarning("Current league is not set! Please assign a league in the inspector.");
             }
-
-            
-            
-           
         }
-
+        
+        /// <summary>
+        /// Check if the game was loaded from a save file
+        /// </summary>
+        private bool IsGameLoadedFromSave()
+        {
+            // Check if SaveSystem exists and has been used to load data
+            if (SaveSystem.Instance != null)
+            {
+                // If the player has joined a league, it indicates saved progress
+                if (currentLeague != null && currentLeague.playerHasJoined)
+                {
+                    return true;
+                }
+                
+                // Check if there's any race progress
+                if (currentLeague != null && currentLeague.currentRace > 0)
+                {
+                    return true;
+                }
+                
+                // Check if any teams have race history (indicating saved progress)
+                if (currentLeague?.teams != null)
+                {
+                    foreach (var team in currentLeague.teams)
+                    {
+                        if (team?.currentSeasonStats?.finishes != null && team.currentSeasonStats.finishes.Count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                
+                // Check if tournament start date has been set
+                if (currentLeague != null && currentLeague.tournamentStartDate != default(System.DateTime))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        public void ShowLeagueInviteAfterDelay()
+        {
+                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+        }
 
 
         public void ShowLeagueInvite()
         {
-            if (currentLeague != null)
+            if (currentLeague != null && TimeManager.Instance != null)
             {
 
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
@@ -89,10 +135,41 @@ namespace League
                 //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
                 //ShowInvite.start();
             }
+           
 
         }
 
-        
+        public System.Collections.IEnumerator StartLeagueInviteMessageAfterDelay(float delaySeconds)
+        {
+            Debug.Log($"Waiting {delaySeconds} seconds before showing league invite message...");
+            if (!GameManager.Instance.playerIsBusy && TimeManager.Instance != null && currentLeague != null)
+            {
+                /*if (PlayerStatsView.Instance != null)
+                {
+                    yield return new WaitForSeconds(delaySeconds / 3);
+
+                //    PlayerStatsView.Instance.DisplayInfo("You are not in a league, join a league to proceed.", 3);
+                }*/
+                        
+                yield return new WaitForSeconds(delaySeconds);
+           
+                ShowLeagueInvite();
+            }
+            else
+            {
+                if (TimeManager.Instance == null)
+                    Debug.LogWarning("TimeManager instance is null, cannot show league invite message.");
+                if (currentLeague == null)
+                    Debug.LogWarning("Current league is null, cannot show league invite message.");
+                if (GameManager.Instance.playerIsBusy)
+                    Debug.Log("Player is busy, delaying league invite message.");
+                // Retry after some time
+                yield return new WaitForSeconds(10f);
+                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+            }
+        }
+
+
         public void SetPlayerHasAcceptedInvite()
         {
             currentLeague.playerHasJoined = true;
@@ -104,8 +181,11 @@ namespace League
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
             onPlayerJoinedLeague?.Invoke();
             
-            
-            
+            // Recheck if today is a race day now that the player has joined the league
+            if (TimeManager.Instance != null)
+            {
+                TimeManager.Instance.RecheckIfRaceDay();
+            }
         }
 
         public void GenerateRaceSchedule()

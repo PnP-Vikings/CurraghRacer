@@ -75,6 +75,7 @@ public class TrainingMenu : MonoBehaviour
         if(CanTrain(30, 50))
         {
             PlayerManager.Instance.ModifyPlayerTeamWork(teamWorkGainAmount);
+            
         }
             
     }

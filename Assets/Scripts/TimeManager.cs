@@ -88,6 +88,12 @@ public class TimeManager : MonoBehaviour
         
     }
     
+    public void RecheckIfRaceDay()
+    {
+        if(RaceManager.Instance != null)
+            RaceManager.Instance.CheckForRaceDay(GetEventsToday());
+    }
+    
     public void AdvanceTimeByHours(float hours)
     {
         if (hours < 0) throw new ArgumentException("Hours to advance must be non-negative");
@@ -130,7 +136,10 @@ public class TimeManager : MonoBehaviour
         
         // Advance the calendar by one day
         AdvanceCalendar(1);
-        
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.TriggerAutoSave();
+        }
         onNewDay.Invoke(); // Raise the OnNewDay event
         timeChangedEvent.Invoke();
     }
@@ -165,6 +174,9 @@ public class TimeManager : MonoBehaviour
         // Trigger the date changed event
         if (onDateChanged != null)
             onDateChanged.Invoke(currentDay, currentMonth, currentYear);
+            
+        // Check if the new date is a race day
+        RecheckIfRaceDay();
     }
     
     private int GetDaysInCurrentMonth()

@@ -34,6 +34,7 @@ public class ClockUI : MonoBehaviour
 
     private void UpdateClock()
     {
+        if (TimeManager.Instance == null) return;
         // Get the current time from the TimeManager in hours
         float hours = TimeManager.Instance.TimeOfDay;
         // Calculate the minutes based on the fraction of the hour

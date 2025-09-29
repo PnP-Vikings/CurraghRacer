@@ -14,6 +14,7 @@ using League;
 using NUnit.Framework.Interfaces;
 using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
+using UnityEngine.Serialization;
 
 public class RaceManager : MonoBehaviour
 {
@@ -27,7 +28,8 @@ public class RaceManager : MonoBehaviour
     public List<Transform> raceStartPositions;
     public UnityEvent startRace;
     public bool isRaceDay;
-    public bool LoadedRaceScene = false; // Flag to check
+    [FormerlySerializedAs("LoadedRaceScene")]
+    public bool loadedRaceScene = false; // Flag to check
     public int raceStartDelaySeconds = 5; // Delay
 
 
@@ -37,7 +39,9 @@ public class RaceManager : MonoBehaviour
     public List<GameObject> ships = new List<GameObject>();
 
     public List<ShipMovement> RaceMovementPositions;
-    
+
+    public List<ShipMovement> currentRaceMovementPositions;
+    public Transform finishLineTransform;
     public ShipMovement playerShip;
     
     [SerializeField]
@@ -111,13 +115,14 @@ public class RaceManager : MonoBehaviour
         if (isRaceStarted) return; // Prevent starting multiple times
 
         RaceDetails[] raceTracks = LeagueController.Instance?.currentLeague.raceTracks;
-        if (raceTracks != null && raceTracks.Length > 0 && !LoadedRaceScene)
+        if (raceTracks != null && raceTracks.Length > 0 && !loadedRaceScene)
         {
             Debug.Log("Starting Race with " + raceTracks.Length + " tracks available.");
             SceneManager.LoadScene(raceTracks[Random.Range(0, raceTracks.Length)].raceSceneName ?? "DefaultRaceScene");
-            LoadedRaceScene = true; // Set flag to
+            loadedRaceScene = true; // Set flag to
+            GameManager.Instance.SetPlayerBusy(true);
         }
-        else if (LoadedRaceScene)
+        else if (loadedRaceScene)
         {
             SpawnShips();
             Debug.Log("Spawning In Ships on New Scene");
@@ -234,7 +239,12 @@ public class RaceManager : MonoBehaviour
             lastMovement.isPlayerShip = true;
             playerShip = lastMovement;
         }
+        foreach (var go in ships)
+        {
+            currentRaceMovementPositions.Add(go.GetComponent<ShipMovement>());
+        }
         
+        finishLineTransform = GameObject.FindGameObjectWithTag("Finish").transform;
         StartCoroutine(StartShips());
     }
 
@@ -287,7 +297,52 @@ public class RaceManager : MonoBehaviour
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
+        
+        StartCoroutine(CheckShipPositionsRoutine());
     }
+    
+     IEnumerator CheckShipPositionsRoutine()
+    {
+        var wait = new WaitForSeconds(.02f); // Instantiate once outside the loop
+       
+        while (!RaceFinished())
+        {
+            yield return wait;
+            CalculateShipPositions();
+        }
+    }
+    
+    public void CalculateShipPositions()
+    {
+        // Sort ships by distance to finish line (ascending - closer to finish = better position)
+        var sortedShips = ships.OrderBy(ship =>
+        {
+            var movement = ship.GetComponent<ShipMovement>();
+            if (movement != null)
+            {
+                return Vector3.Distance(movement.transform.position, finishLineTransform.position);
+            }
+            return float.MaxValue;
+        }).ToList();
+
+        // Update RaceMovementPositions based on sorted order
+        currentRaceMovementPositions.Clear();
+        foreach (var ship in sortedShips)
+        {
+            var movement = ship.GetComponent<ShipMovement>();
+            if (movement != null)
+            {
+                currentRaceMovementPositions.Add(movement);
+            }
+        }
+        
+        for (int i = 0; i < currentRaceMovementPositions.Count; i++)
+        {
+            currentRaceMovementPositions[i].SetShipPositionText(i + 1);
+        }
+    }
+    
+    
 
     public void ShipFinished(ShipMovement ship)
     {
@@ -409,13 +464,14 @@ public class RaceManager : MonoBehaviour
         }
         ships.Clear();
         isRaceStarted = false;
-        LoadedRaceScene = false; // Reset flag when ending
+        loadedRaceScene = false; // Reset flag when ending
         
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
 
         RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+        GameManager.Instance.SetPlayerBusy(false);
     }
     
     IEnumerator ShowAd()
@@ -427,11 +483,9 @@ public class RaceManager : MonoBehaviour
     
     public bool RaceFinished()
     {
-        if(ships.Count != RaceMovementPositions.Count)
-        {
-            return false;
-        }
-      return true;
+        // Race is finished when all ships have crossed the finish line
+        // RaceMovementPositions contains ships that have finished
+        return ships.Count > 0 && RaceMovementPositions.Count >= ships.Count;
     }
 
     public void OnDisable()
