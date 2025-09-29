@@ -124,7 +124,8 @@ public class PowerwashController : MonoBehaviour
         wallList.Add(WallPrefab2);
         wallList.Add(WallPrefab3);
         int wallIndex = UnityEngine.Random.Range(0, 3);
-        Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.identity);
+        //Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.identity);
+        wallPrefab = wallList[wallIndex];
 
         for (int i = 0; i < spawnCount; i++) // Spawn 5 walls
         {
