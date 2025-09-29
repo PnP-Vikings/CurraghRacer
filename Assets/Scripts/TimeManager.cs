@@ -9,6 +9,8 @@ public class TimeManager : MonoBehaviour
 {
     // Singleton instance
     private static TimeManager _instance;
+    
+    public DateTime StartDate = new DateTime(2008, 1, 5);
     public static TimeManager Instance { get { return _instance; } }
     internal string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -392,6 +394,22 @@ public class TimeManager : MonoBehaviour
         }
         
         return sundays.ToArray();
+    }
+
+    public void SetCurrentDate(DateTime newDate)
+    {
+        currentDay = newDate.Day;
+        currentMonth = newDate.Month - 1; // Convert to 0-based index
+        currentYear = newDate.Year;
+        currentDayOfWeek = (int)newDate.DayOfWeek; // Sunday=0, Monday=1, ..., Saturday=6
+        daysInCurrentMonth = GetDaysInCurrentMonth();
+        HasEventToday();
+        
+        // Trigger the date changed event
+        if (onDateChanged != null)
+            onDateChanged.Invoke(currentDay, currentMonth, currentYear);
+        
+        RecheckIfRaceDay();
     }
     
     /// <summary>

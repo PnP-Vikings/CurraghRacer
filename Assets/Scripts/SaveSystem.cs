@@ -643,8 +643,7 @@ public class SaveSystem : MonoBehaviour
             {
                 if (DateTime.TryParse(saveData.calendarData.currentDate, out DateTime savedDate))
                 {
-                    // Set the time manager to the saved date
-                    // Note: You may need to add a SetCurrentDate method to TimeManager
+                    TimeManager.Instance.SetCurrentDate(savedDate);
                     Debug.Log($"Restored game date: {savedDate}");
                 }
             }
@@ -928,9 +927,9 @@ public class SaveSystem : MonoBehaviour
         if (TimeManager.Instance != null)
         {
             // Set to a default starting date - you may want to adjust this
-            DateTime startDate = new DateTime(2024, 1, 1);
-            // Note: You may need to add a SetCurrentDate method to TimeManager
-            Debug.Log($"New game starting date: {startDate}");
+            
+            TimeManager.Instance.SetCurrentDate(TimeManager.Instance.StartDate);
+            Debug.Log($"New game starting date: {TimeManager.Instance.StartDate}");
         }
         
         // Reset League data to initial state
@@ -1023,8 +1022,16 @@ public class SaveSystem : MonoBehaviour
         saveData.gameProgress.loadedRaceScene = false;
         saveData.gameProgress.playerIsBusy = false;
         
-        // Set fresh calendar data
-        saveData.calendarData.currentDate = DateTime.Now.ToString("yyyy-MM-dd");
+        // Set fresh calendar data to game's starting date
+        if (TimeManager.Instance != null)
+        {
+            saveData.calendarData.currentDate = TimeManager.Instance.StartDate.ToString("yyyy-MM-dd");
+        }
+        else
+        {
+            // Fallback to the default starting date if TimeManager is not available
+            saveData.calendarData.currentDate = new DateTime(2008, 1, 1).ToString("yyyy-MM-dd");
+        }
         
         return saveData;
     }

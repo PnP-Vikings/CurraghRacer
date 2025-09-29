@@ -150,10 +150,13 @@ public class SaveMenuUI : MonoBehaviour
             }
         }
         
-        // Update quick load button state
+        // Update quick load button state - check for both quick save and autosave
         if (quickLoadButton != null)
         {
-            quickLoadButton.interactable = SaveSystem.Instance.SaveSlotExists(quickSaveSlot);
+            int autoSaveSlot = SaveSystem.Instance.maxSaveSlots - 1;
+            bool hasQuickSave = SaveSystem.Instance.SaveSlotExists(quickSaveSlot);
+            bool hasAutoSave = SaveSystem.Instance.SaveSlotExists(autoSaveSlot);
+            quickLoadButton.interactable = hasQuickSave || hasAutoSave;
         }
     }
     
@@ -174,15 +177,69 @@ public class SaveMenuUI : MonoBehaviour
     
     public void QuickLoad()
     {
-        if (SaveSystem.Instance.LoadGame(quickSaveSlot))
+        int autoSaveSlot = SaveSystem.Instance.maxSaveSlots - 1;
+        bool hasQuickSave = SaveSystem.Instance.SaveSlotExists(quickSaveSlot);
+        bool hasAutoSave = SaveSystem.Instance.SaveSlotExists(autoSaveSlot);
+        
+        int slotToLoad = -1;
+        string loadType = "";
+        
+        if (hasQuickSave && hasAutoSave)
         {
-            ShowMessage("Quick Load completed!", false);
-            GameManager.Instance.StartGame();
-            StartCoroutine(CloseMenuAfterDelay(1f));
+            // Both exist, load the most recent one
+            SaveData quickSaveData = SaveSystem.Instance.GetSavePreview(quickSaveSlot);
+            SaveData autoSaveData = SaveSystem.Instance.GetSavePreview(autoSaveSlot);
+            
+            try
+            {
+                System.DateTime quickSaveDate = System.DateTime.Parse(quickSaveData.saveDate);
+                System.DateTime autoSaveDate = System.DateTime.Parse(autoSaveData.saveDate);
+                
+                if (autoSaveDate > quickSaveDate)
+                {
+                    slotToLoad = autoSaveSlot;
+                    loadType = "Auto Save";
+                }
+                else
+                {
+                    slotToLoad = quickSaveSlot;
+                    loadType = "Quick Save";
+                }
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"Failed to parse save dates, defaulting to quick save: {e.Message}");
+                slotToLoad = quickSaveSlot;
+                loadType = "Quick Save";
+            }
+        }
+        else if (hasQuickSave)
+        {
+            slotToLoad = quickSaveSlot;
+            loadType = "Quick Save";
+        }
+        else if (hasAutoSave)
+        {
+            slotToLoad = autoSaveSlot;
+            loadType = "Auto Save";
+        }
+        
+        if (slotToLoad >= 0)
+        {
+            if (SaveSystem.Instance.LoadGame(slotToLoad))
+            {
+                ShowMessage($"{loadType} loaded successfully!", false);
+                GameManager.Instance.StartGame();
+                StartCoroutine(CloseMenuAfterDelay(1f));
+            }
+            else
+            {
+                ShowMessage($"Failed to load {loadType}!", true);
+            }
         }
         else
         {
-            ShowMessage("Quick Load failed - no quick save found!", true);
+            ShowMessage("No save files found to load!", true);
         }
     }
     
