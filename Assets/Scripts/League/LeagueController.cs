@@ -49,14 +49,64 @@ namespace League
         {
             if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
-                ClearLeague();
-                RegenerateRaceSchedule();
-                currentLeague.RecalculateStandings();
+                // Only clear and regenerate if this is a fresh game start (not loaded from save)
+                if (!IsGameLoadedFromSave())
+                {
+                    ClearLeague();
+                    RegenerateRaceSchedule();
+                    currentLeague.RecalculateStandings();
+                }
+                else
+                {
+                    Debug.Log("Game loaded from save - preserving existing league data");
+                }
             }
-            else
+            else if (currentLeague == null)
             {
                 Debug.LogWarning("Current league is not set! Please assign a league in the inspector.");
             }
+        }
+        
+        /// <summary>
+        /// Check if the game was loaded from a save file
+        /// </summary>
+        private bool IsGameLoadedFromSave()
+        {
+            // Check if SaveSystem exists and has been used to load data
+            if (SaveSystem.Instance != null)
+            {
+                // If the player has joined a league, it indicates saved progress
+                if (currentLeague != null && currentLeague.playerHasJoined)
+                {
+                    return true;
+                }
+                
+                // Check if there's any race progress
+                if (currentLeague != null && currentLeague.currentRace > 0)
+                {
+                    return true;
+                }
+                
+                // Check if any teams have race history (indicating saved progress)
+                if (currentLeague?.teams != null)
+                {
+                    foreach (var team in currentLeague.teams)
+                    {
+                        if (team?.currentSeasonStats?.finishes != null && team.currentSeasonStats.finishes.Count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                
+                // Check if tournament start date has been set
+                if (currentLeague != null && currentLeague.tournamentStartDate != default(System.DateTime))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
         }
         public void ShowLeagueInviteAfterDelay()
         {

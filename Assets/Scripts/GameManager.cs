@@ -53,6 +53,7 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
+        AdsManager.Instance.bannerAds.HideBannerAd();
         GameStarted = true;
         OnGameStarted?.Invoke();
         SceneManager.LoadScene(mainSceneName);
@@ -63,9 +64,27 @@ public class GameManager : MonoBehaviour
         return GameStarted;
     }
     
-    public void SetPlayerBusy(bool isBusy)
+    public void SetPlayerBusy(bool busy)
     {
-        playerIsBusy = isBusy;
+        playerIsBusy = busy;
+    }
+    
+    public void SetGameStarted(bool started)
+    {
+        GameStarted = started;
+    }
+    
+    
+    /// <summary>
+    /// Trigger an auto-save at important game events
+    /// </summary>
+    public void TriggerAutoSave()
+    {
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, "Auto Save");
+            Debug.Log("Auto-save triggered");
+        }
     }
     
     

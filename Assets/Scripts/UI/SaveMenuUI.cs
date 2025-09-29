@@ -1,0 +1,322 @@
+using UnityEngine;
+using UnityEngine.UI;
+using TMPro;
+using System.Collections;
+
+public class SaveMenuUI : MonoBehaviour
+{
+    [Header("UI References")]
+    public GameObject saveSlotPrefab;
+    public Transform slotsContainer;
+    public Button quickSaveButton;
+    public Button quickLoadButton;
+    public Button autoSaveButton;
+    public Button newGameButton;
+    public Button closeButton;
+    public TMP_Text messageText;
+    public GameObject messagePanel;
+    public GameObject confirmationDialog;
+    public TMP_Text confirmationText;
+    public Button confirmYesButton;
+    public Button confirmNoButton;
+    
+    [Header("Settings")]
+    public int quickSaveSlot = 0; // Slot 0 reserved for quick save
+    public float messageDisplayTime = 3f;
+    
+    private SaveSlotUI[] slotUIs;
+    private System.Action pendingConfirmationAction;
+    
+    private void Start()
+    {
+        Initialize();
+    }
+    
+    private void Initialize()
+    {
+        // Setup button events
+        if (quickSaveButton != null)
+            quickSaveButton.onClick.AddListener(QuickSave);
+        if (quickLoadButton != null)
+            quickLoadButton.onClick.AddListener(QuickLoad);
+        if (autoSaveButton != null)
+            autoSaveButton.onClick.AddListener(AutoSave);
+        if (closeButton != null)
+            closeButton.onClick.AddListener(CloseMenu);
+
+        if (newGameButton != null)
+        {
+            // Check if player has saves to show/hide New Game button
+            if (!SaveSystem.Instance.HasAnySaves())
+            {
+                newGameButton.gameObject.SetActive(true);
+            }
+            else
+            {
+                newGameButton.gameObject.SetActive(false);
+            }
+            
+            newGameButton.onClick.AddListener(() => {
+                if (SaveSystem.Instance.NewGame("My First Game"))
+                {
+                    // New game started successfully
+                    // Maybe show a success message or transition to game
+                    Debug.Log("New game started!");
+                    GameManager.Instance.StartGame();
+                }
+                else
+                {
+                    // Handle error
+                    Debug.LogError("Failed to start new game");
+                }
+            });
+
+        }
+
+        // Setup confirmation dialog
+        if (confirmYesButton != null)
+            confirmYesButton.onClick.AddListener(ConfirmAction);
+        if (confirmNoButton != null)
+            confirmNoButton.onClick.AddListener(CancelConfirmation);
+        
+        // Hide UI elements initially
+        if (messagePanel != null)
+            messagePanel.SetActive(false);
+        if (confirmationDialog != null)
+            confirmationDialog.SetActive(false);
+        
+        
+        CreateSlotUIs();
+        RefreshAllSlots();
+    }
+    
+    private void CreateSlotUIs()
+    {
+        if (saveSlotPrefab == null || slotsContainer == null)
+        {
+            Debug.LogError("SaveMenuUI: Missing prefab or container references!");
+            return;
+        }
+        
+        // Clear existing slots
+        foreach (Transform child in slotsContainer)
+        {
+            if (Application.isPlaying)
+                Destroy(child.gameObject);
+            else
+                DestroyImmediate(child.gameObject);
+        }
+        
+        // Create slot UIs
+        int maxSlots = SaveSystem.Instance != null ? SaveSystem.Instance.maxSaveSlots : 5;
+        slotUIs = new SaveSlotUI[maxSlots];
+        
+        for (int i = 0; i < maxSlots; i++)
+        {
+            GameObject slotObj = Instantiate(saveSlotPrefab, slotsContainer);
+            SaveSlotUI slotUI = slotObj.GetComponent<SaveSlotUI>();
+            
+            if (slotUI != null)
+            {
+                slotUIs[i] = slotUI;
+            }
+            else
+            {
+                Debug.LogError($"SaveSlotUI component not found on slot prefab for slot {i}!");
+            }
+        }
+    }
+    
+    public void RefreshAllSlots()
+    {
+        if (SaveSystem.Instance == null)
+        {
+            Debug.LogError("SaveSystem.Instance is null!");
+            return;
+        }
+        
+        SaveSlotInfo[] allSlots = SaveSystem.Instance.GetAllSaveSlots();
+        
+        // Sort slots by save time (most recent first)
+        SaveSlotInfo[] sortedSlots = SortSlotsBySaveTime(allSlots);
+        
+        for (int i = 0; i < slotUIs.Length && i < sortedSlots.Length; i++)
+        {
+            if (slotUIs[i] != null)
+            {
+                // Use the actual slot index from the sorted data, not the display position
+                int actualSlotIndex = sortedSlots[i] != null ? sortedSlots[i].slotIndex : i;
+                slotUIs[i].Initialize(actualSlotIndex, sortedSlots[i], this);
+            }
+        }
+        
+        // Update quick load button state
+        if (quickLoadButton != null)
+        {
+            quickLoadButton.interactable = SaveSystem.Instance.SaveSlotExists(quickSaveSlot);
+        }
+    }
+    
+    
+    
+    public void QuickSave()
+    {
+        if (SaveSystem.Instance.SaveGame(quickSaveSlot, "Quick Save"))
+        {
+            RefreshAllSlots();
+            ShowMessage("Quick Save completed!", false);
+        }
+        else
+        {
+            ShowMessage("Quick Save failed!", true);
+        }
+    }
+    
+    public void QuickLoad()
+    {
+        if (SaveSystem.Instance.LoadGame(quickSaveSlot))
+        {
+            ShowMessage("Quick Load completed!", false);
+            GameManager.Instance.StartGame();
+            StartCoroutine(CloseMenuAfterDelay(1f));
+        }
+        else
+        {
+            ShowMessage("Quick Load failed - no quick save found!", true);
+        }
+    }
+    
+    public void AutoSave()
+    {
+        // Use the last slot for auto save
+        int autoSaveSlot = SaveSystem.Instance.maxSaveSlots - 1;
+        
+        if (SaveSystem.Instance.SaveGame(autoSaveSlot, "Auto Save"))
+        {
+            RefreshAllSlots();
+            ShowMessage("Auto Save completed!", false);
+        }
+        else
+        {
+            ShowMessage("Auto Save failed!", true);
+        }
+    }
+    
+    public void ShowMessage(string message, bool isError = false)
+    {
+        if (messageText != null && messagePanel != null)
+        {
+            messageText.text = message;
+            messageText.color = isError ? Color.red : Color.green;
+            
+            messagePanel.SetActive(true);
+            StartCoroutine(HideMessageAfterDelay());
+        }
+        
+        Debug.Log($"SaveMenuUI: {message}");
+    }
+    
+    private IEnumerator HideMessageAfterDelay()
+    {
+        yield return new WaitForSeconds(messageDisplayTime);
+        
+        if (messagePanel != null)
+            messagePanel.SetActive(false);
+    }
+    
+    public void ShowConfirmationDialog(string message, System.Action onConfirm)
+    {
+        if (confirmationDialog != null && confirmationText != null)
+        {
+            confirmationText.text = message;
+            confirmationDialog.SetActive(true);
+            pendingConfirmationAction = onConfirm;
+        }
+    }
+    
+    private void ConfirmAction()
+    {
+        pendingConfirmationAction?.Invoke();
+        CancelConfirmation();
+    }
+    
+    private void CancelConfirmation()
+    {
+        if (confirmationDialog != null)
+            confirmationDialog.SetActive(false);
+        
+        pendingConfirmationAction = null;
+    }
+    
+    public void CloseMenu()
+    {
+        gameObject.SetActive(false);
+    }
+    
+    private IEnumerator CloseMenuAfterDelay(float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        CloseMenu();
+    }
+    
+    // Public methods for external access
+    public void OpenSaveMenu()
+    {
+        gameObject.SetActive(true);
+        RefreshAllSlots();
+    }
+    
+    public void PerformAutoSaveIfEnabled()
+    {
+        // Call this method periodically or at important game events
+        AutoSave();
+    }
+    
+    /// <summary>
+    /// Sort save slots by save time (most recent first)
+    /// </summary>
+    private SaveSlotInfo[] SortSlotsBySaveTime(SaveSlotInfo[] slots)
+    {
+        if (slots == null || slots.Length == 0)
+            return slots;
+        
+        // Create a copy to avoid modifying the original array
+        SaveSlotInfo[] sortedSlots = new SaveSlotInfo[slots.Length];
+        System.Array.Copy(slots, sortedSlots, slots.Length);
+        
+        // Sort using Array.Sort with custom comparison
+        System.Array.Sort(sortedSlots, (slot1, slot2) =>
+        {
+            // Handle empty slots - they should appear at the bottom
+            bool slot1HasData = slot1 != null && slot1.exists && slot1.saveData != null;
+            bool slot2HasData = slot2 != null && slot2.exists && slot2.saveData != null;
+            
+            // If one has data and the other doesn't, prioritize the one with data
+            if (slot1HasData && !slot2HasData) return -1;
+            if (!slot1HasData && slot2HasData) return 1;
+            
+            // If neither has data, maintain original order
+            if (!slot1HasData && !slot2HasData) return 0;
+            
+            // Both have data, compare by save date
+            try
+            {
+                System.DateTime date1 = System.DateTime.Parse(slot1.saveData.saveDate);
+                System.DateTime date2 = System.DateTime.Parse(slot2.saveData.saveDate);
+                
+                // Sort descending (most recent first)
+                return date2.CompareTo(date1);
+            }
+            catch (System.Exception e)
+            {
+                Debug.LogWarning($"Failed to parse save dates for sorting: {e.Message}");
+                // If parsing fails, maintain original order
+                return 0;
+            }
+        });
+        
+        return sortedSlots;
+    }
+
+   
+}

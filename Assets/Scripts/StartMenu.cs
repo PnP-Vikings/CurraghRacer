@@ -66,13 +66,13 @@ public class StartMenu : MonoBehaviour
     {
         if(LeagueController.Instance == null || RaceManager.Instance == null)
             return;
-        
+
         if(LeagueController.Instance.currentLeague == null || !LeagueController.Instance.currentLeague.playerHasJoined)
         {
             Debug.Log("Player not in league, showing join message after delay.");
             StartCoroutine(LeagueController.Instance.StartLeagueInviteMessageAfterDelay(30f));
         }
-        
+
         RaceDayStatus status = GetRaceDayStatus();
         switch (status)
         {
@@ -91,13 +91,10 @@ public class StartMenu : MonoBehaviour
                 {
                     startRaceButtonGarage.interactable = false;
                     _startRaceButtonText.text = "No Race Available";
-                    //StartCoroutine(ShowLeagueJoinMessageAfterDelay(16f));
                     break;
                 }
                 _startRaceButton.SetEnabled(false);
                 _startRaceButton.text = "No Race Available";
-                
-               // StartCoroutine(ShowLeagueJoinMessageAfterDelay(16f));
                 break;
             case RaceDayStatus.NotRaceDay:
             default:
@@ -184,7 +181,7 @@ public class StartMenu : MonoBehaviour
        
 
     }
-    
+
     public void OnTrainingButtonClicked()
     {
        trainingMenuPrefab.SetActive(true);

@@ -130,7 +130,10 @@ public class TimeManager : MonoBehaviour
         
         // Advance the calendar by one day
         AdvanceCalendar(1);
-        
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.TriggerAutoSave();
+        }
         onNewDay.Invoke(); // Raise the OnNewDay event
         timeChangedEvent.Invoke();
     }

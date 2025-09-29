@@ -314,17 +314,15 @@ public class RaceManager : MonoBehaviour
     
     public void CalculateShipPositions()
     {
-        // Sort ships by forward progress (descending - most progress = best position)
-        var sortedShips = ships.OrderByDescending(ship =>
+        // Sort ships by distance to finish line (ascending - closer to finish = better position)
+        var sortedShips = ships.OrderBy(ship =>
         {
             var movement = ship.GetComponent<ShipMovement>();
             if (movement != null)
             {
-                // Calculate forward progress by measuring Z-axis movement from starting position
-                // Assumes ships move in the positive Z direction (forward)
-                return movement.transform.position.z;
+                return Vector3.Distance(movement.transform.position, finishLineTransform.position);
             }
-            return float.MinValue;
+            return float.MaxValue;
         }).ToList();
 
         // Update RaceMovementPositions based on sorted order
@@ -342,8 +340,6 @@ public class RaceManager : MonoBehaviour
         {
             currentRaceMovementPositions[i].SetShipPositionText(i + 1);
         }
-        
-        Debug.Log($"Updated positions for {currentRaceMovementPositions.Count} ships. Player position: {GetCurrentPlayerPosition()}");
     }
     
     
@@ -670,20 +666,5 @@ public class RaceManager : MonoBehaviour
                 return i;
         }
         return -1;
-    }
-    
-    /// <summary>
-    /// Helper method to get the current player position during the race
-    /// </summary>
-    private int GetCurrentPlayerPosition()
-    {
-        for (int i = 0; i < currentRaceMovementPositions.Count; i++)
-        {
-            if (currentRaceMovementPositions[i].isPlayerShip)
-            {
-                return i + 1;
-            }
-        }
-        return -1; // Player not found
     }
 }
