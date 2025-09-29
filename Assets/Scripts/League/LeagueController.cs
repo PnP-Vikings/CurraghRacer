@@ -181,8 +181,11 @@ namespace League
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
             onPlayerJoinedLeague?.Invoke();
             
-            
-            
+            // Recheck if today is a race day now that the player has joined the league
+            if (TimeManager.Instance != null)
+            {
+                TimeManager.Instance.RecheckIfRaceDay();
+            }
         }
 
         public void GenerateRaceSchedule()
