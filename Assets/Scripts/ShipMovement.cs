@@ -16,6 +16,9 @@ public class ShipMovement : MonoBehaviour
     private CharacterStats playerStats; // Reference to player stats if needed
     public bool shipIsFinsihed = false;
     
+    [Header("Ui Elements")]
+    public TMPro.TMP_Text shipPositionText;
+    
     
     private void Start()
     {
@@ -36,6 +39,13 @@ public class ShipMovement : MonoBehaviour
         );
     }
     
+    public void SetShipPositionText(int position)
+    {
+        if(shipPositionText != null)
+        {
+            shipPositionText.text = position.ToString();
+        }
+    }
     
     void Update()
     {
