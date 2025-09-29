@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
    public bool GameStarted = false;
    public Transform cameraStartPosition;
    public int racesTillNextAd = 3;
+   public string startSceneName = "Main Menu";
    public string mainSceneName = "Garage";
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
    public bool playerIsBusy = false;

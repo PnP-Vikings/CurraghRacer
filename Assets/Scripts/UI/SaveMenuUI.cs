@@ -46,7 +46,7 @@ public class SaveMenuUI : MonoBehaviour
 
         if (newGameButton != null)
         {
-            // Check if player has saves to show/hide New Game button
+            /*// Check if player has saves to show/hide New Game button
             if (!SaveSystem.Instance.HasAnySaves())
             {
                 newGameButton.gameObject.SetActive(true);
@@ -54,7 +54,7 @@ public class SaveMenuUI : MonoBehaviour
             else
             {
                 newGameButton.gameObject.SetActive(false);
-            }
+            }*/
             
             newGameButton.onClick.AddListener(() => {
                 if (SaveSystem.Instance.NewGame("My First Game"))
