@@ -16,6 +16,7 @@ public class TvSettingsUi : MonoBehaviour
             quickSaveButton.interactable = SaveSystem.Instance != null && SaveSystem.Instance.WasLoadedFromSave || SaveSystem.Instance.IsNewGame;
         }
     }
+    
 
     public void QuickSave()
     {
