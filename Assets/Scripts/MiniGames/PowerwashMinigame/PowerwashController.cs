@@ -112,7 +112,7 @@ public class PowerwashController : MonoBehaviour
         if (wallCleanPosition.wallLogic == null  && walls.Count > 0)
         {
             walls[0].transform.position = cleanPosition.position; // Move the wall to the clean position
-            walls[0].transform.rotation = cleanPosition.rotation; // Set the rotation to match the clean position
+           // walls[0].transform.rotation = cleanPosition.rotation; // Set the rotation to match the clean position
         }
     }
     
@@ -125,14 +125,7 @@ public class PowerwashController : MonoBehaviour
         wallList.Add(WallPrefab3);
         int wallIndex = UnityEngine.Random.Range(0, 3);
 
-       /* if (wallIndex == 0)
-        {
-            GameObject w= Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0,90,0),90));
-        }
-        else
-        {
-            GameObject w= Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(90,0,0),90));
-        }
+       /* 
         */
 
         //Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.identity);
@@ -143,8 +136,18 @@ public class PowerwashController : MonoBehaviour
             {
                 return;
             }
-            GameObject wallObject = Instantiate(wallPrefab, spawnPoint.position, Quaternion.identity);
-            wallObject.transform.rotation = spawnPoint.rotation; // Set the rotation to match the spawn point
+            GameObject wallObject = null;
+            if (wallIndex == 0)
+            {
+                wallObject= Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0,90,0),90));
+            }
+            else
+            {
+                wallObject= Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(90,0,0),90));
+                Debug.Log("Spawned wall with rotation: " + wallObject.transform.rotation.eulerAngles);
+            }
+            
+           // wallObject.transform.rotation = spawnPoint.rotation; // Set the rotation to match the spawn point
             WallLogic wallLogic = wallObject.GetComponent<WallLogic>();
             if (wallLogic != null)
             {

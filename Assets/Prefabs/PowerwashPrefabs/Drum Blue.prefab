@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 181776891425469530}
   - component: {fileID: 4540242408479831348}
   - component: {fileID: 1627971252406621129}
-  - component: {fileID: 1555516088962297467}
+  - component: {fileID: 1780026968347555632}
   m_Layer: 6
   m_Name: Drum Blue (1)
   m_TagString: Untagged
@@ -104,27 +104,6 @@ MonoBehaviour:
   dirtMaterialAsset: {fileID: 2100000, guid: 37c6646644837a74194602b81ab63c4d, type: 2}
   dirtLevel: 1
   cleanSpeed: 0.2
---- !u!65 &3775828477400887079
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4825664188110439836}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 1
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
-  m_Center: {x: 0, y: 0, z: 0}
 --- !u!54 &1627971252406621129
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -152,7 +131,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 126
   m_CollisionDetection: 0
---- !u!65 &1555516088962297467
+--- !u!65 &1780026968347555632
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -171,8 +150,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 0.019999998, y: 0.019999998, z: 0.020132365}
-  m_Center: {x: 0, y: 0, z: 0.000066183035}
+  m_Size: {x: 0.019999998, y: 0.020000001, z: 0.020132372}
+  m_Center: {x: 0, y: 0, z: 0.000066183056}
 --- !u!1 &6850031582982249738
 GameObject:
   m_ObjectHideFlags: 0
@@ -185,7 +164,7 @@ GameObject:
   - component: {fileID: 1108983870591442783}
   - component: {fileID: 5177007153091291611}
   - component: {fileID: 4030070327183808857}
-  - component: {fileID: 4294840621603477267}
+  - component: {fileID: 618657427119846769}
   m_Layer: 6
   m_Name: Drum Blue
   m_TagString: Untagged
@@ -276,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   dirt: []
---- !u!65 &4294840621603477267
+--- !u!65 &618657427119846769
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -295,5 +274,5 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1}
+  m_Size: {x: 0.015, y: 0.015, z: 0.018}
   m_Center: {x: 0, y: 0, z: 0}
