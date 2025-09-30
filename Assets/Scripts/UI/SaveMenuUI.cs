@@ -36,7 +36,10 @@ public class SaveMenuUI : MonoBehaviour
     {
         // Setup button events
         if (quickSaveButton != null)
+        {
             quickSaveButton.onClick.AddListener(QuickSave);
+            quickSaveButton.interactable = SaveSystem.Instance != null && SaveSystem.Instance.WasLoadedFromSave || SaveSystem.Instance.IsNewGame;
+        }
         if (quickLoadButton != null)
             quickLoadButton.onClick.AddListener(QuickLoad);
         if (autoSaveButton != null)

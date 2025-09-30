@@ -7,6 +7,7 @@ public class SaveSlotUI : MonoBehaviour
 {
     [Header("UI References")]
     public Button saveButton;
+    public Button startNewGameSaveButton;
     public Button loadButton;
     public Button deleteButton;
     public TMP_Text slotIndexText;
@@ -39,6 +40,9 @@ public class SaveSlotUI : MonoBehaviour
             loadButton.onClick.AddListener(OnLoadClicked);
         if (deleteButton != null)
             deleteButton.onClick.AddListener(OnDeleteClicked);
+        if (startNewGameSaveButton != null)
+            startNewGameSaveButton.onClick.AddListener(OnStartNewGameSaveClicked);
+            
     }
     
     public void RefreshDisplay()
@@ -57,12 +61,16 @@ public class SaveSlotUI : MonoBehaviour
         
         // Enable/disable buttons based on slot state
         if (saveButton != null)
-            saveButton.interactable = true; // Always allow saving
+            saveButton.interactable = SaveSystem.Instance.WasLoadedFromSave || SaveSystem.Instance.IsNewGame; // Always allow saving
         if (loadButton != null)
-            loadButton.interactable = hasData;
+            loadButton.interactable = hasData ;
         if (deleteButton != null)
             deleteButton.interactable = hasData;
-        
+        if (startNewGameSaveButton != null)
+        {
+            startNewGameSaveButton.gameObject.SetActive(!SaveSystem.Instance.WasLoadedFromSave); // Always allow starting new game
+            startNewGameSaveButton.gameObject.SetActive(!hasData); // Only show if slot is empty
+        }
         if (hasData)
         {
             DisplaySaveData(slotInfo.saveData);
@@ -139,6 +147,14 @@ public class SaveSlotUI : MonoBehaviour
         {
             saveName = saveNameInputField.text;
         }
+        else if (slotInfo != null && slotInfo.exists && slotInfo.saveData != null && !string.IsNullOrEmpty(slotInfo.saveData.saveName))
+        {
+            saveName = slotInfo.saveData.saveName; // Retain existing name if no new name provided
+        }
+        else
+        {
+            saveName = $"Save {slotIndex + 1}"; // Default name if none provided
+        }
         
         if (SaveSystem.Instance.SaveGame(slotIndex, saveName))
         {
@@ -163,6 +179,33 @@ public class SaveSlotUI : MonoBehaviour
         {
             parentMenu?.ShowMessage($"Failed to load game from Slot {slotIndex + 1}!", true);
         }
+    }
+    
+    private void OnStartNewGameSaveClicked()
+    {
+        if(saveNameInputField !=null && !string.IsNullOrEmpty(saveNameInputField.text))
+        {
+            if (SaveSystem.Instance.NewGame(saveNameInputField.text, slotIndex + 1))
+            {
+                GameManager.Instance.StartGame();
+            }
+            else
+            {
+                Debug.LogError("Failed to start a new game in the selected slot.");
+            }
+        }
+        else
+        {
+            if (SaveSystem.Instance.NewGame("Game Save", slotIndex + 1))
+            {
+                GameManager.Instance.StartGame();
+            }
+            else
+            {
+                Debug.LogError("Failed to start a new game in the selected slot.");
+            }
+        }
+       
     }
     
     private void OnDeleteClicked()

@@ -255,11 +255,14 @@ public class SaveSystem : MonoBehaviour
 
     [Header("Load State")]
     [SerializeField] private bool _wasLoadedFromSave = false;
+    [SerializeField] private bool _isNewGame = false;
 
     /// <summary>
     /// Indicates whether the current game session was loaded from a save file
     /// </summary>
     public bool WasLoadedFromSave => _wasLoadedFromSave;
+    
+    public bool IsNewGame => _isNewGame;
 
     private string SaveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
 
@@ -844,6 +847,7 @@ public class SaveSystem : MonoBehaviour
         {
             // Set flag to false for fresh game
             _wasLoadedFromSave = false;
+            _isNewGame = true;
             
             // Initialize fresh game state
             InitializeNewGameState();
@@ -872,6 +876,82 @@ public class SaveSystem : MonoBehaviour
             {
                 Debug.LogError("Failed to save new game data");
                 return false;
+            }
+        }
+        catch (Exception e)
+        {
+            Debug.LogError($"Failed to start new game: {e.Message}");
+            return false;
+        }
+    }
+    
+    public bool NewGame(string saveName = "New Game", int preferredSlot = 0)
+    {
+        if (preferredSlot < 0)
+            throw new ArgumentOutOfRangeException(nameof(preferredSlot));
+        try
+        {
+            // Set flag to false for fresh game
+            _wasLoadedFromSave = false;
+            _isNewGame = true;
+            
+            // Initialize fresh game state
+            InitializeNewGameState();
+            
+            // Save to the first available slot
+            if (preferredSlot == 0)
+            {
+                int availableSlot = FindFirstAvailableSlot();
+                if (availableSlot == -1)
+                {
+                    // If no slots are available, use slot 0
+                    availableSlot = 0;
+                }
+
+
+                // Create and save new game data
+                SaveData newGameData = CreateFreshSaveData(saveName);
+                ApplySaveData(newGameData);
+
+                // Save the new game
+                bool saveSuccess = SaveGame(availableSlot, saveName);
+
+                if (saveSuccess)
+                {
+                    Debug.Log($"New game started successfully in slot {availableSlot}");
+                    return true;
+                }
+                else
+                {
+                    Debug.LogError("Failed to save new game data");
+                    return false;
+                }
+            }
+            else
+            {
+                if (preferredSlot >= maxSaveSlots)
+                {
+                    Debug.LogError($"Invalid preferred slot index: {preferredSlot}. Must be between 0 and {maxSaveSlots - 1}");
+                    return false;
+                }
+
+                // Create and save new game data
+                SaveData newGameData = CreateFreshSaveData(saveName);
+                ApplySaveData(newGameData);
+
+                // Save the new game
+                bool saveSuccess = SaveGame(preferredSlot, saveName);
+
+                if (saveSuccess)
+                {
+                    Debug.Log($"New game started successfully in preferred slot {preferredSlot}");
+                    return true;
+                }
+                else
+                {
+                    Debug.LogError("Failed to save new game data");
+                    return false;
+                }
             }
         }
         catch (Exception e)
