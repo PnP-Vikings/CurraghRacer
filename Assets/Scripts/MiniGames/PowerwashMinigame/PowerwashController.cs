@@ -31,7 +31,7 @@ public class PowerwashController : MonoBehaviour
 
     public Camera powerwashCamera;
 
-    List<GameObject> wallList = new List<GameObject>();
+    public List<GameObject> wallList = new List<GameObject>();
 
     public GameObject WallPrefab1;
 
@@ -124,11 +124,22 @@ public class PowerwashController : MonoBehaviour
         wallList.Add(WallPrefab2);
         wallList.Add(WallPrefab3);
         int wallIndex = UnityEngine.Random.Range(0, 3);
-        Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.identity);
-
+        if (wallIndex == 0)
+        {
+            GameObject w= Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0,90,0),90));
+        }
+        else
+        {
+            GameObject w= Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(90,0,0),90));
+        }
         for (int i = 0; i < spawnCount; i++) // Spawn 5 walls
         {
+            if (wallPrefab == null)
+            {
+                return;
+            }
             GameObject wallObject = Instantiate(wallPrefab, spawnPoint.position, Quaternion.identity);
+            wallObject.transform.rotation = spawnPoint.rotation; // Set the rotation to match the spawn point
             WallLogic wallLogic = wallObject.GetComponent<WallLogic>();
             if (wallLogic != null)
             {
@@ -148,9 +159,9 @@ public class PowerwashController : MonoBehaviour
         walls.Remove(wallCleanPosition.wallLogic); // Remove the cleaned wall from the walls list
         wallCleanPosition.wallLogic = null; // Clear the wallLogic reference in wallCleanPosition
         MovewallToCleanPosition(); // Move the next wall to the clean position
-
-        MovewallAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move wall");
-        MovewallAudio.start();
+        
+        /*MovewallAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move wall");
+        MovewallAudio.start();*/
 
         MinigameFinished();
     }

@@ -888,6 +888,7 @@ MonoBehaviour:
   cleanPosition: {fileID: 96751308}
   finishClean: {fileID: 77460296}
   powerwashCamera: {fileID: 1325367575}
+  wallList: []
   WallPrefab1: {fileID: 1454287351456404813, guid: 025df5e42680597479f0ed52b977882f, type: 3}
   WallPrefab2: {fileID: 6850031582982249738, guid: d3f8a14f949334e47af7292cb77560c4, type: 3}
   WallPrefab3: {fileID: 6380974008711255739, guid: 4b9a8be97bf45554a862ad196404c5ab, type: 3}
@@ -1143,19 +1144,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalRotation.w
-      value: 0.9527362
+      value: 0.7070291
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalRotation.x
-      value: 0.016592074
+      value: 0.015838802
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0.30320442
+      value: 0.70692945
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalRotation.z
-      value: 0.009251432
+      value: -0.010483566
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x
@@ -1163,7 +1164,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalEulerAnglesHint.y
-      value: -35.299
+      value: 90
       objectReference: {fileID: 0}
     - target: {fileID: 3599806562767760157, guid: c51fb65494e0eb14794bf38cbb154714, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
