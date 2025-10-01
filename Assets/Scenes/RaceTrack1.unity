@@ -1294,6 +1294,14 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 241617719556263597, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
+      propertyPath: m_TagString
+      value: RaceStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 1740161559874759600, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
+      propertyPath: m_TagString
+      value: RaceStart
+      objectReference: {fileID: 0}
     - target: {fileID: 2113207988514690120, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0.24
@@ -1333,6 +1341,14 @@ PrefabInstance:
     - target: {fileID: 2306305490564402944, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
       propertyPath: m_Enabled
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2378739382469344040, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
+      propertyPath: m_TagString
+      value: RaceStart
+      objectReference: {fileID: 0}
+    - target: {fileID: 3281379454258007294, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
+      propertyPath: m_TagString
+      value: RaceStart
       objectReference: {fileID: 0}
     - target: {fileID: 3495412405897936751, guid: de192e955f9b8e3439ef88f84b3603cd, type: 3}
       propertyPath: m_LocalPosition.x

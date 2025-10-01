@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Selectable
+  - RaceStart
   layers:
   - Default
   - TransparentFX

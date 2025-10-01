@@ -143,6 +143,47 @@ public class RaceManager : MonoBehaviour
     {
         if (!GameManager.Instance.GetGameStarted()) return;
         
+        // If ShipStartLocations hasn't initialized yet, wait for it
+        if (ShipStartLocations.Instance == null)
+        {
+            Debug.Log("RaceManager: ShipStartLocations.Instance is NULL - waiting for initialization");
+            StartCoroutine(WaitForShipStartLocationsAndSpawn());
+            return;
+        }
+        
+        // Always try to get fresh positions from ShipStartLocations if available
+        Debug.Log($"RaceManager: ShipStartLocations.Instance is {(ShipStartLocations.Instance == null ? "NULL" : "not null")}");
+        if (ShipStartLocations.Instance != null && ShipStartLocations.Instance.raceStartPositions != null)
+        {
+            Debug.Log($"RaceManager: ShipStartLocations.Instance.raceStartPositions is not null");
+            raceStartPositions = ShipStartLocations.Instance.raceStartPositions;
+            Debug.Log($"Got positions from ShipStartLocations: {raceStartPositions.Count} positions");
+            
+            // Debug each transform immediately after assignment
+            for (int i = 0; i < raceStartPositions.Count; i++)
+            {
+                Transform t = raceStartPositions[i];
+                Debug.Log($"RaceManager: Position {i} from ShipStartLocations is {(t == null ? "NULL" : t.name)}");
+            }
+        }
+        else if (raceStartPositions == null || raceStartPositions.Count == 0)
+        {
+            Debug.Log("ShipStartLocations not available, trying fallback methods");
+        }
+
+        if (raceStartPositions == null || raceStartPositions.Count == 0)
+        {
+            // Fallback to finding by tag, but filter out null transforms
+            var foundObjects = GameObject.FindGameObjectsWithTag("RaceStart");
+            raceStartPositions = foundObjects
+                .Where(go => go != null && go.transform != null)
+                .Select(go => go.transform)
+                .Where(t => t != null)
+                .ToList();
+            Debug.Log($"Searched by tag and found {raceStartPositions.Count} valid start positions");
+        }
+        
+        
         // Get the teams scheduled for this race from the league
         var currentRace = LeagueController.Instance?.GetCurrentPlayerRace();
         if (currentRace == null)
@@ -151,6 +192,8 @@ public class RaceManager : MonoBehaviour
             SpawnShipsWithFallback();
             return;
         }
+
+      
 
         var raceTeams = currentRace.teams;
         var raceTeamsList = raceTeams.ToList();
@@ -177,14 +220,30 @@ public class RaceManager : MonoBehaviour
         raceTeams = raceTeamsList.ToArray();
 
         currentRace.teams = raceTeams;
+
+        Debug.Log($"Main SpawnShips: raceStartPositions list has {raceStartPositions.Count} items");
+        
+        // Count how many are actually null
+        int nullCount = raceStartPositions.Count(t => t == null);
+        int validCount = raceStartPositions.Count - nullCount;
+        Debug.Log($"Main SpawnShips: Of {raceStartPositions.Count} positions: {validCount} valid, {nullCount} null");
+
+        if (shipPrefab == null)
+        {
+            Debug.LogError("Ship prefab is null! Cannot spawn ships. Please assign the ship prefab in the RaceManager inspector.");
+            return;
+        }
        
         for (int i = 0; i < shipsToSpawn; i++)
         {
             Transform racepos = raceStartPositions[i];
             Team team = raceTeams[i];
             
-           
-           
+            if (racepos == null)
+            {
+                Debug.LogWarning($"Race start position {i} is null - skipping team {team.teamName}");
+                continue;
+            }
 
             Debug.Log($"Spawning ship for team: {team.teamName} at position: {racepos.position}");
             
@@ -202,7 +261,20 @@ public class RaceManager : MonoBehaviour
             if (isLastBoat && playerInRace)
             {
                 // Set up player ship on the last (closest to camera) position
-                movement.stats = PlayerManager.Instance.GetPlayerStats();
+                if (PlayerManager.Instance != null)
+                {
+                    movement.stats = PlayerManager.Instance.GetPlayerStats();
+                }
+                else
+                {
+                    Debug.LogWarning("PlayerManager.Instance is null, using fallback player stats");
+                    movement.stats = new CharacterStats(
+                        strength: 12f,
+                        stamina: 12f,
+                        technique: 10f,
+                        teamWork: 10f
+                    );
+                }
                 movement.isPlayerShip = true;
                
                 playerShip = movement;
@@ -235,7 +307,21 @@ public class RaceManager : MonoBehaviour
             var lastMovement = lastShip.GetComponent<ShipMovement>();
             
             // Set up as player ship
-            lastMovement.stats = PlayerManager.Instance.GetPlayerStats();
+            if (PlayerManager.Instance != null)
+            {
+                lastMovement.stats = PlayerManager.Instance.GetPlayerStats();
+            }
+            else
+            {
+                Debug.LogWarning("PlayerManager.Instance is null in SpawnShips, using fallback player stats");
+                // Create fallback player stats
+                lastMovement.stats = new CharacterStats(
+                    strength: 12f,
+                    stamina: 12f,
+                    technique: 10f,
+                    teamWork: 10f
+                );
+            }
             lastMovement.isPlayerShip = true;
             playerShip = lastMovement;
         }
@@ -253,35 +339,227 @@ public class RaceManager : MonoBehaviour
     /// </summary>
     private void SpawnShipsWithFallback()
     {
-        foreach (Transform racepos in raceStartPositions)
+        // If ShipStartLocations hasn't initialized yet, wait for it
+        if (ShipStartLocations.Instance == null)
         {
-            Debug.Log("Spawning ship at position: " + racepos.position);
-            GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
-            var movement = ship.GetComponent<ShipMovement>();
-            movement.shipName = "Ship " + (ships.Count + 1);
-            
-            // Generate AI stats as fallback
-            var aiStats = new CharacterStats(
-                strength : Random.Range(8f, 12f)  * difficulty,
-                stamina  : Random.Range(8f, 12f)  * difficulty,
-                technique: Random.Range(5f, 10f)  * difficulty,
-                teamWork : Random.Range(5f, 10f)  * difficulty
-            );
-            movement.stats = aiStats;
-            
-            ships.Add(ship);
+            Debug.Log("Fallback: ShipStartLocations.Instance is NULL - waiting for initialization");
+            StartCoroutine(WaitForShipStartLocationsAndSpawnFallback());
+            return;
         }
         
-        // Mark one as "player" for fallback
-        var playerGO = ships[ships.Count - 1];
-        var playerMove = playerGO.GetComponent<ShipMovement>();
-        playerMove.stats = PlayerManager.Instance.GetPlayerStats();
-        playerMove.isPlayerShip = true;
-        playerMove.shipName = "Player Ship";
-        playerGO.name = "PlayerShip";
-        playerShip = playerMove;
+        // Always try to get fresh positions from ShipStartLocations if available
+        Debug.Log($"Fallback: ShipStartLocations.Instance is {(ShipStartLocations.Instance == null ? "NULL" : "not null")}");
+        if (ShipStartLocations.Instance != null && ShipStartLocations.Instance.raceStartPositions != null)
+        {
+            Debug.Log($"Fallback: ShipStartLocations.Instance.raceStartPositions is not null");
+            raceStartPositions = ShipStartLocations.Instance.raceStartPositions;
+            Debug.Log($"Fallback: Got positions from ShipStartLocations: {raceStartPositions.Count} positions");
+            
+            // Debug each transform immediately after assignment
+            for (int i = 0; i < raceStartPositions.Count; i++)
+            {
+                Transform t = raceStartPositions[i];
+                Debug.Log($"Fallback: Position {i} from ShipStartLocations is {(t == null ? "NULL" : t.name)}");
+            }
+        }
+        else if (raceStartPositions == null || raceStartPositions.Count == 0)
+        {
+            Debug.Log("Fallback: ShipStartLocations not available, trying tag-based fallback");
+        }
         
-        StartCoroutine(StartShips());
+        if(raceStartPositions == null || raceStartPositions.Count == 0)
+        {
+            // Fallback to finding by tag, but filter out null transforms
+            var foundObjects = GameObject.FindGameObjectsWithTag("RaceStart");
+            raceStartPositions = foundObjects
+                .Where(go => go != null && go.transform != null)
+                .Select(go => go.transform)
+                .Where(t => t != null)
+                .ToList();
+            Debug.Log($"Searched by tag and found {raceStartPositions.Count} valid start positions");
+        }
+
+        if (raceStartPositions != null && raceStartPositions.Count != 0)
+        {
+            Debug.Log($"raceStartPositions list has {raceStartPositions.Count} items");
+            
+            // Count how many are actually null
+            int nullCount = raceStartPositions.Count(t => t == null);
+            int validCount = raceStartPositions.Count - nullCount;
+            Debug.Log($"Of {raceStartPositions.Count} positions: {validCount} valid, {nullCount} null");
+            
+            if (validCount == 0)
+            {
+                Debug.LogError("All race start positions are null! Cannot spawn ships.");
+            }
+            else
+            {
+                if (raceStartPositions == null || raceStartPositions.Count == 0)
+                {
+                    // Try ShipStartLocations first, but with null check
+                    if (ShipStartLocations.Instance != null && ShipStartLocations.Instance.raceStartPositions != null)
+                    {
+                        raceStartPositions = ShipStartLocations.Instance.raceStartPositions;
+                        Debug.Log($"Got positions from ShipStartLocations: {raceStartPositions.Count} positions");
+                    }
+                }
+
+                if (raceStartPositions == null || raceStartPositions.Count == 0)
+                {
+                    // Fallback to finding by tag, but filter out null transforms
+                    var foundObjects = GameObject.FindGameObjectsWithTag("RaceStart");
+                    raceStartPositions = foundObjects
+                        .Where(go => go != null && go.transform != null)
+                        .Select(go => go.transform)
+                        .Where(t => t != null)
+                        .ToList();
+                    Debug.Log($"Searched by tag and found {raceStartPositions.Count} valid start positions");
+                }
+            }
+
+            if (shipPrefab == null)
+            {
+                Debug.LogError("Ship prefab is null! Cannot spawn ships. Please assign the ship prefab in the RaceManager inspector.");
+                return;
+            }
+
+
+            // Get teams from league system for realistic fallback
+            Team[] fallbackTeams = GetFallbackTeams(raceStartPositions.Count);
+            
+            int teamIndex = 0;
+            foreach (Transform racepos in raceStartPositions)
+            {
+                if (racepos == null)
+                {
+                    Debug.LogWarning("Found null Transform in raceStartPositions - skipping this spawn position");
+                    continue;
+                }
+                
+                Debug.Log("Spawning ship at position: " + racepos.position);
+                GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
+                var movement = ship.GetComponent<ShipMovement>();
+                
+                // Use real team name and stats instead of generic "Ship X"
+                if (teamIndex < fallbackTeams.Length)
+                {
+                    Team currentTeam = fallbackTeams[teamIndex];
+                    movement.shipName = currentTeam.teamName;
+                    ship.name = currentTeam.teamName + "_Ship";
+                    movement.stats = currentTeam.GetTeamStats();
+                    Debug.Log($"Fallback: Using team {currentTeam.teamName} with stats from league system");
+                }
+                else
+                {
+                    // Ultimate fallback if we somehow don't have enough teams
+                    movement.shipName = "Ship " + (ships.Count + 1);
+                    movement.stats = new CharacterStats(
+                        strength: Random.Range(8f, 12f) * difficulty,
+                        stamina: Random.Range(8f, 12f) * difficulty,
+                        technique: Random.Range(5f, 10f) * difficulty,
+                        teamWork: Random.Range(5f, 10f) * difficulty
+                    );
+                    Debug.LogWarning($"Using ultimate fallback for ship {movement.shipName}");
+                }
+
+                ships.Add(ship);
+                teamIndex++;
+            }
+
+            // Check if we actually spawned any ships
+            if (ships.Count == 0)
+            {
+                Debug.LogError("No ships were spawned! All race start positions were null. Cannot start race.");
+                return;
+            }
+
+            // Mark one as "player" for fallback
+            var playerGO = ships[ships.Count - 1];
+            var playerMove = playerGO.GetComponent<ShipMovement>();
+            
+            // Check if PlayerManager is available, otherwise use fallback stats
+            if (PlayerManager.Instance != null)
+            {
+                playerMove.stats = PlayerManager.Instance.GetPlayerStats();
+            }
+            else
+            {
+                Debug.LogWarning("PlayerManager.Instance is null, using fallback player stats");
+                // Create fallback player stats that are slightly better than AI
+                playerMove.stats = new CharacterStats(
+                    strength: 12f,
+                    stamina: 12f,
+                    technique: 10f,
+                    teamWork: 10f
+                );
+            }
+            
+            playerMove.isPlayerShip = true;
+            playerMove.shipName = "Player Ship";
+            playerGO.name = "PlayerShip";
+            playerShip = playerMove;
+
+            StartCoroutine(StartShips());
+        }
+        else
+        {
+            Debug.LogError("No race start positions found - cannot spawn ships!");
+        }
+    }
+
+    /// <summary>
+    /// Waits for ShipStartLocations to initialize, then spawns ships
+    /// </summary>
+    IEnumerator WaitForShipStartLocationsAndSpawn()
+    {
+        Debug.Log("Waiting for ShipStartLocations to initialize...");
+        float timeout = 5f; // 5 second timeout
+        float elapsed = 0f;
+        
+        // Wait for ShipStartLocations.Instance to become available
+        while (ShipStartLocations.Instance == null && elapsed < timeout)
+        {
+            yield return new WaitForFixedUpdate();
+            elapsed += Time.fixedDeltaTime;
+        }
+        
+        if (ShipStartLocations.Instance == null)
+        {
+            Debug.LogWarning("ShipStartLocations failed to initialize within timeout - using fallback spawning");
+            SpawnShipsWithFallback();
+        }
+        else
+        {
+            Debug.Log("ShipStartLocations initialized - proceeding with normal spawning");
+            SpawnShips(); // Call again now that ShipStartLocations is available
+        }
+    }
+
+    /// <summary>
+    /// Waits for ShipStartLocations to initialize, then spawns ships with fallback method
+    /// </summary>
+    IEnumerator WaitForShipStartLocationsAndSpawnFallback()
+    {
+        Debug.Log("Fallback: Waiting for ShipStartLocations to initialize...");
+        float timeout = 5f; // 5 second timeout
+        float elapsed = 0f;
+        
+        // Wait for ShipStartLocations.Instance to become available
+        while (ShipStartLocations.Instance == null && elapsed < timeout)
+        {
+            yield return new WaitForFixedUpdate();
+            elapsed += Time.fixedDeltaTime;
+        }
+        
+        if (ShipStartLocations.Instance == null)
+        {
+            Debug.LogError("ShipStartLocations failed to initialize within timeout - cannot spawn ships!");
+        }
+        else
+        {
+            Debug.Log("Fallback: ShipStartLocations initialized - proceeding with fallback spawning");
+            SpawnShipsWithFallback(); // Call again now that ShipStartLocations is available
+        }
     }
 
     IEnumerator StartShips()
@@ -314,13 +592,28 @@ public class RaceManager : MonoBehaviour
     
     public void CalculateShipPositions()
     {
-        // Sort ships by distance to finish line (ascending - closer to finish = better position)
+        if (finishLineTransform == null)
+        {
+            Debug.LogWarning("Finish line transform not set - attempting to find by tag");
+            finishLineTransform = GameObject.FindGameObjectWithTag("Finish")?.transform;
+            if (finishLineTransform == null)
+            {
+                Debug.LogError("Could not find finish line! Cannot calculate positions.");
+                return;
+            }
+        }
+        
+        // Sort ships by forward progress toward finish line (ascending - less distance remaining = better position)
         var sortedShips = ships.OrderBy(ship =>
         {
             var movement = ship.GetComponent<ShipMovement>();
             if (movement != null)
             {
-                return Vector3.Distance(movement.transform.position, finishLineTransform.position);
+                // Calculate forward progress along the race direction (Z-axis)
+                // Ships move forward in positive Z direction, so closer to finish line Z position = better
+                float distanceToFinish = finishLineTransform.position.z - movement.transform.position.z;
+                Debug.Log(movement.shipName + " distance to finish (Z-axis): " + distanceToFinish + " (Ship Z: " + movement.transform.position.z + ", Finish Z: " + finishLineTransform.position.z + ")");
+                return distanceToFinish;
             }
             return float.MaxValue;
         }).ToList();
@@ -409,13 +702,20 @@ public class RaceManager : MonoBehaviour
             // Record race results in League system
             RecordRaceResults();
 
-            if (isRaceDay)
+            if (PlayerManager.Instance != null)
             {
-                PlayerManager.Instance.ModifyPlayerEnergy(-50);
+                if (isRaceDay)
+                {
+                    PlayerManager.Instance.ModifyPlayerEnergy(-50);
+                }
+                else
+                {
+                    PlayerManager.Instance.ModifyPlayerEnergy(-25);
+                }
             }
             else
             {
-                PlayerManager.Instance.ModifyPlayerEnergy(-25);
+                Debug.LogWarning("PlayerManager.Instance is null - cannot modify player energy");
             }
 
 
@@ -425,7 +725,14 @@ public class RaceManager : MonoBehaviour
                 finishMenu.UpdatePlayerMessage(true, "You are the champion!");
                 if (isRaceDay)
                 {
-                    PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
+                    if (PlayerManager.Instance != null)
+                    {
+                        PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
+                    }
+                    else
+                    {
+                        Debug.LogWarning("PlayerManager.Instance is null - cannot modify player coins");
+                    }
                     difficulty += .3f;
                 }
 
@@ -653,6 +960,103 @@ public class RaceManager : MonoBehaviour
         }
         
         Debug.Log($"Race results recorded - Player finished {playerPosition}");
+    }
+
+    /// <summary>
+    /// Gets teams for fallback spawning from the league system
+    /// </summary>
+    private Team[] GetFallbackTeams(int numberOfTeams)
+    {
+        List<Team> availableTeams = new List<Team>();
+        
+        // First, try to get teams from the current active league
+        if (LeagueController.Instance?.currentLeague != null)
+        {
+            var currentLeague = LeagueController.Instance.currentLeague;
+            Debug.Log($"Fallback: Using teams from current league: {currentLeague.leagueName}");
+            
+            // Get all teams from current league (excluding player team for now)
+            foreach (var team in currentLeague.teams)
+            {
+                if (team.teamType != TeamType.Player) // We'll add player team separately
+                {
+                    availableTeams.Add(team);
+                }
+            }
+        }
+        
+        // If current league doesn't have enough teams, try other leagues
+        if (availableTeams.Count < numberOfTeams - 1) // -1 because we'll add player team
+        {
+            Debug.Log("Fallback: Current league doesn't have enough teams, searching other leagues");
+            
+            if (LeagueController.Instance?.leagues != null)
+            {
+                foreach (var league in LeagueController.Instance.leagues)
+                {
+                    if (league != LeagueController.Instance.currentLeague) // Skip current league (already processed)
+                    {
+                        foreach (var team in league.teams)
+                        {
+                            if (team.teamType != TeamType.Player && !availableTeams.Contains(team))
+                            {
+                                availableTeams.Add(team);
+                                if (availableTeams.Count >= numberOfTeams - 1) break;
+                            }
+                        }
+                        if (availableTeams.Count >= numberOfTeams - 1) break;
+                    }
+                }
+            }
+        }
+        
+        // Shuffle the teams for variety
+        for (int i = 0; i < availableTeams.Count; i++)
+        {
+            Team temp = availableTeams[i];
+            int randomIndex = Random.Range(i, availableTeams.Count);
+            availableTeams[i] = availableTeams[randomIndex];
+            availableTeams[randomIndex] = temp;
+        }
+        
+        // Take only the number of teams we need
+        List<Team> selectedTeams = availableTeams.Take(numberOfTeams - 1).ToList();
+        
+        // Add player team at the end (will be in last boat position)
+        if (LeagueController.Instance?.currentLeague != null)
+        {
+            var playerTeam = LeagueController.Instance.currentLeague.teams.FirstOrDefault(t => t.teamType == TeamType.Player);
+            if (playerTeam != null)
+            {
+                selectedTeams.Add(playerTeam);
+                Debug.Log("Fallback: Added player team to race");
+            }
+            else
+            {
+                Debug.LogWarning("Fallback: No player team found, creating fallback player team");
+                // Create a fallback player team
+                var fallbackPlayerTeam = ScriptableObject.CreateInstance<Team>();
+                fallbackPlayerTeam.teamName = "Player Team";
+                fallbackPlayerTeam.teamType = TeamType.Player;
+                selectedTeams.Add(fallbackPlayerTeam);
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Fallback: No league controller available, creating generic player team");
+            var fallbackPlayerTeam = ScriptableObject.CreateInstance<Team>();
+            fallbackPlayerTeam.teamName = "Player Team";
+            fallbackPlayerTeam.teamType = TeamType.Player;
+            selectedTeams.Add(fallbackPlayerTeam);
+        }
+        
+        Debug.Log($"Fallback: Selected {selectedTeams.Count} teams for race");
+        foreach (var team in selectedTeams)
+        {
+            Debug.Log($"  - {team.teamName} ({team.teamType})");
+        }
+        
+        return selectedTeams.ToArray();
     }
 
     /// <summary>
