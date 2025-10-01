@@ -101,11 +101,18 @@ public class CameraController : MonoBehaviour
          GameObject cameraObject = position.gameObject;
          if (cameraObject.GetComponent<FollowPlayer>() !=null)
          {
-            ship = RaceManager.Instance.ships[RaceManager.Instance.ships.Count - 1].transform;
-
-            followOffset = cameraObject.transform;
-            followPlayer = true;
-           
+            // Check if ships exist before trying to access them
+            if (RaceManager.Instance.ships != null && RaceManager.Instance.ships.Count > 0)
+            {
+                ship = RaceManager.Instance.ships[RaceManager.Instance.ships.Count - 1].transform;
+                followOffset = cameraObject.transform;
+                followPlayer = true;
+            }
+            else
+            {
+                Debug.LogWarning("CameraController: No ships available to follow!");
+                followPlayer = false;
+            }
          }
         
       }

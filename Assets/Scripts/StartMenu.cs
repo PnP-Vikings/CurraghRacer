@@ -140,7 +140,7 @@ public class StartMenu : MonoBehaviour
             return;
         }
 
-        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(25))
+        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !RaceManager.Instance.isRaceDay)
         {
             PlayerStatsView.Instance.DisplayInfo("You Must have 25 Energy to Race", 3);
             return;

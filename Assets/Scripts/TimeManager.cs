@@ -10,6 +10,19 @@ public class TimeManager : MonoBehaviour
     // Singleton instance
     private static TimeManager _instance;
     
+    public int startYear = 2008;
+    [Tooltip("1-12 (January = 1)")] public int startMonth = 1;
+    [Tooltip("1-based day of month")] public int startDay = 5;
+
+    private void OnValidate()
+    {
+        if (startMonth < 1) startMonth = 1;
+        if (startMonth > 12) startMonth = 12;
+        int maxDay = DateTime.DaysInMonth(Mathf.Clamp(startYear, 1, 9999), startMonth);
+        if (startDay < 1) startDay = 1;
+        if (startDay > maxDay) startDay = maxDay;
+    }
+    
     public DateTime StartDate = new DateTime(2008, 1, 5);
     public static TimeManager Instance { get { return _instance; } }
     internal string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
@@ -70,6 +83,9 @@ public class TimeManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        // Initialize starting date
+        StartDate = new DateTime(startYear, startMonth, startDay);
         
         timeOfDay = 6f; // Start at 6 AM
         daysPassed = 0;

@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/Garage.unity
     guid: 80428de81aaf5474ea7d4c4ab7cbf45c
-  - enabled: 1
+  - enabled: 0
     path: Assets/Scenes/RaceScene.unity
     guid: d3d207ad9d882024d9ca7382ed0f9a73
   - enabled: 1
@@ -24,6 +24,7 @@ EditorBuildSettings:
     path: Assets/Scenes/RaceTrack1.unity
     guid: 4d736e7afc0a30a42938c862ef71fb11
   m_configObjects:
+    com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 7ada5aaf1775ce74bb2c6bc9df2b768f, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 3a5131c02ade1c14aae08e940a45fadf, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 1b80f92d2f09d114785b282f5f186495, type: 2}
     com.unity.input.settings.actions: {fileID: -944628639613478452, guid: 052faaac586de48259a63d0c4782560b, type: 3}

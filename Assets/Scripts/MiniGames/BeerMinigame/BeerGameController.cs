@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using MiniGames;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -13,6 +14,7 @@ public class BeerGameController : MonoBehaviour
     public static BeerGameController Instance { get; private set; }
     public List<BeerShaderPour> beers; // List of beer shader pours
     public List<BeerShaderPour> Completedbeers; // List of beer shader pours
+    public bool gameCompleted = false; // Flag to indicate if the game is completed
 
 
     public void OnEnable()
@@ -112,18 +114,41 @@ public class BeerGameController : MonoBehaviour
 
     public void GameCompleted()
     {
-        
-        if (Completedbeers.Count >= 5) // Check if 5 beers are completed
+
+        if (Completedbeers.Count >= 5 && !gameCompleted) // Check if 5 beers are completed
         {
             Debug.Log("All beers completed!");
-            // Let MiniGameManager handle the completion instead of loading scene directly
-            // SceneManager.LoadScene("RaceScene"); 
-            // if(GameManager.Instance != null)
-            // {
-            //     GameManager.Instance.PlayerWorked();
-            // }
+
+            int finalScore = Completedbeers.Count * 100; // 100 points per plate cleaned
+
+            // Let MiniGameManager handle the completion, rewards, and scene transition
+            if (MiniGameManager.Instance != null)
+            {
+                Debug.Log($"Calling MiniGameManager.CompleteGame with score: {finalScore}");
+                MiniGameManager.Instance.CompleteGame(finalScore);
+                gameCompleted = true; // Set the game completed flag to true
+            }
+            else
+            {
+                Debug.LogError("MiniGameManager.Instance is null! Cannot complete minigame properly.");
+
+                // Fallback: manually return to main scene if MiniGameManager is missing
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.PlayerWorked();
+                }
+
+                // Restart audio and return to main scene as fallback
+                if (RaceManager.Instance != null)
+                {
+                    RaceManager.Instance.GarageAmbience.start();
+                    RaceManager.Instance.Radio.start();
+                }
+                SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+                gameCompleted = true; // Set the game completed flag to true
+            }
         }
-        
+
     }
 
 }

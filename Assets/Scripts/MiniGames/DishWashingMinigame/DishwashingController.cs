@@ -155,22 +155,37 @@ public class DishwashingController : MonoBehaviour
        if(platesCleaned.Count == spawnCount)
        {
            Debug.Log("Dishwashing minigame completed!");
-            // Let MiniGameManager handle the completion instead of loading scene directly
-            // SceneManager.LoadScene("RaceScene"); 
-            // if(GameManager.Instance != null)
-            // {
-            //     GameManager.Instance.PlayerWorked();
-            // }
+           
+           // Stop the kitchen ambience
+           KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
-            KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-
-            if (RaceManager.Instance == null)
-            {
-                return;
-            }
-            RaceManager.Instance.GarageAmbience.start();
-            RaceManager.Instance.Radio.start();
+           
+           int finalScore = platesCleaned.Count * 100; // 100 points per plate cleaned
+           
+           // Let MiniGameManager handle the completion, rewards, and scene transition
+           if (MiniGameManager.Instance != null)
+           {
+               Debug.Log($"Calling MiniGameManager.CompleteGame with score: {finalScore}");
+               MiniGameManager.Instance.CompleteGame(finalScore);
+           }
+           else
+           {
+               Debug.LogError("MiniGameManager.Instance is null! Cannot complete minigame properly.");
+               
+               // Fallback: manually return to main scene if MiniGameManager is missing
+               if (GameManager.Instance != null)
+               {
+                   GameManager.Instance.PlayerWorked();
+               }
+               
+               // Restart audio and return to main scene as fallback
+               if (RaceManager.Instance != null)
+               {
+                   RaceManager.Instance.GarageAmbience.start();
+                   RaceManager.Instance.Radio.start();
+               }
+               SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+           }
        }
-      
     }
 }
