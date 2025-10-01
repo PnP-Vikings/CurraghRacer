@@ -18,7 +18,7 @@ public class Bill : MonoBehaviour
         {
             PlayerManager.Instance.coins -= amount;
             isPaid = true;
-            Debug.Log($"Bill '{billName}' paid. Amount: {amount}");
+            Debug.Log($"Bill '{billName} {billType}  paid. Amount: {amount}");
             return true;
         }
         Debug.Log($"Not enough coins to pay bill '{billName}' or it is already paid.");
