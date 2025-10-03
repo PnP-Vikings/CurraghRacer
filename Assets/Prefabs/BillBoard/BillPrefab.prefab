@@ -404,6 +404,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 989157270313495068}
+  - component: {fileID: 8501685875695387219}
   m_Layer: 5
   m_Name: BillPrefab
   m_TagString: Untagged
@@ -435,6 +436,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &8501685875695387219
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2254747351404544138}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8a6d8b6579ce77643b2cc0b3e36ad9e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  billName: {fileID: 136346227813232835}
+  billAmountText: {fileID: 8728069825780124658}
+  daysTillDueText: {fileID: 4588762742864371002}
+  payBillButton: {fileID: 6898806061944955785}
 --- !u!1 &2361903849358578507
 GameObject:
   m_ObjectHideFlags: 0

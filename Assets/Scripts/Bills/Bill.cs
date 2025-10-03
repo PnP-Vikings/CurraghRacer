@@ -1,9 +1,12 @@
 using UnityEngine;
 
-public class Bill : MonoBehaviour
+[System.Serializable]
+public class Bill
 {
     public string billName;
+    [Tooltip("Amount for the Bill if Recurring, or Total Amount if One-time")]
     public float amount;
+    public float amountDue;
     public int dueDay; // Day of the month the bill is due
     public bool isPaid = false;
     public BillType billType;
@@ -12,10 +15,11 @@ public class Bill : MonoBehaviour
     public int daysTillNextBill; // Days until the next bill is generated for recurring bills
     public bool isOverdue => daysUntilDue <= 0 && !isPaid;
 
-    public Bill(string name, float amt, int due, BillType type, bool recurring)
+    public Bill(string name, float amt,float amtDue, int due, BillType type, bool recurring)
     {
         billName = name;
         amount = amt;
+        amountDue = amtDue;
         dueDay = due;
         billType = type;
         isRecurring = recurring;
@@ -30,11 +34,11 @@ public class Bill : MonoBehaviour
     /// <returns>True if the bill was paid, false otherwise.</returns>
     public bool PayBill()
     {
-        if (PlayerManager.Instance.coins >= amount && !isPaid)
+        if (PlayerManager.Instance.coins >= amountDue && !isPaid)
         {
-            PlayerManager.Instance.coins -= amount;
+            PlayerManager.Instance.coins -= amountDue;
             isPaid = true;
-            Debug.Log($"Bill '{billName} {billType}  paid. Amount: {amount}");
+            Debug.Log($"Bill '{billName} {billType}  paid. Amount: {amountDue}");
             return true;
         }
         Debug.Log($"Not enough coins to pay bill '{billName}' or it is already paid.");
@@ -52,8 +56,8 @@ public class Bill : MonoBehaviour
     
     public void ApplyLateFee(float lateFeeAmount)
     {
-        amount += lateFeeAmount;
-        Debug.Log($"Late fee of {lateFeeAmount} applied to bill '{billName}'. New amount: {amount}");
+        amountDue += lateFeeAmount;
+        Debug.Log($"Late fee of {lateFeeAmount} applied to bill '{billName}'. New amount: {amountDue}");
     }
 }
 

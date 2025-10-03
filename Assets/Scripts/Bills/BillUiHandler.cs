@@ -6,23 +6,53 @@ public class BillUiHandler : MonoBehaviour
     public Transform billsUiParent;
     void OnEnable()
     {
-        if(billUiPrefab == null)
+        if(billUiPrefab == null && BillsController.Instance != null)
         {
-            BillsController.Instance.billPrefab = billUiPrefab;
+            billUiPrefab = BillsController.Instance.billPrefab;
         }
         if (billsUiParent!=null)
         {
-            foreach(Bill bill in BillsController.Instance.bills)
+            if (BillsController.Instance != null)
             {
-                GameObject billUi = Instantiate(billUiPrefab, billsUiParent);
-                BillUi billUiComponent = billUi.GetComponent<BillUi>();
-                if (billUiComponent != null)
+
+                if (BillsController.Instance.bills == null || BillsController.Instance.bills.Count == 0)
                 {
-                    billUiComponent.SetBillUi(bill);
+                    Debug.Log("BillUiHandler: No bills to display.");
+                    return;
+                }
+                foreach (Bill bill in BillsController.Instance.bills)
+                {
+                    Debug.Log("BillUiHandler: Creating UI for bill: " + bill.billName);
+                    GameObject billUi = Instantiate(billUiPrefab, billsUiParent);
+                    BillUi billUiComponent = billUi.GetComponent<BillUi>();
+                    if (billUiComponent != null)
+                    {
+                        billUiComponent.SetBillUi(bill);
+                    }
                 }
             }
+            else
+            {
+                Debug.LogError("BillUiHandler: BillsController instance is null.");
+                return;
+            }
+            
         }
         
     }
+    
+    void OnDisable()
+    {
+        ClearBillUis();
+    }
+    
+    public void ClearBillUis()
+    {
+        foreach (Transform child in billsUiParent)
+        {
+            Destroy(child.gameObject);
+        }
+    }
+    
     
 }

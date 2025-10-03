@@ -15,11 +15,11 @@ public class BillUi : MonoBehaviour
             return;
         }
         billData = bill;
-        float amountDue = bill.amount;
+        float amountDue = bill.amountDue;
         int daysTillDue = bill.daysUntilDue;
         
         
-        billName.text = bill.name;
+        billName.text = bill.billName;
         billAmountText.text = "Bill Amount: €" + amountDue.ToString("F2");
         daysTillDueText.text = "Days Till Due: " + daysTillDue.ToString();
         
@@ -41,11 +41,13 @@ public class BillUi : MonoBehaviour
         
         if (BillsController.Instance.CanPayBill(bill))
         {
+            payBillButton.GetComponent<Image>().color = Color.white;
             payBillButton.interactable = true;
         }
         else
         {
-            payBillButton.interactable = false;
+            payBillButton.GetComponent<Image>().color = new Color(0.55f, 0f, 0f); // Dark red
+           // payBillButton.interactable = false;
         }
         
     }
@@ -53,7 +55,13 @@ public class BillUi : MonoBehaviour
     public void OnPayBillButtonClicked()
     {
         Debug.Log("Pay Bill Button Clicked");
-        BillsController.Instance.PayBill(billData);
+        
+        if(BillsController.Instance.PayBill(billData))
+        {
+            Destroy(gameObject);
+        }
+      
+        
     }
     
 }
