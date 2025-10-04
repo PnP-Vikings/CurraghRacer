@@ -106,7 +106,7 @@ public class SaveSlotUI : MonoBehaviour
         // Display play time
         if (playTimeText != null)
         {
-            TimeSpan time = TimeSpan.FromSeconds(saveData.playTime);
+            TimeSpan time = TimeSpan.FromMinutes(saveData.playTime);
             playTimeText.text = $"Play Time: {time.Hours:D2}:{time.Minutes:D2}";
         }
         

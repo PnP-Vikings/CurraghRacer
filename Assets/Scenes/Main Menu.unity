@@ -10708,8 +10708,35 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 579750604}
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+--- !u!1 &579750603 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1539091530887075933, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+  m_PrefabInstance: {fileID: 579750602}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &579750604
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 579750603}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1022f2590db39984e8cbdea5cd2d0477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricityBillAmount: 20
+  heatingBillAmount: 15
+  rentBillAmount: 50
+  totalBillsAmount: 0
+  bills: []
+  recurringPaidBills: []
+  billPrefab: {fileID: 2254747351404544138, guid: 173888b92f992d3439d11505aa75e6a4, type: 3}
 --- !u!4 &581684821 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}

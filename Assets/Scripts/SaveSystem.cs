@@ -10,7 +10,7 @@ public class SaveData
     [Header("Save Metadata")]
     public string saveName = "Save Slot";
     public string saveDate;
-    public float playTime;
+    public float playTime =0f;
     public int saveVersion = 1;
 
     [Header("Player Data")]
@@ -24,6 +24,8 @@ public class SaveData
     
     [Header("Calendar Data")]
     public CalendarSaveData calendarData;
+    [Header("Bill Data")]
+    public BillSaveData billData;
 
     public SaveData()
     {
@@ -32,6 +34,7 @@ public class SaveData
         leagueData = new LeagueSaveData();
         gameProgress = new GameProgressData();
         calendarData = new CalendarSaveData();
+        billData = new BillSaveData();
     }
 }
 
@@ -42,6 +45,13 @@ public class PlayerSaveData
     public float coins = 50f;
     public TeamMemberSaveData[] teamMembers;
     public string currentTeamName;
+}
+
+[System.Serializable]
+public class BillSaveData
+{
+    public List<Bill> bills;
+    public List<Bill> recurringPaidBills;
 }
 
 [System.Serializable]
@@ -98,7 +108,6 @@ public class LeagueSaveData
     public bool playerHasJoined;
     public LeagueInfoSaveData[] allLeagues;
     public TeamSaveData[] allTeams;
-    public RaceSaveData[] raceSchedule;
     public int currentRaceIndex;
 }
 
@@ -121,6 +130,7 @@ public class LeagueInfoSaveData
     public int maxExperienceGivenPerRace;
     public string tournamentStartDate;
     public TeamStandingSaveData[] standings;
+    public RaceDayFormationSaveData[] raceSchedule;
 }
 
 [System.Serializable]
@@ -130,6 +140,13 @@ public class TeamStandingSaveData
     public int position;
     public int points;
     public int wins;
+}
+
+[System.Serializable]
+public class RaceDayFormationSaveData
+{
+    public List<Race> races;
+    public bool processed = false;
 }
 
 [System.Serializable]
@@ -488,6 +505,7 @@ public class SaveSystem : MonoBehaviour
             if (LeagueController.Instance.currentLeague != null)
             {
                 saveData.leagueData.currentLeagueName = LeagueController.Instance.currentLeague.leagueName;
+                saveData.leagueData.currentRaceIndex = LeagueController.Instance.currentLeague.currentRace;
                 saveData.leagueData.playerHasJoined = LeagueController.Instance.currentLeague.playerHasJoined;
             }
 
@@ -503,7 +521,6 @@ public class SaveSystem : MonoBehaviour
                     LeagueInfoSaveData leagueInfo = new LeagueInfoSaveData
                     {
                         leagueName = league.leagueName,
-                        description = league.description,
                         isActive = league.isActive,
                         playerHasJoined = league.playerHasJoined,
                         currentRace = league.currentRace,
@@ -532,6 +549,21 @@ public class SaveSystem : MonoBehaviour
                                 points = league.standings[i].points,
                                 wins = league.standings[i].wins
                             };
+                        }
+                    }
+                    
+                    //Save Race Schedule
+                    if (league.raceDays != null)
+                    {
+                        leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
+                        for (int i = 0; i < league.raceDays.Length; i++)
+                        {
+                            leagueInfo.raceSchedule[i] = new RaceDayFormationSaveData
+                            {
+                                races = new List<Race>(league.raceDays[i].races),
+                                processed = league.raceDays[i].processed
+                            };
+
                         }
                     }
 
@@ -569,6 +601,23 @@ public class SaveSystem : MonoBehaviour
         if (TimeManager.Instance != null)
         {
             saveData.calendarData.currentDate = TimeManager.Instance.GetCurrentDate().ToString("yyyy-MM-dd");
+        }
+        
+        // Save play time
+        if (GameManager.Instance != null)
+        {
+            saveData.playTime = GameManager.Instance.GetTotalPlayTime();
+        }
+        
+        // Save Bills 
+        if (BillsController.Instance != null)
+        {
+            BillSaveData billData = new BillSaveData
+            {
+                bills = BillsController.Instance.bills != null ? new List<Bill>(BillsController.Instance.bills) : new List<Bill>(),
+                recurringPaidBills = BillsController.Instance.recurringPaidBills != null ? new List<Bill>(BillsController.Instance.recurringPaidBills) : new List<Bill>()
+            };
+            saveData.billData = billData;
         }
 
         return saveData;
@@ -610,6 +659,7 @@ public class SaveSystem : MonoBehaviour
                 {
                     LeagueController.Instance.currentLeague = league;
                     league.playerHasJoined = saveData.leagueData.playerHasJoined;
+                    league.currentRace = saveData.leagueData.currentRaceIndex;
                 }
             }
 
@@ -656,6 +706,26 @@ public class SaveSystem : MonoBehaviour
         if (PlayerManager.Instance?.playerStatsView != null)
         {
             PlayerManager.Instance.playerStatsView.UpdatePlayerStats();
+        }
+        
+        // Apply Play Time
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetTotalPlayTime(saveData.playTime);
+        }
+        
+        // Apply Bills Data
+        
+        if (BillsController.Instance != null && saveData.billData != null)
+        {
+            BillsController.Instance.bills = saveData.billData.bills != null ? new List<Bill>(saveData.billData.bills) : new List<Bill>();
+            BillsController.Instance.recurringPaidBills = saveData.billData.recurringPaidBills != null ? new List<Bill>(saveData.billData.recurringPaidBills) : new List<Bill>();
+            
+            // Generate bills if this is a new game and bills are empty
+            if (_isNewGame && BillsController.Instance.bills.Count == 0)
+            {
+                BillsController.Instance.GenerateBills();
+            }
         }
     }
 
@@ -735,7 +805,6 @@ public class SaveSystem : MonoBehaviour
             if (foundLeague != null)
             {
                 // Restore league data
-                foundLeague.description = leagueSave.description;
                 foundLeague.isActive = leagueSave.isActive;
                 foundLeague.playerHasJoined = leagueSave.playerHasJoined;
                 foundLeague.currentRace = leagueSave.currentRace;
@@ -748,6 +817,7 @@ public class SaveSystem : MonoBehaviour
                 foundLeague.maxNumberOfBoatsPerRace = leagueSave.maxNumberOfBoatsPerRace;
                 foundLeague.repeatCount = leagueSave.repeatCount;
                 foundLeague.maxExperienceGivenPerRace = leagueSave.maxExperienceGivenPerRace;
+                foundLeague.currentRace = leagueSave.currentRace;
 
                 // Restore tournament start date
                 if (DateTime.TryParse(leagueSave.tournamentStartDate, out DateTime startDate))
@@ -773,6 +843,17 @@ public class SaveSystem : MonoBehaviour
                             };
                         }
                     }
+                }
+
+                //Restore Race Schedule
+                if (leagueSave.raceSchedule != null && foundLeague.raceDays != null)
+                {
+                    for (int i = 0; i < Mathf.Min(leagueSave.raceSchedule.Length, foundLeague.raceDays.Length); i++)
+                    {
+                        foundLeague.raceDays[i].races = new List<Race>(leagueSave.raceSchedule[i].races);
+                        foundLeague.raceDays[i].processed = leagueSave.raceSchedule[i].processed;
+                    }
+
                 }
             }
         }
@@ -849,6 +930,8 @@ public class SaveSystem : MonoBehaviour
             _wasLoadedFromSave = false;
             _isNewGame = true;
             
+            
+            
             // Initialize fresh game state
             InitializeNewGameState();
             
@@ -858,6 +941,11 @@ public class SaveSystem : MonoBehaviour
             {
                 // If no slots are available, use slot 0
                 availableSlot = 0;
+            }
+            
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.ResetTotalPlayTime();
             }
             
             // Create and save new game data
@@ -1080,6 +1168,13 @@ public class SaveSystem : MonoBehaviour
                 LeagueController.Instance.currentLeague = LeagueController.Instance.leagues[0];
             }
         }
+        
+        // Clear bills for new game - they will be generated after first save/load
+        if (BillsController.Instance != null)
+        {
+            BillsController.Instance.bills.Clear();
+            BillsController.Instance.recurringPaidBills.Clear();
+        }
     }
     
     /// <summary>
@@ -1112,6 +1207,13 @@ public class SaveSystem : MonoBehaviour
             // Fallback to the default starting date if TimeManager is not available
             saveData.calendarData.currentDate = new DateTime(2008, 1, 1).ToString("yyyy-MM-dd");
         }
+        
+        // Ensure bill data is empty for new game
+        saveData.billData = new BillSaveData
+        {
+            bills = new List<Bill>(),
+            recurringPaidBills = new List<Bill>()
+        };
         
         return saveData;
     }

@@ -50,7 +50,15 @@ namespace League
             if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
                 // Only clear and regenerate if this is a fresh game start (not loaded from save)
-                if (!IsGameLoadedFromSave())
+                if (SaveSystem.Instance != null)
+                {
+                    if (!SaveSystem.Instance.IsNewGame || SaveSystem.Instance.WasLoadedFromSave)
+                        return;
+                    ClearLeague();
+                    RegenerateRaceSchedule();
+                    currentLeague.RecalculateStandings();
+                }
+                else if (!IsGameLoadedFromSave())
                 {
                     ClearLeague();
                     RegenerateRaceSchedule();

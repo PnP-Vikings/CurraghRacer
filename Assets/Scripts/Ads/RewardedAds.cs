@@ -20,6 +20,11 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
         }
     }
     
+    public bool IsAdUnitIDSet()
+    {
+        return !string.IsNullOrEmpty(adUnitId);
+    }
+    
     public void LoadRewardedAd()
     {
         if (adUnitId != null)

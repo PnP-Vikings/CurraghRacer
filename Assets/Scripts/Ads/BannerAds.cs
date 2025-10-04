@@ -22,6 +22,11 @@ public class BannerAds : MonoBehaviour
         Advertisement.Banner.SetPosition(BannerPosition.BOTTOM_CENTER);
     }
     
+    public bool IsAdUnitIDSet()
+    {
+        return !string.IsNullOrEmpty(adUnitId);
+    }
+    
     
     public void LoadBannerAd()
     {

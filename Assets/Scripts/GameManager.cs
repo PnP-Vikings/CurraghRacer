@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
    public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
+   [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
 
    public List<String> miniGameWorkScenes = new List<string>
    {
@@ -39,8 +40,18 @@ public class GameManager : MonoBehaviour
        }
        
        StartCoroutine(DisplayBannerWithDelay());
+       StartCoroutine(TrackPlayTime());
+       
    }
    
+   private IEnumerator TrackPlayTime()
+   {
+         while (true)
+         {
+             yield return new WaitForSeconds(60f); // Wait for 1 minute
+             totalPlayTime++;
+         }
+    }
     private IEnumerator DisplayBannerWithDelay()
     {
          yield return new WaitForSeconds(2f); // Adjust the delay as needed
@@ -147,6 +158,21 @@ public class GameManager : MonoBehaviour
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
         PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
+    }
+
+    public float GetTotalPlayTime()
+    {
+        return totalPlayTime;
+    }
+    
+    public void ResetTotalPlayTime()
+    {
+        totalPlayTime = 0;
+    }
+    
+    public void SetTotalPlayTime(float minutes)
+    {
+        totalPlayTime = minutes;
     }
     
     public Transform GetCameraStartPosition()

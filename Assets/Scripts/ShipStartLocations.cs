@@ -29,8 +29,5 @@ public class ShipStartLocations : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
-        // Remove the circular dependency - let RaceManager pull the data when it needs it
-        // instead of pushing it during Awake() when timing is unpredictable
     }
 }

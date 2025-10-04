@@ -1,3 +1,4 @@
+using System.Collections;
 using League;
 using UnityEngine;
 using UnityEngine.UI;
@@ -8,6 +9,7 @@ public class LeagueInviteCardsUi : MonoBehaviour
   
   public TMPro.TMP_Text leagueNameText, leagueDescriptionText;
   public Image leagueLogoImage;
+  public GameObject leagueInvitePanel;
   
   
   public static LeagueInviteCardsUi Instance { get; private set; }
@@ -26,7 +28,7 @@ public class LeagueInviteCardsUi : MonoBehaviour
       Destroy(gameObject);
     }
     
-    if (leagueNameText == null || leagueDescriptionText == null || leagueLogoImage == null)
+    if (leagueNameText == null || leagueDescriptionText == null || leagueLogoImage == null || leagueInvitePanel == null)
     {
       Debug.LogError("One or more UI components are not assigned in the inspector!");
     }
@@ -45,7 +47,7 @@ public class LeagueInviteCardsUi : MonoBehaviour
       return;
     }
 
-    leagueNameText.text = "You have been invited to participate in " + league.leagueName;
+    leagueNameText.text = "You have been invited to participate in\nThe " + league.leagueName;
     leagueDescriptionText.text = league.description;
 
     if (league.leagueIcon != null)
@@ -58,6 +60,8 @@ public class LeagueInviteCardsUi : MonoBehaviour
       leagueLogoImage.gameObject.SetActive(false);
     }
   }
+    
+    
   
   public void OnClickAcceptInvite()
   {
@@ -67,4 +71,38 @@ public class LeagueInviteCardsUi : MonoBehaviour
     Destroy(gameObject);
   }
   
+  public void OnClickDeclineInvite()
+  {
+    leagueInvitePanel.SetActive(false);
+    StartCoroutine(ShowLeaguePanelAfterDelay(30f));
+  }
+
+  public void ShowLeagueInviteAgain()
+  {
+      leagueInvitePanel.SetActive(true);
+     
+  }
+  
+  public IEnumerator ShowLeaguePanelAfterDelay(float delay)
+  {
+    if (!GameManager.Instance.playerIsBusy && TimeManager.Instance != null && LeagueController.Instance.currentLeague != null)
+    {
+      
+      yield return new WaitForSeconds(delay);
+           
+      ShowLeagueInviteAgain();
+    }
+    else
+    {
+      if (TimeManager.Instance == null)
+        Debug.LogWarning("TimeManager instance is null, cannot show league invite message.");
+      if (LeagueController.Instance.currentLeague == null)
+        Debug.LogWarning("Current league is null, cannot show league invite message.");
+      if (GameManager.Instance.playerIsBusy)
+        Debug.Log("Player is busy, delaying league invite message.");
+      // Retry after some time
+      yield return new WaitForSeconds(10f);
+      StartCoroutine(ShowLeaguePanelAfterDelay(25f));
+    }
+  }
 }

@@ -80,7 +80,6 @@ public class RaceManager : MonoBehaviour
         GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
         GarageAmbience.start();
         Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
-        Radio.start();
     }
 
     // Listener receives today's events list
@@ -722,7 +721,15 @@ public class RaceManager : MonoBehaviour
             if (RaceMovementPositions[0].isPlayerShip)
             {
                 Debug.Log("Player finished first!");
-                finishMenu.UpdatePlayerMessage(true, "You are the champion!");
+                if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && LeagueController.Instance.currentLeague.isFinished)
+                {
+                    finishMenu.UpdatePlayerMessage(true, "You are the champion!");
+                }
+                else
+                {
+                    finishMenu.UpdatePlayerMessage(true, "You have won the race!");
+                }
+               
                 if (isRaceDay)
                 {
                     if (PlayerManager.Instance != null)
@@ -779,6 +786,11 @@ public class RaceManager : MonoBehaviour
         RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         SceneManager.LoadScene(GameManager.Instance.mainSceneName);
         GameManager.Instance.SetPlayerBusy(false);
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.TriggerAutoSave();
+        }
+        
     }
     
     IEnumerator ShowAd()

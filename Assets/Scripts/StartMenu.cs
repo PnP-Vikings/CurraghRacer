@@ -67,12 +67,7 @@ public class StartMenu : MonoBehaviour
         if(LeagueController.Instance == null || RaceManager.Instance == null)
             return;
 
-        if(LeagueController.Instance.currentLeague == null || !LeagueController.Instance.currentLeague.playerHasJoined)
-        {
-            Debug.Log("Player not in league, showing join message after delay.");
-            StartCoroutine(LeagueController.Instance.StartLeagueInviteMessageAfterDelay(30f));
-        }
-
+        
         RaceDayStatus status = GetRaceDayStatus();
         switch (status)
         {
