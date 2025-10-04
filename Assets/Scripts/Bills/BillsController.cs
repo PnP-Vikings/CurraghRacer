@@ -27,11 +27,7 @@ public class BillsController : MonoBehaviour
             Destroy(gameObject);
         }
     }
-
-    void Start()
-    {
-        GenerateBills();
-    }
+    
 
     private void OnEnable()
     {
@@ -104,10 +100,20 @@ public class BillsController : MonoBehaviour
 
     public void GenerateBills()
     {
-        bills.Clear();
-        CreateNewBill("Electricity", electricityBillAmount, electricityBillAmount,5, BillType.Utilities, true);
-        CreateNewBill("Heating", heatingBillAmount, heatingBillAmount,10, BillType.Utilities, true);
-        CreateNewBill("Rent", rentBillAmount, rentBillAmount,1, BillType.Rent, true);
+        if(SaveSystem.Instance != null && SaveSystem.Instance.IsNewGame)
+        {
+            Debug.Log("New game detected, generating initial bills.");
+            bills.Clear();
+            CreateNewBill("Electricity", electricityBillAmount, electricityBillAmount,5, BillType.Utilities, true);
+            CreateNewBill("Heating", heatingBillAmount, heatingBillAmount,10, BillType.Utilities, true);
+            CreateNewBill("Rent", rentBillAmount, rentBillAmount,1, BillType.Rent, true);
+        }
+        else
+        {
+            Debug.Log("Not a new game, skipping bill generation.");
+        }
+     
+       
     }
     
     public void CreateNewBill(string billName, float amount, float amountDue, int dueDay, BillType billType, bool isRecurring)
