@@ -98,7 +98,6 @@ public class LeagueSaveData
     public bool playerHasJoined;
     public LeagueInfoSaveData[] allLeagues;
     public TeamSaveData[] allTeams;
-    public RaceSaveData[] raceSchedule;
     public int currentRaceIndex;
 }
 
@@ -121,6 +120,7 @@ public class LeagueInfoSaveData
     public int maxExperienceGivenPerRace;
     public string tournamentStartDate;
     public TeamStandingSaveData[] standings;
+    public RaceDayFormationSaveData[] raceSchedule;
 }
 
 [System.Serializable]
@@ -130,6 +130,13 @@ public class TeamStandingSaveData
     public int position;
     public int points;
     public int wins;
+}
+
+[System.Serializable]
+public class RaceDayFormationSaveData
+{
+    public List<Race> races;
+    public bool processed = false;
 }
 
 [System.Serializable]
@@ -488,6 +495,7 @@ public class SaveSystem : MonoBehaviour
             if (LeagueController.Instance.currentLeague != null)
             {
                 saveData.leagueData.currentLeagueName = LeagueController.Instance.currentLeague.leagueName;
+                saveData.leagueData.currentRaceIndex = LeagueController.Instance.currentLeague.currentRace;
                 saveData.leagueData.playerHasJoined = LeagueController.Instance.currentLeague.playerHasJoined;
             }
 
@@ -503,7 +511,6 @@ public class SaveSystem : MonoBehaviour
                     LeagueInfoSaveData leagueInfo = new LeagueInfoSaveData
                     {
                         leagueName = league.leagueName,
-                        description = league.description,
                         isActive = league.isActive,
                         playerHasJoined = league.playerHasJoined,
                         currentRace = league.currentRace,
@@ -532,6 +539,21 @@ public class SaveSystem : MonoBehaviour
                                 points = league.standings[i].points,
                                 wins = league.standings[i].wins
                             };
+                        }
+                    }
+                    
+                    //Save Race Schedule
+                    if (league.raceDays != null)
+                    {
+                        leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
+                        for (int i = 0; i < league.raceDays.Length; i++)
+                        {
+                            leagueInfo.raceSchedule[i] = new RaceDayFormationSaveData
+                            {
+                                races = new List<Race>(league.raceDays[i].races),
+                                processed = league.raceDays[i].processed
+                            };
+
                         }
                     }
 
@@ -610,6 +632,7 @@ public class SaveSystem : MonoBehaviour
                 {
                     LeagueController.Instance.currentLeague = league;
                     league.playerHasJoined = saveData.leagueData.playerHasJoined;
+                    league.currentRace = saveData.leagueData.currentRaceIndex;
                 }
             }
 
@@ -735,7 +758,6 @@ public class SaveSystem : MonoBehaviour
             if (foundLeague != null)
             {
                 // Restore league data
-                foundLeague.description = leagueSave.description;
                 foundLeague.isActive = leagueSave.isActive;
                 foundLeague.playerHasJoined = leagueSave.playerHasJoined;
                 foundLeague.currentRace = leagueSave.currentRace;
@@ -748,6 +770,7 @@ public class SaveSystem : MonoBehaviour
                 foundLeague.maxNumberOfBoatsPerRace = leagueSave.maxNumberOfBoatsPerRace;
                 foundLeague.repeatCount = leagueSave.repeatCount;
                 foundLeague.maxExperienceGivenPerRace = leagueSave.maxExperienceGivenPerRace;
+                foundLeague.currentRace = leagueSave.currentRace;
 
                 // Restore tournament start date
                 if (DateTime.TryParse(leagueSave.tournamentStartDate, out DateTime startDate))
@@ -773,6 +796,17 @@ public class SaveSystem : MonoBehaviour
                             };
                         }
                     }
+                }
+
+                //Restore Race Schedule
+                if (leagueSave.raceSchedule != null && foundLeague.raceDays != null)
+                {
+                    for (int i = 0; i < Mathf.Min(leagueSave.raceSchedule.Length, foundLeague.raceDays.Length); i++)
+                    {
+                        foundLeague.raceDays[i].races = new List<Race>(leagueSave.raceSchedule[i].races);
+                        foundLeague.raceDays[i].processed = leagueSave.raceSchedule[i].processed;
+                    }
+
                 }
             }
         }
