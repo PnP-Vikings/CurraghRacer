@@ -39,6 +39,8 @@ public class PowerwashController : MonoBehaviour
 
     public GameObject WallPrefab3;
 
+    public GameObject WallPrefab4;
+
 
     [SerializeField] private int spawnCount = 5;
 
@@ -123,7 +125,8 @@ public class PowerwashController : MonoBehaviour
         wallList.Add(WallPrefab1);
         wallList.Add(WallPrefab2);
         wallList.Add(WallPrefab3);
-        int wallIndex = UnityEngine.Random.Range(0, 3);
+        wallList.Add(WallPrefab4);
+        int wallIndex = UnityEngine.Random.Range(0, 4);
 
        /* 
         */
@@ -139,7 +142,11 @@ public class PowerwashController : MonoBehaviour
             GameObject wallObject = null;
             if (wallIndex == 0)
             {
-                wallObject= Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0,90,0),90));
+                wallObject = Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0, 90, 0), 90));
+            }
+            else if (wallIndex == 3)
+            {
+                wallObject = Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0, -90, 90), 90));
             }
             else
             {
