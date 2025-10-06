@@ -24,8 +24,13 @@ public class Team : ScriptableObject
     public List<int> recentResults = new List<int>();
 
     [Header("Team Members")]
+    [Tooltip("Team Manager.")]
+    public TeamMember teamManager;
+        
     public TeamMember[] teamMembers;
 
+    public TeamMember[] bench;
+    
     [Header("Current Season Stats")]
     [Tooltip("Wins, draws, losses, and points for the current season.")]
     public SeasonStats currentSeasonStats;
@@ -34,6 +39,8 @@ public class Team : ScriptableObject
     [Tooltip("Cumulative wins, draws, losses, and points across all seasons.")]
     public SeasonStats lifetimeStats;
 
+    
+        
     /// <summary>
     /// Records a race finish position, updating both season and lifetime stats.
     /// </summary>

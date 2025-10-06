@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public enum Attitude
 {
@@ -56,6 +58,15 @@ public class TeamMember : ScriptableObject
     [Tooltip("Base salary or cost for hiring this member.")]
     public int salary = 50;
     
+    [Tooltip("Races available for.")]
+    public int racesAvailableFor = 999999; // Default
+    
+    [Header("Happiness && Fitness")]
+    public TeamMemberFitness fitness = new TeamMemberFitness();
+    [Tooltip("Happiness level of the team member (0-100).")]
+    public Happiness happiness = new Happiness(); // Default happiness level
+    
+    
     public CharacterStats GetStats()
     {
         return characterStats;
@@ -69,6 +80,8 @@ public class TeamMember : ScriptableObject
         level = 1;
         experience = 0;
         xpToNextLevel = 100;
+        fitness.ResetFitness();
+        happiness = new Happiness(); // Reset to default happiness
     }
     
     public CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
@@ -296,6 +309,7 @@ public class TeamMember : ScriptableObject
     }
 
 
+    
     public enum StatType
     {
         Strength,
@@ -303,4 +317,83 @@ public class TeamMember : ScriptableObject
         Technique,
         TeamWork
     }
+}
+
+
+public class TeamMemberFitness
+{
+    public float currentFitness;
+    public float maxFitness = 100f;
+    public float recoveryRate = 5f; // Fitness points recovered per hour
+    public float HungerLevel;
+    public float maxHungerLevel = 100f;
+    
+    public enum PhysicalState
+    {
+        Energetic,
+        Tired,
+        Exhausted,
+        Hungry,
+        Thirsty
+    }
+    
+    public void AdjustFitness(float amount)
+    {
+        currentFitness = Mathf.Clamp(currentFitness + amount, 0, maxFitness);
+    }
+    
+    public TeamMemberFitness()
+    {
+        currentFitness = maxFitness; // Start fully fit
+        HungerLevel = 100f; // Start fully satiated
+    }
+
+   public enum InjuryStatus
+   {
+       Healthy,
+       Minor,
+       Major,
+       Critical
+   }
+   
+   
+   public InjuryStatus injuryStatus = InjuryStatus.Healthy;
+
+   public PhysicalState currentPhysicalState = PhysicalState.Energetic;
+   
+   public void ResetFitness()
+   {
+       currentFitness = maxFitness;
+       HungerLevel = maxHungerLevel;
+       injuryStatus = InjuryStatus.Healthy;
+       currentPhysicalState = PhysicalState.Energetic;
+   }
+  
+ 
+}
+
+public class Happiness
+{
+    public float currentHappiness;
+    public float maxHappiness = 100f;
+
+    public Happiness()
+    {
+        currentHappiness = maxHappiness; // Start fully happy
+    }
+    
+    public void AdjustHappiness(float amount)
+    {
+        currentHappiness = Mathf.Clamp(currentHappiness + amount, 0, maxHappiness);
+    }
+    
+    public enum Mood
+    {
+        Happy,
+        Neutral,
+        Sad,
+        Angry,
+        Excited
+    }
+    public Mood currentMood = Mood.Happy;
 }
