@@ -84,7 +84,7 @@ public class TeamMember : ScriptableObject
         happiness = new Happiness(); // Reset to default happiness
     }
     
-    public CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
+    public virtual CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
     {
         switch (attitude)
         {

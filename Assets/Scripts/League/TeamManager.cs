@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
@@ -6,17 +7,27 @@ public class TeamManager : MonoBehaviour
     public static TeamManager Instance { get; private set; }
 
     public Team playerTeam;
-    public TeamMember[] benchTeamMembers;
-    public TeamMember[] racersForHire;
+    public TeamMember teamManager;
+    public List<TeamMember> activeCrewMembers;
+    public List<TeamMember> benchTeamMembers;
+    public List<TeamMember> racersForHire;
     public bool isAllActiveTeamMembersHealthy = false;
     
-    
-    public void SetRacersForHire(TeamMember[] availableRacers)
+    public void SetTeamManager(TeamMember manager)
+    {
+        teamManager = manager;
+    }
+    public void SetActiveCrewMembers( List<TeamMember> activeMembers)
+    {
+        activeCrewMembers = activeMembers;
+    }
+   
+    public void SetRacersForHire(List<TeamMember> availableRacers)
     {
         racersForHire = availableRacers;
     }
     
-    public void SetBenchTeamMembers(TeamMember[] benchMembers)
+    public void SetBenchTeamMembers(List<TeamMember> benchMembers)
     {
         benchTeamMembers = benchMembers;
     }

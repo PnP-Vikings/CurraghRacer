@@ -33,8 +33,19 @@ public class PlayerManager : MonoBehaviour
        {
            playerTeam = LeagueController.Instance.currentLeague.GetPlayerTeam();
        }
-        team = playerTeam.teamMembers;
-       
+       if (playerTeam != null)
+       {
+           team = playerTeam.teamMembers;
+
+           if (TeamManager.Instance != null)
+           {
+               TeamManager.Instance.SetPlayerTeam(playerTeam);
+               TeamManager.Instance.SetTeamManager(playerTeam.teamManager);
+               TeamManager.Instance.SetActiveCrewMembers(playerTeam.teamMembers);
+               TeamManager.Instance.SetBenchTeamMembers(playerTeam.bench);
+           }
+       }
+
     }
 
     public CharacterStats GetPlayerStats()
