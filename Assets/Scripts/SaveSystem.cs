@@ -528,8 +528,8 @@ public class SaveSystem : MonoBehaviour
 
             if (PlayerManager.Instance.team != null)
             {
-                saveData.playerData.teamMembers = new TeamMemberSaveData[PlayerManager.Instance.team.Length];
-                for (int i = 0; i < PlayerManager.Instance.team.Length; i++)
+                saveData.playerData.teamMembers = new TeamMemberSaveData[PlayerManager.Instance.team.Count];
+                for (int i = 0; i < PlayerManager.Instance.team.Count; i++)
                 {
                     saveData.playerData.teamMembers[i] = new TeamMemberSaveData(PlayerManager.Instance.team[i]);
                 }
@@ -676,7 +676,7 @@ public class SaveSystem : MonoBehaviour
             // Restore team members
             if (saveData.playerData.teamMembers != null && PlayerManager.Instance.team != null)
             {
-                for (int i = 0; i < Mathf.Min(saveData.playerData.teamMembers.Length, PlayerManager.Instance.team.Length); i++)
+                for (int i = 0; i < Mathf.Min(saveData.playerData.teamMembers.Length, PlayerManager.Instance.team.Count); i++)
                 {
                     RestoreTeamMember(PlayerManager.Instance.team[i], saveData.playerData.teamMembers[i]);
                 }
@@ -807,7 +807,7 @@ public class SaveSystem : MonoBehaviour
                     currentMood = team.teamManager.happiness.currentMood
                 } : null
             } : null,
-            bench =  team.bench != null ? Array.ConvertAll(team.bench, member => new TeamMemberSaveData(member)) : null,
+            bench =  team.bench != null ? new TeamMemberSaveData[team.bench.Count] : null,
             recentResults = new List<int>(team.recentResults),
             teamColor = new ColorSaveData(team.teamColor)
         };
@@ -832,8 +832,8 @@ public class SaveSystem : MonoBehaviour
         // Save team members
         if (team.teamMembers != null)
         {
-            teamSave.teamMembers = new TeamMemberSaveData[team.teamMembers.Length];
-            for (int i = 0; i < team.teamMembers.Length; i++)
+            teamSave.teamMembers = new TeamMemberSaveData[team.teamMembers.Count];
+            for (int i = 0; i < team.teamMembers.Count; i++)
             {
                 teamSave.teamMembers[i] = new TeamMemberSaveData(team.teamMembers[i]);
             }
@@ -985,7 +985,7 @@ public class SaveSystem : MonoBehaviour
                 // Restore bench members
                 if (teamSave.bench != null && foundTeam.bench != null)
                 {
-                    for (int i = 0; i < Mathf.Min(teamSave.bench.Length, foundTeam.bench.Length); i++)
+                    for (int i = 0; i < Mathf.Min(teamSave.bench.Length, foundTeam.bench.Count); i++)
                     {
                         RestoreTeamMember(foundTeam.bench[i], teamSave.bench[i]);
                     }
@@ -1011,7 +1011,7 @@ public class SaveSystem : MonoBehaviour
                 // Restore team members
                 if (teamSave.teamMembers != null && foundTeam.teamMembers != null)
                 {
-                    for (int i = 0; i < Mathf.Min(teamSave.teamMembers.Length, foundTeam.teamMembers.Length); i++)
+                    for (int i = 0; i < Mathf.Min(teamSave.teamMembers.Length, foundTeam.teamMembers.Count); i++)
                     {
                         RestoreTeamMember(foundTeam.teamMembers[i], teamSave.teamMembers[i]);
                     }

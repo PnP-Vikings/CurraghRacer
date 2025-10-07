@@ -27,9 +27,9 @@ public class Team : ScriptableObject
     [Tooltip("Team Manager.")]
     public TeamMember teamManager;
         
-    public TeamMember[] teamMembers;
+    public List<TeamMember> teamMembers = new List<TeamMember>();
 
-    public TeamMember[] bench;
+    public List<TeamMember> bench = new List<TeamMember>();
     
     [Header("Current Season Stats")]
     [Tooltip("Wins, draws, losses, and points for the current season.")]
@@ -97,7 +97,7 @@ public class Team : ScriptableObject
 
     public void ResetAllPlayerStats()
     {
-        for (int i = 0; i < teamMembers.Length; i++)
+        for (int i = 0; i < teamMembers.Count; i++)
         {
             if (teamMembers[i] != null)
             {
@@ -124,14 +124,14 @@ public class Team : ScriptableObject
 
     public void UseExperience()
     {
-        for (int i = 0; i < teamMembers.Length; i++)
+        for (int i = 0; i < teamMembers.Count; i++)
         {
 
             if (teamMembers[i] != null)
             {
                 
-                teamMembers[i].UpdateExperience(teamExperience / teamMembers.Length);
-                teamExperience -= (teamExperience / teamMembers.Length);
+                teamMembers[i].UpdateExperience(teamExperience / teamMembers.Count);
+                teamExperience -= (teamExperience / teamMembers.Count);
             }
 
         }
@@ -148,7 +148,7 @@ public class Team : ScriptableObject
     /// </summary>
     public CharacterStats GetTeamStats()
     {
-        if (teamMembers != null && teamMembers.Length > 0)
+        if (teamMembers != null && teamMembers.Count > 0)
         {
             // Calculate average stats from all team members
             float totalStrength = 0f;
@@ -193,6 +193,8 @@ public class Team : ScriptableObject
             teamWork: baseValue + (formModifier * 0.8f) + UnityEngine.Random.Range(-variation, variation)
         );
     }
+    
+    
 }
 
 public enum TeamType

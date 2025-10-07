@@ -356,6 +356,11 @@ public class TeamMemberFitness
        Critical
    }
    
+   public bool IsPlayerFitToRace()
+   {
+       return currentFitness >= 30f && injuryStatus == InjuryStatus.Healthy || injuryStatus == InjuryStatus.Minor;
+   }
+   
    
    public InjuryStatus injuryStatus = InjuryStatus.Healthy;
 
@@ -395,5 +400,6 @@ public class Happiness
         Angry,
         Excited
     }
+    
     public Mood currentMood = Mood.Happy;
 }
