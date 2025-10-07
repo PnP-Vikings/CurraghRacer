@@ -104,6 +104,15 @@ public class Team : ScriptableObject
                 teamMembers[i].ResetAllStats(teamQuality);
             }
         }
+        
+        for (int i = 0; i < bench.Count; i++)
+        {
+            if (bench[i] != null)
+            {
+                bench[i].ResetAllStats(teamQuality);
+            }
+        }
+        
     }
     
     

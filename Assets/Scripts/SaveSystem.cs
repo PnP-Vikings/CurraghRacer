@@ -26,6 +26,7 @@ public class SaveData
     public CalendarSaveData calendarData;
     [Header("Bill Data")]
     public BillSaveData billData;
+   
 
     public SaveData()
     {
@@ -402,8 +403,9 @@ public class SaveSystem : MonoBehaviour
             string jsonData = File.ReadAllText(filePath);
             SaveData saveData = JsonUtility.FromJson<SaveData>(jsonData);
 
-            // Set the flag before applying save data
+            // Set the flags before applying save data
             _wasLoadedFromSave = true;
+            _isNewGame = false;
 
             ApplySaveData(saveData);
 
@@ -846,10 +848,17 @@ public class SaveSystem : MonoBehaviour
     {
         if (member == null || saveData == null) return;
 
+        // Skip restoring if this is empty/default data (like uninitialized bench members)
+        if (string.IsNullOrEmpty(saveData.memberName) && saveData.age == 0)
+        {
+            Debug.Log("Skipping restoration of empty TeamMember data");
+            return;
+        }
+
         member.memberName = saveData.memberName;
         member.age = saveData.age;
 
-        if (System.Enum.TryParse<Attitude>(saveData.attitude, out Attitude attitude))
+        if (!string.IsNullOrEmpty(saveData.attitude) && System.Enum.TryParse<Attitude>(saveData.attitude, out Attitude attitude))
         {
             member.attitude = attitude;
         }
@@ -957,6 +966,8 @@ public class SaveSystem : MonoBehaviour
 
     private void RestoreTeamsData(TeamSaveData[] teamsData)
     {
+        Debug.Log($"Starting RestoreTeamsData with {teamsData.Length} teams");
+        
         foreach (var teamSave in teamsData)
         {
             // Find the corresponding team in the leagues
@@ -969,6 +980,8 @@ public class SaveSystem : MonoBehaviour
 
             if (foundTeam != null)
             {
+                Debug.Log($"Restoring data for team: {foundTeam.teamName}");
+                
                 // Restore team data
                 foundTeam.teamDescription = teamSave.teamDescription;
                 foundTeam.teamQuality = teamSave.teamQuality;
@@ -977,9 +990,28 @@ public class SaveSystem : MonoBehaviour
                 foundTeam.recentResults = new List<int>(teamSave.recentResults);
                 
                 // Restore team manager
-                if (teamSave.teamManager != null && foundTeam.teamManager != null)
+                if (teamSave.teamManager != null)
                 {
+                    Debug.Log($"Team {foundTeam.teamName} has manager data in save: {teamSave.teamManager.memberName}");
+                    
+                    if (foundTeam.teamManager == null)
+                    {
+                        // Create a new TeamMember instance for the manager if it doesn't exist
+                        foundTeam.teamManager = ScriptableObject.CreateInstance<TeamMember>();
+                        Debug.Log($"Created new teamManager instance for team {foundTeam.teamName}");
+                    }
+                    else
+                    {
+                        Debug.Log($"Team {foundTeam.teamName} already has a manager instance: {foundTeam.teamManager.memberName}");
+                    }
+                    
+                    Debug.Log($"Restoring manager for team {foundTeam.teamName}: {teamSave.teamManager.memberName}");
                     RestoreTeamMember(foundTeam.teamManager, teamSave.teamManager);
+                    Debug.Log($"Manager restored. Current name: {foundTeam.teamManager.memberName}, Age: {foundTeam.teamManager.age}");
+                }
+                else
+                {
+                    Debug.LogWarning($"Team {foundTeam.teamName} has NO manager data in save file");
                 }
                 
                 // Restore bench members
@@ -987,6 +1019,10 @@ public class SaveSystem : MonoBehaviour
                 {
                     for (int i = 0; i < Mathf.Min(teamSave.bench.Length, foundTeam.bench.Count); i++)
                     {
+                        if (foundTeam.bench[i] == null)
+                        {
+                            foundTeam.bench[i] = ScriptableObject.CreateInstance<TeamMember>();
+                        }
                         RestoreTeamMember(foundTeam.bench[i], teamSave.bench[i]);
                     }
                 }
@@ -1016,6 +1052,8 @@ public class SaveSystem : MonoBehaviour
                         RestoreTeamMember(foundTeam.teamMembers[i], teamSave.teamMembers[i]);
                     }
                 }
+                
+                
             }
         }
     }
@@ -1239,6 +1277,12 @@ public class SaveSystem : MonoBehaviour
                                 if (team.currentSeasonStats != null)
                                 {
                                     team.currentSeasonStats.finishes.Clear();
+                                }
+                                
+                                // Reset team manager
+                                if (team.teamManager != null)
+                                {
+                                    team.teamManager.ResetAllStats(team.teamQuality);
                                 }
                                 
                                 // Reset team members
