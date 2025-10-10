@@ -2675,6 +2675,7 @@ GameObject:
   - component: {fileID: 667618652}
   - component: {fileID: 667618654}
   - component: {fileID: 667618655}
+  - component: {fileID: 667618656}
   m_Layer: 5
   m_Name: BulletinBoardButton
   m_TagString: Untagged
@@ -2941,6 +2942,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &667618656
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 667618647}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30056ca85a4eb774e8adc8ba81c6728e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElement:
+  - {fileID: 1443861095}
 --- !u!1 &700890456
 GameObject:
   m_ObjectHideFlags: 0
@@ -5943,6 +5958,7 @@ GameObject:
   - component: {fileID: 1616850242}
   - component: {fileID: 1616850243}
   - component: {fileID: 1616850244}
+  - component: {fileID: 1616850245}
   m_Layer: 5
   m_Name: TVButton
   m_TagString: Untagged
@@ -6203,6 +6219,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1616850245
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1616850237}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30056ca85a4eb774e8adc8ba81c6728e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElement:
+  - {fileID: 497225263}
 --- !u!1 &1629906051
 GameObject:
   m_ObjectHideFlags: 0
@@ -6218,6 +6248,7 @@ GameObject:
   - component: {fileID: 1629906055}
   - component: {fileID: 1629906053}
   - component: {fileID: 1629906059}
+  - component: {fileID: 1629906060}
   m_Layer: 5
   m_Name: Calendar
   m_TagString: Untagged
@@ -6478,6 +6509,20 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1629906060
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1629906051}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30056ca85a4eb774e8adc8ba81c6728e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElement:
+  - {fileID: 920086155}
 --- !u!1001 &1635952659
 PrefabInstance:
   m_ObjectHideFlags: 0
