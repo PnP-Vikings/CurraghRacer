@@ -20,10 +20,6 @@ public class BlinkUi : MonoBehaviour
         {
             image = GetComponent<Image>();
         }
-        currentOpacity = opacityMax;    
-        var color = image.color;
-        color.a =opacityMax;
-        image.color = color;
 
          // Ensure the image starts fully visible
         StartCoroutine(Blink());
@@ -36,10 +32,6 @@ public class BlinkUi : MonoBehaviour
         {
             image = GetComponent<Image>();
         }
-        currentOpacity = opacityMax;    
-        var color = image.color;
-        color.a =opacityMax;
-        image.color = color;
 
          // Ensure the image starts fully visible
         StartCoroutine(Blink());
