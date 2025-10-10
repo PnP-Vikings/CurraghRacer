@@ -892,6 +892,7 @@ MonoBehaviour:
   WallPrefab1: {fileID: 1454287351456404813, guid: 025df5e42680597479f0ed52b977882f, type: 3}
   WallPrefab2: {fileID: 6850031582982249738, guid: d3f8a14f949334e47af7292cb77560c4, type: 3}
   WallPrefab3: {fileID: 6380974008711255739, guid: 4b9a8be97bf45554a862ad196404c5ab, type: 3}
+  WallPrefab4: {fileID: 6526876407295574114, guid: 236643995a6abd441a36a1f1ebd3f538, type: 3}
   spawnCount: 1
 --- !u!1 &1022409519
 GameObject:
