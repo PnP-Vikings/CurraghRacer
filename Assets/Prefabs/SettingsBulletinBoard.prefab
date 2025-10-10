@@ -2815,6 +2815,8 @@ MonoBehaviour:
   teamBenchUiParent: {fileID: 9020345454578503673}
   racersforHireUiParent: {fileID: 1406772864864601122}
   teamManagerUiPrefab: {fileID: 8598144522272698404, guid: 875dbb6d6656dc44c8c0a49a1e10a286, type: 3}
+  benchTeamMemberUiHandler: {fileID: 2571327593248780582, guid: 8f209d455a848d64d907c99575da4171, type: 3}
+  hireableSailorsUiHandler: {fileID: 4364504125556338930, guid: 140c30a0670da6443b30075878b586a6, type: 3}
 --- !u!1 &2974021481895823813
 GameObject:
   m_ObjectHideFlags: 0
@@ -5714,6 +5716,7 @@ GameObject:
   - component: {fileID: 5414239306519974184}
   - component: {fileID: 4628932722521540512}
   - component: {fileID: 7316731159836164209}
+  - component: {fileID: 9197578421010704323}
   m_Layer: 5
   m_Name: Close Training Menu (1)
   m_TagString: Untagged
@@ -5936,6 +5939,18 @@ MonoBehaviour:
             m_StringArgument: 
             m_BoolArgument: 0
           m_CallState: 2
+--- !u!114 &9197578421010704323
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5267390696343199094}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5296782560708598464
 GameObject:
   m_ObjectHideFlags: 0
@@ -8147,6 +8162,7 @@ GameObject:
   m_Component:
   - component: {fileID: 5217739497345617767}
   - component: {fileID: 5427929902497958565}
+  - component: {fileID: 4019080138806699240}
   m_Layer: 5
   m_Name: Content
   m_TagString: Untagged
@@ -8197,6 +8213,20 @@ MonoBehaviour:
   m_Spacing: {x: 0, y: 2.5}
   m_Constraint: 0
   m_ConstraintCount: 1
+--- !u!114 &4019080138806699240
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7545462988524578365}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3245ec927659c4140ac4f8d17403cc18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_HorizontalFit: 0
+  m_VerticalFit: 2
 --- !u!1 &7595223469080099197
 GameObject:
   m_ObjectHideFlags: 0
@@ -8358,7 +8388,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 100, y: 100}
+  m_SizeDelta: {x: 1409.9, y: 1315.3}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7156266338728295051
 CanvasRenderer:

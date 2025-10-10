@@ -10,7 +10,7 @@ public class TeamManager : MonoBehaviour
     public TeamMember teamManager;
     public List<TeamMember> activeCrewMembers;
     public List<TeamMember> benchTeamMembers;
-    public List<TeamMember> racersForHire;
+    public List<HireableTeamMembers> racersForHire;
     public bool isAllActiveTeamMembersHealthy = false;
     
     public void SetTeamManager(TeamMember manager)
@@ -22,7 +22,7 @@ public class TeamManager : MonoBehaviour
         activeCrewMembers = activeMembers;
     }
    
-    public void SetRacersForHire(List<TeamMember> availableRacers)
+    public void SetRacersForHire(List<HireableTeamMembers> availableRacers)
     {
         racersForHire = availableRacers;
     }
@@ -47,6 +47,33 @@ public class TeamManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+    
+    public void HireRacer(HireableTeamMembers racer)
+    {
+
+        if (playerTeam.bench.Count >= 3)
+        {
+            PlayerStatsView.Instance.ClearInfo(); 
+            PlayerStatsView.Instance.DisplayInfo($"Bench is full! Cannot hire more racers.");
+            return;
+        }
+        
+        
+        if ( PlayerManager.Instance.PurchaseItem(racer.hireCost,purchaseType: PurchaseType.HireRacer)) // Assuming a max of 3 bench members
+        {
+            playerTeam.bench.Add(racer);
+            racersForHire.Remove(racer);
+            PlayerStatsView.Instance.ClearInfo();
+            PlayerStatsView.Instance.DisplayInfo($"Hired {racer.memberName} for {racer.hireCost} coins.");
+            Debug.Log($"Hired {racer.memberName} to the team.");
+        }
+        else
+        { 
+            PlayerStatsView.Instance.ClearInfo(); 
+            PlayerStatsView.Instance.DisplayInfo($"Could not afford to hire player.");
+            Debug.Log("Could not afford to hire player.");
         }
     }
     

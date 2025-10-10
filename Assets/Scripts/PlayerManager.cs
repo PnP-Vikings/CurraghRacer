@@ -207,6 +207,7 @@ public class PlayerManager : MonoBehaviour
 public enum PurchaseType
 {
         RaceEntry,
+        HireRacer,
         Bill,
         Sleep,
         Training,

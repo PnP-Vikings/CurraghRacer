@@ -19,9 +19,9 @@ MonoBehaviour:
   age: 21
   attitude: 8
   characterStats:
-    strength: 5
-    stamina: 5
-    technique: 5
+    strength: 8
+    stamina: 2
+    technique: 7
     teamWork: 5
   level: 1
   experience: 0

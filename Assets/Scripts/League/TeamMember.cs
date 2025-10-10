@@ -74,6 +74,7 @@ public class TeamMember : ScriptableObject
     
     
     
+    
     public void ResetAllStats(int teamQuality = 1)
     {
         characterStats = GetDefaultStatsBasedOnAttitude(teamQuality);
@@ -317,6 +318,8 @@ public class TeamMember : ScriptableObject
         Technique,
         TeamWork
     }
+    
+    
 }
 
 
@@ -375,6 +378,7 @@ public class TeamMemberFitness
    }
   
  
+   
 }
 
 public class Happiness

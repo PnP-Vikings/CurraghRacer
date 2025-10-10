@@ -1,0 +1,40 @@
+using League;
+using TMPro;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class BenchTeamMemberUiHandler : MonoBehaviour
+{
+    
+    public TMP_Text memberNameText,
+        memberStarRatingText;
+    public Image memberIconImage;
+
+    public void SetMemberData(TeamMember member)
+    {
+        if (memberIconImage.sprite != null)
+        {
+            memberIconImage.gameObject.SetActive(true);
+            memberIconImage.sprite = memberIconImage.sprite;
+        }
+        else
+        {
+            memberIconImage.gameObject.SetActive(false);
+            Debug.LogWarning("Member icon image or sprite is not set!");
+        }
+        
+        memberNameText.text = member.memberName;
+        if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null)
+        {
+            memberStarRatingText.text =
+                "Star Rating: " + LeagueController.Instance.CalculateTeamMemberStarRating(member);
+        }
+        else
+        {
+            memberStarRatingText.text = "Star Rating: N/A";
+            Debug.LogWarning("LeagueController or currentLeague is null!");
+        }
+
+      
+    }
+}

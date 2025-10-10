@@ -19,10 +19,10 @@ MonoBehaviour:
   age: 32
   attitude: 3
   characterStats:
-    strength: 5
-    stamina: 5
-    technique: 5
-    teamWork: 5
+    strength: 10
+    stamina: 8
+    technique: 7
+    teamWork: 3
   level: 1
   experience: 0
   xpToNextLevel: 100

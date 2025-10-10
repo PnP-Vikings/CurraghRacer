@@ -440,5 +440,114 @@ namespace League
                 Debug.LogWarning("No current league to regenerate schedule for!");
             }
         }
+        
+        
+        public int CalculateTeamMemberStarRating(TeamMember member)
+        {
+            if (currentLeague == null || currentLeague.teams == null || currentLeague.teams.Length == 0)
+            {
+                return 0;
+            }
+
+            // Collect all team members in the league
+            List<TeamMember> allMembers = new List<TeamMember>();
+            foreach (var team in currentLeague.teams)
+            {
+                if (team != null && team.teamMembers != null)
+                {
+                    foreach (var tm in team.teamMembers)
+                    {
+                        if (tm != null)
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
+            }
+
+            if (allMembers.Count == 0) return 0;
+
+            // Calculate percentile for each stat
+            float strengthPercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.Strength);
+            float techniquePercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.Technique);
+            float staminaPercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.Stamina);
+            float teamWorkPercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.TeamWork);
+
+            // Average the percentiles
+            float averagePercentile = (strengthPercentile + techniquePercentile + staminaPercentile + teamWorkPercentile) / 4f;
+
+            // Convert percentile to star rating (1-5)
+            // 0-20%: 1 star (bottom tier)
+            // 20-40%: 2 stars (below average)
+            // 40-60%: 3 stars (average)
+            // 60-80%: 4 stars (above average)
+            // 80-100%: 5 stars (top tier)
+            if (averagePercentile >= 80f) return 5;
+            if (averagePercentile >= 60f) return 4;
+            if (averagePercentile >= 40f) return 3;
+            if (averagePercentile >= 20f) return 2;
+            return 1;
+        }
+
+        /// <summary>
+        /// Calculates the percentile ranking of a team member for a specific stat
+        /// Returns a value from 0-100 representing the percentage of members this player is better than
+        /// </summary>
+        private float CalculatePercentile(TeamMember member, List<TeamMember> allMembers, TeamMember.StatType statType)
+        {
+            float memberStatValue = member.GetTeamMemberStat(statType);
+            int betterThanCount = 0;
+
+            foreach (var otherMember in allMembers)
+            {
+                if (otherMember.GetTeamMemberStat(statType) < memberStatValue)
+                {
+                    betterThanCount++;
+                }
+            }
+
+            // Calculate percentile (percentage of members this player is better than)
+            return (betterThanCount / (float)allMembers.Count) * 100f;
+        }
+
+        /// <summary>
+        /// Gets a detailed breakdown of the team member's rating
+        /// </summary>
+        public string GetTeamMemberRatingBreakdown(TeamMember member)
+        {
+            if (currentLeague == null || currentLeague.teams == null || currentLeague.teams.Length == 0)
+            {
+                return "N/A";
+            }
+
+            // Collect all team members in the league
+            List<TeamMember> allMembers = new List<TeamMember>();
+            foreach (var team in currentLeague.teams)
+            {
+                if (team != null && team.teamMembers != null)
+                {
+                    foreach (var tm in team.teamMembers)
+                    {
+                        if (tm != null)
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
+            }
+
+            if (allMembers.Count == 0) return "N/A";
+
+            // Calculate percentile for each stat
+            float strengthPercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.Strength);
+            float techniquePercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.Technique);
+            float staminaPercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.Stamina);
+            float teamWorkPercentile = CalculatePercentile(member, allMembers, TeamMember.StatType.TeamWork);
+
+            int starRating = CalculateTeamMemberStarRating(member);
+
+            return $"Overall: {starRating}★ | Strength: {strengthPercentile:F0}% | Technique: {techniquePercentile:F0}% | Stamina: {staminaPercentile:F0}% | Teamwork: {teamWorkPercentile:F0}%";
+        }
     }
 }
+
