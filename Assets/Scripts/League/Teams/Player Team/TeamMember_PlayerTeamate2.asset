@@ -16,14 +16,15 @@ MonoBehaviour:
   memberIcon: {fileID: 0}
   memberPrefab: {fileID: 0}
   memberDescription: 
-  age: 24
-  attitude: 1
+  age: 28
+  attitude: 0
   characterStats:
-    strength: 5
+    strength: 6
     stamina: 5
-    technique: 5
-    teamWork: 5
+    technique: 6
+    teamWork: 7
   level: 1
   experience: 0
   xpToNextLevel: 100
   salary: 50
+  racesAvailableFor: 999999

@@ -16,7 +16,7 @@ MonoBehaviour:
   memberIcon: {fileID: 0}
   memberPrefab: {fileID: 0}
   memberDescription: 
-  age: 23
+  age: 32
   attitude: 4
   characterStats:
     strength: 5
@@ -27,3 +27,4 @@ MonoBehaviour:
   experience: 0
   xpToNextLevel: 100
   salary: 50
+  racesAvailableFor: 999999

@@ -1346,6 +1346,19 @@ public class SaveSystem : MonoBehaviour
         saveData.playerData.energy = 100f;
         saveData.playerData.coins = 50f;
         
+        // Capture current team member data from PlayerManager (preserves attitudes and other ScriptableObject settings)
+        if (PlayerManager.Instance != null && PlayerManager.Instance.team != null && PlayerManager.Instance.team.Count > 0)
+        {
+            saveData.playerData.teamMembers = new TeamMemberSaveData[PlayerManager.Instance.team.Count];
+            for (int i = 0; i < PlayerManager.Instance.team.Count; i++)
+            {
+                if (PlayerManager.Instance.team[i] != null)
+                {
+                    saveData.playerData.teamMembers[i] = new TeamMemberSaveData(PlayerManager.Instance.team[i]);
+                }
+            }
+        }
+        
         // Set fresh game progress
         saveData.gameProgress.gameStarted = true;
         saveData.gameProgress.difficulty = 1f;
