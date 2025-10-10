@@ -12,6 +12,11 @@ public class TvSettingsUi : MonoBehaviour
     {
         if (quickSaveButton != null)
         {
+            if (SaveSystem.Instance == null)
+            {
+                Debug.LogError("TvSettingsUi: SaveSystem instance is null. Quick Save button will be disabled.");
+                return;
+            }
             quickSaveButton.onClick.AddListener(QuickSave);
             quickSaveButton.interactable = SaveSystem.Instance != null && SaveSystem.Instance.WasLoadedFromSave || SaveSystem.Instance.IsNewGame;
         }

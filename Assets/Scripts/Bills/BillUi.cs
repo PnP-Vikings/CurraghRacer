@@ -20,7 +20,7 @@ public class BillUi : MonoBehaviour
         
         
         billName.text = bill.billName;
-        billAmountText.text = "Bill Amount: €" + amountDue.ToString("F2");
+        billAmountText.text = "Amount: €" + amountDue.ToString("F2");
         daysTillDueText.text = "Days Till Due: " + daysTillDue.ToString();
         
         if (daysTillDue <= 0)

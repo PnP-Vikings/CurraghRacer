@@ -278,7 +278,7 @@ namespace League
                 var raceDay = currentLeague.raceDays[i];
                 foreach (var race in raceDay.races)
                 {
-                    if (race.teams?.Any(t => t.teamType == TeamType.Player) == true && !race.processed)
+                    if (race.teams?.Any(t => t != null && t.teamType == TeamType.Player) == true && !race.processed)
                     {
                         return race;
                     }
@@ -299,7 +299,7 @@ namespace League
             var currentRaceDay = currentLeague.raceDays[currentLeague.currentRace];
             foreach (var race in currentRaceDay.races)
             {
-                if (race.teams?.Any(t => t.teamType == TeamType.Player) == true && !race.processed)
+                if (race.teams?.Any(t => t != null && t.teamType == TeamType.Player) == true && !race.processed)
                 {
                     race.positions = allPositions;
                     race.processed = true;

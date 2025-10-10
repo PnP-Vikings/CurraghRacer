@@ -15,6 +15,8 @@ GameObject:
   - component: {fileID: 2191016002663425716}
   - component: {fileID: 8150581909809056547}
   - component: {fileID: 3942734090947527062}
+  - component: {fileID: 6272484885003525780}
+  - component: {fileID: 2148385281798546612}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -60,6 +62,7 @@ MonoBehaviour:
   OnGameStarted:
     m_PersistentCalls:
       m_Calls: []
+  totalPlayTime: 0
   miniGameWorkScenes:
   - BeerPourMinigame
   - DishWashingMinigame
@@ -183,3 +186,43 @@ MonoBehaviour:
   enablePersistence: 0
   saveFileName: completed_races.json
   completedRaceObjects: []
+--- !u!114 &6272484885003525780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1022f2590db39984e8cbdea5cd2d0477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricityBillAmount: 20
+  heatingBillAmount: 15
+  rentBillAmount: 50
+  totalBillsAmount: 0
+  bills: []
+  recurringPaidBills: []
+  billPrefab: {fileID: 2254747351404544138, guid: 173888b92f992d3439d11505aa75e6a4, type: 3}
+--- !u!114 &2148385281798546612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df9e9961ee5066459b817f46c2b4230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTeam: {fileID: 0}
+  teamManager: {fileID: 0}
+  activeCrewMembers: []
+  benchTeamMembers: []
+  racersForHire:
+  - {fileID: 11400000, guid: bc8afc5fdfcc08240a72a736d9a239fd, type: 2}
+  - {fileID: 11400000, guid: 5eaef92c11f77a54ea33e32618c8ca63, type: 2}
+  - {fileID: 11400000, guid: 543b62c2d2109534dabaea32e198e8f3, type: 2}
+  isAllActiveTeamMembersHealthy: 0

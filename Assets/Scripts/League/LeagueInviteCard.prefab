@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 2079438521999883793}
   - component: {fileID: 7266049558979670199}
   - component: {fileID: 7094615972615993738}
+  - component: {fileID: 6143853205310386948}
   m_Layer: 5
   m_Name: DeclineLeagueInvite
   m_TagString: Untagged
@@ -177,6 +178,18 @@ MonoBehaviour:
       Data3: 1337274268
       Data4: -131705617
     Path: event:/UI/Calender
+--- !u!114 &6143853205310386948
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 249763782431018055}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &640428740136366388
 GameObject:
   m_ObjectHideFlags: 0
@@ -481,6 +494,7 @@ GameObject:
   - component: {fileID: 2138935730566988132}
   - component: {fileID: 7431796821407216697}
   - component: {fileID: 839241707129764051}
+  - component: {fileID: 3904141222010951067}
   m_Layer: 5
   m_Name: AcceptLeagueInvite
   m_TagString: Untagged
@@ -645,6 +659,18 @@ MonoBehaviour:
       Data3: 1337274268
       Data4: -131705617
     Path: event:/UI/Calender
+--- !u!114 &3904141222010951067
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3150409439674393525}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3790138087582847214
 GameObject:
   m_ObjectHideFlags: 0

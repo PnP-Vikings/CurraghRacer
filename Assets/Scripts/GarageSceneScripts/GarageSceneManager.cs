@@ -24,6 +24,12 @@ public class GarageSceneManager : MonoBehaviour
 
     public void CheckAndShowLeagueInvite()
     {
+        if(LeagueController.Instance == null)
+        {
+            Debug.LogWarning("LeagueController instance is null. Cannot check league status.");
+            return;
+        }
+        
         if(LeagueController.Instance.currentLeague == null || !LeagueController.Instance.currentLeague.playerHasJoined)
         {
             Debug.Log("Player not in league, showing join message after delay.");

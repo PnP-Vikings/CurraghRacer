@@ -26,6 +26,7 @@ public class SaveData
     public CalendarSaveData calendarData;
     [Header("Bill Data")]
     public BillSaveData billData;
+   
 
     public SaveData()
     {
@@ -63,6 +64,9 @@ public class TeamMemberSaveData
     public CharacterStatsSaveData stats;
     public int level;
     public int experience;
+    public int racesAvailableFor;
+    public TeamMemberFitness fitnessStatus;
+    public Happiness happiness;
     
     public TeamMemberSaveData() { }
     
@@ -74,8 +78,37 @@ public class TeamMemberSaveData
         stats = new CharacterStatsSaveData(member.characterStats);
         level = member.level;
         experience = member.experience;
+        racesAvailableFor = member.racesAvailableFor;
+        
+        // Deep copy fitness status
+        if (member.fitness != null)
+        {
+            fitnessStatus = new TeamMemberFitness
+            {
+                currentFitness = member.fitness.currentFitness,
+                maxFitness = member.fitness.maxFitness,
+                recoveryRate = member.fitness.recoveryRate,
+                HungerLevel = member.fitness.HungerLevel,
+                maxHungerLevel = member.fitness.maxHungerLevel,
+                injuryStatus = member.fitness.injuryStatus,
+                currentPhysicalState = member.fitness.currentPhysicalState
+            };
+        }
+        
+        // Deep copy happiness
+        if (member.happiness != null)
+        {
+            happiness = new Happiness
+            {
+                currentHappiness = member.happiness.currentHappiness,
+                maxHappiness = member.happiness.maxHappiness,
+                currentMood = member.happiness.currentMood
+            };
+        }
     }
 }
+
+
 
 [System.Serializable]
 public class CharacterStatsSaveData
@@ -161,7 +194,9 @@ public class TeamSaveData
     public List<int> recentResults;
     public SeasonStatsSaveData currentSeasonStats;
     public SeasonStatsSaveData lifetimeStats;
+    public TeamMemberManagerSaveData teamManager;
     public TeamMemberSaveData[] teamMembers;
+    public TeamMemberSaveData[] bench;
     public ColorSaveData teamColor;
     
     public TeamSaveData()
@@ -172,6 +207,14 @@ public class TeamSaveData
         teamColor = new ColorSaveData();
     }
 }
+
+[System.Serializable]
+public class TeamMemberManagerSaveData : TeamMemberSaveData
+{
+  
+ 
+}
+  
 
 [System.Serializable]
 public class ColorSaveData
@@ -360,8 +403,9 @@ public class SaveSystem : MonoBehaviour
             string jsonData = File.ReadAllText(filePath);
             SaveData saveData = JsonUtility.FromJson<SaveData>(jsonData);
 
-            // Set the flag before applying save data
+            // Set the flags before applying save data
             _wasLoadedFromSave = true;
+            _isNewGame = false;
 
             ApplySaveData(saveData);
 
@@ -486,8 +530,8 @@ public class SaveSystem : MonoBehaviour
 
             if (PlayerManager.Instance.team != null)
             {
-                saveData.playerData.teamMembers = new TeamMemberSaveData[PlayerManager.Instance.team.Length];
-                for (int i = 0; i < PlayerManager.Instance.team.Length; i++)
+                saveData.playerData.teamMembers = new TeamMemberSaveData[PlayerManager.Instance.team.Count];
+                for (int i = 0; i < PlayerManager.Instance.team.Count; i++)
                 {
                     saveData.playerData.teamMembers[i] = new TeamMemberSaveData(PlayerManager.Instance.team[i]);
                 }
@@ -634,7 +678,7 @@ public class SaveSystem : MonoBehaviour
             // Restore team members
             if (saveData.playerData.teamMembers != null && PlayerManager.Instance.team != null)
             {
-                for (int i = 0; i < Mathf.Min(saveData.playerData.teamMembers.Length, PlayerManager.Instance.team.Length); i++)
+                for (int i = 0; i < Mathf.Min(saveData.playerData.teamMembers.Length, PlayerManager.Instance.team.Count); i++)
                 {
                     RestoreTeamMember(PlayerManager.Instance.team[i], saveData.playerData.teamMembers[i]);
                 }
@@ -739,6 +783,33 @@ public class SaveSystem : MonoBehaviour
             teamQuality = team.teamQuality,
             teamExperience = team.teamExperience,
             currentForm = team.currentForm,
+            teamManager =  team.teamManager != null ? new TeamMemberManagerSaveData() 
+            { 
+                memberName = team.teamManager.memberName,
+                age = team.teamManager.age,
+                attitude = team.teamManager.attitude.ToString(),
+                stats = new CharacterStatsSaveData(team.teamManager.characterStats),
+                level = team.teamManager.level,
+                experience = team.teamManager.experience,
+                racesAvailableFor = team.teamManager.racesAvailableFor,
+                fitnessStatus = team.teamManager.fitness != null ? new TeamMemberFitness
+                {
+                    currentFitness = team.teamManager.fitness.currentFitness,
+                    maxFitness = team.teamManager.fitness.maxFitness,
+                    recoveryRate = team.teamManager.fitness.recoveryRate,
+                    HungerLevel = team.teamManager.fitness.HungerLevel,
+                    maxHungerLevel = team.teamManager.fitness.maxHungerLevel,
+                    injuryStatus = team.teamManager.fitness.injuryStatus,
+                    currentPhysicalState = team.teamManager.fitness.currentPhysicalState
+                } : null,
+                happiness = team.teamManager.happiness != null ? new Happiness
+                {
+                    currentHappiness = team.teamManager.happiness.currentHappiness,
+                    maxHappiness = team.teamManager.happiness.maxHappiness,
+                    currentMood = team.teamManager.happiness.currentMood
+                } : null
+            } : null,
+            bench =  team.bench != null ? new TeamMemberSaveData[team.bench.Count] : null,
             recentResults = new List<int>(team.recentResults),
             teamColor = new ColorSaveData(team.teamColor)
         };
@@ -763,8 +834,8 @@ public class SaveSystem : MonoBehaviour
         // Save team members
         if (team.teamMembers != null)
         {
-            teamSave.teamMembers = new TeamMemberSaveData[team.teamMembers.Length];
-            for (int i = 0; i < team.teamMembers.Length; i++)
+            teamSave.teamMembers = new TeamMemberSaveData[team.teamMembers.Count];
+            for (int i = 0; i < team.teamMembers.Count; i++)
             {
                 teamSave.teamMembers[i] = new TeamMemberSaveData(team.teamMembers[i]);
             }
@@ -777,10 +848,17 @@ public class SaveSystem : MonoBehaviour
     {
         if (member == null || saveData == null) return;
 
+        // Skip restoring if this is empty/default data (like uninitialized bench members)
+        if (string.IsNullOrEmpty(saveData.memberName) && saveData.age == 0)
+        {
+            Debug.Log("Skipping restoration of empty TeamMember data");
+            return;
+        }
+
         member.memberName = saveData.memberName;
         member.age = saveData.age;
 
-        if (System.Enum.TryParse<Attitude>(saveData.attitude, out Attitude attitude))
+        if (!string.IsNullOrEmpty(saveData.attitude) && System.Enum.TryParse<Attitude>(saveData.attitude, out Attitude attitude))
         {
             member.attitude = attitude;
         }
@@ -792,6 +870,33 @@ public class SaveSystem : MonoBehaviour
 
         member.level = saveData.level;
         member.experience = saveData.experience;
+        member.racesAvailableFor = saveData.racesAvailableFor;
+        
+        // Restore fitness status
+        if (saveData.fitnessStatus != null)
+        {
+            member.fitness = new TeamMemberFitness
+            {
+                currentFitness = saveData.fitnessStatus.currentFitness,
+                maxFitness = saveData.fitnessStatus.maxFitness,
+                recoveryRate = saveData.fitnessStatus.recoveryRate,
+                HungerLevel = saveData.fitnessStatus.HungerLevel,
+                maxHungerLevel = saveData.fitnessStatus.maxHungerLevel,
+                injuryStatus = saveData.fitnessStatus.injuryStatus,
+                currentPhysicalState = saveData.fitnessStatus.currentPhysicalState
+            };
+        }
+        
+        // Restore happiness
+        if (saveData.happiness != null)
+        {
+            member.happiness = new Happiness
+            {
+                currentHappiness = saveData.happiness.currentHappiness,
+                maxHappiness = saveData.happiness.maxHappiness,
+                currentMood = saveData.happiness.currentMood
+            };
+        }
     }
 
     private void RestoreLeaguesData(LeagueInfoSaveData[] leaguesData)
@@ -861,6 +966,8 @@ public class SaveSystem : MonoBehaviour
 
     private void RestoreTeamsData(TeamSaveData[] teamsData)
     {
+        Debug.Log($"Starting RestoreTeamsData with {teamsData.Length} teams");
+        
         foreach (var teamSave in teamsData)
         {
             // Find the corresponding team in the leagues
@@ -873,12 +980,52 @@ public class SaveSystem : MonoBehaviour
 
             if (foundTeam != null)
             {
+                Debug.Log($"Restoring data for team: {foundTeam.teamName}");
+                
                 // Restore team data
                 foundTeam.teamDescription = teamSave.teamDescription;
                 foundTeam.teamQuality = teamSave.teamQuality;
                 foundTeam.teamExperience = teamSave.teamExperience;
                 foundTeam.currentForm = teamSave.currentForm;
                 foundTeam.recentResults = new List<int>(teamSave.recentResults);
+                
+                // Restore team manager
+                if (teamSave.teamManager != null)
+                {
+                    Debug.Log($"Team {foundTeam.teamName} has manager data in save: {teamSave.teamManager.memberName}");
+                    
+                    if (foundTeam.teamManager == null)
+                    {
+                        // Create a new TeamMember instance for the manager if it doesn't exist
+                        foundTeam.teamManager = ScriptableObject.CreateInstance<TeamMember>();
+                        Debug.Log($"Created new teamManager instance for team {foundTeam.teamName}");
+                    }
+                    else
+                    {
+                        Debug.Log($"Team {foundTeam.teamName} already has a manager instance: {foundTeam.teamManager.memberName}");
+                    }
+                    
+                    Debug.Log($"Restoring manager for team {foundTeam.teamName}: {teamSave.teamManager.memberName}");
+                    RestoreTeamMember(foundTeam.teamManager, teamSave.teamManager);
+                    Debug.Log($"Manager restored. Current name: {foundTeam.teamManager.memberName}, Age: {foundTeam.teamManager.age}");
+                }
+                else
+                {
+                    Debug.LogWarning($"Team {foundTeam.teamName} has NO manager data in save file");
+                }
+                
+                // Restore bench members
+                if (teamSave.bench != null && foundTeam.bench != null)
+                {
+                    for (int i = 0; i < Mathf.Min(teamSave.bench.Length, foundTeam.bench.Count); i++)
+                    {
+                        if (foundTeam.bench[i] == null)
+                        {
+                            foundTeam.bench[i] = ScriptableObject.CreateInstance<TeamMember>();
+                        }
+                        RestoreTeamMember(foundTeam.bench[i], teamSave.bench[i]);
+                    }
+                }
 
                 // Restore team color
                 if (teamSave.teamColor != null)
@@ -900,11 +1047,13 @@ public class SaveSystem : MonoBehaviour
                 // Restore team members
                 if (teamSave.teamMembers != null && foundTeam.teamMembers != null)
                 {
-                    for (int i = 0; i < Mathf.Min(teamSave.teamMembers.Length, foundTeam.teamMembers.Length); i++)
+                    for (int i = 0; i < Mathf.Min(teamSave.teamMembers.Length, foundTeam.teamMembers.Count); i++)
                     {
                         RestoreTeamMember(foundTeam.teamMembers[i], teamSave.teamMembers[i]);
                     }
                 }
+                
+                
             }
         }
     }
@@ -1128,6 +1277,12 @@ public class SaveSystem : MonoBehaviour
                                 if (team.currentSeasonStats != null)
                                 {
                                     team.currentSeasonStats.finishes.Clear();
+                                }
+                                
+                                // Reset team manager
+                                if (team.teamManager != null)
+                                {
+                                    team.teamManager.ResetAllStats(team.teamQuality);
                                 }
                                 
                                 // Reset team members

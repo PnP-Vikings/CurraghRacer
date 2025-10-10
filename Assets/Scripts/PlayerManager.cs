@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using League;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -6,7 +7,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance { get; private set; }
     public  Team playerTeam; 
-    public TeamMember[] team;
+    public List<TeamMember> team;
     public float energy= 100f; // Default energy value
     public float coins = 50f; // Default coins value
     public PlayerStatsView playerStatsView;
@@ -32,14 +33,25 @@ public class PlayerManager : MonoBehaviour
        {
            playerTeam = LeagueController.Instance.currentLeague.GetPlayerTeam();
        }
-        team = playerTeam.teamMembers;
-       
+       if (playerTeam != null)
+       {
+           team = playerTeam.teamMembers;
+
+           if (TeamManager.Instance != null)
+           {
+               TeamManager.Instance.SetPlayerTeam(playerTeam);
+               TeamManager.Instance.SetTeamManager(playerTeam.teamManager);
+               TeamManager.Instance.SetActiveCrewMembers(playerTeam.teamMembers);
+               TeamManager.Instance.SetBenchTeamMembers(playerTeam.bench);
+           }
+       }
+
     }
 
     public CharacterStats GetPlayerStats()
     {
      
-        if (team.Length > 0)
+        if (team.Count > 0)
         {
             float totalStrength = 0f;
             float totalStamina = 0f;
