@@ -9,7 +9,18 @@ public class BenchTeamMemberUiHandler : MonoBehaviour
     public TMP_Text memberNameText,
         memberStarRatingText;
     public Image memberIconImage;
+    public TeamMember teamMember;
+    
+  
 
+    public void ClearMemberData()
+    {
+        memberNameText.text = "N/A";
+        memberStarRatingText.text = "Star Rating: N/A";
+        memberIconImage.sprite = null;
+        memberIconImage.gameObject.SetActive(false);
+        teamMember = null;
+    }
     public void SetMemberData(TeamMember member)
     {
         if (memberIconImage.sprite != null)
@@ -34,7 +45,8 @@ public class BenchTeamMemberUiHandler : MonoBehaviour
             memberStarRatingText.text = "Star Rating: N/A";
             Debug.LogWarning("LeagueController or currentLeague is null!");
         }
-
+    
+        teamMember = member;
       
     }
 }

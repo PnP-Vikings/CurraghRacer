@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Serialization;
 
 public class TeamManager : MonoBehaviour
 {
@@ -14,7 +15,31 @@ public class TeamManager : MonoBehaviour
     public List<HireableTeamMembers> startingHireableRacers;
     public List<HireableTeamMembers> racersForHire;
     public bool isAllActiveTeamMembersHealthy = false;
-    public UnityEvent OnTeamMemberHired;
+    [FormerlySerializedAs("OnTeamMemberHired")] public UnityEvent onTeamMemberHired;
+    public UnityEvent onTeamMembersUpdated;
+    
+    public TeamMember selectedActiveTeamMember;
+    public TeamMember selectedBenchTeamMember;
+    
+    public void ClearSelectedTeamMembers()    
+    {
+        selectedActiveTeamMember = null;
+        selectedBenchTeamMember = null;
+    }
+    
+    public void TrySwapSelectedMembers()
+    {
+        if (selectedActiveTeamMember != null && selectedBenchTeamMember != null)
+        {
+            SwapTeamMembers(selectedBenchTeamMember, selectedActiveTeamMember);
+            ClearSelectedTeamMembers();
+        }
+        else
+        {
+            Debug.LogWarning("Both an active team member and a bench team member must be selected to swap.");
+        }
+    }
+    
     public void SetTeamManager(TeamMember manager)
     {
         teamManager = manager;
@@ -41,6 +66,7 @@ public class TeamManager : MonoBehaviour
             Debug.Log("Updating team lists in TeamManager.");
             SetActiveCrewMembers(playerTeam.teamMembers);
             SetBenchTeamMembers(playerTeam.bench);
+            onTeamMembersUpdated?.Invoke();
         }
         else
         {
@@ -98,7 +124,7 @@ public class TeamManager : MonoBehaviour
             PlayerStatsView.Instance.ClearInfo();
             PlayerStatsView.Instance.DisplayInfo($"Hired {racer.memberName} for {racer.hireCost} coins.");
             Debug.Log($"Hired {racer.memberName} to the team.");
-            OnTeamMemberHired?.Invoke();
+            onTeamMemberHired?.Invoke();
         }
         else
         { 
@@ -137,13 +163,13 @@ public class TeamManager : MonoBehaviour
     
   public void SwapTeamMembers(TeamMember memberToActivate, TeamMember memberToBench)
     {
-        if (playerTeam.teamMembers.Contains(memberToActivate) && playerTeam.bench.Contains(memberToBench))
+        if (playerTeam.teamMembers.Contains(memberToBench) && playerTeam.bench.Contains(memberToActivate))
         {
-            playerTeam.teamMembers.Remove(memberToActivate);
-            playerTeam.bench.Remove(memberToBench);
+            playerTeam.teamMembers.Remove(memberToBench);
+            playerTeam.bench.Remove(memberToActivate);
             
-            playerTeam.teamMembers.Add(memberToBench);
-            playerTeam.bench.Add(memberToActivate);
+            playerTeam.teamMembers.Add(memberToActivate);
+            playerTeam.bench.Add(memberToBench);
             
             UpdateLists();
             Debug.Log($"Swapped {memberToActivate.memberName} with {memberToBench.memberName}.");

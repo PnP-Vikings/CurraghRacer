@@ -31,6 +31,13 @@ public class Team : ScriptableObject
 
     public List<TeamMember> bench = new List<TeamMember>();
     
+    [Header("Default Team Setup (for new games)")]
+    [Tooltip("Original default team members - used to restore team when starting a new game.")]
+    public List<TeamMember> defaultTeamMembers = new List<TeamMember>();
+    
+    [Tooltip("Original default bench members - used to restore bench when starting a new game.")]
+    public List<TeamMember> defaultBench = new List<TeamMember>();
+
     [Header("Current Season Stats")]
     [Tooltip("Wins, draws, losses, and points for the current season.")]
     public SeasonStats currentSeasonStats;
@@ -151,6 +158,28 @@ public class Team : ScriptableObject
     {
         lifetimeStats = new SeasonStats();
     }
+    
+    /// <summary>
+    /// Restores the team to its default state for a new game.
+    /// This includes resetting team members and bench to their original defaults.
+    /// </summary>
+    public void RestoreDefaultTeamSetup()
+    {
+        // Restore team members from defaults
+        if (defaultTeamMembers != null && defaultTeamMembers.Count > 0)
+        {
+            teamMembers = new List<TeamMember>(defaultTeamMembers);
+        }
+        
+        // Restore bench from defaults
+        if (defaultBench != null && defaultBench.Count > 0)
+        {
+            bench = new List<TeamMember>(defaultBench);
+        }
+        
+        Debug.Log($"Restored default team setup for {teamName}. Team Members: {teamMembers.Count}, Bench: {bench.Count}");
+    }
+    
     /// <summary>
     /// Gets the team's combined stats from all team members.
     /// Returns average stats if team has members, otherwise generates stats based on team quality.

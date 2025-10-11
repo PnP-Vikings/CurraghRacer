@@ -886,6 +886,21 @@ public class SaveSystem : MonoBehaviour
             
             TeamManager.Instance.racersForHire = saveData.teamManagerData.racersForHire != null ? new List<HireableTeamMembers>(saveData.teamManagerData.racersForHire) : new List<HireableTeamMembers>();
             TeamManager.Instance.isAllActiveTeamMembersHealthy = saveData.teamManagerData.isAllActiveTeamMembersHealthy;
+            
+            // Update the playerTeam lists to reference the same restored instances
+            // This ensures SwapTeamMembers works correctly
+            if (TeamManager.Instance.playerTeam != null)
+            {
+                TeamManager.Instance.playerTeam.teamMembers = TeamManager.Instance.activeCrewMembers;
+                TeamManager.Instance.playerTeam.bench = TeamManager.Instance.benchTeamMembers;
+                
+                // Update PlayerManager's team reference to match the restored team members
+                if (PlayerManager.Instance != null)
+                {
+                    PlayerManager.Instance.playerTeam = TeamManager.Instance.playerTeam;
+                    PlayerManager.Instance.team = TeamManager.Instance.activeCrewMembers;
+                }
+            }
         }
     }
 
@@ -1386,6 +1401,13 @@ public class SaveSystem : MonoBehaviour
                         {
                             if (team != null)
                             {
+                                if(team.teamType == TeamType.Player)
+                                {
+                                    // Restore team to default setup (restores original team members and bench)
+                                    team.RestoreDefaultTeamSetup();
+                                }
+                               
+                                
                                 team.currentForm = 50f;
                                 team.recentResults.Clear();
                                 
@@ -1495,15 +1517,27 @@ public class SaveSystem : MonoBehaviour
         //Set Fresh Bench Data - only team manager if available
         if (TeamManager.Instance != null)
         {
-            if (TeamManager.Instance.benchTeamMembers.Count > 1)
+            // After RestoreDefaultTeamSetup has been called in InitializeNewGameState,
+            // sync TeamManager lists with the playerTeam's restored default lists
+            if (TeamManager.Instance.playerTeam != null)
             {
-                if (TeamManager.Instance.teamManager != null)
+                // Use the already-restored team members and bench from the playerTeam ScriptableObject
+                TeamManager.Instance.activeCrewMembers = TeamManager.Instance.playerTeam.teamMembers;
+                TeamManager.Instance.benchTeamMembers = TeamManager.Instance.playerTeam.bench;
+            }
+            else
+            {
+                // Fallback: clear bench if no player team exists
+                if (TeamManager.Instance.benchTeamMembers.Count > 1)
                 {
-                    TeamManager.Instance.benchTeamMembers = new List<TeamMember> { TeamManager.Instance.teamManager };
-                }
-                else
-                {
-                    TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+                    if (TeamManager.Instance.teamManager != null)
+                    {
+                        TeamManager.Instance.benchTeamMembers = new List<TeamMember> { TeamManager.Instance.teamManager };
+                    }
+                    else
+                    {
+                        TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+                    }
                 }
             }
             
