@@ -27,7 +27,23 @@ public class TeamManagerUi : MonoBehaviour
    
    void OnEnable()
    {
-       if (teamManagerUiParent != null && teamManagerUiPrefab != null)
+     RefreshManagerUi();
+     
+     if(TeamManager.Instance != null)
+     {
+         TeamManager.Instance.OnTeamMemberHired.AddListener(RefreshManagerUi);
+     }
+     else
+     {
+         Debug.LogError("TeamManagerUi: TeamManager instance is null on OnEnable.");
+     }
+   }
+   
+   
+   public void RefreshManagerUi()
+   {
+       ClearTeamMemberUis();
+         if (teamManagerUiParent != null && teamManagerUiPrefab != null)
        {
            if (TeamManager.Instance != null)
            {
@@ -74,7 +90,6 @@ public class TeamManagerUi : MonoBehaviour
            }
        }
    }
-   
    void OnDisable()
    {
        ClearTeamMemberUis();

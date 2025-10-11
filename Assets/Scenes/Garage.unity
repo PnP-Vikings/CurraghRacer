@@ -7983,6 +7983,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: SettingsBulletinBoard
       objectReference: {fileID: 0}
+    - target: {fileID: 2254177849537665379, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7403869330894755503, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[1].m_Target
       value: 

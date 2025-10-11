@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.Events;
 
 public class TeamManager : MonoBehaviour
 {
@@ -13,7 +14,7 @@ public class TeamManager : MonoBehaviour
     public List<HireableTeamMembers> startingHireableRacers;
     public List<HireableTeamMembers> racersForHire;
     public bool isAllActiveTeamMembersHealthy = false;
-    
+    public UnityEvent OnTeamMemberHired;
     public void SetTeamManager(TeamMember manager)
     {
         teamManager = manager;
@@ -69,6 +70,7 @@ public class TeamManager : MonoBehaviour
             PlayerStatsView.Instance.ClearInfo();
             PlayerStatsView.Instance.DisplayInfo($"Hired {racer.memberName} for {racer.hireCost} coins.");
             Debug.Log($"Hired {racer.memberName} to the team.");
+            OnTeamMemberHired?.Invoke();
         }
         else
         { 
