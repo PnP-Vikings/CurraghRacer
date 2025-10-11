@@ -27,7 +27,9 @@ public class SaveData
     public CalendarSaveData calendarData;
     [Header("Bill Data")]
     public BillSaveData billData;
-   
+    
+    [Header("Team Manager Data")]
+    public TeamManagerSaveData teamManagerData;   
 
     public SaveData()
     {
@@ -37,6 +39,7 @@ public class SaveData
         gameProgress = new GameProgressData();
         calendarData = new CalendarSaveData();
         billData = new BillSaveData();
+        teamManagerData = new TeamManagerSaveData();
     }
 }
 
@@ -55,6 +58,64 @@ public class BillSaveData
     public List<Bill> bills;
     public List<Bill> recurringPaidBills;
 }
+
+[System.Serializable]
+public class TeamManagerSaveData 
+{
+  public Team playerTeam;
+  public TeamMember teamManager;
+  public TeamMemberSaveData[] activeCrewMembers;
+  public TeamMemberSaveData[] benchTeamMembers;
+  public List<HireableTeamMembers> racersForHire;
+  public bool isAllActiveTeamMembersHealthy = false;
+
+  public TeamManagerSaveData() {}
+  
+  public TeamManagerSaveData(TeamManager manager)
+  {
+      playerTeam = manager.playerTeam;
+      teamManager = manager.teamManager;
+      
+      // Convert active crew members to save data
+      if (manager.activeCrewMembers != null && manager.activeCrewMembers.Count > 0)
+      {
+          activeCrewMembers = new TeamMemberSaveData[manager.activeCrewMembers.Count];
+          for (int i = 0; i < manager.activeCrewMembers.Count; i++)
+          {
+              if (manager.activeCrewMembers[i] != null)
+              {
+                  activeCrewMembers[i] = new TeamMemberSaveData(manager.activeCrewMembers[i]);
+              }
+          }
+      }
+      else
+      {
+          activeCrewMembers = new TeamMemberSaveData[0];
+      }
+      
+      // Convert bench team members to save data
+      if (manager.benchTeamMembers != null && manager.benchTeamMembers.Count > 0)
+      {
+          benchTeamMembers = new TeamMemberSaveData[manager.benchTeamMembers.Count];
+          for (int i = 0; i < manager.benchTeamMembers.Count; i++)
+          {
+              if (manager.benchTeamMembers[i] != null)
+              {
+                  benchTeamMembers[i] = new TeamMemberSaveData(manager.benchTeamMembers[i]);
+              }
+          }
+      }
+      else
+      {
+          benchTeamMembers = new TeamMemberSaveData[0];
+      }
+      
+      racersForHire = manager.racersForHire != null ? new List<HireableTeamMembers>(manager.racersForHire) : new List<HireableTeamMembers>();
+      isAllActiveTeamMembersHealthy = manager.isAllActiveTeamMembersHealthy;
+  }
+ 
+}
+
 
 [System.Serializable]
 public class TeamMemberSaveData
@@ -664,6 +725,13 @@ public class SaveSystem : MonoBehaviour
             };
             saveData.billData = billData;
         }
+        
+        // Save Team Manager Data
+        if (TeamManager.Instance != null)
+        {
+            saveData.teamManagerData = new TeamManagerSaveData(TeamManager.Instance);
+        }
+        
 
         return saveData;
     }
@@ -771,6 +839,53 @@ public class SaveSystem : MonoBehaviour
             {
                 BillsController.Instance.GenerateBills();
             }
+        }
+        // Apply Team Manager Data
+        if (TeamManager.Instance != null && saveData.teamManagerData != null)
+        {
+            TeamManager.Instance.playerTeam = saveData.teamManagerData.playerTeam;
+            TeamManager.Instance.teamManager = saveData.teamManagerData.teamManager;
+            
+            // Restore active crew members
+            if (saveData.teamManagerData.activeCrewMembers != null && saveData.teamManagerData.activeCrewMembers.Length > 0)
+            {
+                TeamManager.Instance.activeCrewMembers = new List<TeamMember>();
+                for (int i = 0; i < saveData.teamManagerData.activeCrewMembers.Length; i++)
+                {
+                    if (saveData.teamManagerData.activeCrewMembers[i] != null)
+                    {
+                        TeamMember crewMember = ScriptableObject.CreateInstance<TeamMember>();
+                        RestoreTeamMember(crewMember, saveData.teamManagerData.activeCrewMembers[i]);
+                        TeamManager.Instance.activeCrewMembers.Add(crewMember);
+                    }
+                }
+            }
+            else
+            {
+                TeamManager.Instance.activeCrewMembers = new List<TeamMember>();
+            }
+            
+            // Restore bench team members
+            if (saveData.teamManagerData.benchTeamMembers != null && saveData.teamManagerData.benchTeamMembers.Length > 0)
+            {
+                TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+                for (int i = 0; i < saveData.teamManagerData.benchTeamMembers.Length; i++)
+                {
+                    if (saveData.teamManagerData.benchTeamMembers[i] != null)
+                    {
+                        TeamMember benchMember = ScriptableObject.CreateInstance<TeamMember>();
+                        RestoreTeamMember(benchMember, saveData.teamManagerData.benchTeamMembers[i]);
+                        TeamManager.Instance.benchTeamMembers.Add(benchMember);
+                    }
+                }
+            }
+            else
+            {
+                TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+            }
+            
+            TeamManager.Instance.racersForHire = saveData.teamManagerData.racersForHire != null ? new List<HireableTeamMembers>(saveData.teamManagerData.racersForHire) : new List<HireableTeamMembers>();
+            TeamManager.Instance.isAllActiveTeamMembersHealthy = saveData.teamManagerData.isAllActiveTeamMembersHealthy;
         }
     }
 
@@ -1393,6 +1508,9 @@ public class SaveSystem : MonoBehaviour
             }
             
             TeamManager.Instance.ResetHireableRacersForHire();
+            
+            // Save the default TeamManager settings for new game
+            saveData.teamManagerData = new TeamManagerSaveData(TeamManager.Instance);
         }
         
         //Clear list

@@ -34,9 +34,35 @@ public class TeamManager : MonoBehaviour
         benchTeamMembers = benchMembers;
     }
     
+    public void UpdateLists()
+    {
+        if(playerTeam != null)
+        {
+            Debug.Log("Updating team lists in TeamManager.");
+            SetActiveCrewMembers(playerTeam.teamMembers);
+            SetBenchTeamMembers(playerTeam.bench);
+        }
+        else
+        {
+            Debug.LogWarning("Player team is not set in TeamManager.");
+            return;
+        }
+     
+    }
+
+    public void SetBenchTeamMembers()
+    {
+        if(playerTeam == null)
+        {
+            Debug.LogWarning("Player team is not set in TeamManager.");
+            return;
+        }
+        benchTeamMembers = playerTeam.bench;
+    }
+    
     public void SetPlayerTeam(Team team)
     {
-        playerTeam = team;
+            playerTeam = team;
     }
     
     private void Awake()
@@ -66,7 +92,9 @@ public class TeamManager : MonoBehaviour
         if ( PlayerManager.Instance.PurchaseItem(racer.hireCost,purchaseType: PurchaseType.HireRacer)) // Assuming a max of 3 bench members
         {
             playerTeam.bench.Add(racer);
+            SetBenchTeamMembers();
             racersForHire.Remove(racer);
+            UpdateLists();
             PlayerStatsView.Instance.ClearInfo();
             PlayerStatsView.Instance.DisplayInfo($"Hired {racer.memberName} for {racer.hireCost} coins.");
             Debug.Log($"Hired {racer.memberName} to the team.");
@@ -107,12 +135,31 @@ public class TeamManager : MonoBehaviour
         racersForHire = racersForHire.OrderBy(r => r.hireCost).ToList();
     }
     
+  public void SwapTeamMembers(TeamMember memberToActivate, TeamMember memberToBench)
+    {
+        if (playerTeam.teamMembers.Contains(memberToActivate) && playerTeam.bench.Contains(memberToBench))
+        {
+            playerTeam.teamMembers.Remove(memberToActivate);
+            playerTeam.bench.Remove(memberToBench);
+            
+            playerTeam.teamMembers.Add(memberToBench);
+            playerTeam.bench.Add(memberToActivate);
+            
+            UpdateLists();
+            Debug.Log($"Swapped {memberToActivate.memberName} with {memberToBench.memberName}.");
+        }
+        else
+        {
+            Debug.Log("One or both members not found in their respective lists.");
+        }
+    }
     
     public void AddTeamMember(TeamMember newMember)
     {
         if (playerTeam.teamMembers.Count < 3)
         {
             playerTeam.teamMembers.Add(newMember);
+            UpdateLists();
             Debug.Log($"Added {newMember.memberName} to the team.");
         }
         else
@@ -126,6 +173,7 @@ public class TeamManager : MonoBehaviour
         if (playerTeam.teamMembers.Contains(memberToRemove))
         {
             playerTeam.teamMembers.Remove(memberToRemove);
+            UpdateLists();
             Debug.Log($"Removed {memberToRemove.memberName} from the team.");
         }
         else
