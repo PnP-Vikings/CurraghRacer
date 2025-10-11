@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Calendar;
 using UnityEngine;
 using League;
 
@@ -1376,15 +1377,28 @@ public class SaveSystem : MonoBehaviour
             saveData.calendarData.currentDate = new DateTime(2008, 1, 1).ToString("yyyy-MM-dd");
         }
 
+        //Set Fresh Bench Data - only team manager if available
         if (TeamManager.Instance != null)
         {
             if (TeamManager.Instance.benchTeamMembers.Count > 1)
             {
-                for (int i = 1; i < TeamManager.Instance.benchTeamMembers.Count; i++)
+                if (TeamManager.Instance.teamManager != null)
                 {
-                    TeamManager.Instance.benchTeamMembers.Remove(TeamManager.Instance.benchTeamMembers[i]);
+                    TeamManager.Instance.benchTeamMembers = new List<TeamMember> { TeamManager.Instance.teamManager };
+                }
+                else
+                {
+                    TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
                 }
             }
+            
+            TeamManager.Instance.ResetHireableRacersForHire();
+        }
+        
+        //Clear list
+        if(CompletedRacesManager.Instance != null)
+        {
+            CompletedRacesManager.Instance.ClearAllCompletedRaces();
         }
         
         // Ensure bill data is empty for new game

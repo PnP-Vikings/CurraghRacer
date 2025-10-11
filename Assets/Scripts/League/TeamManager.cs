@@ -10,6 +10,7 @@ public class TeamManager : MonoBehaviour
     public TeamMember teamManager;
     public List<TeamMember> activeCrewMembers;
     public List<TeamMember> benchTeamMembers;
+    public List<HireableTeamMembers> startingHireableRacers;
     public List<HireableTeamMembers> racersForHire;
     public bool isAllActiveTeamMembersHealthy = false;
     
@@ -95,6 +96,13 @@ public class TeamManager : MonoBehaviour
         {
             Debug.Log("All active team members are healthy.");
         }
+    }
+    
+  public void ResetHireableRacersForHire()
+    {
+        racersForHire.Clear();
+        racersForHire = new List<HireableTeamMembers>(startingHireableRacers);
+        racersForHire = racersForHire.OrderBy(r => r.hireCost).ToList();
     }
     
     

@@ -10665,6 +10665,26 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2148385281798546612, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: startingHireableRacers.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 2148385281798546612, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'startingHireableRacers.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 543b62c2d2109534dabaea32e198e8f3, type: 2}
+    - target: {fileID: 2148385281798546612, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'startingHireableRacers.Array.data[1]'
+      value: 
+      objectReference: {fileID: 11400000, guid: bc8afc5fdfcc08240a72a736d9a239fd, type: 2}
+    - target: {fileID: 2148385281798546612, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'startingHireableRacers.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 5eaef92c11f77a54ea33e32618c8ca63, type: 2}
+    - target: {fileID: 3942734090947527062, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: enablePersistence
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 4155108299724904071, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: m_LocalPosition.x
       value: -147.23541
