@@ -26,7 +26,7 @@ MonoBehaviour:
   level: 1
   experience: 0
   xpToNextLevel: 100
-  salary: 50
-  racesAvailableFor: 999999
+  salary: 125
+  racesAvailableFor: 2
   hireCost: 150
   skillLevel: 1

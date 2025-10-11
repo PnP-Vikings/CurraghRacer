@@ -1375,6 +1375,17 @@ public class SaveSystem : MonoBehaviour
             // Fallback to the default starting date if TimeManager is not available
             saveData.calendarData.currentDate = new DateTime(2008, 1, 1).ToString("yyyy-MM-dd");
         }
+
+        if (TeamManager.Instance != null)
+        {
+            if (TeamManager.Instance.benchTeamMembers.Count > 1)
+            {
+                for (int i = 1; i < TeamManager.Instance.benchTeamMembers.Count; i++)
+                {
+                    TeamManager.Instance.benchTeamMembers.Remove(TeamManager.Instance.benchTeamMembers[i]);
+                }
+            }
+        }
         
         // Ensure bill data is empty for new game
         saveData.billData = new BillSaveData
