@@ -11,7 +11,9 @@ namespace League
         public League currentLeague;
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
+        public LeagueCompleteCard leagueCompleteCardPrefab;
         public UnityEvent onPlayerJoinedLeague;
+        public  League nextLeague = null;
         FMOD.Studio.EventInstance UIClick1;
         //FMOD.Studio.EventInstance ShowInvite;
 
@@ -47,28 +49,82 @@ namespace League
         {
             if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
-                ClearLeague();
-                RegenerateRaceSchedule();
-                currentLeague.RecalculateStandings();
-                GameManager.Instance.OnGameStarted.AddListener(ShowLeagueInvite);
-                
-              
+                // Only clear and regenerate if this is a fresh game start (not loaded from save)
+                if (SaveSystem.Instance != null)
+                {
+                    if (!SaveSystem.Instance.IsNewGame || SaveSystem.Instance.WasLoadedFromSave)
+                        return;
+                    ClearLeague();
+                    RegenerateRaceSchedule();
+                    currentLeague.RecalculateStandings();
+                }
+                else if (!IsGameLoadedFromSave())
+                {
+                    ClearLeague();
+                    RegenerateRaceSchedule();
+                    currentLeague.RecalculateStandings();
+                }
+                else
+                {
+                    Debug.Log("Game loaded from save - preserving existing league data");
+                }
             }
-            else
+            else if (currentLeague == null)
             {
                 Debug.LogWarning("Current league is not set! Please assign a league in the inspector.");
             }
-
-            
-            
-           
         }
-
+        
+        /// <summary>
+        /// Check if the game was loaded from a save file
+        /// </summary>
+        private bool IsGameLoadedFromSave()
+        {
+            // Check if SaveSystem exists and has been used to load data
+            if (SaveSystem.Instance != null)
+            {
+                // If the player has joined a league, it indicates saved progress
+                if (currentLeague != null && currentLeague.playerHasJoined)
+                {
+                    return true;
+                }
+                
+                // Check if there's any race progress
+                if (currentLeague != null && currentLeague.currentRace > 0)
+                {
+                    return true;
+                }
+                
+                // Check if any teams have race history (indicating saved progress)
+                if (currentLeague?.teams != null)
+                {
+                    foreach (var team in currentLeague.teams)
+                    {
+                        if (team?.currentSeasonStats?.finishes != null && team.currentSeasonStats.finishes.Count > 0)
+                        {
+                            return true;
+                        }
+                    }
+                }
+                
+                // Check if tournament start date has been set
+                if (currentLeague != null && currentLeague.tournamentStartDate != default(System.DateTime))
+                {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+        public void ShowLeagueInviteAfterDelay()
+        {
+                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+        }
 
 
         public void ShowLeagueInvite()
         {
-            if (currentLeague != null)
+            if (currentLeague != null && TimeManager.Instance != null)
             {
 
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
@@ -80,17 +136,48 @@ namespace League
                 else
                 {
                     Debug.LogWarning("LeagueInviteCardsUi reference is not set in the inspector.");
-                    GenerateRaceSchedule();
+                    RegenerateRaceSchedule();
                     SetPlayerHasAcceptedInvite();
                 
                 }
                 //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
                 //ShowInvite.start();
             }
+           
 
         }
 
-        
+        public System.Collections.IEnumerator StartLeagueInviteMessageAfterDelay(float delaySeconds)
+        {
+            Debug.Log($"Waiting {delaySeconds} seconds before showing league invite message...");
+            if (!GameManager.Instance.playerIsBusy && TimeManager.Instance != null && currentLeague != null)
+            {
+                /*if (PlayerStatsView.Instance != null)
+                {
+                    yield return new WaitForSeconds(delaySeconds / 3);
+
+                //    PlayerStatsView.Instance.DisplayInfo("You are not in a league, join a league to proceed.", 3);
+                }*/
+                        
+                yield return new WaitForSeconds(delaySeconds);
+           
+                ShowLeagueInvite();
+            }
+            else
+            {
+                if (TimeManager.Instance == null)
+                    Debug.LogWarning("TimeManager instance is null, cannot show league invite message.");
+                if (currentLeague == null)
+                    Debug.LogWarning("Current league is null, cannot show league invite message.");
+                if (GameManager.Instance.playerIsBusy)
+                    Debug.Log("Player is busy, delaying league invite message.");
+                // Retry after some time
+                yield return new WaitForSeconds(10f);
+                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+            }
+        }
+
+
         public void SetPlayerHasAcceptedInvite()
         {
             currentLeague.playerHasJoined = true;
@@ -101,6 +188,12 @@ namespace League
             // Set the tournament start date when player joins (this should be fixed and not change)
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();
             onPlayerJoinedLeague?.Invoke();
+            
+            // Recheck if today is a race day now that the player has joined the league
+            if (TimeManager.Instance != null)
+            {
+                TimeManager.Instance.RecheckIfRaceDay();
+            }
         }
 
         public void GenerateRaceSchedule()
@@ -168,8 +261,7 @@ namespace League
             // Update standings after race results
             currentLeague.RecalculateStandings();
             
-            // Do NOT simulate next race here - it will be simulated when that race day arrives
-            // This prevents AI teams from getting extra races
+            
         }
 
         /// <summary>
@@ -186,7 +278,7 @@ namespace League
                 var raceDay = currentLeague.raceDays[i];
                 foreach (var race in raceDay.races)
                 {
-                    if (race.teams?.Any(t => t.teamType == TeamType.Player) == true && !race.processed)
+                    if (race.teams?.Any(t => t != null && t.teamType == TeamType.Player) == true && !race.processed)
                     {
                         return race;
                     }
@@ -207,7 +299,7 @@ namespace League
             var currentRaceDay = currentLeague.raceDays[currentLeague.currentRace];
             foreach (var race in currentRaceDay.races)
             {
-                if (race.teams?.Any(t => t.teamType == TeamType.Player) == true && !race.processed)
+                if (race.teams?.Any(t => t != null && t.teamType == TeamType.Player) == true && !race.processed)
                 {
                     race.positions = allPositions;
                     race.processed = true;
@@ -233,13 +325,68 @@ namespace League
             currentLeague.isFinished = true;
             currentLeague.RecalculateStandings();
             Debug.Log($"Season {currentLeague.currentSeason} completed for {currentLeague.leagueName}!");
+            Team playerTeam = currentLeague.GetPlayerTeam();
+            int playerFinalPosition = currentLeague.GetTeamPosition(playerTeam);
+            Debug.Log($"Player's final position: {playerFinalPosition}");
+
+            nextLeague =  currentLeague.GetNextLeague();
             
-            // TODO: Handle promotion/relegation, start new season, etc.
+            LeagueCompleteCard leagueCompleteCard = Instantiate(leagueCompleteCardPrefab);
+            if (nextLeague != null && nextLeague != currentLeague)
+            {
+                bool playerWasRelegated = false;
+                bool playerWasPromoted = false;
+                
+              
+                playerWasPromoted = currentLeague.DidPlayerGetPromoted();
+                playerWasRelegated = currentLeague.DidPlayerGetRelegated();
+                
+                
+                leagueCompleteCard.SetLeagueCompletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),playerWasRelegated,playerWasPromoted);
+            }
+            else
+            {
+                leagueCompleteCard.SetLeagueCompletionData(currentLeague, playerFinalPosition, currentLeague.teams.Length, currentLeague.GetTeamPoints(playerTeam), currentLeague.GetTeamWins(playerTeam),false,false);
+            }
+            
         }
+        
+        public void StartNewSeason()
+        {
+            if (currentLeague == null)
+            {
+                Debug.LogWarning("No current league to start a new season in!");
+                return;
+            }
+            
+            if (!currentLeague.isFinished)
+            {
+                Debug.LogWarning("Current league season is not finished yet!");
+                return;
+            }
+
+            // Move to next league if applicable
+            if (nextLeague != null && nextLeague != currentLeague)
+            {
+                currentLeague = nextLeague;
+                nextLeague = null;
+            }
+
+            foreach (var league in leagues)
+            {
+                league.ResetLeagueForNewSeason();
+            }
+            currentLeague.standings = null;
+            RegenerateRaceSchedule();
+            
+            Debug.Log($"Starting new season {currentLeague.currentSeason} in league '{currentLeague.leagueName}'");
+            
+            
+        }
+        
 
         /// <summary>
         /// Clears the current league and resets all race data.
-        /// This method can be called from the inspector button.
         /// </summary>
         [ContextMenu("Clear League")]
         public void ClearLeague()

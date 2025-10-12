@@ -22,10 +22,11 @@ MonoBehaviour:
   attributeGainMultiplier: 1
   sceneName: BeerPourMinigame
   useSceneLoading: 1
-  returnSceneName: RaceScene
+  returnSceneName: Garage
   baseEarnings: 50
   baseGain: 0
   difficultyMultiplier: 1
+  enablePerfectBonus: 1
   perfectBonus: 1.5
   minimumPerformanceForReward: 0.3
   timeLimit: 60

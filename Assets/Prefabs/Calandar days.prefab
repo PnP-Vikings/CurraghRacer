@@ -284,6 +284,7 @@ GameObject:
   - component: {fileID: 3894716652294135764}
   - component: {fileID: 8608986354410778643}
   - component: {fileID: 2668730752494473403}
+  - component: {fileID: 354574991634110907}
   m_Layer: 5
   m_Name: Calandar days
   m_TagString: Untagged
@@ -373,6 +374,18 @@ MonoBehaviour:
   imageRender: {fileID: 6679237830306954410}
   backgroundColorImage: {fileID: 8608986354410778643}
   calendarEvents: {fileID: 0}
+--- !u!114 &354574991634110907
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1810984023732408645}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 91073af9cd570c6458ff078e664fc00c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &3637102161385697558
 GameObject:
   m_ObjectHideFlags: 0

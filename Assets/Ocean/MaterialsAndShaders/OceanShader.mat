@@ -12,12 +12,11 @@ Material:
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
-  m_InvalidKeywords:
-  - _EMISSION
-  m_LightmapFlags: 3
+  m_InvalidKeywords: []
+  m_LightmapFlags: 1
   m_EnableInstancingVariants: 1
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 3001
   stringTagMap: {}
   disabledShaderPasses:
   - MOTIONVECTORS
@@ -86,7 +85,7 @@ Material:
     - _BASE_COLOR_WEIGHT: 1
     - _BUMP_MAP_STRENGTH: 0.3
     - _DisplacementStrength: 0.52
-    - _Distance: 0.44
+    - _Distance: 1.43
     - _EMISSION_WEIGHT: 1
     - _FoamAmount: 1
     - _FoamCutOff: 2
@@ -96,7 +95,7 @@ Material:
     - _METALNESS: 0
     - _NormalStrength: 1
     - _QueueControl: 0
-    - _QueueOffset: 0
+    - _QueueOffset: 1
     - _REFLECTIONS_IOR: 1.52
     - _REFLECTIONS_ROUGHNESS: 1
     - _REFLECTIONS_WEIGHT: 1

@@ -20,9 +20,17 @@ public class AdsManager : MonoBehaviour
        {
            Destroy(gameObject);
        }
-       
-       bannerAds.LoadBannerAd();
-       interstitialAds.LoadInterstitialAd();
-       rewardedAds.LoadRewardedAd();
+       if (bannerAds != null && bannerAds.IsAdUnitIDSet())
+       {
+           bannerAds.LoadBannerAd();
+       }
+       if (interstitialAds != null && interstitialAds.IsAdUnitIDSet())
+       {
+           interstitialAds.LoadInterstitialAd();
+       }
+       if (rewardedAds != null && rewardedAds.IsAdUnitIDSet())
+       {
+           rewardedAds.LoadRewardedAd();
+       }
    }
 }

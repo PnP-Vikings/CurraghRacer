@@ -19,6 +19,11 @@ public class InterstitialAds : MonoBehaviour,IUnityAdsLoadListener, IUnityAdsSho
             adUnitId = androidAdUnitId;
         }
     }
+    public bool IsAdUnitIDSet()
+    {
+        return !string.IsNullOrEmpty(adUnitId);
+    }
+
     public void LoadInterstitialAd()
     {
        Advertisement.Load(adUnitId,this);

@@ -89,7 +89,7 @@ namespace MiniGames
             MiniGameData selectedActivity = workActivities[randomIndex];
             
             Debug.Log($"Starting random work activity: {selectedActivity.gameName}");
-            
+            GameManager.Instance.SetPlayerBusy(true);
             // Start the selected activity directly
             StartActivityDirectly(selectedActivity);
         }
@@ -107,7 +107,7 @@ namespace MiniGames
             MiniGameData selectedActivity = trainingActivities[randomIndex];
             
             Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
-            
+            GameManager.Instance.SetPlayerBusy(true);
             // Start the selected activity directly
             StartActivityDirectly(selectedActivity);
         }
@@ -144,7 +144,7 @@ namespace MiniGames
             }
             
             // Check energy cost
-            if (playerManager != null && !playerManager.playerHasEnoughEnergy(activity.energyCost))
+            if (playerManager != null && !playerManager.PlayerHasEnoughEnergy(activity.energyCost))
             {
                 Debug.LogWarning($"Not enough energy! Need {activity.energyCost} energy to play {activity.gameName}");
                 return;
@@ -346,6 +346,7 @@ namespace MiniGames
             currentGame = null;
             currentGameInstance = null;
             gameActive = false;
+            GameManager.Instance.SetPlayerBusy(false);
         }
     }
 }

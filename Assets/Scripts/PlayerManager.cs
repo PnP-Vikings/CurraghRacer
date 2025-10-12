@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using League;
 using UnityEngine;
 using UnityEngine.Serialization;
@@ -6,7 +7,7 @@ public class PlayerManager : MonoBehaviour
 {
     public static PlayerManager Instance { get; private set; }
     public  Team playerTeam; 
-    public TeamMember[] team;
+    public List<TeamMember> team;
     public float energy= 100f; // Default energy value
     public float coins = 50f; // Default coins value
     public PlayerStatsView playerStatsView;
@@ -32,37 +33,25 @@ public class PlayerManager : MonoBehaviour
        {
            playerTeam = LeagueController.Instance.currentLeague.GetPlayerTeam();
        }
-        team = playerTeam.teamMembers;
-       
+       if (playerTeam != null)
+       {
+           team = playerTeam.teamMembers;
+
+           if (TeamManager.Instance != null)
+           {
+               TeamManager.Instance.SetPlayerTeam(playerTeam);
+               TeamManager.Instance.SetTeamManager(playerTeam.teamManager);
+               TeamManager.Instance.SetActiveCrewMembers(playerTeam.teamMembers);
+               TeamManager.Instance.SetBenchTeamMembers(playerTeam.bench);
+           }
+       }
+
     }
-    
-
-    /*public void SetPlayerStrength(int strength)
-    {
-        playerStats.strength = strength;
-    }
-
-    public void SetPlayerStamina(int stamina)
-    {
-        playerStats.stamina = stamina;
-    }
-
-    public void SetPlayerTechnique(int technique)
-    {
-        playerStats.technique = technique;
-    }
-
-    public void SetPlayerTeamWork(int teamWork)
-    {
-        playerStats.teamWork = teamWork;
-    }*/
-
-
 
     public CharacterStats GetPlayerStats()
     {
      
-        if (team.Length > 0)
+        if (team.Count > 0)
         {
             float totalStrength = 0f;
             float totalStamina = 0f;
@@ -129,7 +118,7 @@ public class PlayerManager : MonoBehaviour
     public void ModifyPlayerCoins(float amount)
     {
         coins += amount;
-        if (coins < 0) coins = 0; // Prevent negative coins
+      //  if (coins < 0) coins = 0; // Prevent negative coins
         playerStatsView.UpdatePlayerStats();
     }
     
@@ -138,12 +127,18 @@ public class PlayerManager : MonoBehaviour
         return coins >= cost;
     }
 
-    public bool PurchaseItem(float cost)
+    public bool PurchaseItem(float cost,PurchaseType purchaseType=PurchaseType.Item)
     {
-        if (CanAffordPurchase(cost))
+        if (CanAffordPurchase(cost) )
         {
             ModifyPlayerCoins(-cost);
             return true;
+        }
+        else if (!CanAffordPurchase(cost) && purchaseType == PurchaseType.RaceEntry)
+        {
+            ModifyPlayerCoins(-cost);
+            Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {cost - coins} coins.");
+            return false;
         }
         else
         {
@@ -152,31 +147,18 @@ public class PlayerManager : MonoBehaviour
         }
     }
     
-    public bool playerHasEnoughEnergy(float energyCost)
+    public bool PlayerHasEnoughEnergy(float energyCost)
     {
         return energy >= energyCost;
     }
     // Method to update player stats
     public void ModifyPlayerStrength(int strength)
     {
-        float energyRequired = 30f; // Energy required to modify strength
-        if (!playerHasEnoughEnergy(energyRequired))
-        {
-            return; // Not enough energy to modify strength
-        }
-
-        /*ModifyPlayerEnergy(-energyRequired);
-
-        bool canAfford = PurchaseItem(strength * 3);
-        if (!canAfford)
-        {
-            Debug.LogWarning("Not enough coins to modify strength.");
-            return;
-        }*/
-
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
             member.ImproveStat(TeamMember.StatType.Strength,strength);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {strength} Strength", 3);
             Debug.Log(member.memberName+" strength modified: " + member.GetTeamMemberStat(TeamMember.StatType.Strength));
         }
 
@@ -184,78 +166,49 @@ public class PlayerManager : MonoBehaviour
 
     public void ModifyPlayerStamina(int stamina)
     {
-
-        float energyRequired = 30f; // Energy required to modify strength
-        if (!playerHasEnoughEnergy(energyRequired))
-        {
-            return; // Not enough energy to modify strength
-        }
-
-        ModifyPlayerEnergy(-energyRequired);
-
-
-        /*
-        bool canAfford = PurchaseItem(stamina * 3);
-        if (!canAfford)
-        {
-            Debug.LogWarning("Not enough coins to modify strength.");
-            return;
-        }
-        */
-
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
-            member.ImproveStat(TeamMember.StatType.Stamina,2);
+            member.ImproveStat(TeamMember.StatType.Stamina,stamina);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {stamina} Stamina", 3);
             Debug.Log(member.memberName+" stamina modified: " + member.GetTeamMemberStat(TeamMember.StatType.Stamina));
         }
 
     }
-    public void ModifyPlayerTechnique(int technique,int cost =50)
+    public void ModifyPlayerTechnique(int technique)
     {
-        float energyRequired = 30f; // Energy required to modify strength
-        if (!playerHasEnoughEnergy(energyRequired))
-        {
-            return; // Not enough energy to modify strength
-        }
-
-        /*ModifyPlayerEnergy(-energyRequired);
-
-        bool canAfford = PurchaseItem(cost);
-        if (!canAfford)
-        {
-            Debug.LogWarning("Not enough coins to modify strength." + technique * 3 +" player coins" +coins );
-            return;
-        }*/
-
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
-            member.ImproveStat(TeamMember.StatType.Technique,2);
+            member.ImproveStat(TeamMember.StatType.Technique,technique);
+            
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {technique} Technique", 3);
             Debug.Log(member.memberName+" technique modified: " + member.GetTeamMemberStat(TeamMember.StatType.Technique));
         }
 
     }
     public void ModifyPlayerTeamWork(int teamWork)
     {
-        float energyRequired = 30f; // Energy required to modify strength
-        if (!playerHasEnoughEnergy(energyRequired))
-        {
-            return; // Not enough energy to modify strength
-        }
-        
-        /*ModifyPlayerEnergy(-energyRequired);
-        
-        bool canAfford = PurchaseItem(teamWork * 3);
-        if (!canAfford)
-        {
-            Debug.LogWarning("Not enough coins to modify strength.");
-            return;
-        }*/
-        
+        playerStatsView.ClearInfo();
         foreach (TeamMember member in team)
         {
-            member.ImproveStat(TeamMember.StatType.TeamWork,2);
+            member.ImproveStat(TeamMember.StatType.TeamWork,teamWork);
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {teamWork} TeamWork", 3);
             Debug.Log(member.memberName+" teamwork modified: " + member.GetTeamMemberStat(TeamMember.StatType.TeamWork));
         }
     }
+
+
+
     
+}
+
+
+public enum PurchaseType
+{
+        RaceEntry,
+        Bill,
+        Sleep,
+        Training,
+        Item
 }

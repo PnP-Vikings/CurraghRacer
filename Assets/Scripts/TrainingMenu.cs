@@ -20,30 +20,28 @@ public class TrainingMenu : MonoBehaviour
     void OnEnable()
     {
         uiDoc = GetComponent<UIDocument>();
+        if(uiDoc != null)
+        {
+            var root = uiDoc.rootVisualElement;
+            _trainStrengthButton = root.Q<Button>("TrainStrength");
+            _trainTechniqueButton = root.Q<Button>("TrainTechnique");
+            _trainStaminaButton = root.Q<Button>("TrainStamina");
+            _trainTeamWorkButton = root.Q<Button>("TrainTeamWork");
+            _backButton = root.Q<Button>("BackButton");
 
-        var root = uiDoc.rootVisualElement;
-        _trainStrengthButton = root.Q<Button>("TrainStrength");
-        _trainTechniqueButton = root.Q<Button>("TrainTechnique");
-        _trainStaminaButton = root.Q<Button>("TrainStamina");
-        _trainTeamWorkButton = root.Q<Button>("TrainTeamWork");
-        _backButton = root.Q<Button>("BackButton");
-
-        _trainStrengthButton.clicked += OnTrainStrengthButtonClicked;
-        _trainTechniqueButton.clicked += OnTrainTechniqueButtonClicked;
-        _trainStaminaButton.clicked += OnTrainStaminaButtonClicked;
-        _trainTeamWorkButton.clicked += OnTrainTeamWorkButtonClicked;
-        _backButton.clicked += OnCloseTrainingMenuButtonClicked;
+            _trainStrengthButton.clicked += OnTrainStrengthButtonClicked;
+            _trainTechniqueButton.clicked += OnTrainTechniqueButtonClicked;
+            _trainStaminaButton.clicked += OnTrainStaminaButtonClicked;
+            _trainTeamWorkButton.clicked += OnTrainTeamWorkButtonClicked;
+            _backButton.clicked += OnCloseTrainingMenuButtonClicked;
+        }
     }
 
     public void OnTrainStrengthButtonClicked()
     {
        if(CanTrain(30, 50))
         {
-           
-       
             PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {strengthGainAmount} Strength", 3);
-
             Dumbbell = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Dumbbell");
             Dumbbell.start();
         }
@@ -58,8 +56,6 @@ public class TrainingMenu : MonoBehaviour
         if (CanTrain(30, 50))
         {
                 PlayerManager.Instance.ModifyPlayerTechnique(techniqueGainAmount);
-                PlayerStatsView.Instance.DisplayInfo($"You gained {techniqueGainAmount} Technique", 3);
-
         }
     }
     
@@ -68,7 +64,6 @@ public class TrainingMenu : MonoBehaviour
         if(CanTrain(30, 50))
         {
             PlayerManager.Instance.ModifyPlayerStamina(staminaGainAmount);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {staminaGainAmount} Stamina", 3);
         }
 
         
@@ -80,7 +75,7 @@ public class TrainingMenu : MonoBehaviour
         if(CanTrain(30, 50))
         {
             PlayerManager.Instance.ModifyPlayerTeamWork(teamWorkGainAmount);
-            PlayerStatsView.Instance.DisplayInfo($"You gained {teamWorkGainAmount} TeamWork", 3);
+            
         }
             
     }
@@ -88,8 +83,10 @@ public class TrainingMenu : MonoBehaviour
     public void OnCloseTrainingMenuButtonClicked()
     {
         startingMenuPrefab.SetActive(true);
-        uiDoc.gameObject.SetActive(false);
-
+        if (uiDoc != null)
+        {
+            uiDoc.gameObject.SetActive(false);
+        }
         UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
         UIClick2.start();
     }
@@ -97,7 +94,7 @@ public class TrainingMenu : MonoBehaviour
     public bool CanTrain(int energyCost, int currencyCost)
     {
         // Check if the player has enough energy
-        if (!PlayerManager.Instance.playerHasEnoughEnergy(energyCost))
+        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCost))
         {
             PlayerStatsView.Instance.DisplayInfo($"You must have at least {energyCost} Energy to train", 3);
             return false; // Not enough energy
@@ -112,12 +109,14 @@ public class TrainingMenu : MonoBehaviour
 
         // Deduct the currency cost and allow training
         PlayerManager.Instance.ModifyPlayerEnergy(-energyCost);
+        TimeManager.Instance.AdvanceTimeByHours(3); // Advance time by 3 hour
         Debug.Log($"Player has enough energy {PlayerManager.Instance.energy}  and currency {PlayerManager.Instance.coins} to train");
         return true;
     }
     
     private void OnDisable()
     {
+        if (uiDoc == null) return;
         _trainStrengthButton.clicked -= OnTrainStrengthButtonClicked;
         _trainTechniqueButton.clicked -= OnTrainTechniqueButtonClicked;
         _trainStaminaButton.clicked -= OnTrainStaminaButtonClicked;

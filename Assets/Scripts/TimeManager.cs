@@ -9,6 +9,21 @@ public class TimeManager : MonoBehaviour
 {
     // Singleton instance
     private static TimeManager _instance;
+    
+    public int startYear = 2008;
+    [Tooltip("1-12 (January = 1)")] public int startMonth = 1;
+    [Tooltip("1-based day of month")] public int startDay = 5;
+
+    private void OnValidate()
+    {
+        if (startMonth < 1) startMonth = 1;
+        if (startMonth > 12) startMonth = 12;
+        int maxDay = DateTime.DaysInMonth(Mathf.Clamp(startYear, 1, 9999), startMonth);
+        if (startDay < 1) startDay = 1;
+        if (startDay > maxDay) startDay = maxDay;
+    }
+    
+    public DateTime StartDate = new DateTime(2008, 1, 5);
     public static TimeManager Instance { get { return _instance; } }
     internal string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
@@ -69,6 +84,9 @@ public class TimeManager : MonoBehaviour
             Destroy(gameObject);
         }
         
+        // Initialize starting date
+        StartDate = new DateTime(startYear, startMonth, startDay);
+        
         timeOfDay = 6f; // Start at 6 AM
         daysPassed = 0;
         
@@ -83,6 +101,47 @@ public class TimeManager : MonoBehaviour
         onNewDay.Invoke(); // Raise the OnNewDay event
         timeChangedEvent.Invoke(); // Raise the time changed event
         
+        if(RaceManager.Instance != null)
+            todaysEvents.AddListener(RaceManager.Instance.CheckForRaceDay);
+        
+    }
+    
+    public void RecheckIfRaceDay()
+    {
+        if(RaceManager.Instance != null)
+            RaceManager.Instance.CheckForRaceDay(GetEventsToday());
+    }
+    
+    public void AdvanceTimeByHours(float hours)
+    {
+        if (hours < 0) throw new ArgumentException("Hours to advance must be non-negative");
+        
+        float previousTimeOfDay = timeOfDay;
+        timeOfDay += hours * timeMultiplier;
+        timeOfDay %= 24f; // Clamp to 0-24
+
+        // Check if a new day has started
+        if (previousTimeOfDay > timeOfDay)
+        {
+            daysPassed++;
+            newItemSpawned = false;
+          //  onNewDay.Invoke(); // Raise the OnNewDay event
+        }
+
+        // Call SpawnItems method at the beginning of a new day
+        if (!newItemSpawned && timeOfDay >= 0 && timeOfDay <= 1)
+        {
+            Debug.Log("New day has started");
+           // onNewDay.Invoke(); // Raise the OnNewDay event
+            newItemSpawned = true;
+        }
+
+        if (IsNight())
+        {
+            onNightStart.Invoke(); // Raise the OnNightStart event
+        }
+        
+        timeChangedEvent.Invoke();
     }
     
     // Update the time of day based on the time multiplier
@@ -95,7 +154,10 @@ public class TimeManager : MonoBehaviour
         
         // Advance the calendar by one day
         AdvanceCalendar(1);
-        
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.TriggerAutoSave();
+        }
         onNewDay.Invoke(); // Raise the OnNewDay event
         timeChangedEvent.Invoke();
     }
@@ -130,6 +192,9 @@ public class TimeManager : MonoBehaviour
         // Trigger the date changed event
         if (onDateChanged != null)
             onDateChanged.Invoke(currentDay, currentMonth, currentYear);
+            
+        // Check if the new date is a race day
+        RecheckIfRaceDay();
     }
     
     private int GetDaysInCurrentMonth()
@@ -345,6 +410,22 @@ public class TimeManager : MonoBehaviour
         }
         
         return sundays.ToArray();
+    }
+
+    public void SetCurrentDate(DateTime newDate)
+    {
+        currentDay = newDate.Day;
+        currentMonth = newDate.Month - 1; // Convert to 0-based index
+        currentYear = newDate.Year;
+        currentDayOfWeek = (int)newDate.DayOfWeek; // Sunday=0, Monday=1, ..., Saturday=6
+        daysInCurrentMonth = GetDaysInCurrentMonth();
+        HasEventToday();
+        
+        // Trigger the date changed event
+        if (onDateChanged != null)
+            onDateChanged.Invoke(currentDay, currentMonth, currentYear);
+        
+        RecheckIfRaceDay();
     }
     
     /// <summary>

@@ -24,8 +24,13 @@ public class Team : ScriptableObject
     public List<int> recentResults = new List<int>();
 
     [Header("Team Members")]
-    public TeamMember[] teamMembers;
+    [Tooltip("Team Manager.")]
+    public TeamMember teamManager;
+        
+    public List<TeamMember> teamMembers = new List<TeamMember>();
 
+    public List<TeamMember> bench = new List<TeamMember>();
+    
     [Header("Current Season Stats")]
     [Tooltip("Wins, draws, losses, and points for the current season.")]
     public SeasonStats currentSeasonStats;
@@ -34,6 +39,8 @@ public class Team : ScriptableObject
     [Tooltip("Cumulative wins, draws, losses, and points across all seasons.")]
     public SeasonStats lifetimeStats;
 
+    
+        
     /// <summary>
     /// Records a race finish position, updating both season and lifetime stats.
     /// </summary>
@@ -90,13 +97,22 @@ public class Team : ScriptableObject
 
     public void ResetAllPlayerStats()
     {
-        for (int i = 0; i < teamMembers.Length; i++)
+        for (int i = 0; i < teamMembers.Count; i++)
         {
             if (teamMembers[i] != null)
             {
                 teamMembers[i].ResetAllStats(teamQuality);
             }
         }
+        
+        for (int i = 0; i < bench.Count; i++)
+        {
+            if (bench[i] != null)
+            {
+                bench[i].ResetAllStats(teamQuality);
+            }
+        }
+        
     }
     
     
@@ -117,14 +133,14 @@ public class Team : ScriptableObject
 
     public void UseExperience()
     {
-        for (int i = 0; i < teamMembers.Length; i++)
+        for (int i = 0; i < teamMembers.Count; i++)
         {
 
             if (teamMembers[i] != null)
             {
                 
-                teamMembers[i].UpdateExperience(teamExperience / teamMembers.Length);
-                teamExperience -= (teamExperience / teamMembers.Length);
+                teamMembers[i].UpdateExperience(teamExperience / teamMembers.Count);
+                teamExperience -= (teamExperience / teamMembers.Count);
             }
 
         }
@@ -141,7 +157,7 @@ public class Team : ScriptableObject
     /// </summary>
     public CharacterStats GetTeamStats()
     {
-        if (teamMembers != null && teamMembers.Length > 0)
+        if (teamMembers != null && teamMembers.Count > 0)
         {
             // Calculate average stats from all team members
             float totalStrength = 0f;
@@ -186,6 +202,8 @@ public class Team : ScriptableObject
             teamWork: baseValue + (formModifier * 0.8f) + UnityEngine.Random.Range(-variation, variation)
         );
     }
+    
+    
 }
 
 public enum TeamType

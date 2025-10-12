@@ -197,5 +197,10 @@ namespace Calendar
             displayedYear = TimeManager.Instance.GetCurrentYear();
             UpdateCalendar();
         }
+
+        private void OnEnable()
+        {
+            CurrentMonth();
+        }
     }
 }

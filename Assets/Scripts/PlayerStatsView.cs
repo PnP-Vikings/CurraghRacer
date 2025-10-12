@@ -35,8 +35,8 @@ public class PlayerStatsView : MonoBehaviour
         _playerCurrencyLabel.text = "Player Currency: " + PlayerManager.Instance.GetPlayerCurrency();
         
         PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
-      
-        
+        UpdatePlayerStats();
+
     }
     
     public void UpdatePlayerStats()
@@ -45,6 +45,7 @@ public class PlayerStatsView : MonoBehaviour
         _playerCurrencyLabel.text = "Player Currency: " + PlayerManager.Instance.GetPlayerCurrency();
     }
         
+    
     
     public void DisplayInfo(string info, float duration = 3)
     {

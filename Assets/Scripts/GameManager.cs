@@ -1,8 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using League;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
@@ -12,14 +14,17 @@ public class GameManager : MonoBehaviour
    public bool GameStarted = false;
    public Transform cameraStartPosition;
    public int racesTillNextAd = 3;
-   public string mainSceneName = "RaceScene";
+   public string startSceneName = "Main Menu";
+   public string mainSceneName = "Garage";
    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
+   public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
+   [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
 
    public List<String> miniGameWorkScenes = new List<string>
    {
        "BeerPourMinigame",
-       "DishWashingMinigame"
+       "DishWashingMinigame" 
    };
    
    private void Awake()
@@ -35,8 +40,18 @@ public class GameManager : MonoBehaviour
        }
        
        StartCoroutine(DisplayBannerWithDelay());
+       StartCoroutine(TrackPlayTime());
+       
    }
    
+   private IEnumerator TrackPlayTime()
+   {
+         while (true)
+         {
+             yield return new WaitForSeconds(60f); // Wait for 1 minute
+             totalPlayTime++;
+         }
+    }
     private IEnumerator DisplayBannerWithDelay()
     {
          yield return new WaitForSeconds(2f); // Adjust the delay as needed
@@ -50,14 +65,41 @@ public class GameManager : MonoBehaviour
     
     public void StartGame()
     {
+        AdsManager.Instance.bannerAds.HideBannerAd();
         GameStarted = true;
         OnGameStarted?.Invoke();
+        SceneManager.LoadScene(mainSceneName);
     }
     
     public bool GetGameStarted()
     {
         return GameStarted;
     }
+    
+    public void SetPlayerBusy(bool busy)
+    {
+        playerIsBusy = busy;
+    }
+    
+    public void SetGameStarted(bool started)
+    {
+        GameStarted = started;
+    }
+    
+    
+    /// <summary>
+    /// Trigger an auto-save at important game events
+    /// </summary>
+    public void TriggerAutoSave()
+    {
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, "Auto Save");
+            Debug.Log("Auto-save triggered");
+        }
+    }
+    
+    
     
     public bool CanShowAd()
     {
@@ -87,7 +129,7 @@ public class GameManager : MonoBehaviour
 
     public void Sleep(int sleepCost)
     {
-        if(PlayerManager.Instance.playerHasEnoughEnergy(100))
+        if(PlayerManager.Instance.PlayerHasEnoughEnergy(100))
         {
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
             return; // Not enough energy to sleep
@@ -116,6 +158,21 @@ public class GameManager : MonoBehaviour
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
         PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
+    }
+
+    public float GetTotalPlayTime()
+    {
+        return totalPlayTime;
+    }
+    
+    public void ResetTotalPlayTime()
+    {
+        totalPlayTime = 0;
+    }
+    
+    public void SetTotalPlayTime(float minutes)
+    {
+        totalPlayTime = minutes;
     }
     
     public Transform GetCameraStartPosition()

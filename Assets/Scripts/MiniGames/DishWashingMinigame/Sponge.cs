@@ -7,6 +7,7 @@ public class Sponge : MonoBehaviour
     {
         if (other.GetComponent<DirtShaderLogic>() != null)
         {
+            Debug.Log("Sponge collided with dirt: " + other.name);
            DirtShaderLogic dirtShaderLogic = other.GetComponent<DirtShaderLogic>();
               if (dirtShaderLogic != null)
               {

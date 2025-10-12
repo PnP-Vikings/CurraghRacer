@@ -31,6 +31,17 @@ public class PowerwashController : MonoBehaviour
 
     public Camera powerwashCamera;
 
+    public List<GameObject> wallList = new List<GameObject>();
+
+    public GameObject WallPrefab1;
+
+    public GameObject WallPrefab2;
+
+    public GameObject WallPrefab3;
+
+    public GameObject WallPrefab4;
+
+
     [SerializeField] private int spawnCount = 5;
 
     FMOD.Studio.EventInstance MovewallAudio;
@@ -48,8 +59,7 @@ public class PowerwashController : MonoBehaviour
         // Only create one powerwash
         if (powerwashInstance == null)
             powerwashInstance = Instantiate(powerwashPrefab);
-        
-        
+
         Spawnwalls();
         wallCleanPosition.onWallCleaned.AddListener(wallCleaned); // Subscribe to the BeerDone event
         MovewallToCleanPosition();
@@ -104,15 +114,47 @@ public class PowerwashController : MonoBehaviour
         if (wallCleanPosition.wallLogic == null  && walls.Count > 0)
         {
             walls[0].transform.position = cleanPosition.position; // Move the wall to the clean position
-            walls[0].transform.rotation = cleanPosition.rotation; // Set the rotation to match the clean position
+           // walls[0].transform.rotation = cleanPosition.rotation; // Set the rotation to match the clean position
         }
     }
     
     public void Spawnwalls()
     {
+
+        //Select a random wall
+        wallList.Add(WallPrefab1);
+        wallList.Add(WallPrefab2);
+        wallList.Add(WallPrefab3);
+        wallList.Add(WallPrefab4);
+        int wallIndex = UnityEngine.Random.Range(0, 4);
+
+       /* 
+        */
+
+        //Instantiate(wallList[wallIndex], cleanPosition.position, Quaternion.identity);
+        wallPrefab = wallList[wallIndex];
         for (int i = 0; i < spawnCount; i++) // Spawn 5 walls
         {
-            GameObject wallObject = Instantiate(wallPrefab, spawnPoint.position, Quaternion.identity);
+            if (wallPrefab == null)
+            {
+                return;
+            }
+            GameObject wallObject = null;
+            if (wallIndex == 0)
+            {
+                wallObject = Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0, 90, 0), 90));
+            }
+            else if (wallIndex == 3)
+            {
+                wallObject = Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(0, -90, 90), 90));
+            }
+            else
+            {
+                wallObject= Instantiate(wallPrefab, cleanPosition.position, Quaternion.RotateTowards(Quaternion.identity, Quaternion.Euler(90,0,0),90));
+                Debug.Log("Spawned wall with rotation: " + wallObject.transform.rotation.eulerAngles);
+            }
+            
+           // wallObject.transform.rotation = spawnPoint.rotation; // Set the rotation to match the spawn point
             WallLogic wallLogic = wallObject.GetComponent<WallLogic>();
             if (wallLogic != null)
             {
@@ -132,9 +174,9 @@ public class PowerwashController : MonoBehaviour
         walls.Remove(wallCleanPosition.wallLogic); // Remove the cleaned wall from the walls list
         wallCleanPosition.wallLogic = null; // Clear the wallLogic reference in wallCleanPosition
         MovewallToCleanPosition(); // Move the next wall to the clean position
-
-        MovewallAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move wall");
-        MovewallAudio.start();
+        
+        /*MovewallAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move wall");
+        MovewallAudio.start();*/
 
         MinigameFinished();
     }

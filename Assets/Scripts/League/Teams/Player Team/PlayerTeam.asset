@@ -21,11 +21,13 @@ MonoBehaviour:
   teamExperience: 100
   currentForm: 50
   recentResults: 
+  teamManager: {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
   teamMembers:
-  - {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
   - {fileID: 11400000, guid: 09db92fe66966b14694b5f081a3c4907, type: 2}
   - {fileID: 11400000, guid: f4185131cdbc08049a5171ae1fe8a296, type: 2}
   - {fileID: 11400000, guid: f41743a69f03d8a47af17ea5e11fcb7f, type: 2}
+  bench:
+  - {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
   currentSeasonStats:
     finishes: 
   lifetimeStats:

@@ -14,6 +14,9 @@ GameObject:
   - component: {fileID: 6042894620679886366}
   - component: {fileID: 2191016002663425716}
   - component: {fileID: 8150581909809056547}
+  - component: {fileID: 3942734090947527062}
+  - component: {fileID: 6272484885003525780}
+  - component: {fileID: 2148385281798546612}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -49,10 +52,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isRewarded: 0
+  GameStarted: 0
   cameraStartPosition: {fileID: 0}
   racesTillNextAd: 3
-  mainSceneName: RaceScene
+  startSceneName: Main Menu
+  mainSceneName: Garage
   sleepsTillNextAd: 3
+  playerIsBusy: 0
+  OnGameStarted:
+    m_PersistentCalls:
+      m_Calls: []
+  totalPlayTime: 0
   miniGameWorkScenes:
   - BeerPourMinigame
   - DishWashingMinigame
@@ -80,10 +90,13 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isRaceDay: 0
-  LoadedRaceScene: 0
+  loadedRaceScene: 0
+  raceStartDelaySeconds: 5
   shipPrefab: {fileID: 3038203907543405209, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
   ships: []
   RaceMovementPositions: []
+  currentRaceMovementPositions: []
+  finishLineTransform: {fileID: 0}
   playerShip: {fileID: 0}
   finishMenu: {fileID: 0}
   waitingForAd: 0
@@ -99,13 +112,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7b3ea6c83fd44964fbdb6a64f7dd3c80, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerStats:
-    strength: 0
-    stamina: 0
-    technique: 0
-    teamWork: 0
-  energy: 100
-  coins: 50
+  playerTeam: {fileID: 0}
+  team: []
+  energy: 300
+  coins: 200
   playerStatsView: {fileID: 0}
 --- !u!114 &2191016002663425716
 MonoBehaviour:
@@ -124,6 +134,21 @@ MonoBehaviour:
   - {fileID: 11400000, guid: b7b9fcb0677f88742b3ded18b143506e, type: 2}
   trainingActivities: []
   audioSource: {fileID: 0}
+  MiniGameTimerRunsOutEvent:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 11500000, guid: 1350a47e151571e45abd4180a2393f6f, type: 3}
+        m_TargetAssemblyTypeName: 
+        m_MethodName: 
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: 
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &8150581909809056547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,3 +164,65 @@ MonoBehaviour:
   currentLeague: {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
   leagues:
   - {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
+  leagueInviteCardsUi: {fileID: 6545524236131076258, guid: e7af4e1578bb16f42881e823255c1a23, type: 3}
+  leagueCompleteCardPrefab: {fileID: 7250917615151901132, guid: 7d20fdd0532851e48983e0d7bf2e15f0, type: 3}
+  onPlayerJoinedLeague:
+    m_PersistentCalls:
+      m_Calls: []
+  nextLeague: {fileID: 0}
+--- !u!114 &3942734090947527062
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 703a7567483149fba2334e1a48b02da2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  calendarEvents: {fileID: 11400000, guid: 454b31a26fe91c0479401781f8a35026, type: 2}
+  enablePersistence: 0
+  saveFileName: completed_races.json
+  completedRaceObjects: []
+--- !u!114 &6272484885003525780
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1022f2590db39984e8cbdea5cd2d0477, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  electricityBillAmount: 20
+  heatingBillAmount: 15
+  rentBillAmount: 50
+  totalBillsAmount: 0
+  bills: []
+  recurringPaidBills: []
+  billPrefab: {fileID: 2254747351404544138, guid: 173888b92f992d3439d11505aa75e6a4, type: 3}
+--- !u!114 &2148385281798546612
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6df9e9961ee5066459b817f46c2b4230, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerTeam: {fileID: 0}
+  teamManager: {fileID: 0}
+  activeCrewMembers: []
+  benchTeamMembers: []
+  racersForHire:
+  - {fileID: 11400000, guid: bc8afc5fdfcc08240a72a736d9a239fd, type: 2}
+  - {fileID: 11400000, guid: 5eaef92c11f77a54ea33e32618c8ca63, type: 2}
+  - {fileID: 11400000, guid: 543b62c2d2109534dabaea32e198e8f3, type: 2}
+  isAllActiveTeamMembersHealthy: 0

@@ -633,6 +633,7 @@ GameObject:
   - component: {fileID: 4844317866809182665}
   - component: {fileID: 7725625939705050984}
   - component: {fileID: 1153147979108045019}
+  - component: {fileID: -8935231555547830398}
   m_Layer: 5
   m_Name: TeamUiPrefab
   m_TagString: Untagged
@@ -811,3 +812,15 @@ MonoBehaviour:
       Data3: -2004657985
       Data4: 1167525165
     Path: event:/UI/Click 1
+--- !u!114 &-8935231555547830398
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8598144522272698404}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

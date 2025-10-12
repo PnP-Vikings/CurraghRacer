@@ -21,8 +21,9 @@ public class ClockUI : MonoBehaviour
         _hourHand = root.Q<VisualElement>("HourHand");
         _dayOfWeekText = root.Q<Label>("DayOfWeekText");
         UpdateClock();
-       TimeManager.Instance.onNewDay.AddListener(UpdateClock);
-       TimeManager.Instance.timeChangedEvent.AddListener(UpdateClock);
+        if (TimeManager.Instance == null) {Debug.Log("TimeManger Instance is null");return;}
+        TimeManager.Instance.onNewDay.AddListener(UpdateClock);
+        TimeManager.Instance.timeChangedEvent.AddListener(UpdateClock);
        
     }
 
@@ -34,6 +35,7 @@ public class ClockUI : MonoBehaviour
 
     private void UpdateClock()
     {
+        if (TimeManager.Instance == null) return;
         // Get the current time from the TimeManager in hours
         float hours = TimeManager.Instance.TimeOfDay;
         // Calculate the minutes based on the fraction of the hour
