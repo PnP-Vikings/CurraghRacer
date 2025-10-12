@@ -10,6 +10,7 @@ public class DecisionCardUiMaster : MonoBehaviour
    public List<DecisionCardUi> decisionCards;
    public bool isDragging = false;
    public DecisionCardUi activeDecisionCard;
+   public float swipeThreshold = 50f; // Minimum x position to consider as a swipe
    
    
    public void DragStarted(DecisionCardUi card)
@@ -40,17 +41,20 @@ public class DecisionCardUiMaster : MonoBehaviour
            {
                float xPos = activeDecisionCard.GetComponent<RectTransform>().anchoredPosition.x;
                
-               if (xPos > 0)
+               if (xPos > 0 + swipeThreshold)
                {
                    decisionCardColorImage.color = Color.Lerp(decisionCardColorImage.color, positiveColor, Time.deltaTime * 5f);
+                   activeDecisionCard.ShowAcceptText();
                }
-               else if (xPos < 0)
+               else if (xPos < 0-swipeThreshold)
                {
                    decisionCardColorImage.color = Color.Lerp(decisionCardColorImage.color, negativeColor, Time.deltaTime * 5f);
+                   activeDecisionCard.ShowRejectText();
                }
                else
                {
                    decisionCardColorImage.color = Color.Lerp(decisionCardColorImage.color, neutralColor, Time.deltaTime * 5f);
+                   activeDecisionCard.HideDecisionText();
                }
            }
            

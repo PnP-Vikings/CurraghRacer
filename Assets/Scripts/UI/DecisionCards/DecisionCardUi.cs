@@ -5,7 +5,7 @@ using UnityEngine.UI;
 public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
 {
     [Header("Swipe Settings")]
-    [SerializeField] private float swipeThreshold = 100f;
+    private float swipeThreshold = 30f;
     [SerializeField] private float rotationStrength = 0.3f;
     [SerializeField] private float swipeSpeed = 5f;
     public DecisionCardUiMaster decisionCardUiMaster;
@@ -14,19 +14,64 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Vector2 originalPosition;
     private bool isSwiping = false;
     
+    public TMPro.TMP_Text cardTitleText, cardDescriptionText;
+    public TMPro.TMP_Text acceptText, rejectText;
+    public Image  cardImage;  
+    
     private void Awake()
     {
         rectTransform = GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
         decisionCardUiMaster = GetComponentInParent<DecisionCardUiMaster>();
-        // Force center anchor and pivot
+        /*// Force center anchor and pivot
         rectTransform.anchorMin = new Vector2(0.5f, 0.5f);
         rectTransform.anchorMax = new Vector2(0.5f, 0.5f);
-        rectTransform.pivot = new Vector2(0.5f, 0.5f);
-    
+        rectTransform.pivot = new Vector2(0.5f, 0.5f);*/
+
+        if (decisionCardUiMaster != null)
+        {
+            swipeThreshold = decisionCardUiMaster.swipeThreshold;
+        }
+         if(acceptText != null)
+         {
+             acceptText.text = "Spent €60 \n On Buying \n The lads a round\n may improve team morale";
+             acceptText.gameObject.SetActive(false);
+         }
+        if(rejectText != null)
+        {
+            rejectText.text = "Save €60 \n By Not Buying \n The lads a round \n but lose team morale";
+            rejectText.gameObject.SetActive(false);
+        }
+         
         // Now store the position
         originalPosition = rectTransform.anchoredPosition;
     }
+    
+    public void SetCardData(string title, string description, Sprite image)
+    {
+        if (cardTitleText != null) cardTitleText.text = title;
+        if (cardDescriptionText != null) cardDescriptionText.text = description;
+        if (cardImage != null) cardImage.sprite = image;
+    }
+    
+    public void HideDecisionText()
+    {
+        if (acceptText != null) acceptText.gameObject.SetActive(false);
+        if (rejectText != null) rejectText.gameObject.SetActive(false);
+    }
+    
+    public void ShowAcceptText()
+    {
+        if (acceptText != null) acceptText.gameObject.SetActive(true);
+        if (rejectText != null) rejectText.gameObject.SetActive(false);
+    }
+    
+    public void ShowRejectText()
+    {
+        if (acceptText != null) acceptText.gameObject.SetActive(false);
+        if (rejectText != null) rejectText.gameObject.SetActive(true);
+    }
+    
     public void OnBeginDrag(PointerEventData eventData)
     {
         isSwiping = true;
@@ -44,7 +89,7 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
         
         // Rotate card based on horizontal movement
-        float rotation = rectTransform.anchoredPosition.x * rotationStrength;
+        float rotation = rectTransform.anchoredPosition.x * rotationStrength *-1;
         rectTransform.rotation = Quaternion.Euler(0, 0, rotation);
     }
     
