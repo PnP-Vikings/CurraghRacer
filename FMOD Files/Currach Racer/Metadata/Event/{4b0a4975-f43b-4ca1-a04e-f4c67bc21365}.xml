@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{4b0a4975-f43b-4ca1-a04e-f4c67bc21365}">
 		<property name="name">
-			<value>Turf Cutting Ambience</value>
+			<value>Footing Turf Ambience</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -85,6 +85,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{2d6c07f2-150e-4bb5-a5e5-8b27f7165e19}">
+		<property name="volume">
+			<value>-3</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{d950eaab-4ef9-4c3b-87f1-3bc9879c1cf9}</destination>
 		</relationship>
