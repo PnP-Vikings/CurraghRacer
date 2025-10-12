@@ -14,7 +14,11 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Vector2 originalPosition;
     private bool isSwiping = false;
     
-    public TMPro.TMP_Text cardTitleText, cardDescriptionText;
+    // Track current card data
+    private DecisionCard currentCard;
+    private TeamMember currentTargetMember;
+    
+    public TMPro.TMP_Text cardTitleText, cardDescriptionText, affectedMemberText;
     public TMPro.TMP_Text acceptText, rejectText;
     public Image  cardImage;  
     
@@ -52,6 +56,80 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         if (cardTitleText != null) cardTitleText.text = title;
         if (cardDescriptionText != null) cardDescriptionText.text = description;
         if (cardImage != null) cardImage.sprite = image;
+    }
+    
+    /// <summary>
+    /// Setup card with DecisionCard data for the Master
+    /// </summary>
+    public void SetupCard(DecisionCard card, TeamMember targetMember = null)
+    {
+        currentCard = card;
+        currentTargetMember = targetMember;
+        
+        // Set card visuals
+        if (card.cardImage != null && cardImage != null)
+            cardImage.sprite = card.cardImage;
+        
+        if (cardTitleText != null)
+            cardTitleText.text = card.cardTitle;
+        
+        // Format description with target member name if applicable
+        string description = card.cardDescription;
+        if (targetMember != null && description.Contains("{member}"))
+        {
+            description = description.Replace("{member}", targetMember.memberName);
+        }
+        
+        if (cardDescriptionText != null)
+            cardDescriptionText.text = description;
+        
+        // Set option text
+        if (acceptText != null)
+            acceptText.text = card.optionA.optionText;
+        
+        if (rejectText != null)
+            rejectText.text = card.optionB.optionText;
+        
+        // Show affected member name if applicable
+        if (affectedMemberText != null)
+        {
+            if (targetMember != null)
+            {
+                affectedMemberText.text = $"Affected: {targetMember.memberName}";
+                affectedMemberText.gameObject.SetActive(true);
+            }
+            else
+            {
+                affectedMemberText.gameObject.SetActive(false);
+            }
+        }
+        
+        // Hide decision text initially
+        HideDecisionText();
+        
+        // Reset position
+        rectTransform.anchoredPosition = originalPosition;
+        rectTransform.rotation = Quaternion.identity;
+        
+    }
+    
+    /// <summary>
+    /// Get the current card for the Master
+    /// </summary>
+    public DecisionCard GetCurrentCard()
+    {
+        return currentCard;
+    }
+    
+    /// <summary>
+    /// Clear card data and hide
+    /// </summary>
+    public void ClearCard()
+    {
+        currentCard = null;
+        currentTargetMember = null;
+        HideDecisionText();
+        gameObject.SetActive(false);
     }
     
     public void HideDecisionText()
@@ -115,16 +193,32 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     
     private void OnSwipeRight()
     {
-        // Hire the racer
-        Debug.Log("Swiped Right - Hire!");
-        AnimateOffScreen(Vector2.right);
+        // Accept - Option A
+        Debug.Log("Swiped Right - Accept!");
+        
+        if (currentCard != null && decisionCardUiMaster != null)
+        {
+            decisionCardUiMaster.OnCardDecision(this, currentCard.optionA, currentCard, currentTargetMember);
+        }
+        else
+        {
+            AnimateOffScreen(Vector2.right);
+        }
     }
     
     private void OnSwipeLeft()
     {
-        // Reject the racer
+        // Reject - Option B
         Debug.Log("Swiped Left - Reject!");
-        AnimateOffScreen(Vector2.left);
+        
+        if (currentCard != null && decisionCardUiMaster != null)
+        {
+            decisionCardUiMaster.OnCardDecision(this, currentCard.optionB, currentCard, currentTargetMember);
+        }
+        else
+        {
+            AnimateOffScreen(Vector2.left);
+        }
     }
     
     private void AnimateOffScreen(Vector2 direction)

@@ -4,7 +4,7 @@ using UnityEngine;
 public class GarageSceneManager : MonoBehaviour
 {
     public static GarageSceneManager Instance { get; private set; }
-
+    public DecisionCardUiMaster De;
     private void Awake()
     {
         if (Instance == null)
@@ -15,11 +15,19 @@ public class GarageSceneManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        if(De != null && DecisionCardManager.Instance != null)
+        {
+            De.gameObject.SetActive(false);
+            DecisionCardManager.Instance.SetUiMaster(De);
+        }
     }
     
     void OnEnable()
     {
         CheckAndShowLeagueInvite();
+        
+      
+      
     }
 
     public void CheckAndShowLeagueInvite()

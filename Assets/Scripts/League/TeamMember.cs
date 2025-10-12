@@ -330,6 +330,7 @@ public class TeamMemberFitness
     public float recoveryRate = 5f; // Fitness points recovered per hour
     public float HungerLevel;
     public float maxHungerLevel = 100f;
+    public bool isInjured = false;
     
     public enum PhysicalState
     {
@@ -357,6 +358,29 @@ public class TeamMemberFitness
        Minor,
        Major,
        Critical
+   }
+   
+   public void Injure(InjuryStatus status)
+   {
+       injuryStatus = status;
+       switch (status)
+       {
+           case InjuryStatus.Healthy:
+               isInjured = false;
+               break;
+           case InjuryStatus.Minor:
+               isInjured = true;
+               AdjustFitness(-10f);
+               break;
+           case InjuryStatus.Major:
+               isInjured = true;
+               AdjustFitness(-30f);
+               break;
+           case InjuryStatus.Critical:
+               isInjured = true;
+               AdjustFitness(-50f);
+               break;
+       }
    }
    
    public bool IsPlayerFitToRace()
