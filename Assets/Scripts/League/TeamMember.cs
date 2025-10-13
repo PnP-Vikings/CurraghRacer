@@ -74,6 +74,7 @@ public class TeamMember : ScriptableObject
     
     
     
+    
     public void ResetAllStats(int teamQuality = 1)
     {
         characterStats = GetDefaultStatsBasedOnAttitude(teamQuality);
@@ -317,6 +318,8 @@ public class TeamMember : ScriptableObject
         Technique,
         TeamWork
     }
+    
+    
 }
 
 
@@ -327,6 +330,7 @@ public class TeamMemberFitness
     public float recoveryRate = 5f; // Fitness points recovered per hour
     public float HungerLevel;
     public float maxHungerLevel = 100f;
+    public bool isInjured = false;
     
     public enum PhysicalState
     {
@@ -356,6 +360,29 @@ public class TeamMemberFitness
        Critical
    }
    
+   public void Injure(InjuryStatus status)
+   {
+       injuryStatus = status;
+       switch (status)
+       {
+           case InjuryStatus.Healthy:
+               isInjured = false;
+               break;
+           case InjuryStatus.Minor:
+               isInjured = true;
+               AdjustFitness(-10f);
+               break;
+           case InjuryStatus.Major:
+               isInjured = true;
+               AdjustFitness(-30f);
+               break;
+           case InjuryStatus.Critical:
+               isInjured = true;
+               AdjustFitness(-50f);
+               break;
+       }
+   }
+   
    public bool IsPlayerFitToRace()
    {
        return currentFitness >= 30f && injuryStatus == InjuryStatus.Healthy || injuryStatus == InjuryStatus.Minor;
@@ -375,6 +402,7 @@ public class TeamMemberFitness
    }
   
  
+   
 }
 
 public class Happiness

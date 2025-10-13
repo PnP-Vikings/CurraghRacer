@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Calendar;
 using UnityEngine;
 using League;
 
@@ -26,7 +27,12 @@ public class SaveData
     public CalendarSaveData calendarData;
     [Header("Bill Data")]
     public BillSaveData billData;
-   
+    
+    [Header("Team Manager Data")]
+    public TeamManagerSaveData teamManagerData;
+    
+    [Header("Decision Card Data")]
+    public DecisionCardSaveData decisionCardData;   
 
     public SaveData()
     {
@@ -36,6 +42,8 @@ public class SaveData
         gameProgress = new GameProgressData();
         calendarData = new CalendarSaveData();
         billData = new BillSaveData();
+        teamManagerData = new TeamManagerSaveData();
+        decisionCardData = new DecisionCardSaveData();
     }
 }
 
@@ -54,6 +62,90 @@ public class BillSaveData
     public List<Bill> bills;
     public List<Bill> recurringPaidBills;
 }
+
+[System.Serializable]
+public class DecisionCardSaveData
+{
+    public List<CardHistoryEntry> cardHistory;
+    
+    public DecisionCardSaveData()
+    {
+        cardHistory = new List<CardHistoryEntry>();
+    }
+}
+
+[System.Serializable]
+public class CardHistoryEntry
+{
+    public string cardTitle;
+    public int lastShownDay;
+    
+    public CardHistoryEntry() { }
+    
+    public CardHistoryEntry(string title, int day)
+    {
+        cardTitle = title;
+        lastShownDay = day;
+    }
+}
+
+[System.Serializable]
+public class TeamManagerSaveData 
+{
+  public Team playerTeam;
+  public TeamMember teamManager;
+  public TeamMemberSaveData[] activeCrewMembers;
+  public TeamMemberSaveData[] benchTeamMembers;
+  public List<HireableTeamMembers> racersForHire;
+  public bool isAllActiveTeamMembersHealthy = false;
+
+  public TeamManagerSaveData() {}
+  
+  public TeamManagerSaveData(TeamManager manager)
+  {
+      playerTeam = manager.playerTeam;
+      teamManager = manager.teamManager;
+      
+      // Convert active crew members to save data
+      if (manager.activeCrewMembers != null && manager.activeCrewMembers.Count > 0)
+      {
+          activeCrewMembers = new TeamMemberSaveData[manager.activeCrewMembers.Count];
+          for (int i = 0; i < manager.activeCrewMembers.Count; i++)
+          {
+              if (manager.activeCrewMembers[i] != null)
+              {
+                  activeCrewMembers[i] = new TeamMemberSaveData(manager.activeCrewMembers[i]);
+              }
+          }
+      }
+      else
+      {
+          activeCrewMembers = new TeamMemberSaveData[0];
+      }
+      
+      // Convert bench team members to save data
+      if (manager.benchTeamMembers != null && manager.benchTeamMembers.Count > 0)
+      {
+          benchTeamMembers = new TeamMemberSaveData[manager.benchTeamMembers.Count];
+          for (int i = 0; i < manager.benchTeamMembers.Count; i++)
+          {
+              if (manager.benchTeamMembers[i] != null)
+              {
+                  benchTeamMembers[i] = new TeamMemberSaveData(manager.benchTeamMembers[i]);
+              }
+          }
+      }
+      else
+      {
+          benchTeamMembers = new TeamMemberSaveData[0];
+      }
+      
+      racersForHire = manager.racersForHire != null ? new List<HireableTeamMembers>(manager.racersForHire) : new List<HireableTeamMembers>();
+      isAllActiveTeamMembersHealthy = manager.isAllActiveTeamMembersHealthy;
+  }
+ 
+}
+
 
 [System.Serializable]
 public class TeamMemberSaveData
@@ -663,6 +755,19 @@ public class SaveSystem : MonoBehaviour
             };
             saveData.billData = billData;
         }
+        
+        // Save Team Manager Data
+        if (TeamManager.Instance != null)
+        {
+            saveData.teamManagerData = new TeamManagerSaveData(TeamManager.Instance);
+        }
+        
+        // Save Decision Card Data
+        if (DecisionCardManager.Instance != null)
+        {
+            saveData.decisionCardData = new DecisionCardSaveData();
+            saveData.decisionCardData.cardHistory = DecisionCardManager.Instance.GetCardHistory();
+        }
 
         return saveData;
     }
@@ -770,6 +875,75 @@ public class SaveSystem : MonoBehaviour
             {
                 BillsController.Instance.GenerateBills();
             }
+        }
+        // Apply Team Manager Data
+        if (TeamManager.Instance != null && saveData.teamManagerData != null)
+        {
+            TeamManager.Instance.playerTeam = saveData.teamManagerData.playerTeam;
+            TeamManager.Instance.teamManager = saveData.teamManagerData.teamManager;
+            
+            // Restore active crew members
+            if (saveData.teamManagerData.activeCrewMembers != null && saveData.teamManagerData.activeCrewMembers.Length > 0)
+            {
+                TeamManager.Instance.activeCrewMembers = new List<TeamMember>();
+                for (int i = 0; i < saveData.teamManagerData.activeCrewMembers.Length; i++)
+                {
+                    if (saveData.teamManagerData.activeCrewMembers[i] != null)
+                    {
+                        TeamMember crewMember = ScriptableObject.CreateInstance<TeamMember>();
+                        RestoreTeamMember(crewMember, saveData.teamManagerData.activeCrewMembers[i]);
+                        TeamManager.Instance.activeCrewMembers.Add(crewMember);
+                    }
+                }
+            }
+            else
+            {
+                TeamManager.Instance.activeCrewMembers = new List<TeamMember>();
+            }
+            
+            // Restore bench team members
+            if (saveData.teamManagerData.benchTeamMembers != null && saveData.teamManagerData.benchTeamMembers.Length > 0)
+            {
+                TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+                for (int i = 0; i < saveData.teamManagerData.benchTeamMembers.Length; i++)
+                {
+                    if (saveData.teamManagerData.benchTeamMembers[i] != null)
+                    {
+                        TeamMember benchMember = ScriptableObject.CreateInstance<TeamMember>();
+                        RestoreTeamMember(benchMember, saveData.teamManagerData.benchTeamMembers[i]);
+                        TeamManager.Instance.benchTeamMembers.Add(benchMember);
+                    }
+                }
+            }
+            else
+            {
+                TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+            }
+            
+            TeamManager.Instance.racersForHire = saveData.teamManagerData.racersForHire != null ? new List<HireableTeamMembers>(saveData.teamManagerData.racersForHire) : new List<HireableTeamMembers>();
+            TeamManager.Instance.isAllActiveTeamMembersHealthy = saveData.teamManagerData.isAllActiveTeamMembersHealthy;
+            
+            // Update the playerTeam lists to reference the same restored instances
+            // This ensures SwapTeamMembers works correctly
+            if (TeamManager.Instance.playerTeam != null)
+            {
+                TeamManager.Instance.playerTeam.teamMembers = TeamManager.Instance.activeCrewMembers;
+                TeamManager.Instance.playerTeam.bench = TeamManager.Instance.benchTeamMembers;
+                
+                // Update PlayerManager's team reference to match the restored team members
+                if (PlayerManager.Instance != null)
+                {
+                    PlayerManager.Instance.playerTeam = TeamManager.Instance.playerTeam;
+                    PlayerManager.Instance.team = TeamManager.Instance.activeCrewMembers;
+                }
+            }
+        }
+        
+        // Apply Decision Card Data
+        if (DecisionCardManager.Instance != null && saveData.decisionCardData != null)
+        {
+            DecisionCardManager.Instance.RestoreCardHistory(saveData.decisionCardData.cardHistory);
+            Debug.Log($"Restored {saveData.decisionCardData.cardHistory.Count} card history entries");
         }
     }
 
@@ -1270,6 +1444,13 @@ public class SaveSystem : MonoBehaviour
                         {
                             if (team != null)
                             {
+                                if(team.teamType == TeamType.Player)
+                                {
+                                    // Restore team to default setup (restores original team members and bench)
+                                    team.RestoreDefaultTeamSetup();
+                                }
+                               
+                                
                                 team.currentForm = 50f;
                                 team.recentResults.Clear();
                                 
@@ -1330,6 +1511,13 @@ public class SaveSystem : MonoBehaviour
             BillsController.Instance.bills.Clear();
             BillsController.Instance.recurringPaidBills.Clear();
         }
+        
+        // Reset DecisionCardManager for new game
+        if (DecisionCardManager.Instance != null)
+        {
+            DecisionCardManager.Instance.ResetForNewGame();
+            Debug.Log("DecisionCardManager reset for new game");
+        }
     }
     
     /// <summary>
@@ -1346,6 +1534,19 @@ public class SaveSystem : MonoBehaviour
         saveData.playerData.energy = 100f;
         saveData.playerData.coins = 50f;
         
+        // Capture current team member data from PlayerManager (preserves attitudes and other ScriptableObject settings)
+        if (PlayerManager.Instance != null && PlayerManager.Instance.team != null && PlayerManager.Instance.team.Count > 0)
+        {
+            saveData.playerData.teamMembers = new TeamMemberSaveData[PlayerManager.Instance.team.Count];
+            for (int i = 0; i < PlayerManager.Instance.team.Count; i++)
+            {
+                if (PlayerManager.Instance.team[i] != null)
+                {
+                    saveData.playerData.teamMembers[i] = new TeamMemberSaveData(PlayerManager.Instance.team[i]);
+                }
+            }
+        }
+        
         // Set fresh game progress
         saveData.gameProgress.gameStarted = true;
         saveData.gameProgress.difficulty = 1f;
@@ -1361,6 +1562,45 @@ public class SaveSystem : MonoBehaviour
         {
             // Fallback to the default starting date if TimeManager is not available
             saveData.calendarData.currentDate = new DateTime(2008, 1, 1).ToString("yyyy-MM-dd");
+        }
+
+        //Set Fresh Bench Data - only team manager if available
+        if (TeamManager.Instance != null)
+        {
+            // After RestoreDefaultTeamSetup has been called in InitializeNewGameState,
+            // sync TeamManager lists with the playerTeam's restored default lists
+            if (TeamManager.Instance.playerTeam != null)
+            {
+                // Use the already-restored team members and bench from the playerTeam ScriptableObject
+                TeamManager.Instance.activeCrewMembers = TeamManager.Instance.playerTeam.teamMembers;
+                TeamManager.Instance.benchTeamMembers = TeamManager.Instance.playerTeam.bench;
+            }
+            else
+            {
+                // Fallback: clear bench if no player team exists
+                if (TeamManager.Instance.benchTeamMembers.Count > 1)
+                {
+                    if (TeamManager.Instance.teamManager != null)
+                    {
+                        TeamManager.Instance.benchTeamMembers = new List<TeamMember> { TeamManager.Instance.teamManager };
+                    }
+                    else
+                    {
+                        TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
+                    }
+                }
+            }
+            
+            TeamManager.Instance.ResetHireableRacersForHire();
+            
+            // Save the default TeamManager settings for new game
+            saveData.teamManagerData = new TeamManagerSaveData(TeamManager.Instance);
+        }
+        
+        //Clear list
+        if(CompletedRacesManager.Instance != null)
+        {
+            CompletedRacesManager.Instance.ClearAllCompletedRaces();
         }
         
         // Ensure bill data is empty for new game

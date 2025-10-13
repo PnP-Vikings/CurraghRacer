@@ -5,7 +5,9 @@ public class TeamManagerUi : MonoBehaviour
    public Transform teamManagerUiParent;
    public Transform teamBenchUiParent;
    public Transform racersforHireUiParent;
-   public GameObject teamManagerUiPrefab;
+   public TeamMemberUiHandler teamManagerUiPrefab;
+   public BenchTeamMemberUiHandler benchTeamMemberUiHandler;
+   public HireableSailorsUiHandler hireableSailorsUiHandler;
    
     public void ClearTeamMemberUis()
     {
@@ -25,7 +27,24 @@ public class TeamManagerUi : MonoBehaviour
    
    void OnEnable()
    {
-       if (teamManagerUiParent != null && teamManagerUiPrefab != null)
+     RefreshManagerUi();
+     
+     if(TeamManager.Instance != null)
+     {
+         TeamManager.Instance.onTeamMemberHired.AddListener(RefreshManagerUi);
+            TeamManager.Instance.onTeamMembersUpdated.AddListener(RefreshManagerUi);
+     }
+     else
+     {
+         Debug.LogError("TeamManagerUi: TeamManager instance is null on OnEnable.");
+     }
+   }
+   
+   
+   public void RefreshManagerUi()
+   {
+       ClearTeamMemberUis();
+         if (teamManagerUiParent != null && teamManagerUiPrefab != null)
        {
            if (TeamManager.Instance != null)
            {
@@ -37,31 +56,42 @@ public class TeamManagerUi : MonoBehaviour
                foreach (TeamMember crewMember in TeamManager.Instance.activeCrewMembers)
                {
                    Debug.Log("TeamManagerUi: Creating UI for crew member: " + crewMember.memberName);
-                   GameObject crewMemberUi = Instantiate(teamManagerUiPrefab, teamManagerUiParent);
-                   TeamMemberUiHandler crewMemberUiComponent = crewMemberUi.GetComponent<TeamMemberUiHandler>();
-                   if (crewMemberUiComponent != null)
+                   GameObject crewMemberUi = Instantiate(teamManagerUiPrefab.gameObject, teamManagerUiParent);
+                   if (crewMemberUi != null)
                    {
-                       crewMemberUiComponent.SetMemberData(crewMember);
+                       TeamMemberUiHandler handler = crewMemberUi.GetComponent<TeamMemberUiHandler>();
+                       if (handler != null)
+                       {
+                           handler.ClearMemberData();
+                           handler.SetMemberData(crewMember);
+                       }
                    }
                }
                foreach (TeamMember benchMember in TeamManager.Instance.benchTeamMembers)
                {
                    Debug.Log("TeamManagerUi: Creating UI for bench member: " + benchMember.memberName);
-                   GameObject benchMemberUi = Instantiate(teamManagerUiPrefab, teamBenchUiParent);
-                   TeamMemberUiHandler benchMemberUiComponent = benchMemberUi.GetComponent<TeamMemberUiHandler>();
-                   if (benchMemberUiComponent != null)
+                   GameObject benchMemberUi = Instantiate(benchTeamMemberUiHandler.gameObject, teamBenchUiParent);
+                    if (benchMemberUi != null)
                    {
-                       benchMemberUiComponent.SetMemberData(benchMember);
+                       BenchTeamMemberUiHandler handler = benchMemberUi.GetComponent<BenchTeamMemberUiHandler>();
+                       if (handler != null)
+                       {
+                           handler.ClearMemberData();
+                           handler.SetMemberData(benchMember);
+                       }
                    }
                }
-                foreach (TeamMember hireMember in TeamManager.Instance.racersForHire)
+                foreach (HireableTeamMembers hireMember in TeamManager.Instance.racersForHire)
                 {
                      Debug.Log("TeamManagerUi: Creating UI for hire member: " + hireMember.memberName);
-                     GameObject hireMemberUi = Instantiate(teamManagerUiPrefab, racersforHireUiParent);
-                     TeamMemberUiHandler hireMemberUiComponent = hireMemberUi.GetComponent<TeamMemberUiHandler>();
-                     if (hireMemberUiComponent != null)
+                     GameObject hireMemberUi = Instantiate(hireableSailorsUiHandler.gameObject, racersforHireUiParent);
+                      if (hireMemberUi != null)
                      {
-                          hireMemberUiComponent.SetMemberData(hireMember);
+                         HireableSailorsUiHandler handler = hireMemberUi.GetComponent<HireableSailorsUiHandler>();
+                         if (handler != null)
+                         {
+                             handler.SetMemberData(hireMember);
+                         }
                      }
                 }
            }
@@ -72,7 +102,6 @@ public class TeamManagerUi : MonoBehaviour
            }
        }
    }
-   
    void OnDisable()
    {
        ClearTeamMemberUis();
@@ -80,5 +109,3 @@ public class TeamManagerUi : MonoBehaviour
    
    
 }
-
-

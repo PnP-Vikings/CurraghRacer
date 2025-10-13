@@ -18,9 +18,10 @@ public class TeamMemberUiHandler : MonoBehaviour
         ageText;
     
     public Image memberIconImage;
+    public TeamMember teamMember;
     
     
-    
+   
     
     public void SetMemberData(TeamMember member)
     {
@@ -47,6 +48,8 @@ public class TeamMemberUiHandler : MonoBehaviour
         {
             Debug.LogWarning("Member icon is not set!");
         }
+        
+        teamMember = member;
 
         SetupUi();
     }
@@ -75,6 +78,34 @@ public class TeamMemberUiHandler : MonoBehaviour
         }
     }
     
+    
+    public void ClearMemberData()
+    {
+        memberName = "";
+        memberDescription = "";
+        attitude = "";
+        strength = 0;
+        stamina = 0;
+        technique = 0;
+        teamWork = 0;
+        age = 0;
+        memberIconImage.sprite = null;
+        teamMember = null;
+
+        memberNameText.text = "N/A";
+        memberDescriptionText.text = "N/A";
+        attitudeText.text = "N/A";
+        strengthText.text = "Strength: N/A";
+        staminaText.text = "Stamina: N/A";
+        techniqueText.text = "Technique: N/A";
+        teamWorkText.text = "Team Work: N/A";
+        ageText.text = "Age: N/A";
+
+        if (memberIconImage != null)
+        {
+            memberIconImage.gameObject.SetActive(false);
+        }
+    }
   
     
 }

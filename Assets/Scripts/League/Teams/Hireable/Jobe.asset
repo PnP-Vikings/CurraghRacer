@@ -20,13 +20,13 @@ MonoBehaviour:
   attitude: 7
   characterStats:
     strength: 5
-    stamina: 5
-    technique: 5
-    teamWork: 5
+    stamina: 6
+    technique: 7
+    teamWork: 6
   level: 1
   experience: 0
   xpToNextLevel: 100
-  salary: 50
-  racesAvailableFor: 999999
+  salary: 125
+  racesAvailableFor: 2
   hireCost: 150
   skillLevel: 1

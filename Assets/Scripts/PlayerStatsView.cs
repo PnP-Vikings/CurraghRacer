@@ -36,7 +36,6 @@ public class PlayerStatsView : MonoBehaviour
         
         PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
         UpdatePlayerStats();
-
     }
     
     public void UpdatePlayerStats()
