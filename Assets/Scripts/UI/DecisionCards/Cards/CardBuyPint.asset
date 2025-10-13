@@ -23,7 +23,7 @@ MonoBehaviour:
   specificTargetMember: {fileID: 0}
   requiredAttitudes: 
   optionA:
-    optionText: Spent 20 On Buying The lads a round may improve team morale
+    optionText: Spend 20 On Buying The lads a round may improve team morale
     optionDescription: 
     coinsChange: -20
     energyChange: 0

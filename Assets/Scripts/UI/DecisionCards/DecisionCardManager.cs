@@ -236,11 +236,21 @@ public class DecisionCardManager : MonoBehaviour
         if (teamMembers == null || teamMembers.Count == 0)
             return null;
         
+        // Filter out temporary racers (racesAvailableFor <= 1000)
+        // Permanent racers have racesAvailableFor set to 99999
+        List<TeamMember> permanentMembers = teamMembers.Where(m => m != null && m.racesAvailableFor > 1000).ToList();
+        
+        if (permanentMembers.Count == 0)
+        {
+            Debug.LogWarning("No permanent team members found for decision card targeting");
+            return null;
+        }
+        
         // Filter by required attitudes
-        List<TeamMember> validMembers = teamMembers;
+        List<TeamMember> validMembers = permanentMembers;
         if (card.requiredAttitudes.Count > 0)
         {
-            validMembers = teamMembers.Where(m => card.requiredAttitudes.Contains(m.attitude)).ToList();
+            validMembers = permanentMembers.Where(m => card.requiredAttitudes.Contains(m.attitude)).ToList();
         }
         
         if (validMembers.Count == 0)
@@ -343,16 +353,23 @@ public class DecisionCardManager : MonoBehaviour
             );
         }
         
-        // Apply to target member
+        // Apply morale change to ALL team members (active + bench)
+        if (option.moraleChange != 0)
+        {
+            ApplyMoraleToAllMembers(option.moraleChange);
+        }
+        
+        // Apply to target member (individual effects)
         if (currentTargetMember != null)
         {
-            // Happiness
+            // Happiness (individual change for the targeted member)
             if (option.happinessChange != 0)
             {
                 currentTargetMember.happiness.currentHappiness = Mathf.Clamp(
                     currentTargetMember.happiness.currentHappiness + option.happinessChange,
                     0, 100
                 );
+                Debug.Log($"{currentTargetMember.memberName} happiness changed by {option.happinessChange}");
             }
             
             // Stats
@@ -383,14 +400,24 @@ public class DecisionCardManager : MonoBehaviour
             );
         }
         
+        // Apply morale change to ALL team members
+        if (outcome.moraleChange != 0)
+        {
+            ApplyMoraleToAllMembers(outcome.moraleChange);
+        }
+        
         // Apply to target member
         if (currentTargetMember != null)
         {
-            // Happiness
-            currentTargetMember.happiness.currentHappiness = Mathf.Clamp(
-                currentTargetMember.happiness.currentHappiness + outcome.happinessChange,
-                0, 100
-            );
+            // Happiness (individual change for the targeted member)
+            if (outcome.happinessChange != 0)
+            {
+                currentTargetMember.happiness.currentHappiness = Mathf.Clamp(
+                    currentTargetMember.happiness.currentHappiness + outcome.happinessChange,
+                    0, 100
+                );
+                Debug.Log($"{currentTargetMember.memberName} happiness changed by {outcome.happinessChange}");
+            }
             
             // Experience
             currentTargetMember.experience += outcome.experienceChange;
@@ -431,6 +458,56 @@ public class DecisionCardManager : MonoBehaviour
     }
     
     /// <summary>
+    /// Apply morale change (happiness) to all team members (active crew + bench)
+    /// </summary>
+    private void ApplyMoraleToAllMembers(int moraleChange)
+    {
+        if (PlayerManager.Instance?.playerTeam == null)
+        {
+            Debug.LogWarning("Cannot apply morale - no player team found");
+            return;
+        }
+        
+        int membersAffected = 0;
+        
+        // Apply to active crew members
+        if (PlayerManager.Instance.playerTeam.teamMembers != null)
+        {
+            foreach (var member in PlayerManager.Instance.playerTeam.teamMembers)
+            {
+                if (member != null && member.happiness != null)
+                {
+                    member.happiness.currentHappiness = Mathf.Clamp(
+                        member.happiness.currentHappiness + moraleChange,
+                        0, 100
+                    );
+                    membersAffected++;
+                }
+                Debug.Log($"Applied morale change to {member.memberName}, new happiness: {member.happiness.currentHappiness}");
+            }
+        }
+        
+        // Apply to bench members
+        if (PlayerManager.Instance.playerTeam.bench != null)
+        {
+            foreach (var member in PlayerManager.Instance.playerTeam.bench)
+            {
+                if (member != null && member.happiness != null)
+                {
+                    member.happiness.currentHappiness = Mathf.Clamp(
+                        member.happiness.currentHappiness + moraleChange,
+                        0, 100
+                    );
+                    membersAffected++;
+                }
+                Debug.Log($"Applied morale change to {member.memberName}, new happiness: {member.happiness.currentHappiness}");
+            }
+        }
+        
+        Debug.Log($"Team morale changed by {moraleChange} for {membersAffected} team members");
+    }
+    
+    /// <summary>
     /// Schedule a follow-up card to appear
     /// </summary>
     private void ScheduleFollowUpCard(DecisionCard followUp, int daysUntil)
@@ -454,6 +531,70 @@ public class DecisionCardManager : MonoBehaviour
     public List<DecisionCard> GetTodaysCards()
     {
         return todaysCards;
+    }
+    
+    /// <summary>
+    /// Get card history for saving
+    /// </summary>
+    public List<CardHistoryEntry> GetCardHistory()
+    {
+        List<CardHistoryEntry> history = new List<CardHistoryEntry>();
+        
+        foreach (var kvp in cardLastShownDay)
+        {
+            if (kvp.Key != null)
+            {
+                history.Add(new CardHistoryEntry(kvp.Key.cardTitle, kvp.Value));
+            }
+        }
+        
+        return history;
+    }
+    
+    /// <summary>
+    /// Restore card history from save data
+    /// </summary>
+    public void RestoreCardHistory(List<CardHistoryEntry> history)
+    {
+        cardLastShownDay.Clear();
+        
+        if (history == null || history.Count == 0)
+        {
+            Debug.Log("No card history to restore");
+            return;
+        }
+        
+        foreach (var entry in history)
+        {
+            // Find the matching card by title
+            DecisionCard card = allDecisionCards.Find(c => c != null && c.cardTitle == entry.cardTitle);
+            
+            if (card != null)
+            {
+                cardLastShownDay[card] = entry.lastShownDay;
+                Debug.Log($"Restored card '{entry.cardTitle}' last shown on day {entry.lastShownDay}");
+            }
+            else
+            {
+                Debug.LogWarning($"Could not find card with title '{entry.cardTitle}' to restore history");
+            }
+        }
+        
+        Debug.Log($"Restored {cardLastShownDay.Count} card history entries");
+    }
+    
+    /// <summary>
+    /// Reset the DecisionCardManager for a new game
+    /// </summary>
+    public void ResetForNewGame()
+    {
+        // Clear all card tracking
+        cardLastShownDay.Clear();
+        todaysCards.Clear();
+        currentCard = null;
+        currentTargetMember = null;
+        
+        Debug.Log("DecisionCardManager reset - all card history cleared for new game");
     }
 }
 

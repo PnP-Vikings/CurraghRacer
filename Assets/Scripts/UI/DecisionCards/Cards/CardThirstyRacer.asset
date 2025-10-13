@@ -24,7 +24,7 @@ MonoBehaviour:
   specificTargetMember: {fileID: 0}
   requiredAttitudes: 
   optionA:
-    optionText: Spent 20 On Buying a drink may improve team mates morale
+    optionText: Spend 20 On Buying a drink may improve team mates morale
     optionDescription: 
     coinsChange: -20
     energyChange: 0

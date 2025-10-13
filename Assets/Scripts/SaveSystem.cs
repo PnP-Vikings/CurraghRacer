@@ -29,7 +29,10 @@ public class SaveData
     public BillSaveData billData;
     
     [Header("Team Manager Data")]
-    public TeamManagerSaveData teamManagerData;   
+    public TeamManagerSaveData teamManagerData;
+    
+    [Header("Decision Card Data")]
+    public DecisionCardSaveData decisionCardData;   
 
     public SaveData()
     {
@@ -40,6 +43,7 @@ public class SaveData
         calendarData = new CalendarSaveData();
         billData = new BillSaveData();
         teamManagerData = new TeamManagerSaveData();
+        decisionCardData = new DecisionCardSaveData();
     }
 }
 
@@ -57,6 +61,32 @@ public class BillSaveData
 {
     public List<Bill> bills;
     public List<Bill> recurringPaidBills;
+}
+
+[System.Serializable]
+public class DecisionCardSaveData
+{
+    public List<CardHistoryEntry> cardHistory;
+    
+    public DecisionCardSaveData()
+    {
+        cardHistory = new List<CardHistoryEntry>();
+    }
+}
+
+[System.Serializable]
+public class CardHistoryEntry
+{
+    public string cardTitle;
+    public int lastShownDay;
+    
+    public CardHistoryEntry() { }
+    
+    public CardHistoryEntry(string title, int day)
+    {
+        cardTitle = title;
+        lastShownDay = day;
+    }
 }
 
 [System.Serializable]
@@ -732,6 +762,12 @@ public class SaveSystem : MonoBehaviour
             saveData.teamManagerData = new TeamManagerSaveData(TeamManager.Instance);
         }
         
+        // Save Decision Card Data
+        if (DecisionCardManager.Instance != null)
+        {
+            saveData.decisionCardData = new DecisionCardSaveData();
+            saveData.decisionCardData.cardHistory = DecisionCardManager.Instance.GetCardHistory();
+        }
 
         return saveData;
     }
@@ -901,6 +937,13 @@ public class SaveSystem : MonoBehaviour
                     PlayerManager.Instance.team = TeamManager.Instance.activeCrewMembers;
                 }
             }
+        }
+        
+        // Apply Decision Card Data
+        if (DecisionCardManager.Instance != null && saveData.decisionCardData != null)
+        {
+            DecisionCardManager.Instance.RestoreCardHistory(saveData.decisionCardData.cardHistory);
+            Debug.Log($"Restored {saveData.decisionCardData.cardHistory.Count} card history entries");
         }
     }
 
@@ -1467,6 +1510,13 @@ public class SaveSystem : MonoBehaviour
         {
             BillsController.Instance.bills.Clear();
             BillsController.Instance.recurringPaidBills.Clear();
+        }
+        
+        // Reset DecisionCardManager for new game
+        if (DecisionCardManager.Instance != null)
+        {
+            DecisionCardManager.Instance.ResetForNewGame();
+            Debug.Log("DecisionCardManager reset for new game");
         }
     }
     
