@@ -56,7 +56,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2257
+  Length: 2757
 --- !u!114 &-8541651289697230892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,7 +398,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638959580681883400
+  lastModified: 638959611724868145
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -602,10 +602,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638959580681893408
+  lastModified: 638959611724899790
   FileSizes:
   - Name: 
-    Value: 2620
+    Value: 2680
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -738,12 +738,13 @@ MonoBehaviour:
   - {fileID: -8571537632650588184}
   - {fileID: 3445940154011273255}
   - {fileID: -1304913028099773801}
+  - {fileID: 3206544367057659537}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638959580681893408
+  cacheTime: 638959611724899790
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -901,6 +902,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &3206544367057659537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Soundtrack/Loading Screen Song
+  m_EditorClassIdentifier: 
+  Path: event:/Soundtrack/Loading Screen Song
+  Guid:
+    Data1: -1487632551
+    Data2: 1338182616
+    Data3: 1968909203
+    Data4: 296153252
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 53333
 --- !u!114 &3445940154011273255
 MonoBehaviour:
   m_ObjectHideFlags: 0
