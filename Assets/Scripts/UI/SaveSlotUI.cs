@@ -24,10 +24,7 @@ public class SaveSlotUI : MonoBehaviour
     public int slotIndex;
     private SaveSlotInfo slotInfo;
     private SaveMenuUI parentMenu;
-
-    private FMOD.Studio.EventInstance UIClick1;
-    private FMOD.Studio.EventInstance DeleteSaveAudio;
-
+    
     public void Initialize(int index, SaveSlotInfo info, SaveMenuUI menu)
     {
         slotIndex = index;
@@ -177,9 +174,6 @@ public class SaveSlotUI : MonoBehaviour
             parentMenu?.ShowMessage($"Game loaded from Slot {slotIndex + 1}!", false);
             GameManager.Instance.StartGame();
             parentMenu?.CloseMenu();
-
-            UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
-            UIClick1.start();
         }
         else
         {
@@ -194,9 +188,6 @@ public class SaveSlotUI : MonoBehaviour
             if (SaveSystem.Instance.NewGame(saveNameInputField.text, slotIndex + 1))
             {
                 GameManager.Instance.StartGame();
-
-                UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
-                UIClick1.start();
             }
             else
             {
@@ -226,9 +217,6 @@ public class SaveSlotUI : MonoBehaviour
                 {
                     parentMenu?.RefreshAllSlots();
                     parentMenu?.ShowMessage($"Save Slot {slotIndex + 1} deleted!", false);
-
-                    DeleteSaveAudio = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Delete Save");
-                    DeleteSaveAudio.start();
                 }
                 else
                 {

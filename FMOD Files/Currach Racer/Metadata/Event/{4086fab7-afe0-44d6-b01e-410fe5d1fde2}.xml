@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.02.00">
+<objects serializationModel="Studio.02.03.00">
 	<object class="Event" id="{4086fab7-afe0-44d6-b01e-410fe5d1fde2}">
 		<property name="name">
 			<value>Gym Bag Zip Up</value>
@@ -90,7 +90,7 @@
 	<object class="MixerBusPanner" id="{6698217e-3ada-41b0-b6f6-5846d0b40273}" />
 	<object class="MultiSound" id="{74d1d63e-5d88-4c3e-a1b9-3b95e8e0ab45}">
 		<property name="length">
-			<value>4.0000000000000009</value>
+			<value>4</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{f488a9d8-29c5-4ccb-bcd1-34a6918c661a}</destination>
@@ -100,7 +100,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{cde9e4f1-1988-4b70-a259-eaf1aed97243}">
 		<property name="name">
-			<value>Gym Bag Zip Up</value>
+			<value>Gym Bad Zip Up</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{92277ed4-55cd-4017-902f-b1c4af879f6b}</destination>

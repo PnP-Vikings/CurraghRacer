@@ -165,33 +165,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 289
---- !u!114 &-7193753908747646984
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Bullet Board/Sleep Outside
-  m_EditorClassIdentifier: 
-  Path: event:/Bullet Board/Sleep Outside
-  Guid:
-    Data1: 519253604
-    Data2: 1336497815
-    Data3: 33648012
-    Data4: -1443493366
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 8819
 --- !u!114 &-7172221576809808135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -398,36 +371,9 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638959515395503305
+  lastModified: 638941541188287549
   FileSizes: []
   Exists: 1
---- !u!114 &-4185394128581720190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Bullet Board/Pay Bill
-  m_EditorClassIdentifier: 
-  Path: event:/Bullet Board/Pay Bill
-  Guid:
-    Data1: 1271018705
-    Data2: 1108036723
-    Data3: 2104792451
-    Data4: -349861335
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2108
 --- !u!114 &-3890573300518132453
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -614,33 +560,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2147
---- !u!114 &-1764442623816428422
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Soundtrack/Loading Screen Song
-  m_EditorClassIdentifier: 
-  Path: event:/Soundtrack/Loading Screen Song
-  Guid:
-    Data1: 1545279238
-    Data2: 1339470716
-    Data3: 2113603252
-    Data4: -1952929032
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 53333
 --- !u!114 &-1757233097622919889
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -656,10 +575,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638959515395543520
+  lastModified: 638941541188312610
   FileSizes:
   - Name: 
-    Value: 2802
+    Value: 2414
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -715,30 +634,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2242
---- !u!114 &-285783768958904192
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Radio/Radio Volume
-  m_EditorClassIdentifier: 
-  Name: Radio Volume
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 4019476872
-    data2: 1052027953
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &11400000
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -785,18 +680,12 @@ MonoBehaviour:
   - {fileID: 5039562840117391632}
   - {fileID: -743040683020159525}
   - {fileID: 1771700652360039094}
-  - {fileID: 6757695221308487273}
-  - {fileID: -4185394128581720190}
-  - {fileID: -1764442623816428422}
-  - {fileID: 7484658273082488369}
-  - {fileID: 4788068929234513053}
-  - {fileID: -7193753908747646984}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638959515395543520
+  cacheTime: 638941541188312610
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -1004,8 +893,7 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
-  Parameters:
-  - {fileID: -285783768958904192}
+  Parameters: []
   MinDistance: 1
   MaxDistance: 20
   Length: 37844
@@ -1036,33 +924,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1531
---- !u!114 &4788068929234513053
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Bullet Board/Sleep
-  m_EditorClassIdentifier: 
-  Path: event:/Bullet Board/Sleep
-  Guid:
-    Data1: -2132961916
-    Data2: 1202051458
-    Data3: -1426856774
-    Data4: -1819576764
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 6819
 --- !u!114 &4932352448969056289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1192,33 +1053,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 27343
---- !u!114 &6757695221308487273
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/UI/Delete Save
-  m_EditorClassIdentifier: 
-  Path: event:/UI/Delete Save
-  Guid:
-    Data1: 1740474616
-    Data2: 1091512976
-    Data3: -959760973
-    Data4: -712599390
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2500
 --- !u!114 &7321747427095314458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1246,33 +1080,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 363
---- !u!114 &7484658273082488369
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Practice/Practice Ambience
-  m_EditorClassIdentifier: 
-  Path: event:/Practice/Practice Ambience
-  Guid:
-    Data1: -1198780606
-    Data2: 1293032560
-    Data3: 123466674
-    Data4: -1991465315
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 30883
 --- !u!114 &7850523887524141844
 MonoBehaviour:
   m_ObjectHideFlags: 0

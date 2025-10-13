@@ -1,11 +1,11 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using League;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
-//using FMOD.Studio.Parameter;
 
 public class GameManager : MonoBehaviour
 {
@@ -21,8 +21,6 @@ public class GameManager : MonoBehaviour
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
 
-   //[SerializeField] FMODUnity.StudioEventEmitter garageAmbiencEmitter;
-   //public FMOD.Studio.EventInstance GarageAmbience;
    public List<String> miniGameWorkScenes = new List<string>
    {
        "BeerPourMinigame",
@@ -46,6 +44,7 @@ public class GameManager : MonoBehaviour
        
    }
    
+   private IEnumerator TrackPlayTime()
    {
          while (true)
          {
@@ -70,12 +69,8 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
         OnGameStarted?.Invoke();
         SceneManager.LoadScene(mainSceneName);
-
-        //GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        //GarageAmbience.start();
     }
     
-
     public bool GetGameStarted()
     {
         return GameStarted;
@@ -146,10 +141,6 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo($"You Spent {sleepCost} on a place to sleep", 3);
             PlayerStatsView.Instance.DisplayInfo("You Have Regained 100 Energy", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
-            //garageAmbiencEmitter.SetParameter("Radio Volume", 0);
-            //GetComponent<FMODUnity.StudioParameterTrigger>().TriggerParameters();
-            //ParameterTrigger.Instance.garageAmbienceEmitter.SetParameter("Radio Volume", 0);
-            //GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
         else
         {
