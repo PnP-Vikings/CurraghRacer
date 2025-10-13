@@ -371,7 +371,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638941701679603674
+  lastModified: 638941541188287549
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -575,10 +575,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638941701679613658
+  lastModified: 638941541188312610
   FileSizes:
   - Name: 
-    Value: 2376
+    Value: 2414
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -607,7 +607,7 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4050
---- !u!114 &-671269332136601359
+--- !u!114 &-743040683020159525
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -617,9 +617,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Turf Cutting/Cut Turf
+  m_Name: event:/Footing Turf/Cut Turf
   m_EditorClassIdentifier: 
-  Path: event:/Turf Cutting/Cut Turf
+  Path: event:/Footing Turf/Cut Turf
   Guid:
     Data1: 913151872
     Data2: 1291704603
@@ -668,10 +668,7 @@ MonoBehaviour:
   - {fileID: -7355683689810480613}
   - {fileID: 2894686220253667848}
   - {fileID: -7557941198526423288}
-  - {fileID: 6644793927448986291}
   - {fileID: -5146918259261699225}
-  - {fileID: 2884387597793963610}
-  - {fileID: -671269332136601359}
   - {fileID: -1702041834828596594}
   - {fileID: 5916317957201816820}
   - {fileID: 5769496863046401991}
@@ -679,12 +676,16 @@ MonoBehaviour:
   - {fileID: -2624806273485465106}
   - {fileID: -6390802952839510384}
   - {fileID: -6377474762000497385}
+  - {fileID: 2589597838079414676}
+  - {fileID: 5039562840117391632}
+  - {fileID: -743040683020159525}
+  - {fileID: 1771700652360039094}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638941701679613658
+  cacheTime: 638941541188312610
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -710,6 +711,60 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &1771700652360039094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Footing Turf/Turf Stack Complete
+  m_EditorClassIdentifier: 
+  Path: event:/Footing Turf/Turf Stack Complete
+  Guid:
+    Data1: -678678360
+    Data2: 1331940973
+    Data3: 1133200786
+    Data4: -659747308
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3750
+--- !u!114 &2589597838079414676
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Footing Turf/Place Turf
+  m_EditorClassIdentifier: 
+  Path: event:/Footing Turf/Place Turf
+  Guid:
+    Data1: -1254800834
+    Data2: 1292855987
+    Data3: 1866031253
+    Data4: -543270139
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 374
 --- !u!114 &2697066490857347409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -734,33 +789,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &2884387597793963610
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Turf Cutting/Turf Cutting Ambience
-  m_EditorClassIdentifier: 
-  Path: event:/Turf Cutting/Turf Cutting Ambience
-  Guid:
-    Data1: 1258965365
-    Data2: 1285682235
-    Data3: -957067616
-    Data4: 1695793787
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 31927
 --- !u!114 &2894686220253667848
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -920,6 +948,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &5039562840117391632
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Footing Turf/Footing Turf Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Footing Turf/Footing Turf Ambience
+  Guid:
+    Data1: 1258965365
+    Data2: 1285682235
+    Data3: -957067616
+    Data4: 1695793787
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 31927
 --- !u!114 &5205683574485413279
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -998,33 +1053,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 27343
---- !u!114 &6644793927448986291
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Turf Cutting/Place Turf
-  m_EditorClassIdentifier: 
-  Path: event:/Turf Cutting/Place Turf
-  Guid:
-    Data1: -1254800834
-    Data2: 1292855987
-    Data3: 1866031253
-    Data4: -543270139
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 374
 --- !u!114 &7321747427095314458
 MonoBehaviour:
   m_ObjectHideFlags: 0
