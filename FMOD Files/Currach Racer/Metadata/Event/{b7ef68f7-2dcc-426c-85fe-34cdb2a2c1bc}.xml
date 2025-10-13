@@ -172,10 +172,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>4500</value>
+			<value>5950</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>7000</value>
+			<value>9000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -275,7 +275,14 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{bf961114-11a1-4428-a1a6-f3d6b225272b}" />
-	<object class="GainEffect" id="{ca2ba516-ba8e-479a-b9c3-66591a02810e}" />
+	<object class="GainEffect" id="{ca2ba516-ba8e-479a-b9c3-66591a02810e}">
+		<property name="gain">
+			<value>-6</value>
+		</property>
+		<relationship name="modulators">
+			<destination>{f4667405-2946-45a9-a5df-8c0a93b5fe58}</destination>
+		</relationship>
+	</object>
 	<object class="LimiterEffect" id="{898f8da8-71eb-4c08-adbf-d862dd9d59a4}">
 		<property name="boost">
 			<value>12</value>
@@ -309,4 +316,21 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{25a9550d-5d8a-49ed-82b0-f5cf9858b89e}" />
+	<object class="ADSRModulator" id="{f4667405-2946-45a9-a5df-8c0a93b5fe58}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>300</value>
+		</property>
+		<property name="releaseTime">
+			<value>800</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 </objects>

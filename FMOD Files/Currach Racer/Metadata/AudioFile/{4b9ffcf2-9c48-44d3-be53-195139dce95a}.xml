@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{4b9ffcf2-9c48-44d3-be53-195139dce95a}">
+		<property name="assetPath">
+			<value>Car Driving By.wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>8.8199319727891154</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
+		</relationship>
+	</object>
+</objects>

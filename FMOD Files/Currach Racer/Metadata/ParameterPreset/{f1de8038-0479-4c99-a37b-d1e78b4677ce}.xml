@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{f1de8038-0479-4c99-a37b-d1e78b4677ce}">
+		<property name="name">
+			<value>Play Car Driving By</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{c26f5e5f-caf6-4eb8-b798-ed00c8db9f21}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{c26f5e5f-caf6-4eb8-b798-ed00c8db9f21}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

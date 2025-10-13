@@ -6,7 +6,8 @@ public class BillUi : MonoBehaviour
     Bill billData;
     public TMPro.TMP_Text billName,billAmountText, daysTillDueText;
     public Button payBillButton;
-    
+    private FMOD.Studio.EventInstance PayBillAudio;
+
     public void SetBillUi(Bill bill)
     {
         if (bill == null)
@@ -59,6 +60,9 @@ public class BillUi : MonoBehaviour
         if(BillsController.Instance.PayBill(billData))
         {
             Destroy(gameObject);
+
+            PayBillAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bullet Board/Pay Bill");
+            PayBillAudio.start();
         }
       
         
