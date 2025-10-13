@@ -743,6 +743,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 136617753}
   m_CullTransparentMesh: 1
+--- !u!1 &169602935 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8195757043388879324, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &169602942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 169602935}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &187127012
 GameObject:
   m_ObjectHideFlags: 0
@@ -3175,6 +3211,42 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: -89.98, y: 0, z: -92.43}
+--- !u!1 &724753857 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 110478798445263786, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &724753864
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 724753857}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &725159502
 GameObject:
   m_ObjectHideFlags: 0
@@ -3418,6 +3490,42 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 98dad0cd49c9ff04dbf6b350f9b7e1e9, type: 3}
+--- !u!1 &832824567 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 3801506346837315417, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &832824574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 832824567}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &857600591 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 1049853615125771423, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
@@ -5832,6 +5940,42 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1500350932}
   m_CullTransparentMesh: 1
+--- !u!1 &1514929147 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 19820565086166543, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1514929154
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1514929147}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1540783208
 GameObject:
   m_ObjectHideFlags: 0
@@ -6996,6 +7140,42 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 4a772cea97627924e8f9202f9849c74b, type: 3}
+--- !u!1 &1687605061 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8074743500723385071, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1687605068
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1687605061}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1082587831
+      Data2: 1154920416
+      Data3: 255925936
+      Data4: -486682139
+    Path: event:/Training/Gym Bag Zip Up
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1701922376
 GameObject:
   m_ObjectHideFlags: 0
@@ -7240,6 +7420,42 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1670528342}
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+--- !u!1 &1839756146 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 2000664050336890358, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1839756153
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1839756146}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1885736094
 GameObject:
   m_ObjectHideFlags: 0
@@ -7717,6 +7933,42 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
+--- !u!1 &1947838170 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 955686006661986060, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1947838177
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1947838170}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
 --- !u!1 &1960495536
 GameObject:
   m_ObjectHideFlags: 0
@@ -7879,6 +8131,78 @@ MonoBehaviour:
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &2097263194 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1623795853705629064, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2097263201
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2097263194}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!1 &2129219288 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7224695741397304363, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &2129219295
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129219288}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
+  Event: 
+  EventPlayTrigger: 19
+  EventStopTrigger: 0
   AllowFadeout: 1
   TriggerOnce: 0
   Preload: 0
@@ -8206,6 +8530,26 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 1925220059183057561, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Path
+      value: event:/UI/Click 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1925220059183057561, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data1
+      value: 1315056477
+      objectReference: {fileID: 0}
+    - target: {fileID: 1925220059183057561, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data2
+      value: 1232490856
+      objectReference: {fileID: 0}
+    - target: {fileID: 1925220059183057561, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data3
+      value: -2004657985
+      objectReference: {fileID: 0}
+    - target: {fileID: 1925220059183057561, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data4
+      value: 1167525165
+      objectReference: {fileID: 0}
     - target: {fileID: 2254177849537665379, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: m_Name
       value: SettingsBulletinBoard
@@ -8217,6 +8561,46 @@ PrefabInstance:
     - target: {fileID: 2912605251652440356, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826276187056806225, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Path
+      value: event:/UI/Click 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826276187056806225, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data1
+      value: -1317472434
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826276187056806225, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data2
+      value: 1101457481
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826276187056806225, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data3
+      value: -2036835701
+      objectReference: {fileID: 0}
+    - target: {fileID: 3826276187056806225, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data4
+      value: -530268499
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628932722521540512, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Path
+      value: event:/UI/Click 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628932722521540512, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data1
+      value: -1317472434
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628932722521540512, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data2
+      value: 1101457481
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628932722521540512, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data3
+      value: -2036835701
+      objectReference: {fileID: 0}
+    - target: {fileID: 4628932722521540512, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data4
+      value: -530268499
       objectReference: {fileID: 0}
     - target: {fileID: 5854282107896515325, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: teamManagerUiPrefab
@@ -8310,10 +8694,77 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 7813788296270269083, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Path
+      value: event:/UI/Click 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7813788296270269083, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data1
+      value: -1317472434
+      objectReference: {fileID: 0}
+    - target: {fileID: 7813788296270269083, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data2
+      value: 1101457481
+      objectReference: {fileID: 0}
+    - target: {fileID: 7813788296270269083, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data3
+      value: -2036835701
+      objectReference: {fileID: 0}
+    - target: {fileID: 7813788296270269083, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data4
+      value: -530268499
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514073697386593824, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Path
+      value: event:/UI/Click 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514073697386593824, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data1
+      value: -1317472434
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514073697386593824, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data2
+      value: 1101457481
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514073697386593824, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data3
+      value: -2036835701
+      objectReference: {fileID: 0}
+    - target: {fileID: 8514073697386593824, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: Event.Guid.Data4
+      value: -530268499
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 3801506346837315417, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 832824574}
+    - targetCorrespondingSourceObject: {fileID: 8074743500723385071, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1687605068}
+    - targetCorrespondingSourceObject: {fileID: 2000664050336890358, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1839756153}
+    - targetCorrespondingSourceObject: {fileID: 110478798445263786, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 724753864}
+    - targetCorrespondingSourceObject: {fileID: 8195757043388879324, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 169602942}
+    - targetCorrespondingSourceObject: {fileID: 19820565086166543, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1514929154}
+    - targetCorrespondingSourceObject: {fileID: 7224695741397304363, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2129219295}
+    - targetCorrespondingSourceObject: {fileID: 955686006661986060, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1947838177}
+    - targetCorrespondingSourceObject: {fileID: 1623795853705629064, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 2097263201}
   m_SourcePrefab: {fileID: 100100000, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
 --- !u!1 &8806052618921000862 stripped
 GameObject:
