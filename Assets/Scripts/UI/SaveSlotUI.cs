@@ -24,7 +24,9 @@ public class SaveSlotUI : MonoBehaviour
     public int slotIndex;
     private SaveSlotInfo slotInfo;
     private SaveMenuUI parentMenu;
-    
+
+    FMOD.Studio.EventInstance UIClick1;
+    FMOD.Studio.EventInstance DeleteSave;
     public void Initialize(int index, SaveSlotInfo info, SaveMenuUI menu)
     {
         slotIndex = index;
@@ -174,6 +176,9 @@ public class SaveSlotUI : MonoBehaviour
             parentMenu?.ShowMessage($"Game loaded from Slot {slotIndex + 1}!", false);
             GameManager.Instance.StartGame();
             parentMenu?.CloseMenu();
+
+            UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
+            UIClick1.start();
         }
         else
         {
@@ -217,6 +222,9 @@ public class SaveSlotUI : MonoBehaviour
                 {
                     parentMenu?.RefreshAllSlots();
                     parentMenu?.ShowMessage($"Save Slot {slotIndex + 1} deleted!", false);
+
+                    DeleteSave = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Delete Save");
+                    DeleteSave.start();
                 }
                 else
                 {

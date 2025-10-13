@@ -21,6 +21,9 @@ public class GameManager : MonoBehaviour
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
 
+   FMOD.Studio.EventInstance SleepAudio;
+   FMOD.Studio.EventInstance SleepOutsideAudio;
+
    public List<String> miniGameWorkScenes = new List<string>
    {
        "BeerPourMinigame",
@@ -141,6 +144,9 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo($"You Spent {sleepCost} on a place to sleep", 3);
             PlayerStatsView.Instance.DisplayInfo("You Have Regained 100 Energy", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
+            SleepAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
+            SleepAudio.start();
+
         }
         else
         {
@@ -149,6 +155,9 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo("You Have Regained 25 Energy", 3);
             PlayerStatsView.Instance.DisplayInfo($"Use the energy you regained to go to work", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
+            SleepOutsideAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
+            SleepOutsideAudio.start();
+
         }
     }
 
