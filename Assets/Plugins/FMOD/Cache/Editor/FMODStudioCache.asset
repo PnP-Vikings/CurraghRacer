@@ -30,6 +30,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 30883
+--- !u!114 &-8571537632650588184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Delete Save
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Delete Save
+  Guid:
+    Data1: 164056605
+    Data2: 1284715787
+    Data3: 259168183
+    Data4: -434079796
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2257
 --- !u!114 &-8541651289697230892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +398,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638941541188287549
+  lastModified: 638959574695712250
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -575,10 +602,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638941541188312610
+  lastModified: 638959574695737316
   FileSizes:
   - Name: 
-    Value: 2414
+    Value: 2620
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -607,6 +634,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4050
+--- !u!114 &-1304913028099773801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Sleep
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Sleep
+  Guid:
+    Data1: -496259850
+    Data2: 1205345202
+    Data3: -1742622531
+    Data4: 638929569
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6262
 --- !u!114 &-743040683020159525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,12 +734,16 @@ MonoBehaviour:
   - {fileID: 5039562840117391632}
   - {fileID: -743040683020159525}
   - {fileID: 1771700652360039094}
+  - {fileID: 8196437064348383504}
+  - {fileID: -8571537632650588184}
+  - {fileID: 3445940154011273255}
+  - {fileID: -1304913028099773801}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638941541188312610
+  cacheTime: 638959574695737316
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -843,6 +901,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &3445940154011273255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Pay Bill
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Pay Bill
+  Guid:
+    Data1: 385197272
+    Data2: 1140316065
+    Data3: 622631849
+    Data4: 1243291617
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2108
 --- !u!114 &4227636680546725267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1107,6 +1192,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 67928
+--- !u!114 &8196437064348383504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Sleep Outside
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Sleep Outside
+  Guid:
+    Data1: 1307717380
+    Data2: 1273777549
+    Data3: 457895306
+    Data4: 1252331532
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8819
 --- !u!114 &8257224443108815385
 MonoBehaviour:
   m_ObjectHideFlags: 0
