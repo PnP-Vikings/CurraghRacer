@@ -1,3 +1,4 @@
+using League;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -6,7 +7,7 @@ public class TeamMemberUiHandler : MonoBehaviour
 {
     public string memberName,memberDescription,attitude;
     public int strength,stamina,technique,teamWork;
-    public int age;
+    public int age,starRating;
     
     public TMP_Text memberNameText,
         memberDescriptionText,
@@ -15,7 +16,7 @@ public class TeamMemberUiHandler : MonoBehaviour
         staminaText,
         techniqueText,
         teamWorkText,
-        ageText;
+        ageText,starRatingText;
     
     public Image memberIconImage;
     public TeamMember teamMember;
@@ -39,6 +40,18 @@ public class TeamMemberUiHandler : MonoBehaviour
         technique = Mathf.RoundToInt(member.characterStats.technique);
         teamWork = Mathf.RoundToInt(member.characterStats.teamWork);
         age = member.age;
+        
+        if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && starRatingText != null)
+        {
+            starRating = LeagueController.Instance.CalculateTeamMemberStarRating(member);
+            starRatingText.text = "Star Rating: " + starRating.ToString();
+        }
+        else if (starRatingText != null)
+        {
+            starRatingText.text = "Star Rating: N/A";
+            starRatingText.gameObject.SetActive(false);
+            Debug.LogWarning("LeagueController or currentLeague is null!");
+        }
         
         if (member.memberIcon != null)
         {
@@ -100,6 +113,7 @@ public class TeamMemberUiHandler : MonoBehaviour
         techniqueText.text = "Technique: N/A";
         teamWorkText.text = "Team Work: N/A";
         ageText.text = "Age: N/A";
+        starRatingText.text = "Star Rating: N/A";
 
         if (memberIconImage != null)
         {

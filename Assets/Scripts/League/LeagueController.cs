@@ -463,6 +463,17 @@ namespace League
                         }
                     }
                 }
+                
+                if (team != null && team.bench != null)
+                {
+                    foreach (var tm in team.bench)
+                    {
+                        if (tm != null && !allMembers.Contains(tm))
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
             }
 
             if (allMembers.Count == 0) return 0;
@@ -476,6 +487,8 @@ namespace League
             // Average the percentiles
             float averagePercentile = (strengthPercentile + techniquePercentile + staminaPercentile + teamWorkPercentile) / 4f;
 
+            Debug.Log($"Team Member {member.memberName} Percentiles - Strength: {strengthPercentile:F1}%, Technique: {techniquePercentile:F1}%, Stamina: {staminaPercentile:F1}%, Teamwork: {teamWorkPercentile:F1}% | Average: {averagePercentile:F1}%");
+            
             // Convert percentile to star rating (1-5)
             // 0-20%: 1 star (bottom tier)
             // 20-40%: 2 stars (below average)
@@ -529,6 +542,16 @@ namespace League
                     foreach (var tm in team.teamMembers)
                     {
                         if (tm != null)
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
+                if (team != null && team.bench != null)
+                {
+                    foreach (var tm in team.bench)
+                    {
+                        if (tm != null && !allMembers.Contains(tm))
                         {
                             allMembers.Add(tm);
                         }
