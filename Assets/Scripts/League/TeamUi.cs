@@ -8,7 +8,7 @@ public class TeamUi : MonoBehaviour
       public Transform gridParent;
       public Team selectedTeam;
       public League.League selectedLeague;
-      public TMPro.TMP_Text TeamNameText,TeamPointsText,TeamWinsText,TeamPositionText;
+      public TMPro.TMP_Text TeamNameText,TeamPointsText,TeamWinsText,TeamPositionText,starRatingText;
       public GameObject TeamUiPanel;
       public Image teamLogo;
       public static TeamUi Instance { get; private set; }
@@ -73,26 +73,35 @@ public class TeamUi : MonoBehaviour
                   var memberCell = Instantiate(teamMemberCellPrefab, gridParent);
                   memberCell.SetMemberData(member);
             }
-
-            selectedLeague = LeagueController.Instance.currentLeague;
-            
-            if (selectedLeague != null)
+            if (LeagueController.Instance != null)
             {
-                  TeamPointsText.text = "Points: " + selectedLeague.GetTeamPoints(team);
-                  TeamWinsText.text = "Wins: " + selectedLeague.GetTeamWins(team);
-                  TeamPositionText.text = "Position: " +selectedLeague.GetTeamPosition(team);
-            }
-            else
-            {
-                  TeamPointsText.text = "Points: 0";
-                  TeamWinsText.text = "Wins: 0";
-                  TeamPositionText.text = "Position: N/A";
+                  selectedLeague = LeagueController.Instance.currentLeague;
+
+                  if (selectedLeague != null)
+                  {
+                        TeamPointsText.text = "Points: " + selectedLeague.GetTeamPoints(team);
+                        TeamWinsText.text = "Wins: " + selectedLeague.GetTeamWins(team);
+                        TeamPositionText.text = "Position: " + selectedLeague.GetTeamPosition(team);
+
+
+                        int starRating = LeagueController.Instance.CalculateTeamStarRating(team);
+                        starRatingText.text = "Star Rating: " + starRating.ToString();
+
+
+                  }
+                  else
+                  {
+                        TeamPointsText.text = "Points: 0";
+                        TeamWinsText.text = "Wins: 0";
+                        TeamPositionText.text = "Position: N/A";
+                  }
             }
 
-            
-            
-            
+
+
             TeamUiPanel.SetActive(true);
       }
       
+      
+     
 }

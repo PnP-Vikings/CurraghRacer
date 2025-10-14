@@ -441,6 +441,35 @@ namespace League
             }
         }
         
+        public int CalculateTeamStarRating(Team team)
+        {
+            if (team == null || team.teamMembers == null || team.teamMembers.Count == 0)
+            {
+                return 0;
+            }
+
+            int totalStars = 0;
+            int memberCount = 0;
+
+            foreach (var member in team.teamMembers)
+            {
+                if (member != null)
+                {
+                    int memberStars = CalculateTeamMemberStarRating(member);
+                    totalStars += memberStars;
+                    memberCount++;
+                }
+            }
+
+            if (memberCount == 0) return 0;
+
+            // Average star rating across all members
+            float averageStars = totalStars / (float)memberCount;
+
+            // Round to nearest whole number for team star rating
+            return Mathf.RoundToInt(averageStars);
+        }
+        
         
         public int CalculateTeamMemberStarRating(TeamMember member)
         {
