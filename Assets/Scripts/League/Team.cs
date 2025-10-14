@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using League;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -89,6 +90,18 @@ public class Team : ScriptableObject
     {
         // Combine base quality (60%) with current form (40%)
         return (teamQuality * 0.6f) + (currentForm * 0.4f);
+    }
+    
+    public float GetRacePerformanceWithStarRating()
+    {
+        // Combine base quality (50%) with current form (30%) and star rating (20%)
+        float starRating = 0f;
+        if(LeagueController.Instance != null)
+        {
+            starRating = LeagueController.Instance.CalculateTeamStarRating(this);
+        }
+        
+        return (teamQuality * 0.10f) + (currentForm * 0.20f) + (starRating * 0.70f);
     }
 
     /// <summary>
