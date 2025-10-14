@@ -1122,6 +1122,8 @@ public class SaveSystem : MonoBehaviour
                             };
                         }
                     }
+                    
+                    foundLeague.RecalculateStandings();
                 }
 
                 //Restore Race Schedule
@@ -1134,6 +1136,8 @@ public class SaveSystem : MonoBehaviour
                     }
 
                 }
+                
+                
             }
         }
     }
@@ -1470,6 +1474,18 @@ public class SaveSystem : MonoBehaviour
                                 if (team.teamMembers != null)
                                 {
                                     foreach (var member in team.teamMembers)
+                                    {
+                                        if (member != null)
+                                        {
+                                            member.ResetAllStats(team.teamQuality);
+                                        }
+                                    }
+                                }
+                                
+                                // Reset bench members
+                                if (team.bench != null)
+                                {
+                                    foreach (var member in team.bench)
                                     {
                                         if (member != null)
                                         {

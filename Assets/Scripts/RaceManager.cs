@@ -563,6 +563,10 @@ public class RaceManager : MonoBehaviour
 
     IEnumerator StartShips()
     {
+        if (PlayerStatsView.Instance != null)
+        {
+            PlayerStatsView.Instance.ClearInfo();
+        }
         yield return new WaitForSeconds(raceStartDelaySeconds);
         startRace.Invoke();
 

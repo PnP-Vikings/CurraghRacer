@@ -318,7 +318,8 @@ namespace League
                         if (leagues[j] == currentLeague)
                         {
                             // Give extra XP for higher leagues
-                            raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace * (j * 5)); 
+                            raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace * (j * 5));
+                            raceTeams[i].ReduceRacesAvailableForActiveTeamMembers();
                             break;
                         }
                       
@@ -331,7 +332,7 @@ namespace League
 
                     if (pos >= 3)
                     {
-                        raceTeams[i].GiveExperience((currentLeague.maxExperienceGivenPerRace / pos) + 20); // Bonus XP for participation
+                        raceTeams[i].GiveExperience((currentLeague.maxExperienceGivenPerRace / pos) + 20*pos); // Bonus XP for participation
                     }
                     else
                     {
@@ -342,6 +343,7 @@ namespace League
                    
                 }
             }
+            
             
             
             

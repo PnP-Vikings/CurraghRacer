@@ -172,6 +172,18 @@ public class Team : ScriptableObject
         lifetimeStats = new SeasonStats();
     }
     
+    public void ReduceRacesAvailableForActiveTeamMembers()
+    {
+        foreach (var member in teamMembers)
+        {
+            if (member != null)
+            {
+                member.ReduceRacesAvailable();
+            }
+        }
+        
+    }
+    
     /// <summary>
     /// Restores the team to its default state for a new game.
     /// This includes resetting team members and bench to their original defaults.

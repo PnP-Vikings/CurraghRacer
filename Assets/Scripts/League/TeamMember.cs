@@ -72,6 +72,14 @@ public class TeamMember : ScriptableObject
         return characterStats;
     }
     
+    public void ReduceRacesAvailable()
+    {
+        if (racesAvailableFor > 0)
+        {
+            racesAvailableFor--;
+        }
+    }
+    
     
     
     
@@ -81,6 +89,7 @@ public class TeamMember : ScriptableObject
         level = 1;
         experience = 0;
         xpToNextLevel = 100;
+        racesAvailableFor = 999999; // Reset to default
         fitness.ResetFitness();
         happiness = new Happiness(); // Reset to default happiness
     }
