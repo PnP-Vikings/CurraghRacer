@@ -311,7 +311,36 @@ namespace League
             for (int i = 0; i < raceTeams.Length && i < allPositions.Length; i++)
             {
                 raceTeams[i].RecordRaceFinish(allPositions[i]);
-                raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace / allPositions[i]); // More experience for better positions
+                if (raceTeams[i].teamType == TeamType.Player)
+                {
+                    for (int j = 0; j < leagues.Length; j++)
+                    {
+                        if (leagues[j] == currentLeague)
+                        {
+                            // Give extra XP for higher leagues
+                            raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace * (j * 5)); 
+                            break;
+                        }
+                      
+                    }
+                    
+                }
+                else
+                {
+                    int pos = allPositions[i];
+
+                    if (pos >= 3)
+                    {
+                        raceTeams[i].GiveExperience((currentLeague.maxExperienceGivenPerRace / pos) + 20); // Bonus XP for participation
+                    }
+                    else
+                    {
+                        raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace / pos); // More XP for top positions
+                    }
+                    
+                    
+                   
+                }
             }
             
             
