@@ -1791,4 +1791,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamMemberSelectedUi: {fileID: 8256688597445426455}
+  selectedActiveTeamMember: {fileID: 4404602557474094137}
+  selectedActiveTeamMemberImage: {fileID: 2816245506786955470}
   btn: {fileID: 7725625939705050984}

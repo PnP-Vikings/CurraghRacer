@@ -20,6 +20,9 @@ public class TeamManager : MonoBehaviour
     
     public TeamMember selectedActiveTeamMember;
     public TeamMember selectedBenchTeamMember;
+
+    public SetActiveTeamMemberSelected oldSelectedActiveTeamMember;
+    public SetBenchTeamMemberSelected oldSelectedBenchTeamMember;
     
     public void ClearSelectedTeamMembers()    
     {
@@ -27,6 +30,27 @@ public class TeamManager : MonoBehaviour
         selectedBenchTeamMember = null;
     }
     
+    
+    public void SetSelectedActiveTeamMember(TeamMember member,SetActiveTeamMemberSelected caller)
+    {
+        if(selectedActiveTeamMember != null)
+            oldSelectedActiveTeamMember.HideSelectionUi();
+        
+        oldSelectedActiveTeamMember = caller;
+        
+        selectedActiveTeamMember = member;
+        TrySwapSelectedMembers();
+    }
+    
+    public void SetSelectedBenchTeamMember(TeamMember member,SetBenchTeamMemberSelected caller)
+    {
+        if(selectedBenchTeamMember != null)
+            oldSelectedBenchTeamMember.HideSelectionUi();
+        
+        oldSelectedBenchTeamMember = caller;
+        selectedBenchTeamMember = member;
+        TrySwapSelectedMembers();
+    }
     public void TrySwapSelectedMembers()
     {
         if (selectedActiveTeamMember != null && selectedBenchTeamMember != null)
@@ -38,6 +62,9 @@ public class TeamManager : MonoBehaviour
         {
             Debug.LogWarning("Both an active team member and a bench team member must be selected to swap.");
         }
+        
+        
+        
     }
     
     public void SetTeamManager(TeamMember manager)

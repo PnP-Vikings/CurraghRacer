@@ -22,26 +22,33 @@ public class SetBenchTeamMemberSelected : MonoBehaviour
         }
     }
 
+    public void HideSelectionUi()
+    {
+        if(teamMemberSelectedUi != null)
+        {
+        
+            teamMemberSelectedUi.SetActive(false);
+        }
+        
+        // Re-enable the button so it can be clicked again
+        if(btn != null)
+        {
+            btn.interactable = true;
+        }
+    }
+    
     public void TeamMemberSelected()
     {
         if(TeamManager.Instance != null && teamMemberSelectedUi != null)
         {
             teamMemberSelectedUi.SetActive(true);
             btn.interactable = false;
-            TeamManager.Instance.selectedBenchTeamMember = this.GetComponent<BenchTeamMemberUiHandler>().teamMember;
-            TeamManager.Instance.TrySwapSelectedMembers();
+            
+            TeamManager.Instance.SetSelectedBenchTeamMember(this.GetComponent<BenchTeamMemberUiHandler>().teamMember,this);
         }
         else
         {
             Debug.LogWarning("SetActiveTeamMemberSelected: TeamManager instance or TeamMemberSelected is null.");
-        }
-    }
-
-    private void OnDisable()
-    {
-        if (TeamManager.Instance != null && teamMemberSelectedUi != null)
-        {
-            TeamManager.Instance.ClearSelectedTeamMembers();
         }
     }
 }
