@@ -93,25 +93,60 @@ namespace MiniGames
             // Start the selected activity directly
             StartActivityDirectly(selectedActivity);
         }
-        
+
         public void StartRandomTrainingActivity()
+        {
+                if (trainingActivities == null || trainingActivities.Count == 0)
+                {
+                    Debug.LogError("No training activities available!");
+                    return;
+                }
+
+                if (PlayerManager.Instance.PlayerHasEnoughEnergy(25))
+                {
+                    // Randomly select a training activity
+                    int randomIndex = Random.Range(0, trainingActivities.Count);
+                    MiniGameData selectedActivity = trainingActivities[randomIndex];
+
+                    Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
+                    GameManager.Instance.SetPlayerBusy(true);
+                    // Start the selected activity directly
+                    StartActivityDirectly(selectedActivity);
+                }
+            
+        }
+        public void StartRandomTrainingActivityBasedOnStatType(TeamMember.StatType statType)
         {
             if (trainingActivities == null || trainingActivities.Count == 0)
             {
                 Debug.LogError("No training activities available!");
                 return;
             }
+
+            if (PlayerManager.Instance.PlayerHasEnoughEnergy(25))
+            {
+                List<MiniGameData>  tempTrainingActivities = new (trainingActivities); // Create a copy to filter
+                
+                for (int i = tempTrainingActivities.Count - 1; i >= 0; i--)
+                {
+                    if (tempTrainingActivities[i].trainingAttribute != statType)
+                    {
+                        tempTrainingActivities.RemoveAt(i);
+                    }
+                }
+                
+                
+                // Randomly select a training activity
+                int randomIndex = Random.Range(0, tempTrainingActivities.Count);
+                MiniGameData selectedActivity = tempTrainingActivities[randomIndex];
+
+                Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
+                GameManager.Instance.SetPlayerBusy(true);
+                // Start the selected activity directly
+                StartActivityDirectly(selectedActivity);
+            }
             
-            // Randomly select a training activity
-            int randomIndex = Random.Range(0, trainingActivities.Count);
-            MiniGameData selectedActivity = trainingActivities[randomIndex];
-            
-            Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
-            GameManager.Instance.SetPlayerBusy(true);
-            // Start the selected activity directly
-            StartActivityDirectly(selectedActivity);
         }
-        
         private void StartActivityDirectly(MiniGameData activity)
         {
             currentGame = activity;
