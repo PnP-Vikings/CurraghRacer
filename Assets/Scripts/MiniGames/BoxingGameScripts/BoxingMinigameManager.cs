@@ -198,7 +198,7 @@ public class BoxingMinigameManager : MonoBehaviour
         int maxAttempts = spawnPoints.Count * 3; // Prevent infinite loop
         
         // When we have few targets (1-2), try to avoid the last used spawn point for variety
-        bool avoidLastSpawn = (currentMaxTargets <= 2 && lastUsedSpawnPoint >= 0);
+        bool avoidLastSpawn = (currentMaxTargets <= 6 && lastUsedSpawnPoint >= 0);
         
         while (attempts < maxAttempts)
         {

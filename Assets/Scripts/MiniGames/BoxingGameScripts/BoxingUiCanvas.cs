@@ -1,65 +1,29 @@
 using UnityEngine;
+using UnityEngine.UI;
 
-public class BoxingUiCanvas : MonoBehaviour
+public class BoxingUiCanvas : MinigameCanvasUI
 {
-   public TMPro.TMP_Text scoreText,timerText,playerLivesText,gameOverText;
-   
-   
-   public void UpdateScore(int score)
-   {
-       if(scoreText != null)
-       {
-           scoreText.text = "Score: " + score;
-       }
-   }
-   
-    public void UpdateTimer(float timeRemaining)
+    public Image healthIndicator;
+
+    public override void UpdatePlayerLives(int lives)
     {
-         if(timerText != null)
-         {
-              timerText.text = "Time: " + Mathf.CeilToInt(timeRemaining).ToString();
-         }
-    }
-    public void UpdatePlayerLives(int lives)
-    {
-         if(playerLivesText != null)
-         {
-              playerLivesText.text = "Lives: " + lives.ToString();
-         }
+        base.UpdatePlayerLives(lives);
+        if (healthIndicator != null)
+        {
+            healthIndicator.fillAmount = Mathf.Clamp01(lives / 3f);
+            if (lives >= 3)
+            {
+                healthIndicator.color = Color.Lerp(Color.red, Color.green, healthIndicator.fillAmount/2);
+            }
+            else
+            {
+                healthIndicator.color = Color.Lerp(Color.red, Color.yellow, healthIndicator.fillAmount);
+            }
+            
+        }
     }
     
-    public void ShowGameOver()
-    {
-         if(timerText != null)
-         {
-              gameOverText.gameObject.SetActive(true);
-              gameOverText.text = "Game Over!";
-         }
-    }
+        
     
-    public void ShowVictory()
-    {
-         if(timerText != null)
-         {
-              timerText.text = "Victory!";
-         }
-    }
-    
-    public void SetUpUI(bool useScore, bool useTimer, bool useLives)
-    {
-         if(scoreText != null)
-         {
-              scoreText.gameObject.SetActive(useScore);
-         }
-         if(timerText != null)
-         {
-              timerText.gameObject.SetActive(useTimer);
-         }
-         if(playerLivesText != null)
-         {
-              playerLivesText.gameObject.SetActive(useLives);
-         }
-    }
-    
-   
+
 }
