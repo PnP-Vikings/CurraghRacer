@@ -6,7 +6,7 @@ public class BoxingTarget : MonoBehaviour
     private Button button;
     [HideInInspector] public int spawnPointIndex = -1; // Track which spawn point this target is using
     [HideInInspector] public Coroutine fadeCoroutine; // Track the fade coroutine so we can stop it when hit
-
+    public int pointValue = 1; // Points awarded for hitting this target
     private void Awake()
     {
         button = GetComponent<Button>();
@@ -24,7 +24,7 @@ public class BoxingTarget : MonoBehaviour
         // Notify the game manager that this target was hit
         if (BoxingMinigameManager.Instance != null)
         {
-            BoxingMinigameManager.Instance.TargetHit(this);
+            BoxingMinigameManager.Instance.TargetHit(this,pointValue);
         }
     }
 

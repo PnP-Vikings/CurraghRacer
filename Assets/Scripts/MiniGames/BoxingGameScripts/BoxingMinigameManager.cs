@@ -11,6 +11,8 @@ public class BoxingMinigameManager : MonoBehaviour
     public List<Transform> spawnPoints;
     public Transform BoxingBag; // Changed from Rigidbody to Transform for position-based animation
     public BoxingTarget targetPrefab;
+    public BoxingTarget targetSpecialPrefab;
+    public BoxingTarget targetEvenMoreSpecialPrefab;
     public Transform targetParent; // UI Canvas or panel to spawn targets under
     public int rightSideSpawnCount = 4; // How many spawn points are on the right side (first N points)
     public float bagSwingDistance = 0.3f; // How far the bag swings horizontally
@@ -26,7 +28,18 @@ public class BoxingMinigameManager : MonoBehaviour
     public float speedIncreasePerScore = 0.02f; // Reduce lifetime by this much per score (slow scaling)
     public float minTargetLifetime = 0.8f; // Minimum time a target can stay visible
     
+    [Header("Special Target Settings")]
+    public int scoreForSpecialTargets = 20; // Score needed before special targets start appearing
+    public int scoreForEvenMoreSpecialTargets = 50; // Score needed before even more special targets start appearing
+    public float baseSpecialTargetChance = 0.1f; // 10% chance at minimum score
+    public float maxSpecialTargetChance = 0.3f; // 30% max chance for special targets
+    public float baseEvenMoreSpecialTargetChance = 0.05f; // 5% chance at minimum score
+    public float maxEvenMoreSpecialTargetChance = 0.15f; // 15% max chance for even more special targets
+    public float chanceIncreasePerScore = 0.001f; // How much the chance increases per point
+    
     private List<BoxingTarget> pooledTargets = new List<BoxingTarget>();
+    private List<BoxingTarget> pooledSpecialTargets = new List<BoxingTarget>();
+    private List<BoxingTarget> pooledEvenMoreSpecialTargets = new List<BoxingTarget>();
     private List<BoxingTarget> activeTargets = new List<BoxingTarget>();
     private HashSet<int> occupiedSpawnPoints = new HashSet<int>(); // Track which spawn points are in use
     [SerializeField] private int score = 0;
@@ -83,11 +96,28 @@ public class BoxingMinigameManager : MonoBehaviour
     
     public void InitializePool(int initialSize)
     {
+        // Create regular targets
         for (int i = 0; i < initialSize; i++)
         {
             BoxingTarget target = Instantiate(targetPrefab, targetParent);
             target.gameObject.SetActive(false);
             pooledTargets.Add(target);
+        }
+        
+        // Create special targets pool
+        for (int i = 0; i < initialSize / 5; i++)
+        {
+            BoxingTarget specialTarget = Instantiate(targetSpecialPrefab, targetParent);
+            specialTarget.gameObject.SetActive(false);
+            pooledSpecialTargets.Add(specialTarget);
+        }
+        
+        // Create even more special targets pool
+        for (int i = 0; i < initialSize / 10; i++)
+        {
+            BoxingTarget evenMoreSpecialTarget = Instantiate(targetEvenMoreSpecialPrefab, targetParent);
+            evenMoreSpecialTarget.gameObject.SetActive(false);
+            pooledEvenMoreSpecialTargets.Add(evenMoreSpecialTarget);
         }
     }
     
@@ -194,19 +224,70 @@ public class BoxingMinigameManager : MonoBehaviour
     
     private BoxingTarget GetTargetFromPool()
     {
+        BoxingTarget target = null;
+        List<BoxingTarget> sourcePool = null;
+        
+        // Determine which type of target to spawn based on score and random chance
+        if (score >= scoreForEvenMoreSpecialTargets && pooledEvenMoreSpecialTargets.Count > 0)
+        {
+            // Calculate chance for even more special targets (increases with score)
+            float evenMoreSpecialChance = Mathf.Min(
+                baseEvenMoreSpecialTargetChance + (score * chanceIncreasePerScore),
+                maxEvenMoreSpecialTargetChance
+            );
+            
+            if (Random.value < evenMoreSpecialChance)
+            {
+                sourcePool = pooledEvenMoreSpecialTargets;
+                Debug.Log($"Spawning EVEN MORE SPECIAL target! (Chance: {evenMoreSpecialChance:P1})");
+            }
+        }
+        
+        // If we didn't pick even more special, try for special target
+        if (sourcePool == null && score >= scoreForSpecialTargets && pooledSpecialTargets.Count > 0)
+        {
+            // Calculate chance for special targets (increases with score)
+            float specialChance = Mathf.Min(
+                baseSpecialTargetChance + (score * chanceIncreasePerScore),
+                maxSpecialTargetChance
+            );
+            
+            if (Random.value < specialChance)
+            {
+                sourcePool = pooledSpecialTargets;
+                Debug.Log($"Spawning SPECIAL target! (Chance: {specialChance:P1})");
+            }
+        }
+        
+        // If no special target selected, use regular target
+        if (sourcePool == null)
+        {
+            sourcePool = pooledTargets;
+        }
+        
+        // Get target from the selected pool
+        if (sourcePool.Count > 0)
+        {
+            target = sourcePool[0];
+            sourcePool.RemoveAt(0);
+            activeTargets.Add(target);
+            return target;
+        }
+        
+        // Fallback to regular targets if special pools are empty
         if (pooledTargets.Count > 0)
         {
-            BoxingTarget target = pooledTargets[0];
+            target = pooledTargets[0];
             pooledTargets.RemoveAt(0);
             activeTargets.Add(target);
             return target;
         }
         
-        Debug.LogWarning("Target pool exhausted!");
+        Debug.LogWarning("All target pools exhausted!");
         return null;
     }
     
-    public void TargetHit(BoxingTarget target)
+    public void TargetHit(BoxingTarget target,int pointsToAdd)
     {
         // Don't process hits if game is over
         if (isGameOver)
@@ -243,7 +324,7 @@ public class BoxingMinigameManager : MonoBehaviour
         }
         
         // Increase score
-        score++;
+        score+= pointsToAdd;
         Debug.Log($"Target Hit! Score: {score}");
         
         if(boxingUiCanvas != null)
@@ -406,7 +487,21 @@ public class BoxingMinigameManager : MonoBehaviour
             }
             
             activeTargets.Remove(target);
-            pooledTargets.Add(target);
+            
+            // Return to the correct pool based on target type
+            if (target.gameObject.name.Contains("EvenMoreSpecial"))
+            {
+                pooledEvenMoreSpecialTargets.Add(target);
+            }
+            else if (target.gameObject.name.Contains("Special"))
+            {
+                pooledSpecialTargets.Add(target);
+            }
+            else
+            {
+                pooledTargets.Add(target);
+            }
+            
             // Reset opacity to full before showing
             Image targetImage = target.GetComponent<Image>();
             if (targetImage != null)
