@@ -9,8 +9,12 @@ public class BoxingMinigameManager : MonoBehaviour
     
     [Header("Target Setup")]
     public List<Transform> spawnPoints;
+    public Transform BoxingBag; // Changed from Rigidbody to Transform for position-based animation
     public BoxingTarget targetPrefab;
     public Transform targetParent; // UI Canvas or panel to spawn targets under
+    public int rightSideSpawnCount = 4; // How many spawn points are on the right side (first N points)
+    public float bagSwingDistance = 0.3f; // How far the bag swings horizontally
+    public float bagSwingDuration = 0.5f; // How long the swing animation takes
     
     [Header("Game Settings")]
     public int targetPoolSize = 100; // Initial pool size
@@ -31,6 +35,13 @@ public class BoxingMinigameManager : MonoBehaviour
     [SerializeField] private float currentTargetLifetime; // Current difficulty-adjusted lifetime for all targets
     private int lastUsedSpawnPoint = -1; // Track the last spawn point used to avoid consecutive repeats
     
+    private Vector3 bagOriginalPosition; // Store the bag's starting position
+    private Coroutine bagSwingCoroutine; // Track the current swing animation
+    private bool isGameOver = false; // Track if the game is over
+    
+    [Header("Ui Settings")]
+    public BoxingUiCanvas boxingUiCanvas;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -50,10 +61,23 @@ public class BoxingMinigameManager : MonoBehaviour
         // Initialize the current lifetime
         currentTargetLifetime = targetLifetime;
         
+        // Store the bag's original position
+        if (BoxingBag != null)
+        {
+            bagOriginalPosition = BoxingBag.position;
+        }
+        
         // Spawn initial targets
         for (int i = 0; i < currentMaxTargets; i++)
         {
             SpawnTargetAtRandomPoint();
+        }
+        
+        if(boxingUiCanvas != null)
+        {
+            boxingUiCanvas.SetUpUI(true,false,true);
+            boxingUiCanvas.UpdatePlayerLives(playerLives);
+            boxingUiCanvas.UpdateScore(score);
         }
     }
     
@@ -69,6 +93,12 @@ public class BoxingMinigameManager : MonoBehaviour
     
     public void SpawnTargetAtRandomPoint()
     {
+        // Don't spawn targets if game is over
+        if (isGameOver)
+        {
+            return;
+        }
+        
         if (spawnPoints.Count == 0 || targetPrefab == null)
         {
             Debug.LogWarning("No spawn points or target prefab assigned.");
@@ -178,6 +208,12 @@ public class BoxingMinigameManager : MonoBehaviour
     
     public void TargetHit(BoxingTarget target)
     {
+        // Don't process hits if game is over
+        if (isGameOver)
+        {
+            return;
+        }
+        
         // Stop the fade coroutine so lives aren't lost
         if (target.fadeCoroutine != null)
         {
@@ -185,11 +221,38 @@ public class BoxingMinigameManager : MonoBehaviour
             target.fadeCoroutine = null;
         }
         
+        // Determine which side was hit and swing the boxing bag
+        if (BoxingBag != null)
+        {
+            // Check if the hit spawn point is on the right side (first N spawn points)
+            bool isRightSide = target.spawnPointIndex < rightSideSpawnCount;
+            
+            // If hit on right side, swing bag left. If hit on left side, swing bag right
+            float swingDirection = isRightSide ? -1f : 1f;
+            
+            // Stop any existing swing animation
+            if (bagSwingCoroutine != null)
+            {
+                StopCoroutine(bagSwingCoroutine);
+            }
+            
+            // Start new swing animation
+            bagSwingCoroutine = StartCoroutine(SwingBag(swingDirection));
+            
+            Debug.Log($"Hit on {(isRightSide ? "RIGHT" : "LEFT")} side (spawn point {target.spawnPointIndex}), swinging bag {(swingDirection > 0 ? "right" : "left")}");
+        }
+        
         // Increase score
         score++;
         Debug.Log($"Target Hit! Score: {score}");
         
-        // Calculate what the new lifetime should be based on score
+        if(boxingUiCanvas != null)
+        {
+            boxingUiCanvas.UpdateScore(score);
+        }
+        
+        // Adjust difficulty based on score
+        // Decrease target lifetime (increase speed)
         float newLifetime = Mathf.Max(targetLifetime - (score * speedIncreasePerScore), minTargetLifetime);
         
         // Only update if it's actually lower (difficulty increase)
@@ -220,6 +283,60 @@ public class BoxingMinigameManager : MonoBehaviour
         }
     }
     
+    IEnumerator SwingBag(float direction)
+    {
+        float elapsed = 0f;
+        
+        // Start from current position and rotation (important for smooth interruptions)
+        Vector3 startPosition = BoxingBag.position;
+        Vector3 currentRotation = BoxingBag.eulerAngles;
+        float startRotationZ = currentRotation.z;
+        
+        // Normalize the rotation to be between -180 and 180 for smooth lerping
+        if (startRotationZ > 180f) startRotationZ -= 360f;
+        
+        Vector3 targetPosition = bagOriginalPosition + new Vector3(direction * bagSwingDistance, 0f, 0f);
+        float targetRotationZ = direction * -2.71f; // Rotate -2.71 degrees in swing direction
+        
+        // Swing to the side (first half of animation)
+        while (elapsed < bagSwingDuration / 2f)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / (bagSwingDuration / 2f);
+            
+            // Lerp from current position to target position
+            BoxingBag.position = Vector3.Lerp(startPosition, targetPosition, t);
+            
+            // Lerp from current rotation to target rotation
+            float currentRotationZ = Mathf.Lerp(startRotationZ, targetRotationZ, t);
+            BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, currentRotationZ);
+            
+            yield return null;
+        }
+        
+        // Swing back to original position (second half of animation)
+        elapsed = 0f;
+        while (elapsed < bagSwingDuration / 2f)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / (bagSwingDuration / 2f);
+            
+            // Lerp from target back to original
+            BoxingBag.position = Vector3.Lerp(targetPosition, bagOriginalPosition, t);
+            
+            // Rotate back to 0
+            float currentRotationZ = Mathf.Lerp(targetRotationZ, 0f, t);
+            BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, currentRotationZ);
+            
+            yield return null;
+        }
+        
+        // Ensure we're exactly at the original position and rotation (Z = 0)
+        BoxingBag.position = bagOriginalPosition;
+        BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, 0f);
+        bagSwingCoroutine = null;
+    }
+    
     IEnumerator DecreaseOpacityOverTime(BoxingTarget target, float duration)
     {
         float elapsed = 0f;
@@ -236,9 +353,36 @@ public class BoxingMinigameManager : MonoBehaviour
         
         sr.color = originalColor; // Reset color
         playerLives--;
+        if(boxingUiCanvas != null)
+        {
+            boxingUiCanvas.UpdatePlayerLives(playerLives);
+        }
         if (playerLives <= 0)
         {
-            Debug.Log("Game Over!");
+            isGameOver = true;
+            
+            // Stop all active target fade coroutines
+            foreach (BoxingTarget activeTarget in activeTargets)
+            {
+                if (activeTarget.fadeCoroutine != null)
+                {
+                    StopCoroutine(activeTarget.fadeCoroutine);
+                    activeTarget.fadeCoroutine = null;
+                }
+            }
+            
+            // Deactivate all active targets
+            while (activeTargets.Count > 0)
+            {
+                ReturnTargetToPool(activeTargets[0]);
+            }
+            
+            if(boxingUiCanvas != null)
+            {
+                boxingUiCanvas.ShowGameOver();
+            }
+            Debug.Log("Game Over! Final Score: " + score);
+            yield break; // Stop this coroutine
         }
         Debug.Log($"Target Missed! Lives remaining: {playerLives}");
         ReturnTargetToPool(target);
