@@ -21,9 +21,9 @@ namespace MiniGames
         // Game state
         private MiniGameData currentGame;
         private MiniGame currentGameInstance;
-        private float gameTimer;
-        private bool gameActive;
-        private int currentScore;
+        [SerializeField] private float gameTimer;
+        [SerializeField] private bool gameActive;
+        [SerializeField]  private int currentScore;
         private PlayerManager playerManager;
 
         //[SerializeField] private DishwashingController dishwashingController;
