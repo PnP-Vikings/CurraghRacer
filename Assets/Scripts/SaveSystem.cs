@@ -4,6 +4,7 @@ using System.IO;
 using Calendar;
 using UnityEngine;
 using League;
+using UnityEngine.SceneManagement;
 
 [System.Serializable]
 public class SaveData
@@ -417,6 +418,8 @@ public class SaveSystem : MonoBehaviour
     public bool IsNewGame => _isNewGame;
 
     private string SaveDirectory => Path.Combine(Application.persistentDataPath, "Saves");
+    
+    private SaveData _lastSaveData; // Cache the last save to restore after scene changes
 
     private void Awake()
     {
@@ -434,6 +437,38 @@ public class SaveSystem : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+    
+    private void OnEnable()
+    {
+        // Subscribe to scene loaded events to restore team stats after scene transitions
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    
+    private void OnDisable()
+    {
+        // Unsubscribe from scene loaded events
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    
+    /// <summary>
+    /// Called whenever a scene is loaded - restores team stats from the cached save
+    /// This prevents ScriptableObject data loss when scenes reload
+    /// </summary>
+    private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        // Only restore if we have cached save data
+        if (_lastSaveData != null && LeagueController.Instance != null)
+        {
+            Debug.Log($"[SaveSystem.OnSceneLoaded] Scene '{scene.name}' loaded - restoring team stats from cache");
+            
+            // Restore team data from the cached save
+            if (_lastSaveData.leagueData?.allTeams != null)
+            {
+                RestoreTeamsData(_lastSaveData.leagueData.allTeams);
+                Debug.Log($"[SaveSystem.OnSceneLoaded] Restored {_lastSaveData.leagueData.allTeams.Length} teams from cache");
+            }
         }
     }
 
@@ -456,6 +491,11 @@ public class SaveSystem : MonoBehaviour
             {
                 saveData.saveName = saveName;
             }
+            
+            // CRITICAL: Cache the save data so it can be restored when scenes reload
+            // This prevents team stats from being wiped when ScriptableObjects reload
+            _lastSaveData = saveData;
+            Debug.Log($"[SaveGame] Cached save data with {saveData.leagueData?.allTeams?.Length ?? 0} teams");
 
             string filePath = GetSaveFilePath(slotIndex);
             string jsonData = JsonUtility.ToJson(saveData, true);
@@ -774,6 +814,11 @@ public class SaveSystem : MonoBehaviour
 
     private void ApplySaveData(SaveData saveData)
     {
+        // CRITICAL: Cache the save data immediately so it can be restored when scenes reload
+        // This prevents team stats from being wiped when ScriptableObjects reload
+        _lastSaveData = saveData;
+        Debug.Log($"[ApplySaveData] Cached save data with {saveData.leagueData?.allTeams?.Length ?? 0} teams");
+        
         // Apply player data
         if (PlayerManager.Instance != null && saveData.playerData != null)
         {
@@ -793,7 +838,13 @@ public class SaveSystem : MonoBehaviour
         // Apply league data
         if (LeagueController.Instance != null && saveData.leagueData != null)
         {
-            // Restore all leagues with their complete data
+            // IMPORTANT: Restore teams FIRST so their stats are available when restoring league standings
+            if (saveData.leagueData.allTeams != null)
+            {
+                RestoreTeamsData(saveData.leagueData.allTeams);
+            }
+            
+            // Now restore leagues with their complete data (including standings)
             if (saveData.leagueData.allLeagues != null)
             {
                 RestoreLeaguesData(saveData.leagueData.allLeagues);
@@ -809,13 +860,8 @@ public class SaveSystem : MonoBehaviour
                     LeagueController.Instance.currentLeague = league;
                     league.playerHasJoined = saveData.leagueData.playerHasJoined;
                     league.currentRace = saveData.leagueData.currentRaceIndex;
+                    LeagueController.Instance.currentLeague.RecalculateStandings();
                 }
-            }
-
-            // Restore teams data
-            if (saveData.leagueData.allTeams != null)
-            {
-                RestoreTeamsData(saveData.leagueData.allTeams);
             }
         }
 
@@ -949,6 +995,12 @@ public class SaveSystem : MonoBehaviour
 
     private TeamSaveData CreateTeamSaveData(Team team)
     {
+        // CRITICAL: Do NOT call team.ResetForNewGame() here!
+        // This method should CAPTURE the team's current state, not RESET it!
+        // Calling ResetForNewGame() here would wipe all stats, experience, and form before saving!
+        
+        Debug.Log($"[CreateTeamSaveData] Saving {team.teamName}: Experience={team.teamExperience}, Form={team.currentForm}, RecentResults={team.recentResults?.Count ?? 0}, CurrentSeasonFinishes={team.currentSeasonStats?.finishes?.Count ?? 0}, LifetimeFinishes={team.lifetimeStats?.finishes?.Count ?? 0}");
+        
         TeamSaveData teamSave = new TeamSaveData
         {
             teamName = team.teamName,
@@ -1120,10 +1172,13 @@ public class SaveSystem : MonoBehaviour
                                 points = leagueSave.standings[i].points,
                                 wins = leagueSave.standings[i].wins
                             };
+                            
+                            Debug.Log($"Restored standings for {team.teamName}: Position {leagueSave.standings[i].position}, Points {leagueSave.standings[i].points}, Wins {leagueSave.standings[i].wins}");
                         }
                     }
                     
-                    foundLeague.RecalculateStandings();
+                    // Don't recalculate standings here - we just loaded them from save!
+                    // RecalculateStandings() would overwrite the loaded data with values from team stats
                 }
 
                 //Restore Race Schedule
@@ -1166,6 +1221,10 @@ public class SaveSystem : MonoBehaviour
                 foundTeam.teamExperience = teamSave.teamExperience;
                 foundTeam.currentForm = teamSave.currentForm;
                 foundTeam.recentResults = new List<int>(teamSave.recentResults);
+                
+                Debug.Log($"  -> Team Experience: {teamSave.teamExperience}");
+                Debug.Log($"  -> Current Form: {teamSave.currentForm}");
+                Debug.Log($"  -> Recent Results Count: {teamSave.recentResults?.Count ?? 0}");
                 
                 // Restore team manager
                 if (teamSave.teamManager != null)
@@ -1211,15 +1270,33 @@ public class SaveSystem : MonoBehaviour
                     foundTeam.teamColor = teamSave.teamColor.ToColor();
                 }
 
-                // Restore season stats
-                if (teamSave.currentSeasonStats != null && foundTeam.currentSeasonStats != null)
+                // Restore season stats - CRITICAL: Create new objects if null!
+                if (teamSave.currentSeasonStats != null)
                 {
+                    if (foundTeam.currentSeasonStats == null)
+                    {
+                        foundTeam.currentSeasonStats = new SeasonStats();
+                    }
                     foundTeam.currentSeasonStats.finishes = new List<int>(teamSave.currentSeasonStats.finishes);
+                    Debug.Log($"Restored currentSeasonStats for {foundTeam.teamName}: {foundTeam.currentSeasonStats.finishes.Count} finishes, {foundTeam.currentSeasonStats.Points} points");
+                }
+                else
+                {
+                    Debug.LogWarning($"No currentSeasonStats in save data for team {foundTeam.teamName}");
                 }
 
-                if (teamSave.lifetimeStats != null && foundTeam.lifetimeStats != null)
+                if (teamSave.lifetimeStats != null)
                 {
+                    if (foundTeam.lifetimeStats == null)
+                    {
+                        foundTeam.lifetimeStats = new SeasonStats();
+                    }
                     foundTeam.lifetimeStats.finishes = new List<int>(teamSave.lifetimeStats.finishes);
+                    Debug.Log($"Restored lifetimeStats for {foundTeam.teamName}: {foundTeam.lifetimeStats.finishes.Count} finishes");
+                }
+                else
+                {
+                    Debug.LogWarning($"No lifetimeStats in save data for team {foundTeam.teamName}");
                 }
 
                 // Restore team members
@@ -1273,6 +1350,17 @@ public class SaveSystem : MonoBehaviour
             if (GameManager.Instance != null)
             {
                 GameManager.Instance.ResetTotalPlayTime();
+            }
+            
+            if(LeagueController.Instance != null)
+            {
+              foreach(var league in LeagueController.Instance.leagues)
+              {
+                  foreach(var team in league.teams)
+                  {
+                      team.ResetForNewGame();
+                  }
+              }
             }
             
             // Create and save new game data
@@ -1349,6 +1437,10 @@ public class SaveSystem : MonoBehaviour
                     Debug.LogError($"Invalid preferred slot index: {preferredSlot}. Must be between 0 and {maxSaveSlots - 1}");
                     return false;
                 }
+                
+                // NOTE: Do NOT call ClearLeague() or RegenerateRaceSchedule() here!
+                // These are already handled in InitializeNewGameState() at the start of this method.
+                // Calling them here would wipe team stats after they've been initialized!
 
                 // Create and save new game data
                 SaveData newGameData = CreateFreshSaveData(saveName);
@@ -1625,6 +1717,119 @@ public class SaveSystem : MonoBehaviour
             bills = new List<Bill>(),
             recurringPaidBills = new List<Bill>()
         };
+        
+        // Capture league data for new game
+        // NOTE: Do NOT call ClearLeague() or RegenerateRaceSchedule() here!
+        // This method should only CREATE save data, not modify the game state.
+        // League initialization happens in InitializeNewGameState() instead.
+        if (LeagueController.Instance != null)
+        {
+            if (LeagueController.Instance.currentLeague != null)
+            {
+                saveData.leagueData.currentLeagueName = LeagueController.Instance.currentLeague.leagueName;
+                saveData.leagueData.currentRaceIndex = LeagueController.Instance.currentLeague.currentRace;
+                saveData.leagueData.playerHasJoined = LeagueController.Instance.currentLeague.playerHasJoined;
+            }
+
+            // Save all leagues with comprehensive data
+            if (LeagueController.Instance.leagues != null)
+            {
+                List<LeagueInfoSaveData> allLeagues = new List<LeagueInfoSaveData>();
+                List<TeamSaveData> allTeams = new List<TeamSaveData>();
+
+                foreach (var league in LeagueController.Instance.leagues)
+                {
+                    league.ResetLeagueForNewSeason();
+                    league.currentSeason = 1;
+                    league.currentRace = 0;
+                    league.playerHasJoined = false;
+                    league.isFinished = false;
+                    league.RecalculateStandings();
+                 
+                    // Save league information
+                    LeagueInfoSaveData leagueInfo = new LeagueInfoSaveData
+                    {
+                        leagueName = league.leagueName,
+                        description = league.description,
+                        isActive = league.isActive,
+                        playerHasJoined = league.playerHasJoined,
+                        currentRace = league.currentRace,
+                        currentSeason = league.currentSeason,
+                        isFinished = league.isFinished,
+                        maxRaceDays = league.maxRaceDays,
+                        leagueRaceEntryCost = league.leagueRaceEntryCost,
+                        isPromotionRelegation = league.isPromotionRelegation,
+                        numberOfTeamsToPromoteRelegate = league.numberOfTeamsToPromoteRelegate,
+                        maxNumberOfBoatsPerRace = league.maxNumberOfBoatsPerRace,
+                        repeatCount = league.repeatCount,
+                        maxExperienceGivenPerRace = league.maxExperienceGivenPerRace,
+                        tournamentStartDate = league.tournamentStartDate.ToString("yyyy-MM-dd HH:mm:ss")
+                    };
+
+                    // Save league standings
+                    if (league.standings != null)
+                    {
+                        leagueInfo.standings = new TeamStandingSaveData[league.standings.Length];
+                        for (int i = 0; i < league.standings.Length; i++)
+                        {
+                            leagueInfo.standings[i] = new TeamStandingSaveData
+                            {
+                                teamName = league.standings[i].team != null ? league.standings[i].team.teamName : "",
+                                position = league.standings[i].position,
+                                points = league.standings[i].points,
+                                wins = league.standings[i].wins
+                            };
+                        }
+                    }
+                    
+                    // Save Race Schedule
+                    if (league.raceDays != null)
+                    {
+                        leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
+                        for (int i = 0; i < league.raceDays.Length; i++)
+                        {
+                            leagueInfo.raceSchedule[i] = new RaceDayFormationSaveData
+                            {
+                                races = new List<Race>(league.raceDays[i].races),
+                                processed = league.raceDays[i].processed
+                            };
+                        }
+                    }
+
+                    allLeagues.Add(leagueInfo);
+
+                    // Save all teams from this league
+                    if (league.teams != null)
+                    {
+                        foreach (var team in league.teams)
+                        {
+                            if (team != null)
+                            {
+                                allTeams.Add(CreateTeamSaveData(team));
+                            }
+                        }
+                    }
+                }
+
+                saveData.leagueData.allLeagues = allLeagues.ToArray();
+                saveData.leagueData.allTeams = allTeams.ToArray();
+            }
+        }
+        
+        // Initialize Decision Card data for new game
+        if (DecisionCardManager.Instance != null)
+        {
+            // Clear existing history by restoring an empty list
+            DecisionCardManager.Instance.RestoreCardHistory(new List<CardHistoryEntry>());
+            saveData.decisionCardData = new DecisionCardSaveData();
+            saveData.decisionCardData.cardHistory = new List<CardHistoryEntry>();
+        }
+        else
+        {
+            // Ensure decision card data is initialized even if manager doesn't exist yet
+            saveData.decisionCardData = new DecisionCardSaveData();
+            saveData.decisionCardData.cardHistory = new List<CardHistoryEntry>();
+        }
         
         return saveData;
     }

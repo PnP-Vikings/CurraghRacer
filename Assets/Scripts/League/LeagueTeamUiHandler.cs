@@ -41,6 +41,7 @@ public class LeagueTeamUiHandler : MonoBehaviour
        if(LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && starRatingText != null)
        {
            int starRating = LeagueController.Instance.CalculateTeamStarRating(team);
+           Debug.Log("Calculated star rating for team " + team.teamName + ": " + starRating);
            starRatingText.text = starRating.ToString();
        }
        else if (starRatingText != null)

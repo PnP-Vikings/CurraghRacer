@@ -615,7 +615,7 @@ public class RaceManager : MonoBehaviour
                 // Calculate forward progress along the race direction (Z-axis)
                 // Ships move forward in positive Z direction, so closer to finish line Z position = better
                 float distanceToFinish = finishLineTransform.position.z - movement.transform.position.z;
-                Debug.Log(movement.shipName + " distance to finish (Z-axis): " + distanceToFinish + " (Ship Z: " + movement.transform.position.z + ", Finish Z: " + finishLineTransform.position.z + ")");
+              //  Debug.Log(movement.shipName + " distance to finish (Z-axis): " + distanceToFinish + " (Ship Z: " + movement.transform.position.z + ", Finish Z: " + finishLineTransform.position.z + ")");
                 return distanceToFinish;
             }
             return float.MaxValue;
@@ -775,6 +775,50 @@ public class RaceManager : MonoBehaviour
 
     public void EndRace()
     {
+        StartCoroutine(EndRaceCoroutine());
+    }
+    
+    private IEnumerator EndRaceCoroutine()
+    {
+        // CRITICAL: Save game BEFORE scene loads to preserve team stats
+        // ScriptableObjects get reloaded from disk when scenes change, 
+        // so we must save to disk first!
+        if (GameManager.Instance != null && SaveSystem.Instance != null)
+        {
+            Debug.Log("[EndRace] Saving game before scene transition to preserve team stats");
+            
+            // Log team stats BEFORE saving
+            if (LeagueController.Instance?.currentLeague?.teams != null)
+            {
+                foreach (var team in LeagueController.Instance.currentLeague.teams)
+                {
+                    if (team != null && team.currentSeasonStats != null)
+                    {
+                        Debug.Log($"[EndRace BEFORE SAVE] Team '{team.teamName}': {team.currentSeasonStats.finishes.Count} finishes, {team.currentSeasonStats.Points} points");
+                    }
+                }
+            }
+            
+            // Save synchronously
+            bool saveSuccess = SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, "Auto Save");
+            
+            if (saveSuccess)
+            {
+                Debug.Log("[EndRace] Save completed successfully");
+            }
+            else
+            {
+                Debug.LogError("[EndRace] Save FAILED - team stats may be lost!");
+            }
+            
+            // Wait one frame to ensure save is flushed to disk
+            yield return null;
+        }
+        else
+        {
+            Debug.LogWarning("[EndRace] SaveSystem not available - cannot save before scene transition!");
+        }
+        
         RaceMovementPositions.Clear();
         foreach (GameObject ship in ships)
         {
@@ -788,13 +832,10 @@ public class RaceManager : MonoBehaviour
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
 
         RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        
+        Debug.Log("[EndRace] Loading main scene - team stats should be saved to disk");
         SceneManager.LoadScene(GameManager.Instance.mainSceneName);
         GameManager.Instance.SetPlayerBusy(false);
-        if (GameManager.Instance != null)
-        {
-            GameManager.Instance.TriggerAutoSave();
-        }
-        
     }
     
     IEnumerator ShowAd()

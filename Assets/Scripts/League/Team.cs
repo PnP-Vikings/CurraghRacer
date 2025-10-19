@@ -41,11 +41,11 @@ public class Team : ScriptableObject
 
     [Header("Current Season Stats")]
     [Tooltip("Wins, draws, losses, and points for the current season.")]
-    public SeasonStats currentSeasonStats;
+    public SeasonStats currentSeasonStats = new SeasonStats();
 
     [Header("All-Time Stats")]
     [Tooltip("Cumulative wins, draws, losses, and points across all seasons.")]
-    public SeasonStats lifetimeStats;
+    public SeasonStats lifetimeStats = new SeasonStats();
 
     
         
@@ -54,9 +54,35 @@ public class Team : ScriptableObject
     /// </summary>
     public void RecordRaceFinish(int position)
     {
+        // CRITICAL: Ensure stats objects are initialized (they can become null when ScriptableObjects reload)
+        if (currentSeasonStats == null)
+        {
+            Debug.LogWarning($"[RecordRaceFinish] currentSeasonStats was null for team '{teamName}' - creating new instance");
+            currentSeasonStats = new SeasonStats();
+        }
+        
+        if (lifetimeStats == null)
+        {
+            Debug.LogWarning($"[RecordRaceFinish] lifetimeStats was null for team '{teamName}' - creating new instance");
+            lifetimeStats = new SeasonStats();
+        }
+        
+        // Ensure the finishes lists are initialized
+        if (currentSeasonStats.finishes == null)
+        {
+            currentSeasonStats.finishes = new List<int>();
+        }
+        
+        if (lifetimeStats.finishes == null)
+        {
+            lifetimeStats.finishes = new List<int>();
+        }
+        
         currentSeasonStats.finishes.Add(position);
         lifetimeStats.finishes.Add(position);
         UpdateForm(position);
+        
+        Debug.Log($"[RecordRaceFinish] Team '{teamName}' finished in position {position}. Total finishes: {currentSeasonStats.finishes.Count}, Total points: {currentSeasonStats.Points}, Wins: {currentSeasonStats.Wins}");
     }
 
     /// <summary>
@@ -95,7 +121,7 @@ public class Team : ScriptableObject
     public float GetRacePerformanceWithStarRating()
     {
         // Combine base quality (50%) with current form (30%) and star rating (20%)
-        float starRating = 0f;
+        float starRating = 1f;
         if(LeagueController.Instance != null)
         {
             starRating = LeagueController.Instance.CalculateTeamStarRating(this);
@@ -113,6 +139,14 @@ public class Team : ScriptableObject
         // Reset form to base level at season start
         currentForm = 50f;
         recentResults.Clear();
+    }
+    
+    public void ResetForNewGame()
+    {
+        ResetCurrentSeasonStats();
+        ResetLifetimeStats();
+        ResetAllPlayerStats();
+        teamExperience = 0;
     }
 
     public void ResetAllPlayerStats()

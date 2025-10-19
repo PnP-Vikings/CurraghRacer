@@ -85,6 +85,7 @@ public class TeamUi : MonoBehaviour
 
 
                         int starRating = LeagueController.Instance.CalculateTeamStarRating(team);
+                        Debug.Log("Calculated star rating for team " + team.teamName + ": " + starRating);
                         starRatingText.text = "Star Rating: " + starRating.ToString();
 
 
