@@ -1116,6 +1116,12 @@ public class RaceManager : MonoBehaviour
         return selectedTeams.ToArray();
     }
 
+    public void ActivateShoutBoost(float duration = 3f)
+    {
+        playerShip.ActivateShoutBoost(duration);
+    }
+    
+    
     /// <summary>
     /// Helper method to find the index of the player ship in the finishing order
     /// </summary>

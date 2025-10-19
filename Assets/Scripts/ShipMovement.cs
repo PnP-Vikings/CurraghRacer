@@ -11,13 +11,19 @@ public class ShipMovement : MonoBehaviour
 
     private bool raceStarted = false;
     private float currentSpeed = 0f;    // our smoothed velocity
+
+   
     
     public string shipName;
     public bool isPlayerShip = false; // Flag to identify if this is the player's ship
     private CharacterStats playerStats; // Reference to player stats if needed
     public bool shipIsFinsihed = false;
     public int starRating = 1;
-   [SerializeField] private float starRatingMultiplier = 1f;
+    
+    [Header("Shout Boost")]
+    public float shoutSpeedBoost = 1f; // Multiplier applied to speed (1 = normal, >1 = boosted)
+    [SerializeField] private float starRatingMultiplier = 1f;
+    private bool isShoutBoosting = false;
     
     [Header("Ui Elements")]
     public TMPro.TMP_Text shipPositionText;
@@ -125,6 +131,9 @@ public class ShipMovement : MonoBehaviour
         // Apply star rating multiplier to final speed
         // Higher star ratings (better overall team quality) get a speed boost
         desiredSpeed *= starRatingMultiplier;
+        
+        // Apply shout boost multiplier if active
+        desiredSpeed *= shoutSpeedBoost;
 
         // Smooth the speed changes for realistic movement
         currentSpeed = Mathf.Lerp(currentSpeed, desiredSpeed,
@@ -156,6 +165,37 @@ public class ShipMovement : MonoBehaviour
         transform.Translate(Vector3.forward * pushForce * Time.deltaTime); // Move the player ship forward based on stats
     }*/
 
+    /// <summary>
+    /// Activates the shout boost for a specified duration
+    /// </summary>
+    /// <param name="duration">How long the boost lasts in seconds</param>
+    public void ActivateShoutBoost(float duration = 3f)
+    {
+        if (!raceStarted || isShoutBoosting) return;
+
+        StartCoroutine(ShoutBoostCoroutine(duration));
+    }
+    
+    private IEnumerator ShoutBoostCoroutine(float duration)
+    {
+        isShoutBoosting = true;
+        
+        // Calculate boost strength based on strength and teamwork stats
+        // Higher stats = bigger boost (1.2x to 2.0x multiplier range)
+        shoutSpeedBoost = 1f + ((stats.strength + stats.teamWork) * 0.02f);
+        
+        Debug.Log($"{shipName} activated shout boost! Speed multiplier: {shoutSpeedBoost:F2}x for {duration}s");
+        
+        // Wait for the boost duration
+        yield return new WaitForSeconds(duration);
+        
+        // Reset boost after duration expires
+        shoutSpeedBoost = 1f;
+        isShoutBoosting = false;
+        
+        Debug.Log($"{shipName} shout boost ended.");
+    }
+    
     public void SetRaceStarted(bool started)
     {
         raceStarted = started;
