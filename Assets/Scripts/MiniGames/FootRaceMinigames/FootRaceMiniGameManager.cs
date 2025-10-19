@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class FootRaceMiniGameManager : MonoBehaviour
 {
     public static FootRaceMiniGameManager Instance;
-    public Button jumpButton;
+    public Button jumpButton, slideButton;
     public Rigidbody playerRigidbody;
     public float jumpForce = 10f;
     public float moveSpeed = 5f;
@@ -36,6 +36,19 @@ public class FootRaceMiniGameManager : MonoBehaviour
     private float lastJumpTime = -1f;
     private float jumpCooldown = 0.8f; // Minimum time between jumps
     
+    [Header("Slide Physics")]
+    public float standingHeight = 1.8f;
+    public float standingRotation = 0f;
+    public float slidingHeight = 1.13f;
+    public float slidingRotation = -67.49f;
+    
+    public float slideDuration = 1f;
+    public float slideTransitionSpeed = 10f; // How quickly to transition between positions
+    private bool isSliding = false;
+    private float slideStartTime;
+    
+    
+    
     [Header("Ui Elements")]
     public MinigameCanvasUI minigameCanvasUI;
    
@@ -59,6 +72,15 @@ public class FootRaceMiniGameManager : MonoBehaviour
         else
         {
             Debug.LogWarning("Jump button is not assigned in the inspector.");
+        }
+        
+        if (slideButton != null)
+        {
+            slideButton.onClick.AddListener(Slide);
+        }
+        else
+        {
+            Debug.LogWarning("Slide button is not assigned in the inspector.");
         }
         
         // Validate ground check setup
@@ -125,6 +147,74 @@ public class FootRaceMiniGameManager : MonoBehaviour
         gameActive = true;
         score = 0;
         StartCoroutine(IncreaseSpeedOverTime(3f)); // Increase speed every 10 seconds
+    }
+    
+    public void Slide()
+    {
+        if (isSliding || !gameActive) return;
+        
+        isSliding = true;
+        slideStartTime = Time.time;
+        StartCoroutine(SlideCoroutine());
+    }
+    
+    IEnumerator SlideCoroutine()
+    {
+        // Transition to sliding position
+        Vector3 startPos = playerRigidbody.transform.localPosition;
+        Vector3 targetSlidePos = new Vector3(startPos.x, slidingHeight, startPos.z);
+        Quaternion startRot = playerRigidbody.transform.localRotation;
+        Quaternion targetSlideRot = Quaternion.Euler(slidingRotation, 0, 0);
+        
+        float elapsedTime = 0f;
+        float transitionDuration = 0.2f; // Quick transition into slide
+        
+        // Smoothly transition INTO slide
+        while (elapsedTime < transitionDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / transitionDuration;
+            
+            playerRigidbody.transform.localPosition = Vector3.Lerp(startPos, targetSlidePos, t);
+            playerRigidbody.transform.localRotation = Quaternion.Lerp(startRot, targetSlideRot, t);
+            
+            yield return null;
+        }
+        
+        // Ensure we're exactly at sliding position
+        playerRigidbody.transform.localPosition = targetSlidePos;
+        playerRigidbody.transform.localRotation = targetSlideRot;
+        
+        // Hold the slide position for the duration
+        yield return new WaitForSeconds(slideDuration - transitionDuration);
+        
+        
+       
+        // Transition back to standing position
+        Vector3 currentPos = playerRigidbody.transform.localPosition;
+        Vector3 targetStandPos = new Vector3(currentPos.x, standingHeight, currentPos.z);
+        Quaternion currentRot = playerRigidbody.transform.localRotation;
+        Quaternion targetStandRot = Quaternion.Euler(standingRotation, 0, 0);
+        
+        elapsedTime = 0f;
+        
+        // Smoothly transition OUT OF slide
+        while (elapsedTime < transitionDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / transitionDuration;
+            
+            playerRigidbody.transform.localPosition = Vector3.Lerp(currentPos, targetStandPos, t);
+            playerRigidbody.transform.localRotation = Quaternion.Lerp(currentRot, targetStandRot, t);
+            
+            yield return null;
+        }
+        
+        // Ensure we're exactly at standing position
+        playerRigidbody.transform.localPosition = targetStandPos;
+        playerRigidbody.transform.localRotation = targetStandRot;
+        
+        isSliding = false;
     }
    
     public bool IsGrounded()
