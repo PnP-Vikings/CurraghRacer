@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c5f7d431-8565-4a87-9024-915e3dd7f22c}">
+		<property name="assetPath">
+			<value>Delet Save 2 (Bin).wav</value>
+		</property>
+		<property name="frequencyInKHz">
+			<value>44.0999985</value>
+		</property>
+		<property name="channelCount">
+			<value>2</value>
+		</property>
+		<property name="length">
+			<value>2.2572562358276644</value>
+		</property>
+		<relationship name="masterAssetFolder">
+			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
+		</relationship>
+	</object>
+</objects>

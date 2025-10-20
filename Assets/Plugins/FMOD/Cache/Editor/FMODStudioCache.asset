@@ -30,6 +30,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 30883
+--- !u!114 &-8571537632650588184
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Delete Save
+  m_EditorClassIdentifier: 
+  Path: event:/UI/Delete Save
+  Guid:
+    Data1: 164056605
+    Data2: 1284715787
+    Data3: 259168183
+    Data4: -434079796
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2757
 --- !u!114 &-8541651289697230892
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -329,6 +356,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4149
+--- !u!114 &-5980474179271715123
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Training/Punch Bag
+  m_EditorClassIdentifier: 
+  Path: event:/Training/Punch Bag
+  Guid:
+    Data1: -2129610616
+    Data2: 1276664045
+    Data3: -1706661721
+    Data4: -2042870397
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 838
 --- !u!114 &-5146918259261699225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -371,7 +425,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638959791962169403
+  lastModified: 638965736222402049
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -421,6 +475,30 @@ MonoBehaviour:
   ID:
     data1: 3522030092
     data2: 3465320899
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &-3124166064794095863
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Pouring Pint/Pouring Pint Volume
+  m_EditorClassIdentifier: 
+  Name: Pouring Pint Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3674512996
+    data2: 3420302904
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -479,6 +557,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 53333
+--- !u!114 &-2467043709528399334
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Training/Gym Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Training/Gym Ambience
+  Guid:
+    Data1: 1464918436
+    Data2: 1103142096
+    Data3: -1116241001
+    Data4: -237760603
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 29946
 --- !u!114 &-2376005639705754878
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -575,10 +680,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638959791962169403
+  lastModified: 638965736222437172
   FileSizes:
   - Name: 
-    Value: 2414
+    Value: 2876
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -607,6 +712,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4050
+--- !u!114 &-1304913028099773801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Sleep
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Sleep
+  Guid:
+    Data1: -496259850
+    Data2: 1205345202
+    Data3: -1742622531
+    Data4: 638929569
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6262
 --- !u!114 &-743040683020159525
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,12 +812,20 @@ MonoBehaviour:
   - {fileID: 5039562840117391632}
   - {fileID: -743040683020159525}
   - {fileID: 1771700652360039094}
+  - {fileID: 8196437064348383504}
+  - {fileID: -8571537632650588184}
+  - {fileID: 3445940154011273255}
+  - {fileID: -1304913028099773801}
+  - {fileID: 3206544367057659537}
+  - {fileID: 2339618380100974076}
+  - {fileID: -5980474179271715123}
+  - {fileID: -2467043709528399334}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638959791962169403
+  cacheTime: 638965736222437172
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -738,6 +878,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3750
+--- !u!114 &2339618380100974076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bar/Pouring Pint
+  m_EditorClassIdentifier: 
+  Path: event:/Bar/Pouring Pint
+  Guid:
+    Data1: 108181624
+    Data2: 1340913852
+    Data3: 1753601176
+    Data4: -1885462154
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -3124166064794095863}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2150
 --- !u!114 &2589597838079414676
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -843,6 +1011,60 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &3206544367057659537
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Soundtrack/Loading Screen Song
+  m_EditorClassIdentifier: 
+  Path: event:/Soundtrack/Loading Screen Song
+  Guid:
+    Data1: -1487632551
+    Data2: 1338182616
+    Data3: 1968909203
+    Data4: 296153252
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 53333
+--- !u!114 &3445940154011273255
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Pay Bill
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Pay Bill
+  Guid:
+    Data1: 385197272
+    Data2: 1140316065
+    Data3: 622631849
+    Data4: 1243291617
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2108
 --- !u!114 &4227636680546725267
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1107,6 +1329,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 67928
+--- !u!114 &8196437064348383504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Sleep Outside
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Sleep Outside
+  Guid:
+    Data1: 1307717380
+    Data2: 1273777549
+    Data3: 457895306
+    Data4: 1252331532
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 8819
 --- !u!114 &8257224443108815385
 MonoBehaviour:
   m_ObjectHideFlags: 0

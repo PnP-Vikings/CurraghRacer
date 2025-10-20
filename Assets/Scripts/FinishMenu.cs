@@ -40,7 +40,6 @@ public class FinishMenu : MonoBehaviour
 
         RaceManager.Instance.RaceWin.setParameterByName("Mute Race Win", 0f);
         RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
-        //RaceManager.Instance.GarageAmbience.start();
         RaceManager.Instance.Radio.start();
 
         RaceManager.Instance.EndRace();

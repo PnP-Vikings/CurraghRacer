@@ -75,12 +75,12 @@ public class RaceManager : MonoBehaviour
       
     }
 
-    private void Start()
-    {
-        GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-        GarageAmbience.start();
-        Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
-    }
+    //private void Start()
+    //{
+    //    GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
+    //    GarageAmbience.start();
+    //    Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
+    //}
 
     // Listener receives today's events list
     public void CheckForRaceDay(List<DayEventType> todaysEvents)
