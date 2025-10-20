@@ -533,20 +533,39 @@ public class SaveSystem : MonoBehaviour
         try
         {
             string jsonData = File.ReadAllText(filePath);
+            if (string.IsNullOrWhiteSpace(jsonData))
+            {
+                Debug.LogError($"Save file at slot {slotIndex} is empty or unreadable: {filePath}");
+                return false;
+            }
             SaveData saveData = JsonUtility.FromJson<SaveData>(jsonData);
+            if (saveData == null)
+            {
+                Debug.LogError($"Failed to deserialize save file at slot {slotIndex}: {filePath}");
+                return false;
+            }
 
             // Set the flags before applying save data
             _wasLoadedFromSave = true;
             _isNewGame = false;
 
-            ApplySaveData(saveData);
+            // Apply with extra safety
+            try
+            {
+                ApplySaveData(saveData);
+            }
+            catch (Exception inner)
+            {
+                Debug.LogError($"Exception while applying save data for slot {slotIndex}: {inner}");
+                return false;
+            }
 
             Debug.Log($"Game loaded successfully from slot {slotIndex}");
             return true;
         }
         catch( Exception e )
         {
-            Debug.LogError($"Failed to load game from slot {slotIndex}: {e.Message}");
+            Debug.LogError($"Failed to load game from slot {slotIndex}: {e}");
             return false;
         }
     }
@@ -814,6 +833,11 @@ public class SaveSystem : MonoBehaviour
 
     private void ApplySaveData(SaveData saveData)
     {
+        if (saveData == null)
+        {
+            Debug.LogError("ApplySaveData received null SaveData. Aborting.");
+            return;
+        }
         // CRITICAL: Cache the save data immediately so it can be restored when scenes reload
         // This prevents team stats from being wiped when ScriptableObjects reload
         _lastSaveData = saveData;
