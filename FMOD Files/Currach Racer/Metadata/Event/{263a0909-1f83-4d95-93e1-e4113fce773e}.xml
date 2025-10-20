@@ -160,9 +160,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{2efdf9bd-92ce-4275-b62a-b3a2ae047ba1}">
-		<property name="volume">
-			<value>-80</value>
-		</property>
 		<property name="name">
 			<value>Ambience</value>
 		</property>
@@ -230,10 +227,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>9750</value>
+			<value>7000</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>26000</value>
+			<value>14000</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -403,9 +400,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{22c2f176-8711-4277-be22-e2908a8df276}">
-		<property name="volume">
-			<value>-80</value>
-		</property>
 		<property name="name">
 			<value>Pub Talk</value>
 		</property>
@@ -525,8 +519,6 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{ebbf3446-435d-4eb0-94a8-4e9647468adc}">
 		<relationship name="effects">
-			<destination>{0f3b421c-fd0b-407c-b39d-8abcf4fa48ea}</destination>
-			<destination>{3b0ad59d-5399-4b91-9973-61d7d216030c}</destination>
 			<destination>{da3b83b8-58a5-43fa-b9c0-45a13af9d346}</destination>
 			<destination>{0cd8ccc2-7b71-4631-a6bf-eff0565fd84e}</destination>
 		</relationship>
@@ -642,7 +634,7 @@
 	</object>
 	<object class="SingleSound" id="{197f7a09-6b02-4ab0-9fea-c2707bbe63f4}">
 		<property name="volume">
-			<value>5</value>
+			<value>3</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{caee50b2-7cef-4203-8d70-73e1c0efb176}</destination>
@@ -689,31 +681,6 @@
 		<relationship name="audioFile">
 			<destination>{d7d0bad8-c536-4dbc-9e51-bbf0471b322b}</destination>
 		</relationship>
-	</object>
-	<object class="MultibandEqEffect" id="{0f3b421c-fd0b-407c-b39d-8abcf4fa48ea}">
-		<property name="filterTypeA">
-			<value>4</value>
-		</property>
-		<property name="frequencyA">
-			<value>20</value>
-		</property>
-		<property name="qualityA">
-			<value>0.140000001</value>
-		</property>
-	</object>
-	<object class="CompressorEffect" id="{3b0ad59d-5399-4b91-9973-61d7d216030c}">
-		<property name="threshold">
-			<value>-14</value>
-		</property>
-		<property name="ratio">
-			<value>4</value>
-		</property>
-		<property name="attackTime">
-			<value>32</value>
-		</property>
-		<property name="gain">
-			<value>2.5</value>
-		</property>
 	</object>
 	<object class="GainEffect" id="{da3b83b8-58a5-43fa-b9c0-45a13af9d346}">
 		<relationship name="modulators">

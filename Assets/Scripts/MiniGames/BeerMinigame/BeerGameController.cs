@@ -16,7 +16,7 @@ public class BeerGameController : MonoBehaviour
     public List<BeerShaderPour> Completedbeers; // List of beer shader pours
     public bool gameCompleted = false; // Flag to indicate if the game is completed
 
-    private FMOD.Studio.EventInstance PintCompleteAudio;
+
     public void OnEnable()
     {
         if (Instance == null)
@@ -101,10 +101,6 @@ public class BeerGameController : MonoBehaviour
                     Completedbeers.Add(beer); // Add the completed beer to the completed list
                     beers.Remove(beer); // Remove the completed beer from the list
                   //  MoveNextBeer();
-                    
-                    PintCompleteAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bar/Set Pint Down");
-                    PintCompleteAudio.start();
-
                     break; // Exit the loop after processing the first completed beer
                 }
             }

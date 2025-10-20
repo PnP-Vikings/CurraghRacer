@@ -124,7 +124,7 @@ MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
   m_PrefabInstance: {fileID: 555922242}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633439651}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8f9269bc155cda746863b0d8899192ff, type: 3}
@@ -484,7 +484,6 @@ MonoBehaviour:
   beerEnterBoxCollider: {fileID: 109084334}
   beers: []
   Completedbeers: []
-  gameCompleted: 0
 --- !u!114 &445076263
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -613,38 +612,6 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.size
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[1].m_Mode
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[1].m_Target
-      value: 
-      objectReference: {fileID: 1633439655}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[1].m_CallState
-      value: 2
-      objectReference: {fileID: 0}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[1].m_MethodName
-      value: MuteEventParameter
-      objectReference: {fileID: 0}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[1].m_TargetAssemblyTypeName
-      value: MuteParameter, Assembly-CSharp
-      objectReference: {fileID: 0}
-    - target: {fileID: 3131605748083582004, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      propertyPath: onBeerCompleted.m_PersistentCalls.m_Calls.Array.data[1].m_Arguments.m_ObjectArgumentAssemblyTypeName
-      value: UnityEngine.Object, UnityEngine
-      objectReference: {fileID: 0}
     - target: {fileID: 3967115830666149493, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
       propertyPath: m_Name
       value: pint pour location
@@ -724,10 +691,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 3967115830666149493, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 1633439655}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
 --- !u!1 &564979549
 GameObject:
@@ -2000,30 +1964,6 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
---- !u!1 &1633439651 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 3967115830666149493, guid: 448ff94fa19303146a02fd8db751a796, type: 3}
-  m_PrefabInstance: {fileID: 555922242}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1633439655
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1633439651}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d2679fdc1b11e05458c003177c9a4fa8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  EventRef:
-    Guid:
-      Data1: -1192062546
-      Data2: 1338437421
-      Data3: 1401454471
-      Data4: -728512877
-    Path: event:/Bar/Pouring Pint
 --- !u!1 &1730298906 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -5499686025384000946, guid: 731ff4bc5202ea24caa6ea925db1c687, type: 3}
