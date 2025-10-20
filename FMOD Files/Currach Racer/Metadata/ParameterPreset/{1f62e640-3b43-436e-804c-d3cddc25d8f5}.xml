@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{1f62e640-3b43-436e-804c-d3cddc25d8f5}">
+		<property name="name">
+			<value>Pouring Pint Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{bc6b0339-88b1-47a8-9034-6dfb31d51b95}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{bc6b0339-88b1-47a8-9034-6dfb31d51b95}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
