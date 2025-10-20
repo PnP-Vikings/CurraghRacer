@@ -398,7 +398,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638959809416578921
+  lastModified: 638965681712614663
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -602,10 +602,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638959809416608966
+  lastModified: 638965681712655042
   FileSizes:
   - Name: 
-    Value: 2680
+    Value: 2876
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -739,12 +739,15 @@ MonoBehaviour:
   - {fileID: 3445940154011273255}
   - {fileID: -1304913028099773801}
   - {fileID: 3206544367057659537}
+  - {fileID: 7260249910908156582}
+  - {fileID: 5459216358510796773}
+  - {fileID: 1117360431987960100}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638959809416608966
+  cacheTime: 638965681712655042
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -770,6 +773,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &1117360431987960100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Training/Punch Bag
+  m_EditorClassIdentifier: 
+  Path: event:/Training/Punch Bag
+  Guid:
+    Data1: 961703041
+    Data2: 1320482491
+    Data3: -1144882785
+    Data4: -897377835
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 838
 --- !u!114 &1771700652360039094
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1037,6 +1067,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1531
+--- !u!114 &4715107858220368621
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Pouring Pint/Pouring Pint Volume
+  m_EditorClassIdentifier: 
+  Name: Pouring Pint Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3476679779
+    data2: 2867961254
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &4932352448969056289
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1112,6 +1166,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &5459216358510796773
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Training/Gym Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Training/Gym Ambience
+  Guid:
+    Data1: -502206160
+    Data2: 1086831117
+    Data3: -1367993724
+    Data4: -166889306
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 29946
 --- !u!114 &5769496863046401991
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1166,6 +1247,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 27343
+--- !u!114 &7260249910908156582
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bar/Pouring Pint
+  m_EditorClassIdentifier: 
+  Path: event:/Bar/Pouring Pint
+  Guid:
+    Data1: -1192062546
+    Data2: 1338437421
+    Data3: 1401454471
+    Data4: -728512877
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4715107858220368621}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2259
 --- !u!114 &7321747427095314458
 MonoBehaviour:
   m_ObjectHideFlags: 0

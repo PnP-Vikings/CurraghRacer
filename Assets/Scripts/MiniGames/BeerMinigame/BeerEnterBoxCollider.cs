@@ -6,7 +6,8 @@ public class BeerEnterBoxCollider : MonoBehaviour
     
     public UnityEvent onBeerCompleted;
     public BeerShaderPour beerShaderPour;
-    
+    private FMOD.Studio.EventInstance PourBeerAudio;
+
     public static BeerEnterBoxCollider Instance { get; private set; }
     public void Start()
     {
@@ -20,6 +21,9 @@ public class BeerEnterBoxCollider : MonoBehaviour
         {
             beerShaderPour = other.GetComponent<BeerShaderPour>();
             beerShaderPour.isActive = true; // Start pouring when player enters
+            //PourBeerAudio.setParameterByName("Pouring Pint Volume", 1f);
+            PourBeerAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
+            PourBeerAudio.start();
         }
         
     }
@@ -40,6 +44,7 @@ public class BeerEnterBoxCollider : MonoBehaviour
             if (beerShaderPour.BeerComplete())
             {
                 onBeerCompleted.Invoke(); // Trigger the event when beer is complete
+                //PourBeerAudio.setParameterByName("Pouring Pint Volume", 0f);
                 Debug.Log("Beer is complete!");
             }
         }
