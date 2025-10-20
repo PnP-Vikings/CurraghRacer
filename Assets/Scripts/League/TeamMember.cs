@@ -72,6 +72,14 @@ public class TeamMember : ScriptableObject
         return characterStats;
     }
     
+    public void ReduceRacesAvailable()
+    {
+        if (racesAvailableFor > 0)
+        {
+            racesAvailableFor--;
+        }
+    }
+    
     
     
     
@@ -81,6 +89,7 @@ public class TeamMember : ScriptableObject
         level = 1;
         experience = 0;
         xpToNextLevel = 100;
+        racesAvailableFor = 999999; // Reset to default
         fitness.ResetFitness();
         happiness = new Happiness(); // Reset to default happiness
     }
@@ -134,9 +143,9 @@ public class TeamMember : ScriptableObject
         xpToNextLevel = Mathf.RoundToInt((100 * level )); // Increase XP requirement for next level
         
         // Base stat increases per level
-        float baseIncrease = 0.5f;
-        float primaryIncrease = 1.0f;
-        float secondaryIncrease = 0.8f;
+        float baseIncrease = 0.5f + (.1f * level); // Scales with level
+        float primaryIncrease = 1.0f + (0.3f * level);
+        float secondaryIncrease = 0.8f+(0.2f * level);
         
         // Apply stat increases based on attitude
         switch (attitude)

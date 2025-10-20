@@ -25,7 +25,7 @@ namespace League
             // Calculate race performance for each team with some randomness
             foreach (var team in teams)
             {
-                float basePerformance = team.GetRacePerformance();
+                float basePerformance = team.GetRacePerformanceWithStarRating();
                 
                 // Add randomness (±15 points) to make races unpredictable
                 float randomVariation = (float)(random.NextDouble() * 30 - 15);

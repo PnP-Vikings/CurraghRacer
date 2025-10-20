@@ -65,7 +65,21 @@ public class LeagueInviteCardsUi : MonoBehaviour
   
   public void OnClickAcceptInvite()
   {
-    LeagueController.Instance.RegenerateRaceSchedule();
+    // CRITICAL: Do NOT call RegenerateRaceSchedule() here!
+    // The race schedule should already exist from when the league was initialized.
+    // Regenerating it creates NEW Race objects with NEW team references, which wipes all recorded stats!
+    
+    // Only regenerate if the schedule doesn't exist yet
+    if (LeagueController.Instance.currentLeague.raceDays == null || LeagueController.Instance.currentLeague.raceDays.Length == 0)
+    {
+      Debug.Log("Race schedule doesn't exist - generating for first time");
+      LeagueController.Instance.RegenerateRaceSchedule();
+    }
+    else
+    {
+      Debug.Log($"Race schedule already exists ({LeagueController.Instance.currentLeague.raceDays.Length} race days) - preserving it");
+    }
+    
     LeagueController.Instance.currentLeague.RecalculateStandings();
     LeagueController.Instance.SetPlayerHasAcceptedInvite();
     Destroy(gameObject);

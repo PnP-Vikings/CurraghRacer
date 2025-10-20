@@ -927,6 +927,7 @@ MonoBehaviour:
   memberNameText: {fileID: 2842224332515365843}
   memberStarRatingText: {fileID: 8667961722475576548}
   memberIconImage: {fileID: 732047835690770809}
+  teamMember: {fileID: 0}
 --- !u!114 &-5777089289244064251
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -952,4 +953,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   teamMemberSelectedUi: {fileID: 6027079301595318609}
+  selectedBenchTeamMember: {fileID: 2441469590159276248}
+  selectedBenchTeamMemberImage: {fileID: 2685541338692956562}
   btn: {fileID: 7725625939705050984}

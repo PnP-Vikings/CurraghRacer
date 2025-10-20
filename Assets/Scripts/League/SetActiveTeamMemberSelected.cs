@@ -22,6 +22,20 @@ public class SetActiveTeamMemberSelected : MonoBehaviour
            Debug.LogWarning("SetBenchTeamMemberSelected: Button reference is null on OnEnable.");
        }
    }
+   
+   public void HideSelectionUi()
+   {
+       if(teamMemberSelectedUi != null)
+       {
+           teamMemberSelectedUi.SetActive(false);
+       }
+       
+       // Re-enable the button so it can be clicked again
+       if(btn != null)
+       {
+           btn.interactable = true;
+       }
+   }
 
    public void TeamMemberSelected()
    {
@@ -29,21 +43,12 @@ public class SetActiveTeamMemberSelected : MonoBehaviour
       {
           teamMemberSelectedUi.SetActive(true);
           btn.interactable = false;
-          TeamManager.Instance.selectedActiveTeamMember = this.GetComponent<TeamMemberUiHandler>().teamMember;
-          TeamManager.Instance.TrySwapSelectedMembers();
+          TeamManager.Instance.SetSelectedActiveTeamMember(this.GetComponent<TeamMemberUiHandler>().teamMember,this);
+         
       }
       else
       {
           Debug.LogWarning("SetActiveTeamMemberSelected: TeamManager instance or TeamMemberSelected is null.");
       }
-   }
-
-   private void OnDisable()
-   {
-       if (TeamManager.Instance != null && teamMemberSelectedUi != null)
-       {
-           TeamManager.Instance.ClearSelectedTeamMembers();
-       }
-       
    }
 }

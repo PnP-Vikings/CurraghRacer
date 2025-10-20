@@ -49,25 +49,41 @@ namespace League
         {
             if (currentLeague != null && !GameManager.Instance.GameStarted)
             {
+                Debug.Log($"[LeagueController.Start] GameStarted = false. Checking if should reset league...");
+                
                 // Only clear and regenerate if this is a fresh game start (not loaded from save)
                 if (SaveSystem.Instance != null)
                 {
+                    Debug.Log($"[LeagueController.Start] SaveSystem exists. IsNewGame={SaveSystem.Instance.IsNewGame}, WasLoadedFromSave={SaveSystem.Instance.WasLoadedFromSave}");
+                    
                     if (!SaveSystem.Instance.IsNewGame || SaveSystem.Instance.WasLoadedFromSave)
+                    {
+                        Debug.Log("[LeagueController.Start] Existing game detected - preserving league data");
                         return;
-                    ClearLeague();
+                    }
+                    
+                    Debug.Log("[LeagueController.Start] NEW GAME - Clearing league and regenerating schedule");
+                    /*ClearLeague();
                     RegenerateRaceSchedule();
-                    currentLeague.RecalculateStandings();
+                    currentLeague.RecalculateStandings();*/
                 }
                 else if (!IsGameLoadedFromSave())
                 {
-                    ClearLeague();
+                    Debug.Log("[LeagueController.Start] No SaveSystem - checking IsGameLoadedFromSave()");
+                    Debug.Log("[LeagueController.Start] NEW GAME - Clearing league and regenerating schedule");
+                    /*ClearLeague();
                     RegenerateRaceSchedule();
-                    currentLeague.RecalculateStandings();
+                    currentLeague.RecalculateStandings();*/
                 }
                 else
                 {
-                    Debug.Log("Game loaded from save - preserving existing league data");
+                    Debug.Log("[LeagueController.Start] Game loaded from save - preserving existing league data");
                 }
+            }
+            else if (currentLeague != null && GameManager.Instance.GameStarted)
+            {
+                Debug.Log($"[LeagueController.Start] GameStarted = true. Current race: {currentLeague.currentRace}, Player joined: {currentLeague.playerHasJoined}");
+                Debug.Log("[LeagueController.Start] Game already in progress - PRESERVING ALL DATA");
             }
             else if (currentLeague == null)
             {
@@ -295,6 +311,8 @@ namespace League
         {
             if (currentLeague?.raceDays == null) return;
             
+            Debug.Log($"=== RecordPlayerRaceResult called for Race Day {currentLeague.currentRace} ===");
+            
             // Find the current player race and update it
             var currentRaceDay = currentLeague.raceDays[currentLeague.currentRace];
             foreach (var race in currentRaceDay.races)
@@ -303,19 +321,70 @@ namespace League
                 {
                     race.positions = allPositions;
                     race.processed = true;
+                    Debug.Log($"Marked player race as processed for Race Day {currentLeague.currentRace}");
                     break;
                 }
             }
             
             // Record results for all teams in this race
+            // IMPORTANT: We need to find the actual team in the league by name, not use the Race's team reference
+            // because Race objects may have deserialized copies that aren't the same instances
             for (int i = 0; i < raceTeams.Length && i < allPositions.Length; i++)
             {
-                raceTeams[i].RecordRaceFinish(allPositions[i]);
-                raceTeams[i].GiveExperience(currentLeague.maxExperienceGivenPerRace / allPositions[i]); // More experience for better positions
+                // Find the actual team in the current league by matching team name
+                Team actualTeam = System.Array.Find(currentLeague.teams, t => t != null && t.teamName == raceTeams[i].teamName);
+                
+                if (actualTeam == null)
+                {
+                    Debug.LogWarning($"Could not find team '{raceTeams[i].teamName}' in current league teams. Stats/XP not updated.");
+                    continue;
+                }
+                
+                Debug.Log($"Recording race finish for {actualTeam.teamName}: Position {allPositions[i]} (Total finishes before: {actualTeam.currentSeasonStats.finishes.Count})");
+                
+                // Now update the ACTUAL team, not the race's copy
+                actualTeam.RecordRaceFinish(allPositions[i]);
+                
+                Debug.Log($"After recording: {actualTeam.teamName} now has {actualTeam.currentSeasonStats.finishes.Count} finishes, {actualTeam.currentSeasonStats.Points} points, {actualTeam.currentSeasonStats.Wins} wins");
+                
+                if (actualTeam.teamType == TeamType.Player)
+                {
+                    for (int j = 0; j < leagues.Length; j++)
+                    {
+                        if (leagues[j] == currentLeague)
+                        {
+                            // Give extra XP for higher leagues
+                            int xpToGive = currentLeague.maxExperienceGivenPerRace * (j * 5);
+                            actualTeam.GiveExperience(xpToGive);
+                            actualTeam.ReduceRacesAvailableForActiveTeamMembers();
+                            Debug.Log($"Player team earned {xpToGive} XP for race finish in position {allPositions[i]}");
+                            break;
+                        }
+                    }
+                }
+                else
+                {
+                    int pos = allPositions[i];
+                    int xpToGive;
+
+                    if (pos >= 3)
+                    {
+                        xpToGive = (currentLeague.maxExperienceGivenPerRace / pos) + 20*pos; // Bonus XP for participation
+                    }
+                    else
+                    {
+                        xpToGive = currentLeague.maxExperienceGivenPerRace / pos; // More XP for top positions
+                    }
+                    
+                    actualTeam.GiveExperience(xpToGive);
+                    Debug.Log($"Team '{actualTeam.teamName}' earned {xpToGive} XP for finishing in position {pos}");
+                }
             }
             
             
             
+            if (currentLeague == null) return;
+            currentLeague.RecalculateStandings();
             // Advance to next race
             AdvanceToNextRace();
         }
@@ -441,6 +510,112 @@ namespace League
             }
         }
         
+        public int CalculateTeamStarRating(Team team)
+        {
+            if (team == null || team.teamMembers == null || team.teamMembers.Count == 0)
+            {
+                return 0;
+            }
+
+            int totalStars = 0;
+            int memberCount = 0;
+
+            foreach (var member in team.teamMembers)
+            {
+                if (member != null)
+                {
+                    int memberStars = CalculateTeamMemberStarRating(member);
+                    totalStars += memberStars;
+                    memberCount++;
+                }
+            }
+
+            if (memberCount == 0) return 0;
+
+            // Average star rating across all members
+            float averageStars = totalStars / (float)memberCount;
+
+            // Round to nearest whole number for team star rating
+            return Mathf.RoundToInt(averageStars);
+        }
+        
+        /// <summary>
+        /// Calculates star rating based on CharacterStats without requiring a full TeamMember
+        /// Returns 1-5 star rating based on stats compared to current league members
+        /// </summary>
+        public int CalculateTeamMemberStarRatingByStats(CharacterStats stats)
+        {
+            if (currentLeague == null || currentLeague.teams == null || currentLeague.teams.Length == 0)
+            {
+                // Default rating if no league context
+                return 3;
+            }
+
+            // Collect all team members in the league
+            List<TeamMember> allMembers = new List<TeamMember>();
+            foreach (var team in currentLeague.teams)
+            {
+                if (team != null && team.teamMembers != null)
+                {
+                    foreach (var tm in team.teamMembers)
+                    {
+                        if (tm != null)
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
+                
+                if (team != null && team.bench != null)
+                {
+                    foreach (var tm in team.bench)
+                    {
+                        if (tm != null && !allMembers.Contains(tm))
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
+            }
+
+            if (allMembers.Count == 0) return 3;
+
+            // Calculate percentile for each stat
+            float strengthPercentile = CalculateStatPercentile(stats.strength, allMembers, TeamMember.StatType.Strength);
+            float techniquePercentile = CalculateStatPercentile(stats.technique, allMembers, TeamMember.StatType.Technique);
+            float staminaPercentile = CalculateStatPercentile(stats.stamina, allMembers, TeamMember.StatType.Stamina);
+            float teamWorkPercentile = CalculateStatPercentile(stats.teamWork, allMembers, TeamMember.StatType.TeamWork);
+
+            // Average the percentiles
+            float averagePercentile = (strengthPercentile + techniquePercentile + staminaPercentile + teamWorkPercentile) / 4f;
+
+            // Convert percentile to star rating (1-5)
+            if (averagePercentile >= 80f) return 5;
+            if (averagePercentile >= 60f) return 4;
+            if (averagePercentile >= 40f) return 3;
+            if (averagePercentile >= 20f) return 2;
+            return 1;
+        }
+        
+        /// <summary>
+        /// Helper method to calculate percentile for a specific stat value compared to league members
+        /// </summary>
+        private float CalculateStatPercentile(float statValue, List<TeamMember> allMembers, TeamMember.StatType statType)
+        {
+            int betterThanCount = 0;
+
+            foreach (var otherMember in allMembers)
+            {
+                if (otherMember.GetTeamMemberStat(statType) < statValue)
+                {
+                    betterThanCount++;
+                }
+            }
+
+            // Calculate percentile (percentage of members this stat is better than)
+            return (betterThanCount / (float)allMembers.Count) * 100f;
+        }
+        
         
         public int CalculateTeamMemberStarRating(TeamMember member)
         {
@@ -463,6 +638,17 @@ namespace League
                         }
                     }
                 }
+                
+                if (team != null && team.bench != null)
+                {
+                    foreach (var tm in team.bench)
+                    {
+                        if (tm != null && !allMembers.Contains(tm))
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
             }
 
             if (allMembers.Count == 0) return 0;
@@ -476,6 +662,8 @@ namespace League
             // Average the percentiles
             float averagePercentile = (strengthPercentile + techniquePercentile + staminaPercentile + teamWorkPercentile) / 4f;
 
+            Debug.Log($"Team Member {member.memberName} Percentiles - Strength: {strengthPercentile:F1}%, Technique: {techniquePercentile:F1}%, Stamina: {staminaPercentile:F1}%, Teamwork: {teamWorkPercentile:F1}% | Average: {averagePercentile:F1}%");
+            
             // Convert percentile to star rating (1-5)
             // 0-20%: 1 star (bottom tier)
             // 20-40%: 2 stars (below average)
@@ -529,6 +717,16 @@ namespace League
                     foreach (var tm in team.teamMembers)
                     {
                         if (tm != null)
+                        {
+                            allMembers.Add(tm);
+                        }
+                    }
+                }
+                if (team != null && team.bench != null)
+                {
+                    foreach (var tm in team.bench)
+                    {
+                        if (tm != null && !allMembers.Contains(tm))
                         {
                             allMembers.Add(tm);
                         }
