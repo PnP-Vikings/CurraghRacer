@@ -2225,12 +2225,14 @@ MonoBehaviour:
   obstacleSpawnDistance: 20
   obstacleDespawnDistance: -10
   score: 0
+  lastSpawnedObstacleTransform: {x: 0, y: 0, z: 0}
   extraSpacingAfterFloat: 5
   standingHeight: 1.8
   standingRotation: 0
   slidingHeight: 1.13
   slidingRotation: -67.49
   slideDuration: 1.5
+  maxSlideDuration: 3
   slideTransitionSpeed: 5
   minigameCanvasUI: {fileID: 1419458617}
 --- !u!1 &1144698704

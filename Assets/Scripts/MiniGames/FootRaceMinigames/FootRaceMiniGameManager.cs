@@ -31,6 +31,8 @@ public class FootRaceMiniGameManager : MonoBehaviour
     public float obstacleSpawnDistance = 20f;
     public float obstacleDespawnDistance = -10f;
     public int score = 0;
+    public Vector3 lastSpawnedObstacleTransform;
+   
     
     [Header("Obstacle Spacing")]
     [Tooltip("Extra Z distance to add after spawning a floating obstacle, to give the player more time.")]
@@ -46,9 +48,11 @@ public class FootRaceMiniGameManager : MonoBehaviour
     public float slidingRotation = -67.49f;
     
     public float slideDuration = 1f;
+    public float maxSlideDuration = 3f; // Maximum total slide duration
     public float slideTransitionSpeed = 10f; // How quickly to transition between positions
     private bool isSliding = false;
     private float slideStartTime;
+    private float currentSlideEndTime; // Tracks when the current slide should end
     private Coroutine slideCoroutineHandle;
     
     
@@ -194,11 +198,11 @@ public class FootRaceMiniGameManager : MonoBehaviour
             
             if (wantFloat)
             {
-                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 2.29f, zCursor);
+                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 2.4f, zCursor);
                 int prefabIndex = UnityEngine.Random.Range(0, floatObstaclePrefab.Count);
                 Instantiate(floatObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
                 consecutiveFloatCount++;
-                
+                lastSpawnedObstacleTransform = spawnPos;
                 // Advance base spacing and add extra spacing after a floating obstacle
                 zCursor += obstacleSpawnDistance + Mathf.Max(0f, extraSpacingAfterFloat);
             }
@@ -208,20 +212,60 @@ public class FootRaceMiniGameManager : MonoBehaviour
                 int prefabIndex = UnityEngine.Random.Range(0, groundObstaclePrefab.Count);
                 Instantiate(groundObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
                 consecutiveFloatCount = 0; // reset on ground spawn
-                
+                lastSpawnedObstacleTransform = spawnPos;
                 // Advance base spacing
                 zCursor += obstacleSpawnDistance;
             }
         }
     }
     
+    public void MovePassedObstacleToEnd(Transform obstacleTransform, ObstacleType obstacleType)
+    {
+       if(obstacleType == ObstacleType.FloatingObstacle)
+       {
+           Vector3 newPos = new Vector3(lastSpawnedObstacleTransform.x, 2.4f, obstacleSpawnDistance +lastSpawnedObstacleTransform.z + Mathf.Max(0f, extraSpacingAfterFloat));
+           obstacleTransform.position = newPos;
+           lastSpawnedObstacleTransform = newPos;
+       }
+       else if(obstacleType == ObstacleType.GroundObstacle)
+       {
+           Vector3 newPos = new Vector3(lastSpawnedObstacleTransform.x, 1.1f, obstacleSpawnDistance +lastSpawnedObstacleTransform.z);
+           obstacleTransform.position = newPos;
+           lastSpawnedObstacleTransform = newPos;
+       }
+       obstacleTransform.gameObject.SetActive(true);
+    }
+    
     
     public void Slide()
     {
-        if (isSliding || !gameActive) return;
+        if (!gameActive) return;
         
+        // If already sliding, extend the slide duration
+        if (isSliding)
+        {
+            float totalSlideTime = Time.time - slideStartTime;
+            float remainingAllowedTime = maxSlideDuration - totalSlideTime;
+            
+            // Only extend if we haven't reached the max duration
+            if (remainingAllowedTime > 0f)
+            {
+                // Extend by slideDuration or remaining time, whichever is smaller
+                float extensionAmount = Mathf.Min(slideDuration, remainingAllowedTime);
+                currentSlideEndTime += extensionAmount;
+                Debug.Log($"Slide extended by {extensionAmount}s. Total slide time will be: {currentSlideEndTime - slideStartTime}s");
+            }
+            else
+            {
+                Debug.Log("Cannot extend slide - max duration reached");
+            }
+            return;
+        }
+        
+        // Start new slide
         isSliding = true;
         slideStartTime = Time.time;
+        currentSlideEndTime = Time.time + slideDuration; // Set initial end time
         slideCoroutineHandle = StartCoroutine(SlideCoroutine());
     }
     
@@ -325,6 +369,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
         float transitionDuration = Mathf.Lerp(baseDuration, minDuration, speedFactor);
         
         float elapsedTime = 0f;
+        float startY = startPos.y;
         
         // Smoothly transition INTO slide
         while (elapsedTime < transitionDuration)
@@ -333,7 +378,10 @@ public class FootRaceMiniGameManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / transitionDuration;
             
-            playerRigidbody.transform.localPosition = Vector3.Lerp(startPos, targetSlidePos, t);
+            // Only control Y position, let X and Z be handled by physics/velocity
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            float targetY = Mathf.Lerp(startY, slidingHeight, t);
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, targetY, currentPos.z);
             playerRigidbody.transform.localRotation = Quaternion.Lerp(startRot, targetSlideRot, t);
             
             yield return null;
@@ -341,23 +389,25 @@ public class FootRaceMiniGameManager : MonoBehaviour
         
         if (!isSliding) yield break;
         
-        // Ensure we're exactly at sliding position
-        playerRigidbody.transform.localPosition = targetSlidePos;
+        // Ensure we're at exact sliding rotation
         playerRigidbody.transform.localRotation = targetSlideRot;
         
-        // Hold the slide position for the duration (keep total slide duration the same)
-        float holdTime = Mathf.Max(0f, slideDuration - transitionDuration);
-        float holdElapsed = 0f;
-        while (holdElapsed < holdTime)
+        // Hold the slide position until currentSlideEndTime (which can be extended dynamically)
+        while (Time.time < currentSlideEndTime)
         {
             if (!isSliding) yield break;
-            holdElapsed += Time.deltaTime;
+            
+            // Keep player at sliding Y height and rotation, but allow forward movement
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, slidingHeight, currentPos.z);
+            playerRigidbody.transform.localRotation = targetSlideRot;
+            
             yield return null;
         }
         
+        if (!isSliding) yield break;
+        
         // Transition back to standing position using the same speed-scaled duration
-        Vector3 currentPos2 = playerRigidbody.transform.localPosition;
-        Vector3 targetStandPos = new Vector3(currentPos2.x, standingHeight, currentPos2.z);
         Quaternion currentRot2 = playerRigidbody.transform.localRotation;
         Quaternion targetStandRot = Quaternion.Euler(standingRotation, 0, 0);
         
@@ -369,14 +419,16 @@ public class FootRaceMiniGameManager : MonoBehaviour
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / transitionDuration;
             
-            playerRigidbody.transform.localPosition = Vector3.Lerp(currentPos2, targetStandPos, t);
+            // Only control Y position during stand-up transition
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            float targetY = Mathf.Lerp(slidingHeight, standingHeight, t);
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, targetY, currentPos.z);
             playerRigidbody.transform.localRotation = Quaternion.Lerp(currentRot2, targetStandRot, t);
             
             yield return null;
         }
         
-        // Ensure we're exactly at standing position
-        playerRigidbody.transform.localPosition = targetStandPos;
+        // Ensure we're exactly at standing rotation
         playerRigidbody.transform.localRotation = targetStandRot;
         
         isSliding = false;
@@ -426,4 +478,11 @@ public class FootRaceMiniGameManager : MonoBehaviour
             currentSpeed = forwardSpeed;
         }
     }
+
+   
+}
+public enum ObstacleType
+{
+    FloatingObstacle,
+    GroundObstacle
 }

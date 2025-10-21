@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
 
-public class RaisedBarriers : MonoBehaviour
+public class GroundBarrier : MonoBehaviour
 {
     public GameObject barrierObject;
-
+    
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -21,7 +21,7 @@ public class RaisedBarriers : MonoBehaviour
         }
         if( FootRaceMiniGameManager.Instance != null)
         {
-            FootRaceMiniGameManager.Instance.MovePassedObstacleToEnd(barrierObject.transform, ObstacleType.FloatingObstacle);
+            FootRaceMiniGameManager.Instance.MovePassedObstacleToEnd(barrierObject.transform, ObstacleType.GroundObstacle);
         }
     }
     
@@ -33,5 +33,4 @@ public class RaisedBarriers : MonoBehaviour
             HideBarrier();
         }
     }
-   
 }
