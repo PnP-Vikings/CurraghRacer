@@ -57,4 +57,6 @@ public class AudioManager : MonoBehaviour
         float newVolume = Mathf.Clamp01(currentVolume - amount);
         SetMasterVolume(newVolume); // Use SetMasterVolume to trigger save
     }
+
+
 }
