@@ -6,7 +6,6 @@ public class PlateCleanPosition : MonoBehaviour
 {
     public PlateLogic plateLogic; // Reference to the PlateLogic component
     public UnityEvent onPlateCleaned; // Event to trigger when the plate is cleaned
-    //private FMOD.Studio.EventInstance spongeAudio;
     
     private void OnTriggerEnter(Collider other)
     {
@@ -15,8 +14,6 @@ public class PlateCleanPosition : MonoBehaviour
         {
             plateLogic = other.GetComponent<PlateLogic>(); // Get the PlateLogic component from the plate
             Debug.Log("Plate entered clean position: " + plateLogic.name);
-            //spongeAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
-            //spongeAudio.start();
         }
     }
 

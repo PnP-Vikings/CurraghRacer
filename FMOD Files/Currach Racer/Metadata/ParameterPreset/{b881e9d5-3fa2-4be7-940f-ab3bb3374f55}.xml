@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{b881e9d5-3fa2-4be7-940f-ab3bb3374f55}">
+		<property name="name">
+			<value>Race Crowd Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{fa0b76d5-e68d-45cd-a465-00f12837f49d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{fa0b76d5-e68d-45cd-a465-00f12837f49d}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

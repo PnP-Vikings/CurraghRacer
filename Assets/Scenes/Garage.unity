@@ -3986,6 +3986,52 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 966093453}
   m_CullTransparentMesh: 1
+--- !u!1 &972673679
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 972673681}
+  - component: {fileID: 972673680}
+  m_Layer: 0
+  m_Name: AudioManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!114 &972673680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972673679}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5bab7fe579a56574aad7374756141882, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  startMenu: {fileID: 8806052618921000863}
+  settingsBulletinBoard: {fileID: 2254177849537665379, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+--- !u!4 &972673681
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 972673679}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -7.652821, y: 8.402773, z: 3.5986423}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &973476484
 GameObject:
   m_ObjectHideFlags: 0
@@ -7313,6 +7359,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 0}
     - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 972673680}
+    - target: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'raceStartPositions.Array.data[0]'
       value: 
       objectReference: {fileID: 0}
@@ -7420,6 +7470,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1670528342}
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+--- !u!114 &1749561627 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1471334263890786786, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+  m_PrefabInstance: {fileID: 1749561626}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1670528341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e1d0fbf9a3d68942b374afde34b7f5b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1839756146 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 2000664050336890358, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
@@ -8450,6 +8511,14 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1732428147}
+    - target: {fileID: 1350123167166785459, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: raceManager
+      value: 
+      objectReference: {fileID: 1749561627}
+    - target: {fileID: 1350123167166785459, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: audioManager
+      value: 
+      objectReference: {fileID: 0}
     - target: {fileID: 1425390007318805474, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: m_Pivot.x
       value: 0.5
@@ -8557,6 +8626,10 @@ PrefabInstance:
     - target: {fileID: 2254177849537665379, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2254177849537665379, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: m_TagString
+      value: BBSettings
       objectReference: {fileID: 0}
     - target: {fileID: 2912605251652440356, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: m_IsActive
@@ -8829,3 +8902,4 @@ SceneRoots:
   - {fileID: 574776554}
   - {fileID: 12287664}
   - {fileID: 1572256175}
+  - {fileID: 972673681}

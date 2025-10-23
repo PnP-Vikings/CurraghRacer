@@ -15,8 +15,6 @@ namespace League
         public UnityEvent onPlayerJoinedLeague;
         public  League nextLeague = null;
         FMOD.Studio.EventInstance UIClick1;
-        //FMOD.Studio.EventInstance ShowInvite;
-
 
         private void Awake()
         {
@@ -138,13 +136,8 @@ namespace League
                     Debug.LogWarning("LeagueInviteCardsUi reference is not set in the inspector.");
                     RegenerateRaceSchedule();
                     SetPlayerHasAcceptedInvite();
-                
                 }
-                //ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
-                //ShowInvite.start();
             }
-           
-
         }
 
         public System.Collections.IEnumerator StartLeagueInviteMessageAfterDelay(float delaySeconds)

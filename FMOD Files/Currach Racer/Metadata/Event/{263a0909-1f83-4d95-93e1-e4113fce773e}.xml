@@ -526,6 +526,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{8c707a17-33f2-4804-82d3-3f11a7dcb9e3}" />
 	<object class="GainEffect" id="{2a1183e5-ab15-45ce-8a1c-7526e8ab4914}">
+		<property name="gain">
+			<value>-80</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{af77d213-38ea-4382-b24f-52e9bc82eb4a}</destination>
 		</relationship>
