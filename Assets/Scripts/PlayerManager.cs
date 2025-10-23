@@ -163,6 +163,28 @@ public class PlayerManager : MonoBehaviour
         }
 
     }
+    
+    public void ModifyTeamMemberStat(TeamMember member, TeamMember.StatType statType, int amount)
+    {
+        List<TeamMember> tempList = new List<TeamMember>();
+        
+        tempList.AddRange(playerTeam.teamMembers);
+        tempList.AddRange(TeamManager.Instance.benchTeamMembers);
+        
+        if (tempList.Contains(member))
+        {
+            member.ImproveStat(statType, amount);
+            playerStatsView.ClearInfo();
+            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {amount} {statType}", 3);
+            Debug.Log($"{member.memberName}'s {statType} modified: " + member.GetTeamMemberStat(statType));
+        }
+        else
+        {
+            Debug.LogWarning("The specified member is not in the player's team.");
+        }
+    }
+    
+    
 
     public void ModifyPlayerStamina(int stamina)
     {

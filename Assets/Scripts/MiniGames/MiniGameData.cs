@@ -25,7 +25,7 @@ namespace MiniGames
         
         [Header("Training Attributes")]
         [Tooltip("Which player attribute this training minigame improves (only applies to training activities)")]
-        public TrainingAttribute trainingAttribute = TrainingAttribute.None;
+        public TeamMember.StatType trainingAttribute = TeamMember.StatType.Strength;
         [Tooltip("How much the selected attribute improves per point of performance")]
         public float attributeGainMultiplier = 1f;
         

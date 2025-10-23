@@ -7,14 +7,17 @@ using UnityEngine;
 public class SeasonStats
 {
     [Tooltip("List of finishing positions for the season.")]
-    public List<int> finishes;
+    public List<int> finishes = new List<int>(); // CRITICAL: Initialize here so it's never null!
 
     // Points distribution similar to F1: 1st to 10th
     private static readonly int[] PointsDistribution = {25, 18, 15, 12, 10, 8, 6, 4, 2, 1};
 
     public SeasonStats()
     {
-        finishes = new List<int>();
+        if (finishes == null)
+        {
+            finishes = new List<int>();
+        }
     }
 
     public int Points
