@@ -425,7 +425,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638965736222402049
+  lastModified: 638968289385486270
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -530,33 +530,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
---- !u!114 &-2624806273485465106
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Kitchen/Currach Dance Track
-  m_EditorClassIdentifier: 
-  Path: event:/Kitchen/Currach Dance Track
-  Guid:
-    Data1: -489040667
-    Data2: 1281603910
-    Data3: 927385729
-    Data4: -744031613
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 0
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 53333
 --- !u!114 &-2467043709528399334
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -637,7 +610,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 980
+  Length: 640
 --- !u!114 &-1975231195295424296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -680,10 +653,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638965736222437172
+  lastModified: 638968289385521414
   FileSizes:
   - Name: 
-    Value: 2876
+    Value: 2826
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -805,7 +778,6 @@ MonoBehaviour:
   - {fileID: 5916317957201816820}
   - {fileID: 5769496863046401991}
   - {fileID: 4552225702241423523}
-  - {fileID: -2624806273485465106}
   - {fileID: -6390802952839510384}
   - {fileID: -6377474762000497385}
   - {fileID: 2589597838079414676}
@@ -825,7 +797,7 @@ MonoBehaviour:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638965736222437172
+  cacheTime: 638968289385521414
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
