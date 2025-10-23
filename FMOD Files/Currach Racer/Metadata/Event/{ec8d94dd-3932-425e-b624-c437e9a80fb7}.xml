@@ -67,11 +67,7 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{8699bd13-3319-482f-81c8-0a3c6832deb4}">
-		<property name="maxVoices">
-			<value>1</value>
-		</property>
-	</object>
+	<object class="EventAutomatableProperties" id="{8699bd13-3319-482f-81c8-0a3c6832deb4}" />
 	<object class="MarkerTrack" id="{da73295f-86cd-4db6-8936-89606b07a303}" />
 	<object class="GroupTrack" id="{0c9452a4-88be-44bf-b340-87e8f37da0b3}">
 		<relationship name="modules">
@@ -571,7 +567,7 @@
 	</object>
 	<object class="PlayPercentage" id="{32746623-8500-46d0-b93a-d7ff9f991ea7}">
 		<property name="percentage">
-			<value>30</value>
+			<value>35</value>
 		</property>
 		<relationship name="sound">
 			<destination>{6923acc1-6e0d-4580-b586-e379b91265bc}</destination>
