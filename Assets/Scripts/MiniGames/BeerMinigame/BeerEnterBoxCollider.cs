@@ -24,7 +24,6 @@ public class BeerEnterBoxCollider : MonoBehaviour
             pouringPint = FMODUnity.RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
             pouringPint.start();
         }
-        
     }
     private void OnTriggerExit(Collider other)
     {
@@ -49,12 +48,10 @@ public class BeerEnterBoxCollider : MonoBehaviour
             }
         }
     }
-  
     
     public void ClearBeerShaderPour()
     {
         beerShaderPour.isActive = false; // Stop pouring
         beerShaderPour = null; // Clear the reference when needed
     }
-    
 }

@@ -762,14 +762,7 @@ public class RaceManager : MonoBehaviour
                 RaceAmbience.setParameterByName("Mute Rowing", 0f);
                 RaceLose = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Lose");
                 RaceLose.start();
-            }
-          
-            
-            
-            
-            
-            
-            
+            }  
         }
     }
 
