@@ -27,6 +27,7 @@ MonoBehaviour:
   - {fileID: 496546100732942899}
   - {fileID: -3140071954010244658}
   - {fileID: 4932352448969056289}
+  - {fileID: 3671450084636152287}
   MinDistance: 1
   MaxDistance: 20
   Length: 30883
@@ -425,7 +426,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638968323769572740
+  lastModified: 638968343218271290
   FileSizes: []
   Exists: 1
 --- !u!114 &-3890573300518132453
@@ -653,10 +654,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638968323769607986
+  lastModified: 638968343218296644
   FileSizes:
   - Name: 
-    Value: 2836
+    Value: 2878
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -797,7 +798,7 @@ MonoBehaviour:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638968323769607986
+  cacheTime: 638968343218296644
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -1037,6 +1038,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2108
+--- !u!114 &3671450084636152287
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Race Ambience/Crowd Volume
+  m_EditorClassIdentifier: 
+  Name: Crowd Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 4015683345
+    data2: 1664620866
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &4227636680546725267
 MonoBehaviour:
   m_ObjectHideFlags: 0

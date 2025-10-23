@@ -332,7 +332,6 @@ public class BoxingMinigameManager : MonoBehaviour
         punchBagAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         punchBagAudio.start();
 
-
         if (boxingUiCanvas != null)
         {
             boxingUiCanvas.UpdateScore(score);
