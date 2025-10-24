@@ -5372,7 +5372,7 @@ MonoBehaviour:
       Data2: 1114385868
       Data3: -852164987
       Data4: -1128160590
-    Path: event:/Main Menu/Main Menu Ambience
+    Path: event:/Main Menu/Main Menu
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
