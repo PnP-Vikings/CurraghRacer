@@ -6,37 +6,52 @@ using UnityEngine;
 public class RadioManager : MonoBehaviour
 {
     private FMOD.Studio.EventInstance radioSong;
-    private FMOD.Studio.EventInstance newsReport;
-    private PLAYBACK_STATE newsReportPlaybackState;
-    Coroutine RadioReportCoroutine;
+    private FMOD.Studio.EventInstance newsReportOrAd;
+    private PLAYBACK_STATE newsReportOrAdPlaybackState;
+    private int newsReportOrAdCounter = 0;
+    Coroutine RadioReportOrAdCoroutine;
 
     void Start()
     {
-        radioSong = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
+        radioSong = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio Song");
         radioSong.start();
 
-        newsReport = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/News Report");
+        newsReportOrAd = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/News Report or Ad");
 
-        RadioReportCoroutine = StartCoroutine(PlayRadioReport());
+        RadioReportOrAdCoroutine = StartCoroutine(PlayRadioReportOrAd());
     }
 
-    IEnumerator PlayRadioReport()
+    IEnumerator PlayRadioReportOrAd()
     {
-        yield return new WaitForSeconds(3f);
+        float randomNumber = Random.Range(3f, 10f);
+        Debug.Log(randomNumber);
+        yield return new WaitForSeconds(randomNumber);
         radioSong.setParameterByName("Radio Song fadeout", 1f);
+
         yield return null;
         radioSong.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
         yield return new WaitForSeconds(1.5f);
-        newsReport.start();
+        newsReportOrAd.start();
+        radioSong.setParameterByName("Radio Song fadeout", 0f);
+        newsReportOrAdCounter++;
+        Debug.Log(newsReportOrAdCounter.ToString());
     }
 
     private void Update()
     {
-        newsReport.getPlaybackState(out newsReportPlaybackState);
+        newsReportOrAd.getPlaybackState(out newsReportOrAdPlaybackState);
 
-        if (newsReportPlaybackState == PLAYBACK_STATE.STOPPING)
+        if (newsReportOrAdPlaybackState == PLAYBACK_STATE.STOPPING)
         {
             radioSong.start();
+        }
+
+        if (newsReportOrAdCounter > 0 && newsReportOrAdPlaybackState == PLAYBACK_STATE.STOPPED)
+        {
+            RadioReportOrAdCoroutine = StartCoroutine(PlayRadioReportOrAd());
+            newsReportOrAdCounter--;
+            Debug.Log(newsReportOrAdCounter.ToString());
         }
     }
 }
