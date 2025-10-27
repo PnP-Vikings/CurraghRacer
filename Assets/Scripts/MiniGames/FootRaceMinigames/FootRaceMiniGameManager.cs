@@ -188,7 +188,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
         for (int i = 1; i <= obstacleInitialSpawnQuantity; i++)
         {
             // Decide type: 0 = float, 1 = ground (first obstacle forced to ground)
-            bool wantFloat = UnityEngine.Random.Range(0, 2) == 0 && i != 1 && (floatObstaclePrefab != null && floatObstaclePrefab.Count > 0);
+            bool wantFloat = UnityEngine.Random.Range(0, 4) == 0 && i != 1 && (floatObstaclePrefab != null && floatObstaclePrefab.Count > 0);
             
             // Enforce rule: no more than two floating platforms back-to-back
             if (wantFloat && consecutiveFloatCount >= maxConsecutiveFloats)
