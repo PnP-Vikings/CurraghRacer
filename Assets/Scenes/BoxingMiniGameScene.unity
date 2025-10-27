@@ -719,7 +719,6 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6513408693958959416, guid: c768d69e367953f4d93a1024374ada49, type: 3}
   m_PrefabInstance: {fileID: 8311638599538359987}
   m_PrefabAsset: {fileID: 0}
-<<<<<<< HEAD
 --- !u!114 &1963541518 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 1356500484179737888, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
@@ -729,9 +728,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-=======
+  m_Name:
+  m_EditorClassIdentifier:
+
 --- !u!1 &1980710206
 GameObject:
   m_ObjectHideFlags: 0
@@ -749,6 +748,7 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+
 --- !u!114 &1980710207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -759,9 +759,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  CollisionTag: 
+  m_Name:
+  m_EditorClassIdentifier:
+  CollisionTag:
   EventReference:
     Guid:
       Data1: 1464918436
@@ -769,7 +769,7 @@ MonoBehaviour:
       Data3: -1116241001
       Data4: -237760603
     Path: event:/Training/Gym Ambience
-  Event: 
+  Event:
   EventPlayTrigger: 1
   EventStopTrigger: 2
   AllowFadeout: 1
@@ -780,6 +780,7 @@ MonoBehaviour:
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+
 --- !u!4 &1980710208
 Transform:
   m_ObjectHideFlags: 0
@@ -795,7 +796,7 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
->>>>>>> a016b8760cb5130d598fd42e9dba6529454179f7
+
 --- !u!1 &2025547713
 GameObject:
   m_ObjectHideFlags: 0
