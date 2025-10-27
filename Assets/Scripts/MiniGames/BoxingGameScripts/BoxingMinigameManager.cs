@@ -54,7 +54,9 @@ public class BoxingMinigameManager : MonoBehaviour
     
     [Header("Ui Settings")]
     public BoxingUiCanvas boxingUiCanvas;
-    
+
+    private FMOD.Studio.EventInstance punchBagAudio;
+
     private void Awake()
     {
         if (Instance == null)
@@ -326,8 +328,11 @@ public class BoxingMinigameManager : MonoBehaviour
         // Increase score
         score+= pointsToAdd;
         Debug.Log($"Target Hit! Score: {score}");
-        
-        if(boxingUiCanvas != null)
+
+        punchBagAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Punch Bag");
+        punchBagAudio.start();
+
+        if (boxingUiCanvas != null)
         {
             boxingUiCanvas.UpdateScore(score);
         }

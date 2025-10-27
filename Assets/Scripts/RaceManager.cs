@@ -69,18 +69,10 @@ public class RaceManager : MonoBehaviour
         }
     }
 
-
     public void OnEnable()
     {
       
     }
-
-    //private void Start()
-    //{
-    //    GarageAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Garage Ambience");
-    //    GarageAmbience.start();
-    //    Radio = FMODUnity.RuntimeManager.CreateInstance("event:/Garage/Radio");
-    //}
 
     // Listener receives today's events list
     public void CheckForRaceDay(List<DayEventType> todaysEvents)
@@ -100,6 +92,7 @@ public class RaceManager : MonoBehaviour
                    isRaceDay = false;
                 }
                 Debug.Log("Checking today's events for Race Day..." + isRaceDay + " Event: " + eventType.eventName);
+
             });
         }
         else
@@ -132,11 +125,8 @@ public class RaceManager : MonoBehaviour
             {
                 Debug.LogWarning("No Race Tracks found in current league -");
             }
-        }
-        
-        
+        } 
     }
-
 
     public void SpawnShips()
     {
@@ -191,7 +181,6 @@ public class RaceManager : MonoBehaviour
             SpawnShipsWithFallback();
             return;
         }
-
       
 
         var raceTeams = currentRace.teams;
@@ -572,8 +561,13 @@ public class RaceManager : MonoBehaviour
 
         RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         RaceAmbience.start();
-        GarageAmbience.setParameterByName("Mute Garage Ambience", 0f);
-        //GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        
+        if (!isRaceDay)
+        {
+            RaceAmbience.setParameterByName("Crowd Volume", 0f);
+        }
+
+        GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
         foreach (var go in ships)

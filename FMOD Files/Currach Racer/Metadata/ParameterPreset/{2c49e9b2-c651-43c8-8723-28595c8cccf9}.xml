@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{2c49e9b2-c651-43c8-8723-28595c8cccf9}">
+		<property name="name">
+			<value>Radio Song fadeout</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{fcd93d53-14ff-4b7a-99c0-8427e7d97dc4}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{fcd93d53-14ff-4b7a-99c0-8427e7d97dc4}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
