@@ -27,22 +27,28 @@ public class WeightLiftingController : MonoBehaviour
     
     [Header("Phase 2 - Lift Settings")]
     public float liftPhaseDuration = 4f;
+    public float liftCountdownDuration = 1f; // Countdown before accepting taps
     public float powerMeterSpeed = 0.5f; // Speed of oscillation
     public float powerMeterPosition; // 0 to 1
     public float liftTargetMin = 0.65f; // Green zone min
     public float liftTargetMax = 0.85f; // Green zone max
     public bool powerMeterGoingUp = true;
     public float acceptableMargin = 0.15f; // Margin for "good" lift
+    private bool liftPhaseReady; // True when countdown is complete
     
     [Header("Phase 3 - Hold Settings")]
     public float holdPhaseDuration = 3f;
-    public float balancePosition = 50f; // 0 to 100, goal is to stay around 50
-    public float balanceDriftSpeed = 15f; // How fast it drifts away from center
-    public float tapCorrectionAmount = 20f; // How much each tap pushes toward center
-    public float safeZoneMin = 30f; // Below this = fail
-    public float safeZoneMax = 70f; // Above this = fail
-    public float driftChangeInterval = 0.8f; // How often drift direction changes
-    private bool driftingUp = true; // Which direction the balance is drifting
+    public float barTiltAngle; // -45 to +45 degrees (left to right)
+    public float tiltDriftSpeed = 20f; // How fast bar tilts in random direction
+    public float buttonPushAmount = 30f; // How much each button press corrects
+    public float maxTiltAngle = 45f; // Max tilt before failure
+    public float tiltDirectionChangeInterval = 1f; // How often tilt direction changes
+    private bool tiltingRight = true; // Which direction the bar is tilting
+    
+    [Header("Hold Phase UI")]
+    public Button pushLeftButton;
+    public Button pushRightButton;
+    public RectTransform barImageTransform; // The bar image that rotates
     
     [Header("Stats")]
     public int successfulReps;
@@ -57,12 +63,11 @@ public class WeightLiftingController : MonoBehaviour
     public Image gripTargetZone;
     public Slider powerMeter;
     public Image powerTargetZone;
-    public Slider tiltBar;
-    public Image tiltBalanceZone;
     public TMP_Text phaseText;
     public TMP_Text weightText;
     public TMP_Text instructionText;
     public TMP_Text statsText;
+    public TMP_Text liftsRemainingTxt;
     public GameObject gripPhaseUI;
     public GameObject liftPhaseUI;
     public GameObject holdPhaseUI;
@@ -121,7 +126,7 @@ public class WeightLiftingController : MonoBehaviour
                 break;
         }
         
-        // Handle tap input
+        // Handle tap input (only for Grip and Lift phases)
         if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
         {
             HandleTapInput();
@@ -137,14 +142,17 @@ public class WeightLiftingController : MonoBehaviour
         failedAttempts = 0;
         maxWeightLifted = 0f;
         totalStrengthGained = 0;
-        
+        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
         StartNewLift();
     }
     
     public void StartNewLift()
     {
+        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
         if (failedAttempts >= maxFailedAttempts)
         {
+            UpdatePhaseUI("FAILED!", "Attempts remaining: " + (maxFailedAttempts - failedAttempts));
+
             EndGame();
             return;
         }
@@ -217,6 +225,7 @@ public class WeightLiftingController : MonoBehaviour
         phaseTimer = 0f;
         powerMeterPosition = 0f;
         powerMeterGoingUp = true;
+        liftPhaseReady = false; // Start with countdown
         hasReleasedInLiftPhase = false;
         isPerfectLift = false;
         
@@ -224,13 +233,29 @@ public class WeightLiftingController : MonoBehaviour
         SetAllPhasesUIInactive();
         if (liftPhaseUI) liftPhaseUI.SetActive(true);
         
-        UpdatePhaseUI("PHASE 2: LIFT", "Tap when the meter hits the green zone!");
+        UpdatePhaseUI("PHASE 2: LIFT", "Get ready...");
         UpdateUI();
     }
     
     private void UpdateLiftPhase()
     {
         phaseTimer += Time.deltaTime;
+        
+        // Handle countdown at start of phase
+        if (!liftPhaseReady)
+        {
+            if (phaseTimer >= liftCountdownDuration)
+            {
+                liftPhaseReady = true;
+                UpdatePhaseUI("PHASE 2: LIFT", "Tap when the meter hits the green zone!");
+            }
+            else
+            {
+                // Show countdown
+                int countdown = Mathf.CeilToInt(liftCountdownDuration - phaseTimer);
+                UpdatePhaseUI("PHASE 2: LIFT", countdown.ToString());
+            }
+        }
         
         // Oscillate power meter (gets faster with heavier weights)
         float weightSpeedMultiplier = 1f + (currentWeight / maxWeight); // 1.0 to 2.0
@@ -258,8 +283,8 @@ public class WeightLiftingController : MonoBehaviour
         // Update UI
         if (powerMeter) powerMeter.value = powerMeterPosition;
         
-        // Auto-fail if time runs out without tapping
-        if (phaseTimer >= liftPhaseDuration && !hasReleasedInLiftPhase)
+        // Auto-fail if time runs out without tapping (only after countdown completes)
+        if (liftPhaseReady && phaseTimer >= (liftCountdownDuration + liftPhaseDuration) && !hasReleasedInLiftPhase)
         {
             FailLift("Failed to lift in time!");
         }
@@ -298,12 +323,16 @@ public class WeightLiftingController : MonoBehaviour
     #region Phase 3 - Hold
     
     private void TransitionToHoldPhase()
-        barTiltAngle = 0f; // Start perfectly balanced (0 degrees)
-        tiltingRight = Random.Range(0, 2) == 0; // Randomly pick initial tilt direction
+    {
+        currentLiftState = LiftState.Hold;
         phaseTimer = 0f;
         tiltChangeTimer = 0f;
-        balancePosition = 50f; // Start perfectly balanced in the center
-        driftingUp = Random.Range(0, 2) == 0; // Randomly pick initial drift direction
+        barTiltAngle = 0f; // Start perfectly balanced (0 degrees)
+        tiltingRight = Random.Range(0, 2) == 0; // Randomly pick initial tilt direction
+        
+        SwitchCamera(holdCamera);
+        SetAllPhasesUIInactive();
+        if (holdPhaseUI) holdPhaseUI.SetActive(true);
         
         // Set up button listeners
         if (pushLeftButton != null)
@@ -314,52 +343,76 @@ public class WeightLiftingController : MonoBehaviour
         
         if (pushRightButton != null)
         {
-        // Randomly change tilt direction
-        if (tiltChangeTimer >= tiltDirectionChangeInterval)
+            pushRightButton.onClick.RemoveAllListeners();
+            pushRightButton.onClick.AddListener(OnPushRightButton);
         }
         
+        UpdatePhaseUI("PHASE 3: HOLD", "Use buttons to keep the bar balanced!");
+        UpdateUI();
+    }
+    
+    private void UpdateHoldPhase()
+    {
+        // Don't update if game is not active
+        if (!gameActive) return;
+        
+        phaseTimer += Time.deltaTime;
+        tiltChangeTimer += Time.deltaTime;
+        
+        // Randomly change tilt direction
+        if (tiltChangeTimer >= tiltDirectionChangeInterval)
+        {
+            tiltChangeTimer = 0f;
             tiltingRight = Random.Range(0, 2) == 0;
             Debug.Log("Bar tilt direction changed: " + (tiltingRight ? "Right" : "Left"));
-        if (holdPhaseUI) holdPhaseUI.SetActive(true);
+        }
         
         // Apply tilt based on weight (heavier = faster tilt)
         float weightTiltMultiplier = 1f + (currentWeight / maxWeight); // 1.0 to 2.0
         float currentTiltSpeed = tiltDriftSpeed * weightTiltMultiplier;
-    
+        
         // Tilt the bar left or right
         if (tiltingRight)
-        phaseTimer += Time.deltaTime;
+        {
             barTiltAngle += currentTiltSpeed * Time.deltaTime;
-        
-        // Randomly change drift direction
-        if (tiltChangeTimer >= driftChangeInterval)
+        }
+        else
+        {
             barTiltAngle -= currentTiltSpeed * Time.deltaTime;
-            tiltChangeTimer = 0f;
-            driftingUp = Random.Range(0, 2) == 0;
+        }
+        
         // Clamp the angle
         barTiltAngle = Mathf.Clamp(barTiltAngle, -maxTiltAngle - 10f, maxTiltAngle + 10f);
-        }
+        
         // Update the visual bar rotation
         if (barImageTransform != null)
         {
             barImageTransform.localRotation = Quaternion.Euler(0f, 0f, -barTiltAngle); // Negative for correct rotation direction
         }
-        float weightDriftMultiplier = 1f + (currentWeight / maxWeight); // 1.0 to 2.0
+        
         // Check for failure (tilted too far)
         if (Mathf.Abs(barTiltAngle) > maxTiltAngle)
-        // Drift away from center (50)
-            Debug.Log("Balance failed! Tilt angle: " + barTiltAngle);
-            FailLift("Lost balance! Bar tilted too far!");
-            balancePosition += currentDriftSpeed * Time.deltaTime;
-        }
-        else
+        // Check for failure (tilted too far)
+        if (Mathf.Abs(barTiltAngle) > maxTiltAngle)
         {
-            balancePosition -= currentDriftSpeed * Time.deltaTime;
+            Debug.Log("Balance failed! Tilt angle: " + barTiltAngle);
+            currentLiftState = LiftState.Idle; // Stop the hold phase immediately
+            FailLift("Lost balance! Bar tilted too far!");
+            return;
         }
+        
+        // Check for success (survived the duration)
+        if (phaseTimer >= holdPhaseDuration)
+        {
+            currentLiftState = LiftState.Idle; // Stop the hold phase immediately
+            SuccessfulLift();
+        }
+    }
+    
     // Button press methods for Hold phase
     public void OnPushLeftButton()
-        balancePosition = Mathf.Clamp(balancePosition, 0f, 100f);
-        if (currentLiftState != LiftState.Hold) return;
+    {
+        if (!gameActive || currentLiftState != LiftState.Hold) return;
         
         // Push bar to the left (decrease angle)
         barTiltAngle -= buttonPushAmount;
@@ -369,33 +422,12 @@ public class WeightLiftingController : MonoBehaviour
     
     public void OnPushRightButton()
     {
-        if (currentLiftState != LiftState.Hold) return;
+        if (!gameActive || currentLiftState != LiftState.Hold) return;
         
         // Push bar to the right (increase angle)
         barTiltAngle += buttonPushAmount;
         barTiltAngle = Mathf.Clamp(barTiltAngle, -maxTiltAngle - 10f, maxTiltAngle + 10f);
         Debug.Log("Pushed RIGHT! Bar angle now: " + barTiltAngle);
-        {
-            SuccessfulLift();
-        }
-    }
-    
-    private void HandleHoldTap()
-    {
-        // Tap pushes the balance back toward center (50)
-        if (balancePosition > 50f)
-        {
-            // Above center, push it down toward 50
-            balancePosition -= tapCorrectionAmount;
-        }
-        else if (balancePosition < 50f)
-        {
-            // Below center, push it up toward 50
-            balancePosition += tapCorrectionAmount;
-        }
-        
-        balancePosition = Mathf.Clamp(balancePosition, 0f, 100f);
-                // Hold phase uses buttons instead of tap input
     }
     
     #endregion
@@ -415,7 +447,7 @@ public class WeightLiftingController : MonoBehaviour
                 break;
                 
             case LiftState.Hold:
-                HandleHoldTap();
+                // Hold phase uses buttons instead of tap input
                 break;
         }
     }
@@ -486,6 +518,16 @@ public class WeightLiftingController : MonoBehaviour
     {
         gameActive = false;
         currentLiftState = LiftState.Idle;
+        
+        // Remove button listeners
+        if (pushLeftButton != null)
+        {
+            pushLeftButton.onClick.RemoveAllListeners();
+        }
+        if (pushRightButton != null)
+        {
+            pushRightButton.onClick.RemoveAllListeners();
+        }
         
         SetAllPhasesUIInactive();
         if (resultsUI) resultsUI.SetActive(true);
