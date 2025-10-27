@@ -12,6 +12,13 @@ public class MinigameCanvasUI : MonoBehaviour
             scoreText.text = "Score: " + score;
         }
     }
+    public virtual void UpdateScore(string score)
+    {
+        if(scoreText != null)
+        {
+            scoreText.text = score.ToString();
+        }
+    }
    
     public void UpdateTimer(float timeRemaining)
     {

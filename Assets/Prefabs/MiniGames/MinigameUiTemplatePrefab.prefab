@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 6806597897561096897}
   - component: {fileID: 3940625616383702565}
   - component: {fileID: 6411893985430881423}
-  - component: {fileID: 7071976228180299094}
+  - component: {fileID: 6807400039332883010}
   m_Layer: 5
   m_Name: MinigameUiTemplatePrefab
   m_TagString: Untagged
@@ -514,7 +514,7 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &7071976228180299094
+--- !u!114 &6807400039332883010
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -523,7 +523,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 3312150881344673577}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a6bfc84e956f1834bb0af1af3a074e5f, type: 3}
+  m_Script: {fileID: 11500000, guid: da03c51eea3d836429a8101b234fa37f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   scoreText: {fileID: 4455661559033685484}
