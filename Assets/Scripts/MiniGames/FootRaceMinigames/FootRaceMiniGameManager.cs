@@ -91,6 +91,13 @@ public class FootRaceMiniGameManager : MonoBehaviour
             Debug.LogWarning("Slide button is not assigned in the inspector.");
         }
         
+        SwipeGesture swipeGesture = GetComponent<SwipeGesture>();
+        if (swipeGesture != null)
+        {
+            swipeGesture.OnSwipeUp += Jump;
+            swipeGesture.OnSwipeDown += Slide;
+        }
+        
         // Validate ground check setup
         if (groundCheck == null)
         {
