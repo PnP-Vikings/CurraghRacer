@@ -11,9 +11,6 @@ public class FootRaceMiniGameManager : MonoBehaviour
     public Rigidbody playerRigidbody;
     public float jumpForce = 10f;
     public float moveSpeed = 5f;
-    public float laneWidth = 2f;
-    public int currentLane = 1; // 0 = left, 1 = center, 2 = right
-    public int totalLanes = 3;
     public bool isGrounded = true;
     public LayerMask groundLayer;
     public Transform groundCheck;
@@ -27,11 +24,19 @@ public class FootRaceMiniGameManager : MonoBehaviour
     public float lowJumpMultiplier = 2f; // Extra gravity when not holding jump
     public bool gameActive = false;
     public float obstacleSpawnInterval = 2f;
-    public GameObject[] obstaclePrefabs;
+    public int obstacleInitialSpawnQuantity = 50;
+    public List<GameObject> groundObstaclePrefab;
+    public List<GameObject> floatObstaclePrefab;
     public Transform obstacleSpawnPoint;
     public float obstacleSpawnDistance = 20f;
     public float obstacleDespawnDistance = -10f;
     public int score = 0;
+    public Vector3 lastSpawnedObstacleTransform;
+   
+    
+    [Header("Obstacle Spacing")]
+    [Tooltip("Extra Z distance to add after spawning a floating obstacle, to give the player more time.")]
+    public float extraSpacingAfterFloat = 5f;
     
     private float lastJumpTime = -1f;
     private float jumpCooldown = 0.8f; // Minimum time between jumps
@@ -43,9 +48,12 @@ public class FootRaceMiniGameManager : MonoBehaviour
     public float slidingRotation = -67.49f;
     
     public float slideDuration = 1f;
+    public float maxSlideDuration = 3f; // Maximum total slide duration
     public float slideTransitionSpeed = 10f; // How quickly to transition between positions
     private bool isSliding = false;
     private float slideStartTime;
+    private float currentSlideEndTime; // Tracks when the current slide should end
+    private Coroutine slideCoroutineHandle;
     
     
     
@@ -83,6 +91,13 @@ public class FootRaceMiniGameManager : MonoBehaviour
             Debug.LogWarning("Slide button is not assigned in the inspector.");
         }
         
+        SwipeGesture swipeGesture = GetComponent<SwipeGesture>();
+        if (swipeGesture != null)
+        {
+            swipeGesture.OnSwipeUp += Jump;
+            swipeGesture.OnSwipeDown += Slide;
+        }
+        
         // Validate ground check setup
         if (groundCheck == null)
         {
@@ -105,6 +120,13 @@ public class FootRaceMiniGameManager : MonoBehaviour
     {
         // Continuously update grounded state
         isGrounded = IsGrounded();
+        
+        // If we left the ground during a slide (bump/jump), cancel slide without snapping Y
+        /*if (isSliding && !isGrounded)
+        {
+            BreakOutOfSlide("Left ground", snapImmediately: false);
+        }*/
+        
         if (gameActive)
         {
             score = Mathf.FloorToInt(Time.timeSinceLevelLoad * 3); // score increases over time
@@ -146,16 +168,196 @@ public class FootRaceMiniGameManager : MonoBehaviour
         currentSpeed = forwardSpeed;
         gameActive = true;
         score = 0;
+        PlaceInitialObstacles();
         StartCoroutine(IncreaseSpeedOverTime(3f)); // Increase speed every 10 seconds
     }
     
+    public void PlaceInitialObstacles()
+    {
+        // Ensure we have prefabs to spawn
+        if (groundObstaclePrefab == null || groundObstaclePrefab.Count == 0)
+        {
+            Debug.LogError("No ground obstacle prefabs assigned!");
+            return;
+        }
+        if (floatObstaclePrefab == null || floatObstaclePrefab.Count == 0)
+        {
+            Debug.LogWarning("No floating obstacle prefabs assigned. All obstacles will be ground type.");
+        }
+        
+        int maxConsecutiveFloats = 2;
+        int consecutiveFloatCount = 0;
+        
+        // Use a running Z cursor so we can add extra spacing after floats
+        float zCursor = obstacleSpawnDistance; // start at 1x base distance
+        
+        // Place a few obstacles at the start of the game
+        for (int i = 1; i <= obstacleInitialSpawnQuantity; i++)
+        {
+            // Decide type: 0 = float, 1 = ground (first obstacle forced to ground)
+            bool wantFloat = UnityEngine.Random.Range(0, 4) == 0 && i != 1 && (floatObstaclePrefab != null && floatObstaclePrefab.Count > 0);
+            
+            // Enforce rule: no more than two floating platforms back-to-back
+            if (wantFloat && consecutiveFloatCount >= maxConsecutiveFloats)
+            {
+                wantFloat = false;
+            }
+            
+            if (wantFloat)
+            {
+                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 2.4f, zCursor);
+                int prefabIndex = UnityEngine.Random.Range(0, floatObstaclePrefab.Count);
+                Instantiate(floatObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
+                consecutiveFloatCount++;
+                lastSpawnedObstacleTransform = spawnPos;
+                // Advance base spacing and add extra spacing after a floating obstacle
+                zCursor += obstacleSpawnDistance + Mathf.Max(0f, extraSpacingAfterFloat);
+            }
+            else
+            {
+                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 1.1f, zCursor);
+                int prefabIndex = UnityEngine.Random.Range(0, groundObstaclePrefab.Count);
+                Instantiate(groundObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
+                consecutiveFloatCount = 0; // reset on ground spawn
+                lastSpawnedObstacleTransform = spawnPos;
+                // Advance base spacing
+                zCursor += obstacleSpawnDistance;
+            }
+        }
+    }
+    
+    public void MovePassedObstacleToEnd(Transform obstacleTransform, ObstacleType obstacleType)
+    {
+       if(obstacleType == ObstacleType.FloatingObstacle)
+       {
+           Vector3 newPos = new Vector3(lastSpawnedObstacleTransform.x, 2.4f, obstacleSpawnDistance +lastSpawnedObstacleTransform.z + Mathf.Max(0f, extraSpacingAfterFloat));
+           obstacleTransform.position = newPos;
+           lastSpawnedObstacleTransform = newPos;
+       }
+       else if(obstacleType == ObstacleType.GroundObstacle)
+       {
+           Vector3 newPos = new Vector3(lastSpawnedObstacleTransform.x, 1.1f, obstacleSpawnDistance +lastSpawnedObstacleTransform.z);
+           obstacleTransform.position = newPos;
+           lastSpawnedObstacleTransform = newPos;
+       }
+       obstacleTransform.gameObject.SetActive(true);
+    }
+    
+    
     public void Slide()
     {
-        if (isSliding || !gameActive) return;
+        if (!gameActive) return;
         
+        // If already sliding, extend the slide duration
+        if (isSliding)
+        {
+            float totalSlideTime = Time.time - slideStartTime;
+            float remainingAllowedTime = maxSlideDuration - totalSlideTime;
+            
+            // Only extend if we haven't reached the max duration
+            if (remainingAllowedTime > 0f)
+            {
+                // Extend by slideDuration or remaining time, whichever is smaller
+                float extensionAmount = Mathf.Min(slideDuration, remainingAllowedTime);
+                currentSlideEndTime += extensionAmount;
+                Debug.Log($"Slide extended by {extensionAmount}s. Total slide time will be: {currentSlideEndTime - slideStartTime}s");
+            }
+            else
+            {
+                Debug.Log("Cannot extend slide - max duration reached");
+            }
+            return;
+        }
+        
+        // Start new slide
         isSliding = true;
         slideStartTime = Time.time;
-        StartCoroutine(SlideCoroutine());
+        currentSlideEndTime = Time.time + slideDuration; // Set initial end time
+        slideCoroutineHandle = StartCoroutine(SlideCoroutine());
+    }
+    
+    private void BreakOutOfSlide(string reason = "", bool snapImmediately = true)
+    {
+        if (!isSliding) return;
+        
+        if (slideCoroutineHandle != null)
+        {
+            StopCoroutine(slideCoroutineHandle);
+            slideCoroutineHandle = null;
+        }
+        
+        // Mark slide ended
+        isSliding = false;
+        
+        if (snapImmediately)
+        {
+            // Snap back to standing posture immediately
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, standingHeight, currentPos.z);
+            playerRigidbody.transform.localRotation = Quaternion.Euler(standingRotation, 0, 0);
+        }
+        else
+        {
+            // For immediate jump: don't change Y before applying force; optionally reset rotation only
+            playerRigidbody.transform.localRotation = Quaternion.Euler(standingRotation, 0, 0);
+        }
+        // Debug.Log($"Slide cancelled: {reason}");
+    }
+
+    private IEnumerator StandUpAfterJump()
+    {
+        // Wait one physics step so the jump impulse is applied first
+        yield return new WaitForFixedUpdate();
+        // Then ensure standing posture (rotation only; do not clamp Y height)
+        playerRigidbody.transform.localRotation = Quaternion.Euler(standingRotation, 0, 0);
+    }
+
+    public void Jump()
+    {
+        Debug.Log("Jump");
+        if (!gameActive) return;
+        
+        bool cancelledSlideThisFrame = false;
+        if (isSliding)
+        {
+            cancelledSlideThisFrame = true;
+            // Do not snap Y yet; we want the jump to occur without losing ground contact due to Y teleport
+            BreakOutOfSlide("Jump pressed", snapImmediately: false);
+        }
+        
+        if (!cancelledSlideThisFrame && (Time.time - lastJumpTime < jumpCooldown))
+        {
+            Debug.Log("Jump on cooldown");
+            return;
+        }
+        
+        // Allow jump if grounded OR we just cancelled a slide (to cover 1-frame groundCheck false due to posture change)
+        bool canJump = IsGrounded() || cancelledSlideThisFrame;
+        if (canJump)
+        {
+            Debug.Log("Jump executed");
+            
+            // Reset Y velocity before applying jump force to prevent stacking
+            Vector3 velocity = playerRigidbody.linearVelocity;
+            velocity.y = 0f;
+            playerRigidbody.linearVelocity = velocity;
+            
+            // Apply jump force
+            playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
+            
+            // Track last jump time
+            lastJumpTime = Time.time;
+            
+            // Update grounded state immediately
+            isGrounded = false;
+            
+            // Ensure we stand up right after the impulse is applied
+            StartCoroutine(StandUpAfterJump());
+        }
+        else
+        {
+            Debug.Log("Not grounded - cannot jump");
+        }
     }
     
     IEnumerator SlideCoroutine()
@@ -166,57 +368,80 @@ public class FootRaceMiniGameManager : MonoBehaviour
         Quaternion startRot = playerRigidbody.transform.localRotation;
         Quaternion targetSlideRot = Quaternion.Euler(slidingRotation, 0, 0);
         
+        // Speed-scaled transition duration: faster at higher forward speeds
+        float baseDuration = 0.2f;    // default feel
+        float minDuration = 0.08f;    // don't go too snappy
+        // Map currentSpeed 0..15 -> 0..1 and lerp duration
+        float speedFactor = Mathf.Clamp01(currentSpeed / 15f);
+        float transitionDuration = Mathf.Lerp(baseDuration, minDuration, speedFactor);
+        
         float elapsedTime = 0f;
-        float transitionDuration = 0.2f; // Quick transition into slide
+        float startY = startPos.y;
         
         // Smoothly transition INTO slide
         while (elapsedTime < transitionDuration)
         {
+            if (!isSliding) yield break;
             elapsedTime += Time.deltaTime;
             float t = elapsedTime / transitionDuration;
             
-            playerRigidbody.transform.localPosition = Vector3.Lerp(startPos, targetSlidePos, t);
+            // Only control Y position, let X and Z be handled by physics/velocity
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            float targetY = Mathf.Lerp(startY, slidingHeight, t);
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, targetY, currentPos.z);
             playerRigidbody.transform.localRotation = Quaternion.Lerp(startRot, targetSlideRot, t);
             
             yield return null;
         }
         
-        // Ensure we're exactly at sliding position
-        playerRigidbody.transform.localPosition = targetSlidePos;
+        if (!isSliding) yield break;
+        
+        // Ensure we're at exact sliding rotation
         playerRigidbody.transform.localRotation = targetSlideRot;
         
-        // Hold the slide position for the duration
-        yield return new WaitForSeconds(slideDuration - transitionDuration);
-        
-        
-       
-        // Transition back to standing position
-        Vector3 currentPos = playerRigidbody.transform.localPosition;
-        Vector3 targetStandPos = new Vector3(currentPos.x, standingHeight, currentPos.z);
-        Quaternion currentRot = playerRigidbody.transform.localRotation;
-        Quaternion targetStandRot = Quaternion.Euler(standingRotation, 0, 0);
-        
-        elapsedTime = 0f;
-        
-        // Smoothly transition OUT OF slide
-        while (elapsedTime < transitionDuration)
+        // Hold the slide position until currentSlideEndTime (which can be extended dynamically)
+        while (Time.time < currentSlideEndTime)
         {
-            elapsedTime += Time.deltaTime;
-            float t = elapsedTime / transitionDuration;
+            if (!isSliding) yield break;
             
-            playerRigidbody.transform.localPosition = Vector3.Lerp(currentPos, targetStandPos, t);
-            playerRigidbody.transform.localRotation = Quaternion.Lerp(currentRot, targetStandRot, t);
+            // Keep player at sliding Y height and rotation, but allow forward movement
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, slidingHeight, currentPos.z);
+            playerRigidbody.transform.localRotation = targetSlideRot;
             
             yield return null;
         }
         
-        // Ensure we're exactly at standing position
-        playerRigidbody.transform.localPosition = targetStandPos;
+        if (!isSliding) yield break;
+        
+        // Transition back to standing position using the same speed-scaled duration
+        Quaternion currentRot2 = playerRigidbody.transform.localRotation;
+        Quaternion targetStandRot = Quaternion.Euler(standingRotation, 0, 0);
+        
+        elapsedTime = 0f;
+        
+        while (elapsedTime < transitionDuration)
+        {
+            if (!isSliding) yield break;
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / transitionDuration;
+            
+            // Only control Y position during stand-up transition
+            Vector3 currentPos = playerRigidbody.transform.localPosition;
+            float targetY = Mathf.Lerp(slidingHeight, standingHeight, t);
+            playerRigidbody.transform.localPosition = new Vector3(currentPos.x, targetY, currentPos.z);
+            playerRigidbody.transform.localRotation = Quaternion.Lerp(currentRot2, targetStandRot, t);
+            
+            yield return null;
+        }
+        
+        // Ensure we're exactly at standing rotation
         playerRigidbody.transform.localRotation = targetStandRot;
         
         isSliding = false;
+        slideCoroutineHandle = null;
     }
-   
+    
     public bool IsGrounded()
     {
         if (groundCheck == null)
@@ -260,41 +485,11 @@ public class FootRaceMiniGameManager : MonoBehaviour
             currentSpeed = forwardSpeed;
         }
     }
-    
-    public void Jump()
-    {
-        Debug.Log("Jump");
-        if (!gameActive) return;
-        
-        // Check if enough time has passed since last jump
-        if (Time.time - lastJumpTime < jumpCooldown)
-        {
-            Debug.Log("Jump on cooldown");
-            return;
-        }
-        
-        if (IsGrounded())
-        {
-            Debug.Log("Jump executed");
-            
-            // Reset Y velocity before applying jump force to prevent stacking
-            Vector3 velocity = playerRigidbody.linearVelocity;
-            velocity.y = 0f;
-            playerRigidbody.linearVelocity = velocity;
-            
-            // Apply jump force
-            playerRigidbody.AddForce(Vector3.up * jumpForce, ForceMode.Impulse);
-            
-            // Track last jump time
-            lastJumpTime = Time.time;
-            
-            // Update grounded state immediately
-            isGrounded = false;
-        }
-        else
-        {
-            Debug.Log("Not grounded - cannot jump");
-        }
-    }
 
+   
+}
+public enum ObstacleType
+{
+    FloatingObstacle,
+    GroundObstacle
 }

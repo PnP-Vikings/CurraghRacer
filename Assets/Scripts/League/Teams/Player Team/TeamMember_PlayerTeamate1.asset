@@ -19,11 +19,12 @@ MonoBehaviour:
   age: 24
   attitude: 6
   characterStats:
-    strength: 5
-    stamina: 5
+    strength: 7
+    stamina: 2
     technique: 5
-    teamWork: 5
+    teamWork: 3
   level: 1
   experience: 0
   xpToNextLevel: 100
   salary: 50
+  racesAvailableFor: 999999

@@ -21,6 +21,8 @@ public enum  MiniGameType
     PullingSledge,
     LiftingStones,
     ArmWrestling,
+    WeightLifting,
+    RhythmRowing,
     TugOfWar
 }
 

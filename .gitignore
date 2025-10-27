@@ -75,3 +75,5 @@ crashlytics-build.properties
 /[Aa]ssets/[Ss]treamingAssets/aa/*
 .idea/.idea.CurraghRacer/.idea/copilotDiffState.xml
 *.idea\.idea.CurraghRacer\.idea\copilotDiffState.xml
+# FMOD cache (generated)
+Assets/Plugins/FMOD/Cache/**

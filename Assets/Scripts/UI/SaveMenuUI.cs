@@ -143,20 +143,40 @@ public class SaveMenuUI : MonoBehaviour
         // Sort slots by save time (most recent first)
         SaveSlotInfo[] sortedSlots = SortSlotsBySaveTime(allSlots);
         
-        for (int i = 0; i < slotUIs.Length && i < sortedSlots.Length; i++)
+        for (int i = 0; i < slotUIs.Length; i++)
         {
-            if (slotUIs[i] != null)
+            if (slotUIs[i] == null) continue;
+            
+            // Choose sorted slot info if available, otherwise fall back to the natural slot index
+            SaveSlotInfo info = null;
+            if (sortedSlots != null && i < sortedSlots.Length)
             {
-                // Use the actual slot index from the sorted data, not the display position
-                int actualSlotIndex = sortedSlots[i] != null ? sortedSlots[i].slotIndex : i;
-                slotUIs[i].Initialize(actualSlotIndex, sortedSlots[i], this);
+                info = sortedSlots[i];
             }
+            
+            if (info == null)
+            {
+                // Fallback to the natural slot index
+                info = new SaveSlotInfo
+                {
+                    slotIndex = i,
+                    exists = SaveSystem.Instance.SaveSlotExists(i),
+                    saveData = SaveSystem.Instance.GetSavePreview(i)
+                };
+            }
+            else if (info.slotIndex < 0 || info.slotIndex >= SaveSystem.Instance.maxSaveSlots)
+            {
+                Debug.LogWarning($"SaveMenuUI: Correcting out-of-range slotIndex {info.slotIndex} to {i}");
+                info.slotIndex = i;
+            }
+            
+            slotUIs[i].Initialize(info.slotIndex, info, this);
         }
         
         // Update quick load button state - check for both quick save and autosave
         if (quickLoadButton != null)
         {
-            int autoSaveSlot = SaveSystem.Instance.maxSaveSlots - 1;
+            int autoSaveSlot = Mathf.Clamp(SaveSystem.Instance.maxSaveSlots - 1, 0, SaveSystem.Instance.maxSaveSlots - 1);
             bool hasQuickSave = SaveSystem.Instance.SaveSlotExists(quickSaveSlot);
             bool hasAutoSave = SaveSystem.Instance.SaveSlotExists(autoSaveSlot);
             quickLoadButton.interactable = hasQuickSave || hasAutoSave;
@@ -180,7 +200,7 @@ public class SaveMenuUI : MonoBehaviour
     
     public void QuickLoad()
     {
-        int autoSaveSlot = SaveSystem.Instance.maxSaveSlots - 1;
+        int autoSaveSlot = Mathf.Clamp(SaveSystem.Instance.maxSaveSlots - 1, 0, SaveSystem.Instance.maxSaveSlots - 1);
         bool hasQuickSave = SaveSystem.Instance.SaveSlotExists(quickSaveSlot);
         bool hasAutoSave = SaveSystem.Instance.SaveSlotExists(autoSaveSlot);
         
@@ -193,27 +213,46 @@ public class SaveMenuUI : MonoBehaviour
             SaveData quickSaveData = SaveSystem.Instance.GetSavePreview(quickSaveSlot);
             SaveData autoSaveData = SaveSystem.Instance.GetSavePreview(autoSaveSlot);
             
-            try
+            // Guard against invalid/corrupt previews
+            if (quickSaveData == null && autoSaveData == null)
             {
-                System.DateTime quickSaveDate = System.DateTime.Parse(quickSaveData.saveDate);
-                System.DateTime autoSaveDate = System.DateTime.Parse(autoSaveData.saveDate);
-                
-                if (autoSaveDate > quickSaveDate)
+                ShowMessage("No valid save previews available to quick load.", true);
+                return;
+            }
+            else if (quickSaveData != null && autoSaveData == null)
+            {
+                slotToLoad = quickSaveSlot;
+                loadType = "Quick Save";
+            }
+            else if (quickSaveData == null && autoSaveData != null)
+            {
+                slotToLoad = autoSaveSlot;
+                loadType = "Auto Save";
+            }
+            else
+            {
+                try
                 {
-                    slotToLoad = autoSaveSlot;
-                    loadType = "Auto Save";
+                    System.DateTime quickSaveDate = System.DateTime.Parse(quickSaveData.saveDate);
+                    System.DateTime autoSaveDate = System.DateTime.Parse(autoSaveData.saveDate);
+                    
+                    if (autoSaveDate > quickSaveDate)
+                    {
+                        slotToLoad = autoSaveSlot;
+                        loadType = "Auto Save";
+                    }
+                    else
+                    {
+                        slotToLoad = quickSaveSlot;
+                        loadType = "Quick Save";
+                    }
                 }
-                else
+                catch (System.Exception e)
                 {
+                    Debug.LogWarning($"Failed to parse save dates, defaulting to quick save: {e.Message}");
                     slotToLoad = quickSaveSlot;
                     loadType = "Quick Save";
                 }
-            }
-            catch (System.Exception e)
-            {
-                Debug.LogWarning($"Failed to parse save dates, defaulting to quick save: {e.Message}");
-                slotToLoad = quickSaveSlot;
-                loadType = "Quick Save";
             }
         }
         else if (hasQuickSave)

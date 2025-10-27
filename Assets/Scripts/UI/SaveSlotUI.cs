@@ -171,6 +171,18 @@ public class SaveSlotUI : MonoBehaviour
     
     private void OnLoadClicked()
     {
+        if (SaveSystem.Instance == null)
+        {
+            parentMenu?.ShowMessage("Save system not available.", true);
+            return;
+        }
+        
+        if (!SaveSystem.Instance.SaveSlotExists(slotIndex))
+        {
+            parentMenu?.ShowMessage($"No save file exists in Slot {slotIndex + 1}.", true);
+            return;
+        }
+        
         if (SaveSystem.Instance.LoadGame(slotIndex))
         {
             parentMenu?.ShowMessage($"Game loaded from Slot {slotIndex + 1}!", false);
