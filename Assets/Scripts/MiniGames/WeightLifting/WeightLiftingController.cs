@@ -18,12 +18,16 @@ public class WeightLiftingController : MonoBehaviour
     
     [Header("Phase 1 - Grip Settings")]
     public float gripPhaseDuration = 2f;
+    public float gripCountdownDuration = 1f; // Countdown before accepting taps
+    public float goMessageDuration = 2f; // How long to show "GO!" message
     public int gripTapsRequired = 10; // Base taps needed
     public float gripBarPosition; // 0 to 1
     public float gripBarTargetMin = 0.7f; // Green zone min
     public float gripBarTargetMax = 0.9f; // Green zone max
     public float gripBarIncreasePerTap = 0.1f;
     public float gripBarDecaySpeed = 0.15f; // How fast bar falls
+    private bool gripPhaseReady; // True when countdown is complete
+    private float goMessageTimer; // Tracks time since GO message started
     
     [Header("Phase 2 - Lift Settings")]
     public float liftPhaseDuration = 4f;
@@ -38,11 +42,13 @@ public class WeightLiftingController : MonoBehaviour
     
     [Header("Phase 3 - Hold Settings")]
     public float holdPhaseDuration = 3f;
+    public float holdCountdownDuration = 1f; // Countdown before starting hold
     public float barTiltAngle; // -45 to +45 degrees (left to right)
     public float tiltDriftSpeed = 20f; // How fast bar tilts in random direction
     public float buttonPushAmount = 30f; // How much each button press corrects
     public float maxTiltAngle = 45f; // Max tilt before failure
     public float tiltDirectionChangeInterval = 1f; // How often tilt direction changes
+    private bool holdPhaseReady; // True when countdown is complete
     private bool tiltingRight = true; // Which direction the bar is tilting
     
     [Header("Hold Phase UI")]
@@ -83,6 +89,7 @@ public class WeightLiftingController : MonoBehaviour
     private float tiltChangeTimer;
     private bool hasReleasedInLiftPhase;
     private bool isPerfectLift;
+    private bool isProcessingPhaseTransition; // Prevent multiple transitions
     
     private void Awake()
     {
@@ -142,16 +149,28 @@ public class WeightLiftingController : MonoBehaviour
         failedAttempts = 0;
         maxWeightLifted = 0f;
         totalStrengthGained = 0;
+        isProcessingPhaseTransition = false;
         liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
         StartNewLift();
     }
-    
+    public void ResetForNewLift()
+    {
+        gripPhaseReady = false;
+        liftPhaseReady = false;
+        holdPhaseReady = false;
+        hasReleasedInLiftPhase = false;
+        isPerfectLift = false;
+        phaseTimer = 0f;
+        goMessageTimer = 0f;
+        isProcessingPhaseTransition = false;
+    }
     public void StartNewLift()
     {
+        ResetForNewLift();
         liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
         if (failedAttempts >= maxFailedAttempts)
         {
-            UpdatePhaseUI("FAILED!", "Attempts remaining: " + (maxFailedAttempts - failedAttempts));
+            UpdatePhaseUI("FAILED!", "You have Failed\nAttempts remaining: " + (maxFailedAttempts - failedAttempts));
 
             EndGame();
             return;
@@ -168,18 +187,48 @@ public class WeightLiftingController : MonoBehaviour
         currentLiftState = LiftState.Grip;
         phaseTimer = 0f;
         gripBarPosition = 0f;
+        gripPhaseReady = false;
         
         SwitchCamera(gripCamera);
         SetAllPhasesUIInactive();
         if (gripPhaseUI) gripPhaseUI.SetActive(true);
         
-        UpdatePhaseUI("PHASE 1: GRIP", "Tap rapidly to grip the bar!");
+        UpdatePhaseUI("PHASE 1: GRIP", "Get ready...");
         UpdateUI();
     }
     
     private void UpdateGripPhase()
     {
         phaseTimer += Time.deltaTime;
+        
+        // Handle countdown at start of phase
+        if (!gripPhaseReady)
+        {
+            if (phaseTimer > gripCountdownDuration)
+            {
+                gripPhaseReady = true;
+                goMessageTimer = 0f; // Start GO message timer
+                UpdatePhaseUI("PHASE 1: GRIP", "GO!\nTap rapidly to grip the bar!");
+                phaseTimer = 0f; // Reset timer for grip duration
+            }
+            else
+            {
+                // Show countdown
+                int countdown = Mathf.CeilToInt(gripCountdownDuration - phaseTimer);
+                UpdatePhaseUI("PHASE 1: GRIP", countdown.ToString()+"\n Tap rapidly to grip the bar!");
+            }
+            return;
+        }
+        
+        // Update GO message timer and show instructions after GO message ends
+        if (goMessageTimer < goMessageDuration)
+        {
+            goMessageTimer += Time.deltaTime;
+            if (goMessageTimer >= goMessageDuration)
+            {
+                UpdatePhaseUI("PHASE 1: GRIP", "Tap rapidly to grip the bar!");
+            }
+        }
         
         // Decay grip bar over time
         gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
@@ -191,6 +240,9 @@ public class WeightLiftingController : MonoBehaviour
         // Check if time is up
         if (phaseTimer >= gripPhaseDuration)
         {
+            if (isProcessingPhaseTransition) return;
+            isProcessingPhaseTransition = true;
+            
             // Check if grip is successful
             if (gripBarPosition >= gripBarTargetMin && gripBarPosition <= gripBarTargetMax)
             {
@@ -207,6 +259,8 @@ public class WeightLiftingController : MonoBehaviour
     
     private void HandleGripTap()
     {
+        if (!gripPhaseReady) return;
+        
         // Increase grip bar based on weight (heavier = harder)
         float weightDifficulty = 1f - (currentWeight / maxWeight) * 0.5f; // 1.0 to 0.5
         gripBarPosition += gripBarIncreasePerTap * weightDifficulty;
@@ -228,6 +282,7 @@ public class WeightLiftingController : MonoBehaviour
         liftPhaseReady = false; // Start with countdown
         hasReleasedInLiftPhase = false;
         isPerfectLift = false;
+        isProcessingPhaseTransition = false;
         
         SwitchCamera(liftCamera);
         SetAllPhasesUIInactive();
@@ -244,16 +299,29 @@ public class WeightLiftingController : MonoBehaviour
         // Handle countdown at start of phase
         if (!liftPhaseReady)
         {
-            if (phaseTimer >= liftCountdownDuration)
+            if (phaseTimer > liftCountdownDuration)
             {
                 liftPhaseReady = true;
-                UpdatePhaseUI("PHASE 2: LIFT", "Tap when the meter hits the green zone!");
+                goMessageTimer = 0f; // Start GO message timer
+                UpdatePhaseUI("PHASE 2: LIFT", "GO!\nTap when the meter hits the green zone!");
+                phaseTimer = 0f; // Reset timer for lift duration
             }
             else
             {
                 // Show countdown
                 int countdown = Mathf.CeilToInt(liftCountdownDuration - phaseTimer);
-                UpdatePhaseUI("PHASE 2: LIFT", countdown.ToString());
+                UpdatePhaseUI("PHASE 2: LIFT", countdown.ToString() +"\n Tap when the meter hits the green zone!");
+            }
+            return;
+        }
+        
+        // Update GO message timer and show instructions after GO message ends
+        if (goMessageTimer < goMessageDuration)
+        {
+            goMessageTimer += Time.deltaTime;
+            if (goMessageTimer >= goMessageDuration)
+            {
+                UpdatePhaseUI("PHASE 2: LIFT", "Tap when the meter hits the green zone!");
             }
         }
         
@@ -283,18 +351,21 @@ public class WeightLiftingController : MonoBehaviour
         // Update UI
         if (powerMeter) powerMeter.value = powerMeterPosition;
         
-        // Auto-fail if time runs out without tapping (only after countdown completes)
-        if (liftPhaseReady && phaseTimer >= (liftCountdownDuration + liftPhaseDuration) && !hasReleasedInLiftPhase)
+        // Auto-fail if time runs out without tapping
+        if (phaseTimer >= liftPhaseDuration && !hasReleasedInLiftPhase)
         {
+            if (isProcessingPhaseTransition) return;
+            isProcessingPhaseTransition = true;
             FailLift("Failed to lift in time!");
         }
     }
     
     private void HandleLiftTap()
     {
-        if (hasReleasedInLiftPhase) return; // Already tapped
+        if (hasReleasedInLiftPhase || !liftPhaseReady || isProcessingPhaseTransition) return;
         
         hasReleasedInLiftPhase = true;
+        isProcessingPhaseTransition = true;
         
         // Check if in perfect zone
         if (powerMeterPosition >= liftTargetMin && powerMeterPosition <= liftTargetMax)
@@ -327,8 +398,10 @@ public class WeightLiftingController : MonoBehaviour
         currentLiftState = LiftState.Hold;
         phaseTimer = 0f;
         tiltChangeTimer = 0f;
-        barTiltAngle = 0f; // Start perfectly balanced (0 degrees)
-        tiltingRight = Random.Range(0, 2) == 0; // Randomly pick initial tilt direction
+        barTiltAngle = 0f;
+        holdPhaseReady = false;
+        tiltingRight = Random.Range(0, 2) == 0;
+        isProcessingPhaseTransition = false;
         
         SwitchCamera(holdCamera);
         SetAllPhasesUIInactive();
@@ -347,16 +420,45 @@ public class WeightLiftingController : MonoBehaviour
             pushRightButton.onClick.AddListener(OnPushRightButton);
         }
         
-        UpdatePhaseUI("PHASE 3: HOLD", "Use buttons to keep the bar balanced!");
+        UpdatePhaseUI("PHASE 3: HOLD", "Get ready...");
         UpdateUI();
     }
     
     private void UpdateHoldPhase()
     {
-        // Don't update if game is not active
         if (!gameActive) return;
         
         phaseTimer += Time.deltaTime;
+        
+        // Handle countdown at start of phase
+        if (!holdPhaseReady)
+        {
+            if (phaseTimer > holdCountdownDuration)
+            {
+                holdPhaseReady = true;
+                goMessageTimer = 0f; // Start GO message timer
+                UpdatePhaseUI("PHASE 3: HOLD", "GO!\nUse buttons to keep the bar balanced!");
+                phaseTimer = 0f; // Reset timer for hold duration
+            }
+            else
+            {
+                // Show countdown
+                int countdown = Mathf.CeilToInt(holdCountdownDuration - phaseTimer);
+                UpdatePhaseUI("PHASE 3: HOLD", countdown.ToString());
+            }
+            return;
+        }
+        
+        // Update GO message timer and show instructions after GO message ends
+        if (goMessageTimer < goMessageDuration)
+        {
+            goMessageTimer += Time.deltaTime;
+            if (goMessageTimer >= goMessageDuration)
+            {
+                UpdatePhaseUI("PHASE 3: HOLD", "Use buttons to keep the bar balanced!");
+            }
+        }
+        
         tiltChangeTimer += Time.deltaTime;
         
         // Randomly change tilt direction
@@ -368,7 +470,7 @@ public class WeightLiftingController : MonoBehaviour
         }
         
         // Apply tilt based on weight (heavier = faster tilt)
-        float weightTiltMultiplier = 1f + (currentWeight / maxWeight); // 1.0 to 2.0
+        float weightTiltMultiplier = 1f + (currentWeight / maxWeight);
         float currentTiltSpeed = tiltDriftSpeed * weightTiltMultiplier;
         
         // Tilt the bar left or right
@@ -387,16 +489,17 @@ public class WeightLiftingController : MonoBehaviour
         // Update the visual bar rotation
         if (barImageTransform != null)
         {
-            barImageTransform.localRotation = Quaternion.Euler(0f, 0f, -barTiltAngle); // Negative for correct rotation direction
+            barImageTransform.localRotation = Quaternion.Euler(0f, 0f, -barTiltAngle);
         }
         
         // Check for failure (tilted too far)
         if (Mathf.Abs(barTiltAngle) > maxTiltAngle)
-        // Check for failure (tilted too far)
-        if (Mathf.Abs(barTiltAngle) > maxTiltAngle)
         {
+            if (isProcessingPhaseTransition) return;
+            isProcessingPhaseTransition = true;
+            
             Debug.Log("Balance failed! Tilt angle: " + barTiltAngle);
-            currentLiftState = LiftState.Idle; // Stop the hold phase immediately
+            currentLiftState = LiftState.Idle;
             FailLift("Lost balance! Bar tilted too far!");
             return;
         }
@@ -404,17 +507,18 @@ public class WeightLiftingController : MonoBehaviour
         // Check for success (survived the duration)
         if (phaseTimer >= holdPhaseDuration)
         {
-            currentLiftState = LiftState.Idle; // Stop the hold phase immediately
+            if (isProcessingPhaseTransition) return;
+            isProcessingPhaseTransition = true;
+            
+            currentLiftState = LiftState.Idle;
             SuccessfulLift();
         }
     }
     
-    // Button press methods for Hold phase
     public void OnPushLeftButton()
     {
-        if (!gameActive || currentLiftState != LiftState.Hold) return;
+        if (!gameActive || currentLiftState != LiftState.Hold || !holdPhaseReady) return;
         
-        // Push bar to the left (decrease angle)
         barTiltAngle -= buttonPushAmount;
         barTiltAngle = Mathf.Clamp(barTiltAngle, -maxTiltAngle - 10f, maxTiltAngle + 10f);
         Debug.Log("Pushed LEFT! Bar angle now: " + barTiltAngle);
@@ -422,9 +526,8 @@ public class WeightLiftingController : MonoBehaviour
     
     public void OnPushRightButton()
     {
-        if (!gameActive || currentLiftState != LiftState.Hold) return;
+        if (!gameActive || currentLiftState != LiftState.Hold || !holdPhaseReady) return;
         
-        // Push bar to the right (increase angle)
         barTiltAngle += buttonPushAmount;
         barTiltAngle = Mathf.Clamp(barTiltAngle, -maxTiltAngle - 10f, maxTiltAngle + 10f);
         Debug.Log("Pushed RIGHT! Bar angle now: " + barTiltAngle);
@@ -494,7 +597,7 @@ public class WeightLiftingController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ShowFailureAndRetry());
+            StartCoroutine(ShowFailureAndRetry(reason));
         }
     }
     
@@ -505,9 +608,9 @@ public class WeightLiftingController : MonoBehaviour
         StartNewLift();
     }
     
-    private IEnumerator ShowFailureAndRetry()
+    private IEnumerator ShowFailureAndRetry(string reason)
     {
-        UpdatePhaseUI("FAILED!", "Attempts remaining: " + (maxFailedAttempts - failedAttempts));
+        UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts));
         yield return new WaitForSeconds(2f);
         
         // Retry same weight
