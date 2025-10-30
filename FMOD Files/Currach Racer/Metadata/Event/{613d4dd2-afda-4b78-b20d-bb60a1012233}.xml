@@ -63,7 +63,11 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{5f397b03-c5cb-449b-9bf6-0f91e4a13fc8}" />
+	<object class="EventAutomatableProperties" id="{5f397b03-c5cb-449b-9bf6-0f91e4a13fc8}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{ec05af97-8160-4434-b6c1-f99c356ae37d}" />
 	<object class="GroupTrack" id="{6517255d-26db-42a3-a899-6726bd943937}">
 		<relationship name="automationTracks">
@@ -209,7 +213,7 @@
 			<value>-80</value>
 		</property>
 		<property name="attackTime">
-			<value>1200</value>
+			<value>2400</value>
 		</property>
 		<property name="attackShape">
 			<value>-0.587577224</value>
@@ -265,7 +269,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>1400</value>
+			<value>2000</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{4015b391-ebfc-4ec6-8f1b-b3fe65d3258f}">

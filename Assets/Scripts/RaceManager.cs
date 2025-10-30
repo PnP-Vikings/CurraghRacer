@@ -1,20 +1,21 @@
+using Calendar;
+using League;
+using NUnit.Framework.Interfaces;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design.Serialization;
 using System.Linq;
 using System.Threading;
-using Calendar;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using UnityEngine.Rendering.Universal;
-using EventType = UnityEngine.EventType;
-using Random = UnityEngine.Random;
-using League;
-using NUnit.Framework.Interfaces;
 using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
+using EventType = UnityEngine.EventType;
+using Random = UnityEngine.Random;
 
 public class RaceManager : MonoBehaviour
 {
@@ -50,12 +51,6 @@ public class RaceManager : MonoBehaviour
     
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
-
-    public FMOD.Studio.EventInstance GarageAmbience;
-    FMOD.Studio.EventInstance RaceAmbience;
-    public FMOD.Studio.EventInstance RaceWin;
-    FMOD.Studio.EventInstance RaceLose;
-    public FMOD.Studio.EventInstance Radio;
 
     private void Awake()
     {
@@ -559,16 +554,18 @@ public class RaceManager : MonoBehaviour
         yield return new WaitForSeconds(raceStartDelaySeconds);
         startRace.Invoke();
 
-        RaceAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Ambience");
-        RaceAmbience.start();
-        
-        if (!isRaceDay)
+        if (AudioManager.instance != null)
         {
-            RaceAmbience.setParameterByName("Crowd Volume", 0f);
-        }
+            AudioManager.instance.raceAmbience.start();
+            AudioManager.instance.raceAmbience.setParameterByName("Crowd Volume", 1f);
+            AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 1f);
+            AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 1f);
 
-        GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            if (!isRaceDay)
+            {
+                AudioManager.instance.raceAmbience.setParameterByName("Crowd Volume", 0f);
+            }
+        }
 
         foreach (var go in ships)
             go.GetComponent<ShipMovement>().SetRaceStarted(true);
@@ -733,6 +730,14 @@ public class RaceManager : MonoBehaviour
                     if (PlayerManager.Instance != null)
                     {
                         PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
+
+                        if (AudioManager.instance != null)
+                        {
+                            AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
+                            AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
+                            AudioManager.instance.raceWin.start();
+                            AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 1f);
+                        }
                     }
                     else
                     {
@@ -740,11 +745,16 @@ public class RaceManager : MonoBehaviour
                     }
                     difficulty += .3f;
                 }
-
-                RaceAmbience.setParameterByName("Mute Encouragement", 0f);
-                RaceAmbience.setParameterByName("Mute Rowing", 0f);
-                RaceWin = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Win");
-                RaceWin.start();
+                else
+                {
+                    if (AudioManager.instance != null)
+                    {
+                        AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
+                        AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
+                        AudioManager.instance.raceWin.start();
+                        AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
+                    }
+                }
             }
             else
             {
@@ -752,18 +762,13 @@ public class RaceManager : MonoBehaviour
                 finishMenu.UpdatePlayerMessage(false, "Better luck next time!");
                 if(!isRaceDay) return; // No coins deducted
 
-                RaceAmbience.setParameterByName("Mute Encouragement", 0f);
-                RaceAmbience.setParameterByName("Mute Rowing", 0f);
-                RaceLose = FMODUnity.RuntimeManager.CreateInstance("event:/Race/Race Lose");
-                RaceLose.start();
-            }
-          
-            
-            
-            
-            
-            
-            
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
+                    AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
+                    AudioManager.instance.raceLose.start();
+                }
+            }  
         }
     }
 
@@ -824,12 +829,15 @@ public class RaceManager : MonoBehaviour
         
         mainCamera.transform.position = GameManager.Instance.cameraStartPosition.position;
         mainCamera.transform.rotation = GameManager.Instance.cameraStartPosition.rotation;
-
-        RaceAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         
         Debug.Log("[EndRace] Loading main scene - team stats should be saved to disk");
         SceneManager.LoadScene(GameManager.Instance.mainSceneName);
         GameManager.Instance.SetPlayerBusy(false);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.raceWin.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
     }
     
     IEnumerator ShowAd()

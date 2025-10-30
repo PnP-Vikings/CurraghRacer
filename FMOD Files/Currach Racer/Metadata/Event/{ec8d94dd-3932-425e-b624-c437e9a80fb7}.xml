@@ -476,6 +476,7 @@
 		<relationship name="effects">
 			<destination>{bb09bbdf-f2b7-42ca-bd14-fe1fd1ba9c28}</destination>
 			<destination>{7ed5db40-9d7d-4402-9c3a-092714ff254c}</destination>
+			<destination>{6977c188-3e5f-43e3-a71e-96073e8b857e}</destination>
 			<destination>{feb1cd61-79a0-4736-875d-380bbc85321d}</destination>
 		</relationship>
 	</object>
@@ -654,6 +655,11 @@
 			<destination>{69021a76-362b-4a7b-8ce2-61dabed272b1}</destination>
 		</relationship>
 	</object>
+	<object class="GainEffect" id="{6977c188-3e5f-43e3-a71e-96073e8b857e}">
+		<relationship name="modulators">
+			<destination>{f30bfc22-3320-4f49-afcf-14247bcf2a46}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{feb1cd61-79a0-4736-875d-380bbc85321d}" />
 	<object class="AutomationPoint" id="{fd70491d-929b-42dc-8380-86ced365cb2c}">
 		<property name="position">
@@ -685,10 +691,10 @@
 			<value>-0.628728509</value>
 		</property>
 		<property name="releaseTime">
-			<value>1400</value>
+			<value>1200</value>
 		</property>
 		<property name="releaseShape">
-			<value>-0.215306789</value>
+			<value>-0.429262608</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>
@@ -760,6 +766,23 @@
 		</property>
 		<property name="releaseShape">
 			<value>-0.271852672</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="ADSRModulator" id="{f30bfc22-3320-4f49-afcf-14247bcf2a46}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>200</value>
+		</property>
+		<property name="releaseTime">
+			<value>100</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>

@@ -25,9 +25,6 @@ namespace MiniGames
         [SerializeField] private bool gameActive;
         [SerializeField]  private int currentScore;
         private PlayerManager playerManager;
-
-        //[SerializeField] private DishwashingController dishwashingController;
-
         public UnityEvent MiniGameTimerRunsOutEvent;
         
         public static MiniGameManager Instance { get; private set; }
@@ -63,13 +60,7 @@ namespace MiniGames
                 if (gameTimer <= 0)
                 {
                     EndGame();
-                    RaceManager.Instance.GarageAmbience.start();
-                    RaceManager.Instance.Radio.start();
-
                     //MiniGameTimerRunsOutEvent.Invoke();
-
-                    //dishwashingController.KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                    //DishwashingController.Instance.KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                 }
                 
                 currentGameInstance?.UpdateGame();
@@ -92,6 +83,12 @@ namespace MiniGames
             GameManager.Instance.SetPlayerBusy(true);
             // Start the selected activity directly
             StartActivityDirectly(selectedActivity);
+
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.radioSong.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                AudioManager.instance.newsReportOrAd.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
         }
 
         public void StartRandomTrainingActivity()
@@ -383,5 +380,11 @@ namespace MiniGames
             gameActive = false;
             GameManager.Instance.SetPlayerBusy(false);
         }
+
+        public bool ReturnGameActiveBool() 
+        { 
+            return gameActive;
+        }
+
     }
 }

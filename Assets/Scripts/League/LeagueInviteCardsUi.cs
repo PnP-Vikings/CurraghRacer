@@ -13,8 +13,6 @@ public class LeagueInviteCardsUi : MonoBehaviour
   
   
   public static LeagueInviteCardsUi Instance { get; private set; }
-  
-  FMOD.Studio.EventInstance ShowInvite;
 
   private void Awake()
   {
@@ -36,8 +34,10 @@ public class LeagueInviteCardsUi : MonoBehaviour
 
     private void Start()
     {
-        ShowInvite = FMODUnity.RuntimeManager.CreateInstance("event:/Main Menu/Show Invite");
-        ShowInvite.start();
+        if (AudioManager.instance != null) 
+        {
+            AudioManager.instance.showInviteAudio.start();
+        }
     }
     public void SetLeagueData(League.League league)
   {

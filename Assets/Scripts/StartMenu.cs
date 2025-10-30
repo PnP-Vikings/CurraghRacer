@@ -14,8 +14,6 @@ public class StartMenu : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text _startRaceButtonText;
     [SerializeField] CameraController cameraController;
     public GameObject trainingMenuPrefab;
-
-    FMOD.Studio.EventInstance GymBagZipUp;
     
     public static StartMenu Instance { get; private set; }
 
@@ -181,10 +179,10 @@ public class StartMenu : MonoBehaviour
     {
        trainingMenuPrefab.SetActive(true);
         
-        GymBagZipUp = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
-        GymBagZipUp.start();
-        
-
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.gymBagZipUp.start();
+        }
     }
     
     public void OnWorkButtonClicked()

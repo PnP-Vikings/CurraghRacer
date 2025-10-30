@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -54,8 +55,6 @@ public class BoxingMinigameManager : MonoBehaviour
     
     [Header("Ui Settings")]
     public BoxingUiCanvas boxingUiCanvas;
-
-    private FMOD.Studio.EventInstance punchBagAudio;
 
     private void Awake()
     {
@@ -329,8 +328,10 @@ public class BoxingMinigameManager : MonoBehaviour
         score+= pointsToAdd;
         Debug.Log($"Target Hit! Score: {score}");
 
-        punchBagAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Punch Bag");
-        punchBagAudio.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.punchBagAudio.start();
+        }
 
         if (boxingUiCanvas != null)
         {

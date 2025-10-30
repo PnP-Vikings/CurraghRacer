@@ -126,6 +126,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{f7929c79-92fb-4faf-8942-5c42e073dcaa}">
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<property name="name">
 			<value>Snoring</value>
 		</property>
@@ -144,7 +147,7 @@
 			<value>8.8199319727891154</value>
 		</property>
 		<property name="volume">
-			<value>-2</value>
+			<value>-4</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{b0520b0e-a8d5-4db3-a719-8b5a45da27cf}</destination>
