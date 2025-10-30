@@ -103,12 +103,8 @@ public class BeerGameController : MonoBehaviour
                   //  MoveNextBeer();
                     break; // Exit the loop after processing the first completed beer
                 }
-            }
-                
-            
-            
+            }  
         }
-       
     }
 
 
@@ -136,13 +132,6 @@ public class BeerGameController : MonoBehaviour
                 if (GameManager.Instance != null)
                 {
                     GameManager.Instance.PlayerWorked();
-                }
-
-                // Restart audio and return to main scene as fallback
-                if (RaceManager.Instance != null)
-                {
-                    RaceManager.Instance.GarageAmbience.start();
-                    RaceManager.Instance.Radio.start();
                 }
                 SceneManager.LoadScene(GameManager.Instance.mainSceneName);
                 gameCompleted = true; // Set the game completed flag to true

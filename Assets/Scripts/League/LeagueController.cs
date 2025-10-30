@@ -14,9 +14,6 @@ namespace League
         public LeagueCompleteCard leagueCompleteCardPrefab;
         public UnityEvent onPlayerJoinedLeague;
         public  League nextLeague = null;
-        FMOD.Studio.EventInstance UIClick1;
-        //FMOD.Studio.EventInstance ShowInvite;
-
 
         private void Awake()
         {
@@ -198,8 +195,10 @@ namespace League
         {
             currentLeague.playerHasJoined = true;
 
-            UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
-            UIClick1.start();
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.UIClick1.start();
+            }
 
             // Set the tournament start date when player joins (this should be fixed and not change)
             currentLeague.tournamentStartDate = TimeManager.Instance.GetCurrentDate();

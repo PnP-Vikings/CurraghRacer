@@ -1,10 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using FMOD.Studio;
 
 public class StartRaceMenuUi : MonoBehaviour
 {
     public TMPro.TMP_Text raceCountdownText;
-    FMOD.Studio.EventInstance LoadingScreenSong;
 
     public void Start()
     {
@@ -14,11 +14,14 @@ public class StartRaceMenuUi : MonoBehaviour
             if(RaceManager.Instance != null && RaceManager.Instance.raceStartDelaySeconds > 0)
             {
                 UpdateRaceCountdown(RaceManager.Instance.raceStartDelaySeconds);
-                LoadingScreenSong = FMODUnity.RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
-                LoadingScreenSong.start();
+
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.radioSong.stop(STOP_MODE.ALLOWFADEOUT);
+                    AudioManager.instance.loadingScreenSong.start();
+                }
             }
         }
-        
     }
     
     
@@ -43,6 +46,9 @@ public class StartRaceMenuUi : MonoBehaviour
         yield return new WaitForSeconds(1f);
         raceCountdownText.text = "";
 
-        LoadingScreenSong.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.loadingScreenSong.stop(STOP_MODE.ALLOWFADEOUT);
+        }
     }
 }

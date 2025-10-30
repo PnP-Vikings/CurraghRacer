@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{c09d5e09-e641-4897-b0a8-a1ce0f5a4b35}">
 		<property name="name">
-			<value>Mute Rowing</value>
+			<value>Rowing Volume</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
