@@ -755,16 +755,6 @@ public class RaceManager : MonoBehaviour
                         AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
                     }
                 }
-                //if (AudioManager.instance != null)
-                //{
-                //    //AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
-                //    //AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
-                //    //AudioManager.instance.raceWin.start();
-                //    //if (!isRaceDay)
-                //    //{
-                //    //    AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
-                //    //}
-                //}
             }
             else
             {
@@ -843,6 +833,11 @@ public class RaceManager : MonoBehaviour
         Debug.Log("[EndRace] Loading main scene - team stats should be saved to disk");
         SceneManager.LoadScene(GameManager.Instance.mainSceneName);
         GameManager.Instance.SetPlayerBusy(false);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.raceWin.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
     }
     
     IEnumerator ShowAd()

@@ -19,11 +19,8 @@ public class TrainingMenu : MonoBehaviour
     public TrainingSelectionUi oldSelectedTeamMemberUi, newSelectedTeamMemberUi;
     public TeamMember selectedTeamMember;
     
-    
-    
-    
-    FMOD.Studio.EventInstance Dumbbell;
-    FMOD.Studio.EventInstance UIClick2;
+    //FMOD.Studio.EventInstance Dumbbell;
+    //FMOD.Studio.EventInstance UIClick2;
 
     void OnEnable()
     {
@@ -74,8 +71,12 @@ public class TrainingMenu : MonoBehaviour
                 if(CanTrain(30, 50))
                 {
                     PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Strength, strengthGainAmount);
-                    Dumbbell = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Dumbbell");
-                    Dumbbell.start();
+                    PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
+
+                    if (AudioManager.instance != null)
+                    {
+                        AudioManager.instance.dumbbell.start();
+                    }
                 }
                 break;
             case TeamMember.StatType.Technique:
@@ -205,8 +206,10 @@ public class TrainingMenu : MonoBehaviour
        if(CanTrain(30, 50))
         {
             PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
-            Dumbbell = FMODUnity.RuntimeManager.CreateInstance("event:/Training/Dumbbell");
-            Dumbbell.start();
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.dumbbell.start();
+            } 
         }
         
      
@@ -257,15 +260,19 @@ public class TrainingMenu : MonoBehaviour
             teamMemberSelectionMenuPrefab.SetActive(false);
         }
 
-        UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
-        UIClick2.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.UIClick2.start();
+        }
     }
     public void OnCloseTrainingMenuButtonClicked()
     {
         startingMenuPrefab.SetActive(true);
-       
-        UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
-        UIClick2.start();
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.UIClick2.start();
+        }
     }
     
     public bool CanTrain(int energyCost, int currencyCost)
