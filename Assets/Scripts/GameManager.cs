@@ -45,11 +45,6 @@ public class GameManager : MonoBehaviour
        
    }
 
-    //private void Start()
-    //{
-    //    SleepAudioChangesCoroutine = StartCoroutine(SleepAudioChanges());
-    //}
-
     private IEnumerator TrackPlayTime()
    {
          while (true)

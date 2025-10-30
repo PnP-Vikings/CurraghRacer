@@ -83,6 +83,12 @@ namespace MiniGames
             GameManager.Instance.SetPlayerBusy(true);
             // Start the selected activity directly
             StartActivityDirectly(selectedActivity);
+
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.radioSong.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                AudioManager.instance.newsReportOrAd.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            }
         }
 
         public void StartRandomTrainingActivity()

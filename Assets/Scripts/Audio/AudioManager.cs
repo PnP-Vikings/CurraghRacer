@@ -22,7 +22,14 @@ public class AudioManager : MonoBehaviour
     public EventInstance tvButtonPushOut;
     public EventInstance tvButtonPushIn;
     public EventInstance showInviteAudio;
-    public EventInstance GymBagZipUp;
+    public EventInstance gymBagZipUp;
+    public EventInstance pouringPint;
+    public EventInstance punchBagAudio;
+    public EventInstance deleteSave;
+    public EventInstance dumbbell;
+    public EventInstance payBill;
+    public EventInstance footingTurfAmbience;
+    public EventInstance turfStackComplete;
 
     void Awake()
     {
@@ -65,7 +72,14 @@ public class AudioManager : MonoBehaviour
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
-        GymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
+        gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
+        pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
+        punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
+        deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
+        dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
+        payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
+        footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
+        turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
     }
 
     public float GetMasterVolume()

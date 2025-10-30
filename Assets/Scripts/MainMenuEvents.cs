@@ -8,7 +8,6 @@ public class MainMenuEvents : MonoBehaviour
     private List<Button> _buttons = new List<Button>();
     public GameObject _gameUi,playerStatsView;
 
-    FMOD.Studio.EventInstance UIClick1;
     private void Awake()
     {
         uiDocument = GetComponent<UIDocument>();
@@ -54,8 +53,10 @@ public class MainMenuEvents : MonoBehaviour
     {
         Debug.Log("Start Game Button Clicked");
 
-        UIClick1 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 1");
-        UIClick1.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.UIClick1.start();
+        }
 
         if (_gameUi != null)
         {

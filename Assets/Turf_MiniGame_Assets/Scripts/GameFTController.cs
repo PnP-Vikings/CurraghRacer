@@ -18,14 +18,10 @@ public class GameFTController : MonoBehaviour
 
   private int _StacksDone = 0;
 
-  FMOD.Studio.EventInstance FootingTurfAmbience;
-  FMOD.Studio.EventInstance TurfStackComplete;
-
   private void Start()
   {
-        FootingTurfAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
-        FootingTurfAmbience.start();
-    }
+
+  }
   private bool AnimatorIsPlaying(Animator animator)
   {
     return animator.GetCurrentAnimatorStateInfo(0).length > animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
@@ -51,8 +47,14 @@ public class GameFTController : MonoBehaviour
         _StacksDone++; // add fineshed stack to counter.
         _Counter.text = string.Format("X {0}", _StacksDone); // Update display counter
 
-        TurfStackComplete = FMODUnity.RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
-        TurfStackComplete.start();
+                //if (SelectedStack != null)
+                //{
+                //    Debug.Log("stack selected");
+                //    if(AudioManager.instance != null)
+                //    {
+                //        AudioManager.instance.turfStackComplete.start();
+                //    }
+                //}
       }
     }
     //animator.SetTrigger(triggerName); // Trigger the animation using a parameter

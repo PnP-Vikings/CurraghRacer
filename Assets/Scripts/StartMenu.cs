@@ -181,7 +181,7 @@ public class StartMenu : MonoBehaviour
         
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.GymBagZipUp.start();
+            AudioManager.instance.gymBagZipUp.start();
         }
     }
     
