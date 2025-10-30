@@ -271,6 +271,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 500
+--- !u!114 &-6725848962149666728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Race Win/Cheering Volume
+  m_EditorClassIdentifier: 
+  Name: Cheering Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 348063571
+    data2: 1278429345
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-6668476389276057025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -380,6 +404,7 @@ MonoBehaviour:
   IsOneShot: 1
   Parameters:
   - {fileID: 2697066490857347409}
+  - {fileID: -6725848962149666728}
   MinDistance: 1
   MaxDistance: 20
   Length: 5670
@@ -437,6 +462,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 838
+--- !u!114 &-5263731955890709593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Garage/Show Invite
+  m_EditorClassIdentifier: 
+  Path: event:/Garage/Show Invite
+  Guid:
+    Data1: -1901405229
+    Data2: 1079633009
+    Data3: 1115190404
+    Data4: -1959983015
+  Banks:
+  - {fileID: -4365254110052270684}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2894
 --- !u!114 &-5146918259261699225
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -479,8 +531,32 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638969980966848250
+  lastModified: 638974221706928979
   FileSizes: []
+  Exists: 1
+--- !u!114 &-4362067899361703930
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/News Report Or Ad/News Report Or Ad Volume
+  m_EditorClassIdentifier: 
+  Name: News Report Or Ad Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3259201346
+    data2: 3766249002
+  Type: 0
+  IsGlobal: 0
+  Labels: []
   Exists: 1
 --- !u!114 &-3890573300518132453
 MonoBehaviour:
@@ -519,9 +595,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Race Ambience/Mute Rowing
+  m_Name: parameter:/Race Ambience/Rowing Volume
   m_EditorClassIdentifier: 
-  Name: Mute Rowing
+  Name: Rowing Volume
   StudioPath: 
   Min: 0
   Max: 1
@@ -707,10 +783,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638969980966883509
+  lastModified: 638974221706964159
   FileSizes:
   - Name: 
-    Value: 3020
+    Value: 3134
   Exists: 1
 --- !u!114 &-1702041834828596594
 MonoBehaviour:
@@ -829,7 +905,6 @@ MonoBehaviour:
   - {fileID: -5146918259261699225}
   - {fileID: -1702041834828596594}
   - {fileID: 5916317957201816820}
-  - {fileID: 5769496863046401991}
   - {fileID: -6390802952839510384}
   - {fileID: -6377474762000497385}
   - {fileID: 2589597838079414676}
@@ -847,12 +922,13 @@ MonoBehaviour:
   - {fileID: -8213204385228797747}
   - {fileID: 8912563026548966950}
   - {fileID: -6417804617064569284}
+  - {fileID: -5263731955890709593}
   EditorParameters: []
   MasterBanks:
   - {fileID: -4365254110052270684}
   StringsBanks:
   - {fileID: -1757233097622919889}
-  cacheTime: 638969980966883509
+  cacheTime: 638974221706964159
   cacheVersion: 131624
 --- !u!114 &496546100732942899
 MonoBehaviour:
@@ -1204,9 +1280,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Race Ambience/Mute Encouragement
+  m_Name: parameter:/Race Ambience/Encouragement Volume
   m_EditorClassIdentifier: 
-  Name: Mute Encouragement
+  Name: Encouragement Volume
   StudioPath: 
   Min: 0
   Max: 1
@@ -1269,33 +1345,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &5769496863046401991
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Main Menu/Show Invite
-  m_EditorClassIdentifier: 
-  Path: event:/Main Menu/Show Invite
-  Guid:
-    Data1: -1901405229
-    Data2: 1079633009
-    Data3: 1115190404
-    Data4: -1959983015
-  Banks:
-  - {fileID: -4365254110052270684}
-  IsStream: 0
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 2894
 --- !u!114 &5916317957201816820
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1441,9 +1490,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Garage/News Report or Ad
+  m_Name: event:/Garage/News Report Or Ad
   m_EditorClassIdentifier: 
-  Path: event:/Garage/News Report or Ad
+  Path: event:/Garage/News Report Or Ad
   Guid:
     Data1: -1219716531
     Data2: 1127194031
@@ -1454,7 +1503,8 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: -4362067899361703930}
   MinDistance: 1
   MaxDistance: 20
   Length: 4400

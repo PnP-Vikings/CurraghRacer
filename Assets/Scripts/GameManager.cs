@@ -20,9 +20,7 @@ public class GameManager : MonoBehaviour
    public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
-
-   FMOD.Studio.EventInstance SleepAudio;
-   FMOD.Studio.EventInstance SleepOutsideAudio;
+   Coroutine SleepAudioChangesCoroutine;
 
    public List<String> miniGameWorkScenes = new List<string>
    {
@@ -46,8 +44,13 @@ public class GameManager : MonoBehaviour
        StartCoroutine(TrackPlayTime());
        
    }
-   
-   private IEnumerator TrackPlayTime()
+
+    //private void Start()
+    //{
+    //    SleepAudioChangesCoroutine = StartCoroutine(SleepAudioChanges());
+    //}
+
+    private IEnumerator TrackPlayTime()
    {
          while (true)
          {
@@ -102,8 +105,6 @@ public class GameManager : MonoBehaviour
         }
     }
     
-    
-    
     public bool CanShowAd()
     {
         racesTillNextAd--;
@@ -144,9 +145,6 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo($"You Spent {sleepCost} on a place to sleep", 3);
             PlayerStatsView.Instance.DisplayInfo("You Have Regained 100 Energy", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
-            SleepAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
-            SleepAudio.start();
-
         }
         else
         {
@@ -155,9 +153,11 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo("You Have Regained 25 Energy", 3);
             PlayerStatsView.Instance.DisplayInfo($"Use the energy you regained to go to work", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
-            SleepOutsideAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
-            SleepOutsideAudio.start();
+        }
 
+        if (AudioManager.instance != null)
+        {
+            SleepAudioChangesCoroutine = StartCoroutine(SleepAudioChanges());
         }
     }
 
@@ -193,5 +193,40 @@ public class GameManager : MonoBehaviour
         }
         return cameraStartPosition;
     }
-   
+
+    IEnumerator SleepAudioChanges()
+    {
+        yield return null;
+        if (AudioManager.instance != null)
+        {
+            yield return new WaitForSeconds(0.5f);
+
+            AudioManager.instance.tvButtonPushOut.start();
+
+            AudioManager.instance.radioSong.setParameterByName("Radio Song Volume", 0f);
+            AudioManager.instance.newsReportOrAd.setParameterByName("News Report Or Ad Volume", 0f);
+
+            if (PlayerManager.Instance != null)
+            {
+                float coins = PlayerManager.Instance.GetPlayerCoins();
+                if (coins >= 20.0f)
+                {
+                    AudioManager.instance.sleepAudio.start();
+                }
+                else
+                {
+                    AudioManager.instance.sleepOutsideAudio.start();
+                }
+            }
+
+            yield return new WaitForSeconds(3.5f);
+
+            AudioManager.instance.tvButtonPushIn.start();
+
+            yield return new WaitForSeconds(0.5f);
+
+            AudioManager.instance.radioSong.setParameterByName("Radio Song Volume", 1f);
+            AudioManager.instance.newsReportOrAd.setParameterByName("News Report Or Ad Volume", 1f);
+        }
+    }
 }

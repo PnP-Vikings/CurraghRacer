@@ -33,24 +33,7 @@ public class DishwashingController : MonoBehaviour
 
     [SerializeField] private int spawnCount = 5;
 
-    FMOD.Studio.EventInstance MovePlateAudio;
-    public FMOD.Studio.EventInstance KitchenAmbience;
-
     public MiniGameManager MiniGameManager;
-
-    //public static DishwashingController Instance { get; private set; }
-
-    //private void Awake()
-    //{
-    //    if (Instance == null)
-    //    {
-    //        Instance = this;
-    //    }
-    //    else
-    //    {
-    //        Destroy(gameObject);
-    //    }
-    //}
 
     void OnEnable()
     {
@@ -71,16 +54,6 @@ public class DishwashingController : MonoBehaviour
         MovePlateToCleanPosition();
     }
 
-    private void Start()
-    {
-        if (RaceManager.Instance != null)
-        {
-            RaceManager.Instance.GarageAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-            RaceManager.Instance.Radio.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        }
-        KitchenAmbience = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
-        KitchenAmbience.start();
-    }
     void Update()
     {
         if (spongeInstance == null) return;
@@ -144,8 +117,10 @@ public class DishwashingController : MonoBehaviour
         plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
         MovePlateToCleanPosition(); // Move the next plate to the clean position
 
-        MovePlateAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        MovePlateAudio.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.movePlateAudio.start();
+        }
 
         MinigameFinished();
     }
@@ -155,10 +130,6 @@ public class DishwashingController : MonoBehaviour
        if(platesCleaned.Count == spawnCount)
        {
            Debug.Log("Dishwashing minigame completed!");
-           
-           // Stop the kitchen ambience
-           KitchenAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-
            
            int finalScore = platesCleaned.Count * 100; // 100 points per plate cleaned
            
@@ -176,13 +147,6 @@ public class DishwashingController : MonoBehaviour
                if (GameManager.Instance != null)
                {
                    GameManager.Instance.PlayerWorked();
-               }
-               
-               // Restart audio and return to main scene as fallback
-               if (RaceManager.Instance != null)
-               {
-                   RaceManager.Instance.GarageAmbience.start();
-                   RaceManager.Instance.Radio.start();
                }
                SceneManager.LoadScene(GameManager.Instance.mainSceneName);
            }

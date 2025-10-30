@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -7,8 +8,6 @@ public class FinishMenu : MonoBehaviour
     private Label _pos1, _pos2, _pos3, _pos4, _playerMessage;
     private Button _backButton;
     [SerializeField] private GameObject startingMenuPrefab;
-
-    FMOD.Studio.EventInstance UIClick2;
 
     void OnEnable()
     {
@@ -28,19 +27,17 @@ public class FinishMenu : MonoBehaviour
         _backButton.clicked += OnCloseFinishMenuButtonClicked;
     }
 
-
     public void OnCloseFinishMenuButtonClicked()
     {
        // startingMenuPrefab.SetActive(true);
         
       // uiDoc.gameObject.SetActive(false);
 
-        UIClick2 = FMODUnity.RuntimeManager.CreateInstance("event:/UI/Click 2");
-        UIClick2.start();
-
-        RaceManager.Instance.RaceWin.setParameterByName("Mute Race Win", 0f);
-        RaceManager.Instance.GarageAmbience.setParameterByName("Mute Garage Ambience", 1f);
-        RaceManager.Instance.Radio.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.UIClick2.start();
+            AudioManager.instance.raceAmbience.stop(STOP_MODE.ALLOWFADEOUT);
+        }
 
         RaceManager.Instance.EndRace();
     }
