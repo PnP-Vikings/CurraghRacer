@@ -114,6 +114,11 @@ public class RowingRhythmController : MonoBehaviour
     {
       bool isLeft = Random.Range(0, 2) == 0;
       float yOffset = FindSafeSpawnOffset(isLeft, minSpacing);
+      minSpacing += 250f; // Increase spacing for next paddle if spawning multiple
+      if(numPaddles != 1)
+      {
+        yOffset += i * 220f; // Slight additional offset for multiple paddles
+      }
       SpawnPaddle(isLeft, yOffset);
     }
   }
