@@ -109,8 +109,9 @@ MonoBehaviour:
   beerMaterialAsset: {fileID: 2100000, guid: 9f9c66cb61fdeb943bf7a43fb3b9140d, type: 2}
   isActive: 0
   fillLevel: 0
-  pourSpeed: 0.5
+  pourSpeed: 0.9
   beerComplete: 0
+  isPlaced: 0
 --- !u!65 &1561451122246041554
 BoxCollider:
   m_ObjectHideFlags: 0

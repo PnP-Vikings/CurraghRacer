@@ -17,7 +17,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [Range(0,1)] public float fillLevel;    // normalized 0–1
     public float   pourSpeed = 0.5f;       // fill units per second
     public bool beerComplete = false; // is the beer glass full?
-
+    public bool isPlaced = false; // is the beer glass placed?
     bool isPouring;
     float meshHeight;
 
@@ -44,8 +44,8 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
     void Update()
     {
-        // Simple raw-input pour (anywhere on screen)
-        isPouring = Input.GetMouseButton(0) || Input.touchCount > 0;
+        /*// Simple raw-input pour (anywhere on screen)
+        isPouring = Input.GetMouseButton(0) || Input.touchCount > 0;*/
 
         if (isPouring && fillLevel < 1f && isActive)
             fillLevel += Time.deltaTime * pourSpeed;
@@ -67,6 +67,21 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             return false; // Beer is not full yet
         }
 
+    }
+    
+    
+    
+    public void StopPouring()
+    {
+        isPouring = false;
+        isActive = false;
+    }
+    
+
+    public void StartPouring()
+    {
+        isPouring = true;
+        isActive = true;
     }
 
     public void OnPointerDown(PointerEventData e) => isPouring = true;
