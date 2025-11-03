@@ -10,7 +10,6 @@ public class RadioManager : MonoBehaviour
 {
     public static RadioManager instance;
     public PLAYBACK_STATE newsReportOrAdPlaybackState;
-    private int newsReportOrAdCounter = 0;
     Coroutine RadioReportOrAdCoroutine;
     private bool newsReportHasJustPlayed = false;
 
@@ -41,7 +40,7 @@ public class RadioManager : MonoBehaviour
     IEnumerator PlayRadioReportOrAd()                                       // Radio coroutine
     {
         float randomNumber = Random.Range(2f, 5f);                          // Assigns a random number between given numbers to float randomNumber
-        Debug.Log(randomNumber);
+        //Debug.Log(randomNumber);
 
         yield return new WaitForSeconds(randomNumber);                      // Waits randomNumber seconds
 
@@ -66,7 +65,6 @@ public class RadioManager : MonoBehaviour
         }
 
         newsReportHasJustPlayed = true;                                     // newsReportHasJustPlayed boolean is set to true
-        Debug.Log(newsReportOrAdCounter.ToString());
     }
 
     private void Update()
@@ -79,44 +77,46 @@ public class RadioManager : MonoBehaviour
             {
                 AudioManager.instance.radioSong.start();
             }
+        }
 
-            if (newsReportHasJustPlayed && newsReportOrAdPlaybackState == PLAYBACK_STATE.STOPPED)    // if the news has just played AND the playback state is "stopped" the coroutine is called
+        if (newsReportHasJustPlayed && newsReportOrAdPlaybackState == PLAYBACK_STATE.STOPPED)    // if the news has just played AND the playback state is "stopped" the coroutine is called
+        {
+            StartCoroutine(PlayRadioReportOrAd());
+            newsReportHasJustPlayed = false;                                                     // the news has just played bool is reset
+        }
+
+        if (RaceManager.Instance != null & MiniGameManager.Instance != null & GameManager.Instance != null)
+        {
+            bool gameActiveBool = MiniGameManager.Instance.ReturnGameActiveBool();
+
+            if (RaceManager.Instance.loadedRaceScene | gameActiveBool | GameManager.Instance.SleepAudioChangesCoroutineIsActive)
             {
-                StartCoroutine(PlayRadioReportOrAd());
-                newsReportHasJustPlayed = false;                                                     // the news has just played bool is reset
-                Debug.Log(newsReportOrAdCounter.ToString());
+                MuteRadio();                                                                     // Mutes Radio if the race scene is loaded OR a minigame is active OR the sleep audio coroutine is running
             }
-
-            if (RaceManager.Instance != null)                                                        // Checks if RaceManager is running
+            else
             {
-                if (RaceManager.Instance.loadedRaceScene)                                            // if the race scene is loaded the radio song and news are muted
-                {
-                    AudioManager.instance.radioSong.stop(STOP_MODE.ALLOWFADEOUT);
-                    AudioManager.instance.newsReportOrAd.stop(STOP_MODE.ALLOWFADEOUT);
-                }
-            }
-
-            if (MiniGameManager.Instance != null)                                                    // Checks if MiniGameManager is running
-            {
-                bool gameActiveBool = MiniGameManager.Instance.ReturnGameActiveBool();
-
-                if (gameActiveBool)                                                                  // if a mini game is loaded the radio song and news are muted
-                {
-                    AudioManager.instance.radioSong.stop(STOP_MODE.ALLOWFADEOUT);
-                    AudioManager.instance.newsReportOrAd.stop(STOP_MODE.ALLOWFADEOUT);
-                }
+                UnMuteRadio();
             }
         }
     }
 
-    public void MuteRadioForSeconds()
+    public void MuteRadio()
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.tvButtonPushOut.start();
             AudioManager.instance.radioSong.setParameterByName("Radio Song Volume", 0f);
             AudioManager.instance.newsReportOrAd.setParameterByName("News Report Or Ad Volume", 0f);
+            //Debug.Log("Radio is muted");
+        }
+    }
 
+    public void UnMuteRadio()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.radioSong.setParameterByName("Radio Song Volume", 1f);
+            AudioManager.instance.newsReportOrAd.setParameterByName("News Report Or Ad Volume", 1f);
+            //Debug.Log("Radio is unmuted");
         }
     }
 }
