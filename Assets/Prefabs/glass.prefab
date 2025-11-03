@@ -107,9 +107,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   beerMaterialAsset: {fileID: 2100000, guid: 9f9c66cb61fdeb943bf7a43fb3b9140d, type: 2}
+  beerColor: {r: 1, g: 0.8235294, b: 0.57254905, a: 1}
   isActive: 0
   fillLevel: 0
-  pourSpeed: 0.9
+  pourSpeed: 3
   beerComplete: 0
   isPlaced: 0
 --- !u!65 &1561451122246041554
@@ -167,7 +168,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 261422671759852309}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 61219eb693e5bc543b34cbe848bb42c1, type: 3}
   m_Name: 

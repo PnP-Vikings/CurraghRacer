@@ -12,6 +12,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     Material beerMatInstance;
     MeshFilter meshFilter;
     Renderer   meshRenderer;
+    public Color beerColor = Color.yellow; // color of the beer liquid
     
     public bool isActive = false; // can be toggled off to pause pouring
     [Range(0,1)] public float fillLevel;    // normalized 0–1
@@ -37,6 +38,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         fillLevel = 0f;
         // ensure the shader shows empty glass immediately
         beerMatInstance.SetFloat("_CutoffHeight", 0f);
+        beerMatInstance.SetColor("_Color", beerColor);
 
         // read the mesh-height once (bounds in object space)
         meshHeight = meshFilter.sharedMesh.bounds.size.y;
@@ -49,7 +51,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
 
         if (isPouring && fillLevel < 1f && isActive)
             fillLevel += Time.deltaTime * pourSpeed;
-
+        beerMatInstance.SetColor("_Color", beerColor);
         // Always push the latest cutoff
         float cutoff = Mathf.Clamp01(fillLevel) * meshHeight;
         beerMatInstance.SetFloat("_CutoffHeight", cutoff);
