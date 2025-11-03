@@ -6,11 +6,12 @@ public class BeerEnterBoxCollider : MonoBehaviour
     
     public UnityEvent onBeerCompleted;
     public BeerShaderPour beerShaderPour;
+    public BeerShaderPour currentBeerShaderPour; // Reference to the current BeerShaderPour component
     
     public static BeerEnterBoxCollider Instance { get; private set; }
     public void Start()
     {
-        BeerGameController.Instance.beerEnterBoxCollider = this; // Set the reference in the game controller
+     //   BeerGameController.Instance.beerEnterBoxCollider = this; // Set the reference in the game controller
     }
   
     private void OnTriggerEnter(Collider other)
@@ -18,8 +19,8 @@ public class BeerEnterBoxCollider : MonoBehaviour
         Debug.Log("Player entered beer pouring area");
         if (other.GetComponent<BeerShaderPour>() != null)
         {
-            beerShaderPour = other.GetComponent<BeerShaderPour>();
-            beerShaderPour.isActive = true; // Start pouring when player enters
+            currentBeerShaderPour = other.GetComponent<BeerShaderPour>();
+            currentBeerShaderPour.isActive = true; // Start pouring when player enters
 
             if (AudioManager.instance != null)
             {
@@ -33,9 +34,8 @@ public class BeerEnterBoxCollider : MonoBehaviour
     {
         if (other.GetComponent<BeerShaderPour>() != null)
         {
-            beerShaderPour = other.GetComponent<BeerShaderPour>();
-            beerShaderPour.isActive = false; // Stop pouring when player exits
-
+            currentBeerShaderPour = other.GetComponent<BeerShaderPour>();
+            currentBeerShaderPour.isActive = false;  
             if (AudioManager.instance != null)
             {
                 AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 0f);
@@ -43,12 +43,21 @@ public class BeerEnterBoxCollider : MonoBehaviour
         }
     }
     
+    public void CheckBeerCompletion()
+    {
+        if (currentBeerShaderPour != null && currentBeerShaderPour.BeerComplete())
+        {
+            onBeerCompleted.Invoke(); // Trigger the event when beer is complete
+            Debug.Log("Beer is complete!");
+        }
+    }
+    
     private void OnTriggerStay(Collider other)
     {
         if (other.GetComponent<BeerShaderPour>() != null)
         {
-            beerShaderPour = other.GetComponent<BeerShaderPour>();
-            if (beerShaderPour.BeerComplete())
+            currentBeerShaderPour = other.GetComponent<BeerShaderPour>();
+            if (currentBeerShaderPour.BeerComplete())
             {
                 onBeerCompleted.Invoke(); // Trigger the event when beer is complete
                 Debug.Log("Beer is complete!");
@@ -64,8 +73,11 @@ public class BeerEnterBoxCollider : MonoBehaviour
     
     public void ClearBeerShaderPour()
     {
-        beerShaderPour.isActive = false; // Stop pouring
-        beerShaderPour = null; // Clear the reference when needed
+        if (currentBeerShaderPour != null && beerShaderPour != null)
+        {
+            beerShaderPour.isActive = false; // Stop pouring
+            beerShaderPour = null; // Clear the reference when needed
+        }
     }
     
 }
