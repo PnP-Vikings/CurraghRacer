@@ -5,6 +5,7 @@ public class GarageSceneManager : MonoBehaviour
 {
     public static GarageSceneManager Instance { get; private set; }
     public DecisionCardUiMaster De;
+    public float inviteDelay = 30f;  
     private void Awake()
     {
         if (Instance == null)
@@ -41,7 +42,7 @@ public class GarageSceneManager : MonoBehaviour
         if(LeagueController.Instance.currentLeague == null || !LeagueController.Instance.currentLeague.playerHasJoined)
         {
             Debug.Log("Player not in league, showing join message after delay.");
-            StartCoroutine(LeagueController.Instance.StartLeagueInviteMessageAfterDelay(30f));
+            StartCoroutine(LeagueController.Instance.StartLeagueInviteMessageAfterDelay(inviteDelay));
         }
     }
     

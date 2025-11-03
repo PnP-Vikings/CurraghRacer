@@ -21,6 +21,7 @@ public class GameManager : MonoBehaviour
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
    Coroutine SleepAudioChangesCoroutine;
+   public bool SleepAudioChangesCoroutineIsActive = false;
 
    public List<String> miniGameWorkScenes = new List<string>
    {
@@ -196,10 +197,14 @@ public class GameManager : MonoBehaviour
         {
             yield return new WaitForSeconds(0.5f);
 
+            SleepAudioChangesCoroutineIsActive = true;
+
             AudioManager.instance.tvButtonPushOut.start();
 
-            AudioManager.instance.radioSong.setParameterByName("Radio Song Volume", 0f);
-            AudioManager.instance.newsReportOrAd.setParameterByName("News Report Or Ad Volume", 0f);
+            if (RadioManager.instance != null)
+            {
+                RadioManager.instance.MuteRadio();
+            }
 
             if (PlayerManager.Instance != null)
             {
@@ -220,8 +225,12 @@ public class GameManager : MonoBehaviour
 
             yield return new WaitForSeconds(0.5f);
 
-            AudioManager.instance.radioSong.setParameterByName("Radio Song Volume", 1f);
-            AudioManager.instance.newsReportOrAd.setParameterByName("News Report Or Ad Volume", 1f);
+            if (RadioManager.instance != null)
+            {
+                RadioManager.instance.UnMuteRadio();
+            }
+
+            SleepAudioChangesCoroutineIsActive = false;
         }
     }
 }
