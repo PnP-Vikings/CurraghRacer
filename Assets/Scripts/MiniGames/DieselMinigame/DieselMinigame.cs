@@ -13,6 +13,7 @@ namespace MiniGames.DieselMinigame
         private bool buttonActive;
         public Button dieselButton;
         public TextMeshProUGUI dieselText;
+        public TextMeshProUGUI resultText;
 
         public void Initialize(MiniGameManager manager, MiniGameData data)
         {
@@ -24,7 +25,12 @@ namespace MiniGames.DieselMinigame
 
         public void StartGame()
         {
+            
+        }
 
+        public void Update()
+        {
+            UpdateGame();
         }
 
         public void UpdateGame()
@@ -35,6 +41,12 @@ namespace MiniGames.DieselMinigame
             }
 
             dieselText.text = dieselAmount.ToString();
+
+            if (dieselAmount > 10f)
+            {
+                resultText.text = "Too much pressure";
+                buttonActive = false;
+            }
         }
 
         public void EndGame()
