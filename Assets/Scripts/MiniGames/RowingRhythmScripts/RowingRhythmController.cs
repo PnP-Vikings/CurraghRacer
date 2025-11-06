@@ -7,6 +7,8 @@ using Random = UnityEngine.Random;
 
 public class RowingRhythmController : MonoBehaviour
 {
+  private static readonly int IsRowing = Animator.StringToHash("isRowing");
+  private static readonly int RowSpeed = Animator.StringToHash("RowSpeed");
   public Button leftButton, rightButton;
   
   public RectTransform leftPaddleTarget,leftPaddleSpawnPoint;
@@ -22,6 +24,8 @@ public class RowingRhythmController : MonoBehaviour
   public List<GameObject> activeRightPaddle;
   public List<GameObject> activeLeftPaddle;
   
+  public List<Animator> paddleAnimations;
+  
   public int spawnAmount = 30;
   public float startingSpeed = 200f; // Starting speed in units per second
   public float maxSpeed = 800f; // Maximum speed cap
@@ -30,6 +34,7 @@ public class RowingRhythmController : MonoBehaviour
   public float currentSpeed;
   public bool gameActive;
   public float score;
+  public float paddlesHitInRow=0f;
   
   public int maxLives = 5; // Maximum lives before game over
   public int currentLives; // Current remaining lives
@@ -253,6 +258,8 @@ public class RowingRhythmController : MonoBehaviour
     score -= 5;
     currentLives--;
     Debug.Log("Lives remaining: " + currentLives);
+    paddlesHitInRow = 0f; // Reset row counter on miss
+    StopPaddleAnimations();
     
     if (currentLives <= 0)
     {
@@ -286,6 +293,7 @@ public class RowingRhythmController : MonoBehaviour
       minigameCanvasUI.UpdateTimer(Time.timeSinceLevelLoad.ToString("F1") + "s");
       minigameCanvasUI.UpdatePlayerLives("Lives: " + currentLives);
     }
+    StopPaddleAnimations();
     minigameCanvasUI.ShowGameOver();
   }
   
@@ -319,6 +327,8 @@ public class RowingRhythmController : MonoBehaviour
         activeLeftPaddle.RemoveAt(closestIndex);
         closestPaddle.SetActive(false);
         inactiveleftPaddle.Add(closestPaddle);
+        paddlesHitInRow++;
+        AnimatePaddles();
         SpawnRandomPaddles(); // Spawn new random paddles
       }
       else
@@ -327,6 +337,7 @@ public class RowingRhythmController : MonoBehaviour
       }
     }
   }
+  
   
   public void CheckPaddleOnRight()
   {
@@ -359,11 +370,30 @@ public class RowingRhythmController : MonoBehaviour
         closestPaddle.SetActive(false);
         inactiveRightPaddle.Add(closestPaddle);
         SpawnRandomPaddles(); // Spawn new random paddles
+        paddlesHitInRow++;
+        AnimatePaddles();
       }
       else
       {
         Debug.Log("Swipe too early or too late - Distance: " + closestDistance);
       }
+    }
+  }
+  public void AnimatePaddles()
+  {
+    foreach (Animator animator in paddleAnimations)
+    {
+      animator.SetBool(IsRowing, true);
+      Debug.Log("Paddle animation started");
+      animator.SetFloat(RowSpeed, .3f+paddlesHitInRow/10f); // Increase rowing speed slightly with each successful hit in a row
+    }
+  }
+  
+  public void StopPaddleAnimations()
+  {
+    foreach (Animator animator in paddleAnimations)
+    {
+      animator.SetBool(IsRowing, false);
     }
   }
   
