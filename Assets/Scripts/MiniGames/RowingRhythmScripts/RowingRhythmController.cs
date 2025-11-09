@@ -379,6 +379,16 @@ public class RowingRhythmController : MonoBehaviour
       }
     }
   }
+  
+  public void StartAnimatePaddles()
+  {
+    foreach (Animator animator in paddleAnimations)
+    {
+      animator.SetBool(IsRowing, true);
+      Debug.Log("Paddle animation started");
+      animator.SetFloat(RowSpeed, 0f); // Initial rowing speed
+    }
+  }
   public void AnimatePaddles()
   {
     foreach (Animator animator in paddleAnimations)
@@ -393,7 +403,9 @@ public class RowingRhythmController : MonoBehaviour
   {
     foreach (Animator animator in paddleAnimations)
     {
-      animator.SetBool(IsRowing, false);
+     // animator.SetBool(IsRowing, false);
+      Debug.Log("Paddle animation stopped");
+      animator.SetFloat(RowSpeed, 0f);
     }
   }
   
@@ -408,6 +420,7 @@ public class RowingRhythmController : MonoBehaviour
     gameActive = true;
     score = 0;
     currentLives = maxLives; // Reset lives
+    StartAnimatePaddles();
     PlaceInitialObstacles();
     StartCoroutine(IncreaseSpeedOverTime(speedIncreaseInterval));
   }
