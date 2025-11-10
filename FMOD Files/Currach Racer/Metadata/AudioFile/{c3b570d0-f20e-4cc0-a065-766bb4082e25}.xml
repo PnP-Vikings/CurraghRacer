@@ -1,20 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.03.00">
-	<object class="AudioFile" id="{5b314563-e954-4042-9328-b4fa83e4d139}">
+<objects serializationModel="Studio.02.02.00">
+	<object class="AudioFile" id="{c3b570d0-f20e-4cc0-a065-766bb4082e25}">
 		<property name="assetPath">
-			<value>Rowing (389504).wav</value>
-		</property>
-		<property name="isStreaming">
-			<value>true</value>
+			<value>Rowing Minigame Success.wav</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>48</value>
+			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>17.339645833333332</value>
+			<value>1.176485260770975</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
