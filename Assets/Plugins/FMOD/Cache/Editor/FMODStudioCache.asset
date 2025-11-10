@@ -334,10 +334,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638977906209354577
+  lastModified: 638983855209074706
   FileSizes:
   - Name: 
-    Value: 3134
+    Value: 3720
   Exists: 1
 --- !u!114 &-6428464906725695876
 MonoBehaviour:
@@ -390,6 +390,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 6262
+--- !u!114 &-5939239162948346501
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Foot Race/Jump
+  m_EditorClassIdentifier: 
+  Path: event:/Foot Race/Jump
+  Guid:
+    Data1: -459780998
+    Data2: 1220809395
+    Data3: -508812906
+    Data4: 953454397
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 588
 --- !u!114 &-5927695301560494611
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,6 +446,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 37844
+--- !u!114 &-5660980387540345251
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rowing Rhythm Game/Fail
+  m_EditorClassIdentifier: 
+  Path: event:/Rowing Rhythm Game/Fail
+  Guid:
+    Data1: -1762314929
+    Data2: 1258893716
+    Data3: -412480615
+    Data4: -404914688
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1176
 --- !u!114 &-4603569952867272999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -581,6 +635,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 31927
+--- !u!114 &-3319422772102486025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Main Menu/Water
+  m_EditorClassIdentifier: 
+  Path: event:/Main Menu/Water
+  Guid:
+    Data1: -1948378115
+    Data2: 1142116948
+    Data3: -1703459455
+    Data4: -1873149110
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 31927
 --- !u!114 &-2030654474216420712
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -605,6 +686,60 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-1598456856888569269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Foot Race/Slide
+  m_EditorClassIdentifier: 
+  Path: event:/Foot Race/Slide
+  Guid:
+    Data1: -886864413
+    Data2: 1271763757
+    Data3: -134085977
+    Data4: -550360078
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 211
+--- !u!114 &-1134690307029872025
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weight Lifting/Grunt
+  m_EditorClassIdentifier: 
+  Path: event:/Weight Lifting/Grunt
+  Guid:
+    Data1: 687249191
+    Data2: 1297852193
+    Data3: 168458942
+    Data4: -1759332850
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1307
 --- !u!114 &-1064343472891620175
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -686,6 +821,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 464
+--- !u!114 &-198961726710919146
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weight Lifting/Bar Grip
+  m_EditorClassIdentifier: 
+  Path: event:/Weight Lifting/Bar Grip
+  Guid:
+    Data1: 1663466587
+    Data2: 1176203497
+    Data3: 1440506025
+    Data4: -1652369375
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1827
 --- !u!114 &-100639668333850177
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -766,12 +928,23 @@ MonoBehaviour:
   - {fileID: -6123064068334538846}
   - {fileID: -3342500523163071097}
   - {fileID: -4132273350679516390}
+  - {fileID: 8903603484183628450}
+  - {fileID: -5660980387540345251}
+  - {fileID: 5139689008638949749}
+  - {fileID: 1512904749870580738}
+  - {fileID: 8155522247790703682}
+  - {fileID: -1134690307029872025}
+  - {fileID: -198961726710919146}
+  - {fileID: -5939239162948346501}
+  - {fileID: -1598456856888569269}
+  - {fileID: -3319422772102486025}
+  - {fileID: 1587772866240880258}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638977906209354577
+  cacheTime: 638983855209074706
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -905,6 +1078,61 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3750
+--- !u!114 &1512904749870580738
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rowing Rhythm Game/Rowing
+  m_EditorClassIdentifier: 
+  Path: event:/Rowing Rhythm Game/Rowing
+  Guid:
+    Data1: -1928311186
+    Data2: 1186831043
+    Data3: -1208969573
+    Data4: -1742104860
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 16994
+--- !u!114 &1587772866240880258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Foot Race/Running
+  m_EditorClassIdentifier: 
+  Path: event:/Foot Race/Running
+  Guid:
+    Data1: 571927
+    Data2: 1172667808
+    Data3: 146705285
+    Data4: -1350961901
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 2520636394081625816}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 19272
 --- !u!114 &1714120419427963235
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -925,6 +1153,30 @@ MonoBehaviour:
   ID:
     data1: 3675934434
     data2: 3267869078
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2520636394081625816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Running/Running Volume
+  m_EditorClassIdentifier: 
+  Name: Running Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1460001747
+    data2: 3552657376
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -1173,6 +1425,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3000
+--- !u!114 &5139689008638949749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rowing Rhythm Game/Success
+  m_EditorClassIdentifier: 
+  Path: event:/Rowing Rhythm Game/Success
+  Guid:
+    Data1: 591587434
+    Data2: 1167970496
+    Data3: -1898754942
+    Data4: -1039360652
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1176
 --- !u!114 &5192746875038887074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1269,9 +1548,36 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638977906209322749
+  lastModified: 638983855209024550
   FileSizes: []
   Exists: 1
+--- !u!114 &8155522247790703682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Weight Lifting/Dumbell Slide
+  m_EditorClassIdentifier: 
+  Path: event:/Weight Lifting/Dumbell Slide
+  Guid:
+    Data1: 1231116323
+    Data2: 1095372881
+    Data3: 1315944595
+    Data4: -1624930510
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2033
 --- !u!114 &8316426771215949192
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1324,6 +1630,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 28993
+--- !u!114 &8903603484183628450
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rowing Rhythm Game/Rowing Game Ambience
+  m_EditorClassIdentifier: 
+  Path: event:/Rowing Rhythm Game/Rowing Game Ambience
+  Guid:
+    Data1: -1747843114
+    Data2: 1197700434
+    Data3: -178524257
+    Data4: -2013415990
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 30883
 --- !u!114 &8950666970211991509
 MonoBehaviour:
   m_ObjectHideFlags: 0

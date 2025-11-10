@@ -1409,6 +1409,7 @@ GameObject:
   - component: {fileID: 660007440}
   - component: {fileID: 660007439}
   - component: {fileID: 660007438}
+  - component: {fileID: 660007442}
   m_Layer: 5
   m_Name: SlideBtn
   m_TagString: Untagged
@@ -1491,7 +1492,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 660007440}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 660007442}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &660007440
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1530,6 +1543,25 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 660007436}
   m_CullTransparentMesh: 1
+--- !u!114 &660007442
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 660007436}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event:
+    Guid:
+      Data1: -886864413
+      Data2: 1271763757
+      Data3: -134085977
+      Data4: -550360078
+    Path: event:/Foot Race/Slide
 --- !u!1 &711318051
 GameObject:
   m_ObjectHideFlags: 0
@@ -1637,6 +1669,69 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 1697457371}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &746810451
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 746810453}
+  - component: {fileID: 746810452}
+  m_Layer: 0
+  m_Name: FootRaceAmbience
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &746810452
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746810451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -1209046793
+      Data2: 1114385868
+      Data3: -852164987
+      Data4: -1128160590
+    Path: event:/Main Menu/Main Menu
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!4 &746810453
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746810451}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &827254320
 GameObject:
@@ -3898,6 +3993,7 @@ GameObject:
   - component: {fileID: 1870190324}
   - component: {fileID: 1870190323}
   - component: {fileID: 1870190326}
+  - component: {fileID: 1870190327}
   m_Layer: 5
   m_Name: JumpBtn
   m_TagString: Untagged
@@ -3968,7 +4064,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1870190324}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1870190327}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1870190324
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4019,6 +4127,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1870190327
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1870190321}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event:
+    Guid:
+      Data1: -459780998
+      Data2: 1220809395
+      Data3: -508812906
+      Data4: 953454397
+    Path: event:/Foot Race/Jump
 --- !u!1 &1898410961
 GameObject:
   m_ObjectHideFlags: 0
@@ -5214,3 +5341,4 @@ SceneRoots:
   - {fileID: 1384253467}
   - {fileID: 2059391189}
   - {fileID: 1697457371}
+  - {fileID: 746810453}
