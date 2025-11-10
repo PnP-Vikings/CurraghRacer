@@ -284,6 +284,10 @@ MonoBehaviour:
   inactiveleftPaddle: []
   activeRightPaddle: []
   activeLeftPaddle: []
+  paddleAnimations:
+  - {fileID: 1757670840}
+  - {fileID: 1868199823}
+  - {fileID: 843161992}
   spawnAmount: 30
   startingSpeed: 40
   maxSpeed: 800
@@ -292,6 +296,7 @@ MonoBehaviour:
   currentSpeed: 0
   gameActive: 0
   score: 0
+  paddlesHitInRow: 0
   maxLives: 5
   currentLives: 0
 --- !u!4 &198276781
@@ -560,6 +565,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2731355363318192306, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -155.57996
+      objectReference: {fileID: 0}
+    - target: {fileID: 2731355363318192306, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -63.80005
+      objectReference: {fileID: 0}
     - target: {fileID: 3312150881344673577, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_Name
       value: MinigameUiTemplatePrefab
@@ -567,6 +580,18 @@ PrefabInstance:
     - target: {fileID: 6806597897561096897, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_SortingOrder
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7413206986963564239, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -63.80005
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595075280194196313, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 195.30005
+      objectReference: {fileID: 0}
+    - target: {fileID: 7595075280194196313, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -63.80005
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -922,6 +947,11 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 825525248}
   m_CullTransparentMesh: 1
+--- !u!95 &843161992 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7174338191398334513, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+  m_PrefabInstance: {fileID: 886324306}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &886324306
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -950,6 +980,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Racing Boat
       objectReference: {fileID: 0}
+    - target: {fileID: 6568883874645986850, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 339d4200621fee844bc464189693583a, type: 2}
     - target: {fileID: 6655582596458977428, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.09
@@ -990,6 +1024,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7174338191398334513, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 339d4200621fee844bc464189693583a, type: 2}
+    - target: {fileID: 7519591055470120590, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+      propertyPath: m_Controller
+      value: 
+      objectReference: {fileID: 9100000, guid: 339d4200621fee844bc464189693583a, type: 2}
     m_RemovedComponents:
     - {fileID: -8916864301174717665, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
     - {fileID: -3436166562302207653, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
@@ -1402,6 +1444,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!95 &1757670840 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 6568883874645986850, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+  m_PrefabInstance: {fileID: 886324306}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1763469264
 GameObject:
   m_ObjectHideFlags: 0
@@ -1738,6 +1785,11 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!95 &1868199823 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 7519591055470120590, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
+  m_PrefabInstance: {fileID: 886324306}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1908465826
 GameObject:
   m_ObjectHideFlags: 0

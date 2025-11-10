@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,6 +8,7 @@ public class BeerPourLocation : MonoBehaviour
   public BeerEnterBoxCollider beerEnterBoxCollider;
   public Button interactButton;
   public bool isAvailable = true;
+  public bool isPouringAutomatically = false;
    
     private void Start()
     { 
@@ -37,6 +39,7 @@ public class BeerPourLocation : MonoBehaviour
         beerEnterBoxCollider.ClearBeerShaderPour();
         beerEnterBoxCollider.currentBeerShaderPour = null;
         isAvailable = true; // Mark pour point as available again
+        isPouringAutomatically = false;
     }
 
     public void PourBeer()
@@ -47,11 +50,27 @@ public class BeerPourLocation : MonoBehaviour
             {
                 Debug.Log("Pouring beer");
                 beerEnterBoxCollider.currentBeerShaderPour.StartPouring();
+                isPouringAutomatically = true;
+                StartCoroutine(PourActiveBeerAutomatically());
                 beerEnterBoxCollider.CheckBeerCompletion();
             }
         }
     }
 
+    private IEnumerator PourActiveBeerAutomatically()
+    {
+        while (isPouringAutomatically)
+        {
+            if (beerEnterBoxCollider != null && beerEnterBoxCollider.currentBeerShaderPour != null)
+            {
+                beerEnterBoxCollider.currentBeerShaderPour.PourAuto();
+                beerEnterBoxCollider.CheckBeerCompletion();
+            }
+            yield return new WaitForSeconds(1f); // Adjust the interval as needed
+        }
+    }
+
+    
     public void StopPouringBeer()
     {
         Debug.Log("Stop pouring beer");

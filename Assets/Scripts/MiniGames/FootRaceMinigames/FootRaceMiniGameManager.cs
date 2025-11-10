@@ -244,9 +244,16 @@ public class FootRaceMiniGameManager : MonoBehaviour
             }
             else
             {
-                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 1.1f, zCursor);
+                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, .45f, zCursor);
                 int prefabIndex = UnityEngine.Random.Range(0, groundObstaclePrefab.Count);
-                Instantiate(groundObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
+                if (prefabIndex == 0)
+                {
+                    Instantiate(groundObstaclePrefab[prefabIndex], spawnPos, Quaternion.Euler(0, -90, 0));
+                }
+                else
+                {
+                    Instantiate(groundObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
+                }
                 consecutiveFloatCount = 0; // reset on ground spawn
                 lastSpawnedObstacleTransform = spawnPos;
                 // Advance base spacing

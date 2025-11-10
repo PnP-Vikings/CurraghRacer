@@ -23,6 +23,18 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RaceTrack1.unity
     guid: 4d736e7afc0a30a42938c862ef71fb11
+  - enabled: 1
+    path: Assets/Scenes/WeightLifting.unity
+    guid: e3c55d46df2d7014e8389576297fd2cb
+  - enabled: 1
+    path: Assets/Scenes/RowingRhythm.unity
+    guid: 1ba54d77acab60d4b83df2747b441583
+  - enabled: 1
+    path: Assets/Scenes/BoxingMiniGameScene.unity
+    guid: d656f11150715614ba5129183425e650
+  - enabled: 1
+    path: Assets/Scenes/FootRacingMiniGameScene.unity
+    guid: d3dcb19df9baec645b45a4a5908530ef
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 7ada5aaf1775ce74bb2c6bc9df2b768f, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 3a5131c02ade1c14aae08e940a45fadf, type: 2}
