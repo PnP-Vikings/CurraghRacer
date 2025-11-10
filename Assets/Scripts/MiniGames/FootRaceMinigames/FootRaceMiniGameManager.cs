@@ -54,8 +54,8 @@ public class FootRaceMiniGameManager : MonoBehaviour
     private float slideStartTime;
     private float currentSlideEndTime; // Tracks when the current slide should end
     private Coroutine slideCoroutineHandle;
-    
-    
+
+    private FMOD.Studio.EventInstance runningDup;
     
     [Header("Ui Elements")]
     public MinigameCanvasUI minigameCanvasUI;
@@ -142,6 +142,27 @@ public class FootRaceMiniGameManager : MonoBehaviour
                 KillPlayer();
             }
         }
+
+        //if (AudioManager.instance != null)
+        //{
+        //    if (isSliding | !isGrounded)
+        //    {
+        //        AudioManager.instance.running.setParameterByName("Running Volume", 0.0f);
+        //    }
+        //    else
+        //    {
+        //        AudioManager.instance.running.setParameterByName("Running Volume", 1.0f);
+        //    }
+        //}
+
+        if (isSliding | !isGrounded)
+        {
+            runningDup.setParameterByName("Running Volume", 0.0f);
+        }
+        else
+        {
+            runningDup.setParameterByName("Running Volume", 1.0f);
+        }
     }
 
     public void FixedUpdate()
@@ -170,6 +191,14 @@ public class FootRaceMiniGameManager : MonoBehaviour
         score = 0;
         PlaceInitialObstacles();
         StartCoroutine(IncreaseSpeedOverTime(3f)); // Increase speed every 10 seconds
+
+        //if (AudioManager.instance != null)
+        //{
+        //    AudioManager.instance.running.start();
+        //}
+
+        runningDup = FMODUnity.RuntimeManager.CreateInstance("event:/Foot Race/Running");
+        runningDup.start();
     }
     
     public void PlaceInitialObstacles()

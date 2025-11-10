@@ -10,17 +10,18 @@ namespace MiniGames.DieselMinigame
         private MiniGameManager gameManager;
         private MiniGameData gameData;
         private float dieselAmount;
-        private bool buttonActive;
+        private float timer;
         public Button dieselButton;
         public TextMeshProUGUI dieselText;
         public TextMeshProUGUI resultText;
+        public TextMeshProUGUI timerText;
 
         public void Initialize(MiniGameManager manager, MiniGameData data)
         {
             gameManager = manager;
             gameData = data;
             dieselAmount = 0;
-            buttonActive = false;
+            dieselButton.interactable = true;
         }
 
         public void StartGame()
@@ -35,38 +36,54 @@ namespace MiniGames.DieselMinigame
 
         public void UpdateGame()
         {
-            if (buttonActive == true)
+            if (dieselAmount > 0 && timer < 10)
             {
-                dieselAmount += Time.deltaTime;
+                dieselAmount -= Time.deltaTime;
             }
-
             dieselText.text = dieselAmount.ToString();
+            timerText.text = timer.ToString();
 
-            if (dieselAmount > 10f)
+            if (timer < 10)
             {
-                resultText.text = "Too much pressure";
-                buttonActive = false;
+                timer += Time.deltaTime;
+            }
+            
+            if (timer >= 10)
+            {
+                dieselButton.interactable = false;
+                timer = 10;
+                EndGame();
             }
         }
 
         public void EndGame()
         {
-            
-        }
-
-        public void DieselPump()
-        {
-            if (buttonActive == false)
+            if (dieselAmount >= 8f)
             {
-                buttonActive = true;
+                resultText.text = "Too much pressure";
+            }
+
+            else if(dieselAmount <= 2f)
+            {
+                resultText.text = "Not enough pressure";
             }
 
             else
             {
-                buttonActive = false;
+                resultText.text = "Minigame won";
             }
+        }
 
-            Debug.Log("Button Pressed");
+        public void DieselPump()
+        {
+            if (dieselButton.interactable == true)
+            {
+                if (dieselAmount < 10)
+                {
+                    dieselAmount++;
+                    Debug.Log("Button Pressed");
+                }
+            }
         }
 
         public int GetCurrentScore()

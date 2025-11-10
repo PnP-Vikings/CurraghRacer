@@ -1,3 +1,4 @@
+using FMODUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -38,8 +39,11 @@ public class RowingRhythmController : MonoBehaviour
   
   public int maxLives = 5; // Maximum lives before game over
   public int currentLives; // Current remaining lives
- 
-  private void PlaceInitialObstacles()
+
+  private FMOD.Studio.EventInstance rowingGameSuccessDup;
+  private FMOD.Studio.EventInstance rowingGameFailDup;
+
+    private void PlaceInitialObstacles()
   {
     for (int i = 0; i < spawnAmount; i++)
     {
@@ -265,7 +269,15 @@ public class RowingRhythmController : MonoBehaviour
     {
       EndGame();
     }
-  }
+
+    //if (AudioManager.instance != null)
+    //{
+    //    AudioManager.instance.rowingGameFail.start();
+    //}
+
+    rowingGameFailDup = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
+    rowingGameFailDup.start();
+   }
   
   private void EndGame()
   {
@@ -330,6 +342,14 @@ public class RowingRhythmController : MonoBehaviour
         paddlesHitInRow++;
         AnimatePaddles();
         SpawnRandomPaddles(); // Spawn new random paddles
+
+        //if (AudioManager.instance != null)
+        //{
+        //   AudioManager.instance.rowingGameSuccess.start();
+        //}
+
+        rowingGameSuccessDup = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
+        rowingGameSuccessDup.start();
       }
       else
       {
@@ -372,6 +392,14 @@ public class RowingRhythmController : MonoBehaviour
         SpawnRandomPaddles(); // Spawn new random paddles
         paddlesHitInRow++;
         AnimatePaddles();
+
+        //if (AudioManager.instance != null)
+        //{
+        //   AudioManager.instance.rowingGameSuccess.start();
+        //}
+
+        rowingGameSuccessDup = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
+        rowingGameSuccessDup.start();
       }
       else
       {

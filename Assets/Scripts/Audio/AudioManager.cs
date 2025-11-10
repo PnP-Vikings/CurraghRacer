@@ -1,35 +1,56 @@
 using FMODUnity;
 using FMOD.Studio;
 using UnityEngine;
+using System.Collections;
 
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     private Bus masterBus;
+        // UI
     public EventInstance UIClick1;
     public EventInstance UIClick2;
+        // Main Menu
+    public EventInstance deleteSave;
+        // Race
     public EventInstance raceAmbience;
+    public EventInstance raceWin;
+    public EventInstance raceLose;
+        // Garage
     public EventInstance radioSong;
     public EventInstance newsReportOrAd;
     public EventInstance loadingScreenSong;
-    public EventInstance sleepAudio;
-    public EventInstance sleepOutsideAudio;
-    public EventInstance raceWin;
-    public EventInstance raceLose;
-    public EventInstance kitchenAmbience;
-    public EventInstance movePlateAudio;
-    public EventInstance spongeAudio;
     public EventInstance tvButtonPushOut;
     public EventInstance tvButtonPushIn;
     public EventInstance showInviteAudio;
-    public EventInstance gymBagZipUp;
-    public EventInstance pouringPint;
-    public EventInstance punchBagAudio;
-    public EventInstance deleteSave;
-    public EventInstance dumbbell;
+        // Bulletin Board
+    public EventInstance sleepAudio;
+    public EventInstance sleepOutsideAudio;
     public EventInstance payBill;
-    public EventInstance footingTurfAmbience;
+        // Training
+    public EventInstance gymBagZipUp;
+    public EventInstance dumbbell;
+    //public EventInstance rowingGameAmbience;
+    public EventInstance rowingGameSuccess;
+    public EventInstance rowingGameFail;
+        // Jobs
+    //public EventInstance kitchenAmbience;
+    public EventInstance movePlateAudio;
+    public EventInstance spongeAudio;
+
+    public EventInstance pouringPint;
+
+    public EventInstance punchBagAudio;
+
+    //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
+
+    public EventInstance dumbbellSlide;
+    public EventInstance grunt;
+    public EventInstance barGrip;
+
+    public EventInstance running;
+
 
     void Awake()
     {
@@ -58,28 +79,46 @@ public class AudioManager : MonoBehaviour
     {
         UIClick1 = RuntimeManager.CreateInstance("event:/UI/Click 1");
         UIClick2 = RuntimeManager.CreateInstance("event:/UI/Click 2");
+
+        deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
+
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
+        raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
+        raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
+        
         radioSong = RuntimeManager.CreateInstance("event:/Garage/Radio Song");
         newsReportOrAd = RuntimeManager.CreateInstance("event:/Garage/News Report Or Ad");
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
-        sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
-        sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
-        raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
-        raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
-        kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
-        movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
-        gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
-        pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
-        punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
-        deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
-        dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
+
+        sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
+        sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
         payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
-        footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
+
+        gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
+        dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
+        //rowingGameAmbience = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing Game Ambience");
+        rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
+        rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
+
+        //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
+        movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
+        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
+        
+        pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
+
+        punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
+        
+        //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
         turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
+
+        dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
+        barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");
+        grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
+
+        running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
     }
 
     public float GetMasterVolume()
