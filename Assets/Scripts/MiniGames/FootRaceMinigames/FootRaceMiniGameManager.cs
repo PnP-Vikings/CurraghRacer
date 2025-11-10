@@ -234,7 +234,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
             
             if (wantFloat)
             {
-                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 2.4f, zCursor);
+                Vector3 spawnPos = obstacleSpawnPoint.position + new Vector3(0, 2.8f, zCursor);
                 int prefabIndex = UnityEngine.Random.Range(0, floatObstaclePrefab.Count);
                 Instantiate(floatObstaclePrefab[prefabIndex], spawnPos, Quaternion.identity);
                 consecutiveFloatCount++;
