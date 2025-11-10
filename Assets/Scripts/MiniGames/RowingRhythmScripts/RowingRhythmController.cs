@@ -297,7 +297,7 @@ public class RowingRhythmController : MonoBehaviour
     minigameCanvasUI.ShowGameOver();
   }
   
-  public void CheckPaddleOnLeft()
+  private void CheckPaddleOnLeft()
   {
     if (activeLeftPaddle.Count > 0)
     {
@@ -339,7 +339,7 @@ public class RowingRhythmController : MonoBehaviour
   }
   
   
-  public void CheckPaddleOnRight()
+  private void CheckPaddleOnRight()
   {
     if (activeRightPaddle.Count > 0)
     {
@@ -380,7 +380,7 @@ public class RowingRhythmController : MonoBehaviour
     }
   }
   
-  public void StartAnimatePaddles()
+  private void StartAnimatePaddles()
   {
     foreach (Animator animator in paddleAnimations)
     {
@@ -398,8 +398,8 @@ public class RowingRhythmController : MonoBehaviour
       animator.SetFloat(RowSpeed, .3f+paddlesHitInRow/10f); // Increase rowing speed slightly with each successful hit in a row
     }
   }
-  
-  public void StopPaddleAnimations()
+
+  private void StopPaddleAnimations()
   {
     foreach (Animator animator in paddleAnimations)
     {
@@ -409,7 +409,7 @@ public class RowingRhythmController : MonoBehaviour
     }
   }
   
-  public void StartGame()
+  private void StartGame()
   {
     if (minigameCanvasUI != null)
     {
