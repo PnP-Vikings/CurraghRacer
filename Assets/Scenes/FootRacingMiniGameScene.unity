@@ -1169,7 +1169,7 @@ GameObject:
   - component: {fileID: 452910172}
   - component: {fileID: 452910171}
   - component: {fileID: 452910170}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Terrain
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1192,7 +1192,7 @@ TerrainCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: 23f2fe8de9044d74c81f3dd46f10cff6, type: 2}
   m_EnableTreeColliders: 1
@@ -1245,7 +1245,7 @@ Transform:
   m_GameObject: {fileID: 452910169}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -487, y: 1, z: -75}
+  m_LocalPosition: {x: -487, y: 0.51, z: -75}
   m_LocalScale: {x: 0.42555, y: 0.42555, z: 0.42555}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -5292,7 +5292,7 @@ TerrainCollider:
     m_Bits: 0
   m_LayerOverridePriority: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_TerrainData: {fileID: 15600000, guid: 0637de2f027ccfc478284f66abf4e0f9, type: 2}
   m_EnableTreeColliders: 1
@@ -6103,7 +6103,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!65 &2052993661
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6132,7 +6132,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2052993660}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
