@@ -50,6 +50,9 @@ public class AudioManager : MonoBehaviour
     public EventInstance barGrip;
 
     public EventInstance running;
+    public EventInstance crashIntoFence;
+
+    public EventInstance rowing;
 
 
     void Awake()
@@ -102,6 +105,7 @@ public class AudioManager : MonoBehaviour
         //rowingGameAmbience = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing Game Ambience");
         rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
         rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
+        rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
 
         //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
@@ -119,6 +123,8 @@ public class AudioManager : MonoBehaviour
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
 
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
+        crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
+
     }
 
     public float GetMasterVolume()
