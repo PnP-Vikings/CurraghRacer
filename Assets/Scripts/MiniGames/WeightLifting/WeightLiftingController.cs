@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using TMPro;
 using Unity.VisualScripting;
+using UnityEngine.InputSystem;
 
 public class WeightLiftingController : MonoBehaviour
 {
@@ -138,8 +139,25 @@ public class WeightLiftingController : MonoBehaviour
                 break;
         }
         
+        bool inputDetected = false;
+        Vector2 inputPosition = Vector2.zero;
+
+        // Check for touch input first (mobile)
+        var ts = Touchscreen.current;
+        if (ts != null && ts.primaryTouch.press.wasPressedThisFrame)
+        {
+            inputDetected = true;
+            inputPosition = ts.primaryTouch.position.ReadValue();
+        }
+        // Fall back to mouse input (desktop/editor)
+        else if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+        {
+            inputDetected = true;
+            inputPosition = Mouse.current.position.ReadValue();
+        }
+        
         // Handle tap input (only for Grip and Lift phases)
-        if (Input.GetMouseButtonDown(0) || Input.touchCount > 0)
+        if (inputDetected)
         {
             HandleTapInput();
         }

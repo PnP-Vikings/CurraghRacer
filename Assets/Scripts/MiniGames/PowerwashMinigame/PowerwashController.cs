@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.InputSystem;
 
 public class PowerwashController : MonoBehaviour
 {
@@ -70,8 +71,27 @@ public class PowerwashController : MonoBehaviour
     {
         if (powerwashInstance == null) return;
 
+        Vector2 inputPosition = Vector2.zero;
+        bool hasInput = false;
+
+        // Check for touch input first (mobile)
+        var ts = Touchscreen.current;
+        if (ts != null && ts.primaryTouch.press.isPressed)
+        {
+            inputPosition = ts.primaryTouch.position.ReadValue();
+            hasInput = true;
+        }
+        // Fall back to mouse input (desktop/editor)
+        else if (Mouse.current != null)
+        {
+            inputPosition = Mouse.current.position.ReadValue();
+            hasInput = true;
+        }
+
+        if (!hasInput) return;
+
         // Ray from camera through cursor/touch
-        Ray ray = powerwashCamera.ScreenPointToRay(Input.mousePosition);
+        Ray ray = powerwashCamera.ScreenPointToRay(inputPosition);
         RaycastHit hit;
 
         // Raycast against wall colliders, up to maxDistance

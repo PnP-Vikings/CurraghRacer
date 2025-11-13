@@ -1,6 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
-
+using UnityEngine.InputSystem;
 public class RaycastSelectionManager : MonoBehaviour
 {
   private const string _selectableTag = "Selectable";
@@ -16,7 +16,24 @@ public class RaycastSelectionManager : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
-    if (Input.GetMouseButtonDown(0) && !EventSystem.current.IsPointerOverGameObject())
+    bool inputDetected = false;
+    Vector2 inputPosition = Vector2.zero;
+
+    // Check for touch input first (mobile)
+    var ts = Touchscreen.current;
+    if (ts != null && ts.primaryTouch.press.wasPressedThisFrame)
+    {
+      inputDetected = true;
+      inputPosition = ts.primaryTouch.position.ReadValue();
+    }
+    // Fall back to mouse input (desktop/editor)
+    else if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+    {
+      inputDetected = true;
+      inputPosition = Mouse.current.position.ReadValue();
+    }
+
+    if (inputDetected && !EventSystem.current.IsPointerOverGameObject())
     {
       if (_lastSelectedStack != null)
       {
@@ -25,7 +42,7 @@ public class RaycastSelectionManager : MonoBehaviour
         _lastSelectedStack = null;
       }
 
-      var ray = GetRayOnMousePosition();
+      var ray = GetRayOnInputPosition(inputPosition);
       RaycastHit rayCastHit;
 
       if (!EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out rayCastHit, 500.0f))
@@ -52,9 +69,9 @@ public class RaycastSelectionManager : MonoBehaviour
   }
 
   // helper func to get ray cast on screen coords depends on the main camera rendering the scene
-  private Ray GetRayOnMousePosition()
+  private Ray GetRayOnInputPosition(Vector2 screenPosition)
   {
-    var ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    var ray = Camera.main.ScreenPointToRay(screenPosition);
     return ray;
   }
 
