@@ -89,7 +89,7 @@ public class BoxingMinigameManager : MonoBehaviour
         
         if(boxingUiCanvas != null)
         {
-            boxingUiCanvas.SetUpUI(true,false,true);
+            boxingUiCanvas.SetUpUI(true,false,true,true);
             boxingUiCanvas.UpdatePlayerLives(playerLives);
             boxingUiCanvas.UpdateScore(score);
         }

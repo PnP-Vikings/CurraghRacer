@@ -161,7 +161,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
 
         if (minigameCanvasUI != null)
         {
-            minigameCanvasUI.SetUpUI(true,true,true);
+            minigameCanvasUI.SetUpUI(true,true,true,true);
         }
         StartGame();
     }
