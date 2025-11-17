@@ -180,7 +180,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
         score = 0;
         PlaceInitialObstacles();
         StartCoroutine(IncreaseSpeedOverTime(3f)); // Increase speed every 10 seconds
-        StartCoroutine(IncreaseRowingSpeedOverTime(3f));
+        StartCoroutine(IncreaseRunningSpeedOverTime(3f));
 
         if (AudioManager.instance != null)
         {
@@ -514,7 +514,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
             currentSpeed = forwardSpeed;
         }
     }
-    IEnumerator IncreaseRowingSpeedOverTime(float interval)
+    IEnumerator IncreaseRunningSpeedOverTime(float interval)
     {
         if (AudioManager.instance != null)
         {
@@ -523,7 +523,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
             while (gameActive & paramValue <= 1)
             {
                 yield return new WaitForSeconds(interval);
-                paramValue = paramValue + 0.05f;
+                paramValue = paramValue + 0.1f;
                 AudioManager.instance.running.setParameterByName("Running Speed", paramValue);
                 Debug.Log("Running Speed " + paramValue);
             }
