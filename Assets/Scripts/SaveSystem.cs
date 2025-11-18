@@ -409,7 +409,7 @@ public class SaveSystem : MonoBehaviour
     [Header("Load State")]
     [SerializeField] private bool _wasLoadedFromSave = false;
     [SerializeField] private bool _isNewGame = false;
-
+    
     /// <summary>
     /// Indicates whether the current game session was loaded from a save file
     /// </summary>
@@ -1336,6 +1336,15 @@ public class SaveSystem : MonoBehaviour
             }
         }
     }
+
+    public bool CanAutoSaveGame()
+    {
+        if( WasLoadedFromSave || _isNewGame  || WasLoadedFromSave  && _isNewGame)
+        {
+           return true;
+        }
+        return false;
+    }
     
     public bool HasAnySaves()
     {
@@ -1857,6 +1866,7 @@ public class SaveSystem : MonoBehaviour
         
         return saveData;
     }
+
 
   
 }
