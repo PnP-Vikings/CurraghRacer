@@ -27,6 +27,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance sleepAudio;
     public EventInstance sleepOutsideAudio;
     public EventInstance payBill;
+    public EventInstance rooster;
         // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
@@ -44,6 +45,7 @@ public class AudioManager : MonoBehaviour
 
     //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
+    public EventInstance placeTurf;
 
     public EventInstance dumbbellSlide;
     public EventInstance grunt;
@@ -98,6 +100,7 @@ public class AudioManager : MonoBehaviour
 
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
+        rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");
         payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
 
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
@@ -109,7 +112,7 @@ public class AudioManager : MonoBehaviour
 
         //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
+        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
         
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
 
@@ -117,6 +120,7 @@ public class AudioManager : MonoBehaviour
         
         //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
         turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
+        placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
         dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
         barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");

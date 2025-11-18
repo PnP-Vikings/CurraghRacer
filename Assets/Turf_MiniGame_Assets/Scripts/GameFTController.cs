@@ -46,15 +46,11 @@ public class GameFTController : MonoBehaviour
       {
         _StacksDone++; // add fineshed stack to counter.
         _Counter.text = string.Format("X {0}", _StacksDone); // Update display counter
-
-                //if (SelectedStack != null)
-                //{
-                //    Debug.Log("stack selected");
-                //    if(AudioManager.instance != null)
-                //    {
-                //        AudioManager.instance.turfStackComplete.start();
-                //    }
-                //}
+          
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.turfStackComplete.start();
+        }       
       }
     }
     //animator.SetTrigger(triggerName); // Trigger the animation using a parameter
@@ -86,4 +82,12 @@ public class GameFTController : MonoBehaviour
       buttonRectTransform.anchoredPosition = new Vector2(randomX2, randomY);
     }    
   }
+
+    public void PlayPlaceTurfAudio()
+    {
+        if (AudioManager.instance != null & _selectedStack != null)
+        {
+            AudioManager.instance.placeTurf.start();
+        }
+    }
 }

@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
    public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
-   Coroutine SleepAudioChangesCoroutine;
+   //Coroutine SleepAudioChangesCoroutine;
    public bool SleepAudioChangesCoroutineIsActive = false;
 
    public List<String> miniGameWorkScenes = new List<string>
@@ -150,11 +150,7 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo($"Use the energy you regained to go to work", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
         }
-
-        if (AudioManager.instance != null)
-        {
-            SleepAudioChangesCoroutine = StartCoroutine(SleepAudioChanges());
-        }
+        StartCoroutine(SleepAudioChanges());
     }
 
     public void PlayerWorked(int rewardedCoins =50, int energyCost = -25)
@@ -219,7 +215,11 @@ public class GameManager : MonoBehaviour
                 }
             }
 
-            yield return new WaitForSeconds(3.5f);
+            yield return new WaitForSeconds(2f);
+
+            AudioManager.instance.rooster.start();
+
+            yield return new WaitForSeconds(1.5f);
 
             AudioManager.instance.tvButtonPushIn.start();
 

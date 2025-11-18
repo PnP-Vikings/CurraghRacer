@@ -6825,8 +6825,8 @@ GameObject:
   m_Component:
   - component: {fileID: 318556196}
   - component: {fileID: 318556195}
-  - component: {fileID: 318556194}
   - component: {fileID: 318556197}
+  - component: {fileID: 318556198}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -6834,14 +6834,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &318556194
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 318556193}
-  m_Enabled: 1
 --- !u!20 &318556195
 Camera:
   m_ObjectHideFlags: 0
@@ -6952,6 +6944,20 @@ MonoBehaviour:
     m_MipBias: 0
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
+--- !u!114 &318556198
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 318556193}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!4 &319901110 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
@@ -11784,6 +11790,7 @@ MonoBehaviour:
   - WeightLifting
   - RowingRhythm
   - FootRacingMiniGameScene
+  - FootingTurfMinigame
   levelButtonPrefab: {fileID: 6310733950840898568, guid: 737099f3e3bf02e40ad14565496c8790, type: 3}
   levelButtonContainer: {fileID: 1690503160}
 --- !u!1001 &592652701
