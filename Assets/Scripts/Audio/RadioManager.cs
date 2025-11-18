@@ -7,7 +7,6 @@ public class RadioManager : MonoBehaviour
 {
     public static RadioManager instance;
     public PLAYBACK_STATE newsReportOrAdPlaybackState;
-    Coroutine RadioReportOrAdCoroutine;
     private bool newsReportHasJustPlayed = false;
 
     void Awake()
@@ -31,7 +30,7 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioSong.start();                        // Starts radio song
         }
 
-        RadioReportOrAdCoroutine = StartCoroutine(PlayRadioReportOrAd());   // Starts radio coroutine
+        StartCoroutine(PlayRadioReportOrAd());                              // Starts radio coroutine
     }
 
     IEnumerator PlayRadioReportOrAd()                                       // Radio coroutine

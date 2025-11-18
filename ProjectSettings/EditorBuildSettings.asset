@@ -35,6 +35,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/FootRacingMiniGameScene.unity
     guid: d3dcb19df9baec645b45a4a5908530ef
+  - enabled: 1
+    path: Assets/Scenes/FootingTurfMinigame.unity
+    guid: d9ea1e419eff46e4eb9d372bd978623e
   m_configObjects:
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 7ada5aaf1775ce74bb2c6bc9df2b768f, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 3a5131c02ade1c14aae08e940a45fadf, type: 2}

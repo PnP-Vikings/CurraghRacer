@@ -358,10 +358,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638990092686423257
+  lastModified: 638990722846611937
   FileSizes:
   - Name: 
-    Value: 3916
+    Value: 3954
   Exists: 1
 --- !u!114 &-6428464906725695876
 MonoBehaviour:
@@ -964,12 +964,13 @@ MonoBehaviour:
   - {fileID: -3319422772102486025}
   - {fileID: 1587772866240880258}
   - {fileID: 6272486264965736759}
+  - {fileID: 5175983113609059880}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638990092686423257
+  cacheTime: 638990722846611937
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1102,7 +1103,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 3750
+  Length: 3950
 --- !u!114 &1512904749870580738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1504,6 +1505,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1176
+--- !u!114 &5175983113609059880
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Rooster
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Rooster
+  Guid:
+    Data1: -1169806444
+    Data2: 1090743954
+    Data3: 1142022053
+    Data4: -1250016843
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1638
 --- !u!114 &5192746875038887074
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1651,7 +1679,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638990092686382703
+  lastModified: 638990722846576639
   FileSizes: []
   Exists: 1
 --- !u!114 &8155522247790703682
