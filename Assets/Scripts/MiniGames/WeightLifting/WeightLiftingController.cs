@@ -93,10 +93,6 @@ public class WeightLiftingController : MonoBehaviour
     private bool isPerfectLift;
     private bool isProcessingPhaseTransition; // Prevent multiple transitions
 
-    private FMOD.Studio.EventInstance dumbbellSlideDup;
-    private FMOD.Studio.EventInstance gruntDup;
-    private FMOD.Studio.EventInstance barGripDup;
-
     private void Awake()
     {
         if (Instance == null)
@@ -271,8 +267,11 @@ public class WeightLiftingController : MonoBehaviour
             {
                 Debug.Log("Grip successful!");
                 TransitionToLiftPhase();
-                barGripDup = FMODUnity.RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");
-                barGripDup.start();
+
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.barGrip.start();
+                }
             }
             else
             {
@@ -392,8 +391,10 @@ public class WeightLiftingController : MonoBehaviour
         hasReleasedInLiftPhase = true;
         isProcessingPhaseTransition = true;
 
-        gruntDup = FMODUnity.RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
-        gruntDup.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.grunt.start();
+        }
 
         // Check if in perfect zone
         if (powerMeterPosition >= liftTargetMin && powerMeterPosition <= liftTargetMax)
@@ -506,19 +507,13 @@ public class WeightLiftingController : MonoBehaviour
         {
             barTiltAngle += currentTiltSpeed * Time.deltaTime;
             //isDumbellSlideAudioPlaying = true;
-            //PlayBarSlideAudio();
             PlayBarSlideAudioFunction();
-            //dumbbellSlideDup = FMODUnity.RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
-            //dumbbellSlideDup.start();
         }
         else
         {
             barTiltAngle -= currentTiltSpeed * Time.deltaTime;
             //isDumbellSlideAudioPlaying = true;
-            //PlayBarSlideAudio();
             PlayBarSlideAudioFunction();
-            //dumbbellSlideDup = FMODUnity.RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
-            //dumbbellSlideDup.start();
         }
         
         // Clamp the angle
@@ -571,26 +566,16 @@ public class WeightLiftingController : MonoBehaviour
         Debug.Log("Pushed RIGHT! Bar angle now: " + barTiltAngle);
     }
 
-    //IEnumerator PlayBarSlideAudio()
-    //{
-    //    while (isDumbellSlideAudioPlaying == true)
-    //    {
-    //        if (barTiltAngle > 10 | barTiltAngle < -10)
-    //        {
-    //            dumbbellSlideDup = FMODUnity.RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
-    //            dumbbellSlideDup.start();
-    //            yield return new WaitForSeconds(1.0f);
-    //        }
-    //    }
-    //}
-
     private void PlayBarSlideAudioFunction()
     {
         if (barTiltAngle > 10 | barTiltAngle < -10)
         {
             Debug.Log("Bar is sliding");
-            dumbbellSlideDup = FMODUnity.RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
-            dumbbellSlideDup.start();
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.dumbbellSlide.start();
+            }
         }
     }
 

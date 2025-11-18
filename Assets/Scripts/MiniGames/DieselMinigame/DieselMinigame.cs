@@ -36,34 +36,45 @@ namespace MiniGames.DieselMinigame
 
         public void UpdateGame()
         {
-            if (dieselAmount > 0 && timer < 10)
+            if (dieselAmount > 0 && dieselAmount < 10 && timer < 10)
             {
                 dieselAmount -= Time.deltaTime;
             }
+
             dieselText.text = dieselAmount.ToString();
             timerText.text = timer.ToString();
 
-            if (timer < 10)
+            if (dieselAmount >= 10)
+            {
+                EndGame();
+            }
+
+            if (dieselAmount < 0)
+            {
+                dieselAmount = 0;
+            }
+
+            if (timer < 10 && dieselAmount < 10)
             {
                 timer += Time.deltaTime;
             }
             
             if (timer >= 10)
             {
-                dieselButton.interactable = false;
                 timer = 10;
+                timerText.text = timer.ToString();
                 EndGame();
             }
         }
 
         public void EndGame()
         {
-            if (dieselAmount >= 8f)
+            if (dieselAmount > 7f)
             {
                 resultText.text = "Too much pressure";
             }
 
-            else if(dieselAmount <= 2f)
+            else if (dieselAmount < 5f)
             {
                 resultText.text = "Not enough pressure";
             }
@@ -72,18 +83,13 @@ namespace MiniGames.DieselMinigame
             {
                 resultText.text = "Minigame won";
             }
+
+            dieselButton.interactable = false;
         }
 
         public void DieselPump()
         {
-            if (dieselButton.interactable == true)
-            {
-                if (dieselAmount < 10)
-                {
-                    dieselAmount++;
-                    Debug.Log("Button Pressed");
-                }
-            }
+            dieselAmount++;
         }
 
         public int GetCurrentScore()

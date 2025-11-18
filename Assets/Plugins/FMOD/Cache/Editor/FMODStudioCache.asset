@@ -319,6 +319,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 675
+--- !u!114 &-6791703346198654595
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Rowing/Rowing Speed
+  m_EditorClassIdentifier: 
+  Name: Rowing Speed
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1181674576
+    data2: 3865879388
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-6506864257628799812
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -334,10 +358,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638984823769900385
+  lastModified: 638990092686423257
   FileSizes:
   - Name: 
-    Value: 3720
+    Value: 3916
   Exists: 1
 --- !u!114 &-6428464906725695876
 MonoBehaviour:
@@ -712,7 +736,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 211
+  Length: 359
 --- !u!114 &-1134690307029872025
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -939,12 +963,13 @@ MonoBehaviour:
   - {fileID: -1598456856888569269}
   - {fileID: -3319422772102486025}
   - {fileID: 1587772866240880258}
+  - {fileID: 6272486264965736759}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638984823769900385
+  cacheTime: 638990092686423257
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1101,7 +1126,9 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
-  Parameters: []
+  Parameters:
+  - {fileID: -6791703346198654595}
+  - {fileID: 6923282467223686129}
   MinDistance: 1
   MaxDistance: 20
   Length: 16994
@@ -1130,6 +1157,7 @@ MonoBehaviour:
   IsOneShot: 0
   Parameters:
   - {fileID: 2520636394081625816}
+  - {fileID: 1840035605337708220}
   MinDistance: 1
   MaxDistance: 20
   Length: 19272
@@ -1153,6 +1181,30 @@ MonoBehaviour:
   ID:
     data1: 3675934434
     data2: 3267869078
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &1840035605337708220
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Running/Running Speed
+  m_EditorClassIdentifier: 
+  Name: Running Speed
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 0
+  ID:
+    data1: 1500088272
+    data2: 3560357178
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -1479,6 +1531,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
+--- !u!114 &6272486264965736759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Foot Race/Crash Into Fence
+  m_EditorClassIdentifier: 
+  Path: event:/Foot Race/Crash Into Fence
+  Guid:
+    Data1: -1695211086
+    Data2: 1140090156
+    Data3: 1410881187
+    Data4: -770372648
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1176
 --- !u!114 &6495100567271991320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1506,6 +1585,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 29946
+--- !u!114 &6923282467223686129
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Rowing/Rowing Volume (Minigame)
+  m_EditorClassIdentifier: 
+  Name: Rowing Volume (Minigame)
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 586065909
+    data2: 2094980396
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &7073751218035960946
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1548,7 +1651,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638984823769809552
+  lastModified: 638990092686382703
   FileSizes: []
   Exists: 1
 --- !u!114 &8155522247790703682

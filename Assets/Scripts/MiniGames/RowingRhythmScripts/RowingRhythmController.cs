@@ -40,8 +40,9 @@ public class RowingRhythmController : MonoBehaviour
   public int maxLives = 5; // Maximum lives before game over
   public int currentLives; // Current remaining lives
 
-  private FMOD.Studio.EventInstance rowingGameSuccessDup;
-  private FMOD.Studio.EventInstance rowingGameFailDup;
+  private bool hasStartedRowing = false;
+  private bool rowingAudioHasStarted = false;
+
 
     private void PlaceInitialObstacles()
   {
@@ -212,6 +213,12 @@ public class RowingRhythmController : MonoBehaviour
       // Check for missed paddles
       CheckForMissedPaddles();
     }
+
+    if (AudioManager.instance != null & hasStartedRowing & !rowingAudioHasStarted)
+        {
+            AudioManager.instance.rowing.start();
+            rowingAudioHasStarted = true;
+        }
   }
   
   private void CheckForMissedPaddles()
@@ -270,13 +277,10 @@ public class RowingRhythmController : MonoBehaviour
       EndGame();
     }
 
-    //if (AudioManager.instance != null)
-    //{
-    //    AudioManager.instance.rowingGameFail.start();
-    //}
-
-    rowingGameFailDup = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
-    rowingGameFailDup.start();
+    if (AudioManager.instance != null)
+    {
+        AudioManager.instance.rowingGameFail.start();
+    }
    }
   
   private void EndGame()
@@ -343,13 +347,10 @@ public class RowingRhythmController : MonoBehaviour
         AnimatePaddles();
         SpawnRandomPaddles(); // Spawn new random paddles
 
-        //if (AudioManager.instance != null)
-        //{
-        //   AudioManager.instance.rowingGameSuccess.start();
-        //}
-
-        rowingGameSuccessDup = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
-        rowingGameSuccessDup.start();
+        if (AudioManager.instance != null)
+        {
+           AudioManager.instance.rowingGameSuccess.start();
+        }
       }
       else
       {
@@ -393,13 +394,10 @@ public class RowingRhythmController : MonoBehaviour
         paddlesHitInRow++;
         AnimatePaddles();
 
-        //if (AudioManager.instance != null)
-        //{
-        //   AudioManager.instance.rowingGameSuccess.start();
-        //}
-
-        rowingGameSuccessDup = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
-        rowingGameSuccessDup.start();
+        if (AudioManager.instance != null)
+        {
+           AudioManager.instance.rowingGameSuccess.start();
+        }
       }
       else
       {
@@ -425,6 +423,13 @@ public class RowingRhythmController : MonoBehaviour
       Debug.Log("Paddle animation started");
       animator.SetFloat(RowSpeed, .3f+paddlesHitInRow/10f); // Increase rowing speed slightly with each successful hit in a row
     }
+
+    hasStartedRowing = true;
+
+    if (AudioManager.instance != null)
+        {
+            AudioManager.instance.rowing.setParameterByName("Rowing Volume (Minigame)", 1f);
+        }
   }
 
   private void StopPaddleAnimations()
@@ -435,6 +440,11 @@ public class RowingRhythmController : MonoBehaviour
       Debug.Log("Paddle animation stopped");
       animator.SetFloat(RowSpeed, 0f);
     }
+
+    if (AudioManager.instance != null)
+        {
+            AudioManager.instance.rowing.setParameterByName("Rowing Volume (Minigame)", 0f);
+        }
   }
   
   private void StartGame()
@@ -451,6 +461,7 @@ public class RowingRhythmController : MonoBehaviour
     StartAnimatePaddles();
     PlaceInitialObstacles();
     StartCoroutine(IncreaseSpeedOverTime(speedIncreaseInterval));
+    StartCoroutine(IncreaseRowingSpeedOverTime(speedIncreaseInterval));
   }
   
   IEnumerator IncreaseSpeedOverTime(float interval)
@@ -467,6 +478,22 @@ public class RowingRhythmController : MonoBehaviour
         Debug.Log("Speed increased to: " + currentSpeed);
       }
     }
+  }
+
+  IEnumerator IncreaseRowingSpeedOverTime(float interval)
+  {
+    if (AudioManager.instance != null)
+    {
+            AudioManager.instance.rowing.getParameterByName("Rowing Speed", out float paramValue);
+
+            while (gameActive & paramValue <= 1)
+            {
+                yield return new WaitForSeconds(interval);
+                paramValue = paramValue + 0.5f;
+                AudioManager.instance.rowing.setParameterByName("Rowing Speed", paramValue);
+                Debug.Log("Rowing Speed " + paramValue);
+            }
+    } 
   }
 }
 

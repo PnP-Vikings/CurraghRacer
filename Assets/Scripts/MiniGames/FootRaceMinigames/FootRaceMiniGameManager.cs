@@ -61,8 +61,6 @@ public class FootRaceMiniGameManager : MonoBehaviour
     private float slideStartTime;
     private float currentSlideEndTime; // Tracks when the current slide should end
     private Coroutine slideCoroutineHandle;
-
-    private FMOD.Studio.EventInstance runningDup;
     
     [Header("Ui Elements")]
     public MinigameCanvasUI minigameCanvasUI;
@@ -209,25 +207,16 @@ public class FootRaceMiniGameManager : MonoBehaviour
             }
         }
 
-        //if (AudioManager.instance != null)
-        //{
-        //    if (isSliding | !isGrounded)
-        //    {
-        //        AudioManager.instance.running.setParameterByName("Running Volume", 0.0f);
-        //    }
-        //    else
-        //    {
-        //        AudioManager.instance.running.setParameterByName("Running Volume", 1.0f);
-        //    }
-        //}
-
-        if (isSliding | !isGrounded)
+        if (AudioManager.instance != null)
         {
-            runningDup.setParameterByName("Running Volume", 0.0f);
-        }
-        else
-        {
-            runningDup.setParameterByName("Running Volume", 1.0f);
+            if (isSliding | !isGrounded)
+            {
+                AudioManager.instance.running.setParameterByName("Running Volume", 0.0f);
+            }
+            else
+            {
+                AudioManager.instance.running.setParameterByName("Running Volume", 1.0f);
+            }
         }
     }
 
@@ -257,14 +246,12 @@ public class FootRaceMiniGameManager : MonoBehaviour
         score = 0;
         PlaceInitialObstacles();
         StartCoroutine(IncreaseSpeedOverTime(3f)); // Increase speed every 10 seconds
+        StartCoroutine(IncreaseRunningSpeedOverTime(3f));
 
-        //if (AudioManager.instance != null)
-        //{
-        //    AudioManager.instance.running.start();
-        //}
-
-        runningDup = FMODUnity.RuntimeManager.CreateInstance("event:/Foot Race/Running");
-        runningDup.start();
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.running.start();
+        }
     }
     
     public void PlaceInitialObstacles()
@@ -576,6 +563,12 @@ public class FootRaceMiniGameManager : MonoBehaviour
         {
             minigameCanvasUI.ShowGameOver();
         }
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.running.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.crashIntoFence.start();
+        }
     }
     
     IEnumerator IncreaseSpeedOverTime(float interval)
@@ -587,8 +580,21 @@ public class FootRaceMiniGameManager : MonoBehaviour
             currentSpeed = forwardSpeed;
         }
     }
+    IEnumerator IncreaseRunningSpeedOverTime(float interval)
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.running.getParameterByName("Running Speed", out float paramValue);
 
-   
+            while (gameActive & paramValue <= 1)
+            {
+                yield return new WaitForSeconds(interval);
+                paramValue = paramValue + 0.1f;
+                AudioManager.instance.running.setParameterByName("Running Speed", paramValue);
+                Debug.Log("Running Speed " + paramValue);
+            }
+        }
+    }
 }
 public enum ObstacleType
 {
