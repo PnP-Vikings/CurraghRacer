@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class CameraController : MonoBehaviour
 {
@@ -66,7 +67,7 @@ public class CameraController : MonoBehaviour
             }
             return;
          }
-         if (Input.GetKeyDown(KeyCode.Space))
+         if (Keyboard.current != null && Keyboard.current.spaceKey.wasPressedThisFrame)
          {
             if(currentPositionIndex >= cameraPositions.Count - 1)
             {

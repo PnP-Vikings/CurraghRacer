@@ -2,12 +2,19 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 
 public class FootRaceMiniGameManager : MonoBehaviour
 {
     public static FootRaceMiniGameManager Instance;
+    
+    [Header("Input")]
+    private PlayerInputs playerInputs;
+    [Header("UI Buttons")]
     public Button jumpButton, slideButton;
+    
+    [Header("Player")]
     public Rigidbody playerRigidbody;
     public float jumpForce = 10f;
     public float moveSpeed = 5f;
@@ -68,9 +75,51 @@ public class FootRaceMiniGameManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        playerInputs = new PlayerInputs();
+    }
+    
+    private void OnEnable()
+    {
+      if (playerInputs!= null)
+        {
+            playerInputs.Enable();
+            playerInputs.Player.Jump.performed += OnJumpInput;
+            playerInputs.Player.Crouch.performed += OnSlideInput;
+        }
+        else
+        {
+            Debug.LogWarning("Input Actions not assigned in the inspector!");
+            return;
+        }
+        
+    }
+
+    private void OnDisable()
+    {
+      
+        if(playerInputs!= null)
+        {
+            playerInputs.Player.Jump.performed -= OnJumpInput;
+            playerInputs.Player.Crouch.performed -= OnSlideInput;
+            playerInputs.Disable();
+        }
+        
+    }
+
+    // Input System callback methods
+    private void OnJumpInput(InputAction.CallbackContext context)
+    {
+        Jump();
+    }
+
+    private void OnSlideInput(InputAction.CallbackContext context)
+    {
+        Slide();
     }
     private void Start()
     {
+        
+        // Set up UI buttons (for touch/mobile)
         if (jumpButton != null)
         {
             jumpButton.onClick.AddListener(Jump);
@@ -89,6 +138,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
             Debug.LogWarning("Slide button is not assigned in the inspector.");
         }
         
+        // Set up swipe gestures (for touch/mobile)
         SwipeGesture swipeGesture = GetComponent<SwipeGesture>();
         if (swipeGesture != null)
         {
@@ -109,13 +159,29 @@ public class FootRaceMiniGameManager : MonoBehaviour
 
         if (minigameCanvasUI != null)
         {
-            minigameCanvasUI.SetUpUI(true,true,true);
+            minigameCanvasUI.SetUpUI(true,true,true,true);
         }
         StartGame();
     }
     
     private void Update()
     {
+        // Check for keyboard input (using new Input System)
+        if (Keyboard.current != null)
+        {
+            // Jump with Spacebar
+            if (Keyboard.current.spaceKey.wasPressedThisFrame)
+            {
+                Jump();
+            }
+            
+            // Slide with Left Ctrl or C key
+            if (Keyboard.current.leftCtrlKey.wasPressedThisFrame || Keyboard.current.cKey.wasPressedThisFrame)
+            {
+                Slide();
+            }
+        }
+        
         // Continuously update grounded state
         isGrounded = IsGrounded();
         

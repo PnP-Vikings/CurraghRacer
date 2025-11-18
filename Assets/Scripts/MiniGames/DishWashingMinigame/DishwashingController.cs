@@ -3,6 +3,7 @@ using MiniGames;
 using System.Collections.Generic;
 using League;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.SceneManagement;
 
 public class DishwashingController : MonoBehaviour
@@ -58,8 +59,27 @@ public class DishwashingController : MonoBehaviour
     {
         if (spongeInstance == null) return;
 
+        Vector2 inputPosition = Vector2.zero;
+        bool hasInput = false;
+
+        // Check for touch input first (mobile)
+        var ts = Touchscreen.current;
+        if (ts != null && ts.primaryTouch.press.isPressed)
+        {
+            inputPosition = ts.primaryTouch.position.ReadValue();
+            hasInput = true;
+        }
+        // Fall back to mouse input (desktop/editor)
+        else if (Mouse.current != null)
+        {
+            inputPosition = Mouse.current.position.ReadValue();
+            hasInput = true;
+        }
+
+        if (!hasInput) return;
+        
         // Ray from camera through cursor/touch
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        Ray ray = Camera.main.ScreenPointToRay(inputPosition);
         RaycastHit hit;
 
         // Raycast against plate colliders, up to maxDistance

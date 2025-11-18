@@ -451,7 +451,7 @@ public class RowingRhythmController : MonoBehaviour
   {
     if (minigameCanvasUI != null)
     {
-      minigameCanvasUI.SetUpUI(true,true,true);
+      minigameCanvasUI.SetUpUI(true,true,true,true);
     }
     
     currentSpeed = startingSpeed;

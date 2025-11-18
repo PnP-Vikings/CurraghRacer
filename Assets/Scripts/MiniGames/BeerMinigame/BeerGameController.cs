@@ -23,8 +23,7 @@ public class BeerGameController : MonoBehaviour
     public float minIntervalSpeed = 5f; // Minimum interval speed
     public float speedIncrement = 0.5f; // Speed increment value
     public float beerMoveDuration = 0.5f; // Duration for beer to lerp to pour point
-    
-    
+
     public void OnEnable()
     {
         if (Instance == null)
@@ -59,7 +58,7 @@ public class BeerGameController : MonoBehaviour
        
         StartCoroutine(DecreaseSpeedOverTime(6f)); // Increase speed every 10 seconds
         StartCoroutine(MoveNewBeer());
-        minigameCanvasUI.SetUpUI(true,false,true);
+        minigameCanvasUI.SetUpUI(true,false,true,true);
         StartCoroutine(CountDownTimer(miniGameDuration)); // Start the countdown timer
     }
     
@@ -136,10 +135,7 @@ public class BeerGameController : MonoBehaviour
         if (beerPrefab != null && SpawnPoint != null)
         {
             GameObject beer = Instantiate(beerPrefab, SpawnPoint.position + new Vector3(beers.Count *-2f,0,0), Quaternion.identity);
-            BeerShaderPour beerShaderPour = beer.GetComponentInChildren<BeerShaderPour>();
-            int typeCount = Enum.GetValues(typeof(BeerType)).Length; // robust: use actual enum count
-            beerShaderPour.AssignBeerType((BeerType)UnityEngine.Random.Range(0, typeCount));
-            beers.Add(beerShaderPour); // Add the beer to the list
+            beers.Add(beer.GetComponentInChildren<BeerShaderPour>()); // Add the beer to the list
             Debug.Log("Beer spawned at: " + SpawnPoint.position);
         }
         else
