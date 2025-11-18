@@ -74,18 +74,20 @@ public class PowerwashController : MonoBehaviour
         Vector2 inputPosition = Vector2.zero;
         bool hasInput = false;
 
-        // Check for touch input first (mobile)
-        var ts = Touchscreen.current;
-        if (ts != null && ts.primaryTouch.press.isPressed)
+        // Use helper to get pointer position (works for touch and mouse)
+        if (InputHelpers.TryGetPrimaryPointerPosition(out inputPosition))
         {
-            inputPosition = ts.primaryTouch.position.ReadValue();
-            hasInput = true;
-        }
-        // Fall back to mouse input (desktop/editor)
-        else if (Mouse.current != null)
-        {
-            inputPosition = Mouse.current.position.ReadValue();
-            hasInput = true;
+            // Ensure the pointer is actively pressed this frame (touch wasPressedThisFrame / mouse leftButton)
+            var ts = Touchscreen.current;
+            if (ts != null && ts.primaryTouch.press.isPressed)
+            {
+                hasInput = true;
+            }
+            else if (Mouse.current != null)
+            {
+                // We'll treat any mouse presence as input for following the cursor (pointer move)
+                hasInput = true;
+            }
         }
 
         if (!hasInput) return;
