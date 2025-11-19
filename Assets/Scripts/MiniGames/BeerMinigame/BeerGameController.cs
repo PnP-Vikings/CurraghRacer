@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using MiniGames;
@@ -7,281 +6,283 @@ using UnityEngine.SceneManagement;
 
 public class BeerGameController : MonoBehaviour
 {
-    public GameObject beerPrefab; // Prefab for the beer object
-    public List<BeerPourLocation> pourPoint; // Point where beer is poured
-    public Transform SpawnPoint; // Point where spam is spawned
-    public Transform FinishPoint; // Point where the beer is finished
-    public float miniGameDuration = 60f; // Duration of the mini-game in seconds
-    public bool timerHasElapsed = false; // Flag to indicate if the timer has elapsed
-    public MinigameCanvasUI minigameCanvasUI; // Reference to the mini-game UI canvas
+    [Header("Core References")]
+    public GameObject beerPrefab;
+    public TapConfiguration[] taps = new TapConfiguration[4];
+    public Transform finishPoint;
+    public BeerMinigameCanvasUI minigameCanvasUI;
     public static BeerGameController Instance { get; private set; }
-    public List<BeerShaderPour> beers; // List of beer shader pours
-    public List<BeerShaderPour> Completedbeers; // List of beer shader pours
-    public bool gameCompleted = false; // Flag to indicate if the game is completed
-    public int spawnBeerCount = 5; // Number of beers to spawn at start
-    public float currentSpeed = 2f; // Current speed of spawning beers
-    public float minIntervalSpeed = 5f; // Minimum interval speed
-    public float speedIncrement = 0.5f; // Speed increment value
-    public float beerMoveDuration = 0.5f; // Duration for beer to lerp to pour point
+    
+    [Header("Game State")]
+    public bool gameCompleted;
+    public List<BeerShaderPour> Completedbeers = new List<BeerShaderPour>();
+    
+    // Round-based system
+    [System.Serializable]
+    public class OrderData
+    {
+        public BeerType beerType;
+        public float targetZoneMin;
+        public float targetZoneMax;
+        public int orderNumber;
+        public float customerPatienceTime;
+        public string customerName;
+    }
+    
+    private List<OrderData> currentRound = new List<OrderData>();
+    private int currentRoundIndex;
+    private int totalRounds;
+    private Dictionary<int, Coroutine> tapTimers = new Dictionary<int, Coroutine>();
+    private Dictionary<int, float> tapTimeRemaining = new Dictionary<int, float>();
+    private int completedInRound;
+    private int beersInCurrentRound;
+    private bool roundInProgress;
+    private List<PourQuality> orderResults = new List<PourQuality>();
+    private int currentOrderIndex;
+    private int perfectStreak;
+    private float performanceMultiplier = 1.0f;
+    
+    private string[] irishNames = new string[]
+    {
+        "O'Brien", "Murphy", "Kelly", "Walsh", "Ryan", "O'Sullivan", "McCarthy", "O'Connor",
+        "Brennan", "Doyle", "Gallagher", "Doherty", "Kennedy", "Lynch", "Murray", "Quinn",
+        "Moore", "McLoughlin", "Carroll", "Connolly", "Daly", "O'Neill", "Fitzpatrick",
+        "Griffin", "Hayes", "Martin", "Collins", "Byrne", "Casey"
+    };
 
     public void OnEnable()
     {
         if (Instance == null)
         {
-            Instance = this; // Set the singleton instance
+            Instance = this;
         }
         else
         {
-            Destroy(gameObject); // Ensure only one instance exists
+            Destroy(gameObject);
         }
         
         // Subscribe to all pour points' beer completed events
-        foreach (var pourP in pourPoint)
+        foreach (var tap in taps)
         {
-            if (pourP != null && pourP.beerEnterBoxCollider != null)
+            if (tap != null && tap.associatedPourPoint != null && tap.associatedPourPoint.beerEnterBoxCollider != null)
             {
-                pourP.beerEnterBoxCollider.onBeerCompleted.AddListener(BeerDone);
+                tap.associatedPourPoint.beerEnterBoxCollider.onBeerCompleted.AddListener(BeerDone);
             }
         }
         
-        StartGameSpawn();
+        StartOrderRoundSystem();
     }
 
-    public void StartGameSpawn()
+    private void StartOrderRoundSystem()
     {
-        for (int i = 0; i < spawnBeerCount; i++) // Spawn 5 beers at the start
-        {
-            SpawnBeer();
-        }
+        totalRounds = UnityEngine.Random.Range(3, 6); // 3-5 rounds
+        currentRoundIndex = 0;
+        currentOrderIndex = 0;
+        orderResults.Clear();
+        tapTimers.Clear();
+        tapTimeRemaining.Clear();
+        perfectStreak = 0;
+        performanceMultiplier = 1.0f;
+        Completedbeers.Clear();
         
-        MoveBeerToNextAvailablePourPoint();
-       
-        StartCoroutine(DecreaseSpeedOverTime(6f)); // Increase speed every 10 seconds
-        StartCoroutine(MoveNewBeer());
-        minigameCanvasUI.SetUpUI(true,false,true,true);
-        StartCoroutine(CountDownTimer(miniGameDuration)); // Start the countdown timer
-    }
-    
-    
-    IEnumerator CountDownTimer(float duration)
-    {
-        float timer = duration;
-        while (timer > 0 && !gameCompleted)
-        {
-            yield return new WaitForSeconds(1f);
-            timer -= 1f;
-            minigameCanvasUI.UpdatePlayerLives("Time Remaining: " + timer + " seconds");
-            Debug.Log("Time remaining: " + timer + " seconds");
-        }
+        minigameCanvasUI.SetUpUI(true, false, true, true);
+        minigameCanvasUI.UpdateScore(0);
+        minigameCanvasUI.UpdatePerfectStreak(0, 1.0f);
         
-        if (!gameCompleted)
-        {
-            Debug.Log("Time's up! Mini-game over.");
-            timerHasElapsed = true;
-            GameCompleted();
-        }
-    }
-    IEnumerator MoveNewBeer()
-    {
-        while(!gameCompleted)
-        {
-            yield return new WaitForSeconds(currentSpeed);
-      
-            MoveBeerToNextAvailablePourPoint();
-        }
-    }
-    
-    IEnumerator DecreaseSpeedOverTime(float interval)
-    {
-        while(!gameCompleted)
-        {
-            yield return new WaitForSeconds(interval);
-      
-            // Increase speed up to max speed cap
-            if (currentSpeed < minIntervalSpeed)
-            {
-                currentSpeed -= speedIncrement;
-                //currentSpeed = Mathf.Min(currentSpeed, maxSpeed); // Cap at max speed
-                Debug.Log("Speed decreased to: " + currentSpeed);
-            }
-        }
-    }
-    
-    
-    public void MoveBeerToNextAvailablePourPoint()
-    {
-        MoveNextBeer();
+        StartNextRound();
     }
 
     private void Update()
     {
-        GameCompleted();
+        // Check for game completion once
+        if (currentRoundIndex >= totalRounds && !gameCompleted)
+        {
+            GameCompleted();
+        }
     }
     
     void OnDisable()
     {
         // Unsubscribe from all pour points' beer completed events
-        foreach (var pourP in pourPoint)
+        foreach (var tap in taps)
         {
-            if (pourP != null && pourP.beerEnterBoxCollider != null)
+            if (tap != null && tap.associatedPourPoint != null && tap.associatedPourPoint.beerEnterBoxCollider != null)
             {
-                pourP.beerEnterBoxCollider.onBeerCompleted.RemoveListener(BeerDone);
+                tap.associatedPourPoint.beerEnterBoxCollider.onBeerCompleted.RemoveListener(BeerDone);
             }
         }
+        
+        // Stop all timers
+        StopAllCoroutines();
     }
 
-    public void SpawnBeer()
+    private int CalculateRoundSize(int roundIndex)
     {
-        if (beerPrefab != null && SpawnPoint != null)
+        if (roundIndex <= 1)
         {
-            GameObject beer = Instantiate(beerPrefab, SpawnPoint.position + new Vector3(beers.Count *-2f,0,0), Quaternion.identity);
-            beers.Add(beer.GetComponentInChildren<BeerShaderPour>()); // Add the beer to the list
-            Debug.Log("Beer spawned at: " + SpawnPoint.position);
+            return Mathf.Max(1, UnityEngine.Random.Range(1, 3)); // 1-2 beers
+        }
+        else if (roundIndex <= 3)
+        {
+            return Mathf.Max(1, UnityEngine.Random.Range(2, 4)); // 1-3 beers
         }
         else
         {
-            Debug.LogError("Beer prefab or pour point is not set!");
+            return Mathf.Max(1, UnityEngine.Random.Range(3, 5)); // 1-4 beers
         }
     }
-    
-    public void MoveNextBeer()
+
+    private List<OrderData> GenerateNextRoundOrders(int count)
     {
-        Debug.Log($"MoveNextBeer called. Total beers: {beers.Count}, Completed: {Completedbeers.Count}");
+        List<OrderData> orders = new List<OrderData>();
         
-        // Count unplaced beers
-        int unplacedBeers = 0;
-        foreach (var beer in beers)
+        for (int i = 0; i < count; i++)
         {
-            if (beer != null && !beer.beerComplete && !beer.isPlaced)
+            OrderData order = new OrderData();
+            order.orderNumber = currentOrderIndex + i + 1;
+            order.customerName = irishNames[UnityEngine.Random.Range(0, irishNames.Length)];
+            
+            // Determine beer type by order pattern
+            int orderPattern = (currentOrderIndex + i) % 9;
+            if (orderPattern < 4)
             {
-                unplacedBeers++;
+                // Orders 1-4: Pilsner/Lager
+                order.beerType = UnityEngine.Random.value > 0.5f ? BeerType.Pilsner : BeerType.Lager;
+                order.targetZoneMin = 0.875f - 0.08f;
+                order.targetZoneMax = 0.875f + 0.08f;
+                order.customerPatienceTime = UnityEngine.Random.Range(10f, 12f);
             }
-        }
-        Debug.Log($"Unplaced beers available: {unplacedBeers}");
-        
-        // Debug: Check all pour points status
-        Debug.Log("=== Checking all pour points ===");
-        foreach (var pourP in pourPoint)
-        {
-            bool isAvailable = pourP.IsAvailable();
-            bool hasCurrentBeer = pourP.beerEnterBoxCollider.currentBeerShaderPour != null;
-            Debug.Log($"PourPoint: {pourP.name} | IsAvailable: {isAvailable} | HasCurrentBeer: {hasCurrentBeer} | CurrentBeer: {(hasCurrentBeer ? pourP.beerEnterBoxCollider.currentBeerShaderPour.name : "None")}");
-        }
-        
-        // Find ONE available pour point and assign ONE beer to it (fills gradually over time)
-        foreach (var pourP in pourPoint)
-        {
-            if (pourP.IsAvailable() && pourP.beerEnterBoxCollider.currentBeerShaderPour == null)
+            else if (orderPattern < 8)
             {
-                Debug.Log($"Found available pour point: {pourP.name}");
-                
-                // Find an unplaced beer
-                foreach (var beer in beers)
-                {
-                    if (beer != null && !beer.beerComplete && !beer.isPlaced)
-                    {
-                        // Mark pour point as unavailable IMMEDIATELY to prevent race conditions
-                        pourP.isAvailable = false;
-                        
-                        // Mark the beer as placed IMMEDIATELY to prevent it being selected again
-                        beer.isPlaced = true;
-                        
-                        // IMMEDIATELY assign the beer to the pour point to prevent race conditions
-                        pourP.beerEnterBoxCollider.currentBeerShaderPour = beer;
-                        
-                        // Start coroutine to smoothly move the beer (visual only now)
-                        StartCoroutine(MoveBeerToPourPoint(beer, pourP));
-                        Debug.Log($"Assigned beer {beer.name} to {pourP.name}");
-                        return; // Exit after assigning ONE beer - next beer will be assigned on next call
-                    }
-                }
-                
-                Debug.LogWarning($"Could not find a beer to assign to {pourP.name}");
-                return; // Exit if no beer found
+                // Orders 5-8: IPA/Ale
+                order.beerType = UnityEngine.Random.value > 0.5f ? BeerType.IPA : BeerType.Ale;
+                order.targetZoneMin = 0.88f - 0.05f;
+                order.targetZoneMax = 0.88f + 0.05f;
+                order.customerPatienceTime = UnityEngine.Random.Range(14f, 16f);
             }
+            else
+            {
+                // Orders 9+: Stout
+                order.beerType = BeerType.Stout;
+                order.targetZoneMin = 0.89f - 0.03f;
+                order.targetZoneMax = 0.89f + 0.03f;
+                order.customerPatienceTime = UnityEngine.Random.Range(18f, 20f);
+            }
+            
+            // Reduce tolerance every 10 orders
+            if (currentOrderIndex + i >= 10)
+            {
+                float reduction = 0.01f * ((float)(currentOrderIndex + i) / 10f);
+                float center = (order.targetZoneMin + order.targetZoneMax) / 2f;
+                float tolerance = (order.targetZoneMax - order.targetZoneMin) / 2f - reduction;
+                order.targetZoneMin = center - tolerance;
+                order.targetZoneMax = center + tolerance;
+            }
+            
+            orders.Add(order);
         }
         
-        Debug.Log("No available pour points found");
+        return orders;
     }
-    
-    IEnumerator MoveBeerToPourPoint(BeerShaderPour beer, BeerPourLocation pourP)
+
+    private Color GetFoamColor(BeerType type)
     {
-        // Beer is already marked as placed and assigned to pour point before this coroutine starts
-        
-        Vector3 startPos = beer.transform.parent.position;
-        Vector3 targetPos = pourP.beerEnterBoxCollider.transform.position;
-        float elapsedTime = 0f;
-        
-        // Smoothly lerp the beer to the target position
-        while (elapsedTime < beerMoveDuration)
+        switch (type)
         {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / beerMoveDuration);
-            beer.transform.parent.position = Vector3.Lerp(startPos, targetPos, t);
-            yield return null;
+            case BeerType.Lager:
+                return Color.white;
+            case BeerType.Stout:
+                return new Color32(210, 180, 140, 255);
+            case BeerType.Ale:
+                return new Color32(255, 253, 208, 255);
+            case BeerType.IPA:
+                return new Color32(250, 240, 230, 255);
+            case BeerType.Pilsner:
+                return new Color32(255, 255, 240, 255);
+            default:
+                return Color.white;
         }
-        
-        // Ensure we're at exactly the target position
-        beer.transform.parent.position = targetPos;
-        
-        Debug.Log("Beer movement complete for " + beer.name + " at " + pourP.name);
-    }
-    
-    
-    IEnumerator MoveBeerToFinishPoint(BeerShaderPour beer, Transform finishP , BeerPourLocation pourP)
-    {
-        Vector3 startPos = beer.transform.parent.position;
-        Vector3 targetPos = finishP.position +new Vector3(Completedbeers.Count * 3f,0,0 ); // Offset finished beers
-        float elapsedTime = 0f;
-        
-        // Smoothly lerp the beer to the target position
-        while (elapsedTime < beerMoveDuration)
-        {
-            elapsedTime += Time.deltaTime;
-            float t = Mathf.Clamp01(elapsedTime / beerMoveDuration);
-            beer.transform.parent.position = Vector3.Lerp(startPos, targetPos, t);
-            yield return null;
-        }
-        
-        // Ensure we're at exactly the target position
-        beer.transform.parent.position = targetPos;
-        
-        // NOW clear the pour point AFTER the beer has moved away
-        pourP.Reset();
-        
-        Debug.Log("Beer moved to finish. Pour point " + pourP.name + " is now available again");
     }
     
     public void BeerDone()
     {
-        // Check all pour points for completed beers
-        foreach (var pourP in pourPoint)
+        // Check all active taps for completed (locked) beers
+        for (int tapIndex = 0; tapIndex < beersInCurrentRound; tapIndex++)
         {
-            if (pourP != null && pourP.beerEnterBoxCollider != null)
+            if (taps[tapIndex] == null || taps[tapIndex].associatedPourPoint == null)
+                continue;
+            
+            var currentBeer = taps[tapIndex].associatedPourPoint.beerEnterBoxCollider.currentBeerShaderPour;
+            
+            if (currentBeer != null && currentBeer.isLocked)
             {
-                var currentBeer = pourP.beerEnterBoxCollider.currentBeerShaderPour;
-                
-                if (currentBeer != null && currentBeer.beerComplete && beers.Contains(currentBeer))
+                // Stop the timer for this tap
+                if (tapTimers.ContainsKey(tapIndex))
                 {
-                    // Move the completed beer to finish point
-                    StartCoroutine(MoveBeerToFinishPoint(currentBeer, FinishPoint, pourP));
-                   // currentBeer.transform.parent.position = FinishPoint.position;
-                    currentBeer.isActive = false; // Stop pouring
-                    
-                    Debug.Log("Beer pouring completed.");
-                    Debug.Log("Beer is complete: " + currentBeer.name);
-                    
-                    // Add to completed list and remove from active list
-                    Completedbeers.Add(currentBeer);
-                    beers.Remove(currentBeer);
-                    
-                    minigameCanvasUI.UpdateScore(Completedbeers.Count);
-                    
-                    // Try to move a new beer to this now-available pour point
-                //    MoveBeerToNextAvailablePourPoint();
-                    
-                    break; // Process one beer at a time
+                    StopCoroutine(tapTimers[tapIndex]);
+                    tapTimers.Remove(tapIndex);
                 }
+                
+                // Get the quality and calculate points
+                PourQuality quality = currentBeer.pourQuality;
+                int basePoints = quality switch
+                {
+                    PourQuality.Perfect => 150,
+                    PourQuality.Good => 100,
+                    PourQuality.Acceptable => 50,
+                    PourQuality.Poor => 20,
+                    _ => 0
+                };
+                
+                // Apply multiplier only for Perfect/Good/Acceptable
+                int finalPoints = basePoints;
+                if (quality == PourQuality.Perfect || quality == PourQuality.Good || quality == PourQuality.Acceptable)
+                {
+                    finalPoints = Mathf.RoundToInt(basePoints * performanceMultiplier);
+                }
+                
+                // Update streak
+                if (quality == PourQuality.Perfect)
+                {
+                    perfectStreak++;
+                }
+                else
+                {
+                    perfectStreak = 0;
+                }
+                
+                // Recalculate multiplier
+                performanceMultiplier = 1.0f + (perfectStreak * 0.1f);
+                
+                // Add to results
+                orderResults.Add(quality);
+                
+                // Update UI
+                minigameCanvasUI.UpdateScore(Completedbeers.Count + 1);
+                minigameCanvasUI.UpdatePerfectStreak(perfectStreak, performanceMultiplier);
+                minigameCanvasUI.ShowTapPourResult(tapIndex, quality, finalPoints, performanceMultiplier);
+                
+                // Move to finish
+                currentBeer.transform.parent.position = finishPoint.position + new Vector3(Completedbeers.Count * 3f, 0, 0);
+                currentBeer.isActive = false;
+                
+                // Add to completed list
+                Completedbeers.Add(currentBeer);
+                completedInRound++;
+                currentOrderIndex++;
+                
+                // Clear pour point
+                taps[tapIndex].associatedPourPoint.Reset();
+                
+                // Hide timer UI for this tap
+                minigameCanvasUI.UpdateTapTimer(tapIndex, 0, false);
+                
+                Debug.Log($"Beer done at tap {tapIndex}. Quality: {quality}, Points: {finalPoints}");
+                
+                // Check if round is complete
+                CheckRoundComplete();
+                
+                break; // Process one beer at a time
             }
         }
     }
@@ -289,34 +290,204 @@ public class BeerGameController : MonoBehaviour
 
     public void GameCompleted()
     {
+        if (gameCompleted)
+            return;
 
-        if (Completedbeers.Count >= spawnBeerCount || timerHasElapsed  && !gameCompleted) // Check if 5 beers are completed
+        gameCompleted = true;
+        Debug.Log("All rounds completed!");
+
+        // Calculate final score from all order results
+        int finalScore = 0;
+        foreach (var quality in orderResults)
         {
-            Debug.Log("All beers completed!");
-
-            int finalScore = Completedbeers.Count * 100; // 100 points per plate cleaned
-
-            // Let MiniGameManager handle the completion, rewards, and scene transition
-            if (MiniGameManager.Instance != null)
+            int basePoints = quality switch
             {
-                Debug.Log($"Calling MiniGameManager.CompleteGame with score: {finalScore}");
-                MiniGameManager.Instance.CompleteGame(finalScore);
-                gameCompleted = true; // Set the game completed flag to true
+                PourQuality.Perfect => 150,
+                PourQuality.Good => 100,
+                PourQuality.Acceptable => 50,
+                PourQuality.Poor => 20,
+                _ => 0
+            };
+            finalScore += basePoints;
+        }
+
+        // Show final summary
+        minigameCanvasUI.ShowFinalSummary(orderResults, finalScore, perfectStreak);
+
+        // Let MiniGameManager handle completion
+        if (MiniGameManager.Instance != null)
+        {
+            Debug.Log($"Calling MiniGameManager.CompleteGame with score: {finalScore}");
+            MiniGameManager.Instance.CompleteGame(finalScore);
+        }
+        else
+        {
+            Debug.LogError("MiniGameManager.Instance is null!");
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.PlayerWorked();
             }
-            else
-            {
-                Debug.LogError("MiniGameManager.Instance is null! Cannot complete minigame properly.");
+            SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+        }
+    }
 
-                // Fallback: manually return to main scene if MiniGameManager is missing
-                if (GameManager.Instance != null)
-                {
-                    GameManager.Instance.PlayerWorked();
-                }
-                SceneManager.LoadScene(GameManager.Instance.mainSceneName);
-                gameCompleted = true; // Set the game completed flag to true
+    private void StartNextRound()
+    {
+        if (currentRoundIndex >= totalRounds)
+        {
+            GameCompleted();
+            return;
+        }
+
+        beersInCurrentRound = CalculateRoundSize(currentRoundIndex);
+        currentRound = GenerateNextRoundOrders(beersInCurrentRound);
+        completedInRound = 0;
+        roundInProgress = true;
+
+        Debug.Log($"Starting Round {currentRoundIndex + 1}/{totalRounds} with {beersInCurrentRound} beers");
+
+        // Spawn beers for this round
+        for (int i = 0; i < beersInCurrentRound; i++)
+        {
+            var order = currentRound[i];
+            var tap = taps[i];
+
+            // Instantiate beer at tap position
+            GameObject beerObj = Instantiate(beerPrefab, tap.associatedPourPoint.beerEnterBoxCollider.transform.position, Quaternion.identity);
+            BeerShaderPour beer = beerObj.GetComponentInChildren<BeerShaderPour>();
+
+            if (beer != null)
+            {
+                // Assign beer type
+                beer.AssignBeerType(order.beerType);
+
+                // Set order target with tap stream origin
+                beer.SetOrderTarget(order.targetZoneMin, order.targetZoneMax, GetFoamColor(order.beerType), tap.GetPourStreamOrigin());
+
+                // Assign to pour point
+                tap.associatedPourPoint.beerEnterBoxCollider.currentBeerShaderPour = beer;
+
+                // Update UI
+                minigameCanvasUI.UpdateTapOrder(i, order.beerType.ToString(), order.customerName);
+
+                // Start timer
+                tapTimers[i] = StartCoroutine(StartTapTimer(i, order.customerPatienceTime));
             }
         }
 
+        // Hide UI for inactive taps
+        for (int i = beersInCurrentRound; i < 4; i++)
+        {
+            minigameCanvasUI.HideTapUI(i);
+        }
     }
 
+    private IEnumerator StartTapTimer(int tapIndex, float duration)
+    {
+        tapTimeRemaining[tapIndex] = duration;
+
+        while (tapTimeRemaining[tapIndex] > 0 && roundInProgress)
+        {
+            yield return new WaitForSeconds(0.1f);
+            tapTimeRemaining[tapIndex] -= 0.1f;
+            minigameCanvasUI.UpdateTapTimer(tapIndex, tapTimeRemaining[tapIndex], true);
+        }
+
+        // Timer expired - auto-submit
+        if (roundInProgress && tapTimeRemaining[tapIndex] <= 0)
+        {
+            AutoSubmitOrder(tapIndex);
+        }
+    }
+
+    private void AutoSubmitOrder(int tapIndex)
+    {
+        var beer = taps[tapIndex].associatedPourPoint.beerEnterBoxCollider.currentBeerShaderPour;
+        if (beer != null && !beer.isLocked)
+        {
+            beer.LockPourAndCalculateQuality();
+            beer.pourQuality = PourQuality.Poor;
+
+            // Reset streak on timeout
+            perfectStreak = 0;
+            performanceMultiplier = 1.0f;
+
+            // Add to results with 0 points
+            orderResults.Add(PourQuality.Poor);
+
+            // Update UI
+            minigameCanvasUI.UpdatePerfectStreak(0, 1.0f);
+            minigameCanvasUI.ShowTapPourResult(tapIndex, PourQuality.Poor, 0, 1.0f);
+
+            // Move to finish
+            beer.transform.parent.position = finishPoint.position + new Vector3(Completedbeers.Count * 3f, 0, 0);
+            Completedbeers.Add(beer);
+            completedInRound++;
+            currentOrderIndex++;
+
+            // Clear pour point
+            taps[tapIndex].associatedPourPoint.Reset();
+
+            Debug.Log($"Tap {tapIndex} timed out. Beer auto-submitted.");
+
+            CheckRoundComplete();
+        }
+    }
+
+    private void CheckRoundComplete()
+    {
+        if (completedInRound >= beersInCurrentRound)
+        {
+            roundInProgress = false;
+
+            // Stop all remaining timers
+            foreach (var timer in tapTimers.Values)
+            {
+                if (timer != null)
+                    StopCoroutine(timer);
+            }
+            tapTimers.Clear();
+
+            StartCoroutine(ShowRoundFeedback());
+        }
+    }
+
+    private IEnumerator ShowRoundFeedback()
+    {
+        // Calculate round performance
+        int basePoints = 0;
+        int bonusPoints = 0;
+
+        // Get last N results (this round's results)
+        int startIndex = Mathf.Max(0, orderResults.Count - beersInCurrentRound);
+        for (int i = startIndex; i < orderResults.Count; i++)
+        {
+            int baseP = orderResults[i] switch
+            {
+                PourQuality.Perfect => 150,
+                PourQuality.Good => 100,
+                PourQuality.Acceptable => 50,
+                PourQuality.Poor => 20,
+                _ => 0
+            };
+            basePoints += baseP;
+            // Bonus is calculated from multiplier effect (simplified for display)
+        }
+
+        int totalPoints = basePoints; // Can add bonus calculation if tracked separately
+
+        // Show summary
+        yield return minigameCanvasUI.ShowRoundSummary(currentRoundIndex + 1, totalRounds, basePoints, bonusPoints, totalPoints, perfectStreak);
+
+        // Clear pour points
+        for (int i = 0; i < beersInCurrentRound; i++)
+        {
+            taps[i].associatedPourPoint.Reset();
+        }
+
+        // Move to next round
+        currentRoundIndex++;
+        StartNextRound();
+    }
 }
+

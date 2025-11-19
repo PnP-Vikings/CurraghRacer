@@ -46,37 +46,37 @@ public class BeerPourLocation : MonoBehaviour
     {
         if (beerEnterBoxCollider != null)
         {
-            if(beerEnterBoxCollider.currentBeerShaderPour != null)
+            if(beerEnterBoxCollider.currentBeerShaderPour != null && !beerEnterBoxCollider.currentBeerShaderPour.isLocked)
             {
                 Debug.Log("Pouring beer");
                 beerEnterBoxCollider.currentBeerShaderPour.StartPouring();
-                isPouringAutomatically = true;
-                StartCoroutine(PourActiveBeerAutomatically());
-                beerEnterBoxCollider.CheckBeerCompletion();
             }
         }
     }
-
-    private IEnumerator PourActiveBeerAutomatically()
-    {
-        while (isPouringAutomatically)
-        {
-            if (beerEnterBoxCollider != null && beerEnterBoxCollider.currentBeerShaderPour != null)
-            {
-                beerEnterBoxCollider.currentBeerShaderPour.PourAuto();
-                beerEnterBoxCollider.CheckBeerCompletion();
-            }
-            yield return new WaitForSeconds(1f); // Adjust the interval as needed
-        }
-    }
-
     
     public void StopPouringBeer()
     {
         Debug.Log("Stop pouring beer");
         if (beerEnterBoxCollider != null && beerEnterBoxCollider.currentBeerShaderPour != null)
         {
-            beerEnterBoxCollider.currentBeerShaderPour.StopPouring();
+            if (!beerEnterBoxCollider.currentBeerShaderPour.isLocked)
+            {
+                beerEnterBoxCollider.currentBeerShaderPour.StopPouring();
+                StartCoroutine(LockAndCompleteBeer());
+            }
+        }
+    }
+
+    private IEnumerator LockAndCompleteBeer()
+    {
+        if (beerEnterBoxCollider.currentBeerShaderPour != null)
+        {
+            beerEnterBoxCollider.currentBeerShaderPour.LockPourAndCalculateQuality();
+            
+            // Wait for foam animation
+            yield return new WaitForSeconds(0.5f);
+            
+            // Trigger completion event
             beerEnterBoxCollider.CheckBeerCompletion();
         }
     }
