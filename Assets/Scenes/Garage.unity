@@ -3939,7 +3939,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d178c6a32c45665438d495174f8b68c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  newsReportOrAdPlaybackState: 0
+  radioAdOrNews1PlaybackState: 0
+  radioAdOrNews2PlaybackState: 0
 --- !u!114 &1045294001 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 9143610521142718996, guid: b4097587fe2b40740b5248e03d2d8f8a, type: 3}
@@ -8268,7 +8269,7 @@ PrefabInstance:
       objectReference: {fileID: 1572256176}
     - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: inviteDelay
-      value: 30
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
