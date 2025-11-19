@@ -17,7 +17,7 @@ public class StartRaceMenuUi : MonoBehaviour
 
                 if (AudioManager.instance != null)
                 {
-                    AudioManager.instance.radioSong.stop(STOP_MODE.ALLOWFADEOUT);
+                    RadioManager.instance.StopAllRadioSongs();
                     AudioManager.instance.loadingScreenSong.start();
                 }
             }
