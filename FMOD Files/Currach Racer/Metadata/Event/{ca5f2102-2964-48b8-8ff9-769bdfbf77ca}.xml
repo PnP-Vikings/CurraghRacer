@@ -62,7 +62,11 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{42e14f74-6131-48a6-85e2-896b23da8121}" />
+	<object class="EventAutomatableProperties" id="{42e14f74-6131-48a6-85e2-896b23da8121}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{8908d5a0-e3d0-4e1b-a521-48be4f69af9a}" />
 	<object class="GroupTrack" id="{d6017b30-0061-470a-a68e-3107fe24eb0f}">
 		<relationship name="modules">
@@ -123,7 +127,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{1f886352-8d34-4345-b274-a38ef00610a2}">
 		<property name="volume">
-			<value>-9</value>
+			<value>-7</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -166,6 +170,7 @@
 	<object class="MixerBusFader" id="{683f6eea-34f0-4630-92ff-fac2c249465f}" />
 	<object class="MixerBusEffectChain" id="{503d8cfe-ff88-4bd6-b00f-85cbd843800d}">
 		<relationship name="effects">
+			<destination>{acd28d50-5a67-4040-ac8a-42aa5d96d09d}</destination>
 			<destination>{ea023cb9-7055-4ef3-9124-28f08bb99fa9}</destination>
 		</relationship>
 	</object>
@@ -179,6 +184,38 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{c3104c93-2a15-47ae-8d57-3ccaaffe8585}" />
+	<object class="MultibandEqEffect" id="{acd28d50-5a67-4040-ac8a-42aa5d96d09d}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="filterTypeD">
+			<value>9</value>
+		</property>
+		<property name="filterTypeE">
+			<value>1</value>
+		</property>
+		<property name="frequencyA">
+			<value>66</value>
+		</property>
+		<property name="frequencyD">
+			<value>2100</value>
+		</property>
+		<property name="frequencyE">
+			<value>5500</value>
+		</property>
+		<property name="qualityA">
+			<value>0.100000001</value>
+		</property>
+		<property name="qualityD">
+			<value>0.560000002</value>
+		</property>
+		<property name="qualityE">
+			<value>0.234999999</value>
+		</property>
+		<property name="gainD">
+			<value>12.5</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{ea023cb9-7055-4ef3-9124-28f08bb99fa9}" />
 	<object class="Automator" id="{aa7c0355-c77b-493f-8f5f-73d67544cc93}">
 		<property name="nameOfPropertyBeingAutomated">

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{c60aa77f-4616-4565-a53e-12669f9b0e84}">
+		<property name="name">
+			<value>Radio Song 3 Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{748dca02-7b7a-4c7f-be81-40761f93927d}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{748dca02-7b7a-4c7f-be81-40761f93927d}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
