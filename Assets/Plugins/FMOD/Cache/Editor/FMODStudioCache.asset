@@ -1,5 +1,29 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9128383845345904927
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Ad Or News 4/Radio Ad Or News 4 Volume
+  m_EditorClassIdentifier: 
+  Name: Radio Ad Or News 4 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3178367445
+    data2: 3843911585
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-8321495213791179455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -363,10 +387,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638991620132133920
+  lastModified: 638991952317519671
   FileSizes:
   - Name: 
-    Value: 4222
+    Value: 4450
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -497,6 +521,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1176
+--- !u!114 &-5405218302037309315
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Radio/Radio Ad Or News 3
+  m_EditorClassIdentifier: 
+  Path: event:/Radio/Radio Ad Or News 3
+  Guid:
+    Data1: -1603577896
+    Data2: 1317342526
+    Data3: -1906196583
+    Data4: -1748678538
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -4257319680342106148}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 6760
 --- !u!114 &-4603569952867272999
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -524,6 +576,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 289
+--- !u!114 &-4257319680342106148
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Ad Or News 3/Radio Ad Or News 3 Volume
+  m_EditorClassIdentifier: 
+  Name: Radio Ad Or News 3 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 2336668652
+    data2: 2548201912
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-4132273350679516390
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -632,6 +708,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 363
+--- !u!114 &-3441198176613530931
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Song 4/Radio Song 4 Volume
+  m_EditorClassIdentifier: 
+  Name: Radio Song 4 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 736262283
+    data2: 3871147257
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-3342500523163071097
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -995,13 +1095,16 @@ MonoBehaviour:
   - {fileID: -1002619187435452065}
   - {fileID: -6712451736052408928}
   - {fileID: 6838502184186457869}
-  - {fileID: 6054709548380876242}
+  - {fileID: 8503121876507896705}
+  - {fileID: -5405218302037309315}
+  - {fileID: 8414186806441808117}
+  - {fileID: 5387323638058673786}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638991620132133920
+  cacheTime: 638991952317519671
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1265,6 +1368,30 @@ MonoBehaviour:
   ID:
     data1: 1500088272
     data2: 3560357178
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2091211635671113743
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Song 3/Radio Song 3 Volume
+  m_EditorClassIdentifier: 
+  Name: Radio Song 3 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1730785757
+    data2: 1584388376
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -1590,6 +1717,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
+--- !u!114 &5387323638058673786
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Radio/Radio Song 4
+  m_EditorClassIdentifier: 
+  Path: event:/Radio/Radio Song 4
+  Guid:
+    Data1: 641846949
+    Data2: 1156001879
+    Data3: -1859962493
+    Data4: -937254791
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: -3441198176613530931}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 200000
 --- !u!114 &5596098863361504242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1614,33 +1769,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &6054709548380876242
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Radio Ad Or News 3
-  m_EditorClassIdentifier: 
-  Path: event:/Radio Ad Or News 3
-  Guid:
-    Data1: -1603577896
-    Data2: 1317342526
-    Data3: -1906196583
-    Data4: -1748678538
-  Banks:
-  - {fileID: 7439203710798878255}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 1
-  Parameters: []
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 30912
 --- !u!114 &6272486264965736759
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1813,7 +1941,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638991620132099202
+  lastModified: 638991952317472884
   FileSizes: []
   Exists: 1
 --- !u!114 &8155522247790703682
@@ -1895,6 +2023,62 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &8414186806441808117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Radio/Radio Ad Or News 4
+  m_EditorClassIdentifier: 
+  Path: event:/Radio/Radio Ad Or News 4
+  Guid:
+    Data1: 861237886
+    Data2: 1197918916
+    Data3: 2021621171
+    Data4: -1622014989
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: -9128383845345904927}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7300
+--- !u!114 &8503121876507896705
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Radio/Radio Song 3
+  m_EditorClassIdentifier: 
+  Path: event:/Radio/Radio Song 3
+  Guid:
+    Data1: -681093101
+    Data2: 1174218885
+    Data3: -2034844276
+    Data4: -405872742
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters:
+  - {fileID: 2091211635671113743}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 190588
 --- !u!114 &8903603484183628450
 MonoBehaviour:
   m_ObjectHideFlags: 0

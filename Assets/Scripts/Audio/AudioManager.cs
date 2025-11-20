@@ -19,9 +19,13 @@ public class AudioManager : MonoBehaviour
         // Garage
     public EventInstance radioSong1;
     public EventInstance radioSong2;
+    public EventInstance radioSong3;
+    public EventInstance radioSong4;
 
     public EventInstance radioAdOrNews1;
     public EventInstance radioAdOrNews2;
+    public EventInstance radioAdOrNews3;
+    public EventInstance radioAdOrNews4;
 
     public EventInstance loadingScreenSong;
     public EventInstance tvButtonPushOut;
@@ -97,10 +101,13 @@ public class AudioManager : MonoBehaviour
         
         radioSong1 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 1");
         radioSong2 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 2");
+        radioSong3 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 3");
+        radioSong4 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 4");
 
         radioAdOrNews1 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 1");
         radioAdOrNews2 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 2");
-
+        radioAdOrNews3 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 3");
+        radioAdOrNews4 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 4");
 
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
