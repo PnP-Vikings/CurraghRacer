@@ -64,25 +64,31 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             case BeerType.Lager:
                 pourSpeed = 0.47f; 
                 beerColor = Color.yellow;
+                foamThickness = 0.04f;
                 break;
             case BeerType.Ale:
                 pourSpeed = 0.4f; // slower pour speed for Ale
                 beerColor = new Color(0.8f, 0.5f, 0.2f); // brownish
+                foamThickness = 0.06f;
                 break;
             case BeerType.Stout:
                 pourSpeed = 0.35f; // even slower pour speed for Stout
                 beerColor = new Color(0.1f, 0.1f, 0.1f); // dark
+                foamThickness = 0.14f;
                 break;
             case BeerType.IPA:
                 pourSpeed = 0.45f; // medium pour speed for IPA
                 beerColor = new Color(1f, 0.6f, 0.2f); // amber
+                foamThickness = 0.05f;
                 break;
             case BeerType.Pilsner:
                 pourSpeed = 0.5f; // standard pour speed for Pilsner
                 beerColor = new Color(1f, 0.9f, 0.5f); // light yellow
+                foamThickness = 0.04f;
                 break;
             default:
                 beerColor = Color.yellow;
+                foamThickness = 0.05f;
                 break;
         }
         SetBeerTypeText();
