@@ -75,7 +75,7 @@ public class BeerPourLocation : MonoBehaviour
             
             // Wait for foam animation
             yield return new WaitForSeconds(0.5f);
-            
+            Debug.Log("LockAndCompleteBeer - Triggering completion event");
             // Trigger completion event
             beerEnterBoxCollider.CheckBeerCompletion();
         }

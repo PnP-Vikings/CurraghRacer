@@ -142,15 +142,14 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     
     public bool BeerComplete()
     {
-        if(fillLevel >= 1f)
+        if(isLocked)
         {
-           return true; // Beer is full
+            return true; // Beer is locked, considered complete
         }
         else
         {
-            return false; // Beer is not full yet
+            return false; // Beer is not locked, not complete
         }
-
     }
     
     
@@ -253,7 +252,8 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             pourQuality = PourQuality.Poor;
         }
-        
+        beerComplete = true; // Mark beer as complete when locked
+        Debug.Log($"Pour locked at level {fillLevel:F2}, Quality: {pourQuality}");
         UpdateFoamAppearance();
         return pourQuality;
     }
