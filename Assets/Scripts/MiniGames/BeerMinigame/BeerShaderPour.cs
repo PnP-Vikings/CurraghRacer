@@ -312,7 +312,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             float zoneHeight = maxHeight - minHeight;
             
             // Position and scale the zone overlay
-            RectTransform rectTransform = targetZoneImage.rectTransform;
+            RectTransform rectTransform = targetZoneCanvas.transform as RectTransform;
             rectTransform.anchoredPosition = new Vector2(0, minHeight);
             rectTransform.sizeDelta = new Vector2(rectTransform.sizeDelta.x, zoneHeight);
             

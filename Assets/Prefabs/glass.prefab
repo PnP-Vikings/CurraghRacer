@@ -10357,6 +10357,7 @@ MonoBehaviour:
   pourStreamParticles: {fileID: 8404641178351176683}
   targetZoneCanvas: {fileID: 2716178978899119352}
   targetZoneImage: {fileID: 8639694219080879553}
+  foamThickness: 0.05
 --- !u!65 &1561451122246041554
 BoxCollider:
   m_ObjectHideFlags: 0
