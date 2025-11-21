@@ -277,51 +277,74 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         StartCoroutine(AnimateFoamRise());
     }
 
-    private IEnumerator AnimateFoamRise()
+   // csharp
+private IEnumerator AnimateFoamRise()
+{
+    float foamStartHeight = fillLevel;
+    float foamDuration = 0.5f;
+    float elapsed = 0f;
+    
+    // Calculate how much foam can actually rise based on quality
+    float maxFoamRise = pourQuality switch
     {
-        float foamStartHeight = fillLevel;
-        float foamDuration = 0.5f;
-        float elapsed = 0f;
-        
-        // Calculate how much foam can actually rise based on quality
-        float maxFoamRise = pourQuality switch
-        {
-            PourQuality.Perfect => desiredFoamHeight, // Full foam rise
-            PourQuality.Good => desiredFoamHeight * 0.7f,
-            PourQuality.Acceptable => desiredFoamHeight * 0.4f,
-            PourQuality.Poor => desiredFoamHeight * 0.2f,
-            _ => 0f
-        };
-        
-        //float finalFoamHeight = Mathf.Min(foamStartHeight + maxFoamRise, 1.0f);
-        
-        float finalFoamHeight = foamStartHeight + maxFoamRise;
-        // Animate foam rising
-        while (elapsed < foamDuration)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / foamDuration;
-            
-            float currentFoamHeight = Mathf.Lerp(foamStartHeight, finalFoamHeight, t);
-            
-            if (beerMatInstance != null)
-            {
-                beerMatInstance.SetFloat("_FoamHeight", currentFoamHeight * meshHeight);
-                beerMatInstance.SetColor("_FoamColor", foamColor);
-            }
-            
-            yield return null;
-        }
-        
-        // Trigger overflow particles if foam exceeded the target
-        if (finalFoamHeight > targetZoneMax && foamOverflowParticles != null)
-        {
-            Debug.Log("Foam overflow! Playing overflow particles.");
-            var main = foamOverflowParticles.main;
-            main.startColor = new ParticleSystem.MinMaxGradient(foamColor);
-            foamOverflowParticles.Play();
-        }
+        PourQuality.Perfect => desiredFoamHeight, // Full foam rise
+        PourQuality.Good => desiredFoamHeight * 0.7f,
+        PourQuality.Acceptable => desiredFoamHeight * 0.4f,
+        PourQuality.Poor => desiredFoamHeight * 0.2f,
+        _ => 0f
+    };
+    
+    // Cap foam to top of the mesh to avoid sending values beyond shader capacity
+    float finalFoamHeight = foamStartHeight + maxFoamRise;
+    bool cappedToTop = false;
+    if (finalFoamHeight > 1.0f)
+    {
+        finalFoamHeight = 1.0f;
+        cappedToTop = true;
     }
+    
+    // Animate foam rising
+    while (elapsed < foamDuration)
+    {
+        elapsed += Time.deltaTime;
+        float t = elapsed / foamDuration;
+        
+        if (cappedToTop)
+        {
+            // If capped, use ease-out for a softer finish
+            t = Mathf.Sin(t * Mathf.PI * 0.5f);
+        }
+        else
+        {
+            // Standard ease-in-out
+            t = t * t * (3f - 2f * t);
+        }
+        
+        float currentFoamHeight = Mathf.Lerp(foamStartHeight, finalFoamHeight, t);
+        
+        if (currentFoamHeight > 1.0f)
+            currentFoamHeight = 1.0f;
+        
+        if (beerMatInstance != null)
+        {
+            // Ensure shader gets a clamped height in world/object units
+            beerMatInstance.SetFloat("_FoamHeight", Mathf.Clamp01(currentFoamHeight) * meshHeight);
+            beerMatInstance.SetColor("_FoamColor", foamColor);
+            
+        }
+        
+        yield return null;
+    }
+    
+    // Trigger overflow particles if foam exceeded the target or reached the top
+    if ((finalFoamHeight > targetZoneMax || finalFoamHeight >= 1.0f) && foamOverflowParticles != null)
+    {
+        var main = foamOverflowParticles.main;
+        main.startColor = new ParticleSystem.MinMaxGradient(foamColor);
+        foamOverflowParticles.Play();
+    }
+}
+
 
     public void ShowTargetZone()
     {
