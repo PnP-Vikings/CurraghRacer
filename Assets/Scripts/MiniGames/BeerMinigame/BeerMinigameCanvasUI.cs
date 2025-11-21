@@ -15,6 +15,9 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
     [Tooltip("Perfect streak display at top-right")]
     public TMP_Text perfectStreakText;
     
+    [Tooltip("Pour Result Feedback Text")]
+    public TMP_Text pourResultText;
+    
     [Tooltip("Round feedback text")]
     public TMP_Text roundFeedbackText;
     
@@ -77,6 +80,8 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
             PourQuality.Poor => "Poor",
             _ => ""
         };
+        
+        StartCoroutine(ShowPourResultFeedback(quality));
 
         string resultText = $"{qualityText} +{points}";
         if (multiplier > 1.0f && quality == PourQuality.Perfect)
@@ -86,7 +91,44 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
 
         Debug.Log($"Tap {tapIndex + 1}: {resultText}");
         
-        // Could add visual popup here if needed
+       
+    }
+    
+   public IEnumerator ShowPourResultFeedback(PourQuality quality)
+    {
+        if (pourResultText != null)
+        {
+            pourResultText.gameObject.SetActive(true);
+            switch (quality)
+            {
+                case PourQuality.Perfect:
+                    pourResultText.text = "PERFECT POUR!";
+                    pourResultText.color = Color.green;
+                    break;
+                case PourQuality.Good:
+                    pourResultText.text = "Good Pour";
+                    pourResultText.color = Color.cyan;
+                    break;  
+                case PourQuality.Acceptable:
+                    pourResultText.text = "Acceptable Pour";
+                    pourResultText.color = Color.yellow;
+                    break;
+                case PourQuality.Poor:
+                    pourResultText.text = "Poor Pour";
+                    pourResultText.color = Color.red;
+                    break;
+                default:
+                    pourResultText.text = "";
+                    pourResultText.color = Color.white;
+                    break;
+            }
+        }
+        yield return new WaitForSeconds(1f);
+
+        if (pourResultText != null)
+        {
+            pourResultText.gameObject.SetActive(false);
+        }
     }
 
     public IEnumerator ShowRoundSummary(int roundNum, int totalRounds, int basePoints, int bonusPoints, int totalPoints, int currentStreak)
