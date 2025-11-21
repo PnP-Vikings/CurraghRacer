@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -16,7 +17,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     
     public bool isActive; // can be toggled off to pause pouring
     [Range(0,1)] public float fillLevel;    // normalized 0–1
-    public float   pourSpeed = 0.5f;       // fill units per second
+    public float pourSpeed = 0.5f;       // fill units per second
     public bool beerComplete; // is the beer glass full?
     public bool isPlaced; // is the beer glass placed?
     bool isPouring;
@@ -41,6 +42,8 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     [Header("Foam Appearance")]
     [Range(0.01f, 0.15f)]
     public float foamThickness = 0.05f;
+    [Range(0f, 2f)]
+    public float desiredFoamHeight = 0.0f;
     
     public void AssignBeerType(BeerType type)
     {
@@ -58,37 +61,42 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     
     public void ProcessBeerType()
     {
-        // Implement logic based on beer type
         switch (beerType)
         {
             case BeerType.Lager:
                 pourSpeed = 0.47f; 
                 beerColor = Color.yellow;
                 foamThickness = 0.04f;
+                desiredFoamHeight = 0.7f;
                 break;
             case BeerType.Ale:
                 pourSpeed = 0.4f; // slower pour speed for Ale
                 beerColor = new Color(0.8f, 0.5f, 0.2f); // brownish
                 foamThickness = 0.06f;
+                desiredFoamHeight = 0.75f;
                 break;
             case BeerType.Stout:
                 pourSpeed = 0.35f; // even slower pour speed for Stout
                 beerColor = new Color(0.1f, 0.1f, 0.1f); // dark
                 foamThickness = 0.14f;
+                desiredFoamHeight = 1.0f;
                 break;
             case BeerType.IPA:
                 pourSpeed = 0.45f; // medium pour speed for IPA
                 beerColor = new Color(1f, 0.6f, 0.2f); // amber
                 foamThickness = 0.05f;
+                desiredFoamHeight = 0.8f;
                 break;
             case BeerType.Pilsner:
                 pourSpeed = 0.5f; // standard pour speed for Pilsner
                 beerColor = new Color(1f, 0.9f, 0.5f); // light yellow
                 foamThickness = 0.04f;
+                desiredFoamHeight = 0.65f;
                 break;
             default:
                 beerColor = Color.yellow;
                 foamThickness = 0.05f;
+                desiredFoamHeight = 0.8f;
                 break;
         }
         SetBeerTypeText();
@@ -140,6 +148,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             // This line makes the beer rise in real-time as you pour
             float cutoff = Mathf.Clamp01(fillLevel) * meshHeight;
             beerMatInstance.SetFloat("_CutoffHeight", cutoff);
+           // beerMatInstance.SetFloat("_FoamHeight", foamHeight * meshHeight);
             beerMatInstance.SetFloat("_FoamThickness", foamThickness);
         }
         
@@ -181,6 +190,7 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         // Start pour stream particles and set color dynamically
         if (pourStreamParticles != null)
         {
+            Debug.Log($"Starting pour particles with color {beerColor} for beer at {transform.position}");
             var main = pourStreamParticles.main;
             main.startColor = new ParticleSystem.MinMaxGradient(beerColor);
             pourStreamParticles.Play();
@@ -229,7 +239,8 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         ShowTargetZone();
     }
 
-    public PourQuality LockPourAndCalculateQuality()
+    
+    public void LockPourAndCalculateQuality()
     {
         isLocked = true;
         isPouring = false;
@@ -258,53 +269,57 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             pourQuality = PourQuality.Poor;
         }
-        beerComplete = true; // Mark beer as complete when locked
+        
+        beerComplete = true;
         Debug.Log($"Pour locked at level {fillLevel:F2}, Quality: {pourQuality}");
-        UpdateFoamAppearance();
-        return pourQuality;
+        
+        // Start foam animation from current fill level
+        StartCoroutine(AnimateFoamRise());
     }
 
-    public void UpdateFoamAppearance()
+    private IEnumerator AnimateFoamRise()
     {
-        float foamHeight = 0f;
+        float foamStartHeight = fillLevel;
+        float foamDuration = 0.5f;
+        float elapsed = 0f;
         
-        // Set foam height based on quality
-        switch (pourQuality)
+        // Calculate how much foam can actually rise based on quality
+        float maxFoamRise = pourQuality switch
         {
-            case PourQuality.Perfect:
-                foamHeight = fillLevel + 0.05f;
-                break;
-            case PourQuality.Good:
-                foamHeight = fillLevel + 0.08f;
-                break;
-            case PourQuality.Acceptable:
-                foamHeight = fillLevel + 0.12f;
-                break;
-            case PourQuality.Poor:
-                foamHeight = fillLevel + 0.20f;
-                // Trigger overflow particles if overfilled
-                if (fillLevel > targetZoneMax && foamOverflowParticles != null)
-                {
-                    var main = foamOverflowParticles.main;
-                    main.startColor = new ParticleSystem.MinMaxGradient(foamColor);
-                    
-                    if (foamOverflowParticles.isPlaying)
-                    {
-                        foamOverflowParticles.Stop();
-                    }
-                    
-                    foamOverflowParticles.Play();
-                    Debug.Log("Foam overflow particles playing!");
-                }
-                break;
+            PourQuality.Perfect => desiredFoamHeight, // Full foam rise
+            PourQuality.Good => desiredFoamHeight * 0.7f,
+            PourQuality.Acceptable => desiredFoamHeight * 0.4f,
+            PourQuality.Poor => desiredFoamHeight * 0.2f,
+            _ => 0f
+        };
+        
+        //float finalFoamHeight = Mathf.Min(foamStartHeight + maxFoamRise, 1.0f);
+        
+        float finalFoamHeight = foamStartHeight + maxFoamRise;
+        // Animate foam rising
+        while (elapsed < foamDuration)
+        {
+            elapsed += Time.deltaTime;
+            float t = elapsed / foamDuration;
+            
+            float currentFoamHeight = Mathf.Lerp(foamStartHeight, finalFoamHeight, t);
+            
+            if (beerMatInstance != null)
+            {
+                beerMatInstance.SetFloat("_FoamHeight", currentFoamHeight * meshHeight);
+                beerMatInstance.SetColor("_FoamColor", foamColor);
+            }
+            
+            yield return null;
         }
         
-        // Update shader properties (null check)
-        if (beerMatInstance != null)
+        // Trigger overflow particles if foam exceeded the target
+        if (finalFoamHeight > targetZoneMax && foamOverflowParticles != null)
         {
-            beerMatInstance.SetFloat("_FoamHeight", foamHeight * meshHeight);
-            beerMatInstance.SetFloat("_FoamThickness", foamThickness);
-            beerMatInstance.SetColor("_FoamColor", foamColor);
+            Debug.Log("Foam overflow! Playing overflow particles.");
+            var main = foamOverflowParticles.main;
+            main.startColor = new ParticleSystem.MinMaxGradient(foamColor);
+            foamOverflowParticles.Play();
         }
     }
 
