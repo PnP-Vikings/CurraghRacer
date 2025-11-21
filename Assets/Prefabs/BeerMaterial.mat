@@ -43,9 +43,12 @@ Material:
     m_Floats:
     - _CutoffHeight: 0
     - _EnableExternalAlpha: 0
+    - _FoamHeight: 0.065
+    - _FoamThickness: 0.05
     - _ZWrite: 0
     m_Colors:
     - _Color: {r: 1, g: 0.82393306, b: 0.5707547, a: 1}
+    - _FoamColor: {r: 1, g: 1, b: 1, a: 1}
     - _RendererColor: {r: 1, g: 1, b: 1, a: 1}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
