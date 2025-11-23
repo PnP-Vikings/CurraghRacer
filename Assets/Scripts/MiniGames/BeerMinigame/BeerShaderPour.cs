@@ -66,35 +66,41 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             case BeerType.Lager:
                 pourSpeed = 0.47f; 
                 beerColor = Color.yellow;
+                foamColor = Color.white;
                 foamThickness = 0.04f;
                 desiredFoamHeight = 0.7f;
                 break;
             case BeerType.Ale:
                 pourSpeed = 0.4f; // slower pour speed for Ale
                 beerColor = new Color(0.8f, 0.5f, 0.2f); // brownish
+                foamColor = new Color32(255, 253, 208, 255);
                 foamThickness = 0.06f;
                 desiredFoamHeight = 0.75f;
                 break;
             case BeerType.Stout:
                 pourSpeed = 0.35f; // even slower pour speed for Stout
                 beerColor = new Color(0.1f, 0.1f, 0.1f); // dark
+                foamColor = new Color32(210, 180, 140, 255);
                 foamThickness = 0.14f;
                 desiredFoamHeight = 1.0f;
                 break;
             case BeerType.IPA:
                 pourSpeed = 0.45f; // medium pour speed for IPA
                 beerColor = new Color(1f, 0.6f, 0.2f); // amber
+                foamColor = new Color32(250, 240, 230, 255);
                 foamThickness = 0.05f;
                 desiredFoamHeight = 0.8f;
                 break;
             case BeerType.Pilsner:
                 pourSpeed = 0.5f; // standard pour speed for Pilsner
                 beerColor = new Color(1f, 0.9f, 0.5f); // light yellow
+                foamColor = new Color32(255, 255, 240, 255);
                 foamThickness = 0.04f;
                 desiredFoamHeight = 0.65f;
                 break;
             default:
                 beerColor = Color.yellow;
+                foamColor = Color.white;
                 foamThickness = 0.05f;
                 desiredFoamHeight = 0.8f;
                 break;
@@ -209,13 +215,41 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         return position;
     }
 
-    public void SetOrderTarget(float min, float max, Color foam, Vector3 streamOrigin)
+    public void SetOrderTarget(float min, float max, Vector3 streamOrigin)
     {
         targetZoneMin = min;
         targetZoneMax = max;
-        foamColor = foam;
         
         Debug.Log($"SetOrderTarget called - Zone: {min:F2} to {max:F2}, Stream origin: {streamOrigin}");
+        // Base adjustment accounts for foam rise
+        /*targetZoneMin = min - desiredFoamHeight;
+        targetZoneMax = max - desiredFoamHeight;*/
+
+        // Fine-tune per beer type for pouring technique
+        switch (beerType)
+        {
+            case BeerType.Stout:
+                // Stout needs extra room for thick foam
+                targetZoneMin -= 0.05f;
+                targetZoneMax -= 0.05f;
+                break;
+            case BeerType.Ale:
+                targetZoneMin -= 0.02f;
+                targetZoneMax -= 0.02f;
+                break;
+            case BeerType.IPA:
+                // IPA is balanced, no extra adjustment needed
+                break;
+            case BeerType.Lager:
+                targetZoneMin += 0.01f;
+                targetZoneMax += 0.01f;
+                break;
+            case BeerType.Pilsner:
+                // Pilsner has minimal foam, target zone slightly higher
+                targetZoneMin += 0.03f;
+                targetZoneMax += 0.03f;
+                break;
+        }
         
         // Position pour stream particles at tap spout
         if (pourStreamParticles != null)

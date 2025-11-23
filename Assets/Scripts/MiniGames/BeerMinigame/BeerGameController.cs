@@ -195,25 +195,7 @@ public class BeerGameController : MonoBehaviour
         
         return orders;
     }
-
-    private Color GetFoamColor(BeerType type)
-    {
-        switch (type)
-        {
-            case BeerType.Lager:
-                return Color.white;
-            case BeerType.Stout:
-                return new Color32(210, 180, 140, 255);
-            case BeerType.Ale:
-                return new Color32(255, 253, 208, 255);
-            case BeerType.IPA:
-                return new Color32(250, 240, 230, 255);
-            case BeerType.Pilsner:
-                return new Color32(255, 255, 240, 255);
-            default:
-                return Color.white;
-        }
-    }
+    
     
     public void BeerDone()
     {
@@ -400,7 +382,7 @@ public class BeerGameController : MonoBehaviour
                 beer.AssignBeerType(order.beerType);
 
                 // Set order target with tap stream origin
-                beer.SetOrderTarget(order.targetZoneMin, order.targetZoneMax, GetFoamColor(order.beerType), tap.GetPourStreamOrigin());
+                beer.SetOrderTarget(order.targetZoneMin, order.targetZoneMax, tap.GetPourStreamOrigin());
 
                 // Assign to pour point
                 tap.associatedPourPoint.beerEnterBoxCollider.currentBeerShaderPour = beer;
