@@ -39,6 +39,17 @@ public class BeerGameController : MonoBehaviour
     private bool roundInProgress;
     private List<PourQuality> orderResults = new List<PourQuality>();
     private int currentOrderIndex;
+    
+    [Header("Performance Tracking")]
+    [SerializeField] private int totalPerfectPours;
+    [SerializeField] private int totalGoodPours;
+    [SerializeField] private int totalAcceptablePours;
+    [SerializeField] private int totalPoorPours;
+    [SerializeField] private int totalBasePoints;
+    [SerializeField] private int totalBonusPoints;
+    [SerializeField] private int totalCombinedPoints;
+    
+    
     private int perfectStreak;
     private float performanceMultiplier = 1.0f;
     
@@ -225,21 +236,41 @@ public class BeerGameController : MonoBehaviour
                 
                 // Get the quality and calculate points
                 PourQuality quality = currentBeer.pourQuality;
-                int basePoints = quality switch
+                int basePoints = 0;
+                
+                    
+                    
+                 switch (quality)
                 {
-                    PourQuality.Perfect => 150,
-                    PourQuality.Good => 100,
-                    PourQuality.Acceptable => 50,
-                    PourQuality.Poor => 20,
-                    _ => 0
+                    case PourQuality.Perfect:
+                        basePoints = 150;
+                        totalPerfectPours++;
+                        break;
+                    case PourQuality.Good :
+                        basePoints = 100;
+                        totalGoodPours++;
+                        break;
+                    case PourQuality.Acceptable :
+                        basePoints = 50;
+                        totalAcceptablePours++;
+                        break;
+                    case PourQuality.Poor:
+                        basePoints = 20;
+                        totalPoorPours++;
+                        break;
+                    default:
+                        basePoints = 0;
+                        break;
                 };
                 
                 // Apply multiplier only for Perfect/Good/Acceptable
                 int finalPoints = basePoints;
+                /*
                 if (quality == PourQuality.Perfect || quality == PourQuality.Good || quality == PourQuality.Acceptable)
                 {
                     finalPoints = Mathf.RoundToInt(basePoints * performanceMultiplier);
                 }
+                */
                 
                 // Update streak
                 if (quality == PourQuality.Perfect)
@@ -280,6 +311,10 @@ public class BeerGameController : MonoBehaviour
                 
                 Debug.Log($"Beer done at tap {tapIndex}. Quality: {quality}, Points: {finalPoints}");
                 
+                totalBasePoints += finalPoints;
+                
+                // Update overall score
+                UpdateScore();
                 // Check if round is complete
                 CheckRoundComplete();
                 
@@ -313,9 +348,9 @@ public class BeerGameController : MonoBehaviour
         }
         
         
-
+        UpdateScore();
         // Show final summary
-        minigameCanvasUI.ShowFinalSummary(orderResults, finalScore, perfectStreak);
+        minigameCanvasUI.ShowFinalSummary(orderResults, totalCombinedPoints, perfectStreak);
 
         // Let MiniGameManager handle completion
         if (MiniGameManager.Instance != null)
@@ -457,45 +492,8 @@ public class BeerGameController : MonoBehaviour
     
     public void UpdateScore()
     {
-        // Calculate round performance
-        int basePoints = 0;
-        int bonusPoints = 0;
-
-        // Get last N results (this round's results)
-        int startIndex = Mathf.Max(0, orderResults.Count - beersInCurrentRound);
-        for (int i = startIndex; i < orderResults.Count; i++)
-        {
-            int baseP = orderResults[i] switch
-            {
-                PourQuality.Perfect => 150,
-                PourQuality.Good => 100,
-                PourQuality.Acceptable => 50,
-                PourQuality.Poor => 20,
-                _ => 0
-            };
-            basePoints += baseP;
-            
-        }
-        
-        for (int i = startIndex; i < orderResults.Count; i++)
-        {
-            if (orderResults[i] == PourQuality.Perfect)
-            {
-                bonusPoints += Mathf.RoundToInt(15 * performanceMultiplier); 
-            }
-            else if (orderResults[i] == PourQuality.Good)
-            {
-                bonusPoints += Mathf.RoundToInt(10 * performanceMultiplier); 
-            }
-            else if (orderResults[i] == PourQuality.Acceptable)
-            {
-                bonusPoints += Mathf.RoundToInt(5 * performanceMultiplier); 
-            }
-        }
-
-        int totalPoints = basePoints +  bonusPoints;
-        
-        minigameCanvasUI.UpdateScore(totalPoints);
+        totalCombinedPoints = totalBasePoints + totalBonusPoints;
+        minigameCanvasUI.UpdateScore(totalCombinedPoints);
     }
 
     private IEnumerator ShowRoundFeedback()
@@ -537,7 +535,10 @@ public class BeerGameController : MonoBehaviour
         }
 
         int totalPoints = basePoints +  bonusPoints;
+        
+        totalBonusPoints += bonusPoints;
 
+        UpdateScore();
         // Show summary
         yield return minigameCanvasUI.ShowRoundSummary(currentRoundIndex + 1, totalRounds, basePoints, bonusPoints, totalPoints, perfectStreak);
 
