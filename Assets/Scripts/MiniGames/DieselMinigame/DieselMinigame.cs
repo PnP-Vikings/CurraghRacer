@@ -12,6 +12,8 @@ namespace MiniGames.DieselMinigame
         private float dieselAmount;
         private float timer;
         public Button dieselButton;
+        public Slider dieselSlider;
+        public Image dieselSliderFill;
         public TextMeshProUGUI dieselText;
         public TextMeshProUGUI resultText;
         public TextMeshProUGUI timerText;
@@ -43,6 +45,23 @@ namespace MiniGames.DieselMinigame
 
             dieselText.text = dieselAmount.ToString();
             timerText.text = timer.ToString();
+            dieselSlider.value = dieselAmount;
+            //dieselSliderFill.color = Color.Lerp(Color.green, Color.red, dieselAmount / 10);
+
+            if (dieselSlider.value > 0 && dieselSlider.value < 5)
+            {
+                dieselSliderFill.color = Color.yellow;
+            }
+
+            else if (dieselSlider.value >= 5 && dieselSlider.value <= 7)
+            {
+                dieselSliderFill.color = Color.green;
+            }
+
+            else
+            {
+                dieselSliderFill.color = Color.red;
+            }
 
             if (dieselAmount >= 10)
             {
