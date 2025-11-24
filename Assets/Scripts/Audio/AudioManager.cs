@@ -16,7 +16,10 @@ public class AudioManager : MonoBehaviour
     public EventInstance raceAmbience;
     public EventInstance raceWin;
     public EventInstance raceLose;
-        // Garage
+    // Garage
+
+    public EventInstance hasJustWonRaceReport1;
+
     public EventInstance radioSong1;
     public EventInstance radioSong2;
     public EventInstance radioSong3;
@@ -96,6 +99,8 @@ public class AudioManager : MonoBehaviour
         UIClick2 = RuntimeManager.CreateInstance("event:/UI/Click 2");
 
         deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
+
+        hasJustWonRaceReport1 = RuntimeManager.CreateInstance("event:/Radio/Has Just Won Race Report 1");
 
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");

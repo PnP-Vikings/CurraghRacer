@@ -47,7 +47,7 @@ public class RaceManager : MonoBehaviour
     
     [SerializeField]
     private FinishMenu finishMenu;
-    
+    public bool hasWonRace = false;
     
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
@@ -716,6 +716,8 @@ public class RaceManager : MonoBehaviour
             if (RaceMovementPositions[0].isPlayerShip)
             {
                 Debug.Log("Player finished first!");
+                hasWonRace = true;
+                //Debug.Log(hasWonRace);
                 if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && LeagueController.Instance.currentLeague.isFinished)
                 {
                     finishMenu.UpdatePlayerMessage(true, "You are the champion!");
