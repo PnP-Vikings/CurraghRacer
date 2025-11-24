@@ -10,6 +10,7 @@ public class RadioManager : MonoBehaviour
     public PLAYBACK_STATE radioAdOrNews2PlaybackState;
     public PLAYBACK_STATE radioAdOrNews3PlaybackState;
     public PLAYBACK_STATE radioAdOrNews4PlaybackState;
+    public PLAYBACK_STATE radioAdOrNews5PlaybackState;
     private bool radioAdOrNewsHasJustPlayed = false;
 
     void Awake()
@@ -57,8 +58,9 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioAdOrNews2.getPlaybackState(out radioAdOrNews2PlaybackState);   
             AudioManager.instance.radioAdOrNews3.getPlaybackState(out radioAdOrNews3PlaybackState);   
             AudioManager.instance.radioAdOrNews4.getPlaybackState(out radioAdOrNews4PlaybackState);   
+            AudioManager.instance.radioAdOrNews5.getPlaybackState(out radioAdOrNews5PlaybackState);   
 
-            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING)   // if either of the playback states are "stopping" a song starts
+            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING)   // if either of the playback states are "stopping" a song starts
             {
                 PlayRadioSong();
             }
@@ -66,7 +68,7 @@ public class RadioManager : MonoBehaviour
 
         if (radioAdOrNewsHasJustPlayed)                                                                // if the news has just played (boolean is true)
         {
-            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED) // AND if either of the playback states are "stopped" the coroutine is called
+            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED) // AND if either of the playback states are "stopped" the coroutine is called
             {
                 StartCoroutine(RadioCoroutine());                                          
                 radioAdOrNewsHasJustPlayed = false;                                                    // the news has just played bool is reset
@@ -100,6 +102,7 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioAdOrNews2.setParameterByName("Radio Ad or News 2 Volume", 0f);
             AudioManager.instance.radioAdOrNews3.setParameterByName("Radio Ad or News 3 Volume", 0f);
             AudioManager.instance.radioAdOrNews4.setParameterByName("Radio Ad or News 4 Volume", 0f);
+            AudioManager.instance.radioAdOrNews5.setParameterByName("Radio Ad or News 5 Volume", 0f);
         }
     }
 
@@ -115,12 +118,13 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioAdOrNews2.setParameterByName("Radio Ad or News 2 Volume", 1f);
             AudioManager.instance.radioAdOrNews3.setParameterByName("Radio Ad or News 3 Volume", 1f);
             AudioManager.instance.radioAdOrNews4.setParameterByName("Radio Ad or News 4 Volume", 1f);
+            AudioManager.instance.radioAdOrNews5.setParameterByName("Radio Ad or News 5 Volume", 1f);
         }
     }
 
     private void PlayRadioSong()
     {
-        int randomNumber = Random.Range(1, 5);
+        int randomNumber = Random.Range(1, 6);
 
         if (AudioManager.instance != null)
         {
@@ -144,12 +148,17 @@ public class RadioManager : MonoBehaviour
                 StopAllRadioSongs();
                 AudioManager.instance.radioSong4.start();
             }
+            else if (randomNumber == 5)
+            {
+                StopAllRadioSongs();
+                AudioManager.instance.radioSong5.start();
+            }
         }
     }
 
     private void PlayRadioAdOrNews()
     {
-        int randomNumber = Random.Range(1, 5);
+        int randomNumber = Random.Range(1, 6);
 
         if (AudioManager.instance != null)
         {
@@ -168,6 +177,9 @@ public class RadioManager : MonoBehaviour
             else if (randomNumber == 4)
             {
                 AudioManager.instance.radioAdOrNews4.start();
+            } else if (randomNumber == 5)
+            {
+                AudioManager.instance.radioAdOrNews5.start();
             }
         }
     }
@@ -179,6 +191,7 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioSong2.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioSong3.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioSong4.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.radioSong5.stop(STOP_MODE.ALLOWFADEOUT);
         }
     }
 }
