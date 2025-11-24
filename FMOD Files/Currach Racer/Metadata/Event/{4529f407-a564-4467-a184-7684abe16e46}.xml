@@ -59,7 +59,11 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{3c37ade4-e0ec-4ab6-94b4-a64fa27a823e}" />
+	<object class="EventAutomatableProperties" id="{3c37ade4-e0ec-4ab6-94b4-a64fa27a823e}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{91bd2121-2069-4281-b83e-8df968957374}" />
 	<object class="GroupTrack" id="{a7e30007-6e3a-4d66-b892-f4eed0462aa2}">
 		<relationship name="automationTracks">
@@ -112,7 +116,7 @@
 			<value>11.5</value>
 		</property>
 		<property name="volume">
-			<value>-3</value>
+			<value>-5</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{c0cf0c17-1ee8-4f79-91fc-9626eb54970c}</destination>
