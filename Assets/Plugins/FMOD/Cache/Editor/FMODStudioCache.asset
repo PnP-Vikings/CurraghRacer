@@ -411,10 +411,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638995890978443390
+  lastModified: 638996017319495046
   FileSizes:
   - Name: 
-    Value: 4718
+    Value: 4694
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -705,30 +705,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 58000
---- !u!114 &-3787587387735533786
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Has Just Won Race Report 1/Has Just Won Race Report 1
-  m_EditorClassIdentifier: 
-  Name: Has Just Won Race Report 1
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 2819851566
-    data2: 4035980158
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &-3610987396062805549
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1046,6 +1022,34 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4149
+--- !u!114 &-917604697180666674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Radio/Story Update 2
+  m_EditorClassIdentifier: 
+  Path: event:/Radio/Story Update 2
+  Guid:
+    Data1: 250094651
+    Data2: 1314049360
+    Data3: 924793242
+    Data4: -596783812
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters:
+  - {fileID: 4810764203811837013}
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 7000
 --- !u!114 &-398954281770706825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1201,13 +1205,13 @@ MonoBehaviour:
   - {fileID: 5387323638058673786}
   - {fileID: -2304228088362976956}
   - {fileID: 4072023337267351743}
-  - {fileID: 3001692277710250032}
+  - {fileID: -917604697180666674}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638995890978443390
+  cacheTime: 638996017319495046
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1523,34 +1527,6 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
---- !u!114 &3001692277710250032
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
-  m_Name: event:/Radio/Has Just Won Race Report 1
-  m_EditorClassIdentifier: 
-  Path: event:/Radio/Has Just Won Race Report 1
-  Guid:
-    Data1: 250094651
-    Data2: 1314049360
-    Data3: 924793242
-    Data4: -596783812
-  Banks:
-  - {fileID: 7439203710798878255}
-  IsStream: 1
-  Is3D: 0
-  IsOneShot: 1
-  Parameters:
-  - {fileID: -3787587387735533786}
-  MinDistance: 1
-  MaxDistance: 20
-  Length: 7000
 --- !u!114 &3018574291482389872
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1795,6 +1771,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3000
+--- !u!114 &4810764203811837013
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Story Update 2/Story Update 2
+  m_EditorClassIdentifier: 
+  Name: Story Update 2
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 2819851566
+    data2: 4035980158
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &5139689008638949749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2100,7 +2100,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638995890978382909
+  lastModified: 638996017319459876
   FileSizes: []
   Exists: 1
 --- !u!114 &8155522247790703682
