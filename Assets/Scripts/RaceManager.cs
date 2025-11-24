@@ -716,7 +716,7 @@ public class RaceManager : MonoBehaviour
             if (RaceMovementPositions[0].isPlayerShip)
             {
                 Debug.Log("Player finished first!");
-                hasJustWonRace = true;
+                
                 //Debug.Log(hasWonRace);
                 if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && LeagueController.Instance.currentLeague.isFinished)
                 {
@@ -729,6 +729,7 @@ public class RaceManager : MonoBehaviour
                
                 if (isRaceDay)
                 {
+                    hasJustWonRace = true;
                     if (PlayerManager.Instance != null)
                     {
                         PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins

@@ -59,7 +59,11 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{7b7b7a97-e052-4ecb-88b6-e29dc66c20de}" />
+	<object class="EventAutomatableProperties" id="{7b7b7a97-e052-4ecb-88b6-e29dc66c20de}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{ecfca3e4-3106-44ad-977c-7729c8e8dca1}" />
 	<object class="GroupTrack" id="{14be7065-77f4-4c93-9ce9-5276c1c3a6a6}">
 		<relationship name="automationTracks">
@@ -115,7 +119,7 @@
 			<value>0.15000000000000002</value>
 		</property>
 		<property name="volume">
-			<value>-7</value>
+			<value>-9</value>
 		</property>
 		<relationship name="fadeOutCurve">
 			<destination>{a70dcf61-4b8a-410b-a22e-35868ec4d1b2}</destination>
