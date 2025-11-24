@@ -229,7 +229,7 @@
 			<value>1400</value>
 		</property>
 		<property name="releaseShape">
-			<value>-0.429262608</value>
+			<value>-0.271852672</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>
@@ -276,7 +276,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>2000</value>
+			<value>3000</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{4015b391-ebfc-4ec6-8f1b-b3fe65d3258f}">
