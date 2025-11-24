@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
+
 public class RaycastSelectionManager : MonoBehaviour
 {
   private const string _selectableTag = "Selectable";
@@ -19,21 +20,23 @@ public class RaycastSelectionManager : MonoBehaviour
     bool inputDetected = false;
     Vector2 inputPosition = Vector2.zero;
 
-    // Check for touch input first (mobile)
-    var ts = Touchscreen.current;
-    if (ts != null && ts.primaryTouch.press.wasPressedThisFrame)
+    // Use new input helper to read primary pointer position (works for touch and mouse)
+    if (InputHelpers.TryGetPrimaryPointerPosition(out inputPosition))
     {
-      inputDetected = true;
-      inputPosition = ts.primaryTouch.position.ReadValue();
-    }
-    // Fall back to mouse input (desktop/editor)
-    else if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
-    {
-      inputDetected = true;
-      inputPosition = Mouse.current.position.ReadValue();
+      // If we have input we also have a pointer press state - filter by performed press for selection
+      // For touch we want wasPressedThisFrame; for mouse we want leftButton.wasPressedThisFrame
+      var ts = Touchscreen.current;
+      if (ts != null && ts.primaryTouch.press.wasPressedThisFrame)
+      {
+        inputDetected = true;
+      }
+      else if (Mouse.current != null && Mouse.current.leftButton.wasPressedThisFrame)
+      {
+        inputDetected = true;
+      }
     }
 
-    if (inputDetected && !EventSystem.current.IsPointerOverGameObject())
+    if (inputDetected && !InputHelpers.IsPointerOverUI(inputPosition))
     {
       if (_lastSelectedStack != null)
       {
@@ -45,7 +48,7 @@ public class RaycastSelectionManager : MonoBehaviour
       var ray = GetRayOnInputPosition(inputPosition);
       RaycastHit rayCastHit;
 
-      if (!EventSystem.current.IsPointerOverGameObject() && Physics.Raycast(ray, out rayCastHit, 500.0f))
+      if (!InputHelpers.IsPointerOverUI(inputPosition) && Physics.Raycast(ray, out rayCastHit, 500.0f))
       {
         //Debug.DrawRay(ray.origin, ray.direction * rayCastHit.distance, Color.green, 5.0f);
         if (rayCastHit.transform.CompareTag(_selectableTag))
@@ -63,7 +66,7 @@ public class RaycastSelectionManager : MonoBehaviour
           //_gameFTController.SelectedStack = null;
           _lastSelectedStack = null;
         }
-        
+
       }
     }
   }

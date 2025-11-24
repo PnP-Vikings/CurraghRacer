@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -11,12 +12,14 @@ public class RowingRhythmController : MonoBehaviour
   private static readonly int IsRowing = Animator.StringToHash("isRowing");
   private static readonly int RowSpeed = Animator.StringToHash("RowSpeed");
   public Button leftButton, rightButton;
+  private PlayerInputs playerInputs;
   
   public RectTransform leftPaddleTarget,leftPaddleSpawnPoint;
   public RectTransform rightPaddleTarget,rightPaddleSpawnPoint;
   
   public GameObject rightPaddlePrefab,leftPaddlePrefab;
   
+  public RhythmCanvas rhythmCanvas;
   public Canvas rowingRhythmCanvas;
   public MinigameCanvasUI minigameCanvasUI;
   
@@ -43,7 +46,22 @@ public class RowingRhythmController : MonoBehaviour
   private bool hasStartedRowing = false;
   private bool rowingAudioHasStarted = false;
 
-
+  private void StartGame()
+  {
+    if (minigameCanvasUI != null)
+    {
+      minigameCanvasUI.SetUpUI(true,true,true,true);
+    }
+    
+    currentSpeed = startingSpeed;
+    gameActive = true;
+    score = 0;
+    currentLives = maxLives; // Reset lives
+    StartAnimatePaddles();
+    PlaceInitialObstacles();
+    StartCoroutine(IncreaseSpeedOverTime(speedIncreaseInterval));
+    StartCoroutine(IncreaseRowingSpeedOverTime(speedIncreaseInterval));
+  }
     private void PlaceInitialObstacles()
   {
     for (int i = 0; i < spawnAmount; i++)
@@ -168,6 +186,37 @@ public class RowingRhythmController : MonoBehaviour
     return baseYOffset;
   }
 
+  public void OnEnable()
+  {
+    
+    playerInputs = new PlayerInputs();
+    playerInputs.RythmGame.Enable();
+
+
+    playerInputs.RythmGame.LeftPaddle.performed += OnLeftInput;
+    playerInputs.RythmGame.RightPaddle.performed +=  OnRightInput;
+  }
+  
+  private void OnRightInput(InputAction.CallbackContext context)
+  {
+    CheckPaddleOnRight();
+  }
+
+  private void OnLeftInput(InputAction.CallbackContext context)
+  {
+    CheckPaddleOnLeft();
+  }
+
+  public void OnDisable()
+  {
+    if (playerInputs != null)
+    {
+      playerInputs.RythmGame.Disable();
+      playerInputs.RythmGame.LeftPaddle.performed -= OnLeftInput;
+      playerInputs.RythmGame.RightPaddle.performed -= OnRightInput;
+    }
+  }
+
   private void Start()
   {
     SwipeGesture swipeGesture = GetComponent<SwipeGesture>();
@@ -185,6 +234,7 @@ public class RowingRhythmController : MonoBehaviour
     {
       rightButton.onClick.AddListener(CheckPaddleOnRight);
     }
+   
     
     StartGame();
   }
@@ -236,6 +286,8 @@ public class RowingRhythmController : MonoBehaviour
         paddle.SetActive(false);
         inactiveleftPaddle.Add(paddle);
         
+        
+        
         if (gameActive) // Only spawn new paddles if game is still active
         {
           SpawnRandomPaddles();
@@ -270,6 +322,7 @@ public class RowingRhythmController : MonoBehaviour
     currentLives--;
     Debug.Log("Lives remaining: " + currentLives);
     paddlesHitInRow = 0f; // Reset row counter on miss
+    ShowHitFeedback(PaddleHitResult.Miss);
     StopPaddleAnimations();
     
     if (currentLives <= 0)
@@ -335,17 +388,66 @@ public class RowingRhythmController : MonoBehaviour
         }
       }
       
-      if (closestPaddle != null && closestDistance <= 50f) // Acceptable hit range
+      // Define hit zones
+      float perfectRange = 20f;
+      float goodRange = 50f;
+      float acceptableRange = 100f;
+      
+      if (closestPaddle != null && closestDistance <= acceptableRange)
       {
-        Debug.Log("Hit Left Paddle - Distance: " + closestDistance);
-        // Successful hit
-        score += 10;
+        PaddleHitResult hitResult;
+        int scoreGained = 0;
+        
+        // Determine hit quality based on distance
+        if (closestDistance <= perfectRange)
+        {
+          hitResult = PaddleHitResult.Perfect;
+          scoreGained = 10;
+          Debug.Log("Perfect Hit! Distance: " + closestDistance);
+        }
+        else if (closestDistance <= goodRange)
+        {
+          // Check if paddle is above or below target to determine Early/Late
+          float verticalDiff = closestPaddle.transform.position.y - leftPaddleTarget.position.y;
+          if (verticalDiff > 0)
+          {
+            hitResult = PaddleHitResult.Early;
+            Debug.Log("Early Hit! Distance: " + closestDistance);
+          }
+          else
+          {
+            hitResult = PaddleHitResult.Late;
+            Debug.Log("Late Hit! Distance: " + closestDistance);
+          }
+          scoreGained = 5;
+        }
+        else
+        {
+          // Too far but still within acceptable range
+          float verticalDiff = closestPaddle.transform.position.y - leftPaddleTarget.position.y;
+          hitResult = verticalDiff > 0 ? PaddleHitResult.Early : PaddleHitResult.Late;
+          scoreGained = 2;
+          Debug.Log("Barely Hit! Distance: " + closestDistance);
+        }
+        
+        // Apply hit
+        score += scoreGained;
         activeLeftPaddle.RemoveAt(closestIndex);
         closestPaddle.SetActive(false);
         inactiveleftPaddle.Add(closestPaddle);
-        paddlesHitInRow++;
+        
+        if (hitResult == PaddleHitResult.Perfect)
+        {
+          paddlesHitInRow++;
+        }
+        else
+        {
+          paddlesHitInRow = 0; // Reset combo on non-perfect hits
+        }
+        
         AnimatePaddles();
-        SpawnRandomPaddles(); // Spawn new random paddles
+        SpawnRandomPaddles();
+        ShowHitFeedback(hitResult);
 
         if (AudioManager.instance != null)
         {
@@ -354,6 +456,21 @@ public class RowingRhythmController : MonoBehaviour
       }
       else
       {
+        Debug.Log("Missed Left Paddle - Auto detected");
+        if (closestPaddle != null)
+        {
+          HandleMissedPaddle();
+          activeLeftPaddle.Remove(closestPaddle);
+
+          closestPaddle.SetActive(false);
+          inactiveleftPaddle.Add(closestPaddle);
+
+          if (gameActive) // Only spawn new paddles if game is still active
+          {
+            SpawnRandomPaddles();
+          }
+        }
+
         Debug.Log("Swipe too early or too late - Distance: " + closestDistance);
       }
     }
@@ -382,17 +499,66 @@ public class RowingRhythmController : MonoBehaviour
         }
       }
       
-      if (closestPaddle != null && closestDistance <= 50f) // Acceptable hit range
+      // Define hit zones
+      float perfectRange = 20f;
+      float goodRange = 50f;
+      float acceptableRange = 100f;
+      
+      if (closestPaddle != null && closestDistance <= acceptableRange)
       {
-        Debug.Log("Hit Right Paddle - Distance: " + closestDistance);
-        // Successful hit
-        score += 10;
+        PaddleHitResult hitResult;
+        int scoreGained = 0;
+        
+        // Determine hit quality based on distance
+        if (closestDistance <= perfectRange)
+        {
+          hitResult = PaddleHitResult.Perfect;
+          scoreGained = 10;
+          Debug.Log("Perfect Hit! Distance: " + closestDistance);
+        }
+        else if (closestDistance <= goodRange)
+        {
+          // Check if paddle is above or below target to determine Early/Late
+          float verticalDiff = closestPaddle.transform.position.y - rightPaddleTarget.position.y;
+          if (verticalDiff > 0)
+          {
+            hitResult = PaddleHitResult.Early;
+            Debug.Log("Early Hit! Distance: " + closestDistance);
+          }
+          else
+          {
+            hitResult = PaddleHitResult.Late;
+            Debug.Log("Late Hit! Distance: " + closestDistance);
+          }
+          scoreGained = 5;
+        }
+        else
+        {
+          // Too far but still within acceptable range
+          float verticalDiff = closestPaddle.transform.position.y - rightPaddleTarget.position.y;
+          hitResult = verticalDiff > 0 ? PaddleHitResult.Early : PaddleHitResult.Late;
+          scoreGained = 2;
+          Debug.Log("Barely Hit! Distance: " + closestDistance);
+        }
+        
+        // Apply hit
+        score += scoreGained;
         activeRightPaddle.RemoveAt(closestIndex);
         closestPaddle.SetActive(false);
         inactiveRightPaddle.Add(closestPaddle);
-        SpawnRandomPaddles(); // Spawn new random paddles
-        paddlesHitInRow++;
+        
+        if (hitResult == PaddleHitResult.Perfect)
+        {
+          paddlesHitInRow++;
+        }
+        else
+        {
+          paddlesHitInRow = 0; // Reset combo on non-perfect hits
+        }
+        
         AnimatePaddles();
+        SpawnRandomPaddles();
+        ShowHitFeedback(hitResult);
 
         if (AudioManager.instance != null)
         {
@@ -401,6 +567,21 @@ public class RowingRhythmController : MonoBehaviour
       }
       else
       {
+        Debug.Log("Missed Right Paddle - Auto detected");
+        if (closestPaddle != null)
+        {
+          HandleMissedPaddle();
+          activeRightPaddle.Remove(closestPaddle);
+
+          closestPaddle.SetActive(false);
+          inactiveRightPaddle.Add(closestPaddle);
+
+          if (gameActive) // Only spawn new paddles if game is still active
+          {
+            SpawnRandomPaddles();
+          }
+        }
+
         Debug.Log("Swipe too early or too late - Distance: " + closestDistance);
       }
     }
@@ -447,22 +628,7 @@ public class RowingRhythmController : MonoBehaviour
         }
   }
   
-  private void StartGame()
-  {
-    if (minigameCanvasUI != null)
-    {
-      minigameCanvasUI.SetUpUI(true,true,true,true);
-    }
-    
-    currentSpeed = startingSpeed;
-    gameActive = true;
-    score = 0;
-    currentLives = maxLives; // Reset lives
-    StartAnimatePaddles();
-    PlaceInitialObstacles();
-    StartCoroutine(IncreaseSpeedOverTime(speedIncreaseInterval));
-    StartCoroutine(IncreaseRowingSpeedOverTime(speedIncreaseInterval));
-  }
+ 
   
   IEnumerator IncreaseSpeedOverTime(float interval)
   {
@@ -495,5 +661,35 @@ public class RowingRhythmController : MonoBehaviour
             }
     } 
   }
+  
+  public void ShowHitFeedback(PaddleHitResult feedback)
+  {
+    if (rhythmCanvas != null)
+    {
+      switch (feedback)
+      {
+        case PaddleHitResult.Miss:
+          rhythmCanvas.ShowHitFeedback("Miss!", feedback, 1f);
+          break;
+        case PaddleHitResult.Early:
+          rhythmCanvas.ShowHitFeedback("Early!", feedback, 1f);
+          break;
+        case PaddleHitResult.Perfect:
+          rhythmCanvas.ShowHitFeedback("Perfect!", feedback, 1f);
+          break;
+        case PaddleHitResult.Late:
+          rhythmCanvas.ShowHitFeedback("Late!", feedback, 1f);
+          break;
+      }
+    }
+  }
+}
+
+public enum PaddleHitResult
+{
+  Miss,
+  Early,
+  Perfect,
+  Late
 }
 

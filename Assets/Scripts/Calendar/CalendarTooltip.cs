@@ -91,7 +91,9 @@ namespace Calendar
             tooltipText.overflowMode = TextOverflowModes.Overflow;
 
             // Convert mouse to canvas local space
-            Vector2 mouse = Input.mousePosition;
+            Vector2 mouse;
+            if (!InputHelpers.TryGetPrimaryPointerPosition(out mouse))
+                return;
             Vector2 mouseLocal;
             if (!RectTransformUtility.ScreenPointToLocalPointInRectangle(
                     canvasRect, mouse, parentCanvas.worldCamera, out mouseLocal))
@@ -240,8 +242,10 @@ namespace Calendar
                 RectTransform tooltipRect = tooltipPanel.GetComponent<RectTransform>();
                 if (canvasRect == null || tooltipRect == null) return;
 
-                Vector2 mouse = Input.mousePosition;
+                Vector2 mouse;
                 Vector2 mouseLocal;
+                if (!InputHelpers.TryGetPrimaryPointerPosition(out mouse))
+                    return;
                 if (RectTransformUtility.ScreenPointToLocalPointInRectangle(
                         canvasRect, mouse, parentCanvas.worldCamera, out mouseLocal))
                 {

@@ -11,7 +11,7 @@ public class BlinkTxt : MonoBehaviour
   public float opacityMax = .6f; // Maximum opacity
   public float currentOpacity;
   private float timer;
-  private bool isVisible = true;
+  //private bool isVisible = true;
     
   void Start()
   {

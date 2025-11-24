@@ -1108,6 +1108,124 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""RythmGame"",
+            ""id"": ""7ec8ef1a-4b15-4123-bfb0-1046fef999f7"",
+            ""actions"": [
+                {
+                    ""name"": ""LeftPaddle"",
+                    ""type"": ""Button"",
+                    ""id"": ""dddfbc8f-091d-4871-8230-db5ea6a54b5a"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""RightPaddle"",
+                    ""type"": ""Button"",
+                    ""id"": ""e82bf9e5-7ebc-4f97-a168-05a61526ed12"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""f63c6dd9-16cc-4ff8-bd00-8e7b0ba80d0a"",
+                    ""path"": ""<Keyboard>/leftArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""LeftPaddle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""79b99889-c10a-43e8-a838-aadc611797f9"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""LeftPaddle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""1b7143d7-5d2f-44f7-a52a-516570b2a1ce"",
+                    ""path"": ""<Keyboard>/rightArrow"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RightPaddle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2329d672-1d7e-489d-9d3f-03511d5e49f5"",
+                    ""path"": ""<Keyboard>/d"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""RightPaddle"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
+        },
+        {
+            ""name"": ""RunningGame"",
+            ""id"": ""e272ab80-cbaa-442e-8f2d-3eb01b270ab0"",
+            ""actions"": [
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""0c5f803a-088a-4a7e-8f23-0cbc9226e6cd"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Slide"",
+                    ""type"": ""Button"",
+                    ""id"": ""e3719129-709a-4295-ae3a-21145abc71c7"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""be87cf57-3231-4645-b900-c69d7772b5f6"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""52ab7a52-b19a-4478-b41a-5cd86301111b"",
+                    ""path"": ""<Keyboard>/ctrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": "";Keyboard&Mouse"",
+                    ""action"": ""Slide"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1197,12 +1315,22 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_UI_ScrollWheel = m_UI.FindAction("ScrollWheel", throwIfNotFound: true);
         m_UI_TrackedDevicePosition = m_UI.FindAction("TrackedDevicePosition", throwIfNotFound: true);
         m_UI_TrackedDeviceOrientation = m_UI.FindAction("TrackedDeviceOrientation", throwIfNotFound: true);
+        // RythmGame
+        m_RythmGame = asset.FindActionMap("RythmGame", throwIfNotFound: true);
+        m_RythmGame_LeftPaddle = m_RythmGame.FindAction("LeftPaddle", throwIfNotFound: true);
+        m_RythmGame_RightPaddle = m_RythmGame.FindAction("RightPaddle", throwIfNotFound: true);
+        // RunningGame
+        m_RunningGame = asset.FindActionMap("RunningGame", throwIfNotFound: true);
+        m_RunningGame_Jump = m_RunningGame.FindAction("Jump", throwIfNotFound: true);
+        m_RunningGame_Slide = m_RunningGame.FindAction("Slide", throwIfNotFound: true);
     }
 
     ~@PlayerInputs()
     {
         UnityEngine.Debug.Assert(!m_Player.enabled, "This will cause a leak and performance issues, PlayerInputs.Player.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputs.UI.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_RythmGame.enabled, "This will cause a leak and performance issues, PlayerInputs.RythmGame.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_RunningGame.enabled, "This will cause a leak and performance issues, PlayerInputs.RunningGame.Disable() has not been called.");
     }
 
     /// <summary>
@@ -1664,6 +1792,220 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="UIActions" /> instance referencing this action map.
     /// </summary>
     public UIActions @UI => new UIActions(this);
+
+    // RythmGame
+    private readonly InputActionMap m_RythmGame;
+    private List<IRythmGameActions> m_RythmGameActionsCallbackInterfaces = new List<IRythmGameActions>();
+    private readonly InputAction m_RythmGame_LeftPaddle;
+    private readonly InputAction m_RythmGame_RightPaddle;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "RythmGame".
+    /// </summary>
+    public struct RythmGameActions
+    {
+        private @PlayerInputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public RythmGameActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "RythmGame/LeftPaddle".
+        /// </summary>
+        public InputAction @LeftPaddle => m_Wrapper.m_RythmGame_LeftPaddle;
+        /// <summary>
+        /// Provides access to the underlying input action "RythmGame/RightPaddle".
+        /// </summary>
+        public InputAction @RightPaddle => m_Wrapper.m_RythmGame_RightPaddle;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_RythmGame; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="RythmGameActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(RythmGameActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="RythmGameActions" />
+        public void AddCallbacks(IRythmGameActions instance)
+        {
+            if (instance == null || m_Wrapper.m_RythmGameActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_RythmGameActionsCallbackInterfaces.Add(instance);
+            @LeftPaddle.started += instance.OnLeftPaddle;
+            @LeftPaddle.performed += instance.OnLeftPaddle;
+            @LeftPaddle.canceled += instance.OnLeftPaddle;
+            @RightPaddle.started += instance.OnRightPaddle;
+            @RightPaddle.performed += instance.OnRightPaddle;
+            @RightPaddle.canceled += instance.OnRightPaddle;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="RythmGameActions" />
+        private void UnregisterCallbacks(IRythmGameActions instance)
+        {
+            @LeftPaddle.started -= instance.OnLeftPaddle;
+            @LeftPaddle.performed -= instance.OnLeftPaddle;
+            @LeftPaddle.canceled -= instance.OnLeftPaddle;
+            @RightPaddle.started -= instance.OnRightPaddle;
+            @RightPaddle.performed -= instance.OnRightPaddle;
+            @RightPaddle.canceled -= instance.OnRightPaddle;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="RythmGameActions.UnregisterCallbacks(IRythmGameActions)" />.
+        /// </summary>
+        /// <seealso cref="RythmGameActions.UnregisterCallbacks(IRythmGameActions)" />
+        public void RemoveCallbacks(IRythmGameActions instance)
+        {
+            if (m_Wrapper.m_RythmGameActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="RythmGameActions.AddCallbacks(IRythmGameActions)" />
+        /// <seealso cref="RythmGameActions.RemoveCallbacks(IRythmGameActions)" />
+        /// <seealso cref="RythmGameActions.UnregisterCallbacks(IRythmGameActions)" />
+        public void SetCallbacks(IRythmGameActions instance)
+        {
+            foreach (var item in m_Wrapper.m_RythmGameActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_RythmGameActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="RythmGameActions" /> instance referencing this action map.
+    /// </summary>
+    public RythmGameActions @RythmGame => new RythmGameActions(this);
+
+    // RunningGame
+    private readonly InputActionMap m_RunningGame;
+    private List<IRunningGameActions> m_RunningGameActionsCallbackInterfaces = new List<IRunningGameActions>();
+    private readonly InputAction m_RunningGame_Jump;
+    private readonly InputAction m_RunningGame_Slide;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "RunningGame".
+    /// </summary>
+    public struct RunningGameActions
+    {
+        private @PlayerInputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public RunningGameActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "RunningGame/Jump".
+        /// </summary>
+        public InputAction @Jump => m_Wrapper.m_RunningGame_Jump;
+        /// <summary>
+        /// Provides access to the underlying input action "RunningGame/Slide".
+        /// </summary>
+        public InputAction @Slide => m_Wrapper.m_RunningGame_Slide;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_RunningGame; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="RunningGameActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(RunningGameActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="RunningGameActions" />
+        public void AddCallbacks(IRunningGameActions instance)
+        {
+            if (instance == null || m_Wrapper.m_RunningGameActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_RunningGameActionsCallbackInterfaces.Add(instance);
+            @Jump.started += instance.OnJump;
+            @Jump.performed += instance.OnJump;
+            @Jump.canceled += instance.OnJump;
+            @Slide.started += instance.OnSlide;
+            @Slide.performed += instance.OnSlide;
+            @Slide.canceled += instance.OnSlide;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="RunningGameActions" />
+        private void UnregisterCallbacks(IRunningGameActions instance)
+        {
+            @Jump.started -= instance.OnJump;
+            @Jump.performed -= instance.OnJump;
+            @Jump.canceled -= instance.OnJump;
+            @Slide.started -= instance.OnSlide;
+            @Slide.performed -= instance.OnSlide;
+            @Slide.canceled -= instance.OnSlide;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="RunningGameActions.UnregisterCallbacks(IRunningGameActions)" />.
+        /// </summary>
+        /// <seealso cref="RunningGameActions.UnregisterCallbacks(IRunningGameActions)" />
+        public void RemoveCallbacks(IRunningGameActions instance)
+        {
+            if (m_Wrapper.m_RunningGameActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="RunningGameActions.AddCallbacks(IRunningGameActions)" />
+        /// <seealso cref="RunningGameActions.RemoveCallbacks(IRunningGameActions)" />
+        /// <seealso cref="RunningGameActions.UnregisterCallbacks(IRunningGameActions)" />
+        public void SetCallbacks(IRunningGameActions instance)
+        {
+            foreach (var item in m_Wrapper.m_RunningGameActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_RunningGameActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="RunningGameActions" /> instance referencing this action map.
+    /// </summary>
+    public RunningGameActions @RunningGame => new RunningGameActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -1884,5 +2226,49 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnTrackedDeviceOrientation(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "RythmGame" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="RythmGameActions.AddCallbacks(IRythmGameActions)" />
+    /// <seealso cref="RythmGameActions.RemoveCallbacks(IRythmGameActions)" />
+    public interface IRythmGameActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "LeftPaddle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnLeftPaddle(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "RightPaddle" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnRightPaddle(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "RunningGame" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="RunningGameActions.AddCallbacks(IRunningGameActions)" />
+    /// <seealso cref="RunningGameActions.RemoveCallbacks(IRunningGameActions)" />
+    public interface IRunningGameActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "Jump" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnJump(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "Slide" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSlide(InputAction.CallbackContext context);
     }
 }

@@ -94,7 +94,7 @@ public class GameManager : MonoBehaviour
     /// </summary>
     public void TriggerAutoSave()
     {
-        if (SaveSystem.Instance != null)
+        if (SaveSystem.Instance != null && SaveSystem.Instance.CanAutoSaveGame())
         {
             SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, "Auto Save");
             Debug.Log("Auto-save triggered");
