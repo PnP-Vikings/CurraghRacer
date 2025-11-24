@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{0effd5fb-2321-468e-a193-e2bc482e7599}">
 		<property name="name">
-			<value>News Report Or Ad Volume</value>
+			<value>Radio Ad Or News 1 Volume</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>

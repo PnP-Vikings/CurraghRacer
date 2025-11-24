@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{83d00015-0801-45b8-87b9-533c2b297306}">
+		<property name="name">
+			<value>Story Update 2</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{b470d74d-6a9f-4ba7-86c7-df34b550f45a}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{b470d74d-6a9f-4ba7-86c7-df34b550f45a}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

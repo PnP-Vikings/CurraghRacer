@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{613d4dd2-afda-4b78-b20d-bb60a1012233}">
 		<property name="name">
-			<value>Radio Song</value>
+			<value>Radio Song 1</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{c2449ffa-1d6a-43ff-be88-b80d5d6d8f6d}</destination>
+			<destination>{03dbb066-27bf-4937-a5b1-c82cd3797146}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{29c98668-8bd1-4dd8-84fc-983ad54e2b6d}</destination>
@@ -99,6 +99,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{c47f7da7-53f3-449d-ab11-bcfe329d71b7}">
+		<property name="volume">
+			<value>-6</value>
+		</property>
 		<relationship name="effectChain">
 			<destination>{0867e693-dff0-4abf-b8fa-4469e3244e50}</destination>
 		</relationship>
@@ -130,7 +133,7 @@
 			<value>37.844036281179136</value>
 		</property>
 		<property name="volume">
-			<value>-13</value>
+			<value>-14</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{6e1e5ee4-1e84-45f7-bc6c-ee5b0c484e70}</destination>
@@ -173,7 +176,11 @@
 			<destination>{e49a9285-aea8-4a4f-9d3b-1d939c256a73}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{4cd8e26f-cd91-4754-95b8-38be2bb439cd}" />
+	<object class="MixerBusPanner" id="{4cd8e26f-cd91-4754-95b8-38be2bb439cd}">
+		<property name="stereoPan">
+			<value>24</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{adbe0aa7-49fc-426c-b664-704ff7dd66ef}" />
 	<object class="Automator" id="{f7516fba-b687-4dbb-9f4c-653b225a3e22}">
 		<property name="nameOfPropertyBeingAutomated">
@@ -222,7 +229,7 @@
 			<value>1400</value>
 		</property>
 		<property name="releaseShape">
-			<value>-0.429262608</value>
+			<value>-0.271852672</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>
@@ -269,7 +276,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>2000</value>
+			<value>3000</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{4015b391-ebfc-4ec6-8f1b-b3fe65d3258f}">

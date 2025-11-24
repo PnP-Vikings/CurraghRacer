@@ -754,6 +754,9 @@
 		<property name="name">
 			<value>Is This Soobik</value>
 		</property>
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{0d81ff2c-0019-4bd8-aaff-e364bc30d1d7}</destination>
 		</relationship>

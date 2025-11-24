@@ -16,9 +16,23 @@ public class AudioManager : MonoBehaviour
     public EventInstance raceAmbience;
     public EventInstance raceWin;
     public EventInstance raceLose;
-        // Garage
-    public EventInstance radioSong;
-    public EventInstance newsReportOrAd;
+    // Garage
+
+    public EventInstance storyUpdate1;
+    public EventInstance storyUpdate2;
+
+    public EventInstance radioSong1;
+    public EventInstance radioSong2;
+    public EventInstance radioSong3;
+    public EventInstance radioSong4;
+    public EventInstance radioSong5;
+
+    public EventInstance radioAdOrNews1;
+    public EventInstance radioAdOrNews2;
+    public EventInstance radioAdOrNews3;
+    public EventInstance radioAdOrNews4;
+    public EventInstance radioAdOrNews5;
+
     public EventInstance loadingScreenSong;
     public EventInstance tvButtonPushOut;
     public EventInstance tvButtonPushIn;
@@ -27,6 +41,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance sleepAudio;
     public EventInstance sleepOutsideAudio;
     public EventInstance payBill;
+    public EventInstance rooster;
         // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
@@ -44,6 +59,7 @@ public class AudioManager : MonoBehaviour
 
     //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
+    public EventInstance placeTurf;
 
     public EventInstance dumbbellSlide;
     public EventInstance grunt;
@@ -88,9 +104,22 @@ public class AudioManager : MonoBehaviour
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
         raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
-        
-        radioSong = RuntimeManager.CreateInstance("event:/Garage/Radio Song");
-        newsReportOrAd = RuntimeManager.CreateInstance("event:/Garage/News Report Or Ad");
+
+        storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
+        storyUpdate2 = RuntimeManager.CreateInstance("event:/Radio/Story Update 2");   // Player won a race
+
+        radioSong1 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 1");
+        radioSong2 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 2");
+        radioSong3 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 3");
+        radioSong4 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 4");
+        radioSong5 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 5");
+
+        radioAdOrNews1 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 1");
+        radioAdOrNews2 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 2");
+        radioAdOrNews3 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 3");
+        radioAdOrNews4 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 4");
+        radioAdOrNews5 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 5");
+
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
@@ -98,6 +127,7 @@ public class AudioManager : MonoBehaviour
 
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
+        rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");
         payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
 
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
@@ -109,7 +139,7 @@ public class AudioManager : MonoBehaviour
 
         //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
+        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
         
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
 
@@ -117,6 +147,7 @@ public class AudioManager : MonoBehaviour
         
         //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
         turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
+        placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
         dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
         barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{c1d4862a-7975-4e37-84b0-7e50406f0878}">
+		<property name="name">
+			<value>Radio Ad Or News 3 Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{2bbbafb7-879b-43da-9238-dee678fe69ef}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{2bbbafb7-879b-43da-9238-dee678fe69ef}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
