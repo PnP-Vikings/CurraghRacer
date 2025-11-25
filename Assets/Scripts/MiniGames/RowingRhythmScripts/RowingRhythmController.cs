@@ -280,7 +280,7 @@ public class RowingRhythmController : MonoBehaviour
       if (paddle.transform.position.y < leftPaddleTarget.position.y - 100f)
       {
         Debug.Log("Missed Left Paddle - Auto detected");
-        HandleMissedPaddle();
+        ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
         if(activeLeftPaddle == null || i >= activeLeftPaddle.Count) continue;
         activeLeftPaddle.RemoveAt(i);
         paddle.SetActive(false);
@@ -302,7 +302,7 @@ public class RowingRhythmController : MonoBehaviour
       if (paddle.transform.position.y < rightPaddleTarget.position.y - 100f)
       {
         Debug.Log("Missed Right Paddle - Auto detected");
-        HandleMissedPaddle();
+        ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
         if(activeRightPaddle == null || i >= activeRightPaddle.Count) continue;
         activeRightPaddle.RemoveAt(i);
         paddle.SetActive(false);
@@ -316,13 +316,12 @@ public class RowingRhythmController : MonoBehaviour
     }
   }
   
-  private void HandleMissedPaddle()
+  private void HandleMissedPaddle(int scorePenalty = -5)
   {
-    score -= 5;
+    score += scorePenalty;
     currentLives--;
     Debug.Log("Lives remaining: " + currentLives);
     paddlesHitInRow = 0f; // Reset row counter on miss
-    ShowHitFeedback(PaddleHitResult.Miss);
     StopPaddleAnimations();
     
     if (currentLives <= 0)
@@ -402,8 +401,6 @@ public class RowingRhythmController : MonoBehaviour
         if (closestDistance <= perfectRange)
         {
           hitResult = PaddleHitResult.Perfect;
-          scoreGained = 10;
-          Debug.Log("Perfect Hit! Distance: " + closestDistance);
         }
         else if (closestDistance <= goodRange)
         {
@@ -412,24 +409,20 @@ public class RowingRhythmController : MonoBehaviour
           if (verticalDiff > 0)
           {
             hitResult = PaddleHitResult.Early;
-            Debug.Log("Early Hit! Distance: " + closestDistance);
           }
           else
           {
             hitResult = PaddleHitResult.Late;
-            Debug.Log("Late Hit! Distance: " + closestDistance);
           }
-          scoreGained = 5;
         }
         else
         {
           // Too far but still within acceptable range
           float verticalDiff = closestPaddle.transform.position.y - leftPaddleTarget.position.y;
           hitResult = verticalDiff > 0 ? PaddleHitResult.Early : PaddleHitResult.Late;
-          scoreGained = 2;
           Debug.Log("Barely Hit! Distance: " + closestDistance);
         }
-        
+        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance);
         // Apply hit
         score += scoreGained;
         activeLeftPaddle.RemoveAt(closestIndex);
@@ -447,7 +440,6 @@ public class RowingRhythmController : MonoBehaviour
         
         AnimatePaddles();
         SpawnRandomPaddles();
-        ShowHitFeedback(hitResult);
 
         if (AudioManager.instance != null)
         {
@@ -459,7 +451,7 @@ public class RowingRhythmController : MonoBehaviour
         Debug.Log("Missed Left Paddle - Auto detected");
         if (closestPaddle != null)
         {
-          HandleMissedPaddle();
+          ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
           activeLeftPaddle.Remove(closestPaddle);
 
           closestPaddle.SetActive(false);
@@ -513,8 +505,7 @@ public class RowingRhythmController : MonoBehaviour
         if (closestDistance <= perfectRange)
         {
           hitResult = PaddleHitResult.Perfect;
-          scoreGained = 10;
-          Debug.Log("Perfect Hit! Distance: " + closestDistance);
+         
         }
         else if (closestDistance <= goodRange)
         {
@@ -523,24 +514,23 @@ public class RowingRhythmController : MonoBehaviour
           if (verticalDiff > 0)
           {
             hitResult = PaddleHitResult.Early;
-            Debug.Log("Early Hit! Distance: " + closestDistance);
           }
           else
           {
             hitResult = PaddleHitResult.Late;
-            Debug.Log("Late Hit! Distance: " + closestDistance);
+          
           }
-          scoreGained = 5;
+         
         }
         else
         {
           // Too far but still within acceptable range
           float verticalDiff = closestPaddle.transform.position.y - rightPaddleTarget.position.y;
           hitResult = verticalDiff > 0 ? PaddleHitResult.Early : PaddleHitResult.Late;
-          scoreGained = 2;
           Debug.Log("Barely Hit! Distance: " + closestDistance);
         }
         
+        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance);
         // Apply hit
         score += scoreGained;
         activeRightPaddle.RemoveAt(closestIndex);
@@ -558,7 +548,6 @@ public class RowingRhythmController : MonoBehaviour
         
         AnimatePaddles();
         SpawnRandomPaddles();
-        ShowHitFeedback(hitResult);
 
         if (AudioManager.instance != null)
         {
@@ -570,7 +559,7 @@ public class RowingRhythmController : MonoBehaviour
         Debug.Log("Missed Right Paddle - Auto detected");
         if (closestPaddle != null)
         {
-          HandleMissedPaddle();
+          ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
           activeRightPaddle.Remove(closestPaddle);
 
           closestPaddle.SetActive(false);
@@ -660,6 +649,32 @@ public class RowingRhythmController : MonoBehaviour
                 Debug.Log("Rowing Speed " + paramValue);
             }
     } 
+  }
+  
+  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance = 0f)
+  {
+    int scoreGained = 0;
+    switch (feedback)
+    {
+      case PaddleHitResult.Miss:
+        scoreGained = -5;
+        HandleMissedPaddle(scoreGained);
+        break;
+      case PaddleHitResult.Early:
+        scoreGained = 5;
+        Debug.Log("Early Hit! Distance: " + closestDistance);
+        break;
+      case PaddleHitResult.Perfect:
+        scoreGained = 10;
+        Debug.Log("Perfect Hit! Distance: " + closestDistance);
+        break;
+      case PaddleHitResult.Late:
+        scoreGained = 5;
+        Debug.Log("Late Hit! Distance: " + closestDistance);
+        break;
+    } 
+    ShowHitFeedback(feedback);
+   return scoreGained;
   }
   
   public void ShowHitFeedback(PaddleHitResult feedback)
