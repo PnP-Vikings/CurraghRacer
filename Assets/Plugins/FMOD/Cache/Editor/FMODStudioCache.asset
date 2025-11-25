@@ -438,10 +438,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638996158333564564
+  lastModified: 638996325580362541
   FileSizes:
   - Name: 
-    Value: 4738
+    Value: 4724
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -1072,8 +1072,7 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
-  Parameters:
-  - {fileID: 4810764203811837013}
+  Parameters: []
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
@@ -1234,12 +1233,13 @@ MonoBehaviour:
   - {fileID: 4072023337267351743}
   - {fileID: -917604697180666674}
   - {fileID: -6648796307801326495}
+  - {fileID: 1476694197085884601}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638996158333564564
+  cacheTime: 638996325580362541
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1401,6 +1401,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3950
+--- !u!114 &1476694197085884601
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Radio/Story Update 3
+  m_EditorClassIdentifier: 
+  Path: event:/Radio/Story Update 3
+  Guid:
+    Data1: 1806329867
+    Data2: 1181637949
+    Data3: 1515402661
+    Data4: -504628382
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 5500
 --- !u!114 &1512904749870580738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1799,30 +1826,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3000
---- !u!114 &4810764203811837013
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Story Update 2/Story Update 2
-  m_EditorClassIdentifier: 
-  Name: Story Update 2
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 2819851566
-    data2: 4035980158
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &5139689008638949749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2128,7 +2131,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638996158333522543
+  lastModified: 638996325580317288
   FileSizes: []
   Exists: 1
 --- !u!114 &8155522247790703682

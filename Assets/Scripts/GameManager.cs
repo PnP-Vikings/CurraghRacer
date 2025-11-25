@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour
    public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
-   //Coroutine SleepAudioChangesCoroutine;
    public bool SleepAudioChangesCoroutineIsActive = false;
 
    public List<String> miniGameWorkScenes = new List<string>
