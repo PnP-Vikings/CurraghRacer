@@ -280,7 +280,7 @@ public class RowingRhythmController : MonoBehaviour
       if (paddle.transform.position.y < leftPaddleTarget.position.y - 100f)
       {
         Debug.Log("Missed Left Paddle - Auto detected");
-        HandleMissedPaddle();
+        ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
         if(activeLeftPaddle == null || i >= activeLeftPaddle.Count) continue;
         activeLeftPaddle.RemoveAt(i);
         paddle.SetActive(false);
@@ -302,7 +302,7 @@ public class RowingRhythmController : MonoBehaviour
       if (paddle.transform.position.y < rightPaddleTarget.position.y - 100f)
       {
         Debug.Log("Missed Right Paddle - Auto detected");
-        HandleMissedPaddle();
+        ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
         if(activeRightPaddle == null || i >= activeRightPaddle.Count) continue;
         activeRightPaddle.RemoveAt(i);
         paddle.SetActive(false);
@@ -316,13 +316,12 @@ public class RowingRhythmController : MonoBehaviour
     }
   }
   
-  private void HandleMissedPaddle()
+  private void HandleMissedPaddle(int scorePenalty = -5)
   {
-    score -= 5;
+    score += scorePenalty;
     currentLives--;
     Debug.Log("Lives remaining: " + currentLives);
     paddlesHitInRow = 0f; // Reset row counter on miss
-    ShowHitFeedback(PaddleHitResult.Miss);
     StopPaddleAnimations();
     
     if (currentLives <= 0)
@@ -452,7 +451,7 @@ public class RowingRhythmController : MonoBehaviour
         Debug.Log("Missed Left Paddle - Auto detected");
         if (closestPaddle != null)
         {
-          HandleMissedPaddle();
+          ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
           activeLeftPaddle.Remove(closestPaddle);
 
           closestPaddle.SetActive(false);
@@ -560,7 +559,7 @@ public class RowingRhythmController : MonoBehaviour
         Debug.Log("Missed Right Paddle - Auto detected");
         if (closestPaddle != null)
         {
-          HandleMissedPaddle();
+          ProcessHitBasedHitFeedback(PaddleHitResult.Miss);
           activeRightPaddle.Remove(closestPaddle);
 
           closestPaddle.SetActive(false);
@@ -652,13 +651,14 @@ public class RowingRhythmController : MonoBehaviour
     } 
   }
   
-  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance)
+  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance = 0f)
   {
     int scoreGained = 0;
     switch (feedback)
     {
       case PaddleHitResult.Miss:
-        scoreGained = 0;
+        scoreGained = -5;
+        HandleMissedPaddle(scoreGained);
         break;
       case PaddleHitResult.Early:
         scoreGained = 5;
