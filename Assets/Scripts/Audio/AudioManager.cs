@@ -20,6 +20,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance storyUpdate1;
     public EventInstance storyUpdate2;
+    public EventInstance storyUpdate3;
 
     public EventInstance radioSong1;
     public EventInstance radioSong2;
@@ -66,6 +67,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance barGrip;
 
     public EventInstance running;
+    public EventInstance jump;
+    public EventInstance slide;
     public EventInstance crashIntoFence;
 
     public EventInstance rowing;
@@ -107,6 +110,7 @@ public class AudioManager : MonoBehaviour
 
         storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
         storyUpdate2 = RuntimeManager.CreateInstance("event:/Radio/Story Update 2");   // Player won a race
+        storyUpdate3 = RuntimeManager.CreateInstance("event:/Radio/Story Update 3");   // Player lost a race
 
         radioSong1 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 1");
         radioSong2 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 2");
@@ -154,6 +158,8 @@ public class AudioManager : MonoBehaviour
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
 
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
+        jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");
+        slide = RuntimeManager.CreateInstance("event:/Foot Race/Slide");
         crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
 
     }

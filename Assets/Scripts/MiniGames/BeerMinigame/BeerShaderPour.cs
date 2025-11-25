@@ -185,8 +185,14 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             pourStreamParticles.Stop();
         }
+
+        // Mute pouring pint audio
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 0f);
+        }
     }
-    
+
 
     public void StartPouring()
     {
@@ -200,6 +206,13 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             var main = pourStreamParticles.main;
             main.startColor = new ParticleSystem.MinMaxGradient(beerColor);
             pourStreamParticles.Play();
+        }
+
+        // Play pouring pint audio
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.pouringPint.start();
+            AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 1f);
         }
     }
 

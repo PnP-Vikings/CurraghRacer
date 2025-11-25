@@ -21,25 +21,14 @@ public class BeerEnterBoxCollider : MonoBehaviour
         {
             currentBeerShaderPour = other.GetComponent<BeerShaderPour>();
             currentBeerShaderPour.isActive = true; // Start pouring when player enters
-
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.pouringPint.start();
-                AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 1f);
-            }
-        }
-        
+        }  
     }
     private void OnTriggerExit(Collider other)
     {
         if (other.GetComponent<BeerShaderPour>() != null)
         {
             currentBeerShaderPour = other.GetComponent<BeerShaderPour>();
-            currentBeerShaderPour.isActive = false;  
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 0f);
-            }
+            currentBeerShaderPour.isActive = false; 
         }
     }
     
@@ -61,15 +50,9 @@ public class BeerEnterBoxCollider : MonoBehaviour
             {
                 onBeerCompleted.Invoke(); // Trigger the event when beer is complete
                 Debug.Log("Beer is complete!");
-
-                if (AudioManager.instance != null)
-                {
-                    AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 0f);
-                }
             }
         }
     }
-  
     
     public void ClearBeerShaderPour()
     {
@@ -78,6 +61,5 @@ public class BeerEnterBoxCollider : MonoBehaviour
             beerShaderPour.isActive = false; // Stop pouring
             beerShaderPour = null; // Clear the reference when needed
         }
-    }
-    
+    }  
 }
