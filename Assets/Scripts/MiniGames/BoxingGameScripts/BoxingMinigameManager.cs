@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using MiniGames;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -423,6 +424,18 @@ public class BoxingMinigameManager : MonoBehaviour
         BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, 0f);
         bagSwingCoroutine = null;
     }
+
+    public void GameOver()
+    {
+        if(isGameOver)
+        {
+            if (MiniGameManager.Instance != null)
+            {
+                Debug.Log($"Calling MiniGameManager.CompleteGame with score: {score}");
+                MiniGameManager.Instance.CompleteGame((score));
+            };
+        }
+    }
     
     IEnumerator DecreaseOpacityOverTime(BoxingTarget target, float duration)
     {
@@ -469,6 +482,7 @@ public class BoxingMinigameManager : MonoBehaviour
                 boxingUiCanvas.ShowGameOver();
             }
             Debug.Log("Game Over! Final Score: " + score);
+            GameOver();
             yield break; // Stop this coroutine
         }
         Debug.Log($"Target Missed! Lives remaining: {playerLives}");

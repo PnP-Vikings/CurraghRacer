@@ -2,6 +2,7 @@ using FMODUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MiniGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -363,6 +364,12 @@ public class RowingRhythmController : MonoBehaviour
     }
     StopPaddleAnimations();
     minigameCanvasUI.ShowGameOver();
+    
+    if (MiniGameManager.Instance != null)
+    {
+      Debug.Log($"Calling MiniGameManager.CompleteGame with score: {score}");
+      MiniGameManager.Instance.CompleteGame((int)Math.Round(score));
+    }
   }
   
   private void CheckPaddleOnLeft()
@@ -659,34 +666,18 @@ public class RowingRhythmController : MonoBehaviour
       case PaddleHitResult.Miss:
         scoreGained = -5;
         HandleMissedPaddle(scoreGained);
-        if (paddle != null)
-        {
-          StartCoroutine(FlashPaddleColor(paddle, Color.red, 0.2f));
-        }
         break;
       case PaddleHitResult.Early:
         scoreGained = 5;
         Debug.Log("Early Hit! Distance: " + closestDistance);
-        if (paddle != null)
-        {
-          StartCoroutine(FlashPaddleColor(paddle, Color.yellow, 0.2f));
-        }
         break;
       case PaddleHitResult.Perfect:
         scoreGained = 10;
         Debug.Log("Perfect Hit! Distance: " + closestDistance);
-        if (paddle != null)
-        {
-          StartCoroutine(FlashPaddleColor(paddle, Color.green, 0.2f));
-        }
         break;
       case PaddleHitResult.Late:
         scoreGained = 5;
         Debug.Log("Late Hit! Distance: " + closestDistance);
-        if (paddle != null)
-        {
-          StartCoroutine(FlashPaddleColor(paddle, new Color(255,165,0), 0.2f));
-        }
         break;
     } 
     ShowHitFeedback(feedback);

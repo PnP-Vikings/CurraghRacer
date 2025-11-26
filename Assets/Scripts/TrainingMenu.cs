@@ -1,4 +1,5 @@
 using System.Collections;
+using MiniGames;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -65,45 +66,20 @@ public class TrainingMenu : MonoBehaviour
             return;
         }
         
-        switch (selectedStatType)
+        /*
+      
+        */
+
+        if (CanTrain(30, 50))
         {
-            case TeamMember.StatType.Strength:
-                if(CanTrain(30, 50))
-                {
-                    PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Strength, strengthGainAmount);
-                    PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.dumbbell.start();
+            } 
+            
+            ManageClickBasedOnStatType(selectedStatType);
 
-                    if (AudioManager.instance != null)
-                    {
-                        AudioManager.instance.dumbbell.start();
-                    }
-                }
-                break;
-            case TeamMember.StatType.Technique:
-                if(CanTrain(30, 50))
-                {
-                    PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Technique, techniqueGainAmount);
-                }
-                break;
-            case TeamMember.StatType.Stamina:
-                if(CanTrain(30, 50))
-                {
-                    PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Stamina, staminaGainAmount);
-                }
-                break;
-            case TeamMember.StatType.TeamWork:
-                if(CanTrain(30, 50))
-                {
-                    PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.TeamWork, teamWorkGainAmount);
-                }
-                break;
-            default:
-                Debug.LogError("Invalid stat type selected for training.");
-                if(PlayerStatsView.Instance != null)
-                    PlayerStatsView.Instance.DisplayInfo("Invalid stat type selected for training.", 3);
-                break;
         }
-
         // Reset selection after training
         selectedTeamMember = null;
         if(oldSelectedTeamMemberUi != null)
@@ -133,6 +109,15 @@ public class TrainingMenu : MonoBehaviour
 
         }
     }
+
+    public void ManageClickBasedOnStatType(TeamMember.StatType statType)
+    {
+        if(MiniGameManager.Instance != null)
+        {
+            MiniGameManager.Instance.StartRandomTrainingActivityBasedOnStatType(statType,selectedTeamMember);
+        }
+    }
+    
      public void RefreshManagerUi()
    {
         ClearTeamMemberUis();
@@ -201,50 +186,6 @@ public class TrainingMenu : MonoBehaviour
         }
     }
     
-    public void OnTrainStrengthButtonClicked()
-    {
-       if(CanTrain(30, 50))
-        {
-            PlayerManager.Instance.ModifyPlayerStrength(strengthGainAmount);
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.dumbbell.start();
-            } 
-        }
-        
-     
-        
-    }
-
-    public void OnTrainTechniqueButtonClicked()
-    {
-        
-        if (CanTrain(30, 50))
-        {
-                PlayerManager.Instance.ModifyPlayerTechnique(techniqueGainAmount);
-        }
-    }
-    
-    public void OnTrainStaminaButtonClicked()
-    {
-        if(CanTrain(30, 50))
-        {
-            PlayerManager.Instance.ModifyPlayerStamina(staminaGainAmount);
-        }
-
-        
-       
-       
-    }
-    public void OnTrainTeamWorkButtonClicked()
-    { 
-        if(CanTrain(30, 50))
-        {
-            PlayerManager.Instance.ModifyPlayerTeamWork(teamWorkGainAmount);
-            
-        }
-            
-    }
     
     public void OnBackButtonClickedOnSelection()
     {

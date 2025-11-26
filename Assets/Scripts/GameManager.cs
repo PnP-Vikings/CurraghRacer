@@ -23,11 +23,6 @@ public class GameManager : MonoBehaviour
    //Coroutine SleepAudioChangesCoroutine;
    public bool SleepAudioChangesCoroutineIsActive = false;
 
-   public List<String> miniGameWorkScenes = new List<string>
-   {
-       "BeerPourMinigame",
-       "DishWashingMinigame" 
-   };
    
    private void Awake()
    {
@@ -160,6 +155,40 @@ public class GameManager : MonoBehaviour
         PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
     }
+
+    public void PlayerTrained(TeamMember selectedTeamMember, TeamMember.StatType selectedStatType, int amountGained)
+    {
+        StartCoroutine(WaitBeforeUpdatingTeamMemberStat(selectedTeamMember, selectedStatType, amountGained));
+    }
+    
+    IEnumerator WaitBeforeUpdatingTeamMemberStat(TeamMember selectedTeamMember, TeamMember.StatType selectedStatType, int amountGained)
+    {
+        yield return new WaitForSeconds(2f); // Wait for half a second before updating the stat
+        Debug.Log($"Training {selectedTeamMember.memberName} in {selectedStatType} for {amountGained} points.");
+        
+        switch (selectedStatType)
+        {
+            case TeamMember.StatType.Strength:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Strength, amountGained);
+                break;
+            case TeamMember.StatType.Technique:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Technique, amountGained);
+                break;
+            case TeamMember.StatType.Stamina:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Stamina, amountGained);
+                break;
+            case TeamMember.StatType.TeamWork:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.TeamWork, amountGained);
+                break;
+            default:
+                Debug.LogError("Invalid stat type selected for training.");
+                if(PlayerStatsView.Instance != null)
+                    PlayerStatsView.Instance.DisplayInfo("Invalid stat type selected for training.", 3);
+                break;
+        }
+        TimeManager.Instance.UpdateTime();
+    }
+    
 
     public float GetTotalPlayTime()
     {

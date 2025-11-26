@@ -10,29 +10,32 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 292ecdd5e13c76f4d834ec68fcb98098, type: 3}
-  m_Name: DishWashing
+  m_Name: RowingRhythmGame
   m_EditorClassIdentifier: 
-  gameName: 'Dish Washing '
+  gameName: 'Rowing Rythm Game '
   description: 
   funnyQuote: 
-  gameType: 0
-  category: 0
-  baseDifficulty: 0
-  trainingAttribute: 5
+  gameType: 17
+  category: 1
+  baseDifficulty: 1
+  trainingAttribute: 2
   attributeGainMultiplier: 1
-  sceneName: DishWashingMinigame
+  sceneName: RowingRhythm
   useSceneLoading: 1
   returnSceneName: Garage
-  baseEarnings: 50
-  baseGain: 0
+  baseEarnings: 0
+  baseGain: 1
   difficultyMultiplier: 1
-  enablePerfectBonus: 1
+  enablePerfectBonus: 0
   perfectBonus: 1.5
   minimumPerformanceForReward: 0.3
-  timeLimit: 60
-  perfectScore: 100
-  hasTimeBonus: 1
+  isTimed: 0
+  timeLimit: 2000
+  hasTimeBonus: 0
   timeBonusMultiplier: 1
+  isScoreBased: 0
+  perfectScore: 100
+  passingScore: 60
   energyCost: 25
   difficultyScoreMultiplier:
     serializedVersion: 2
@@ -101,7 +104,7 @@ MonoBehaviour:
   minimumLevel: 1
   minimumCoins: 0
   prerequisites: []
-  maxPlaysPerDay: 1
+  maxPlaysPerDay: -1
   cooldownMinutes: 0
   customControllerPrefab: {fileID: 0}
   gameplayModifiers: []
