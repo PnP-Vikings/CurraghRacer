@@ -158,12 +158,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayerTrained(TeamMember selectedTeamMember, TeamMember.StatType selectedStatType, int amountGained)
     {
-        StartCoroutine(WaitBeforeUpdatingTeamMemberStat(selectedTeamMember, selectedStatType, amountGained));
-    }
-    
-    IEnumerator WaitBeforeUpdatingTeamMemberStat(TeamMember selectedTeamMember, TeamMember.StatType selectedStatType, int amountGained)
-    {
-        yield return new WaitForSeconds(2f); // Wait for half a second before updating the stat
+        // Apply stat changes immediately BEFORE scene transition to prevent cache overwrite
         Debug.Log($"Training {selectedTeamMember.memberName} in {selectedStatType} for {amountGained} points.");
         
         switch (selectedStatType)
@@ -186,6 +181,13 @@ public class GameManager : MonoBehaviour
                     PlayerStatsView.Instance.DisplayInfo("Invalid stat type selected for training.", 3);
                 break;
         }
+        
+        // Update the cached save data to include the new stats
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.UpdateCachedSaveData();
+        }
+        
         TimeManager.Instance.UpdateTime();
     }
     

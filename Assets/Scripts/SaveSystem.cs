@@ -461,13 +461,20 @@ public class SaveSystem : MonoBehaviour
         // Only restore if we have cached save data
         if (_lastSaveData != null && LeagueController.Instance != null)
         {
-            Debug.Log($"[SaveSystem.OnSceneLoaded] Scene '{scene.name}' loaded - restoring team stats from cache");
+            Debug.Log($"[SaveSystem.OnSceneLoaded] Scene '{scene.name}' loaded - restoring data from cache");
             
-            // Restore team data from the cached save
-            if (_lastSaveData.leagueData?.allTeams != null)
+            // Restore league team data from the cached save
+            if (LeagueController.Instance != null && _lastSaveData.leagueData?.allTeams != null)
             {
                 RestoreTeamsData(_lastSaveData.leagueData.allTeams);
                 Debug.Log($"[SaveSystem.OnSceneLoaded] Restored {_lastSaveData.leagueData.allTeams.Length} teams from cache");
+            }
+            
+            // Restore TeamManager data (including racersForHire) from the cached save
+            if (TeamManager.Instance != null && _lastSaveData.teamManagerData != null)
+            {
+                RestoreTeamManagerData(_lastSaveData.teamManagerData);
+                Debug.Log($"[SaveSystem.OnSceneLoaded] Restored TeamManager data from cache");
             }
         }
     }
@@ -508,6 +515,20 @@ public class SaveSystem : MonoBehaviour
         {
             Debug.LogError($"Failed to save game to slot {slotIndex}: {e.Message}");
             return false;
+        }
+    }
+    
+    /// <summary>
+    /// Updates the cached save data with the current game state
+    /// This prevents the cache from overwriting recent changes during scene loads
+    /// </summary>
+    public void UpdateCachedSaveData()
+    {
+        if (_lastSaveData != null)
+        {
+            SaveData updatedData = CreateSaveData();
+            _lastSaveData = updatedData;
+            Debug.Log($"[UpdateCachedSaveData] Cached save data updated with current game state");
         }
     }
 
@@ -1335,6 +1356,36 @@ public class SaveSystem : MonoBehaviour
                 
             }
         }
+    }
+    
+    /// <summary>
+    /// Restores TeamManager data from cached save, including racersForHire list
+    /// </summary>
+    private void RestoreTeamManagerData(TeamManagerSaveData saveData)
+    {
+        if (TeamManager.Instance == null || saveData == null)
+        {
+            Debug.LogWarning("[RestoreTeamManagerData] TeamManager.Instance or saveData is null");
+            return;
+        }
+        
+        Debug.Log($"[RestoreTeamManagerData] Restoring TeamManager data");
+        
+        // Restore racersForHire - this is critical to prevent the list from breaking
+        if (saveData.racersForHire != null)
+        {
+            TeamManager.Instance.racersForHire = new List<HireableTeamMembers>(saveData.racersForHire);
+            Debug.Log($"[RestoreTeamManagerData] Restored {TeamManager.Instance.racersForHire.Count} racers for hire");
+        }
+        
+        // Restore isAllActiveTeamMembersHealthy flag
+        TeamManager.Instance.isAllActiveTeamMembersHealthy = saveData.isAllActiveTeamMembersHealthy;
+        
+        // Note: We don't restore activeCrewMembers, benchTeamMembers, or teamManager here
+        // because those are ScriptableObjects that persist across scene loads
+        // and may have been modified during gameplay. Only restore if they're null.
+        
+        Debug.Log($"[RestoreTeamManagerData] TeamManager data restoration complete");
     }
 
     public bool CanAutoSaveGame()

@@ -36,6 +36,8 @@ namespace MiniGames
         public bool useSceneLoading = false;
         [Tooltip("Scene to return to after minigame completion")]
         public string returnSceneName = "Garage";
+        [Tooltip("Delay before returning to main scene (in seconds)")]
+        public float returnDelay = 2f;
         
         [Header("Rewards")]
         [Tooltip("Base earnings for this minigame (applies to work activities)")]
