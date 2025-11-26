@@ -422,7 +422,7 @@ public class RowingRhythmController : MonoBehaviour
           hitResult = verticalDiff > 0 ? PaddleHitResult.Early : PaddleHitResult.Late;
           Debug.Log("Barely Hit! Distance: " + closestDistance);
         }
-        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance);
+        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance,closestPaddle);
         // Apply hit
         score += scoreGained;
         activeLeftPaddle.RemoveAt(closestIndex);
@@ -530,7 +530,7 @@ public class RowingRhythmController : MonoBehaviour
           Debug.Log("Barely Hit! Distance: " + closestDistance);
         }
         
-        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance);
+        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance,closestPaddle);
         // Apply hit
         score += scoreGained;
         activeRightPaddle.RemoveAt(closestIndex);
@@ -651,7 +651,7 @@ public class RowingRhythmController : MonoBehaviour
     } 
   }
   
-  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance = 0f)
+  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance = 0f,GameObject paddle = null)
   {
     int scoreGained = 0;
     switch (feedback)
@@ -659,18 +659,34 @@ public class RowingRhythmController : MonoBehaviour
       case PaddleHitResult.Miss:
         scoreGained = -5;
         HandleMissedPaddle(scoreGained);
+        if (paddle != null)
+        {
+          StartCoroutine(FlashPaddleColor(paddle, Color.red, 0.2f));
+        }
         break;
       case PaddleHitResult.Early:
         scoreGained = 5;
         Debug.Log("Early Hit! Distance: " + closestDistance);
+        if (paddle != null)
+        {
+          StartCoroutine(FlashPaddleColor(paddle, Color.yellow, 0.2f));
+        }
         break;
       case PaddleHitResult.Perfect:
         scoreGained = 10;
         Debug.Log("Perfect Hit! Distance: " + closestDistance);
+        if (paddle != null)
+        {
+          StartCoroutine(FlashPaddleColor(paddle, Color.green, 0.2f));
+        }
         break;
       case PaddleHitResult.Late:
         scoreGained = 5;
         Debug.Log("Late Hit! Distance: " + closestDistance);
+        if (paddle != null)
+        {
+          StartCoroutine(FlashPaddleColor(paddle, new Color(255,165,0), 0.2f));
+        }
         break;
     } 
     ShowHitFeedback(feedback);
@@ -696,6 +712,18 @@ public class RowingRhythmController : MonoBehaviour
           rhythmCanvas.ShowHitFeedback("Late!", feedback, 1f);
           break;
       }
+    }
+  }
+  
+  private IEnumerator FlashPaddleColor(GameObject paddle, Color flashColor, float duration)
+  {
+    Image paddleImage = paddle.GetComponent<Image>();
+    if (paddleImage != null)
+    {
+      Color originalColor = paddleImage.color;
+      paddleImage.color = flashColor;
+      yield return new WaitForSeconds(duration);
+      paddleImage.color = originalColor;
     }
   }
 }
