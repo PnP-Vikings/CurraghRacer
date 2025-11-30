@@ -42103,11 +42103,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7574018796514636384, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: moveEase
-      value: 1
+      value: 30
       objectReference: {fileID: 0}
     - target: {fileID: 7574018796514636384, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: moveDuration
-      value: 0.1
+      value: 0.05
       objectReference: {fileID: 0}
     - target: {fileID: 7574018796514636384, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: offscreenOffset.x

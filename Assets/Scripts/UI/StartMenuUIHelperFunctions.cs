@@ -38,19 +38,23 @@ public class StartMenuUIHelperFunctions : MonoBehaviour
                 var t = uiElementsToAnimate[i];
                 if (t == null) continue;
 
-                // create move and rotate tweens
                 var moveTween = t.DOLocalMove(targetLocalPositions[i], moveDuration).SetEase(moveEase);
                 var rotateTween = t.DOLocalRotate(Vector3.zero, rotateDuration).SetEase(moveEase);
 
-                // play both in a sequence so they run together, then await completion
                 var seq = DOTween.Sequence();
                 seq.Join(moveTween);
                 seq.Join(rotateTween);
-
-                await seq.AsyncWaitForCompletion();
+            
+               // await seq.AsyncWaitForCompletion();
+            
+                // Wait for the stagger delay before starting the next element
+                if (i < uiElementsToAnimate.Count - 1)
+                {
+                    await System.Threading.Tasks.Task.Delay((int)(stagger * 1000));
+                }
             }
         }
-        catch( Exception e )
+        catch(Exception e)
         {
             Debug.LogError($"Error during UI animation: {e.Message}");
         }
