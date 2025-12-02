@@ -26547,7 +26547,7 @@ MonoBehaviour:
   rotateDuration: 0.4
   stagger: 0.2
   moveEase: 30
-  playOnlyOnStart: 0
+  playOnlyOnStart: 1
 --- !u!1001 &1319424451
 PrefabInstance:
   m_ObjectHideFlags: 0
