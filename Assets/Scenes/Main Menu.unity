@@ -25185,6 +25185,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
   m_PrefabInstance: {fileID: 1609093987}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1263808095 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 7569062422589216733, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+  m_PrefabInstance: {fileID: 4362316326491213309}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &1275268944
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -26517,6 +26522,32 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6425027337252039727, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
   m_PrefabInstance: {fileID: 4362316326491213309}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1315713680
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1263808095}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8ac5826b328b13843b573e23a4631494, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  uiElementsToAnimate:
+  - {fileID: 279909218}
+  - {fileID: 457244726}
+  - {fileID: 1195859524}
+  - {fileID: 1476419348}
+  - {fileID: 1955055977}
+  - {fileID: 2075016534}
+  - {fileID: 1207444251}
+  offscreenOffset: {x: -1000, y: 0, z: 0}
+  moveDuration: 0.05
+  rotateDuration: 0.4
+  stagger: 0.2
+  moveEase: 30
+  playOnlyOnStart: 0
 --- !u!1001 &1319424451
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -42252,6 +42283,9 @@ PrefabInstance:
       insertIndex: 5
       addedObject: {fileID: 590886352}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 7569062422589216733, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1315713680}
     - targetCorrespondingSourceObject: {fileID: 1554382852392505832, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1955055976}
