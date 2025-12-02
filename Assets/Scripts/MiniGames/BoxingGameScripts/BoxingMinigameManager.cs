@@ -4,6 +4,7 @@ using MiniGames;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
+using DG.Tweening;
 
 public class BoxingMinigameManager : MonoBehaviour
 {
@@ -51,8 +52,14 @@ public class BoxingMinigameManager : MonoBehaviour
     private int lastUsedSpawnPoint = -1; // Track the last spawn point used to avoid consecutive repeats
     
     private Vector3 bagOriginalPosition; // Store the bag's starting position
-    private Coroutine bagSwingCoroutine; // Track the current swing animation
+    private Sequence bagSwingSequence; // Track the current swing animation sequence
     private bool isGameOver = false; // Track if the game is over
+    
+    [Header("Camera Settings")]
+    public Camera gameCamera; // Reference to the camera for shake effect
+    public float cameraShakeIntensity = 0.15f; // How strong the shake is
+    public float cameraShakeDuration = 0.2f; // How long the shake lasts
+    private Vector3 cameraOriginalPosition; // Store camera's starting position
     
     [Header("Ui Settings")]
     public BoxingUiCanvas boxingUiCanvas;
@@ -80,6 +87,18 @@ public class BoxingMinigameManager : MonoBehaviour
         if (BoxingBag != null)
         {
             bagOriginalPosition = BoxingBag.position;
+        }
+        
+        // Get camera reference if not assigned
+        if (gameCamera == null)
+        {
+            gameCamera = Camera.main;
+        }
+        
+        // Store camera's original position
+        if (gameCamera != null)
+        {
+            cameraOriginalPosition = gameCamera.transform.localPosition;
         }
         
         // Spawn initial targets
@@ -314,16 +333,19 @@ public class BoxingMinigameManager : MonoBehaviour
             float swingDirection = isRightSide ? -1f : 1f;
             
             // Stop any existing swing animation
-            if (bagSwingCoroutine != null)
+            if (bagSwingSequence != null && bagSwingSequence.IsActive())
             {
-                StopCoroutine(bagSwingCoroutine);
+                bagSwingSequence.Kill();
             }
             
             // Start new swing animation
-            bagSwingCoroutine = StartCoroutine(SwingBag(swingDirection));
+            SwingBagWithDOTween(swingDirection);
             
             Debug.Log($"Hit on {(isRightSide ? "RIGHT" : "LEFT")} side (spawn point {target.spawnPointIndex}), swinging bag {(swingDirection > 0 ? "right" : "left")}");
         }
+        
+        // Add camera shake effect for impact
+        ShakeCamera();
         
         // Increase score
         score+= pointsToAdd;
@@ -371,58 +393,54 @@ public class BoxingMinigameManager : MonoBehaviour
         }
     }
     
-    IEnumerator SwingBag(float direction)
+    void SwingBagWithDOTween(float direction)
     {
-        float elapsed = 0f;
-        
-        // Start from current position and rotation (important for smooth interruptions)
-        Vector3 startPosition = BoxingBag.position;
-        Vector3 currentRotation = BoxingBag.eulerAngles;
-        float startRotationZ = currentRotation.z;
-        
-        // Normalize the rotation to be between -180 and 180 for smooth lerping
-        if (startRotationZ > 180f) startRotationZ -= 360f;
-        
+        // Calculate target position and rotation
         Vector3 targetPosition = bagOriginalPosition + new Vector3(direction * bagSwingDistance, 0f, 0f);
         float targetRotationZ = direction * -2.71f; // Rotate -2.71 degrees in swing direction
         
-        // Swing to the side (first half of animation)
-        while (elapsed < bagSwingDuration / 2f)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / (bagSwingDuration / 2f);
-            
-            // Lerp from current position to target position
-            BoxingBag.position = Vector3.Lerp(startPosition, targetPosition, t);
-            
-            // Lerp from current rotation to target rotation
-            float currentRotationZ = Mathf.Lerp(startRotationZ, targetRotationZ, t);
-            BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, currentRotationZ);
-            
-            yield return null;
-        }
+        // Get current rotation components (preserve X and Y)
+        Vector3 currentRotation = BoxingBag.eulerAngles;
+        Vector3 targetRotationVector = new Vector3(currentRotation.x, currentRotation.y, targetRotationZ);
+        Vector3 originalRotationVector = new Vector3(currentRotation.x, currentRotation.y, 0f);
         
-        // Swing back to original position (second half of animation)
-        elapsed = 0f;
-        while (elapsed < bagSwingDuration / 2f)
-        {
-            elapsed += Time.deltaTime;
-            float t = elapsed / (bagSwingDuration / 2f);
-            
-            // Lerp from target back to original
-            BoxingBag.position = Vector3.Lerp(targetPosition, bagOriginalPosition, t);
-            
-            // Rotate back to 0
-            float currentRotationZ = Mathf.Lerp(targetRotationZ, 0f, t);
-            BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, currentRotationZ);
-            
-            yield return null;
-        }
+        // Create a sequence for smooth animation
+        bagSwingSequence = DOTween.Sequence();
         
-        // Ensure we're exactly at the original position and rotation (Z = 0)
-        BoxingBag.position = bagOriginalPosition;
-        BoxingBag.eulerAngles = new Vector3(currentRotation.x, currentRotation.y, 0f);
-        bagSwingCoroutine = null;
+        // Swing to the target position and rotation (first half)
+        bagSwingSequence.Append(BoxingBag.DOMove(targetPosition, bagSwingDuration / 2f).SetEase(Ease.OutQuad));
+        bagSwingSequence.Join(BoxingBag.DORotate(targetRotationVector, bagSwingDuration / 2f, RotateMode.Fast).SetEase(Ease.OutQuad));
+        
+        // Swing back to original position and rotation (second half)
+        bagSwingSequence.Append(BoxingBag.DOMove(bagOriginalPosition, bagSwingDuration / 2f).SetEase(Ease.InQuad));
+        bagSwingSequence.Join(BoxingBag.DORotate(originalRotationVector, bagSwingDuration / 2f, RotateMode.Fast).SetEase(Ease.InQuad));
+        
+        // Clean up the sequence reference when complete
+        bagSwingSequence.OnComplete(() => bagSwingSequence = null);
+    }
+    
+    void ShakeCamera()
+    {
+        if (gameCamera == null) return;
+        
+        // Kill any existing shake animations
+        gameCamera.transform.DOKill();
+        
+        // Reset to original position first
+        gameCamera.transform.localPosition = cameraOriginalPosition;
+        
+        // Create a punch/shake effect using DOTween
+        // We'll shake the camera randomly and then return it to original position
+        gameCamera.transform.DOShakePosition(
+            cameraShakeDuration, 
+            cameraShakeIntensity, 
+            vibrato: 10, 
+            randomness: 90, 
+            fadeOut: true
+        ).OnComplete(() => {
+            // Ensure camera returns exactly to original position
+            gameCamera.transform.localPosition = cameraOriginalPosition;
+        });
     }
 
     public void GameOver()
