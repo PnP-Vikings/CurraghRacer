@@ -16,6 +16,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance raceAmbience;
     public EventInstance raceWin;
     public EventInstance raceLose;
+    public EventInstance shout;
     // Garage
 
     public EventInstance storyUpdate1;
@@ -107,6 +108,7 @@ public class AudioManager : MonoBehaviour
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
         raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
+        shout = RuntimeManager.CreateInstance("event:/Race/Shout");
 
         storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
         storyUpdate2 = RuntimeManager.CreateInstance("event:/Radio/Story Update 2");   // Player won a race
