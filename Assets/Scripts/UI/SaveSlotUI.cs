@@ -205,6 +205,11 @@ public class SaveSlotUI : MonoBehaviour
             if (SaveSystem.Instance.NewGame(saveNameInputField.text, slotIndex + 1))
             {
                 GameManager.Instance.StartGame();
+
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.UIClick1.start();
+                }
             }
             else
             {
@@ -216,6 +221,11 @@ public class SaveSlotUI : MonoBehaviour
             if (SaveSystem.Instance.NewGame("Game Save", slotIndex + 1))
             {
                 GameManager.Instance.StartGame();
+
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.UIClick1.start();
+                }
             }
             else
             {
@@ -227,9 +237,15 @@ public class SaveSlotUI : MonoBehaviour
     
     private void OnDeleteClicked()
     {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.UIClick1.start();
+        }
+
         parentMenu?.ShowConfirmationDialog(
             $"Are you sure you want to delete Save Slot {slotIndex + 1}?",
             () => {
+
                 if (SaveSystem.Instance.DeleteSave(slotIndex))
                 {
                     parentMenu?.RefreshAllSlots();

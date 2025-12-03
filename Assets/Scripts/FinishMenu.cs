@@ -59,6 +59,12 @@ public class FinishMenu : MonoBehaviour
         else
         {
             _playerMessage.text = "Better luck next time! " + message;
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
+                AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
+                AudioManager.instance.raceLose.start();
+            }
         }
     }
 

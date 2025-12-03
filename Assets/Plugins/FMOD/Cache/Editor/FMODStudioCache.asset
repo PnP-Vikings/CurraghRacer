@@ -438,10 +438,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 638996325580362541
+  lastModified: 639003689382062482
   FileSizes:
   - Name: 
-    Value: 4724
+    Value: 4772
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -1234,12 +1234,13 @@ MonoBehaviour:
   - {fileID: -917604697180666674}
   - {fileID: -6648796307801326495}
   - {fileID: 1476694197085884601}
+  - {fileID: 7518721589535716726}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 638996325580362541
+  cacheTime: 639003689382062482
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -2131,9 +2132,36 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 638996325580317288
+  lastModified: 639003689382027285
   FileSizes: []
   Exists: 1
+--- !u!114 &7518721589535716726
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Race/Shout
+  m_EditorClassIdentifier: 
+  Path: event:/Race/Shout
+  Guid:
+    Data1: -1861568450
+    Data2: 1340098914
+    Data3: -1761157211
+    Data4: -1179860535
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1307
 --- !u!114 &8155522247790703682
 MonoBehaviour:
   m_ObjectHideFlags: 0

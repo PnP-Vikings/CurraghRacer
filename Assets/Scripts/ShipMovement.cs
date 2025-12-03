@@ -185,6 +185,11 @@ public class ShipMovement : MonoBehaviour
         shoutSpeedBoost = 1f + ((stats.strength + stats.teamWork) * 0.02f);
         
         Debug.Log($"{shipName} activated shout boost! Speed multiplier: {shoutSpeedBoost:F2}x for {duration}s");
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.shout.start();
+        }
         
         // Wait for the boost duration
         yield return new WaitForSeconds(duration);
