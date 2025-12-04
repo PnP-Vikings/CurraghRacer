@@ -24,6 +24,30 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-8599118059440351735
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Story Update 3/Story Report Volume 3
+  m_EditorClassIdentifier: 
+  Name: Story Report Volume 3
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 2979293710
+    data2: 2938298640
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-8321495213791179455
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -237,7 +261,7 @@ MonoBehaviour:
   Parameters: []
   MinDistance: 1
   MaxDistance: 20
-  Length: 2108
+  Length: 2720
 --- !u!114 &-7323222143648839996
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -419,7 +443,8 @@ MonoBehaviour:
   IsStream: 1
   Is3D: 0
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: 2750367178640810511}
   MinDistance: 1
   MaxDistance: 20
   Length: 8000
@@ -438,10 +463,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639004030992126148
+  lastModified: 639004580673867894
   FileSizes:
   - Name: 
-    Value: 4772
+    Value: 4956
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -701,7 +726,8 @@ MonoBehaviour:
   IsStream: 0
   Is3D: 0
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: 5929355194854424526}
   MinDistance: 1
   MaxDistance: 20
   Length: 359
@@ -1069,13 +1095,14 @@ MonoBehaviour:
     Data4: -596783812
   Banks:
   - {fileID: 7439203710798878255}
-  IsStream: 1
+  IsStream: 0
   Is3D: 0
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: 5408383811714248195}
   MinDistance: 1
   MaxDistance: 20
-  Length: 4000
+  Length: 4961
 --- !u!114 &-398954281770706825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1240,7 +1267,7 @@ MonoBehaviour:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639004030992126148
+  cacheTime: 639004580673867894
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1422,13 +1449,14 @@ MonoBehaviour:
     Data4: -504628382
   Banks:
   - {fileID: 7439203710798878255}
-  IsStream: 1
+  IsStream: 0
   Is3D: 0
   IsOneShot: 1
-  Parameters: []
+  Parameters:
+  - {fileID: -8599118059440351735}
   MinDistance: 1
   MaxDistance: 20
-  Length: 5500
+  Length: 5523
 --- !u!114 &1512904749870580738
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1579,6 +1607,30 @@ MonoBehaviour:
   ID:
     data1: 1460001747
     data2: 3552657376
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &2750367178640810511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Story Update 1/Story Report Volume 1
+  m_EditorClassIdentifier: 
+  Name: Story Report Volume 1
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3202507458
+    data2: 3878185107
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -1936,6 +1988,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 200000
+--- !u!114 &5408383811714248195
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Story Update 2/Story Report Volume 2
+  m_EditorClassIdentifier: 
+  Name: Story Report Volume 2
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1708119837
+    data2: 4015329020
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &5596098863361504242
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1956,6 +2032,30 @@ MonoBehaviour:
   ID:
     data1: 2460626552
     data2: 3558753587
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
+--- !u!114 &5929355194854424526
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/TV Button Push In/TV Button Push In Volume
+  m_EditorClassIdentifier: 
+  Name: TV Button Push In Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 3220280189
+    data2: 3070946586
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -2132,7 +2232,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639004030992091046
+  lastModified: 639004580673822452
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726

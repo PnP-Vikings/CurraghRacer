@@ -185,7 +185,7 @@ public class GameManager : MonoBehaviour
         return cameraStartPosition;
     }
 
-    IEnumerator SleepAudioChanges()
+    public IEnumerator SleepAudioChanges()
     {
         yield return null;
         if (AudioManager.instance != null)

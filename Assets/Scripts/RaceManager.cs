@@ -730,7 +730,7 @@ public class RaceManager : MonoBehaviour
                 if (isRaceDay)
                 {
                     hasJustWonRace = true;
-                    Debug.Log("Player Won Race - AudioDebug");
+                    //Debug.Log("Player Won Race - AudioDebug");
                     if (PlayerManager.Instance != null)
                     {
                         PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
