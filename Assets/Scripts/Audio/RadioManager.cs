@@ -15,9 +15,11 @@ public class RadioManager : MonoBehaviour
     private PLAYBACK_STATE radioAdOrNews5PlaybackState;
     private PLAYBACK_STATE storyUpdate1PlaybackState;
     private PLAYBACK_STATE storyUpdate2PlaybackState;
+    private PLAYBACK_STATE storyUpdate3PlaybackState;
+    private Scene activeScene;
     private bool radioAdOrNewsHasJustPlayed = false;
     private bool storyUpdate1HasPlayed = false;
-    private Scene activeScene;
+    public bool hasJustLostRace = false;
 
     void Awake()
     {
@@ -61,6 +63,7 @@ public class RadioManager : MonoBehaviour
         {
             AudioManager.instance.storyUpdate1.getPlaybackState(out storyUpdate1PlaybackState);       // Gets the playback state of story updates and assigns it to the variable
             AudioManager.instance.storyUpdate2.getPlaybackState(out storyUpdate2PlaybackState);
+            AudioManager.instance.storyUpdate3.getPlaybackState(out storyUpdate3PlaybackState);
 
             AudioManager.instance.radioAdOrNews1.getPlaybackState(out radioAdOrNews1PlaybackState);   // Gets the playback state of the news and assigns it to the variable
             AudioManager.instance.radioAdOrNews2.getPlaybackState(out radioAdOrNews2PlaybackState);
@@ -68,18 +71,23 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioAdOrNews4.getPlaybackState(out radioAdOrNews4PlaybackState);
             AudioManager.instance.radioAdOrNews5.getPlaybackState(out radioAdOrNews5PlaybackState);
 
-            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPING)
+            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate3PlaybackState == PLAYBACK_STATE.STOPPING)
             {
                 PlayRadioSong();                                                                      // if any of the playback states are "stopping" a random song starts
             }
 
             if (radioAdOrNewsHasJustPlayed)                                                           // checks if the news has just played (if the boolean is true)
             {
-                if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPED)
+                if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate3PlaybackState == PLAYBACK_STATE.STOPPED)
                 {
                     StartCoroutine(RadioCoroutine());                                                 // AND if any of the playback states are "stopped" the coroutine is called
                     radioAdOrNewsHasJustPlayed = false;                                               // the news has just played boolean is reset
                 }
+            }
+
+            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate1PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate2PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate3PlaybackState == PLAYBACK_STATE.PLAYING)
+            {
+                StopAllRadioSongs();                                                                  // Prevents Songs from starting if ads are playing
             }
         }
 
@@ -97,39 +105,63 @@ public class RadioManager : MonoBehaviour
                 UnMuteRadio();
             }
         }
-    }
 
-    public void MuteRadio()
-    {
-        if (AudioManager.instance != null)
+        activeScene = SceneManager.GetActiveScene();
+        if (GameManager.Instance != null)
         {
-            AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 0f);
-            AudioManager.instance.radioSong2.setParameterByName("Radio Song 2 Volume", 0f);
-            AudioManager.instance.radioSong3.setParameterByName("Radio Song 3 Volume", 0f);
-            AudioManager.instance.radioSong4.setParameterByName("Radio Song 4 Volume", 0f);
-            AudioManager.instance.radioSong5.setParameterByName("Radio Song 5 Volume", 0f);
-            AudioManager.instance.radioAdOrNews1.setParameterByName("Radio Ad or News 1 Volume", 0f);
-            AudioManager.instance.radioAdOrNews2.setParameterByName("Radio Ad or News 2 Volume", 0f);
-            AudioManager.instance.radioAdOrNews3.setParameterByName("Radio Ad or News 3 Volume", 0f);
-            AudioManager.instance.radioAdOrNews4.setParameterByName("Radio Ad or News 4 Volume", 0f);
-            AudioManager.instance.radioAdOrNews5.setParameterByName("Radio Ad or News 5 Volume", 0f);
+            if (activeScene.name != "Garage" & GameManager.Instance.SleepAudioChangesCoroutineIsActive)
+            {
+                MuteSleepAudio();
+            }
+        }
+    }
+    private void PlayAdOrNewsOrOverrideWithStoryUpdate()
+    {
+        if (RaceManager.Instance != null)
+        {
+            if (storyUpdate1HasPlayed == false | RaceManager.Instance.hasJustWonRace == true | hasJustLostRace) // checks if story update 1 has played or if the player has just won a race and calls the override method if true
+            {
+                OverriedRadioWithStoryUpdates();
+            }
+            else
+            {
+                PlayRadioAdOrNews();                                        // a regular news is played if false
+            }
         }
     }
 
-    public void UnMuteRadio()
+    private void OverriedRadioWithStoryUpdates()
     {
+        activeScene = SceneManager.GetActiveScene();
+
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 1f);
-            AudioManager.instance.radioSong2.setParameterByName("Radio Song 2 Volume", 1f);
-            AudioManager.instance.radioSong3.setParameterByName("Radio Song 3 Volume", 1f);
-            AudioManager.instance.radioSong4.setParameterByName("Radio Song 4 Volume", 1f);
-            AudioManager.instance.radioSong5.setParameterByName("Radio Song 5 Volume", 1f);
-            AudioManager.instance.radioAdOrNews1.setParameterByName("Radio Ad or News 1 Volume", 1f);
-            AudioManager.instance.radioAdOrNews2.setParameterByName("Radio Ad or News 2 Volume", 1f);
-            AudioManager.instance.radioAdOrNews3.setParameterByName("Radio Ad or News 3 Volume", 1f);
-            AudioManager.instance.radioAdOrNews4.setParameterByName("Radio Ad or News 4 Volume", 1f);
-            AudioManager.instance.radioAdOrNews5.setParameterByName("Radio Ad or News 5 Volume", 1f);
+            if (activeScene.name == "Garage")                            // Checks if the active scene is the Garage scene
+            {
+                // Story update 1 (Declan Kelly Returns)
+                if (!storyUpdate1HasPlayed)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
+                {
+                    AudioManager.instance.storyUpdate1.start();
+                    storyUpdate1HasPlayed = true;
+                }
+
+                // Story update 2 (Player wins race)
+                if (RaceManager.Instance != null)
+                {
+                    if (RaceManager.Instance.hasJustWonRace == true)     // checks if the player has just won a race and if they have it plays story update 2 and sets the boolean to false
+                    {
+                        AudioManager.instance.storyUpdate2.start();
+                        RaceManager.Instance.hasJustWonRace = false;
+                    }
+                }
+
+                // Story update 3 (Player lost race)
+                if (hasJustLostRace)
+                {
+                    AudioManager.instance.storyUpdate3.start();
+                    hasJustLostRace = false;
+                }
+            }
         }
     }
 
@@ -201,6 +233,7 @@ public class RadioManager : MonoBehaviour
         {
             AudioManager.instance.storyUpdate1.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.storyUpdate2.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.storyUpdate3.stop(STOP_MODE.ALLOWFADEOUT);
 
             AudioManager.instance.radioAdOrNews1.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews2.stop(STOP_MODE.ALLOWFADEOUT);
@@ -222,46 +255,47 @@ public class RadioManager : MonoBehaviour
         }
     }
 
-    private void OverriedRadioWithStoryUpdates()
+    public void MuteRadio()
     {
-        activeScene = SceneManager.GetActiveScene();
-
         if (AudioManager.instance != null)
         {
-            if (activeScene.name == "Garage")                            // Checks if the active scene is the Garage scene
-            {
-                // Story update 1 (Declan Kelly Returns)
-                if (!storyUpdate1HasPlayed)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
-                {
-                    AudioManager.instance.storyUpdate1.start();
-                    storyUpdate1HasPlayed = true;
-                }
-
-                // Story update 2 (Player wins race)
-                if (RaceManager.Instance != null)
-                {
-                    if (RaceManager.Instance.hasJustWonRace == true)     // checks if the player has just one a race and if they have it plays story update 2 and sets the boolean to false
-                    {
-                        AudioManager.instance.storyUpdate2.start();
-                        RaceManager.Instance.hasJustWonRace = false;
-                    }
-                }
-            }
+            AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 0f);
+            AudioManager.instance.radioSong2.setParameterByName("Radio Song 2 Volume", 0f);
+            AudioManager.instance.radioSong3.setParameterByName("Radio Song 3 Volume", 0f);
+            AudioManager.instance.radioSong4.setParameterByName("Radio Song 4 Volume", 0f);
+            AudioManager.instance.radioSong5.setParameterByName("Radio Song 5 Volume", 0f);
+            AudioManager.instance.radioAdOrNews1.setParameterByName("Radio Ad or News 1 Volume", 0f);
+            AudioManager.instance.radioAdOrNews2.setParameterByName("Radio Ad or News 2 Volume", 0f);
+            AudioManager.instance.radioAdOrNews3.setParameterByName("Radio Ad or News 3 Volume", 0f);
+            AudioManager.instance.radioAdOrNews4.setParameterByName("Radio Ad or News 4 Volume", 0f);
+            AudioManager.instance.radioAdOrNews5.setParameterByName("Radio Ad or News 5 Volume", 0f);
         }
     }
 
-    private void PlayAdOrNewsOrOverrideWithStoryUpdate()
+    public void UnMuteRadio()
     {
-        if(RaceManager.Instance != null)
+        if (AudioManager.instance != null)
         {
-            if (storyUpdate1HasPlayed == false | RaceManager.Instance.hasJustWonRace == true) // checks if story update 1 has played or if the player has just won a race and calls the override method if true
-            {
-                OverriedRadioWithStoryUpdates();
-            }
-            else
-            {
-                PlayRadioAdOrNews();                                        // a regular news is played if false
-            }
+            AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 1f);
+            AudioManager.instance.radioSong2.setParameterByName("Radio Song 2 Volume", 1f);
+            AudioManager.instance.radioSong3.setParameterByName("Radio Song 3 Volume", 1f);
+            AudioManager.instance.radioSong4.setParameterByName("Radio Song 4 Volume", 1f);
+            AudioManager.instance.radioSong5.setParameterByName("Radio Song 5 Volume", 1f);
+            AudioManager.instance.radioAdOrNews1.setParameterByName("Radio Ad or News 1 Volume", 1f);
+            AudioManager.instance.radioAdOrNews2.setParameterByName("Radio Ad or News 2 Volume", 1f);
+            AudioManager.instance.radioAdOrNews3.setParameterByName("Radio Ad or News 3 Volume", 1f);
+            AudioManager.instance.radioAdOrNews4.setParameterByName("Radio Ad or News 4 Volume", 1f);
+            AudioManager.instance.radioAdOrNews5.setParameterByName("Radio Ad or News 5 Volume", 1f);
+        }
+    }
+
+    public void MuteSleepAudio()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.sleepAudio.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.sleepOutsideAudio.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.rooster.stop(STOP_MODE.ALLOWFADEOUT);
         }
     }
 }
