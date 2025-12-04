@@ -13,7 +13,8 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Canvas canvas;
     private Vector2 originalPosition;
     private bool isSwiping = false;
-    
+    [SerializeField] private float maxRotation = 30f;
+    private Vector2 dragStartPosition; 
     // Track current card data
     private DecisionCard currentCard;
     private TeamMember currentTargetMember;
@@ -153,21 +154,24 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public void OnBeginDrag(PointerEventData eventData)
     {
         isSwiping = true;
+        dragStartPosition = rectTransform.anchoredPosition;
     }
     
     public void OnDrag(PointerEventData eventData)
     {
         if (!isSwiping) return;
-        
+    
         if (decisionCardUiMaster != null)
         {
             decisionCardUiMaster.DragStarted(this);
         }
         // Move card with drag
         rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
-        
-        // Rotate card based on horizontal movement
-        float rotation = rectTransform.anchoredPosition.x * rotationStrength *-1;
+    
+        // Rotate card based on horizontal movement from start position (not absolute position)
+        float dragDeltaX = rectTransform.anchoredPosition.x - dragStartPosition.x;
+        float rotation = dragDeltaX * rotationStrength * -1;
+        rotation = Mathf.Clamp(rotation, -maxRotation, maxRotation);
         rectTransform.rotation = Quaternion.Euler(0, 0, rotation);
     }
     
@@ -246,7 +250,11 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         Destroy(gameObject);
         // Load next card
     }
-
+    public bool IsSwiping()
+    {
+        return isSwiping;
+    }
+    
     private void ResetPosition()
     {
         StartCoroutine(ResetPositionCoroutine());

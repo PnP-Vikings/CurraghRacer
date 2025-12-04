@@ -148,6 +148,8 @@ GameObject:
   - component: {fileID: 3620711424652744927}
   - component: {fileID: 4339352593043026507}
   - component: {fileID: 1715210297775455110}
+  - component: {fileID: 380163020378545069}
+  - component: {fileID: 3763380528340432701}
   m_Layer: 5
   m_Name: CardPrefab
   m_TagString: Untagged
@@ -239,6 +241,35 @@ MonoBehaviour:
   acceptText: {fileID: 7615262528476029115}
   rejectText: {fileID: 5698267633027294925}
   cardImage: {fileID: 1357159382931374618}
+--- !u!114 &380163020378545069
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3644548006252439026}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 721a70647d81516449f828b018267385, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTiltAngle: 5
+  tiltSpeed: 0.2
+--- !u!114 &3763380528340432701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3644548006252439026}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9fd8a637c4d7994f845286ac7b37c39, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  maxTiltAngle: 5
+  tiltSpeed: 0.2
+  _card: {fileID: 1715210297775455110}
 --- !u!1 &6266114493349435784
 GameObject:
   m_ObjectHideFlags: 0

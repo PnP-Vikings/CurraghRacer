@@ -64,7 +64,7 @@ public class TeamMember : ScriptableObject
     [Header("Happiness && Fitness")]
     public TeamMemberFitness fitness = new TeamMemberFitness();
     [Tooltip("Happiness level of the team member (0-100).")]
-    public Happiness happiness = new Happiness(); // Default happiness level
+    public Happiness Happiness = new Happiness(); // Default happiness level
     
     
     public CharacterStats GetStats()
@@ -91,7 +91,7 @@ public class TeamMember : ScriptableObject
         xpToNextLevel = 100;
         racesAvailableFor = 999999; // Reset to default
         fitness.ResetFitness();
-        happiness = new Happiness(); // Reset to default happiness
+        Happiness = new Happiness(); // Reset to default happiness
     }
     
     public virtual CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)

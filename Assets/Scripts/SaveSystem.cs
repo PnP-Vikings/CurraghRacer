@@ -189,13 +189,13 @@ public class TeamMemberSaveData
         }
         
         // Deep copy happiness
-        if (member.happiness != null)
+        if (member.Happiness != null)
         {
             happiness = new Happiness
             {
-                currentHappiness = member.happiness.currentHappiness,
-                maxHappiness = member.happiness.maxHappiness,
-                currentMood = member.happiness.currentMood
+                currentHappiness = member.Happiness.currentHappiness,
+                maxHappiness = member.Happiness.maxHappiness,
+                currentMood = member.Happiness.currentMood
             };
         }
     }
@@ -1073,11 +1073,11 @@ public class SaveSystem : MonoBehaviour
                     injuryStatus = team.teamManager.fitness.injuryStatus,
                     currentPhysicalState = team.teamManager.fitness.currentPhysicalState
                 } : null,
-                happiness = team.teamManager.happiness != null ? new Happiness
+                happiness = team.teamManager.Happiness != null ? new Happiness
                 {
-                    currentHappiness = team.teamManager.happiness.currentHappiness,
-                    maxHappiness = team.teamManager.happiness.maxHappiness,
-                    currentMood = team.teamManager.happiness.currentMood
+                    currentHappiness = team.teamManager.Happiness.currentHappiness,
+                    maxHappiness = team.teamManager.Happiness.maxHappiness,
+                    currentMood = team.teamManager.Happiness.currentMood
                 } : null
             } : null,
             bench =  team.bench != null ? new TeamMemberSaveData[team.bench.Count] : null,
@@ -1161,7 +1161,7 @@ public class SaveSystem : MonoBehaviour
         // Restore happiness
         if (saveData.happiness != null)
         {
-            member.happiness = new Happiness
+            member.Happiness = new Happiness
             {
                 currentHappiness = saveData.happiness.currentHappiness,
                 maxHappiness = saveData.happiness.maxHappiness,

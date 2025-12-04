@@ -7,38 +7,45 @@ using UnityEngine.InputSystem;
 public class UiFollowMouse : MonoBehaviour, IPointerDownHandler, IPointerUpHandler, IPointerExitHandler, IPointerEnterHandler
 {
     Quaternion _base;
-    Tween _currentTween;
+    protected Tween _currentTween;
     bool isPointerOver;
-    PlayerInputs playerInput;
-    
+
     [SerializeField] private float maxTiltAngle = 5f;
     [SerializeField] private float tiltSpeed = 0.2f;
-    
+
     private RectTransform _rectTransform;
     private Canvas _canvas;
-    
-    void Awake()
+    private Camera _uiCamera;
+
+  
+    protected virtual void OnEnable()
     {
         _base = transform.localRotation;
         _rectTransform = GetComponent<RectTransform>();
         _canvas = GetComponentInParent<Canvas>();
         
+        // Get the correct camera based on render mode
+        if (_canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+        {
+            _uiCamera = null; // Overlay doesn't use a camera
+        }
+        else
+        {
+            _uiCamera = _canvas.worldCamera;
+        }
     }
 
-    private void OnEnable()
-    {
-        playerInput = new PlayerInputs();
-    }
-    void OnDisable()
+    protected virtual void OnDisable()
     {
         _currentTween?.Kill();
         transform.localRotation = _base;
+        isPointerOver = false;
     }
-    
-    void Update()
+
+    protected virtual void Update()
     {
         if (!isPointerOver) return;
-        
+
         Vector2 inputPosition = Vector2.zero;
         bool hasInput = false;
 
@@ -57,12 +64,20 @@ public class UiFollowMouse : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
         }
 
         if (!hasInput) return;
-        
-        Vector3 mousePos = inputPosition;
-        Vector3 objectScreenPos = RectTransformUtility.WorldToScreenPoint(_canvas.worldCamera, transform.position);
-        
-        Vector3 offset = mousePos - objectScreenPos;
-        
+        Vector3 objectScreenPos;
+
+        // Handle both overlay and camera-based canvases
+        if (_canvas.renderMode == RenderMode.ScreenSpaceOverlay)
+        {
+            objectScreenPos = _rectTransform.position;
+        }
+        else
+        {
+            objectScreenPos = RectTransformUtility.WorldToScreenPoint(_uiCamera, _rectTransform.position);
+        }
+
+        Vector3 offset = new Vector3(inputPosition.x - objectScreenPos.x, inputPosition.y - objectScreenPos.y, objectScreenPos.z);
+
         float targetX = -offset.y / Screen.height * maxTiltAngle * 2f;
         float targetY = offset.x / Screen.width * maxTiltAngle * 2f;
 
@@ -73,32 +88,34 @@ public class UiFollowMouse : MonoBehaviour, IPointerDownHandler, IPointerUpHandl
             .SetUpdate(true)
             .SetEase(Ease.OutQuad);
     }
-    
-    public void OnPointerDown(PointerEventData e)
+
+    public virtual void OnPointerDown(PointerEventData e)
     {
         isPointerOver = true;
     }
 
-    public void OnPointerUp(PointerEventData e)
+    public virtual void OnPointerUp(PointerEventData e)
     {
         isPointerOver = false;
-        _currentTween?.Kill();
-        _currentTween = transform.DOLocalRotateQuaternion(_base, tiltSpeed)
-            .SetUpdate(true)
-            .SetEase(Ease.OutQuad);
+        ResetRotation();
     }
 
     public void OnPointerExit(PointerEventData e)
     {
         isPointerOver = false;
-        _currentTween?.Kill();
-        _currentTween = transform.DOLocalRotateQuaternion(_base, tiltSpeed)
-            .SetUpdate(true)
-            .SetEase(Ease.OutQuad);
+        ResetRotation();
     }
 
     public void OnPointerEnter(PointerEventData e)
     {
         isPointerOver = true;
+    }
+
+    private void ResetRotation()
+    {
+        _currentTween?.Kill();
+        _currentTween = transform.DOLocalRotateQuaternion(_base, tiltSpeed)
+            .SetUpdate(true)
+            .SetEase(Ease.OutQuad);
     }
 }
