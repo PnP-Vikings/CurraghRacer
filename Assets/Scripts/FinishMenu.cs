@@ -37,6 +37,8 @@ public class FinishMenu : MonoBehaviour
         {
             AudioManager.instance.UIClick2.start();
             AudioManager.instance.raceAmbience.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceLose.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceWin.stop(STOP_MODE.ALLOWFADEOUT);
         }
 
         RaceManager.Instance.EndRace();

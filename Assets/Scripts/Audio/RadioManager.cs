@@ -3,6 +3,7 @@ using MiniGames;
 using System.Collections;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering;
 using UnityEngine.SceneManagement;
 
 public class RadioManager : MonoBehaviour
@@ -111,8 +112,15 @@ public class RadioManager : MonoBehaviour
         {
             if (activeScene.name != "Garage" & GameManager.Instance.SleepAudioChangesCoroutineIsActive)
             {
+                Debug.Log("Sleep Audio is muted - AudioDebug");
                 MuteSleepAudio();
             }
+        }
+
+        if (activeScene.name == "Main Menu")
+        {
+            Debug.Log("Radio muted as main menu is active");
+            MuteRadio();
         }
     }
     private void PlayAdOrNewsOrOverrideWithStoryUpdate()
@@ -259,6 +267,9 @@ public class RadioManager : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
+            AudioManager.instance.storyUpdate1.setParameterByName("Story Report 1 Volume", 0f);
+            AudioManager.instance.storyUpdate2.setParameterByName("Story Report 2 Volume", 0f);
+            AudioManager.instance.storyUpdate3.setParameterByName("Story Report 3 Volume", 0f);
             AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 0f);
             AudioManager.instance.radioSong2.setParameterByName("Radio Song 2 Volume", 0f);
             AudioManager.instance.radioSong3.setParameterByName("Radio Song 3 Volume", 0f);
@@ -276,6 +287,9 @@ public class RadioManager : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
+            AudioManager.instance.storyUpdate1.setParameterByName("Story Report 1 Volume", 1f);
+            AudioManager.instance.storyUpdate2.setParameterByName("Story Report 2 Volume", 1f);
+            AudioManager.instance.storyUpdate3.setParameterByName("Story Report 3 Volume", 1f);
             AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 1f);
             AudioManager.instance.radioSong2.setParameterByName("Radio Song 2 Volume", 1f);
             AudioManager.instance.radioSong3.setParameterByName("Radio Song 3 Volume", 1f);
@@ -296,6 +310,7 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.sleepAudio.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.sleepOutsideAudio.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.rooster.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.tvButtonPushIn.setParameterByName("TV Button Push In Volume", 0f);
         }
     }
 }
