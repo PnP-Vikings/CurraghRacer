@@ -42,9 +42,9 @@ public class AudioManager : MonoBehaviour
         // Bulletin Board
     public EventInstance sleepAudio;
     public EventInstance sleepOutsideAudio;
-    public EventInstance payBill;
     public EventInstance rooster;
-        // Training
+    public EventInstance payBill;
+    // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
     //public EventInstance rowingGameAmbience;

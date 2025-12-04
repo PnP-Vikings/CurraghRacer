@@ -730,6 +730,7 @@ public class RaceManager : MonoBehaviour
                 if (isRaceDay)
                 {
                     hasJustWonRace = true;
+                    Debug.Log("Player Won Race - AudioDebug");
                     if (PlayerManager.Instance != null)
                     {
                         PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
@@ -764,7 +765,7 @@ public class RaceManager : MonoBehaviour
                 Debug.Log("Player did not finish first.");
                 finishMenu.UpdatePlayerMessage(false, "Better luck next time!");
                 if(!isRaceDay) return; // No coins deducted
-            }  
+            }
         }
     }
 
