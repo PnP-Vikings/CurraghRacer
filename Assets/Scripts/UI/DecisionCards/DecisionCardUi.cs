@@ -14,7 +14,8 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     private Vector2 originalPosition;
     private bool isSwiping = false;
     [SerializeField] private float maxRotation = 30f;
-    private Vector2 dragStartPosition; 
+    private Vector2 dragStartPosition;
+    private Vector2 dragOffset; // Offset between click position and card center
     // Track current card data
     private DecisionCard currentCard;
     private TeamMember currentTargetMember;
@@ -155,6 +156,17 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     {
         isSwiping = true;
         dragStartPosition = rectTransform.anchoredPosition;
+        
+        // Calculate the offset between the click position and the card's center in parent's local space
+        Vector2 localPointerPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform.parent as RectTransform, 
+            eventData.position, 
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, 
+            out localPointerPosition
+        );
+        // Store the offset from the card's current position to the pointer
+        dragOffset = localPointerPosition - rectTransform.anchoredPosition;
     }
     
     public void OnDrag(PointerEventData eventData)
@@ -165,8 +177,18 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         {
             decisionCardUiMaster.DragStarted(this);
         }
-        // Move card with drag
-        rectTransform.anchoredPosition += eventData.delta / canvas.scaleFactor;
+        
+        // Convert the current pointer position to local space
+        Vector2 localPointerPosition;
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(
+            rectTransform.parent as RectTransform, 
+            eventData.position, 
+            canvas.renderMode == RenderMode.ScreenSpaceOverlay ? null : canvas.worldCamera, 
+            out localPointerPosition
+        );
+        
+        // Set the card's position accounting for the initial click offset
+        rectTransform.anchoredPosition = localPointerPosition - dragOffset;
     
         // Rotate card based on horizontal movement from start position (not absolute position)
         float dragDeltaX = rectTransform.anchoredPosition.x - dragStartPosition.x;
