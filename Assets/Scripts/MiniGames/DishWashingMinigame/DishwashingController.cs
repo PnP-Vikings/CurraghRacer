@@ -37,7 +37,7 @@ public class DishwashingController : MonoBehaviour
 
     public MiniGameManager MiniGameManager;
     
-    Tween _currentTween;
+    Sequence _currentTween;
 
     void OnEnable()
     {
@@ -55,7 +55,7 @@ public class DishwashingController : MonoBehaviour
         
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
-        MovePlateToCleanPosition();
+        
     }
 
     void Update()
@@ -119,26 +119,53 @@ public class DishwashingController : MonoBehaviour
             });
         }
     }
+
+    public Tween MovePlateToStartPostion(PlateLogic plateLogic)
+    {
+        Debug.Log("Moving plate to start position: " + plateLogic.gameObject.name);
+        Tween tween = DOTween.Sequence()
+            .Append(plateLogic.transform.DOMove(spawnPoint.position + new Vector3(0, 0.009f* (plates.Count), 0) , 0.5f).SetEase(Ease.InOutSine))
+            .SetUpdate(true)
+            .SetEase(Ease.OutQuad);
     
-    
-    
+        return tween; // Return the tween so we can track it
+    }
+
     public void SpawnPlates()
     {
-        for (int i = 0; i < spawnCount; i++) // Spawn 5 plates
+        List<Tween> spawnTweens = new List<Tween>();
+    
+        for (int i = 0; i < spawnCount; i++)
         {
-            GameObject plateObject = Instantiate(PlatePrefab, spawnPoint.position, Quaternion.identity);
+            GameObject plateObject = Instantiate(PlatePrefab, spawnPoint.position + new Vector3(3,1, 0), Quaternion.identity);
             PlateLogic plateLogic = plateObject.GetComponent<PlateLogic>();
             if (plateLogic != null)
             {
-                plates.Add(plateLogic); // Add the plate to the list
+                plates.Add(plateLogic);
                 Debug.Log("Spawned plate: " + plateObject.name);
+                Tween tween = MovePlateToStartPostion(plateLogic);
+                spawnTweens.Add(tween);
             }
             else
             {
                 Debug.LogError("PlateLogic component not found on the spawned plate prefab.");
             }
         }
+
+        // Wait for all spawn animations to complete
+        _currentTween?.Kill();
+        _currentTween = DOTween.Sequence();
+        foreach (var tween in spawnTweens)
+        {
+            _currentTween.Append(tween); // Join all tweens so they play simultaneously
+        }
+    
+        _currentTween.OnComplete(() =>
+        {
+            MovePlateToCleanPosition();
+        });
     }
+    
     public void PlateCleaned()
     {
         float finishCleanPosX=finishClean.position.x; 
