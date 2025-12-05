@@ -1,6 +1,7 @@
 //using System.Collections;
 using MiniGames;
 using System.Collections.Generic;
+using DG.Tweening;
 using League;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -35,6 +36,8 @@ public class DishwashingController : MonoBehaviour
     [SerializeField] private int spawnCount = 5;
 
     public MiniGameManager MiniGameManager;
+    
+    Tween _currentTween;
 
     void OnEnable()
     {
@@ -103,10 +106,21 @@ public class DishwashingController : MonoBehaviour
     {
         if (plateCleanPosition.plateLogic == null  && plates.Count > 0)
         {
-            plates[0].transform.position = cleanPosition.position; // Move the plate to the clean position
-            plates[0].transform.rotation = cleanPosition.rotation; // Set the rotation to match the clean position
+            _currentTween?.Kill(); // Kill any existing tween
+            // Move the plate to the clean position and Set the rotation to match the clean position*/
+            _currentTween = DOTween.Sequence()
+                .Append(plates[0].transform.DOMove(spawnPoint.position + new Vector3(0,1f,0), 2f).SetEase(Ease.InOutSine))
+                .Append(plates[0].transform.DOMove(cleanPosition.position, 1f).SetEase(Ease.OutSine))
+                .Join(plates[0].transform.DORotateQuaternion(cleanPosition.rotation, 1f).SetEase(Ease.OutSine))
+                .SetUpdate(true).SetEase(Ease.OutQuad);
+            _currentTween.OnComplete(() =>
+            {
+                plates[0].SetAllDirtShaderstoCleaning(); // Start cleaning the plate
+            });
         }
     }
+    
+    
     
     public void SpawnPlates()
     {
@@ -130,12 +144,29 @@ public class DishwashingController : MonoBehaviour
         float finishCleanPosX=finishClean.position.x; 
         float finishCleanPosZ=finishClean.position.z; 
         float finishCleanPosY=finishClean.position.y; 
+        
+        _currentTween?.Kill();
+        _currentTween = DOTween.Sequence()
+            .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + 1f, finishCleanPosZ), 0.3f).SetEase(Ease.OutSine))
+            .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + (0.004f * (platesCleaned.Count + 1)), finishCleanPosZ), 0.3f).SetEase(Ease.OutQuad)) // Reduced to 0.3s
+            .Join(plateCleanPosition.plateLogic.transform.DORotateQuaternion(finishClean.rotation, 0.3f).SetEase(Ease.OutQuad)) // Match rotation duration
+            .SetUpdate(true);
+        
+        
+        
+        /*
         plateCleanPosition.plateLogic.transform.position = new Vector3(finishCleanPosX,finishCleanPosY + (.03f*(platesCleaned.Count+1)),finishCleanPosZ); // Slightly raise the plate to avoid z-fighting
         plateCleanPosition.plateLogic.transform.rotation= finishClean.transform.rotation; // Set the rotation to match the finish clean position
+        */
         platesCleaned.Add(plateCleanPosition.plateLogic); // Add the cleaned plate to the list
         plates.Remove(plateCleanPosition.plateLogic); // Remove the cleaned plate from the plates list
         plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
-        MovePlateToCleanPosition(); // Move the next plate to the clean position
+        
+        _currentTween.OnComplete(() =>
+        {
+            MovePlateToCleanPosition(); // Move the next plate to the clean position
+        });
+    
 
         if (AudioManager.instance != null)
         {
@@ -172,4 +203,13 @@ public class DishwashingController : MonoBehaviour
            }
        }
     }
+
+    public enum PlateDishwashingStages
+    {
+        NotStarted,
+        Sinking,
+        Cleaning,
+        Finished
+    }
 }
+
