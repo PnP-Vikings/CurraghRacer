@@ -7,8 +7,8 @@ public class PlateCleanPosition : MonoBehaviour
     public PlateLogic plateLogic; // Reference to the PlateLogic component
     public UnityEvent onPlateCleaned; // Event to trigger when the plate is cleaned
     //private FMOD.Studio.EventInstance spongeAudio;
-    private bool _hasInvokedEvent = false;
-    /*private void OnTriggerEnter(Collider other)
+    
+    private void OnTriggerEnter(Collider other)
     {
         // Check if the collider belongs to a plate
         if (other.GetComponent<PlateLogic>() != null)
@@ -18,19 +18,27 @@ public class PlateCleanPosition : MonoBehaviour
             //spongeAudio = FMODUnity.RuntimeManager.CreateInstance("event:/Kitchen/Sponge");
             //spongeAudio.start();
         }
-    }*/
+    }
 
     private void OnTriggerStay(Collider other)
     {
         if (other.GetComponent<PlateLogic>() != null)
         {
-            PlateLogic plate = other.GetComponent<PlateLogic>();
-            if (plate != null && plate.IsPlateClean() && plateLogic == null)
+            plateLogic = other.GetComponent<PlateLogic>();
+            // Check if the plate is clean
+            if (plateLogic == null)
             {
-                plateLogic = plate;
+                Debug.LogWarning("PlateLogic is not assigned or found in the collider.");
+                return; // Exit if plateLogic is not set
+            }
+            if (plateLogic.IsPlateClean())
+            {
                 Debug.Log("Plate is clean and ready to be placed in the rack.");
-                _hasInvokedEvent = true; // Set flag before invoking
-                onPlateCleaned?.Invoke();
+                onPlateCleaned.Invoke(); // Trigger the event when the plate is clean
+            }
+            else
+            {
+                Debug.Log("Plate is not clean, cannot be placed in the rack.");
             }
         }
     }
@@ -40,14 +48,13 @@ public class PlateCleanPosition : MonoBehaviour
         // Check if the collider belongs to a plate
         if (other.GetComponent<PlateLogic>() != null)
         {
-            Debug.Log("Plate exited clean position: " + other.gameObject.name);
-            _hasInvokedEvent = false; // Reset flag when plate exits
+            Debug.Log("Plate exited clean position: " + other.name);
         }
         
-        if(other.GetComponent<PlateLogic>() == null)
+        /*if(other.GetComponent<PlateLogic>() == null)
         {
             plateLogic = null;
-        }
+        }*/
     }
     
 }

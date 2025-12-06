@@ -185,37 +185,33 @@ public class DishwashingController : MonoBehaviour
         });
     }
     
-    private bool _isProcessingPlate = false;
-
     public void PlateCleaned()
     {
-        if (_isProcessingPlate) return; // Prevent multiple calls
-        _isProcessingPlate = true;
-
-        float finishCleanPosX=finishClean.position.x;
-        float finishCleanPosZ=finishClean.position.z;
-        float finishCleanPosY=finishClean.position.y;
-
+        float finishCleanPosX=finishClean.position.x; 
+        float finishCleanPosZ=finishClean.position.z; 
+        float finishCleanPosY=finishClean.position.y; 
+        
         _currentTween?.Kill();
         _currentTween = DOTween.Sequence()
             .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + 1f, finishCleanPosZ), 0.3f).SetEase(Ease.OutSine))
-            .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + (0.004f * (platesCleaned.Count + 1)), finishCleanPosZ), 0.3f).SetEase(Ease.OutQuad))
-            .Join(plateCleanPosition.plateLogic.transform.DORotateQuaternion(finishClean.rotation, 0.3f).SetEase(Ease.OutQuad))
+            .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + (0.004f * (platesCleaned.Count + 1)), finishCleanPosZ), 0.3f).SetEase(Ease.OutQuad)) // Reduced to 0.3s
+            .Join(plateCleanPosition.plateLogic.transform.DORotateQuaternion(finishClean.rotation, 0.3f).SetEase(Ease.OutQuad)) // Match rotation duration
             .SetUpdate(true);
-
+        
+        
+       
         _currentTween.OnComplete(() =>
         {
+            platesCleaned.Add(plateCleanPosition.plateLogic); // Add the cleaned plate to the list
+            plates.Remove(plateCleanPosition.plateLogic); // Remove the cleaned plate from the plates list
+            plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
+
             UpdateScoreUI();
-            platesCleaned.Add(plateCleanPosition.plateLogic);
-            plates.Remove(plateCleanPosition.plateLogic);
-    
-            MinigameFinished(); // Move this before clearing plateLogic
-    
-            plateCleanPosition.plateLogic = null;
-            _isProcessingPlate = false;
-    
-            MovePlateToCleanPosition();
+            MovePlateToCleanPosition(); // Move the next plate to the clean position
         });
+        
+        
+    
 
         if (AudioManager.instance != null)
         {
