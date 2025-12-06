@@ -37,6 +37,7 @@ public class DishwashingController : MonoBehaviour
 
     public MiniGameManager MiniGameManager;
     
+    public PlateDishwashingStages currentStage = PlateDishwashingStages.SpawningPlates;
     
 
     [SerializeField] private MinigameCanvasUI minigameCanvasUI;
@@ -60,7 +61,7 @@ public class DishwashingController : MonoBehaviour
         
         StopSplashParticles();
         
-        minigameCanvasUI.SetUpUI(true,true,false,false,true);
+        minigameCanvasUI.SetUpUI(true,false,false,false,true);
         
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
@@ -115,17 +116,24 @@ public class DishwashingController : MonoBehaviour
 
     public void MovePlateToCleanPosition()
     {
+        Debug.Log("Moving plate to clean position.");
+        currentStage = PlateDishwashingStages.WaitingForPlate;
+        
+        ShowAdditionalUI(true);
         if (plateCleanPosition.plateLogic == null  && plates.Count > 0)
         {
             _currentTween?.Kill(); // Kill any existing tween
             // Move the plate to the clean position and Set the rotation to match the clean position*/
             _currentTween = DOTween.Sequence()
                 .Append(plates[0].transform.DOMove(spawnPoint.position + new Vector3(0,1f,0), 2f).SetEase(Ease.InOutSine))
-                .Append(plates[0].transform.DOMove(cleanPosition.position, 1f).SetEase(Ease.OutSine))
-                .Join(plates[0].transform.DORotateQuaternion(cleanPosition.rotation, 1f).SetEase(Ease.OutSine))
+                .Append(plates[0].transform.DOMove(cleanPosition.position, .7f).SetEase(Ease.OutSine))
+                .Insert(1,plates[0].transform.DORotateQuaternion(cleanPosition.rotation, 1f).SetEase(Ease.OutSine))
                 .SetUpdate(true).SetEase(Ease.OutQuad);
             _currentTween.OnComplete(() =>
             {
+                currentStage = PlateDishwashingStages.Cleaning;
+                StartSplashParticles();
+                UpdateAdditionalUI();
                 plates[0].SetAllDirtShaderstoCleaning(); // Start cleaning the plate
             });
         }
@@ -150,8 +158,51 @@ public class DishwashingController : MonoBehaviour
             minigameCanvasUI.UpdateScore(platesCleaned.Count + "/" + spawnCount);
         }
     }
+    
+    public void ShowAdditionalUI(bool show)
+    {
+       if(minigameCanvasUI != null)
+       {
+           if(!show)
+               minigameCanvasUI.HideAdditionalInfo();
+           else
+           {
+               minigameCanvasUI.ShowAdditionalInfo();
+               UpdateAdditionalUI();
+           }
+       }
+    }
+    
+    public void UpdateAdditionalUI()
+    {
+       if(minigameCanvasUI != null)
+       {
+           switch (currentStage)
+           {
+               case PlateDishwashingStages.SpawningPlates:
+                   minigameCanvasUI.UpdateAdditionalInfo("Spawning Plates...");
+                   break;
+               case PlateDishwashingStages.WaitingForPlate:
+                   minigameCanvasUI.UpdateAdditionalInfo("Waiting for Plate...");
+                   break;
+               case PlateDishwashingStages.Sinking:
+                   minigameCanvasUI.UpdateAdditionalInfo("Plate Sinking...");
+                   break;
+               case PlateDishwashingStages.Cleaning:
+                   minigameCanvasUI.UpdateAdditionalInfo("Clean Plate...");
+                   break;
+               case PlateDishwashingStages.Finished:
+                   minigameCanvasUI.UpdateAdditionalInfo("All Plates Cleaned!");
+                   break;
+               default:
+                   minigameCanvasUI.UpdateAdditionalInfo("");
+                   break;
+           }
+       }
+    }
     public void SpawnPlates()
     {
+        ShowAdditionalUI(true);
         List<Tween> spawnTweens = new List<Tween>();
     
         for (int i = 0; i < spawnCount; i++)
@@ -187,6 +238,12 @@ public class DishwashingController : MonoBehaviour
     
     public void PlateCleaned()
     {
+        StopSplashParticles();
+        if (minigameCanvasUI != null)
+        {
+            minigameCanvasUI.UpdateAdditionalInfo("Plate Cleaned!");
+        }
+        
         float finishCleanPosX=finishClean.position.x; 
         float finishCleanPosZ=finishClean.position.z; 
         float finishCleanPosY=finishClean.position.y; 
@@ -205,20 +262,15 @@ public class DishwashingController : MonoBehaviour
             platesCleaned.Add(plateCleanPosition.plateLogic); // Add the cleaned plate to the list
             plates.Remove(plateCleanPosition.plateLogic); // Remove the cleaned plate from the plates list
             plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
-
             UpdateScoreUI();
+            MinigameFinished();
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.movePlateAudio.start();
+            }
             MovePlateToCleanPosition(); // Move the next plate to the clean position
         });
         
-        
-    
-
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.movePlateAudio.start();
-        }
-
-        MinigameFinished();
     }
     
     public void MinigameFinished()
@@ -226,6 +278,9 @@ public class DishwashingController : MonoBehaviour
        if(platesCleaned.Count == spawnCount)
        {
            Debug.Log("Dishwashing minigame completed!");
+           
+           currentStage = PlateDishwashingStages.Finished;
+           UpdateAdditionalUI();
            
            int finalScore = platesCleaned.Count * 100; // 100 points per plate cleaned
            
