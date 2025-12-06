@@ -37,6 +37,12 @@ public class DishwashingController : MonoBehaviour
 
     public MiniGameManager MiniGameManager;
     
+    
+
+    [SerializeField] private MinigameCanvasUI minigameCanvasUI;
+    [SerializeField]private ParticleSystem splashParticles;
+    
+    
     Sequence _currentTween;
 
     void OnEnable()
@@ -52,11 +58,16 @@ public class DishwashingController : MonoBehaviour
         if (spongeInstance == null)
             spongeInstance = Instantiate(spongePrefab);
         
+        StopSplashParticles();
+        
+        minigameCanvasUI.SetUpUI(true,true,false,false,true);
         
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
-        
+        UpdateScoreUI();
     }
+    
+    
 
     void Update()
     {
@@ -131,6 +142,14 @@ public class DishwashingController : MonoBehaviour
         return tween; // Return the tween so we can track it
     }
 
+    
+    public void UpdateScoreUI()
+    {
+        if (minigameCanvasUI != null)
+        {
+            minigameCanvasUI.UpdateScore(platesCleaned.Count + "/" + spawnCount);
+        }
+    }
     public void SpawnPlates()
     {
         List<Tween> spawnTweens = new List<Tween>();
@@ -166,34 +185,37 @@ public class DishwashingController : MonoBehaviour
         });
     }
     
+    private bool _isProcessingPlate = false;
+
     public void PlateCleaned()
     {
-        float finishCleanPosX=finishClean.position.x; 
-        float finishCleanPosZ=finishClean.position.z; 
-        float finishCleanPosY=finishClean.position.y; 
-        
+        if (_isProcessingPlate) return; // Prevent multiple calls
+        _isProcessingPlate = true;
+
+        float finishCleanPosX=finishClean.position.x;
+        float finishCleanPosZ=finishClean.position.z;
+        float finishCleanPosY=finishClean.position.y;
+
         _currentTween?.Kill();
         _currentTween = DOTween.Sequence()
             .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + 1f, finishCleanPosZ), 0.3f).SetEase(Ease.OutSine))
-            .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + (0.004f * (platesCleaned.Count + 1)), finishCleanPosZ), 0.3f).SetEase(Ease.OutQuad)) // Reduced to 0.3s
-            .Join(plateCleanPosition.plateLogic.transform.DORotateQuaternion(finishClean.rotation, 0.3f).SetEase(Ease.OutQuad)) // Match rotation duration
+            .Append(plateCleanPosition.plateLogic.transform.DOMove(new Vector3(finishCleanPosX, finishCleanPosY + (0.004f * (platesCleaned.Count + 1)), finishCleanPosZ), 0.3f).SetEase(Ease.OutQuad))
+            .Join(plateCleanPosition.plateLogic.transform.DORotateQuaternion(finishClean.rotation, 0.3f).SetEase(Ease.OutQuad))
             .SetUpdate(true);
-        
-        
-        
-        /*
-        plateCleanPosition.plateLogic.transform.position = new Vector3(finishCleanPosX,finishCleanPosY + (.03f*(platesCleaned.Count+1)),finishCleanPosZ); // Slightly raise the plate to avoid z-fighting
-        plateCleanPosition.plateLogic.transform.rotation= finishClean.transform.rotation; // Set the rotation to match the finish clean position
-        */
-        platesCleaned.Add(plateCleanPosition.plateLogic); // Add the cleaned plate to the list
-        plates.Remove(plateCleanPosition.plateLogic); // Remove the cleaned plate from the plates list
-        plateCleanPosition.plateLogic = null; // Clear the plateLogic reference in PlateCleanPosition
-        
+
         _currentTween.OnComplete(() =>
         {
-            MovePlateToCleanPosition(); // Move the next plate to the clean position
-        });
+            UpdateScoreUI();
+            platesCleaned.Add(plateCleanPosition.plateLogic);
+            plates.Remove(plateCleanPosition.plateLogic);
     
+            MinigameFinished(); // Move this before clearing plateLogic
+    
+            plateCleanPosition.plateLogic = null;
+            _isProcessingPlate = false;
+    
+            MovePlateToCleanPosition();
+        });
 
         if (AudioManager.instance != null)
         {
@@ -229,11 +251,28 @@ public class DishwashingController : MonoBehaviour
                SceneManager.LoadScene(GameManager.Instance.mainSceneName);
            }
        }
+       
+      
     }
-
+    private void StartSplashParticles()
+    {
+        if (splashParticles != null && !splashParticles.isPlaying)
+        {
+            splashParticles.Play();
+        }
+    }
+    
+    private void StopSplashParticles()
+    {
+        if (splashParticles != null && splashParticles.isPlaying)
+        {
+            splashParticles.Stop();
+        }
+    }
     public enum PlateDishwashingStages
     {
-        NotStarted,
+        SpawningPlates,
+        WaitingForPlate,
         Sinking,
         Cleaning,
         Finished
