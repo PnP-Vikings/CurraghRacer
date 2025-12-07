@@ -2,6 +2,7 @@ using FMODUnity;
 using FMOD.Studio;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -17,7 +18,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance raceWin;
     public EventInstance raceLose;
     public EventInstance shout;
-    // Garage
+        // Garage
 
     public EventInstance storyUpdate1;
     public EventInstance storyUpdate2;
@@ -35,6 +36,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance radioAdOrNews4;
     public EventInstance radioAdOrNews5;
 
+    public EventInstance angelus;
+
     public EventInstance loadingScreenSong;
     public EventInstance tvButtonPushOut;
     public EventInstance tvButtonPushIn;
@@ -44,22 +47,25 @@ public class AudioManager : MonoBehaviour
     public EventInstance sleepOutsideAudio;
     public EventInstance rooster;
     public EventInstance payBill;
-    // Training
+        // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
-    //public EventInstance rowingGameAmbience;
+        //public EventInstance rowingGameAmbience;
     public EventInstance rowingGameSuccess;
     public EventInstance rowingGameFail;
         // Jobs
-    //public EventInstance kitchenAmbience;
+        //public EventInstance kitchenAmbience;
     public EventInstance movePlateAudio;
     public EventInstance spongeAudio;
 
+    public EventInstance barAmbience;
     public EventInstance pouringPint;
+    public EventInstance acceptablePour;
+    public EventInstance poorPour;
 
     public EventInstance punchBagAudio;
 
-    //public EventInstance footingTurfAmbience;
+        //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
     public EventInstance placeTurf;
 
@@ -74,7 +80,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance rowing;
 
-
+    private Scene activeScene;
     void Awake()
     {
         // Singleton pattern to ensure only one instance of AudioManager exists
@@ -126,6 +132,8 @@ public class AudioManager : MonoBehaviour
         radioAdOrNews4 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 4");
         radioAdOrNews5 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 5");
 
+        angelus = RuntimeManager.CreateInstance("event:/Radio/Angelus");
+
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
@@ -146,8 +154,11 @@ public class AudioManager : MonoBehaviour
         //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
         spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
-        
+
+        barAmbience = RuntimeManager.CreateInstance("event:/Bar/Bar Ambience");
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
+        acceptablePour = RuntimeManager.CreateInstance("event:/Bar/Acceptable Pour");
+        poorPour = RuntimeManager.CreateInstance("event:/Bar/Poor Pour");
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         
@@ -164,6 +175,16 @@ public class AudioManager : MonoBehaviour
         slide = RuntimeManager.CreateInstance("event:/Foot Race/Slide");
         crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
 
+    }
+
+    private void Update()
+    {
+        activeScene = SceneManager.GetActiveScene();
+        if (activeScene.name != "BeerPourMinigame")
+        {
+            acceptablePour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            poorPour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
     }
 
     public float GetMasterVolume()
