@@ -9,6 +9,7 @@ using UnityEngine.SceneManagement;
 public class RadioManager : MonoBehaviour
 {
     public static RadioManager instance;
+    private PLAYBACK_STATE angelusPlaybackState;
     private PLAYBACK_STATE radioAdOrNews1PlaybackState;
     private PLAYBACK_STATE radioAdOrNews2PlaybackState;
     private PLAYBACK_STATE radioAdOrNews3PlaybackState;
@@ -66,27 +67,29 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.storyUpdate2.getPlaybackState(out storyUpdate2PlaybackState);
             AudioManager.instance.storyUpdate3.getPlaybackState(out storyUpdate3PlaybackState);
 
+            AudioManager.instance.angelus.getPlaybackState(out angelusPlaybackState);   // Gets the playback state of the news and assigns it to the variable
+
             AudioManager.instance.radioAdOrNews1.getPlaybackState(out radioAdOrNews1PlaybackState);   // Gets the playback state of the news and assigns it to the variable
             AudioManager.instance.radioAdOrNews2.getPlaybackState(out radioAdOrNews2PlaybackState);
             AudioManager.instance.radioAdOrNews3.getPlaybackState(out radioAdOrNews3PlaybackState);
             AudioManager.instance.radioAdOrNews4.getPlaybackState(out radioAdOrNews4PlaybackState);
             AudioManager.instance.radioAdOrNews5.getPlaybackState(out radioAdOrNews5PlaybackState);
 
-            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate3PlaybackState == PLAYBACK_STATE.STOPPING)
+            if (angelusPlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdate3PlaybackState == PLAYBACK_STATE.STOPPING)
             {
                 PlayRadioSong();                                                                      // if any of the playback states are "stopping" a random song starts
             }
 
             if (radioAdOrNewsHasJustPlayed)                                                           // checks if the news has just played (if the boolean is true)
             {
-                if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate3PlaybackState == PLAYBACK_STATE.STOPPED)
+                if (angelusPlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate1PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate2PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdate3PlaybackState == PLAYBACK_STATE.STOPPED)
                 {
                     StartCoroutine(RadioCoroutine());                                                 // AND if any of the playback states are "stopped" the coroutine is called
                     radioAdOrNewsHasJustPlayed = false;                                               // the news has just played boolean is reset
                 }
             }
 
-            if (radioAdOrNews1PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate1PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate2PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate3PlaybackState == PLAYBACK_STATE.PLAYING)
+            if (angelusPlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews1PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate1PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate2PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdate3PlaybackState == PLAYBACK_STATE.PLAYING)
             {
                 StopAllRadioSongs();                                                                  // Prevents Songs from starting if ads are playing
             }
@@ -120,7 +123,9 @@ public class RadioManager : MonoBehaviour
         if (activeScene.name == "Main Menu")
         {
             Debug.Log("Radio muted as main menu is active");
+            StopAllAdOrNews();
             MuteRadio();
+            
         }
     }
     private void PlayAdOrNewsOrOverrideWithStoryUpdate()
@@ -209,27 +214,31 @@ public class RadioManager : MonoBehaviour
 
     private void PlayRadioAdOrNews()
     {
-        int randomNumber = Random.Range(1, 6);
+        int randomNumber = Random.Range(1, 7);
 
         if (AudioManager.instance != null)
         {
             if (randomNumber == 1)
             {
-                AudioManager.instance.radioAdOrNews1.start();
+                AudioManager.instance.angelus.start();
             }
             else if (randomNumber == 2)
             {
-                AudioManager.instance.radioAdOrNews2.start();
+                AudioManager.instance.radioAdOrNews1.start();
             }
             else if (randomNumber == 3)
             {
-                AudioManager.instance.radioAdOrNews3.start();
+                AudioManager.instance.radioAdOrNews2.start();
             }
             else if (randomNumber == 4)
             {
-                AudioManager.instance.radioAdOrNews4.start();
+                AudioManager.instance.radioAdOrNews3.start();
             }
             else if (randomNumber == 5)
+            {
+                AudioManager.instance.radioAdOrNews4.start();
+            }
+            else if (randomNumber == 6)
             {
                 AudioManager.instance.radioAdOrNews5.start();
             }
@@ -239,6 +248,8 @@ public class RadioManager : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
+            AudioManager.instance.angelus.stop(STOP_MODE.ALLOWFADEOUT);
+
             AudioManager.instance.storyUpdate1.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.storyUpdate2.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.storyUpdate3.stop(STOP_MODE.ALLOWFADEOUT);
@@ -267,6 +278,7 @@ public class RadioManager : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
+            AudioManager.instance.angelus.setParameterByName("Angelus Volume", 0f);
             AudioManager.instance.storyUpdate1.setParameterByName("Story Report 1 Volume", 0f);
             AudioManager.instance.storyUpdate2.setParameterByName("Story Report 2 Volume", 0f);
             AudioManager.instance.storyUpdate3.setParameterByName("Story Report 3 Volume", 0f);
@@ -287,6 +299,7 @@ public class RadioManager : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
+            AudioManager.instance.angelus.setParameterByName("Angelus Volume", 1f);
             AudioManager.instance.storyUpdate1.setParameterByName("Story Report 1 Volume", 1f);
             AudioManager.instance.storyUpdate2.setParameterByName("Story Report 2 Volume", 1f);
             AudioManager.instance.storyUpdate3.setParameterByName("Story Report 3 Volume", 1f);

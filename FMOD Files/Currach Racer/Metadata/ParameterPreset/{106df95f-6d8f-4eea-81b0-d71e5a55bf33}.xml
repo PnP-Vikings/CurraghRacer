@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{106df95f-6d8f-4eea-81b0-d71e5a55bf33}">
+		<property name="name">
+			<value>Pub Talk Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ba4a7eb7-6fcf-49bd-911b-b930b432ce10}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ba4a7eb7-6fcf-49bd-911b-b930b432ce10}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.88999998569488525</value>
+		</property>
+	</object>
+</objects>

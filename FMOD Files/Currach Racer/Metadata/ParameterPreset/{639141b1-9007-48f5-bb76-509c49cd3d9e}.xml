@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{639141b1-9007-48f5-bb76-509c49cd3d9e}">
+		<property name="name">
+			<value>Angelus Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{a8248af5-7d99-444c-a85a-ffdbb54edb3e}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{a8248af5-7d99-444c-a85a-ffdbb54edb3e}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
