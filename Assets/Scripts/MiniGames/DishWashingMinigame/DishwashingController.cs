@@ -39,8 +39,10 @@ public class DishwashingController : MonoBehaviour
     
     public PlateDishwashingStages currentStage = PlateDishwashingStages.SpawningPlates;
     
+    public bool readyForDipping = false;
 
     [SerializeField] private MinigameCanvasUI minigameCanvasUI;
+    [SerializeField] private GameObject dippingStageUI;
     [SerializeField]private ParticleSystem splashParticles;
     
     
@@ -59,10 +61,16 @@ public class DishwashingController : MonoBehaviour
         if (spongeInstance == null)
             spongeInstance = Instantiate(spongePrefab);
         
+        SwipeGesture swipeGesture = GetComponent<SwipeGesture>();
+        if (swipeGesture != null)
+        {
+            swipeGesture.OnSwipeDown += DipPlateInWater;
+        }
+        
         StopSplashParticles();
         
         minigameCanvasUI.SetUpUI(true,false,false,false,true);
-        
+        spongeInstance.SetActive(false); // Hide the sponge
         SpawnPlates();
         plateCleanPosition.onPlateCleaned.AddListener(PlateCleaned); // Subscribe to the BeerDone event
         UpdateScoreUI();
@@ -131,13 +139,78 @@ public class DishwashingController : MonoBehaviour
                 .SetUpdate(true).SetEase(Ease.OutQuad);
             _currentTween.OnComplete(() =>
             {
-                currentStage = PlateDishwashingStages.Cleaning;
+                //currentStage = PlateDishwashingStages.Cleaning;
                 StartSplashParticles();
                 UpdateAdditionalUI();
-                plates[0].SetAllDirtShaderstoCleaning(); // Start cleaning the plate
+                ProgressToDippingStage();
             });
         }
     }
+    
+    void StartCleaningPhase()
+    {
+        if(dippingStageUI != null)
+            dippingStageUI.SetActive(false);
+        currentStage = PlateDishwashingStages.Cleaning;
+        UpdateAdditionalUI();
+        plates[0].SetAllDirtShaderstoCleaning(); // Start cleaning the plate
+        spongeInstance.SetActive(true); // Show the sponge
+        UpdateAdditionalUI();
+    }
+    
+    public void ProgressToDippingStage()
+    {
+        if(dippingStageUI != null)
+            dippingStageUI.SetActive(true);
+        spongeInstance.SetActive(false); // Hide the sponge
+        readyForDipping = true;
+        currentStage = PlateDishwashingStages.Dipping;
+        UpdateAdditionalUI();
+    }
+    
+    public void DipPlateInWater()
+    {
+        if(plateCleanPosition.plateLogic != null && readyForDipping && currentStage == PlateDishwashingStages.Dipping)
+        {
+            readyForDipping = false;
+            _currentTween?.Kill(); // Kill any existing tween
+            // Move the plate to the clean position and Set the rotation to match the clean position*/
+            _currentTween = DOTween.Sequence()
+                .Append(plates[0].transform.DOMove(plates[0].transform.position - new Vector3(0,1f,0), 1f).SetEase(Ease.InOutSine))
+                .SetUpdate(true).SetEase(Ease.OutQuad);
+            minigameCanvasUI.UpdateAdditionalInfo("Dipping Plate!");
+            _currentTween.OnComplete(ReturnPlateFromWater);
+
+        }
+    }
+    
+    public void ReturnPlateFromWater()
+    {
+        if(plateCleanPosition.plateLogic != null)
+        {
+            _currentTween?.Kill(); // Kill any existing tween
+            // Move the plate to the clean position and Set the rotation to match the clean position*/
+            _currentTween = DOTween.Sequence()
+                .Append(plates[0].transform.DOMove(cleanPosition.position, 1f).SetEase(Ease.InOutSine))
+                .SetUpdate(true).SetEase(Ease.OutQuad);
+
+            _currentTween.OnComplete(() =>
+            {
+                plateCleanPosition.plateLogic.IncrementWaterDipCount();
+                if(plates[0].HasBeenDippedInWaterEnough())
+                {
+                    StartCleaningPhase();
+                }
+                else
+                {
+                    readyForDipping = true;
+                    minigameCanvasUI.UpdateAdditionalInfo("Dip Plate Again!");
+                }
+            });
+        }
+    }
+    
+    
 
     public Tween MovePlateToStartPostion(PlateLogic plateLogic)
     {
@@ -185,8 +258,8 @@ public class DishwashingController : MonoBehaviour
                case PlateDishwashingStages.WaitingForPlate:
                    minigameCanvasUI.UpdateAdditionalInfo("Waiting for Plate...");
                    break;
-               case PlateDishwashingStages.Sinking:
-                   minigameCanvasUI.UpdateAdditionalInfo("Plate Sinking...");
+               case PlateDishwashingStages.Dipping:
+                   minigameCanvasUI.UpdateAdditionalInfo("Dip Plate in Water...");
                    break;
                case PlateDishwashingStages.Cleaning:
                    minigameCanvasUI.UpdateAdditionalInfo("Clean Plate...");
@@ -324,7 +397,7 @@ public class DishwashingController : MonoBehaviour
     {
         SpawningPlates,
         WaitingForPlate,
-        Sinking,
+        Dipping,
         Cleaning,
         Finished
     }
