@@ -9,12 +9,16 @@ namespace MiniGames.DieselMinigame
     {
         private MiniGameManager gameManager;
         private MiniGameData gameData;
+        private float dieselPressure;
         private float dieselAmount;
         private float timer;
         public Button dieselButton;
         public Slider dieselSlider;
         public Image dieselSliderFill;
+        public Slider dieselAmountSlider;
+        public Image dieselAmountSliderFill;
         public TextMeshProUGUI dieselText;
+        public TextMeshProUGUI dieselAmountText;
         public TextMeshProUGUI resultText;
         public TextMeshProUGUI timerText;
 
@@ -22,6 +26,7 @@ namespace MiniGames.DieselMinigame
         {
             gameManager = manager;
             gameData = data;
+            dieselPressure = 0;
             dieselAmount = 0;
             dieselButton.interactable = true;
         }
@@ -38,24 +43,26 @@ namespace MiniGames.DieselMinigame
 
         public void UpdateGame()
         {
-            if (dieselAmount > 0 && dieselAmount < 10 && timer < 10)
+            if (dieselPressure > 0 && dieselPressure < 10 && timer < 10)
             {
-                dieselAmount -= Time.deltaTime;
+                dieselPressure -= Time.deltaTime;
             }
 
-            dieselText.text = dieselAmount.ToString();
+            dieselText.text = dieselPressure.ToString();
+            dieselAmountText.text = dieselAmount.ToString();
             timerText.text = timer.ToString();
-            dieselSlider.value = dieselAmount;
-            //dieselSliderFill.color = Color.Lerp(Color.green, Color.red, dieselAmount / 10);
+            dieselSlider.value = dieselPressure;
+            dieselAmountSlider.value = dieselAmount;
+            dieselAmountSliderFill.color = Color.Lerp(Color.red, Color.green, dieselAmount / 20);
 
-            if (dieselSlider.value > 0 && dieselSlider.value < 5)
-            {
-                dieselSliderFill.color = Color.yellow;
-            }
-
-            else if (dieselSlider.value >= 5 && dieselSlider.value <= 7)
+            if (dieselSlider.value >= 5 && dieselSlider.value <= 7)
             {
                 dieselSliderFill.color = Color.green;
+
+                if (timer < 10)
+                {
+                    dieselAmount += Time.deltaTime;
+                }
             }
 
             else
@@ -63,17 +70,17 @@ namespace MiniGames.DieselMinigame
                 dieselSliderFill.color = Color.red;
             }
 
-            if (dieselAmount >= 10)
+            if (dieselPressure >= 10)
             {
                 EndGame();
             }
 
-            if (dieselAmount < 0)
+            if (dieselPressure < 0)
             {
-                dieselAmount = 0;
+                dieselPressure = 0;
             }
 
-            if (timer < 10 && dieselAmount < 10)
+            if (timer < 10 && dieselPressure < 10)
             {
                 timer += Time.deltaTime;
             }
@@ -88,19 +95,14 @@ namespace MiniGames.DieselMinigame
 
         public void EndGame()
         {
-            if (dieselAmount > 7f)
+            if (dieselPressure >= 10f)
             {
                 resultText.text = "Too much pressure";
             }
 
-            else if (dieselAmount < 5f)
-            {
-                resultText.text = "Not enough pressure";
-            }
-
             else
             {
-                resultText.text = "Minigame won";
+                resultText.text = "Minigame done";
             }
 
             dieselButton.interactable = false;
@@ -108,7 +110,7 @@ namespace MiniGames.DieselMinigame
 
         public void DieselPump()
         {
-            dieselAmount++;
+            dieselPressure++;
         }
 
         public int GetCurrentScore()
