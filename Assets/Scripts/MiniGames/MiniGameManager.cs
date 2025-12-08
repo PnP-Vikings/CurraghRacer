@@ -29,6 +29,14 @@ namespace MiniGames
         
         public static MiniGameManager Instance { get; private set; }
         
+        [Header("Training Activity Settings")]
+        [SerializeField] private TeamMember selectedTeamMember;
+        [SerializeField] private TeamMember.StatType selectedTrainingStatType;
+        
+        
+        
+        
+        
         void Awake()
         {
             if (Instance == null)
@@ -106,8 +114,10 @@ namespace MiniGames
                 }
             
         }
-        public void StartRandomTrainingActivityBasedOnStatType(TeamMember.StatType statType)
+        public void StartRandomTrainingActivityBasedOnStatType(TeamMember.StatType statType, TeamMember teamMember)
         {
+            selectedTeamMember = teamMember;
+            selectedTrainingStatType = statType;
             if (trainingActivities == null || trainingActivities.Count == 0)
             {
                 Debug.LogError("No training activities available!");
@@ -269,6 +279,7 @@ namespace MiniGames
         public void CompleteGame(int finalScore)
         {
             currentScore = finalScore;
+            Debug.Log($"Game completed with final score: {currentScore}");
             EndGame();
         }
         
@@ -291,27 +302,28 @@ namespace MiniGames
             float timeRemaining = Mathf.Max(0, gameTimer);
             
             // Calculate final score with time bonuses and difficulty scaling
-            int finalScore = currentGame.CalculateFinalScore(currentScore, timeRemaining);
-            float scorePercentage = (float)finalScore / currentGame.perfectScore;
-            
-            // Use the enhanced reward calculation
-            var (earnings, stamina) = currentGame.CalculateRewards(scorePercentage);
-            
-           // Call GameManager.PlayerWorked() to handle additional logic like time updates and energy costs
-            if (GameManager.Instance != null)
+            if(currentGame == null)
             {
-                if (currentGame.category == ActivityCategory.Work)
-                {
-                    // For work activities, use the GameManager method but with our calculated earnings
-                    // This ensures time updates and proper energy deduction
-                    GameManager.Instance.PlayerWorked((int)earnings, 0); // 0 energy cost since we already deducted it
-                }
-                else
-                {
-                    // For training activities, still update time
-                    TimeManager.Instance.UpdateTime();
-                }
+                Debug.LogError("No current game data available to calculate results!");
+                return;
             }
+            int finalScore = 0;
+            float earnings = 0;
+            int attribute = 0;
+            finalScore=  currentGame.CalculateFinalScore(currentScore, timeRemaining);
+            float scorePercentage = 1f;
+            if (currentGame.enablePerfectBonus)
+            {
+                scorePercentage= (float)finalScore / currentGame.perfectScore;
+                (earnings, attribute) = currentGame.CalculateRewards(scorePercentage);
+            }
+            else
+            {
+                
+                (earnings, attribute) = currentGame.CalculateRewards(scorePercentage);
+            }
+            
+           
             
             // Get appropriate quote based on performance
             string resultQuote = currentGame.GetQuoteForPerformance(scorePercentage, timedOut);
@@ -334,7 +346,7 @@ namespace MiniGames
             Debug.Log($"Performance: {scorePercentage:P0}");
             Debug.Log($"Time Remaining: {timeRemaining:F1}s");
             Debug.Log($"Earnings: £{earnings:F0}");
-            Debug.Log($"Stamina Gained: {stamina}");
+            Debug.Log($"Stamina Gained: {attribute}");
             if (!string.IsNullOrEmpty(resultQuote))
             {
                 Debug.Log($"Quote: \"{resultQuote}\"");
@@ -357,7 +369,38 @@ namespace MiniGames
             // If we loaded a scene for this minigame, return to the main scene
             if (currentGame.CanLoadScene && !string.IsNullOrEmpty(currentGame.returnSceneName))
             {
-                StartCoroutine(ReturnToMainSceneAfterDelay(2f)); // Give time to see results
+                StartCoroutine(ReturnToMainSceneAfterDelay(currentGame.returnDelay)); // Give time to see results
+            }
+            
+            // Call GameManager.PlayerWorked() to handle additional logic like time updates and energy costs
+            if (GameManager.Instance != null)
+            {
+                if (currentGame.category == ActivityCategory.Work)
+                {
+                    // For work activities, use the GameManager method but with our calculated earnings
+                    // This ensures time updates and proper energy deduction
+                    GameManager.Instance.PlayerWorked((int)earnings, 0); // 0 energy cost since we already deducted it
+                }
+                else if( currentGame.category == ActivityCategory.Training)
+                {
+                    
+                    // For training activities, deduct energy cost here
+                    if (PlayerManager.Instance != null)
+                    {
+                        PlayerManager.Instance.ModifyPlayerEnergy(-currentGame.energyCost);
+                    }
+                    if(selectedTeamMember != null )
+                    {
+                        // Update time via GameManager
+                        GameManager.Instance.PlayerTrained(selectedTeamMember, selectedTrainingStatType, attribute);    
+                    }
+                    else
+                    {
+                        Debug.LogWarning("No team member or stat type selected for training.");
+                    }
+                  
+                  
+                }
             }
         }
         

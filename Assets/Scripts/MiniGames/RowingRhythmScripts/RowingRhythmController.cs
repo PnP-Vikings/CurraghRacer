@@ -2,6 +2,7 @@ using FMODUnity;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MiniGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -363,6 +364,12 @@ public class RowingRhythmController : MonoBehaviour
     }
     StopPaddleAnimations();
     minigameCanvasUI.ShowGameOver();
+    
+    if (MiniGameManager.Instance != null)
+    {
+      Debug.Log($"Calling MiniGameManager.CompleteGame with score: {score}");
+      MiniGameManager.Instance.CompleteGame((int)Math.Round(score));
+    }
   }
   
   private void CheckPaddleOnLeft()
@@ -422,7 +429,7 @@ public class RowingRhythmController : MonoBehaviour
           hitResult = verticalDiff > 0 ? PaddleHitResult.Early : PaddleHitResult.Late;
           Debug.Log("Barely Hit! Distance: " + closestDistance);
         }
-        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance);
+        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance,closestPaddle);
         // Apply hit
         score += scoreGained;
         activeLeftPaddle.RemoveAt(closestIndex);
@@ -530,7 +537,7 @@ public class RowingRhythmController : MonoBehaviour
           Debug.Log("Barely Hit! Distance: " + closestDistance);
         }
         
-        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance);
+        scoreGained = ProcessHitBasedHitFeedback(hitResult, closestDistance,closestPaddle);
         // Apply hit
         score += scoreGained;
         activeRightPaddle.RemoveAt(closestIndex);
@@ -651,7 +658,7 @@ public class RowingRhythmController : MonoBehaviour
     } 
   }
   
-  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance = 0f)
+  public int ProcessHitBasedHitFeedback(PaddleHitResult feedback, float closestDistance = 0f,GameObject paddle = null)
   {
     int scoreGained = 0;
     switch (feedback)
@@ -696,6 +703,18 @@ public class RowingRhythmController : MonoBehaviour
           rhythmCanvas.ShowHitFeedback("Late!", feedback, 1f);
           break;
       }
+    }
+  }
+  
+  private IEnumerator FlashPaddleColor(GameObject paddle, Color flashColor, float duration)
+  {
+    Image paddleImage = paddle.GetComponent<Image>();
+    if (paddleImage != null)
+    {
+      Color originalColor = paddleImage.color;
+      paddleImage.color = flashColor;
+      yield return new WaitForSeconds(duration);
+      paddleImage.color = originalColor;
     }
   }
 }

@@ -101,7 +101,7 @@ MonoBehaviour:
   minimumLevel: 1
   minimumCoins: 0
   prerequisites: []
-  maxPlaysPerDay: -1
+  maxPlaysPerDay: 1
   cooldownMinutes: 0
   customControllerPrefab: {fileID: 0}
   gameplayModifiers: []

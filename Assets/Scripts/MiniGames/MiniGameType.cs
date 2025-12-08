@@ -23,6 +23,7 @@ public enum  MiniGameType
     ArmWrestling,
     WeightLifting,
     RhythmRowing,
+    BoxingGame,
     TugOfWar
 }
 

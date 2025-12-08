@@ -365,8 +365,8 @@ public class DecisionCardManager : MonoBehaviour
             // Happiness (individual change for the targeted member)
             if (option.happinessChange != 0)
             {
-                currentTargetMember.happiness.currentHappiness = Mathf.Clamp(
-                    currentTargetMember.happiness.currentHappiness + option.happinessChange,
+                currentTargetMember.Happiness.currentHappiness = Mathf.Clamp(
+                    currentTargetMember.Happiness.currentHappiness + option.happinessChange,
                     0, 100
                 );
                 Debug.Log($"{currentTargetMember.memberName} happiness changed by {option.happinessChange}");
@@ -412,8 +412,8 @@ public class DecisionCardManager : MonoBehaviour
             // Happiness (individual change for the targeted member)
             if (outcome.happinessChange != 0)
             {
-                currentTargetMember.happiness.currentHappiness = Mathf.Clamp(
-                    currentTargetMember.happiness.currentHappiness + outcome.happinessChange,
+                currentTargetMember.Happiness.currentHappiness = Mathf.Clamp(
+                    currentTargetMember.Happiness.currentHappiness + outcome.happinessChange,
                     0, 100
                 );
                 Debug.Log($"{currentTargetMember.memberName} happiness changed by {outcome.happinessChange}");
@@ -475,15 +475,16 @@ public class DecisionCardManager : MonoBehaviour
         {
             foreach (var member in PlayerManager.Instance.playerTeam.teamMembers)
             {
-                if (member != null && member.happiness != null)
+                if (member != null && member.Happiness != null)
                 {
-                    member.happiness.currentHappiness = Mathf.Clamp(
-                        member.happiness.currentHappiness + moraleChange,
+                    member.Happiness.currentHappiness = Mathf.Clamp(
+                        member.Happiness.currentHappiness + moraleChange,
                         0, 100
                     );
                     membersAffected++;
                 }
-                Debug.Log($"Applied morale change to {member.memberName}, new happiness: {member.happiness.currentHappiness}");
+                if (member.Happiness != null)
+                    Debug.Log($"Applied morale change to {member.memberName}, new happiness: {member.Happiness.currentHappiness}");
             }
         }
         
@@ -492,15 +493,16 @@ public class DecisionCardManager : MonoBehaviour
         {
             foreach (var member in PlayerManager.Instance.playerTeam.bench)
             {
-                if (member != null && member.happiness != null)
+                if (member != null && member.Happiness != null)
                 {
-                    member.happiness.currentHappiness = Mathf.Clamp(
-                        member.happiness.currentHappiness + moraleChange,
+                    member.Happiness.currentHappiness = Mathf.Clamp(
+                        member.Happiness.currentHappiness + moraleChange,
                         0, 100
                     );
                     membersAffected++;
                 }
-                Debug.Log($"Applied morale change to {member.memberName}, new happiness: {member.happiness.currentHappiness}");
+                if (member.Happiness != null)
+                    Debug.Log($"Applied morale change to {member.memberName}, new happiness: {member.Happiness.currentHappiness}");
             }
         }
         

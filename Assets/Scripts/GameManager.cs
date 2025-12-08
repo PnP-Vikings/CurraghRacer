@@ -22,11 +22,6 @@ public class GameManager : MonoBehaviour
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
    [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
 
-   public List<String> miniGameWorkScenes = new List<string>
-   {
-       "BeerPourMinigame",
-       "DishWashingMinigame" 
-   };
    
    private void Awake()
    {
@@ -159,6 +154,42 @@ public class GameManager : MonoBehaviour
         PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
     }
+
+    public void PlayerTrained(TeamMember selectedTeamMember, TeamMember.StatType selectedStatType, int amountGained)
+    {
+        // Apply stat changes immediately BEFORE scene transition to prevent cache overwrite
+        Debug.Log($"Training {selectedTeamMember.memberName} in {selectedStatType} for {amountGained} points.");
+        
+        switch (selectedStatType)
+        {
+            case TeamMember.StatType.Strength:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Strength, amountGained);
+                break;
+            case TeamMember.StatType.Technique:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Technique, amountGained);
+                break;
+            case TeamMember.StatType.Stamina:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Stamina, amountGained);
+                break;
+            case TeamMember.StatType.TeamWork:
+                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.TeamWork, amountGained);
+                break;
+            default:
+                Debug.LogError("Invalid stat type selected for training.");
+                if(PlayerStatsView.Instance != null)
+                    PlayerStatsView.Instance.DisplayInfo("Invalid stat type selected for training.", 3);
+                break;
+        }
+        
+        // Update the cached save data to include the new stats
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.UpdateCachedSaveData();
+        }
+        
+        TimeManager.Instance.UpdateTime();
+    }
+    
 
     public float GetTotalPlayTime()
     {

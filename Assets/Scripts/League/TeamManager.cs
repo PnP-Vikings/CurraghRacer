@@ -235,6 +235,32 @@ public class TeamManager : MonoBehaviour
         }
     }
     
+    public TeamMember GetTeamMemberByName(string memberName)
+    {
+        foreach (var member in playerTeam.teamMembers)
+        {
+            if (member.memberName == memberName)
+            {
+                Debug.Log($"Found team member: {member.memberName}");
+                return member;
+            }
+        }
+        
+        if (benchTeamMembers != null)
+        {
+            foreach (var member in benchTeamMembers)
+            {
+                if (member.memberName == memberName)
+                {
+                    Debug.Log($"Found team member on bench: {member.memberName}");
+                    return member;
+                }
+            }
+        }
+        Debug.LogWarning($"Team member with name {memberName} not found.");
+        return null;
+    }
+    
     
     
 }

@@ -43,6 +43,8 @@ public class DirtShaderLogic : MonoBehaviour,
     void Update()
     {
 
+       if (!isCleaning) return;
+       
         if (dirtLevel <= 0f)
         {
             if (!isClean)
@@ -62,7 +64,15 @@ public class DirtShaderLogic : MonoBehaviour,
     
     public void CleanDirt()
     {
+        if(!isCleaning) return;
+        if (dirtLevel <= 0f) return;
+        
         dirtLevel -= .35f*cleanSpeed;
+    }
+    
+    public void SetIsCleaning(bool cleaning)
+    {
+        isCleaning = cleaning;
     }
 
     

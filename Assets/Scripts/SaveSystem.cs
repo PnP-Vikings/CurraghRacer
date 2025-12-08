@@ -189,13 +189,13 @@ public class TeamMemberSaveData
         }
         
         // Deep copy happiness
-        if (member.happiness != null)
+        if (member.Happiness != null)
         {
             happiness = new Happiness
             {
-                currentHappiness = member.happiness.currentHappiness,
-                maxHappiness = member.happiness.maxHappiness,
-                currentMood = member.happiness.currentMood
+                currentHappiness = member.Happiness.currentHappiness,
+                maxHappiness = member.Happiness.maxHappiness,
+                currentMood = member.Happiness.currentMood
             };
         }
     }
@@ -409,6 +409,7 @@ public class SaveSystem : MonoBehaviour
     [Header("Load State")]
     [SerializeField] private bool _wasLoadedFromSave = false;
     [SerializeField] private bool _isNewGame = false;
+    private string _pendingNewGameSaveName = null;
     
     /// <summary>
     /// Indicates whether the current game session was loaded from a save file
@@ -458,16 +459,75 @@ public class SaveSystem : MonoBehaviour
     /// </summary>
     private void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        // Check if we have a pending new game initialization (called from main menu)
+        if (_isNewGame && !string.IsNullOrEmpty(_pendingNewGameSaveName))
+        {
+            Debug.Log($"[SaveSystem.OnSceneLoaded] Completing new game initialization after scene load");
+            
+            // Now that managers exist, complete the new game setup
+            InitializeNewGameState();
+            
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.ResetTotalPlayTime();
+            }
+            
+            if(LeagueController.Instance != null)
+            {
+                foreach(var league in LeagueController.Instance.leagues)
+                {
+                    foreach(var team in league.teams)
+                    {
+                        team.ResetForNewGame();
+                    }
+                }
+            }
+            
+            // Create and save new game data
+            SaveData newGameData = CreateFreshSaveData(_pendingNewGameSaveName);
+            ApplySaveData(newGameData);
+            
+            // Save to the first available slot
+            int availableSlot = FindFirstAvailableSlot();
+            if (availableSlot == -1)
+            {
+                availableSlot = 0;
+            }
+            
+            // Save the new game
+            bool saveSuccess = SaveGame(availableSlot, _pendingNewGameSaveName);
+            
+            if (saveSuccess)
+            {
+                Debug.Log($"New game completed successfully in slot {availableSlot}");
+            }
+            else
+            {
+                Debug.LogError("Failed to save new game data after scene load");
+            }
+            
+            // Clear the pending flag
+            _pendingNewGameSaveName = null;
+            return;
+        }
+        
         // Only restore if we have cached save data
         if (_lastSaveData != null && LeagueController.Instance != null)
         {
-            Debug.Log($"[SaveSystem.OnSceneLoaded] Scene '{scene.name}' loaded - restoring team stats from cache");
+            Debug.Log($"[SaveSystem.OnSceneLoaded] Scene '{scene.name}' loaded - restoring data from cache");
             
-            // Restore team data from the cached save
-            if (_lastSaveData.leagueData?.allTeams != null)
+            // Restore league team data from the cached save
+            if (LeagueController.Instance != null && _lastSaveData.leagueData?.allTeams != null)
             {
                 RestoreTeamsData(_lastSaveData.leagueData.allTeams);
                 Debug.Log($"[SaveSystem.OnSceneLoaded] Restored {_lastSaveData.leagueData.allTeams.Length} teams from cache");
+            }
+            
+            // Restore TeamManager data (including racersForHire) from the cached save
+            if (TeamManager.Instance != null && _lastSaveData.teamManagerData != null)
+            {
+                RestoreTeamManagerData(_lastSaveData.teamManagerData);
+                Debug.Log($"[SaveSystem.OnSceneLoaded] Restored TeamManager data from cache");
             }
         }
     }
@@ -508,6 +568,20 @@ public class SaveSystem : MonoBehaviour
         {
             Debug.LogError($"Failed to save game to slot {slotIndex}: {e.Message}");
             return false;
+        }
+    }
+    
+    /// <summary>
+    /// Updates the cached save data with the current game state
+    /// This prevents the cache from overwriting recent changes during scene loads
+    /// </summary>
+    public void UpdateCachedSaveData()
+    {
+        if (_lastSaveData != null)
+        {
+            SaveData updatedData = CreateSaveData();
+            _lastSaveData = updatedData;
+            Debug.Log($"[UpdateCachedSaveData] Cached save data updated with current game state");
         }
     }
 
@@ -1052,11 +1126,11 @@ public class SaveSystem : MonoBehaviour
                     injuryStatus = team.teamManager.fitness.injuryStatus,
                     currentPhysicalState = team.teamManager.fitness.currentPhysicalState
                 } : null,
-                happiness = team.teamManager.happiness != null ? new Happiness
+                happiness = team.teamManager.Happiness != null ? new Happiness
                 {
-                    currentHappiness = team.teamManager.happiness.currentHappiness,
-                    maxHappiness = team.teamManager.happiness.maxHappiness,
-                    currentMood = team.teamManager.happiness.currentMood
+                    currentHappiness = team.teamManager.Happiness.currentHappiness,
+                    maxHappiness = team.teamManager.Happiness.maxHappiness,
+                    currentMood = team.teamManager.Happiness.currentMood
                 } : null
             } : null,
             bench =  team.bench != null ? new TeamMemberSaveData[team.bench.Count] : null,
@@ -1140,7 +1214,7 @@ public class SaveSystem : MonoBehaviour
         // Restore happiness
         if (saveData.happiness != null)
         {
-            member.happiness = new Happiness
+            member.Happiness = new Happiness
             {
                 currentHappiness = saveData.happiness.currentHappiness,
                 maxHappiness = saveData.happiness.maxHappiness,
@@ -1336,6 +1410,36 @@ public class SaveSystem : MonoBehaviour
             }
         }
     }
+    
+    /// <summary>
+    /// Restores TeamManager data from cached save, including racersForHire list
+    /// </summary>
+    private void RestoreTeamManagerData(TeamManagerSaveData saveData)
+    {
+        if (TeamManager.Instance == null || saveData == null)
+        {
+            Debug.LogWarning("[RestoreTeamManagerData] TeamManager.Instance or saveData is null");
+            return;
+        }
+        
+        Debug.Log($"[RestoreTeamManagerData] Restoring TeamManager data");
+        
+        // Restore racersForHire - this is critical to prevent the list from breaking
+        if (saveData.racersForHire != null)
+        {
+            TeamManager.Instance.racersForHire = new List<HireableTeamMembers>(saveData.racersForHire);
+            Debug.Log($"[RestoreTeamManagerData] Restored {TeamManager.Instance.racersForHire.Count} racers for hire");
+        }
+        
+        // Restore isAllActiveTeamMembersHealthy flag
+        TeamManager.Instance.isAllActiveTeamMembersHealthy = saveData.isAllActiveTeamMembersHealthy;
+        
+        // Note: We don't restore activeCrewMembers, benchTeamMembers, or teamManager here
+        // because those are ScriptableObjects that persist across scene loads
+        // and may have been modified during gameplay. Only restore if they're null.
+        
+        Debug.Log($"[RestoreTeamManagerData] TeamManager data restoration complete");
+    }
 
     public bool CanAutoSaveGame()
     {
@@ -1367,51 +1471,66 @@ public class SaveSystem : MonoBehaviour
             _wasLoadedFromSave = false;
             _isNewGame = true;
             
+            // Store the save name for when we do the initial save after scene loads
+            _pendingNewGameSaveName = saveName;
             
+            // Initialize fresh game state only if managers exist (we're already in game scene)
+            // Otherwise, initialization will happen after scene loads via OnSceneLoaded
+            bool managersExist = LeagueController.Instance != null && 
+                                 PlayerManager.Instance != null && 
+                                 GameManager.Instance != null;
             
-            // Initialize fresh game state
-            InitializeNewGameState();
-            
-            // Save to the first available slot
-            int availableSlot = FindFirstAvailableSlot();
-            if (availableSlot == -1)
+            if (managersExist)
             {
-                // If no slots are available, use slot 0
-                availableSlot = 0;
-            }
-            
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.ResetTotalPlayTime();
-            }
-            
-            if(LeagueController.Instance != null)
-            {
-              foreach(var league in LeagueController.Instance.leagues)
-              {
-                  foreach(var team in league.teams)
+                InitializeNewGameState();
+                
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.ResetTotalPlayTime();
+                }
+                
+                if(LeagueController.Instance != null)
+                {
+                  foreach(var league in LeagueController.Instance.leagues)
                   {
-                      team.ResetForNewGame();
+                      foreach(var team in league.teams)
+                      {
+                          team.ResetForNewGame();
+                      }
                   }
-              }
-            }
-            
-            // Create and save new game data
-            SaveData newGameData = CreateFreshSaveData(saveName);
-            ApplySaveData(newGameData);
-            
-            // Save the new game
-            bool saveSuccess = SaveGame(availableSlot, saveName);
-            
-            if (saveSuccess)
-            {
-                Debug.Log($"New game started successfully in slot {availableSlot}");
-                return true;
+                }
+                
+                // Create and save new game data
+                SaveData newGameData = CreateFreshSaveData(saveName);
+                ApplySaveData(newGameData);
+                
+                // Save to the first available slot
+                int availableSlot = FindFirstAvailableSlot();
+                if (availableSlot == -1)
+                {
+                    // If no slots are available, use slot 0
+                    availableSlot = 0;
+                }
+                
+                // Save the new game
+                bool saveSuccess = SaveGame(availableSlot, saveName);
+                
+                if (saveSuccess)
+                {
+                    Debug.Log($"New game started successfully in slot {availableSlot}");
+                    return true;
+                }
+                else
+                {
+                    Debug.LogError("Failed to save new game data");
+                    return false;
+                }
             }
             else
             {
-                Debug.LogError("Failed to save new game data");
-                return false;
+                // We're in main menu, defer initialization and save until after scene loads
+                Debug.Log("NewGame called from main menu - deferring save until game scene loads");
+                return true;
             }
         }
         catch (Exception e)
@@ -1431,67 +1550,86 @@ public class SaveSystem : MonoBehaviour
             _wasLoadedFromSave = false;
             _isNewGame = true;
             
-            // Initialize fresh game state
-            InitializeNewGameState();
+            // Store the save name for when we do the initial save after scene loads
+            _pendingNewGameSaveName = saveName;
             
-            // Save to the first available slot
-            if (preferredSlot == 0)
+            // Initialize fresh game state only if managers exist (we're already in game scene)
+            // Otherwise, initialization will happen after scene loads via OnSceneLoaded
+            bool managersExist = LeagueController.Instance != null && 
+                                 PlayerManager.Instance != null && 
+                                 GameManager.Instance != null;
+            
+            if (managersExist)
             {
-                int availableSlot = FindFirstAvailableSlot();
-                if (availableSlot == -1)
+                InitializeNewGameState();
+                
+                // Save to the first available slot
+                if (preferredSlot == 0)
                 {
-                    // If no slots are available, use slot 0
-                    availableSlot = 0;
-                }
+                    int availableSlot = FindFirstAvailableSlot();
+                    if (availableSlot == -1)
+                    {
+                        // If no slots are available, use slot 0
+                        availableSlot = 0;
+                    }
 
 
-                // Create and save new game data
-                SaveData newGameData = CreateFreshSaveData(saveName);
-                ApplySaveData(newGameData);
+                    // Create and save new game data
+                    SaveData newGameData = CreateFreshSaveData(saveName);
+                    ApplySaveData(newGameData);
 
-                // Save the new game
-                bool saveSuccess = SaveGame(availableSlot, saveName);
+                    // Save the new game
+                    bool saveSuccess = SaveGame(availableSlot, saveName);
 
-                if (saveSuccess)
-                {
-                    Debug.Log($"New game started successfully in slot {availableSlot}");
-                    return true;
+                    if (saveSuccess)
+                    {
+                        Debug.Log($"New game started successfully in slot {availableSlot}");
+                        _pendingNewGameSaveName = null;
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to save new game data");
+                        return false;
+                    }
                 }
                 else
                 {
-                    Debug.LogError("Failed to save new game data");
-                    return false;
+                    if (preferredSlot >= maxSaveSlots)
+                    {
+                        Debug.LogError($"Invalid preferred slot index: {preferredSlot}. Must be between 0 and {maxSaveSlots - 1}");
+                        return false;
+                    }
+                    
+                    // NOTE: Do NOT call ClearLeague() or RegenerateRaceSchedule() here!
+                    // These are already handled in InitializeNewGameState() at the start of this method.
+                    // Calling them here would wipe team stats after they've been initialized!
+
+                    // Create and save new game data
+                    SaveData newGameData = CreateFreshSaveData(saveName);
+                    ApplySaveData(newGameData);
+
+                    // Save the new game
+                    bool saveSuccess = SaveGame(preferredSlot, saveName);
+
+                    if (saveSuccess)
+                    {
+                        Debug.Log($"New game started successfully in preferred slot {preferredSlot}");
+                        _pendingNewGameSaveName = null;
+                        return true;
+                    }
+                    else
+                    {
+                        Debug.LogError("Failed to save new game data");
+                        return false;
+                    }
                 }
             }
             else
             {
-                if (preferredSlot >= maxSaveSlots)
-                {
-                    Debug.LogError($"Invalid preferred slot index: {preferredSlot}. Must be between 0 and {maxSaveSlots - 1}");
-                    return false;
-                }
-                
-                // NOTE: Do NOT call ClearLeague() or RegenerateRaceSchedule() here!
-                // These are already handled in InitializeNewGameState() at the start of this method.
-                // Calling them here would wipe team stats after they've been initialized!
-
-                // Create and save new game data
-                SaveData newGameData = CreateFreshSaveData(saveName);
-                ApplySaveData(newGameData);
-
-                // Save the new game
-                bool saveSuccess = SaveGame(preferredSlot, saveName);
-
-                if (saveSuccess)
-                {
-                    Debug.Log($"New game started successfully in preferred slot {preferredSlot}");
-                    return true;
-                }
-                else
-                {
-                    Debug.LogError("Failed to save new game data");
-                    return false;
-                }
+                // We're in main menu, defer initialization and save until after scene loads
+                Debug.Log("NewGame called from main menu - deferring save until game scene loads");
+                return true;
             }
         }
         catch (Exception e)

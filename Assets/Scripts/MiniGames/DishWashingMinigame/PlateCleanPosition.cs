@@ -49,14 +49,12 @@ public class PlateCleanPosition : MonoBehaviour
         if (other.GetComponent<PlateLogic>() != null)
         {
             Debug.Log("Plate exited clean position: " + other.name);
-            plateLogic = null; // Clear the reference to the PlateLogic component
-            // Additional logic for when the plate exits the clean position can be added here
         }
         
-        if(other.GetComponent<PlateLogic>() == null)
+        /*if(other.GetComponent<PlateLogic>() == null)
         {
             plateLogic = null;
-        }
+        }*/
     }
     
 }

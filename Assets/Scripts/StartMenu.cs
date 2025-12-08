@@ -202,13 +202,6 @@ public class StartMenu : MonoBehaviour
                 // Deduct energy cost
                 PlayerManager.Instance.ModifyPlayerEnergy(-25);
             }
-            else
-            {
-                // Fallback to old system if MiniGameManager not available
-                int randomValue = Random.Range(0, GameManager.Instance.miniGameWorkScenes.Count);
-                string selectedScene = GameManager.Instance.miniGameWorkScenes[randomValue];
-                SceneManager.LoadScene(selectedScene);
-            }
         }
         else
         {

@@ -28,7 +28,17 @@ public class PlateLogic : MonoBehaviour
         }
         return true; // All dirt shaders are clean
     }
-    
-    
+
+    public void SetAllDirtShaderstoCleaning()
+    {
+        foreach (var dirtShader in dirt)
+        {
+            if (dirtShader != null)
+            {
+                dirtShader.SetIsCleaning(true); // Start cleaning each dirt shader
+            }
+        }
+    }
+
 
 }

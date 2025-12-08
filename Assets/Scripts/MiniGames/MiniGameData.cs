@@ -36,6 +36,8 @@ namespace MiniGames
         public bool useSceneLoading = false;
         [Tooltip("Scene to return to after minigame completion")]
         public string returnSceneName = "Garage";
+        [Tooltip("Delay before returning to main scene (in seconds)")]
+        public float returnDelay = 2f;
         
         [Header("Rewards")]
         [Tooltip("Base earnings for this minigame (applies to work activities)")]
@@ -45,7 +47,7 @@ namespace MiniGames
         [Tooltip("Global multiplier applied to all rewards")]
         public float difficultyMultiplier = 1f;
         [Tooltip("Whether to apply a bonus multiplier for perfect completion")]
-        public bool enablePerfectBonus = true;
+        public bool enablePerfectBonus = false;
         [Tooltip("Bonus multiplier for perfect completion (100% performance)")]
         public float perfectBonus = 1.5f;
         [Tooltip("Minimum performance required for any reward (0-1)")]
@@ -53,14 +55,23 @@ namespace MiniGames
         public float minimumPerformanceForReward = 0.3f;
         
         [Header("Game Settings")]
+        [Tooltip("Is this minigame timed?")]
+        public bool isTimed = false;
         [Tooltip("Maximum time allowed to complete this minigame (in seconds)")]
         public float timeLimit = 60f;
-        [Tooltip("Maximum possible score for perfect performance")]
-        public int perfectScore = 100;
         [Tooltip("Whether players get bonus points for finishing with time remaining")]
         public bool hasTimeBonus = true;
         [Tooltip("Time bonus points per second remaining")]
         public float timeBonusMultiplier = 1f;
+        
+        [Tooltip("Is this minigame score based?")]
+        public bool isScoreBased = false;
+        
+        [Tooltip("Maximum possible score for perfect performance")]
+        public int perfectScore = 100;
+        [Tooltip("Minimum score required to pass the minigame")]
+        public int passingScore = 60;
+       
         [Tooltip("Energy cost to play this minigame")]
         public int energyCost = 25;
         
@@ -144,7 +155,7 @@ namespace MiniGames
             float finalScore = baseScore;
             
             // Apply time bonus if enabled
-            if (hasTimeBonus && timeRemaining > 0)
+            if (hasTimeBonus && isTimed && timeRemaining > 0)
             {
                 finalScore += timeRemaining * timeBonusMultiplier;
             }
@@ -153,16 +164,18 @@ namespace MiniGames
             float difficultyMult = difficultyScoreMultiplier.Evaluate((int)baseDifficulty);
             finalScore *= difficultyMult;
             
+            Debug.Log($"Calculated final score: {finalScore} (Base: {baseScore}, Time Bonus: {(hasTimeBonus ? timeRemaining * timeBonusMultiplier : 0)}, Difficulty Mult: {difficultyMult})");
+            
             return Mathf.RoundToInt(finalScore);
         }
         
         /// <summary>
         /// Calculate rewards based on performance percentage
         /// </summary>
-        public (float earnings, int stamina) CalculateRewards(float performancePercentage)
+        public (float earnings, int attribute) CalculateRewards(float performancePercentage)
         {
             float earnings = 0f;
-            int stamina = 0;
+            int attribute = 0;
             
             // Check if performance meets minimum threshold
             if (performancePercentage < minimumPerformanceForReward)
@@ -183,16 +196,17 @@ namespace MiniGames
             }
             else if (category == ActivityCategory.Training)
             {
-                stamina = Mathf.RoundToInt(baseGain * performancePercentage * difficultyMultiplier * difficultyMult);
+                attribute = Mathf.RoundToInt(baseGain * performancePercentage * difficultyMultiplier * difficultyMult);
                 
                 // Perfect bonus
                 if (performancePercentage >= 1f && enablePerfectBonus)
                 {
-                    stamina = Mathf.RoundToInt(stamina * perfectBonus);
+                    attribute = Mathf.RoundToInt(attribute * perfectBonus);
                 }
             }
+            Debug.Log($"Calculated rewards - Earnings: {earnings}, Attribute Gain: {attribute} (Performance: {performancePercentage}, Difficulty Mult: {difficultyMult})");
             
-            return (earnings, stamina);
+            return (earnings, attribute);
         }
         
         /// <summary>

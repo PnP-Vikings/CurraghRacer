@@ -6,10 +6,50 @@ using UnityEngine.UI;
 public class MinigameCanvasUI : MonoBehaviour
 {
     
-    public TMPro.TMP_Text scoreText,timerText,playerLivesText,gameOverText;
+    public TMPro.TMP_Text scoreText,timerText,playerLivesText,gameOverText,additionalInfoText;
     bool showRestartButtons = false;
     public GameObject testDemoButtons;
     public Button backToMainMenuButton, restartMinigameButton;
+
+    public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
+    {
+        if (scoreText != null)
+        {
+            scoreText.gameObject.SetActive(useScore);
+        }
+        if (timerText != null)
+        {
+            timerText.gameObject.SetActive(useTimer);
+        }
+        if (playerLivesText != null)
+        {
+            playerLivesText.gameObject.SetActive(useLives);
+        }
+
+        if (additionalInfoText != null)
+        {
+            additionalInfoText.gameObject.SetActive(showAdditionalInfo);
+        }
+        showRestartButtons = showTestRestartsButtons;
+        if (showRestartButtons != false)
+        {
+            if (testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(false);
+            }
+            if (backToMainMenuButton != null)
+            {
+                backToMainMenuButton.gameObject.SetActive(true);
+                backToMainMenuButton.onClick.AddListener(ReturnToMainMenu);
+            }
+            if (restartMinigameButton != null)
+            {
+                restartMinigameButton.gameObject.SetActive(true);
+                restartMinigameButton.onClick.AddListener(RestartMinigame);
+            }
+        }
+    }
+
     public virtual void UpdateScore(int score)
     {
         if(scoreText != null)
@@ -73,6 +113,54 @@ public class MinigameCanvasUI : MonoBehaviour
         }
     }
     
+    public virtual void UpdateAdditionalInfo(string info)
+    {
+        if(additionalInfoText != null)
+        {
+            additionalInfoText.text = info;
+        }
+    }
+    
+    public virtual void UpdateAdditionalInfo(int info)
+    {
+        if(additionalInfoText != null)
+        {
+            additionalInfoText.text = info.ToString();
+        }
+    }
+    
+    public virtual void UpdateAdditionalInfo(float info)
+    {
+        if(additionalInfoText != null)
+        {
+            additionalInfoText.text = info.ToString();
+        }
+    }
+    
+    public virtual void ClearAdditionalInfo()
+    {
+        if(additionalInfoText != null)
+        {
+            additionalInfoText.text = "";
+        }
+    }
+    
+    public virtual void ShowAdditionalInfo()
+    {
+        if(additionalInfoText != null)
+        {
+            additionalInfoText.gameObject.SetActive(true);
+        }
+    }
+    
+    public virtual void HideAdditionalInfo()
+    {
+        if(additionalInfoText != null)
+        {
+            additionalInfoText.gameObject.SetActive(false);
+        }
+    }
+    
     public void ShowVictory()
     {
         if(timerText != null)
@@ -100,37 +188,6 @@ public class MinigameCanvasUI : MonoBehaviour
         SceneManager.LoadScene(SceneManager.GetActiveScene().name);
     }
     
-    public void SetUpUI(bool useScore, bool useTimer, bool useLives,bool showTestRestartsButtons)
-    {
-        if(scoreText != null)
-        {
-            scoreText.gameObject.SetActive(useScore);
-        }
-        if(timerText != null)
-        {
-            timerText.gameObject.SetActive(useTimer);
-        }
-        if(playerLivesText != null)
-        {
-            playerLivesText.gameObject.SetActive(useLives);
-        }
-        showRestartButtons = showTestRestartsButtons;
-        if(showRestartButtons != false)
-        {
-            if(testDemoButtons != null)
-            {
-                testDemoButtons.SetActive(false);
-            }
-            if(backToMainMenuButton != null)
-            {
-                backToMainMenuButton.gameObject.SetActive(true);
-                backToMainMenuButton.onClick.AddListener(ReturnToMainMenu);
-            }
-            if(restartMinigameButton != null)
-            {
-                restartMinigameButton.gameObject.SetActive(true);
-                restartMinigameButton.onClick.AddListener(RestartMinigame);
-            }
-        }
-    }
+   
+    
 }
