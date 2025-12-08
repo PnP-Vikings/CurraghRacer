@@ -153,6 +153,7 @@ public class DishwashingController : MonoBehaviour
             dippingStageUI.SetActive(false);
         currentStage = PlateDishwashingStages.Cleaning;
         UpdateAdditionalUI();
+        plates[0].StopWaterSplashEffect();
         plates[0].SetAllDirtShaderstoCleaning(); // Start cleaning the plate
         spongeInstance.SetActive(true); // Show the sponge
         UpdateAdditionalUI();
@@ -160,6 +161,9 @@ public class DishwashingController : MonoBehaviour
     
     public void ProgressToDippingStage()
     {
+        if(spongeInstance != null)
+            spongeInstance.SetActive(false); // Hide the sponge
+        
         if(dippingStageUI != null)
             dippingStageUI.SetActive(true);
         spongeInstance.SetActive(false); // Hide the sponge
@@ -193,7 +197,7 @@ public class DishwashingController : MonoBehaviour
             _currentTween = DOTween.Sequence()
                 .Append(plates[0].transform.DOMove(cleanPosition.position, 1f).SetEase(Ease.InOutSine))
                 .SetUpdate(true).SetEase(Ease.OutQuad);
-
+            plates[0].PlayWaterSplashEffect();
             _currentTween.OnComplete(() =>
             {
                 plateCleanPosition.plateLogic.IncrementWaterDipCount();
@@ -316,7 +320,8 @@ public class DishwashingController : MonoBehaviour
         {
             minigameCanvasUI.UpdateAdditionalInfo("Plate Cleaned!");
         }
-        
+        if(spongeInstance != null)
+            spongeInstance.SetActive(false); // Hide the sponge
         float finishCleanPosX=finishClean.position.x; 
         float finishCleanPosZ=finishClean.position.z; 
         float finishCleanPosY=finishClean.position.y; 

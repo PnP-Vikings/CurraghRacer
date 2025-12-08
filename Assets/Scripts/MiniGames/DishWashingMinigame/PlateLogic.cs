@@ -8,6 +8,7 @@ public class PlateLogic : MonoBehaviour
     public List<DirtShaderLogic> dirt; // List of dirt shaders on the plate
     public int numofTimesPlateDippedInWater = 0;
     public int timesPlateNeedsToBeDippedInWaterToClean = 3;
+    [SerializeField] private ParticleSystem waterSplashEffect;
     
     private void OnEnable()
     {
@@ -17,6 +18,22 @@ public class PlateLogic : MonoBehaviour
       }
       Debug.Log("Plate Logic Enabled: " + dirt.Count + " dirt shaders found.");
       numofTimesPlateDippedInWater = 0;
+    }
+    
+    public void PlayWaterSplashEffect()
+    {
+        if (waterSplashEffect != null)
+        {
+            waterSplashEffect.Play();
+        }
+    }
+    
+    public void StopWaterSplashEffect()
+    {
+        if (waterSplashEffect != null)
+        {
+            waterSplashEffect.Stop();
+        }
     }
     
     public void IncrementWaterDipCount()
