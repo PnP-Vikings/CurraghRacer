@@ -2,6 +2,7 @@ using FMODUnity;
 using FMOD.Studio;
 using UnityEngine;
 using System.Collections;
+using UnityEngine.SceneManagement;
 
 public class AudioManager : MonoBehaviour
 {
@@ -16,10 +17,12 @@ public class AudioManager : MonoBehaviour
     public EventInstance raceAmbience;
     public EventInstance raceWin;
     public EventInstance raceLose;
-    // Garage
+    public EventInstance shout;
+        // Garage
 
     public EventInstance storyUpdate1;
     public EventInstance storyUpdate2;
+    public EventInstance storyUpdate3;
 
     public EventInstance radioSong1;
     public EventInstance radioSong2;
@@ -33,6 +36,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance radioAdOrNews4;
     public EventInstance radioAdOrNews5;
 
+    public EventInstance angelus;
+
     public EventInstance loadingScreenSong;
     public EventInstance tvButtonPushOut;
     public EventInstance tvButtonPushIn;
@@ -40,24 +45,27 @@ public class AudioManager : MonoBehaviour
         // Bulletin Board
     public EventInstance sleepAudio;
     public EventInstance sleepOutsideAudio;
-    public EventInstance payBill;
     public EventInstance rooster;
+    public EventInstance payBill;
         // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
-    //public EventInstance rowingGameAmbience;
+        //public EventInstance rowingGameAmbience;
     public EventInstance rowingGameSuccess;
     public EventInstance rowingGameFail;
         // Jobs
-    //public EventInstance kitchenAmbience;
+        //public EventInstance kitchenAmbience;
     public EventInstance movePlateAudio;
     public EventInstance spongeAudio;
 
+    public EventInstance barAmbience;
     public EventInstance pouringPint;
+    public EventInstance acceptablePour;
+    public EventInstance poorPour;
 
     public EventInstance punchBagAudio;
 
-    //public EventInstance footingTurfAmbience;
+        //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
     public EventInstance placeTurf;
 
@@ -66,11 +74,13 @@ public class AudioManager : MonoBehaviour
     public EventInstance barGrip;
 
     public EventInstance running;
+    public EventInstance jump;
+    public EventInstance slide;
     public EventInstance crashIntoFence;
 
     public EventInstance rowing;
 
-
+    private Scene activeScene;
     void Awake()
     {
         // Singleton pattern to ensure only one instance of AudioManager exists
@@ -104,9 +114,11 @@ public class AudioManager : MonoBehaviour
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
         raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
         raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
+        shout = RuntimeManager.CreateInstance("event:/Race/Shout");
 
         storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
         storyUpdate2 = RuntimeManager.CreateInstance("event:/Radio/Story Update 2");   // Player won a race
+        storyUpdate3 = RuntimeManager.CreateInstance("event:/Radio/Story Update 3");   // Player lost a race
 
         radioSong1 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 1");
         radioSong2 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 2");
@@ -119,6 +131,8 @@ public class AudioManager : MonoBehaviour
         radioAdOrNews3 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 3");
         radioAdOrNews4 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 4");
         radioAdOrNews5 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 5");
+
+        angelus = RuntimeManager.CreateInstance("event:/Radio/Angelus");
 
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
@@ -140,8 +154,11 @@ public class AudioManager : MonoBehaviour
         //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
         spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
-        
+
+        barAmbience = RuntimeManager.CreateInstance("event:/Bar/Bar Ambience");
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
+        acceptablePour = RuntimeManager.CreateInstance("event:/Bar/Acceptable Pour");
+        poorPour = RuntimeManager.CreateInstance("event:/Bar/Poor Pour");
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         
@@ -154,8 +171,20 @@ public class AudioManager : MonoBehaviour
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
 
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
+        jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");
+        slide = RuntimeManager.CreateInstance("event:/Foot Race/Slide");
         crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
 
+    }
+
+    private void Update()
+    {
+        activeScene = SceneManager.GetActiveScene();
+        if (activeScene.name != "BeerPourMinigame")
+        {
+            acceptablePour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            poorPour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
     }
 
     public float GetMasterVolume()

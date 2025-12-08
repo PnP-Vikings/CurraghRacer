@@ -20,8 +20,7 @@ public class GameManager : MonoBehaviour
    public bool playerIsBusy = false;
    public UnityEvent OnGameStarted;
    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
-   //Coroutine SleepAudioChangesCoroutine;
-   public bool SleepAudioChangesCoroutineIsActive = false;
+   [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
 
    
    private void Awake()
@@ -217,7 +216,7 @@ public class GameManager : MonoBehaviour
         return cameraStartPosition;
     }
 
-    IEnumerator SleepAudioChanges()
+    public IEnumerator SleepAudioChanges()
     {
         yield return null;
         if (AudioManager.instance != null)

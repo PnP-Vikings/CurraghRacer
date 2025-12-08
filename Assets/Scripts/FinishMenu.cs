@@ -37,6 +37,8 @@ public class FinishMenu : MonoBehaviour
         {
             AudioManager.instance.UIClick2.start();
             AudioManager.instance.raceAmbience.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceLose.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceWin.stop(STOP_MODE.ALLOWFADEOUT);
         }
 
         RaceManager.Instance.EndRace();
@@ -59,6 +61,21 @@ public class FinishMenu : MonoBehaviour
         else
         {
             _playerMessage.text = "Better luck next time! " + message;
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
+                AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
+                AudioManager.instance.raceLose.start();
+
+                if (RaceManager.Instance.isRaceDay)
+                {
+                    if (RadioManager.instance)
+                    {
+                        RadioManager.instance.hasJustLostRace = true;
+                        Debug.Log("Player Lost Race - AudioDebug");
+                    }
+                }
+            }
         }
     }
 

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{2a6ccf38-d90f-46aa-b71e-585d56418bef}">
+		<property name="name">
+			<value>TV Button Push In Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{bc12a347-cecc-49c1-95f7-311917592eb3}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{bc12a347-cecc-49c1-95f7-311917592eb3}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

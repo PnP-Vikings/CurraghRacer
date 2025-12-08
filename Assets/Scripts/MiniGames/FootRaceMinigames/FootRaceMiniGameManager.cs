@@ -363,6 +363,12 @@ public class FootRaceMiniGameManager : MonoBehaviour
         slideStartTime = Time.time;
         currentSlideEndTime = Time.time + slideDuration; // Set initial end time
         slideCoroutineHandle = StartCoroutine(SlideCoroutine());
+
+        // Play Slide Audio
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.slide.start();
+        }
     }
     
     private void BreakOutOfSlide(string reason = "", bool snapImmediately = true)
@@ -439,6 +445,13 @@ public class FootRaceMiniGameManager : MonoBehaviour
             
             // Update grounded state immediately
             isGrounded = false;
+
+            // Play Jump Audio
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.jump.start();
+            }
+
             
             // Ensure we stand up right after the impulse is applied
             StartCoroutine(StandUpAfterJump());

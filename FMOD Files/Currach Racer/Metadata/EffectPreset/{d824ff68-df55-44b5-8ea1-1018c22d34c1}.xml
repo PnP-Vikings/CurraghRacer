@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="EffectPreset" id="{d824ff68-df55-44b5-8ea1-1018c22d34c1}">
+		<property name="name">
+			<value>Distortion</value>
+		</property>
+		<relationship name="folder">
+			<destination>{731172a8-ab4c-4235-b35b-feb3a9eafcb6}</destination>
+		</relationship>
+		<relationship name="effect">
+			<destination>{1455f31a-136f-4190-a45f-e96afe007d43}</destination>
+		</relationship>
+	</object>
+	<object class="DistortionEffect" id="{1455f31a-136f-4190-a45f-e96afe007d43}">
+		<property name="level">
+			<value>0.399999976</value>
+		</property>
+	</object>
+</objects>

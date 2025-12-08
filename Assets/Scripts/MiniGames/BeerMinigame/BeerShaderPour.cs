@@ -1,3 +1,5 @@
+using FMODUnity;
+using FMOD.Studio;
 using System.Collections;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -44,7 +46,12 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
     public float foamThickness = 0.05f;
     [Range(0f, 2f)]
     public float desiredFoamHeight = 0.0f;
-    
+
+    public StudioEventEmitter barAmbienceEventEmitter;
+
+    private PLAYBACK_STATE poorPourPlaybackState;
+    private PLAYBACK_STATE acceptablePourPlaybackState;
+
     public void AssignBeerType(BeerType type)
     {
         beerType = type;
@@ -117,6 +124,9 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         // 1) Instantiate a unique copy of the material:
         beerMatInstance = Instantiate(beerMaterialAsset);
         meshRenderer.material = beerMatInstance;
+
+        var gameObject = GameObject.Find("BarAmbience");
+        barAmbienceEventEmitter = gameObject.GetComponent<StudioEventEmitter>();
     }
 
     void OnEnable()
@@ -159,6 +169,22 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         }
         
         beerComplete = BeerComplete(); // Update the beer complete status
+
+        // Mute Pub Talk if Pour Quality response is playing
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.acceptablePour.getPlaybackState(out acceptablePourPlaybackState);
+            AudioManager.instance.poorPour.getPlaybackState(out poorPourPlaybackState);
+
+            if (acceptablePourPlaybackState == PLAYBACK_STATE.PLAYING | poorPourPlaybackState == PLAYBACK_STATE.PLAYING)
+            {
+                barAmbienceEventEmitter.SetParameter("Pub Talk Volume", 0f);
+            }
+            else
+            {
+                barAmbienceEventEmitter.SetParameter("Pub Talk Volume", 1f);
+            }
+        }
     }
     
     public bool BeerComplete()
@@ -185,8 +211,14 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         {
             pourStreamParticles.Stop();
         }
+
+        // Mute pouring pint audio
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 0f);
+        }
     }
-    
+
 
     public void StartPouring()
     {
@@ -200,6 +232,13 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
             var main = pourStreamParticles.main;
             main.startColor = new ParticleSystem.MinMaxGradient(beerColor);
             pourStreamParticles.Play();
+        }
+
+        // Play pouring pint audio
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.pouringPint.start();
+            AudioManager.instance.pouringPint.setParameterByName("Pouring Pint Volume", 1f);
         }
     }
 
@@ -309,6 +348,8 @@ public class BeerShaderPour : MonoBehaviour, IPointerDownHandler, IPointerUpHand
         
         // Start foam animation from current fill level
         StartCoroutine(AnimateFoamRise());
+
+        PlayPourQualityAudio();
     }
 
    // csharp
@@ -400,7 +441,21 @@ private IEnumerator AnimateFoamRise()
         }
     }
 
-
+    private void PlayPourQualityAudio()
+    {
+        if (AudioManager.instance != null)
+        {
+            // Prevents Poor Quality Responses being cut off by another
+            if (pourQuality == PourQuality.Acceptable & acceptablePourPlaybackState != PLAYBACK_STATE.PLAYING)
+            {
+                AudioManager.instance.acceptablePour.start();
+            }
+            if (pourQuality == PourQuality.Poor & poorPourPlaybackState != PLAYBACK_STATE.PLAYING)
+            {
+                AudioManager.instance.poorPour.start();
+            }
+        }
+    }
 }
 
 public enum BeerType

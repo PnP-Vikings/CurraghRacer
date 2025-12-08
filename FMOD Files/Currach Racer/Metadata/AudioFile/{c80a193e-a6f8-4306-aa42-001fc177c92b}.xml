@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{06b3ffc9-b77f-450f-9e04-141ba139b591}">
+	<object class="AudioFile" id="{c80a193e-a6f8-4306-aa42-001fc177c92b}">
 		<property name="assetPath">
-			<value>Gas Stove boiling water.wav</value>
-		</property>
-		<property name="isStreaming">
-			<value>true</value>
+			<value>Story Report 2.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
@@ -14,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>30</value>
+			<value>4.9618367346938772</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
