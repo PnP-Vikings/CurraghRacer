@@ -135,7 +135,12 @@ public class DecisionCardUiMaster : MonoBehaviour
            RectTransform cardRect = currentCardInstance.GetComponent<RectTransform>();
            Debug.Log($"Card is now active! GameObject: {currentCardInstance.gameObject.name}, Active: {currentCardInstance.gameObject.activeSelf}");
            Debug.Log($"Card Position: {cardRect.anchoredPosition}, Scale: {cardRect.localScale}");
-       }
+
+           if (AudioManager.instance != null)
+           {
+               AudioManager.instance.card.start();
+           }
+        }
        else
        {
            // No more cards

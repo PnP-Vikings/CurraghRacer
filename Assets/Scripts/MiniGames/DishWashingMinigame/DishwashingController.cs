@@ -185,6 +185,10 @@ public class DishwashingController : MonoBehaviour
             minigameCanvasUI.UpdateAdditionalInfo("Dipping Plate!");
             _currentTween.OnComplete(ReturnPlateFromWater);
 
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.dunkPlate.start();
+            }
         }
     }
     
@@ -292,6 +296,11 @@ public class DishwashingController : MonoBehaviour
                 Debug.Log("Spawned plate: " + plateObject.name);
                 Tween tween = MovePlateToStartPostion(plateLogic);
                 spawnTweens.Add(tween);
+
+                if(AudioManager.instance != null)
+                {
+                    AudioManager.instance.spawnPlates.start();
+                }
             }
             else
             {
@@ -344,7 +353,7 @@ public class DishwashingController : MonoBehaviour
             MinigameFinished();
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.movePlateAudio.start();
+                AudioManager.instance.movePlate.start();
             }
             MovePlateToCleanPosition(); // Move the next plate to the clean position
         });
