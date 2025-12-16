@@ -85,6 +85,7 @@ public class WeightLiftingController : MonoBehaviour
     public Camera gripCamera;
     public Camera liftCamera;
     public Camera holdCamera;
+    public Camera weightSelectionCamera;
     
     // Timers
     private float phaseTimer;
@@ -118,6 +119,10 @@ public class WeightLiftingController : MonoBehaviour
         
         switch (currentLiftState)
         {
+            case LiftState.WeightSelection:
+                // Currently not implemented
+                break;
+            
             case LiftState.Idle:
                 // Waiting to start
                 break;
@@ -198,6 +203,25 @@ public class WeightLiftingController : MonoBehaviour
         // Start with Grip phase
         TransitionToGripPhase();
     }
+    
+    #region Phase 0 - WeightSelection
+    // Currently not implemented, but could be added for player to choose starting weight
+    private void TransitionToWeightSelectionPhase()
+    {
+        currentLiftState = LiftState.WeightSelection;
+        phaseTimer = 0f;
+        
+        SwitchCamera(weightSelectionCamera);
+        SetAllPhasesUIInactive();
+        if (gripPhaseUI) gripPhaseUI.SetActive(true);
+        
+        UpdatePhaseUI("PHASE 1: GRIP", "Get ready...");
+        UpdateUI();
+    }
+    
+    
+    
+    #endregion
     
     #region Phase 1 - Grip
     
@@ -763,6 +787,7 @@ public class WeightLiftingController : MonoBehaviour
     public enum LiftState 
     {
         Idle,
+        WeightSelection,
         Grip,
         Lift,
         Hold
