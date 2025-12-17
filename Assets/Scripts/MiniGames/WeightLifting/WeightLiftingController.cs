@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
@@ -17,6 +18,18 @@ public class WeightLiftingController : MonoBehaviour
     public float currentWeight = 20f; // Starting weight in kg
     public float weightIncrement = 5f;
     public float maxWeight = 200f;
+    
+    [Header("Phase 0 - Weight Selection Settings")]
+    public List<int> availableWeights = new List<int>() {20, 30, 40, 50, 60, 70, 80, 90, 100};
+    public int selectedWeightIndex = 0;
+    public float selectedWeight
+    {
+        get { return availableWeights[selectedWeightIndex]; }
+    }
+    public List<GameObject> weightModels; // Visual representations of weights
+    
+    
+    
     
     [Header("Phase 1 - Grip Settings")]
     public float gripPhaseDuration = 2f;
@@ -104,6 +117,7 @@ public class WeightLiftingController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
     
     private void Start()
@@ -174,8 +188,8 @@ public class WeightLiftingController : MonoBehaviour
         maxWeightLifted = 0f;
         totalStrengthGained = 0;
         isProcessingPhaseTransition = false;
-        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
-        StartNewLift();
+        //StartNewLift();
+        TransitionToWeightSelectionPhase();
     }
     public void ResetForNewLift()
     {
@@ -210,15 +224,32 @@ public class WeightLiftingController : MonoBehaviour
     {
         currentLiftState = LiftState.WeightSelection;
         phaseTimer = 0f;
-        
+       
         SwitchCamera(weightSelectionCamera);
         SetAllPhasesUIInactive();
-        if (gripPhaseUI) gripPhaseUI.SetActive(true);
-        
-        UpdatePhaseUI("PHASE 1: GRIP", "Get ready...");
-        UpdateUI();
+        ClearAllOtherUI();
+        UpdatePhaseUI("PHASE 0: Weight Selection", "Choose your starting weight.");
     }
     
+    public List<int> GetAvailableWeights()
+    {
+        return availableWeights;
+    }
+    
+    public void SetSelectedWeight(int weight)
+    {
+        if (availableWeights.Contains(weight))
+        {
+            selectedWeightIndex = availableWeights.IndexOf(weight);
+            currentWeight = weight;
+            Debug.Log("Selected starting weight: " + currentWeight + "kg");
+            StartNewLift();
+        }
+        else
+        {
+            Debug.LogWarning("Selected weight not available: " + weight + "kg");
+        }
+    }
     
     
     #endregion
@@ -765,6 +796,12 @@ public class WeightLiftingController : MonoBehaviour
         }
     }
     
+    private void ClearAllOtherUI()
+    {
+        if (phaseText) phaseText.text = "";
+        if (instructionText) instructionText.text = "";
+        if (statsText) statsText.text = "";
+    }
     private void SetAllPhasesUIInactive()
     {
         if (gripPhaseUI) gripPhaseUI.SetActive(false);
