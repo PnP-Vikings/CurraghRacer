@@ -2,9 +2,11 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using Sequence = DG.Tweening.Sequence;
 
 public class WeightLiftingController : MonoBehaviour
 {
@@ -13,6 +15,7 @@ public class WeightLiftingController : MonoBehaviour
     [Header("Game State")]
     public LiftState currentLiftState = LiftState.Idle;
     public bool gameActive;
+    
     
     [Header("Weight Settings")]
     public float currentWeight = 20f; // Starting weight in kg
@@ -111,6 +114,8 @@ public class WeightLiftingController : MonoBehaviour
     private bool isPerfectLift;
     private bool isProcessingPhaseTransition; // Prevent multiple transitions
 
+    private Tween currentDelayTween;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -262,8 +267,35 @@ public class WeightLiftingController : MonoBehaviour
     {
         if (weightSelected)
         {
+            // Kill any existing delay
+            currentDelayTween?.Kill();
+
+            // Update UI BEFORE the delay
+            
             Debug.Log("Confirmed starting weight: " + currentWeight + "kg");
-            StartNewLift();
+
+            // Then wait and start the lift
+            /*currentDelayTween = DOVirtual.DelayedCall(2f, () =>
+            {
+                StartNewLift();
+            });*/
+            
+            Sequence transitionSequence = DOTween.Sequence();
+            transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
+                .AppendInterval(1f)
+                .AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 2 seconds..."))
+                .AppendInterval(1f)
+                .AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 1 seconds..."))
+                .AppendInterval(1f)
+                .AppendCallback(() => UpdatePhaseUI("GO!", "Lift that weight!"))
+                .AppendInterval(1f)
+                .AppendCallback(() =>
+                {
+                    
+                    StartNewLift();
+                });
+            
+        
             return true;
         }
         else
