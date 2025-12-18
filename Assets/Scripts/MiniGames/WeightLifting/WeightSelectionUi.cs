@@ -54,4 +54,13 @@ public class WeightSelectionUi : MonoBehaviour
     {
         gameController.SetSelectedWeight(weight);
     }
+    
+    public void ConfirmSelection()
+    {
+       bool selectionMade = gameController.ConfirmWeightSelection();
+         if (selectionMade)
+         {
+              this.gameObject.SetActive(false);
+         }
+    }
 }

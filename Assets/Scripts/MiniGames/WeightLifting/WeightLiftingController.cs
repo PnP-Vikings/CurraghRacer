@@ -18,15 +18,19 @@ public class WeightLiftingController : MonoBehaviour
     public float currentWeight = 20f; // Starting weight in kg
     public float weightIncrement = 5f;
     public float maxWeight = 200f;
-    
+    public bool weightSelected = false;
+
     [Header("Phase 0 - Weight Selection Settings")]
-    public List<int> availableWeights = new List<int>() {20, 30, 40, 50, 60, 70, 80, 90, 100};
+    public List<int> availableWeights = new List<int>() {20, 40, 60, 80, 100,120};
     public int selectedWeightIndex = 0;
     public float selectedWeight
     {
         get { return availableWeights[selectedWeightIndex]; }
     }
     public List<GameObject> weightModels; // Visual representations of weights
+    
+    public class WeightSelectionChangedEvent : UnityEngine.Events.UnityEvent<int>{};
+    public WeightSelectionChangedEvent onWeightSelectionChanged = new WeightSelectionChangedEvent();
     
     
     
@@ -243,11 +247,29 @@ public class WeightLiftingController : MonoBehaviour
             selectedWeightIndex = availableWeights.IndexOf(weight);
             currentWeight = weight;
             Debug.Log("Selected starting weight: " + currentWeight + "kg");
-            StartNewLift();
+            weightSelected = true;
+            onWeightSelectionChanged.Invoke(weight);
+            UpdateUI();
+           // StartNewLift();
         }
         else
         {
             Debug.LogWarning("Selected weight not available: " + weight + "kg");
+        }
+    }
+    
+    public bool ConfirmWeightSelection()
+    {
+        if (weightSelected)
+        {
+            Debug.Log("Confirmed starting weight: " + currentWeight + "kg");
+            StartNewLift();
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("No weight selected to confirm.");
+            return false;
         }
     }
     
@@ -767,7 +789,12 @@ public class WeightLiftingController : MonoBehaviour
     {
         if (weightText)
         {
-            weightText.text = "Weight: " + currentWeight + "kg";
+            if (currentLiftState == LiftState.WeightSelection)
+            {
+                weightText.text = "Weight Selected " + selectedWeight + "kg";
+            }
+            else
+                weightText.text = "Weight: " + currentWeight + "kg";
         }
     }
     
@@ -801,6 +828,7 @@ public class WeightLiftingController : MonoBehaviour
         if (phaseText) phaseText.text = "";
         if (instructionText) instructionText.text = "";
         if (statsText) statsText.text = "";
+        if( weightText) weightText.text = "";
     }
     private void SetAllPhasesUIInactive()
     {
