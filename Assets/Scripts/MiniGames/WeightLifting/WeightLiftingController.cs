@@ -49,6 +49,7 @@ public class WeightLiftingController : MonoBehaviour
     public float gripBarIncreasePerTap = 0.1f;
     public float gripBarDecaySpeed = 0.15f; // How fast bar falls
     private bool gripPhaseReady; // True when countdown is complete
+    private bool gripPhaseCompleted; // True when grip phase is done
     private float goMessageTimer; // Tracks time since GO message started
     
     [Header("Phase 2 - Lift Settings")]
@@ -61,6 +62,7 @@ public class WeightLiftingController : MonoBehaviour
     public bool powerMeterGoingUp = true;
     public float acceptableMargin = 0.15f; // Margin for "good" lift
     private bool liftPhaseReady; // True when countdown is complete
+    private bool liftPhaseCompleted; // True when lift phase is done
     
     [Header("Phase 3 - Hold Settings")]
     public float holdPhaseDuration = 3f;
@@ -106,7 +108,14 @@ public class WeightLiftingController : MonoBehaviour
     public Camera liftCamera;
     public Camera holdCamera;
     public Camera weightSelectionCamera;
+    public Camera phaseTransitionCamera;
+
+    [Header("Transitions and Effects")]
+    public float transitionDuration = 1f;
+    public Transform lookAtBenchLocation;
     
+    
+    [Header("Timers")]
     // Timers
     private float phaseTimer;
     private float tiltChangeTimer;
@@ -280,9 +289,12 @@ public class WeightLiftingController : MonoBehaviour
                 StartNewLift();
             });*/
             
+            phaseTransitionCamera.transform.position = weightSelectionCamera.transform.position;
+            SwitchCamera(phaseTransitionCamera);
             Sequence transitionSequence = DOTween.Sequence();
-            transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
-                .AppendInterval(1f)
+            /*transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
+                .Append(phaseTransitionCamera.transform.DOMove(lookAtBenchLocation.transform.position + new Vector3(0, 1, 0), 3f))
+                .Join(phaseTransitionCamera.transform.DOLookAt(lookAtBenchLocation.position, 3f))
                 .AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 2 seconds..."))
                 .AppendInterval(1f)
                 .AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 1 seconds..."))
@@ -293,7 +305,21 @@ public class WeightLiftingController : MonoBehaviour
                 {
                     
                     StartNewLift();
-                });
+                });*/
+            
+            transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
+                .Append(DOVirtual.Float(3, 0, 3f, (countdown) =>
+                {
+                    int seconds = Mathf.CeilToInt(countdown);
+                    UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in " + seconds + " seconds...");
+                }))
+                .Join(phaseTransitionCamera.transform.DOMove(lookAtBenchLocation.transform.position + new Vector3(0, 1, 0), 3f))
+                .Join(phaseTransitionCamera.transform.DOLookAt(lookAtBenchLocation.position, 3f))
+                .AppendCallback(() => UpdatePhaseUI("GO!", "Lift that weight!"))
+                .Append(phaseTransitionCamera.transform.DOMove(gripCamera.transform.position , 1.5f))
+                .Join(phaseTransitionCamera.transform.DORotate(gripCamera.transform.rotation.eulerAngles, 3f))
+                .AppendInterval(1f)
+                .AppendCallback(() => StartNewLift());
             
         
             return true;
@@ -316,6 +342,7 @@ public class WeightLiftingController : MonoBehaviour
         phaseTimer = 0f;
         gripBarPosition = 0f;
         gripPhaseReady = false;
+        gripPhaseCompleted = false;
         
         SwitchCamera(gripCamera);
         SetAllPhasesUIInactive();
@@ -359,9 +386,11 @@ public class WeightLiftingController : MonoBehaviour
         }
         
         // Decay grip bar over time
-        gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
-        gripBarPosition = Mathf.Clamp01(gripBarPosition);
-        
+        if(!gripPhaseCompleted)
+        {
+            gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
+            gripBarPosition = Mathf.Clamp01(gripBarPosition);
+        }
         // Update UI
         if (gripBar) gripBar.value = gripBarPosition;
         
@@ -374,8 +403,18 @@ public class WeightLiftingController : MonoBehaviour
             // Check if grip is successful
             if (gripBarPosition >= gripBarTargetMin && gripBarPosition <= gripBarTargetMax)
             {
+                gripPhaseCompleted = true;
+                UpdatePhaseUI("PHASE 1: GRIP", "Grip successful!\nPreparing to lift...");
+                
+                currentDelayTween?.Kill();
+                
+                currentDelayTween = DOVirtual.DelayedCall(2f, () =>
+                {
+                    TransitionToLiftPhase();
+                });
+                
                 Debug.Log("Grip successful!");
-                TransitionToLiftPhase();
+                
 
                 if (AudioManager.instance != null)
                 {
@@ -392,7 +431,7 @@ public class WeightLiftingController : MonoBehaviour
     
     private void HandleGripTap()
     {
-        if (!gripPhaseReady) return;
+        if (!gripPhaseReady || gripPhaseCompleted) return;
         
         // Increase grip bar based on weight (heavier = harder)
         float weightDifficulty = 1f - (currentWeight / maxWeight) * 0.5f; // 1.0 to 0.5
@@ -416,7 +455,7 @@ public class WeightLiftingController : MonoBehaviour
         hasReleasedInLiftPhase = false;
         isPerfectLift = false;
         isProcessingPhaseTransition = false;
-        
+        liftPhaseCompleted = false;
         SwitchCamera(liftCamera);
         SetAllPhasesUIInactive();
         if (liftPhaseUI) liftPhaseUI.SetActive(true);
@@ -464,6 +503,7 @@ public class WeightLiftingController : MonoBehaviour
         
         if (powerMeterGoingUp)
         {
+            if(liftPhaseCompleted) return;
             powerMeterPosition += currentSpeed * Time.deltaTime;
             if (powerMeterPosition >= 1f)
             {
@@ -473,6 +513,7 @@ public class WeightLiftingController : MonoBehaviour
         }
         else
         {
+            if(liftPhaseCompleted) return;
             powerMeterPosition -= currentSpeed * Time.deltaTime;
             if (powerMeterPosition <= 0f)
             {
@@ -495,7 +536,7 @@ public class WeightLiftingController : MonoBehaviour
     
     private void HandleLiftTap()
     {
-        if (hasReleasedInLiftPhase || !liftPhaseReady || isProcessingPhaseTransition) return;
+        if (hasReleasedInLiftPhase || !liftPhaseReady || isProcessingPhaseTransition || liftPhaseCompleted) return;
         
         hasReleasedInLiftPhase = true;
         isProcessingPhaseTransition = true;
@@ -510,7 +551,14 @@ public class WeightLiftingController : MonoBehaviour
         {
             Debug.Log("Perfect lift timing!");
             isPerfectLift = true;
-            TransitionToHoldPhase();
+            liftPhaseCompleted = true;
+            UpdatePhaseUI("PHASE 2: LIFT", "Perfect lift!\nPreparing to hold...");
+            currentDelayTween?.Kill();
+            
+            currentDelayTween = DOVirtual.DelayedCall(1f, () =>
+            {
+                TransitionToHoldPhase();
+            });
         }
         // Check if in acceptable margin
         else if (powerMeterPosition >= (liftTargetMin - acceptableMargin) && 
@@ -518,7 +566,12 @@ public class WeightLiftingController : MonoBehaviour
         {
             Debug.Log("Good lift timing!");
             isPerfectLift = false;
-            TransitionToHoldPhase();
+            liftPhaseCompleted = true;
+            UpdatePhaseUI("PHASE 2: LIFT", "Good Enough!\nPreparing to hold...");
+            currentDelayTween = DOVirtual.DelayedCall(1f, () =>
+            {
+                TransitionToHoldPhase();
+            });
         }
         else
         {
@@ -875,6 +928,8 @@ public class WeightLiftingController : MonoBehaviour
         if (gripCamera) gripCamera.gameObject.SetActive(false);
         if (liftCamera) liftCamera.gameObject.SetActive(false);
         if (holdCamera) holdCamera.gameObject.SetActive(false);
+        if (weightSelectionCamera) weightSelectionCamera.gameObject.SetActive(false);
+        if (phaseTransitionCamera) phaseTransitionCamera.gameObject.SetActive(false);
         
         if (targetCamera) targetCamera.gameObject.SetActive(true);
     }
