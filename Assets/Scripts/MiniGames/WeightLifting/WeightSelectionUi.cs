@@ -50,8 +50,22 @@ public class WeightSelectionUi : MonoBehaviour
         }
     }
     
-    public void OnSelectWeight(int weight)
+    public void OnSelectWeight(int weight,WeightSelectionButton wb = null)
     {
+        if (wb != null)
+        {
+            foreach (var button in weightButtons)
+            {
+                button.ResetColor();
+            }
+            weightButtons[weightButtons.IndexOf(wb)].SetSelectedColor();
+
+        }
+        else
+        {
+            Debug.Log("Weight selected programmatically: " + weight);
+        }
+        
         gameController.SetSelectedWeight(weight);
     }
     
