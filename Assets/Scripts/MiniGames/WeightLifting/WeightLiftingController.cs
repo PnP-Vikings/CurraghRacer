@@ -15,6 +15,48 @@ public class WeightLiftingController : MonoBehaviour
     [Header("Game State")]
     public LiftState currentLiftState = LiftState.Idle;
     public bool gameActive;
+    public int SuccessfulReps
+    {
+        get { return successfulReps; }
+        set { successfulReps = value; }
+    }
+    
+    public int PerfectLifts
+    {
+        get { return perfectLifts; }
+        set { perfectLifts = value; }
+    }
+    
+    public int FailedAttempts
+    {
+        get { return failedAttempts; }
+        set { failedAttempts = value; }
+    }
+    
+    public int TotalStrengthGained
+    {
+        get { return totalStrengthGained; }
+        set { totalStrengthGained = value; }
+    }
+    
+    public int MaxFailedAttempts
+    {
+        get { return maxFailedAttempts; }
+        set { maxFailedAttempts = value; }
+    }
+    
+    public int MaxWeightLifted
+    {
+        get { return Mathf.FloorToInt(maxWeightLifted); }
+        set { maxWeightLifted = value; }
+    }
+    
+    public int MaxSuccessfulRepsPerSession
+    {
+        get { return maxSuccessfulReps; }
+        set { maxSuccessfulReps = value; }
+    }
+
     
     
     [Header("Weight Settings")]
@@ -49,10 +91,14 @@ public class WeightLiftingController : MonoBehaviour
     public float goMessageDuration = 2f; // How long to show "GO!" message
     public int gripTapsRequired = 10; // Base taps needed
     public float gripBarPosition; // 0 to 1
-    public float gripBarTargetMin = 0.7f; // Green zone min
-    public float gripBarTargetMax = 0.9f; // Green zone max
+    public float gripBarTargetMin = 0.7f; // Green zone min (dynamically set)
+    public float gripBarTargetMax = 0.9f; // Green zone max (dynamically set)
     public float gripBarIncreasePerTap = 0.1f;
     public float gripBarDecaySpeed = 0.15f; // How fast bar falls
+    public float gripZoneMinDistance = 0.15f; // Minimum safe distance from edges (0-1)
+    public float gripZoneMaxDistance = 0.15f; // Maximum distance from edges (0-1)
+    public float baseGripZoneWidth = 0.2f; // Starting zone width
+    public float minGripZoneWidth = 0.08f; // Minimum zone width after difficulty scaling
     private bool gripPhaseReady; // True when countdown is complete
     private bool gripPhaseCompleted; // True when grip phase is done
     private float goMessageTimer; // Tracks time since GO message started
@@ -65,10 +111,14 @@ public class WeightLiftingController : MonoBehaviour
     public float liftCountdownDuration = 1f; // Countdown before accepting taps
     public float powerMeterSpeed = 0.5f; // Speed of oscillation
     public float powerMeterPosition; // 0 to 1
-    public float liftTargetMin = 0.65f; // Green zone min
-    public float liftTargetMax = 0.85f; // Green zone max
+    public float liftTargetMin = 0.65f; // Green zone min (dynamically set)
+    public float liftTargetMax = 0.85f; // Green zone max (dynamically set)
     public bool powerMeterGoingUp = true;
     public float acceptableMargin = 0.15f; // Margin for "good" lift
+    public float liftZoneMinDistance = 0.15f; // Minimum safe distance from edges (0-1)
+    public float liftZoneMaxDistance = 0.15f; // Maximum distance from edges (0-1)
+    public float baseLiftZoneWidth = 0.2f; // Starting zone width
+    public float minLiftZoneWidth = 0.08f; // Minimum zone width after difficulty scaling
     private bool liftPhaseReady; // True when countdown is complete
     private bool liftPhaseCompleted; // True when lift phase is done
     
@@ -94,6 +144,7 @@ public class WeightLiftingController : MonoBehaviour
     public int failedAttempts;
     public int maxFailedAttempts = 3;
     public float maxWeightLifted;
+    public int maxSuccessfulReps = 3;
     public int totalStrengthGained;
     
     [Header("UI References")]
@@ -110,6 +161,7 @@ public class WeightLiftingController : MonoBehaviour
     public GameObject liftPhaseUI;
     public GameObject holdPhaseUI;
     public GameObject resultsUI;
+    public Image resultsBackgroundImage;
     
     [Header("Cameras")]
     public Camera gripCamera;
@@ -150,6 +202,7 @@ public class WeightLiftingController : MonoBehaviour
     {
         UpdateUI();
         SetAllPhasesUIInactive();
+        SetupTargetZones();
         StartGame();
         armInitialPosition = armModel.transform.position;
         armInitialRotation = armModel.transform.rotation;
@@ -341,6 +394,31 @@ public class WeightLiftingController : MonoBehaviour
     
     #region Phase 1 - Grip
     
+    private void RandomizeGripZone()
+    {
+        // Calculate difficulty scaling based on successful reps
+        float difficultyFactor = Mathf.Clamp01(successfulReps / 10f); // 0 to 1 over 10 reps
+        
+        // Scale zone width based on difficulty (starts at baseGripZoneWidth, shrinks to minGripZoneWidth)
+        float currentZoneWidth = Mathf.Lerp(baseGripZoneWidth, minGripZoneWidth, difficultyFactor);
+        
+        // Calculate safe range for zone center (avoid edges)
+        float safeMin = gripZoneMinDistance + (currentZoneWidth / 2f);
+        float safeMax = 1f - gripZoneMaxDistance - (currentZoneWidth / 2f);
+        
+        // Randomize the center position
+        float zoneCenterPosition = Random.Range(safeMin, safeMax);
+        
+        // Set min and max based on center and width
+        gripBarTargetMin = zoneCenterPosition - (currentZoneWidth / 2f);
+        gripBarTargetMax = zoneCenterPosition + (currentZoneWidth / 2f);
+        
+        // Update the UI position
+        UpdateGripTargetZoneUI();
+        
+        Debug.Log($"Grip Zone randomized - Center: {zoneCenterPosition:F2}, Width: {currentZoneWidth:F2}, Range: [{gripBarTargetMin:F2}, {gripBarTargetMax:F2}]");
+    }
+    
     private void TransitionToGripPhase()
     {
         currentLiftState = LiftState.Grip;
@@ -348,6 +426,9 @@ public class WeightLiftingController : MonoBehaviour
         gripBarPosition = 0f;
         gripPhaseReady = false;
         gripPhaseCompleted = false;
+        
+        // Randomize grip zone position and difficulty
+        RandomizeGripZone();
         
         SwitchCamera(gripCamera);
         ShowArmModel();
@@ -472,6 +553,7 @@ public class WeightLiftingController : MonoBehaviour
             }
             else
             {
+                gripPhaseCompleted = true; // Stop the grip phase from updating
                 Debug.Log("Failed to grip! Try again.");
                 FailLift("Failed to establish proper grip!");
             }
@@ -494,6 +576,31 @@ public class WeightLiftingController : MonoBehaviour
     
     #region Phase 2 - Lift
     
+    private void RandomizeLiftZone()
+    {
+        // Calculate difficulty scaling based on successful reps
+        float difficultyFactor = Mathf.Clamp01(successfulReps / 10f); // 0 to 1 over 10 reps
+        
+        // Scale zone width based on difficulty (starts at baseLiftZoneWidth, shrinks to minLiftZoneWidth)
+        float currentZoneWidth = Mathf.Lerp(baseLiftZoneWidth, minLiftZoneWidth, difficultyFactor);
+        
+        // Calculate safe range for zone center (avoid edges)
+        float safeMin = liftZoneMinDistance + (currentZoneWidth / 2f);
+        float safeMax = 1f - liftZoneMaxDistance - (currentZoneWidth / 2f);
+        
+        // Randomize the center position
+        float zoneCenterPosition = Random.Range(safeMin, safeMax);
+        
+        // Set min and max based on center and width
+        liftTargetMin = zoneCenterPosition - (currentZoneWidth / 2f);
+        liftTargetMax = zoneCenterPosition + (currentZoneWidth / 2f);
+        
+        // Update the UI position
+        UpdateLiftTargetZoneUI();
+        
+        Debug.Log($"Lift Zone randomized - Center: {zoneCenterPosition:F2}, Width: {currentZoneWidth:F2}, Range: [{liftTargetMin:F2}, {liftTargetMax:F2}]");
+    }
+    
     private void TransitionToLiftPhase()
     {
         currentLiftState = LiftState.Lift;
@@ -505,6 +612,10 @@ public class WeightLiftingController : MonoBehaviour
         isPerfectLift = false;
         isProcessingPhaseTransition = false;
         liftPhaseCompleted = false;
+        
+        // Randomize lift zone position and difficulty
+        RandomizeLiftZone();
+        
         SwitchCamera(liftCamera);
         SetAllPhasesUIInactive();
         if (liftPhaseUI) liftPhaseUI.SetActive(true);
@@ -515,6 +626,8 @@ public class WeightLiftingController : MonoBehaviour
     
     private void UpdateLiftPhase()
     {
+        if (liftPhaseCompleted) return;
+        
         phaseTimer += Time.deltaTime;
         
         // Handle countdown at start of phase
@@ -589,7 +702,7 @@ public class WeightLiftingController : MonoBehaviour
         
         hasReleasedInLiftPhase = true;
         isProcessingPhaseTransition = true;
-
+        liftPhaseCompleted = true;
         if (AudioManager.instance != null)
         {
             AudioManager.instance.grunt.start();
@@ -775,9 +888,14 @@ public class WeightLiftingController : MonoBehaviour
     
     public void SuccessfulAnimationComplete()
     {
+        holdPhaseUI.SetActive(false);
+        
         Sequence transitionSequence = DOTween.Sequence();
         
         transitionSequence
+            .AppendCallback(() => UpdatePhaseUI("PHASE 3: HOLD", "Holding complete!\nRacking the bar..."))
+            .AppendInterval(1f)
+            .AppendCallback(() => UpdatePhaseUI("Racking the bar", ""))
             .Append(bar.transform.DORotate(new Vector3(0f, 0f, 0f), 1f).SetRelative(false))
             .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
             .AppendCallback(() => { }) // Force evaluation
@@ -865,6 +983,12 @@ public class WeightLiftingController : MonoBehaviour
         
         Debug.Log("Successful lift! Weight: " + currentWeight + "kg, Strength gained: " + strengthGain);
         
+        if(successfulReps >= maxSuccessfulReps)
+        {
+            EndGame();
+            return;
+        }
+        
         // Increase weight
         currentWeight += weightIncrement;
         currentWeight = Mathf.Min(currentWeight, maxWeight);
@@ -877,7 +1001,7 @@ public class WeightLiftingController : MonoBehaviour
     {
         failedAttempts++;
         Debug.Log("Lift failed! Reason: " + reason + " (Attempt " + failedAttempts + "/" + maxFailedAttempts + ")");
-        
+        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
         if (failedAttempts >= maxFailedAttempts)
         {
             EndGame();
@@ -943,8 +1067,18 @@ public class WeightLiftingController : MonoBehaviour
             pushRightButton.onClick.RemoveAllListeners();
         }
         
+        if(resultsBackgroundImage != null)
+        {
+            resultsBackgroundImage.enabled = true;
+        }
+        
         SetAllPhasesUIInactive();
         if (resultsUI) resultsUI.SetActive(true);
+        
+        if(successfulReps >= maxSuccessfulReps)
+            UpdatePhaseUI("Game Finished", "Congratulations!\nYou are a Beast!");
+        else
+            UpdatePhaseUI("Game Finished", "Oops\nYou Suck Man!");
         
         Debug.Log("=== Training Complete ===");
         Debug.Log("Successful Reps: " + successfulReps);
@@ -958,7 +1092,7 @@ public class WeightLiftingController : MonoBehaviour
     private int CalculateStrengthGain()
     {
         // Base strength from weight
-        int baseStrength = Mathf.RoundToInt(currentWeight / 5f);
+        int baseStrength = Mathf.RoundToInt((currentWeight / 10f)/2f);
         
         // Bonus for perfect lift
         if (isPerfectLift)
@@ -1081,6 +1215,57 @@ public class WeightLiftingController : MonoBehaviour
         if (targetCamera) targetCamera.gameObject.SetActive(true);
     }
     
+    private void UpdateGripTargetZoneUI()
+    {
+        if (gripTargetZone != null && gripBar != null)
+        {
+            RectTransform gripZoneRect = gripTargetZone.GetComponent<RectTransform>();
+            RectTransform gripBarRect = gripBar.GetComponent<RectTransform>();
+
+            float gripBarWidth = gripBarRect.rect.width;
+            float zoneWidth = (gripBarTargetMax - gripBarTargetMin) * gripBarWidth;
+
+            // Calculate center position in pixels
+            float centerNormalized = (gripBarTargetMin + gripBarTargetMax) / 2f;
+            float centerPosition = centerNormalized * gripBarWidth;
+
+            // Adjust for anchor offset
+            float anchorOffset = gripBarRect.rect.xMin;
+        
+            gripZoneRect.sizeDelta = new Vector2(zoneWidth, gripZoneRect.sizeDelta.y);
+            gripZoneRect.anchoredPosition = new Vector2(centerPosition + anchorOffset, 0);
+        }
+    }
+    
+    private void UpdateLiftTargetZoneUI()
+    {
+        if (powerTargetZone != null && powerMeter != null)
+        {
+            RectTransform liftZoneRect = powerTargetZone.GetComponent<RectTransform>();
+            RectTransform liftBarRect = powerMeter.GetComponent<RectTransform>();
+
+            float liftBarWidth = liftBarRect.rect.width;
+            float zoneWidth = (liftTargetMax - liftTargetMin) * liftBarWidth;
+
+            // Calculate center position in pixels
+            float centerNormalized = (liftTargetMin + liftTargetMax) / 2f;
+            float centerPosition = centerNormalized * liftBarWidth;
+
+            // Adjust for anchor offset
+            float anchorOffset = liftBarRect.rect.xMin;
+
+            liftZoneRect.sizeDelta = new Vector2(zoneWidth, liftZoneRect.sizeDelta.y);
+            liftZoneRect.anchoredPosition = new Vector2(centerPosition + anchorOffset, 0);
+        }
+    }
+    
+    private void SetupTargetZones()
+    {
+        // Initial setup - just call the update methods
+        UpdateGripTargetZoneUI();
+        UpdateLiftTargetZoneUI();
+    }
+
     #endregion
     
     public enum LiftState 
