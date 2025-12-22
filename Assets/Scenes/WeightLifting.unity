@@ -1137,7 +1137,6 @@ MonoBehaviour:
   weightSelected: 0
   bar: {fileID: 1255423492}
   armModel: {fileID: 3588450539203004977}
-  armInitialPosition: {fileID: 4217458788677013643}
   barBellPosition: {fileID: 1741494670}
   barObjectInitialPosition: {fileID: 0}
   availableWeights: 14000000280000003c000000500000006400000078000000
@@ -2163,7 +2162,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 75.3
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -4347,7 +4346,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 75.3
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
