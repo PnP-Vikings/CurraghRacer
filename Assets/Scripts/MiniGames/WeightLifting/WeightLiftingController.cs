@@ -1,9 +1,12 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using Sequence = DG.Tweening.Sequence;
 
 public class WeightLiftingController : MonoBehaviour
 {
@@ -13,10 +16,32 @@ public class WeightLiftingController : MonoBehaviour
     public LiftState currentLiftState = LiftState.Idle;
     public bool gameActive;
     
+    
     [Header("Weight Settings")]
     public float currentWeight = 20f; // Starting weight in kg
     public float weightIncrement = 5f;
     public float maxWeight = 200f;
+    public bool weightSelected = false;
+    public GameObject bar,armModel;
+    [SerializeField]private Transform barBellPosition,barObjectInitialPosition;
+    private Vector3 armInitialPosition,barBellInitialPosition,barObjectInitialPositionVector;
+    private Quaternion armInitialRotation,barObjectInitialRotation;
+    
+    
+    [Header("Phase 0 - Weight Selection Settings")]
+    public List<int> availableWeights = new List<int>() {20, 40, 60, 80, 100,120};
+    public int selectedWeightIndex = 0;
+    public float selectedWeight
+    {
+        get { return availableWeights[selectedWeightIndex]; }
+    }
+    public List<GameObject> weightModels; // Visual representations of weights
+    
+    public class WeightSelectionChangedEvent : UnityEngine.Events.UnityEvent<int>{};
+    public WeightSelectionChangedEvent onWeightSelectionChanged = new WeightSelectionChangedEvent();
+    
+    
+    
     
     [Header("Phase 1 - Grip Settings")]
     public float gripPhaseDuration = 2f;
@@ -29,7 +54,11 @@ public class WeightLiftingController : MonoBehaviour
     public float gripBarIncreasePerTap = 0.1f;
     public float gripBarDecaySpeed = 0.15f; // How fast bar falls
     private bool gripPhaseReady; // True when countdown is complete
+    private bool gripPhaseCompleted; // True when grip phase is done
     private float goMessageTimer; // Tracks time since GO message started
+    Quaternion armStartRotation = Quaternion.Euler(225, 180, 0);
+    Quaternion armTargetRotation = Quaternion.Euler(180, 180, 0);
+    
     
     [Header("Phase 2 - Lift Settings")]
     public float liftPhaseDuration = 4f;
@@ -41,6 +70,7 @@ public class WeightLiftingController : MonoBehaviour
     public bool powerMeterGoingUp = true;
     public float acceptableMargin = 0.15f; // Margin for "good" lift
     private bool liftPhaseReady; // True when countdown is complete
+    private bool liftPhaseCompleted; // True when lift phase is done
     
     [Header("Phase 3 - Hold Settings")]
     public float holdPhaseDuration = 3f;
@@ -85,7 +115,15 @@ public class WeightLiftingController : MonoBehaviour
     public Camera gripCamera;
     public Camera liftCamera;
     public Camera holdCamera;
+    public Camera weightSelectionCamera;
+    public Camera phaseTransitionCamera;
+
+    [Header("Transitions and Effects")]
+    public float transitionDuration = 1f;
+    public Transform lookAtBenchLocation;
     
+    
+    [Header("Timers")]
     // Timers
     private float phaseTimer;
     private float tiltChangeTimer;
@@ -93,6 +131,8 @@ public class WeightLiftingController : MonoBehaviour
     private bool isPerfectLift;
     private bool isProcessingPhaseTransition; // Prevent multiple transitions
 
+    private Tween currentDelayTween;
+    
     private void Awake()
     {
         if (Instance == null)
@@ -103,6 +143,7 @@ public class WeightLiftingController : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
     }
     
     private void Start()
@@ -110,6 +151,12 @@ public class WeightLiftingController : MonoBehaviour
         UpdateUI();
         SetAllPhasesUIInactive();
         StartGame();
+        armInitialPosition = armModel.transform.position;
+        armInitialRotation = armModel.transform.rotation;
+        barObjectInitialPosition = bar.transform;
+        barObjectInitialPositionVector = bar.transform.position;
+        barObjectInitialRotation = bar.transform.rotation;
+        barBellInitialPosition = barBellPosition.position;
     }
     
     private void Update()
@@ -118,6 +165,10 @@ public class WeightLiftingController : MonoBehaviour
         
         switch (currentLiftState)
         {
+            case LiftState.WeightSelection:
+                // Currently not implemented
+                break;
+            
             case LiftState.Idle:
                 // Waiting to start
                 break;
@@ -169,11 +220,15 @@ public class WeightLiftingController : MonoBehaviour
         maxWeightLifted = 0f;
         totalStrengthGained = 0;
         isProcessingPhaseTransition = false;
-        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
-        StartNewLift();
+        //StartNewLift();
+        TransitionToWeightSelectionPhase();
     }
     public void ResetForNewLift()
     {
+        ResetBarPosition();
+        ResetBarRotation();
+        SetArmRotationForGrip(); // Set to grip starting rotation (225, 180, 0) instead of target
+        MoveArmToInitialPosition(.0f);
         gripPhaseReady = false;
         liftPhaseReady = false;
         holdPhaseReady = false;
@@ -199,6 +254,91 @@ public class WeightLiftingController : MonoBehaviour
         TransitionToGripPhase();
     }
     
+    #region Phase 0 - WeightSelection
+    // Currently not implemented, but could be added for player to choose starting weight
+    private void TransitionToWeightSelectionPhase()
+    {
+        currentLiftState = LiftState.WeightSelection;
+        phaseTimer = 0f;
+       
+        SwitchCamera(weightSelectionCamera);
+        SetAllPhasesUIInactive();
+        ClearAllOtherUI();
+        HideArmModel();
+        UpdatePhaseUI("PHASE 0: Weight Selection", "Choose your starting weight.");
+    }
+    
+    public List<int> GetAvailableWeights()
+    {
+        return availableWeights;
+    }
+    
+    public void SetSelectedWeight(int weight)
+    {
+        if (availableWeights.Contains(weight))
+        {
+            selectedWeightIndex = availableWeights.IndexOf(weight);
+            currentWeight = weight;
+            Debug.Log("Selected starting weight: " + currentWeight + "kg");
+            weightSelected = true;
+            onWeightSelectionChanged.Invoke(weight);
+            UpdateUI();
+           // StartNewLift();
+        }
+        else
+        {
+            Debug.LogWarning("Selected weight not available: " + weight + "kg");
+        }
+    }
+    
+    public bool ConfirmWeightSelection()
+    {
+        if (weightSelected)
+        {
+            // Kill any existing delay
+            currentDelayTween?.Kill();
+
+            // Update UI BEFORE the delay
+            
+            Debug.Log("Confirmed starting weight: " + currentWeight + "kg");
+
+            // Then wait and start the lift
+            /*currentDelayTween = DOVirtual.DelayedCall(2f, () =>
+            {
+                StartNewLift();
+            });*/
+            
+            phaseTransitionCamera.transform.position = weightSelectionCamera.transform.position;
+            SwitchCamera(phaseTransitionCamera);
+            Sequence transitionSequence = DOTween.Sequence();
+            
+            transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
+                .Append(DOVirtual.Float(3, 0, 3f, (countdown) =>
+                {
+                    int seconds = Mathf.CeilToInt(countdown);
+                    UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in " + seconds + " seconds...");
+                }))
+                .Join(phaseTransitionCamera.transform.DOMove(lookAtBenchLocation.transform.position + new Vector3(0, 1, 0), 3f))
+                .Join(phaseTransitionCamera.transform.DOLookAt(lookAtBenchLocation.position, 3f))
+                .AppendCallback(() => UpdatePhaseUI("GO!", "Lift that weight!"))
+                .Append(phaseTransitionCamera.transform.DOMove(gripCamera.transform.position , 1.5f))
+                .Join(phaseTransitionCamera.transform.DORotate(gripCamera.transform.rotation.eulerAngles, 3f))
+                .AppendInterval(1f)
+                .AppendCallback(() => StartNewLift());
+            
+        
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning("No weight selected to confirm.");
+            return false;
+        }
+    }
+    
+    
+    #endregion
+    
     #region Phase 1 - Grip
     
     private void TransitionToGripPhase()
@@ -207,8 +347,13 @@ public class WeightLiftingController : MonoBehaviour
         phaseTimer = 0f;
         gripBarPosition = 0f;
         gripPhaseReady = false;
+        gripPhaseCompleted = false;
         
         SwitchCamera(gripCamera);
+        ShowArmModel();
+        MoveArmToInitialPosition(.0f);
+        MoveArmToWardsPosition(armInitialPosition + new Vector3(0, 0.24f, 0),.3f);
+        SetArmRotationForGrip();
         SetAllPhasesUIInactive();
         if (gripPhaseUI) gripPhaseUI.SetActive(true);
         
@@ -250,9 +395,16 @@ public class WeightLiftingController : MonoBehaviour
         }
         
         // Decay grip bar over time
-        gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
-        gripBarPosition = Mathf.Clamp01(gripBarPosition);
-        
+        if(!gripPhaseCompleted)
+        {
+            gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
+            gripBarPosition = Mathf.Clamp01(gripBarPosition);
+    
+            // Interpolate arm rotation based on grip bar position
+            // Use LerpUnclamped so arm continues rotating beyond target when gripBarPosition > gripBarTargetMin
+            float normalizedPosition = gripBarPosition / gripBarTargetMin;
+            armModel.transform.rotation = Quaternion.LerpUnclamped(armStartRotation, armTargetRotation, normalizedPosition);
+        }
         // Update UI
         if (gripBar) gripBar.value = gripBarPosition;
         
@@ -265,8 +417,28 @@ public class WeightLiftingController : MonoBehaviour
             // Check if grip is successful
             if (gripBarPosition >= gripBarTargetMin && gripBarPosition <= gripBarTargetMax)
             {
+                gripPhaseCompleted = true;
+                UpdatePhaseUI("PHASE 1: GRIP", "Grip successful!\nPreparing to lift...");
+                
+                /*currentDelayTween?.Kill();*/
+                
+                /*currentDelayTween = DOVirtual.DelayedCall(2f, () =>
+                {
+                    
+                });*/
+                
+                
+                Sequence transitionSequence = DOTween.Sequence();
+                transitionSequence
+                    .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f, 0f, -0.10f), 1f).SetRelative(false))
+                    .AppendCallback(() => { }) // Force evaluation
+                    .Append(bar.transform.DOMove(new Vector3(0f, -0.10f, 0), 1f).SetRelative(true))
+                    .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
+                    .AppendInterval(1f)
+                    .AppendCallback(() => TransitionToLiftPhase());
+                
                 Debug.Log("Grip successful!");
-                TransitionToLiftPhase();
+                
 
                 if (AudioManager.instance != null)
                 {
@@ -283,7 +455,7 @@ public class WeightLiftingController : MonoBehaviour
     
     private void HandleGripTap()
     {
-        if (!gripPhaseReady) return;
+        if (!gripPhaseReady || gripPhaseCompleted) return;
         
         // Increase grip bar based on weight (heavier = harder)
         float weightDifficulty = 1f - (currentWeight / maxWeight) * 0.5f; // 1.0 to 0.5
@@ -307,7 +479,7 @@ public class WeightLiftingController : MonoBehaviour
         hasReleasedInLiftPhase = false;
         isPerfectLift = false;
         isProcessingPhaseTransition = false;
-        
+        liftPhaseCompleted = false;
         SwitchCamera(liftCamera);
         SetAllPhasesUIInactive();
         if (liftPhaseUI) liftPhaseUI.SetActive(true);
@@ -355,6 +527,7 @@ public class WeightLiftingController : MonoBehaviour
         
         if (powerMeterGoingUp)
         {
+            if(liftPhaseCompleted) return;
             powerMeterPosition += currentSpeed * Time.deltaTime;
             if (powerMeterPosition >= 1f)
             {
@@ -364,6 +537,7 @@ public class WeightLiftingController : MonoBehaviour
         }
         else
         {
+            if(liftPhaseCompleted) return;
             powerMeterPosition -= currentSpeed * Time.deltaTime;
             if (powerMeterPosition <= 0f)
             {
@@ -386,7 +560,7 @@ public class WeightLiftingController : MonoBehaviour
     
     private void HandleLiftTap()
     {
-        if (hasReleasedInLiftPhase || !liftPhaseReady || isProcessingPhaseTransition) return;
+        if (hasReleasedInLiftPhase || !liftPhaseReady || isProcessingPhaseTransition || liftPhaseCompleted) return;
         
         hasReleasedInLiftPhase = true;
         isProcessingPhaseTransition = true;
@@ -401,7 +575,18 @@ public class WeightLiftingController : MonoBehaviour
         {
             Debug.Log("Perfect lift timing!");
             isPerfectLift = true;
-            TransitionToHoldPhase();
+            liftPhaseCompleted = true;
+            UpdatePhaseUI("PHASE 2: LIFT", "Perfect lift!\nPreparing to hold...");
+            /*currentDelayTween?.Kill();
+            
+            currentDelayTween = DOVirtual.DelayedCall(1f, () =>
+            {
+                TransitionToHoldPhase();
+            });*/
+            
+            DoLiftThenProgressToHold();
+            
+            
         }
         // Check if in acceptable margin
         else if (powerMeterPosition >= (liftTargetMin - acceptableMargin) && 
@@ -409,13 +594,27 @@ public class WeightLiftingController : MonoBehaviour
         {
             Debug.Log("Good lift timing!");
             isPerfectLift = false;
-            TransitionToHoldPhase();
+            liftPhaseCompleted = true;
+            UpdatePhaseUI("PHASE 2: LIFT", "Good Enough!\nPreparing to hold...");
+            DoLiftThenProgressToHold();
         }
         else
         {
             Debug.Log("Poor lift timing!");
             FailLift("Missed the timing window!");
         }
+    }
+    
+    public void DoLiftThenProgressToHold()
+    {
+        Sequence transitionSequence = DOTween.Sequence();
+            
+        transitionSequence
+            .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
+            .AppendCallback(() => { }) // Force evaluation
+            .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
+            .AppendInterval(1f)
+            .AppendCallback(() => TransitionToHoldPhase());
     }
     
     #endregion
@@ -523,6 +722,7 @@ public class WeightLiftingController : MonoBehaviour
         if (barImageTransform != null)
         {
             barImageTransform.localRotation = Quaternion.Euler(0f, 0f, -barTiltAngle);
+            bar.transform.localRotation = Quaternion.Euler(0f, 0f, barTiltAngle);
         }
         
         // Check for failure (tilted too far)
@@ -544,8 +744,24 @@ public class WeightLiftingController : MonoBehaviour
             isProcessingPhaseTransition = true;
             
             currentLiftState = LiftState.Idle;
-            SuccessfulLift();
+            SuccessfulAnimationComplete();
         }
+    }
+    
+    public void SuccessfulAnimationComplete()
+    {
+        Sequence transitionSequence = DOTween.Sequence();
+        
+        transitionSequence
+            .Append(bar.transform.DORotate(new Vector3(0f, 0f, 0f), 1f).SetRelative(false))
+            .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
+            .AppendCallback(() => { }) // Force evaluation
+            .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
+            .Append(bar.transform.DOMove(new Vector3(0f, 0f, -0.10f), 1f).SetRelative(true))
+            .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
+            .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
+            .AppendInterval(1f)
+            .AppendCallback(() => SuccessfulLift());
     }
     
     public void OnPushLeftButton()
@@ -705,6 +921,50 @@ public class WeightLiftingController : MonoBehaviour
     }
     
     #endregion
+
+    #region Arm Stuff
+    
+    public void ResetBarPosition()
+    {
+        bar.transform.position = barObjectInitialPositionVector;
+    }
+    public void ResetBarRotation()
+    {
+        bar.transform.rotation = barObjectInitialRotation;
+    }
+    
+    public void HideArmModel()
+    {
+        armModel.SetActive(false);
+    }
+    
+    public void ShowArmModel()
+    {
+        armModel.SetActive(true);
+    }
+    
+    public void SetArmRotationToDefault()
+    {
+        armModel.transform.rotation = armInitialRotation;
+    }
+    
+    public void SetArmRotationForGrip()
+    {
+        armModel.transform.rotation = armStartRotation;
+    }
+    
+    public void MoveArmToWardsPosition(Vector3 targetPosition, float duration)
+    {
+        armModel.transform.DOMove(targetPosition, duration);
+    }
+    public void MoveArmToInitialPosition(float duration)
+    {
+        armModel.transform.DOMove(armInitialPosition, duration);
+    }
+    
+    
+    
+    #endregion
     
     #region UI Updates
     
@@ -712,7 +972,12 @@ public class WeightLiftingController : MonoBehaviour
     {
         if (weightText)
         {
-            weightText.text = "Weight: " + currentWeight + "kg";
+            if (currentLiftState == LiftState.WeightSelection)
+            {
+                weightText.text = "Weight Selected " + selectedWeight + "kg";
+            }
+            else
+                weightText.text = "Weight: " + currentWeight + "kg";
         }
     }
     
@@ -741,6 +1006,13 @@ public class WeightLiftingController : MonoBehaviour
         }
     }
     
+    private void ClearAllOtherUI()
+    {
+        if (phaseText) phaseText.text = "";
+        if (instructionText) instructionText.text = "";
+        if (statsText) statsText.text = "";
+        if( weightText) weightText.text = "";
+    }
     private void SetAllPhasesUIInactive()
     {
         if (gripPhaseUI) gripPhaseUI.SetActive(false);
@@ -754,6 +1026,8 @@ public class WeightLiftingController : MonoBehaviour
         if (gripCamera) gripCamera.gameObject.SetActive(false);
         if (liftCamera) liftCamera.gameObject.SetActive(false);
         if (holdCamera) holdCamera.gameObject.SetActive(false);
+        if (weightSelectionCamera) weightSelectionCamera.gameObject.SetActive(false);
+        if (phaseTransitionCamera) phaseTransitionCamera.gameObject.SetActive(false);
         
         if (targetCamera) targetCamera.gameObject.SetActive(true);
     }
@@ -763,6 +1037,7 @@ public class WeightLiftingController : MonoBehaviour
     public enum LiftState 
     {
         Idle,
+        WeightSelection,
         Grip,
         Lift,
         Hold

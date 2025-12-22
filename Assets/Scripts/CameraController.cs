@@ -24,7 +24,11 @@ public class CameraController : MonoBehaviour
          // If in mini-game, do not allow camera movement
          return;
       }
-
+      if(GameManager.Instance == null || RaceManager.Instance == null)
+      {
+        Debug.LogError("GameManager or RaceManager instance is null!");
+         return;
+      }
       
      RaceManager.Instance.mainCamera =this.GetComponent<Camera>();
      RaceManager.Instance.startRace.AddListener(SetFollowPlayer);
@@ -32,6 +36,10 @@ public class CameraController : MonoBehaviour
    
    private void Update()
    {
+         if(GameManager.Instance == null || RaceManager.Instance == null)
+         {
+            return;
+         }
       
          
          if (isMiniGame)
@@ -41,11 +49,12 @@ public class CameraController : MonoBehaviour
          }
          
          
-         if(GameManager.Instance.GameStarted!= true)
+         if(!GameManager.Instance.GameStarted)
          {
+            // If the game has not started or the player is busy, do not allow camera movement
             return;
          }
-         
+     
          if (followPlayer) 
          {
             if (ship != null && followOffset != null)
