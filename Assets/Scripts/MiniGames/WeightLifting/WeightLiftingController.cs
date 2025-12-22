@@ -391,6 +391,8 @@ public class WeightLiftingController : MonoBehaviour
             if (goMessageTimer >= goMessageDuration)
             {
                 UpdatePhaseUI("PHASE 1: GRIP", "Tap rapidly to grip the bar!");
+                
+                
             }
         }
         
@@ -404,6 +406,29 @@ public class WeightLiftingController : MonoBehaviour
             // Use LerpUnclamped so arm continues rotating beyond target when gripBarPosition > gripBarTargetMin
             float normalizedPosition = gripBarPosition / gripBarTargetMin;
             armModel.transform.rotation = Quaternion.LerpUnclamped(armStartRotation, armTargetRotation, normalizedPosition);
+            
+            int timeleft = Mathf.CeilToInt(gripPhaseDuration - phaseTimer);
+            Debug.Log("Time left in grip phase: " + timeleft + " seconds");
+            if (timeleft > 3)
+            {
+                UpdatePhaseUI("PHASE 1: GRIP", "Tap rapidly to grip the bar!");
+            }
+            else if(timeleft == 3)
+            {
+                UpdatePhaseUI("PHASE 1: GRIP", "3 Seconds Left!");
+            }
+            else if(timeleft == 2)
+            {
+                UpdatePhaseUI("PHASE 1: GRIP", "2 Seconds Left!");
+            }
+            else if(timeleft == 1)
+            {
+                UpdatePhaseUI("PHASE 1: GRIP", "1 Second Left!");
+            }
+            else
+            {
+                UpdatePhaseUI("PHASE 1: GRIP", "Gripping!!!");
+            }
         }
         // Update UI
         if (gripBar) gripBar.value = gripBarPosition;
@@ -845,7 +870,7 @@ public class WeightLiftingController : MonoBehaviour
         currentWeight = Mathf.Min(currentWeight, maxWeight);
         
         // Reset for next lift
-        StartCoroutine(ShowSuccessAndContinue());
+        ShowSuccessAndContinue();
     }
     
     private void FailLift(string reason)
@@ -859,24 +884,48 @@ public class WeightLiftingController : MonoBehaviour
         }
         else
         {
-            StartCoroutine(ShowFailureAndRetry(reason));
+            ShowFailureAndRetry(reason);
         }
     }
     
-    private IEnumerator ShowSuccessAndContinue()
+    private void ShowSuccessAndContinue()
     {
-        UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!");
-        yield return new WaitForSeconds(2f);
-        StartNewLift();
+        Sequence transitionSequence = DOTween.Sequence();
+        
+        transitionSequence
+            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!"))
+            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!" +"\nStarting new lift... 3 seconds"))
+            .AppendInterval(1f)
+            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!" +"\nStarting new lift... 2 seconds"))
+            .AppendInterval(1f)
+            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!" +"\nStarting new lift... 1 seconds"))
+            .AppendInterval(1f)
+            // Retry same weight
+            .AppendCallback(() =>   StartNewLift());
+        
+        
+      
     }
     
-    private IEnumerator ShowFailureAndRetry(string reason)
+    private void ShowFailureAndRetry(string reason)
     {
-        UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts));
-        yield return new WaitForSeconds(2f);
+       
         
-        // Retry same weight
-        StartNewLift();
+        Sequence transitionSequence = DOTween.Sequence();
+        
+        transitionSequence
+            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts)))
+            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 3 seconds"))
+            .AppendInterval(1f)
+            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 2 seconds"))
+            .AppendInterval(1f)
+            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 1 seconds"))
+            .AppendInterval(1f)
+            // Retry same weight
+            .AppendCallback(() => StartNewLift());
+        
+      
+        
     }
     
     private void EndGame()
