@@ -22,7 +22,9 @@ public class WeightLiftingController : MonoBehaviour
     public float weightIncrement = 5f;
     public float maxWeight = 200f;
     public bool weightSelected = false;
-
+    public GameObject barBell,armModel;
+    private Transform armInitialPosition;
+    
     [Header("Phase 0 - Weight Selection Settings")]
     public List<int> availableWeights = new List<int>() {20, 40, 60, 80, 100,120};
     public int selectedWeightIndex = 0;
@@ -51,6 +53,9 @@ public class WeightLiftingController : MonoBehaviour
     private bool gripPhaseReady; // True when countdown is complete
     private bool gripPhaseCompleted; // True when grip phase is done
     private float goMessageTimer; // Tracks time since GO message started
+    Quaternion armStartRotation = Quaternion.Euler(225, 180, 0);
+    Quaternion armTargetRotation = Quaternion.Euler(180, 180, 0);
+    
     
     [Header("Phase 2 - Lift Settings")]
     public float liftPhaseDuration = 4f;
@@ -143,6 +148,7 @@ public class WeightLiftingController : MonoBehaviour
         UpdateUI();
         SetAllPhasesUIInactive();
         StartGame();
+        armInitialPosition = armModel.transform;
     }
     
     private void Update()
@@ -246,6 +252,7 @@ public class WeightLiftingController : MonoBehaviour
         SwitchCamera(weightSelectionCamera);
         SetAllPhasesUIInactive();
         ClearAllOtherUI();
+        HideArmModel();
         UpdatePhaseUI("PHASE 0: Weight Selection", "Choose your starting weight.");
     }
     
@@ -345,6 +352,9 @@ public class WeightLiftingController : MonoBehaviour
         gripPhaseCompleted = false;
         
         SwitchCamera(gripCamera);
+        ShowArmModel();
+        MoveArmToWardsPosition(armInitialPosition.position + new Vector3(0, 0.4f, 0),.3f);
+        SetArmRotationForGrip();
         SetAllPhasesUIInactive();
         if (gripPhaseUI) gripPhaseUI.SetActive(true);
         
@@ -390,6 +400,10 @@ public class WeightLiftingController : MonoBehaviour
         {
             gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
             gripBarPosition = Mathf.Clamp01(gripBarPosition);
+    
+            // Allow rotation to go up to 1.5x beyond target when bar is at max (1.0)
+            float normalizedPosition = Mathf.Clamp(gripBarPosition / gripBarTargetMin + 0.1f, 0f, 1.5f);
+            armModel.transform.rotation = Quaternion.Lerp(armStartRotation, armTargetRotation, normalizedPosition);
         }
         // Update UI
         if (gripBar) gripBar.value = gripBarPosition;
@@ -865,6 +879,37 @@ public class WeightLiftingController : MonoBehaviour
         
         return baseStrength;
     }
+    
+    #endregion
+
+    #region Arm Stuff
+    
+    public void HideArmModel()
+    {
+        armModel.SetActive(false);
+    }
+    
+    public void ShowArmModel()
+    {
+        armModel.SetActive(true);
+    }
+    
+    public void SetArmRotationToDefault()
+    {
+        armModel.transform.rotation = armTargetRotation;
+    }
+    
+    public void SetArmRotationForGrip()
+    {
+        armModel.transform.rotation = armStartRotation;
+    }
+    
+    public void MoveArmToWardsPosition(Vector3 targetPosition, float duration)
+    {
+        armModel.transform.DOMove(targetPosition, duration);
+    }
+    
+    
     
     #endregion
     
