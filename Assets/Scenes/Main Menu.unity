@@ -42214,9 +42214,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6445757404836835946, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_fontSize
+      value: 132.95
+      objectReference: {fileID: 0}
     - target: {fileID: 7058761396590824417, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_IsActive
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 7097430785113607470, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7097430785113607470, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7569062422589216733, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_Name
@@ -42274,6 +42286,22 @@ PrefabInstance:
       propertyPath: 'uiElementsToAnimate.Array.data[6]'
       value: 
       objectReference: {fileID: 1207444251}
+    - target: {fileID: 7804077526296767894, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7804077526296767894, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200951695895511220, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8200951695895511220, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 8327815042234790280, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
       value: 3
