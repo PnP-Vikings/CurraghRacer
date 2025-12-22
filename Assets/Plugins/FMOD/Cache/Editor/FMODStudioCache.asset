@@ -415,11 +415,10 @@ MonoBehaviour:
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 7413995360578737421}
   - {fileID: -6497653646043772243}
   MinDistance: 1
   MaxDistance: 20
-  Length: 37844
+  Length: 171428
 --- !u!114 &-6648796307801326495
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -463,10 +462,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639006672048386733
+  lastModified: 639008357440823078
   FileSizes:
   - Name: 
-    Value: 5154
+    Value: 5296
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -779,6 +778,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 359
+--- !u!114 &-4057881698284028633
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Kitchen/Dunk Plate
+  m_EditorClassIdentifier: 
+  Path: event:/Kitchen/Dunk Plate
+  Guid:
+    Data1: 1763862745
+    Data2: 1276722529
+    Data3: -2079319918
+    Data4: -1138436357
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1948
 --- !u!114 &-3890113074363611012
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -964,6 +990,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-1618051181059981873
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Kitchen/Spawn Plates
+  m_EditorClassIdentifier: 
+  Path: event:/Kitchen/Spawn Plates
+  Guid:
+    Data1: -291489459
+    Data2: 1213658920
+    Data3: 416789670
+    Data4: 368736683
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 2850
 --- !u!114 &-1598456856888569269
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1313,12 +1366,16 @@ MonoBehaviour:
   - {fileID: 5698074014997505834}
   - {fileID: 2896662228100627213}
   - {fileID: 1357243760738233091}
+  - {fileID: 3140666919614263511}
+  - {fileID: -4057881698284028633}
+  - {fileID: -1618051181059981873}
+  - {fileID: 8751745750506016009}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639006672048386733
+  cacheTime: 639008357440823078
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1401,7 +1458,7 @@ MonoBehaviour:
   - {fileID: 8385188642393100925}
   MinDistance: 1
   MaxDistance: 20
-  Length: 53333
+  Length: 116821
 --- !u!114 &1357243760738233091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1742,6 +1799,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2150
+--- !u!114 &3140666919614263511
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Soundtrack/Boom Bap
+  m_EditorClassIdentifier: 
+  Path: event:/Soundtrack/Boom Bap
+  Guid:
+    Data1: 1206877988
+    Data2: 1195049131
+    Data3: 1589621434
+    Data4: 288473028
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 0
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 67368
 --- !u!114 &3144202322166324598
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1871,12 +1955,12 @@ MonoBehaviour:
   - {fileID: 7439203710798878255}
   IsStream: 1
   Is3D: 0
-  IsOneShot: 1
+  IsOneShot: 0
   Parameters:
   - {fileID: -1318205178700359581}
   MinDistance: 1
   MaxDistance: 20
-  Length: 8720
+  Length: 86363
 --- !u!114 &4170325778612374187
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2299,30 +2383,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2242
---- !u!114 &7413995360578737421
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Radio Song 1/Radio Song fadeout
-  m_EditorClassIdentifier: 
-  Name: Radio Song fadeout
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 0
-  ID:
-    data1: 3850583622
-    data2: 3045904607
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &7439203710798878255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2338,7 +2398,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639006672048331361
+  lastModified: 639008357440766205
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726
@@ -2503,6 +2563,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 190588
+--- !u!114 &8751745750506016009
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bulletin Board/Card
+  m_EditorClassIdentifier: 
+  Path: event:/Bulletin Board/Card
+  Guid:
+    Data1: -222415727
+    Data2: 1211315546
+    Data3: 1381519236
+    Data4: 88830622
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 429
 --- !u!114 &8903603484183628450
 MonoBehaviour:
   m_ObjectHideFlags: 0

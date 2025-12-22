@@ -46,7 +46,7 @@ public class RadioManager : MonoBehaviour
     {
         PlayRadioSong();                                                    // A random song plays
 
-        float randomNumber = Random.Range(2f, 4f);                          // A random number between the given numbers is assigned to the float 'randomNumber'
+        float randomNumber = Random.Range(8f, 15f);                          // A random number between the given numbers is assigned to the float 'randomNumber'
 
         yield return new WaitForSeconds(randomNumber);                      // Waits randomNumber seconds
 

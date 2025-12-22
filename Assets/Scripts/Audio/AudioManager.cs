@@ -47,6 +47,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance sleepOutsideAudio;
     public EventInstance rooster;
     public EventInstance payBill;
+    public EventInstance card;
         // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
@@ -55,8 +56,10 @@ public class AudioManager : MonoBehaviour
     public EventInstance rowingGameFail;
         // Jobs
         //public EventInstance kitchenAmbience;
-    public EventInstance movePlateAudio;
-    public EventInstance spongeAudio;
+    public EventInstance spawnPlates;
+    public EventInstance movePlate;
+    public EventInstance dunkPlate;
+    public EventInstance sponge;
 
     public EventInstance barAmbience;
     public EventInstance pouringPint;
@@ -143,6 +146,7 @@ public class AudioManager : MonoBehaviour
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
         rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");
         payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
+        card = RuntimeManager.CreateInstance("event:/Bulletin Board/Card");
 
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
         dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
@@ -152,8 +156,10 @@ public class AudioManager : MonoBehaviour
         rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
 
         //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
-        movePlateAudio = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
+        spawnPlates = RuntimeManager.CreateInstance("event:/Kitchen/Spawn Plates");
+        movePlate = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
+        sponge = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
+        dunkPlate = RuntimeManager.CreateInstance("event:/Kitchen/Dunk Plate");
 
         barAmbience = RuntimeManager.CreateInstance("event:/Bar/Bar Ambience");
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
