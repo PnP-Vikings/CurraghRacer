@@ -100,6 +100,9 @@
 		<property name="length">
 			<value>0.5</value>
 		</property>
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<property name="pitch">
 			<value>1</value>
 		</property>
