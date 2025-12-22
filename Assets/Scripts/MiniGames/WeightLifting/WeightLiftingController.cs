@@ -22,8 +22,11 @@ public class WeightLiftingController : MonoBehaviour
     public float weightIncrement = 5f;
     public float maxWeight = 200f;
     public bool weightSelected = false;
-    public GameObject barBell,armModel;
-    private Transform armInitialPosition;
+    public GameObject bar,armModel;
+    [SerializeField]private Transform barBellPosition,barObjectInitialPosition;
+    private Vector3 armInitialPosition,barBellInitialPosition,barObjectInitialPositionVector;
+    private Quaternion armInitialRotation,barObjectInitialRotation;
+    
     
     [Header("Phase 0 - Weight Selection Settings")]
     public List<int> availableWeights = new List<int>() {20, 40, 60, 80, 100,120};
@@ -148,7 +151,12 @@ public class WeightLiftingController : MonoBehaviour
         UpdateUI();
         SetAllPhasesUIInactive();
         StartGame();
-        armInitialPosition = armModel.transform;
+        armInitialPosition = armModel.transform.position;
+        armInitialRotation = armModel.transform.rotation;
+        barObjectInitialPosition = bar.transform;
+        barObjectInitialPositionVector = bar.transform.position;
+        barObjectInitialRotation = bar.transform.rotation;
+        barBellInitialPosition = barBellPosition.position;
     }
     
     private void Update()
@@ -217,6 +225,10 @@ public class WeightLiftingController : MonoBehaviour
     }
     public void ResetForNewLift()
     {
+        ResetBarPosition();
+        ResetBarRotation();
+        SetArmRotationForGrip(); // Set to grip starting rotation (225, 180, 0) instead of target
+        MoveArmToInitialPosition(.0f);
         gripPhaseReady = false;
         liftPhaseReady = false;
         holdPhaseReady = false;
@@ -299,20 +311,6 @@ public class WeightLiftingController : MonoBehaviour
             phaseTransitionCamera.transform.position = weightSelectionCamera.transform.position;
             SwitchCamera(phaseTransitionCamera);
             Sequence transitionSequence = DOTween.Sequence();
-            /*transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
-                .Append(phaseTransitionCamera.transform.DOMove(lookAtBenchLocation.transform.position + new Vector3(0, 1, 0), 3f))
-                .Join(phaseTransitionCamera.transform.DOLookAt(lookAtBenchLocation.position, 3f))
-                .AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 2 seconds..."))
-                .AppendInterval(1f)
-                .AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 1 seconds..."))
-                .AppendInterval(1f)
-                .AppendCallback(() => UpdatePhaseUI("GO!", "Lift that weight!"))
-                .AppendInterval(1f)
-                .AppendCallback(() =>
-                {
-                    
-                    StartNewLift();
-                });*/
             
             transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
                 .Append(DOVirtual.Float(3, 0, 3f, (countdown) =>
@@ -353,7 +351,8 @@ public class WeightLiftingController : MonoBehaviour
         
         SwitchCamera(gripCamera);
         ShowArmModel();
-        MoveArmToWardsPosition(armInitialPosition.position + new Vector3(0, 0.4f, 0),.3f);
+        MoveArmToInitialPosition(.0f);
+        MoveArmToWardsPosition(armInitialPosition + new Vector3(0, 0.24f, 0),.3f);
         SetArmRotationForGrip();
         SetAllPhasesUIInactive();
         if (gripPhaseUI) gripPhaseUI.SetActive(true);
@@ -401,9 +400,10 @@ public class WeightLiftingController : MonoBehaviour
             gripBarPosition -= gripBarDecaySpeed * Time.deltaTime;
             gripBarPosition = Mathf.Clamp01(gripBarPosition);
     
-            // Allow rotation to go up to 1.5x beyond target when bar is at max (1.0)
-            float normalizedPosition = Mathf.Clamp(gripBarPosition / gripBarTargetMin + 0.1f, 0f, 1.5f);
-            armModel.transform.rotation = Quaternion.Lerp(armStartRotation, armTargetRotation, normalizedPosition);
+            // Interpolate arm rotation based on grip bar position
+            // Use LerpUnclamped so arm continues rotating beyond target when gripBarPosition > gripBarTargetMin
+            float normalizedPosition = gripBarPosition / gripBarTargetMin;
+            armModel.transform.rotation = Quaternion.LerpUnclamped(armStartRotation, armTargetRotation, normalizedPosition);
         }
         // Update UI
         if (gripBar) gripBar.value = gripBarPosition;
@@ -420,12 +420,22 @@ public class WeightLiftingController : MonoBehaviour
                 gripPhaseCompleted = true;
                 UpdatePhaseUI("PHASE 1: GRIP", "Grip successful!\nPreparing to lift...");
                 
-                currentDelayTween?.Kill();
+                /*currentDelayTween?.Kill();*/
                 
-                currentDelayTween = DOVirtual.DelayedCall(2f, () =>
+                /*currentDelayTween = DOVirtual.DelayedCall(2f, () =>
                 {
-                    TransitionToLiftPhase();
-                });
+                    
+                });*/
+                
+                
+                Sequence transitionSequence = DOTween.Sequence();
+                transitionSequence
+                    .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f, 0f, -0.10f), 1f).SetRelative(false))
+                    .AppendCallback(() => { }) // Force evaluation
+                    .Append(bar.transform.DOMove(new Vector3(0f, -0.10f, 0), 1f).SetRelative(true))
+                    .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
+                    .AppendInterval(1f)
+                    .AppendCallback(() => TransitionToLiftPhase());
                 
                 Debug.Log("Grip successful!");
                 
@@ -567,12 +577,16 @@ public class WeightLiftingController : MonoBehaviour
             isPerfectLift = true;
             liftPhaseCompleted = true;
             UpdatePhaseUI("PHASE 2: LIFT", "Perfect lift!\nPreparing to hold...");
-            currentDelayTween?.Kill();
+            /*currentDelayTween?.Kill();
             
             currentDelayTween = DOVirtual.DelayedCall(1f, () =>
             {
                 TransitionToHoldPhase();
-            });
+            });*/
+            
+            DoLiftThenProgressToHold();
+            
+            
         }
         // Check if in acceptable margin
         else if (powerMeterPosition >= (liftTargetMin - acceptableMargin) && 
@@ -582,16 +596,25 @@ public class WeightLiftingController : MonoBehaviour
             isPerfectLift = false;
             liftPhaseCompleted = true;
             UpdatePhaseUI("PHASE 2: LIFT", "Good Enough!\nPreparing to hold...");
-            currentDelayTween = DOVirtual.DelayedCall(1f, () =>
-            {
-                TransitionToHoldPhase();
-            });
+            DoLiftThenProgressToHold();
         }
         else
         {
             Debug.Log("Poor lift timing!");
             FailLift("Missed the timing window!");
         }
+    }
+    
+    public void DoLiftThenProgressToHold()
+    {
+        Sequence transitionSequence = DOTween.Sequence();
+            
+        transitionSequence
+            .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
+            .AppendCallback(() => { }) // Force evaluation
+            .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
+            .AppendInterval(1f)
+            .AppendCallback(() => TransitionToHoldPhase());
     }
     
     #endregion
@@ -699,6 +722,7 @@ public class WeightLiftingController : MonoBehaviour
         if (barImageTransform != null)
         {
             barImageTransform.localRotation = Quaternion.Euler(0f, 0f, -barTiltAngle);
+            bar.transform.localRotation = Quaternion.Euler(0f, 0f, barTiltAngle);
         }
         
         // Check for failure (tilted too far)
@@ -720,8 +744,24 @@ public class WeightLiftingController : MonoBehaviour
             isProcessingPhaseTransition = true;
             
             currentLiftState = LiftState.Idle;
-            SuccessfulLift();
+            SuccessfulAnimationComplete();
         }
+    }
+    
+    public void SuccessfulAnimationComplete()
+    {
+        Sequence transitionSequence = DOTween.Sequence();
+        
+        transitionSequence
+            .Append(bar.transform.DORotate(new Vector3(0f, 0f, 0f), 1f).SetRelative(false))
+            .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
+            .AppendCallback(() => { }) // Force evaluation
+            .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
+            .Append(bar.transform.DOMove(new Vector3(0f, 0f, -0.10f), 1f).SetRelative(true))
+            .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
+            .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
+            .AppendInterval(1f)
+            .AppendCallback(() => SuccessfulLift());
     }
     
     public void OnPushLeftButton()
@@ -884,6 +924,15 @@ public class WeightLiftingController : MonoBehaviour
 
     #region Arm Stuff
     
+    public void ResetBarPosition()
+    {
+        bar.transform.position = barObjectInitialPositionVector;
+    }
+    public void ResetBarRotation()
+    {
+        bar.transform.rotation = barObjectInitialRotation;
+    }
+    
     public void HideArmModel()
     {
         armModel.SetActive(false);
@@ -896,7 +945,7 @@ public class WeightLiftingController : MonoBehaviour
     
     public void SetArmRotationToDefault()
     {
-        armModel.transform.rotation = armTargetRotation;
+        armModel.transform.rotation = armInitialRotation;
     }
     
     public void SetArmRotationForGrip()
@@ -907,6 +956,10 @@ public class WeightLiftingController : MonoBehaviour
     public void MoveArmToWardsPosition(Vector3 targetPosition, float duration)
     {
         armModel.transform.DOMove(targetPosition, duration);
+    }
+    public void MoveArmToInitialPosition(float duration)
+    {
+        armModel.transform.DOMove(armInitialPosition, duration);
     }
     
     
