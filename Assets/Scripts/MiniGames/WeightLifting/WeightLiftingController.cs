@@ -15,6 +15,48 @@ public class WeightLiftingController : MonoBehaviour
     [Header("Game State")]
     public LiftState currentLiftState = LiftState.Idle;
     public bool gameActive;
+    public int SuccessfulReps
+    {
+        get { return successfulReps; }
+        set { successfulReps = value; }
+    }
+    
+    public int PerfectLifts
+    {
+        get { return perfectLifts; }
+        set { perfectLifts = value; }
+    }
+    
+    public int FailedAttempts
+    {
+        get { return failedAttempts; }
+        set { failedAttempts = value; }
+    }
+    
+    public int TotalStrengthGained
+    {
+        get { return totalStrengthGained; }
+        set { totalStrengthGained = value; }
+    }
+    
+    public int MaxFailedAttempts
+    {
+        get { return maxFailedAttempts; }
+        set { maxFailedAttempts = value; }
+    }
+    
+    public int MaxWeightLifted
+    {
+        get { return Mathf.FloorToInt(maxWeightLifted); }
+        set { maxWeightLifted = value; }
+    }
+    
+    public int MaxSuccessfulRepsPerSession
+    {
+        get { return maxSuccessfulReps; }
+        set { maxSuccessfulReps = value; }
+    }
+
     
     
     [Header("Weight Settings")]
@@ -94,6 +136,7 @@ public class WeightLiftingController : MonoBehaviour
     public int failedAttempts;
     public int maxFailedAttempts = 3;
     public float maxWeightLifted;
+    public int maxSuccessfulReps = 3;
     public int totalStrengthGained;
     
     [Header("UI References")]
@@ -150,6 +193,7 @@ public class WeightLiftingController : MonoBehaviour
     {
         UpdateUI();
         SetAllPhasesUIInactive();
+        SetupTargetZones();
         StartGame();
         armInitialPosition = armModel.transform.position;
         armInitialRotation = armModel.transform.rotation;
@@ -865,6 +909,12 @@ public class WeightLiftingController : MonoBehaviour
         
         Debug.Log("Successful lift! Weight: " + currentWeight + "kg, Strength gained: " + strengthGain);
         
+        if(successfulReps >= maxSuccessfulReps)
+        {
+            EndGame();
+            return;
+        }
+        
         // Increase weight
         currentWeight += weightIncrement;
         currentWeight = Mathf.Min(currentWeight, maxWeight);
@@ -958,7 +1008,7 @@ public class WeightLiftingController : MonoBehaviour
     private int CalculateStrengthGain()
     {
         // Base strength from weight
-        int baseStrength = Mathf.RoundToInt(currentWeight / 5f);
+        int baseStrength = Mathf.RoundToInt((currentWeight / 10f)/2f);
         
         // Bonus for perfect lift
         if (isPerfectLift)
@@ -1080,7 +1130,49 @@ public class WeightLiftingController : MonoBehaviour
         
         if (targetCamera) targetCamera.gameObject.SetActive(true);
     }
-    
+    private void SetupTargetZones()
+    {
+        // Setup grip target zone
+        if (gripTargetZone != null && gripBar != null)
+        {
+            RectTransform gripZoneRect = gripTargetZone.GetComponent<RectTransform>();
+            RectTransform gripBarRect = gripBar.GetComponent<RectTransform>();
+
+            float gripBarWidth = gripBarRect.rect.width;
+            float zoneWidth = (gripBarTargetMax - gripBarTargetMin) * gripBarWidth;
+
+            // Calculate center position in pixels
+            float centerNormalized = (gripBarTargetMin + gripBarTargetMax) / 2f;
+            float centerPosition = centerNormalized * gripBarWidth;
+
+            // Adjust for anchor offset
+            float anchorOffset = gripBarRect.rect.xMin;
+        
+            gripZoneRect.sizeDelta = new Vector2(zoneWidth, gripZoneRect.sizeDelta.y);
+            gripZoneRect.anchoredPosition = new Vector2(centerPosition + anchorOffset, 0);
+        }
+
+        // Setup lift target zone
+        if (powerTargetZone != null && powerMeter != null)
+        {
+            RectTransform liftZoneRect = powerTargetZone.GetComponent<RectTransform>();
+            RectTransform liftBarRect = powerMeter.GetComponent<RectTransform>();
+
+            float liftBarWidth = liftBarRect.rect.width;
+            float zoneWidth = (liftTargetMax - liftTargetMin) * liftBarWidth;
+
+            // Calculate center position in pixels
+            float centerNormalized = (liftTargetMin + liftTargetMax) / 2f;
+            float centerPosition = centerNormalized * liftBarWidth;
+
+            // Adjust for anchor offset
+            float anchorOffset = liftBarRect.rect.xMin;
+
+            liftZoneRect.sizeDelta = new Vector2(zoneWidth, liftZoneRect.sizeDelta.y);
+            liftZoneRect.anchoredPosition = new Vector2(centerPosition + anchorOffset, 0);
+        }
+    }
+
     #endregion
     
     public enum LiftState 
