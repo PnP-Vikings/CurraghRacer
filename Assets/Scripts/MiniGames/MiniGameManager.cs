@@ -2,6 +2,7 @@
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
+using DG.Tweening;
 using MiniGames.DishWashingMinigame;
 using MiniGames.BeerMinigame;
 using UnityEngine.SceneManagement;
@@ -33,7 +34,7 @@ namespace MiniGames
         [SerializeField] private TeamMember selectedTeamMember;
         [SerializeField] private TeamMember.StatType selectedTrainingStatType;
         
-        
+        private Tween currentDelayTween;
         
         
         
@@ -276,14 +277,19 @@ namespace MiniGames
             Debug.Log($"Progress: {progressText}");
         }
         
-        public void CompleteGame(int finalScore)
+        public void CompleteGame(int finalScore, float delayBeforeEnding = 0f)
         {
             currentScore = finalScore;
             Debug.Log($"Game completed with final score: {currentScore}");
-            EndGame();
+            if(currentDelayTween != null)
+            {
+                currentDelayTween.Kill();
+            }
+            currentDelayTween = DOVirtual.DelayedCall(delayBeforeEnding, () => EndGame());
         }
         
-        public void EndGame(bool forceEnd = false)
+        
+        private void EndGame(bool forceEnd = false)
         {
             gameActive = false;
 
