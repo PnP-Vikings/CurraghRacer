@@ -134,6 +134,8 @@ MonoBehaviour:
   trainingActivities:
   - {fileID: 11400000, guid: e9279e8e2fc9f444090dcfc3997eb5d7, type: 2}
   - {fileID: 11400000, guid: 0968ca18c5806804fbd76eb533e14fde, type: 2}
+  - {fileID: 11400000, guid: 34efa9fa0b6a28b49b45f9a4f896c74a, type: 2}
+  - {fileID: 11400000, guid: be526c7ab921c034683f47ad22960210, type: 2}
   audioSource: {fileID: 0}
   gameTimer: 0
   gameActive: 0
@@ -153,6 +155,8 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+  selectedTeamMember: {fileID: 0}
+  selectedTrainingStatType: 0
 --- !u!114 &8150581909809056547
 MonoBehaviour:
   m_ObjectHideFlags: 0

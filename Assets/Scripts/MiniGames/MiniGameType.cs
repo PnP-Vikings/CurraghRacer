@@ -19,11 +19,12 @@ public enum  MiniGameType
     PushingWheelbarrow,
     SwingingHammer,
     PullingSledge,
-    LiftingStones,
+    Lifting,
     ArmWrestling,
     WeightLifting,
     RhythmRowing,
     BoxingGame,
+    FootRacing,
     TugOfWar
 }
 
