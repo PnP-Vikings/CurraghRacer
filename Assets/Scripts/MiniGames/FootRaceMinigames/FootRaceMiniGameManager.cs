@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using MiniGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UI;
@@ -64,6 +65,8 @@ public class FootRaceMiniGameManager : MonoBehaviour
     
     [Header("Ui Elements")]
     public MinigameCanvasUI minigameCanvasUI;
+    
+    
    
     private void Awake()
     {
@@ -582,6 +585,13 @@ public class FootRaceMiniGameManager : MonoBehaviour
             AudioManager.instance.running.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.crashIntoFence.start();
         }
+        
+        if(MiniGameManager.Instance != null)
+        {
+            MiniGameManager.Instance.CompleteGame(score,3);
+        }
+        
+        
     }
     
     IEnumerator IncreaseSpeedOverTime(float interval)

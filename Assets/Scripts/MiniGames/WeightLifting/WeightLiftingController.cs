@@ -3,6 +3,7 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using MiniGames;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
@@ -1087,6 +1088,11 @@ public class WeightLiftingController : MonoBehaviour
         Debug.Log("Total Strength Gained: " + totalStrengthGained);
         
         UpdateStatsDisplay();
+        
+        if(MiniGameManager.Instance != null)
+        {
+            MiniGameManager.Instance.CompleteGame(totalStrengthGained,3);
+        }
     }
     
     private int CalculateStrengthGain()
