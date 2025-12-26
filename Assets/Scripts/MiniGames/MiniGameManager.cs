@@ -297,8 +297,18 @@ namespace MiniGames
             {
                 currentGameInstance.EndGame();
             }
+
+
+            if (currentGame.DidPlayerPass(currentScore))
+            {
+                CalculateAndShowResults();
+            }
+            else
+            {
+                PlayerFailedMiniGame();
+            }
             
-            CalculateAndShowResults();
+           
         }
         
         private void CalculateAndShowResults()
@@ -313,6 +323,10 @@ namespace MiniGames
                 Debug.LogError("No current game data available to calculate results!");
                 return;
             }
+            
+            
+            
+            
             int finalScore = 0;
             float earnings = 0;
             int attribute = 0;
@@ -408,6 +422,51 @@ namespace MiniGames
                   
                 }
             }
+        }
+        
+        private void PlayerFailedMiniGame()
+        {
+            Debug.Log("Player failed the mini game.");
+            
+            // If we loaded a scene for this minigame, return to the main scene
+            if (currentGame.CanLoadScene && !string.IsNullOrEmpty(currentGame.returnSceneName))
+            {
+                StartCoroutine(ReturnToMainSceneAfterDelay(currentGame.returnDelay)); // Give time to see results
+            }
+
+            if (GameManager.Instance != null)
+            {
+                if (currentGame.category == ActivityCategory.Work)
+                {
+                    // For work activities, use the GameManager method but with our calculated earnings
+                    // This ensures time updates and proper energy deduction
+                    PlayerStatsView.Instance.DisplayInfo("You Didn't work Hard Enough\nThe Boss is pissed\nYou have not gotten paid", 3);
+                }
+                else if( currentGame.category == ActivityCategory.Training)
+                {
+                    
+                    // For training activities, deduct energy cost here
+                    if (PlayerManager.Instance != null)
+                    {
+                        PlayerManager.Instance.ModifyPlayerEnergy(-currentGame.energyCost);
+                    }
+                    if(selectedTeamMember != null )
+                    {
+                        // Update time via GameManager
+                        PlayerStatsView.Instance.DisplayInfo($"{selectedTeamMember} has not improved at {selectedTrainingStatType}", 3);
+                    }
+                    else
+                    {
+                        PlayerStatsView.Instance.DisplayInfo($"No Stats have changed", 3);
+
+                    }
+                  
+                  
+                }
+            }
+            
+           
+            
         }
         
         private IEnumerator ReturnToMainSceneAfterDelay(float delay)
