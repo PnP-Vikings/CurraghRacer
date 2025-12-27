@@ -29,6 +29,9 @@ public class TimeManager : MonoBehaviour
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
     internal int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     public CalendarEvents calendarEvents;
+    
+    //Real-time duration of an in-game day
+    [SerializeField] private bool useRealTimeDayDuration = true;
     [SerializeField] private float dayDurationInMinutes = 15F; // Real-time minutes for a full in-game day
 
     [SerializeField] internal UnityEvent timeChangedEvent;
@@ -337,7 +340,7 @@ public class TimeManager : MonoBehaviour
     
     public void Update()
     {
-        if (GameManager.Instance.GameStarted)
+        if (GameManager.Instance.GameStarted && useRealTimeDayDuration)
         {
             UpdateTimeRealTime(Time.deltaTime);
         }
