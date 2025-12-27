@@ -10630,6 +10630,10 @@ PrefabInstance:
       propertyPath: currentDayOfWeek
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5925614133511598973, guid: ae207ed792dae004996b867015b8dc50, type: 3}
+      propertyPath: dayDurationInMinutes
+      value: 15
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

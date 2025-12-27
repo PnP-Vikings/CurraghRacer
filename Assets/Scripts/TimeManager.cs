@@ -29,7 +29,7 @@ public class TimeManager : MonoBehaviour
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
     internal int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     public CalendarEvents calendarEvents;
-    
+    [SerializeField] private float dayDurationInMinutes = 15F; // Real-time minutes for a full in-game day
 
     [SerializeField] internal UnityEvent timeChangedEvent;
 
@@ -354,7 +354,6 @@ public class TimeManager : MonoBehaviour
         // 15 minutes = 900 seconds
         // 24 hours = 86400 seconds in-game
         // Multiplier = 86400 / 900 = 96
-        float dayDurationInMinutes = 15f;
         float calculatedMultiplier = (24f * 60f * 60f) / (dayDurationInMinutes * 60f);
     
         timeOfDay += (deltaTime / 3600f) * calculatedMultiplier;
