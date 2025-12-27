@@ -125,28 +125,27 @@ namespace MiniGames
                 return;
             }
 
-            if (PlayerManager.Instance.PlayerHasEnoughEnergy(25))
+           
+            List<MiniGameData>  tempTrainingActivities = new (trainingActivities); // Create a copy to filter
+            
+            for (int i = tempTrainingActivities.Count - 1; i >= 0; i--)
             {
-                List<MiniGameData>  tempTrainingActivities = new (trainingActivities); // Create a copy to filter
-                
-                for (int i = tempTrainingActivities.Count - 1; i >= 0; i--)
+                if (tempTrainingActivities[i].trainingAttribute != statType)
                 {
-                    if (tempTrainingActivities[i].trainingAttribute != statType)
-                    {
-                        tempTrainingActivities.RemoveAt(i);
-                    }
+                    tempTrainingActivities.RemoveAt(i);
                 }
-                
-                
-                // Randomly select a training activity
-                int randomIndex = Random.Range(0, tempTrainingActivities.Count);
-                MiniGameData selectedActivity = tempTrainingActivities[randomIndex];
-
-                Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
-                GameManager.Instance.SetPlayerBusy(true);
-                // Start the selected activity directly
-                StartActivityDirectly(selectedActivity);
             }
+            
+            
+            // Randomly select a training activity
+            int randomIndex = Random.Range(0, tempTrainingActivities.Count);
+            MiniGameData selectedActivity = tempTrainingActivities[randomIndex];
+
+            Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
+            GameManager.Instance.SetPlayerBusy(true);
+            // Start the selected activity directly
+            StartActivityDirectly(selectedActivity);
+            
             
         }
         private void StartActivityDirectly(MiniGameData activity)
@@ -186,12 +185,6 @@ namespace MiniGames
                 Debug.LogWarning($"Not enough energy! Need {activity.energyCost} energy to play {activity.gameName}");
                 return;
             }
-            
-            /*// Deduct energy cost
-            if (playerManager != null)
-            {
-                playerManager.ModifyPlayerEnergy(-activity.energyCost);
-            }*/
             
             // Reset game state
             gameTimer = activity.timeLimit;

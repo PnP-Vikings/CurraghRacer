@@ -119,58 +119,58 @@ public class TrainingMenu : MonoBehaviour
         ClearTeamMemberUis();
         
          if (teamManagerUiParent != null && teamManagerUiPrefab != null)
-       {
-           if (TeamManager.Instance != null)
-           {
-               if (TeamManager.Instance.activeCrewMembers == null || TeamManager.Instance.activeCrewMembers.Count == 0)
-               {
-                   Debug.Log("TeamManagerUi: No crew members to display.");
-                   return;
-               }
-               foreach (TeamMember crewMember in TeamManager.Instance.activeCrewMembers)
-               {
-                   Debug.Log("TeamManagerUi: Creating UI for crew member: " + crewMember.memberName);
-                   if(crewMember.racesAvailableFor <100) return;
-                   GameObject crewMemberUi = Instantiate(teamManagerUiPrefab.gameObject, teamManagerUiParent);
-                   if (crewMemberUi != null)
-                   {
-                       TeamMemberUiHandler handler = crewMemberUi.GetComponent<TeamMemberUiHandler>();
-                       if (handler != null)
-                       {
-                           handler.ClearMemberData();
-                           handler.SetMemberData(crewMember);
-                       }
-                       TrainingSelectionUi selectionUi = crewMemberUi.GetComponent<TrainingSelectionUi>();
-                       if(selectionUi != null)
-                         selectionUi.SetTrainingMenu(this, crewMember);
-                   }
-               }
-               foreach (TeamMember benchMember in TeamManager.Instance.benchTeamMembers)
-               {
-                   Debug.Log("TeamManagerUi: Creating UI for crew member: " + benchMember.memberName);
-                   if(benchMember.racesAvailableFor <100) return;
-                   GameObject crewMemberUi = Instantiate(teamManagerUiPrefab.gameObject, teamManagerUiParent);
-                   if (crewMemberUi != null)
-                   {
-                       TeamMemberUiHandler handler = crewMemberUi.GetComponent<TeamMemberUiHandler>();
-                       if (handler != null)
-                       {
-                           handler.ClearMemberData();
-                           handler.SetMemberData(benchMember);
-                       }
-                       TrainingSelectionUi selectionUi = crewMemberUi.GetComponent<TrainingSelectionUi>();
-                       if(selectionUi != null)
-                           selectionUi.SetTrainingMenu(this, benchMember);
-                   }
-               }
+         {
+             if (TeamManager.Instance != null)
+             {
+                 if (TeamManager.Instance.activeCrewMembers == null || TeamManager.Instance.activeCrewMembers.Count == 0)
+                 {
+                     Debug.Log("TeamManagerUi: No crew members to display.");
+                     return;
+                 }
+                 foreach (TeamMember crewMember in TeamManager.Instance.activeCrewMembers)
+                 {
+                     Debug.Log("TeamManagerUi: Creating UI for crew member: " + crewMember.memberName);
+                     if(crewMember.racesAvailableFor <100) return;
+                     GameObject crewMemberUi = Instantiate(teamManagerUiPrefab.gameObject, teamManagerUiParent);
+                     if (crewMemberUi != null)
+                     {
+                         TeamMemberUiHandler handler = crewMemberUi.GetComponent<TeamMemberUiHandler>();
+                         if (handler != null)
+                         {
+                             handler.ClearMemberData();
+                             handler.SetMemberData(crewMember);
+                         }
+                         TrainingSelectionUi selectionUi = crewMemberUi.GetComponent<TrainingSelectionUi>();
+                         if(selectionUi != null)
+                             selectionUi.SetTrainingMenu(this, crewMember);
+                     }
+                 }
+                 foreach (TeamMember benchMember in TeamManager.Instance.benchTeamMembers)
+                 {
+                     Debug.Log("TeamManagerUi: Creating UI for crew member: " + benchMember.memberName);
+                     if(benchMember.racesAvailableFor <100) return;
+                     GameObject crewMemberUi = Instantiate(teamManagerUiPrefab.gameObject, teamManagerUiParent);
+                     if (crewMemberUi != null)
+                     {
+                         TeamMemberUiHandler handler = crewMemberUi.GetComponent<TeamMemberUiHandler>();
+                         if (handler != null)
+                         {
+                             handler.ClearMemberData();
+                             handler.SetMemberData(benchMember);
+                         }
+                         TrainingSelectionUi selectionUi = crewMemberUi.GetComponent<TrainingSelectionUi>();
+                         if(selectionUi != null)
+                             selectionUi.SetTrainingMenu(this, benchMember);
+                     }
+                 }
                
-           }
-           else
-           {
-               Debug.LogError("TeamManagerUi: TeamManager instance is null.");
-               return;
-           }
-       }
+             }
+             else
+             {
+                 Debug.LogError("TeamManagerUi: TeamManager instance is null.");
+                 return;
+             }
+         }
    }
     
 
@@ -222,27 +222,30 @@ public class TrainingMenu : MonoBehaviour
                 return false;
             }
         }
-        
+    
         // Check if the player has enough energy
         if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCost))
         {
             PlayerStatsView.Instance.DisplayInfo($"You must have at least {energyCost} Energy to train", 3);
-            return false; // Not enough energy
+            return false;
         }
 
-        // Check if the player has enough currency
-        if (!PlayerManager.Instance.PurchaseItem(currencyCost))
+        // Check if the player has enough currency WITHOUT deducting yet
+        if (PlayerManager.Instance.GetPlayerCoins() < currencyCost)
         {
             PlayerStatsView.Instance.DisplayInfo($"You must have at least {currencyCost} Currency to train", 3);
-            return false; // Not enough currency
+            return false;
         }
 
-        // Deduct the currency cost and allow training
+        // Now deduct both currency and energy
+        PlayerManager.Instance.PurchaseItem(currencyCost);
         PlayerManager.Instance.ModifyPlayerEnergy(-energyCost);
-        TimeManager.Instance.AdvanceTimeByHours(3); // Advance time by 3 hour
-        Debug.Log($"Player has enough energy {PlayerManager.Instance.energy}  and currency {PlayerManager.Instance.coins} to train");
+        TimeManager.Instance.AdvanceTimeByHours(3);
+    
+        Debug.Log($"Player has enough energy {PlayerManager.Instance.energy} and currency {PlayerManager.Instance.coins} to train");
         return true;
     }
+
     
     private void OnDisable()
     {
