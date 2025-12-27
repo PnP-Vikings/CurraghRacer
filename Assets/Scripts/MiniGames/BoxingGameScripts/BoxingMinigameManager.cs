@@ -555,4 +555,12 @@ public class BoxingMinigameManager : MonoBehaviour
     {
         return score;
     }
+    
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 }

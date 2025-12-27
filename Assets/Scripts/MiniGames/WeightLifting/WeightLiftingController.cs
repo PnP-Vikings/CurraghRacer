@@ -1300,5 +1300,13 @@ public class WeightLiftingController : MonoBehaviour
         Lift,
         Hold
     }
+    
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 }
 
