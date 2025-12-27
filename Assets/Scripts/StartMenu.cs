@@ -14,7 +14,7 @@ public class StartMenu : MonoBehaviour
     [SerializeField] private TMPro.TMP_Text _startRaceButtonText;
     [SerializeField] CameraController cameraController;
     public GameObject trainingMenuPrefab;
-    
+    public bool isTooLateForActivities = false;
     public static StartMenu Instance { get; private set; }
 
     public void Awake()
@@ -187,7 +187,18 @@ public class StartMenu : MonoBehaviour
     
     public void OnWorkButtonClicked()
     {
-        if (PlayerManager.Instance.PlayerHasEnoughEnergy(25))
+        if (TimeManager.Instance != null)
+        {
+            isTooLateForActivities = TimeManager.Instance.IsTooLateForActivities();
+            
+            if (isTooLateForActivities)
+            {
+                PlayerStatsView.Instance.DisplayInfo("It's too late to work today. Try again tomorrow.", 3);
+                return;
+            }
+        }
+
+        if (PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !isTooLateForActivities)
         {
             // Use MiniGameManager instead of loading separate scenes
             if (MiniGames.MiniGameManager.Instance != null)

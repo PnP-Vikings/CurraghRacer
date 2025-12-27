@@ -20,6 +20,7 @@ public class TrainingMenu : MonoBehaviour
     public TrainingSelectionUi oldSelectedTeamMemberUi, newSelectedTeamMemberUi;
     public TeamMember selectedTeamMember;
     
+    public bool isTooLateForActivities = false;
     //FMOD.Studio.EventInstance Dumbbell;
     //FMOD.Studio.EventInstance UIClick2;
 
@@ -214,6 +215,17 @@ public class TrainingMenu : MonoBehaviour
     
     public bool CanTrain(int energyCost, int currencyCost)
     {
+        if (TimeManager.Instance != null)
+        {
+            isTooLateForActivities = TimeManager.Instance.IsTooLateForActivities();
+            
+            if (isTooLateForActivities)
+            {
+                PlayerStatsView.Instance.DisplayInfo("It's too late to Train today. Try again tomorrow.", 3);
+                return false;
+            }
+        }
+        
         if(MiniGameManager.Instance != null)
         {
             if (!MiniGameManager.Instance.HasMiniGameOfStatType(selectedStatType))
@@ -240,7 +252,16 @@ public class TrainingMenu : MonoBehaviour
         // Now deduct both currency and energy
         PlayerManager.Instance.PurchaseItem(currencyCost);
         PlayerManager.Instance.ModifyPlayerEnergy(-energyCost);
-        TimeManager.Instance.AdvanceTimeByHours(3);
+        
+        if(TimeManager.Instance != null){
+            if(TimeManager.Instance.IsNight()){
+                PlayerStatsView.Instance.DisplayInfo("It's getting late, consider resting soon.", 3, Color.yellow);
+            }
+            
+            if(!TimeManager.Instance.realtimeDayDurationEnabled()) 
+            {TimeManager.Instance.AdvanceTimeByHours(3);}
+        }
+       
     
         Debug.Log($"Player has enough energy {PlayerManager.Instance.energy} and currency {PlayerManager.Instance.coins} to train");
         return true;

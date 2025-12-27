@@ -349,7 +349,7 @@ public class TimeManager : MonoBehaviour
     public void UpdateTimeRealTime(float deltaTime)
     {
         // Stop clock at 23:30 (23.5 hours)
-        if(timeOfDay >= 23.5f) return;
+        if(timeOfDay >= 23.99f) return;
     
         float previousTimeOfDay = timeOfDay;
     
@@ -362,7 +362,7 @@ public class TimeManager : MonoBehaviour
         timeOfDay += (deltaTime / 3600f) * calculatedMultiplier;
     
         // Clamp to prevent going past 23:30
-        timeOfDay = Mathf.Min(timeOfDay, 23.5f);
+        timeOfDay = Mathf.Min(timeOfDay, 23.99f);
 
         // Call SpawnItems method at the beginning of a new day
         if (!newItemSpawned && timeOfDay >= 0 && timeOfDay <= 0.1f)
@@ -415,6 +415,11 @@ public class TimeManager : MonoBehaviour
     public bool IsNight()
     {
         return timeOfDay >= 19 && timeOfDay <= 24;
+    }
+    
+    public bool IsTooLateForActivities()
+    {
+        return timeOfDay >= 22 && timeOfDay <= 24;
     }
     
     /// <summary>
@@ -475,6 +480,11 @@ public class TimeManager : MonoBehaviour
         RecheckIfRaceDay();
     }
     
+    
+    public bool realtimeDayDurationEnabled()
+    {
+        return useRealTimeDayDuration;
+    }
     /// <summary>
     /// Alternative method using current date as start date
     /// </summary>
