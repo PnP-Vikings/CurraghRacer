@@ -224,6 +224,14 @@ public class TrainingMenu : MonoBehaviour
                 PlayerStatsView.Instance.DisplayInfo("It's too late to Train today. Try again tomorrow.", 3);
                 return false;
             }
+            
+            
+            if(TimeManager.Instance.IsNight()){
+                PlayerStatsView.Instance.DisplayInfo("It's getting late, consider resting soon.", 1, Color.yellow);
+            }
+            
+            if(!TimeManager.Instance.realtimeDayDurationEnabled()) 
+            {TimeManager.Instance.AdvanceTimeByHours(3);}
         }
         
         if(MiniGameManager.Instance != null)
@@ -253,15 +261,6 @@ public class TrainingMenu : MonoBehaviour
         PlayerManager.Instance.PurchaseItem(currencyCost);
         PlayerManager.Instance.ModifyPlayerEnergy(-energyCost);
         
-        if(TimeManager.Instance != null){
-            if(TimeManager.Instance.IsNight()){
-                PlayerStatsView.Instance.DisplayInfo("It's getting late, consider resting soon.", 3, Color.yellow);
-            }
-            
-            if(!TimeManager.Instance.realtimeDayDurationEnabled()) 
-            {TimeManager.Instance.AdvanceTimeByHours(3);}
-        }
-       
     
         Debug.Log($"Player has enough energy {PlayerManager.Instance.energy} and currency {PlayerManager.Instance.coins} to train");
         return true;

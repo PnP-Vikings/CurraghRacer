@@ -386,7 +386,23 @@ public class TimeManager : MonoBehaviour
     {
         float previousTimeOfDay = timeOfDay;
         /*timeOfDay += Time.deltaTime * timeMultiplier;*/
-        timeOfDay += 3f;
+        if (!useRealTimeDayDuration)
+        {
+            if (timeOfDay < 20f)
+            {
+                timeOfDay += 3f;
+            }
+            else
+            {
+                timeOfDay += 1f;
+            }
+            
+            if (timeOfDay > 23f)
+            {
+                timeOfDay = 23.99f; // Stop at 23:59 to avoid skipping night events
+            }
+        }
+
         timeOfDay %= 24f; // Clamp to 0-24
 
         // Check if a new day has started
@@ -419,7 +435,7 @@ public class TimeManager : MonoBehaviour
     
     public bool IsTooLateForActivities()
     {
-        return timeOfDay >= 22 && timeOfDay <= 24;
+        return timeOfDay >= 22.5 && timeOfDay <= 24;
     }
     
     /// <summary>
