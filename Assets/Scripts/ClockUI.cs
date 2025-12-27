@@ -32,20 +32,31 @@ public class ClockUI : MonoBehaviour
      TimeManager.Instance.onNewDay.RemoveListener(UpdateClock);
         TimeManager.Instance.timeChangedEvent.RemoveListener(UpdateClock);
     }
-
-    private void UpdateClock()
+    
+    
+    public void UpdateClock()
     {
         if (TimeManager.Instance == null) return;
-        // Get the current time from the TimeManager in hours
-        float hours = TimeManager.Instance.TimeOfDay;
-        // Calculate the minutes based on the fraction of the hour
-        float minutes = (hours % 1) * 60;
 
-        // Rotate the hour hand based on the hours (30 degrees per hour) and subtract 30 degrees from the initial rotation
-        _hourHand.transform.rotation = Quaternion.Euler(0, 0, -hours * 90f);
-        // Rotate the minute hand based on the minutes (6 degrees per minute)
-        _minuteHand.transform.rotation = Quaternion.Euler(0, 0, -minutes * 90f);
+        float totalHours = TimeManager.Instance.TimeOfDay; // e.g., 14.5 for 2:30 PM
+        float hours = totalHours % 12f; // Convert to 12-hour format (includes fractional minutes)
+        float minutes = (totalHours % 1f) * 60f; // Extract minutes from decimal portion
 
+        // Calculate angles (0° = 12 o'clock, rotates clockwise)
+        // Hour hand: totalHours already includes minutes as decimal, so just multiply by 30
+        float hourAngle = hours * 30f; // 30° per hour (e.g., 2.5 hours = 75°)
+    
+        // Minute hand: moves 360° in 60 minutes = 6° per minute
+        float minuteAngle = minutes * 6f;
+
+        // Apply rotations (negative for clockwise)
+        if (_hourHand != null)
+            _hourHand.transform.rotation = Quaternion.Euler(0, 0, hourAngle);
+    
+        // Rotate the minute hand based on the minutes 
+        if (_minuteHand != null)
+            _minuteHand.transform.rotation = Quaternion.Euler(0, 0, minuteAngle);
+        
         // Get the current day number from the TimeManager
         int dayNumber = TimeManager.Instance.DaysPassed;
         // Calculate the day of the week using the modulo operator
@@ -55,6 +66,6 @@ public class ClockUI : MonoBehaviour
         // Update the day of the week text
         _dayOfWeekText.text = dayOfWeek;
     }
-
+    
 
 }

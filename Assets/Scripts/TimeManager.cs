@@ -335,6 +335,51 @@ public class TimeManager : MonoBehaviour
         return new DateTime(currentYear, currentMonth + 1, currentDay);
     }
     
+    public void Update()
+    {
+        if (GameManager.Instance.GameStarted)
+        {
+            UpdateTimeRealTime(Time.deltaTime);
+        }
+    }
+
+    public void UpdateTimeRealTime(float deltaTime)
+    {
+        // Stop clock at 23:30 (23.5 hours)
+        if(timeOfDay >= 23.5f) return;
+    
+        float previousTimeOfDay = timeOfDay;
+    
+        // Calculate time multiplier: 15 minutes real time = 24 hours game time
+        // 15 minutes = 900 seconds
+        // 24 hours = 86400 seconds in-game
+        // Multiplier = 86400 / 900 = 96
+        float dayDurationInMinutes = 15f;
+        float calculatedMultiplier = (24f * 60f * 60f) / (dayDurationInMinutes * 60f);
+    
+        timeOfDay += (deltaTime / 3600f) * calculatedMultiplier;
+    
+        // Clamp to prevent going past 23:30
+        timeOfDay = Mathf.Min(timeOfDay, 23.5f);
+
+        // Call SpawnItems method at the beginning of a new day
+        if (!newItemSpawned && timeOfDay >= 0 && timeOfDay <= 0.1f)
+        {
+            Debug.Log("New day has started");
+            onNewDay.Invoke();
+            newItemSpawned = true;
+        }
+
+        if (IsNight())
+        {
+            onNightStart.Invoke();
+        }
+    
+        timeChangedEvent.Invoke();
+    }
+
+    
+
     public void UpdateTime()
     {
         float previousTimeOfDay = timeOfDay;
