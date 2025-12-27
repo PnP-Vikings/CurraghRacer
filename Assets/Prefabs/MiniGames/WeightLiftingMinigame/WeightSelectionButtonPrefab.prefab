@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 6387426373582607678}
   - component: {fileID: 5206084056717203953}
   - component: {fileID: 1508726382204705768}
+  - component: {fileID: 8164767776753190006}
   m_Layer: 5
   m_Name: WeightSelectionButtonPrefab
   m_TagString: Untagged
@@ -135,6 +136,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8164767776753190006}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &5206084056717203953
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -162,6 +175,25 @@ MonoBehaviour:
   weight: 0
   weightSelectionUi: {fileID: 0}
   weightText: {fileID: 3038197998952955843}
+--- !u!114 &8164767776753190006
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 53447912980666526}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Event:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
 --- !u!1 &3043886154819915144
 GameObject:
   m_ObjectHideFlags: 0

@@ -36,7 +36,7 @@ MonoBehaviour:
   timeBonusMultiplier: 1
   isScoreBased: 0
   perfectScore: 100
-  passingScore: 60
+  passingScore: 4
   energyCost: 25
   difficultyScoreMultiplier:
     serializedVersion: 2
