@@ -453,7 +453,8 @@ namespace MiniGames
                     if(selectedTeamMember != null )
                     {
                         // Update time via GameManager
-                        PlayerStatsView.Instance.DisplayInfo($"{selectedTeamMember} has not improved at {selectedTrainingStatType}", 3);
+                        Debug.LogWarning(selectedTeamMember.memberName + " has failed to improve at " + selectedTrainingStatType);
+                        PlayerStatsView.Instance.DisplayInfo($"You Failed\n{selectedTeamMember.memberName} has not improved at {selectedTrainingStatType}", 3);
                     }
                     else
                     {
@@ -488,5 +489,17 @@ namespace MiniGames
             return gameActive;
         }
 
+        public bool HasMiniGameOfStatType(TeamMember.StatType statType)
+        {
+            foreach (var activity in trainingActivities)
+            {
+                if (activity.trainingAttribute == statType)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
     }
 }

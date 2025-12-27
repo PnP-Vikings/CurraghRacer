@@ -66,10 +66,6 @@ public class TrainingMenu : MonoBehaviour
             return;
         }
         
-        /*
-      
-        */
-
         if (CanTrain(30, 50))
         {
             if (AudioManager.instance != null)
@@ -218,6 +214,15 @@ public class TrainingMenu : MonoBehaviour
     
     public bool CanTrain(int energyCost, int currencyCost)
     {
+        if(MiniGameManager.Instance != null)
+        {
+            if (!MiniGameManager.Instance.HasMiniGameOfStatType(selectedStatType))
+            {
+                PlayerStatsView.Instance.DisplayInfo($"No mini-game available to train {selectedStatType}", 3, Color.red);
+                return false;
+            }
+        }
+        
         // Check if the player has enough energy
         if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCost))
         {
