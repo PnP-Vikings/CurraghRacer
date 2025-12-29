@@ -618,6 +618,14 @@ public class FootRaceMiniGameManager : MonoBehaviour
             }
         }
     }
+
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+    }
 }
 public enum ObstacleType
 {

@@ -6,6 +6,7 @@ public class PlayerStatsView : MonoBehaviour
     [SerializeField] private UIDocument uiDoc;
     private Label _playerEnergyLabel,_playerCurrencyLabel,_displayInfo;
     private VisualElement _displayInfoBackground;
+    
     public static PlayerStatsView Instance { get; private set; }
     
     private void Awake()
@@ -20,6 +21,10 @@ public class PlayerStatsView : MonoBehaviour
             Destroy(gameObject);
         }
         
+        if(_displayInfo != null)
+        {
+            _displayInfo.style.color = Color.white;
+        }
     }
     
     void OnEnable()
@@ -46,18 +51,25 @@ public class PlayerStatsView : MonoBehaviour
         
     
     
-    public void DisplayInfo(string info, float duration = 3)
+    public void DisplayInfo(string info, float duration = 3,Color txtColor = default)
     {
+        if(txtColor == default)
+        {
+            txtColor = Color.white;
+        }
+        
         _displayInfoBackground.style.display = DisplayStyle.Flex;
         
         if (_displayInfo.text.Length > 0 && _displayInfo.text != info)
         {
             _displayInfo.text += "\n"; // Add a new line if there is existing text
             _displayInfo.text += info;
+            _displayInfo.style.color = txtColor;
         }
         else
         {
             _displayInfo.text = info;
+            _displayInfo.style.color = txtColor;
         }
        
         Invoke(nameof(ClearInfo), duration);

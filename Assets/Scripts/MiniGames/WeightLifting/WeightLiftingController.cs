@@ -527,20 +527,13 @@ public class WeightLiftingController : MonoBehaviour
                 gripPhaseCompleted = true;
                 UpdatePhaseUI("PHASE 1: GRIP", "Grip successful!\nPreparing to lift...");
                 
-                /*currentDelayTween?.Kill();*/
-                
-                /*currentDelayTween = DOVirtual.DelayedCall(2f, () =>
-                {
-                    
-                });*/
-                
-                
                 Sequence transitionSequence = DOTween.Sequence();
                 transitionSequence
                     .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f, 0f, -0.10f), 1f).SetRelative(false))
                     .AppendCallback(() => { }) // Force evaluation
                     .Append(bar.transform.DOMove(new Vector3(0f, -0.10f, 0), 1f).SetRelative(true))
                     .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
+                    .AppendCallback(() => PlayBarGripSound()) // Force evaluation
                     .AppendInterval(1f)
                     .AppendCallback(() => TransitionToLiftPhase());
                 
@@ -704,10 +697,7 @@ public class WeightLiftingController : MonoBehaviour
         hasReleasedInLiftPhase = true;
         isProcessingPhaseTransition = true;
         liftPhaseCompleted = true;
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.grunt.start();
-        }
+        
 
         // Check if in perfect zone
         if (powerMeterPosition >= liftTargetMin && powerMeterPosition <= liftTargetMax)
@@ -749,6 +739,7 @@ public class WeightLiftingController : MonoBehaviour
         Sequence transitionSequence = DOTween.Sequence();
             
         transitionSequence
+            .AppendCallback(PlayGruntSound)
             .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
             .AppendCallback(() => { }) // Force evaluation
             .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
@@ -869,7 +860,7 @@ public class WeightLiftingController : MonoBehaviour
         {
             if (isProcessingPhaseTransition) return;
             isProcessingPhaseTransition = true;
-            
+            PlayDumbbellSlideSound();
             Debug.Log("Balance failed! Tilt angle: " + barTiltAngle);
             currentLiftState = LiftState.Idle;
             FailLift("Lost balance! Bar tilted too far!");
@@ -900,6 +891,7 @@ public class WeightLiftingController : MonoBehaviour
             .Append(bar.transform.DORotate(new Vector3(0f, 0f, 0f), 1f).SetRelative(false))
             .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
             .AppendCallback(() => { }) // Force evaluation
+            .AppendCallback(PlayGruntSound)
             .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
             .Append(bar.transform.DOMove(new Vector3(0f, 0f, -0.10f), 1f).SetRelative(true))
             .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
@@ -1273,6 +1265,32 @@ public class WeightLiftingController : MonoBehaviour
     }
 
     #endregion
+
+    #region Sound Effects
+    public void PlayBarGripSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.barGrip.start();
+        }
+    }
+    
+    public void PlayGruntSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.grunt.start();
+        }
+    }
+    
+    public void PlayDumbbellSlideSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.dumbbellSlide.start();
+        }
+    }
+    #endregion
     
     public enum LiftState 
     {
@@ -1281,6 +1299,14 @@ public class WeightLiftingController : MonoBehaviour
         Grip,
         Lift,
         Hold
+    }
+    
+    private void OnDestroy()
+    {
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 }
 

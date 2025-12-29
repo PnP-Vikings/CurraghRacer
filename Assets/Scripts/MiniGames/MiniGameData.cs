@@ -225,6 +225,11 @@ namespace MiniGames
             
             return failureQuote;
         }
+        
+        public bool DidPlayerPass(int finalScore)
+        {
+            return finalScore >= passingScore;
+        }
     }
     
     [System.Serializable]

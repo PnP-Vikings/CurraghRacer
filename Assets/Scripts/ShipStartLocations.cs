@@ -9,7 +9,8 @@ public class ShipStartLocations : MonoBehaviour
 
     private void Awake()
     {
-        if (Instance == null)
+        // Check if Instance is null OR if it's pointing to a destroyed object
+        if (Instance == null || Instance.gameObject == null)
         {
             Instance = this;
             
@@ -28,6 +29,15 @@ public class ShipStartLocations : MonoBehaviour
         else
         {
             Destroy(gameObject);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Clear the Instance reference when this object is destroyed
+        if (Instance == this)
+        {
+            Instance = null;
         }
     }
 }

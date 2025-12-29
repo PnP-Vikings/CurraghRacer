@@ -127,24 +127,25 @@ public class PlayerManager : MonoBehaviour
         return coins >= cost;
     }
 
-    public bool PurchaseItem(float cost,PurchaseType purchaseType=PurchaseType.Item)
+    public bool PurchaseItem(float cost, PurchaseType purchaseType = PurchaseType.Item)
     {
-        if (CanAffordPurchase(cost) )
-        {
-            ModifyPlayerCoins(-cost);
-            return true;
-        }
-        else if (!CanAffordPurchase(cost) && purchaseType == PurchaseType.RaceEntry)
+        if (!CanAffordPurchase(cost) && purchaseType == PurchaseType.RaceEntry)
         {
             ModifyPlayerCoins(-cost);
             Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {cost - coins} coins.");
-            return false;
+            return true; // Changed from false to true - purchase went through despite debt
         }
-        else
+        else if (!CanAffordPurchase(cost) && purchaseType != PurchaseType.RaceEntry)
         {
             Debug.LogWarning("Not enough coins to make this purchase.");
             return false;
         }
+        else if (CanAffordPurchase(cost))
+        {
+            ModifyPlayerCoins(-cost);
+            return true;
+        }
+        return false;
     }
     
     public bool PlayerHasEnoughEnergy(float energyCost)

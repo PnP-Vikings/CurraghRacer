@@ -125,28 +125,27 @@ namespace MiniGames
                 return;
             }
 
-            if (PlayerManager.Instance.PlayerHasEnoughEnergy(25))
+           
+            List<MiniGameData>  tempTrainingActivities = new (trainingActivities); // Create a copy to filter
+            
+            for (int i = tempTrainingActivities.Count - 1; i >= 0; i--)
             {
-                List<MiniGameData>  tempTrainingActivities = new (trainingActivities); // Create a copy to filter
-                
-                for (int i = tempTrainingActivities.Count - 1; i >= 0; i--)
+                if (tempTrainingActivities[i].trainingAttribute != statType)
                 {
-                    if (tempTrainingActivities[i].trainingAttribute != statType)
-                    {
-                        tempTrainingActivities.RemoveAt(i);
-                    }
+                    tempTrainingActivities.RemoveAt(i);
                 }
-                
-                
-                // Randomly select a training activity
-                int randomIndex = Random.Range(0, tempTrainingActivities.Count);
-                MiniGameData selectedActivity = tempTrainingActivities[randomIndex];
-
-                Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
-                GameManager.Instance.SetPlayerBusy(true);
-                // Start the selected activity directly
-                StartActivityDirectly(selectedActivity);
             }
+            
+            
+            // Randomly select a training activity
+            int randomIndex = Random.Range(0, tempTrainingActivities.Count);
+            MiniGameData selectedActivity = tempTrainingActivities[randomIndex];
+
+            Debug.Log($"Starting random training activity: {selectedActivity.gameName}");
+            GameManager.Instance.SetPlayerBusy(true);
+            // Start the selected activity directly
+            StartActivityDirectly(selectedActivity);
+            
             
         }
         private void StartActivityDirectly(MiniGameData activity)
@@ -186,12 +185,6 @@ namespace MiniGames
                 Debug.LogWarning($"Not enough energy! Need {activity.energyCost} energy to play {activity.gameName}");
                 return;
             }
-            
-            /*// Deduct energy cost
-            if (playerManager != null)
-            {
-                playerManager.ModifyPlayerEnergy(-activity.energyCost);
-            }*/
             
             // Reset game state
             gameTimer = activity.timeLimit;
@@ -297,8 +290,18 @@ namespace MiniGames
             {
                 currentGameInstance.EndGame();
             }
+
+
+            if (currentGame.DidPlayerPass(currentScore))
+            {
+                CalculateAndShowResults();
+            }
+            else
+            {
+                PlayerFailedMiniGame();
+            }
             
-            CalculateAndShowResults();
+           
         }
         
         private void CalculateAndShowResults()
@@ -313,6 +316,10 @@ namespace MiniGames
                 Debug.LogError("No current game data available to calculate results!");
                 return;
             }
+            
+            
+            
+            
             int finalScore = 0;
             float earnings = 0;
             int attribute = 0;
@@ -410,6 +417,52 @@ namespace MiniGames
             }
         }
         
+        private void PlayerFailedMiniGame()
+        {
+            Debug.Log("Player failed the mini game.");
+            
+            // If we loaded a scene for this minigame, return to the main scene
+            if (currentGame.CanLoadScene && !string.IsNullOrEmpty(currentGame.returnSceneName))
+            {
+                StartCoroutine(ReturnToMainSceneAfterDelay(currentGame.returnDelay)); // Give time to see results
+            }
+
+            if (GameManager.Instance != null)
+            {
+                if (currentGame.category == ActivityCategory.Work)
+                {
+                    // For work activities, use the GameManager method but with our calculated earnings
+                    // This ensures time updates and proper energy deduction
+                    PlayerStatsView.Instance.DisplayInfo("You Didn't work Hard Enough\nThe Boss is pissed\nYou have not gotten paid", 3);
+                }
+                else if( currentGame.category == ActivityCategory.Training)
+                {
+                    
+                    // For training activities, deduct energy cost here
+                    if (PlayerManager.Instance != null)
+                    {
+                        PlayerManager.Instance.ModifyPlayerEnergy(-currentGame.energyCost);
+                    }
+                    if(selectedTeamMember != null )
+                    {
+                        // Update time via GameManager
+                        Debug.LogWarning(selectedTeamMember.memberName + " has failed to improve at " + selectedTrainingStatType);
+                        PlayerStatsView.Instance.DisplayInfo($"You Failed\n{selectedTeamMember.memberName} has not improved at {selectedTrainingStatType}", 3);
+                    }
+                    else
+                    {
+                        PlayerStatsView.Instance.DisplayInfo($"No Stats have changed", 3);
+
+                    }
+                  
+                  
+                }
+            }
+            
+           
+            
+        }
+        
         private IEnumerator ReturnToMainSceneAfterDelay(float delay)
         {
             yield return new WaitForSeconds(delay);
@@ -429,5 +482,17 @@ namespace MiniGames
             return gameActive;
         }
 
+        public bool HasMiniGameOfStatType(TeamMember.StatType statType)
+        {
+            foreach (var activity in trainingActivities)
+            {
+                if (activity.trainingAttribute == statType)
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+        
     }
 }

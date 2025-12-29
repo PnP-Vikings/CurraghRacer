@@ -30,6 +30,9 @@ public class TimeManager : MonoBehaviour
     internal int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     public CalendarEvents calendarEvents;
     
+    //Real-time duration of an in-game day
+    [SerializeField] private bool useRealTimeDayDuration = true;
+    [SerializeField] private float dayDurationInMinutes = 15F; // Real-time minutes for a full in-game day
 
     [SerializeField] internal UnityEvent timeChangedEvent;
 
@@ -335,11 +338,71 @@ public class TimeManager : MonoBehaviour
         return new DateTime(currentYear, currentMonth + 1, currentDay);
     }
     
+    public void Update()
+    {
+        if (GameManager.Instance.GameStarted && useRealTimeDayDuration)
+        {
+            UpdateTimeRealTime(Time.deltaTime);
+        }
+    }
+
+    public void UpdateTimeRealTime(float deltaTime)
+    {
+        // Stop clock at 23:30 (23.5 hours)
+        if(timeOfDay >= 23.99f) return;
+    
+        float previousTimeOfDay = timeOfDay;
+    
+        // Calculate time multiplier: 15 minutes real time = 24 hours game time
+        // 15 minutes = 900 seconds
+        // 24 hours = 86400 seconds in-game
+        // Multiplier = 86400 / 900 = 96
+        float calculatedMultiplier = (24f * 60f * 60f) / (dayDurationInMinutes * 60f);
+    
+        timeOfDay += (deltaTime / 3600f) * calculatedMultiplier;
+    
+        // Clamp to prevent going past 23:30
+        timeOfDay = Mathf.Min(timeOfDay, 23.99f);
+
+        // Call SpawnItems method at the beginning of a new day
+        if (!newItemSpawned && timeOfDay >= 0 && timeOfDay <= 0.1f)
+        {
+            Debug.Log("New day has started");
+            onNewDay.Invoke();
+            newItemSpawned = true;
+        }
+
+        if (IsNight())
+        {
+            onNightStart.Invoke();
+        }
+    
+        timeChangedEvent.Invoke();
+    }
+
+    
+
     public void UpdateTime()
     {
         float previousTimeOfDay = timeOfDay;
         /*timeOfDay += Time.deltaTime * timeMultiplier;*/
-        timeOfDay += 3f;
+        if (!useRealTimeDayDuration)
+        {
+            if (timeOfDay < 20f)
+            {
+                timeOfDay += 3f;
+            }
+            else
+            {
+                timeOfDay += 1f;
+            }
+            
+            if (timeOfDay > 23f)
+            {
+                timeOfDay = 23.99f; // Stop at 23:59 to avoid skipping night events
+            }
+        }
+
         timeOfDay %= 24f; // Clamp to 0-24
 
         // Check if a new day has started
@@ -368,6 +431,11 @@ public class TimeManager : MonoBehaviour
     public bool IsNight()
     {
         return timeOfDay >= 19 && timeOfDay <= 24;
+    }
+    
+    public bool IsTooLateForActivities()
+    {
+        return timeOfDay >= 22.5 && timeOfDay <= 24;
     }
     
     /// <summary>
@@ -428,6 +496,11 @@ public class TimeManager : MonoBehaviour
         RecheckIfRaceDay();
     }
     
+    
+    public bool realtimeDayDurationEnabled()
+    {
+        return useRealTimeDayDuration;
+    }
     /// <summary>
     /// Alternative method using current date as start date
     /// </summary>
