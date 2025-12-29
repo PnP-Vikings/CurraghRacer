@@ -39,6 +39,7 @@ EditorBuildSettings:
     path: Assets/Scenes/FootingTurfMinigame.unity
     guid: d9ea1e419eff46e4eb9d372bd978623e
   m_configObjects:
+    com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: e3720b109b8380946be0172658a2fcef, type: 2}
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 7ada5aaf1775ce74bb2c6bc9df2b768f, type: 2}
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 3a5131c02ade1c14aae08e940a45fadf, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: 1b80f92d2f09d114785b282f5f186495, type: 2}

@@ -45,6 +45,24 @@ public class Bill
         return false;
     }
     
+    public bool BillIsOverdueBy(int days)
+    {
+        return isOverdue && (daysUntilDue <= -days);
+    }
+    
+    public void ProcessAutoPay()
+    {
+        if (!isPaid)
+        {
+            PlayerManager.Instance.PurchaseItem(amountDue, PurchaseType.BillAutoPay);
+            isPaid = true;
+            Debug.Log($"Bill '{billName} {billType} auto-paid. Amount: {amountDue}");
+        }
+        else
+        {
+            Debug.Log($"Bill '{billName}' is already paid. No auto-pay needed.");
+        }
+    }
 
     /// <summary>
     /// Reset the bill status for a new billing cycle.
@@ -60,6 +78,7 @@ public class Bill
         amountDue += lateFeeAmount;
         Debug.Log($"Late fee of {lateFeeAmount} applied to bill '{billName}'. New amount: {amountDue}");
     }
+    
 }
 
 public enum BillType
