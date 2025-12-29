@@ -34,9 +34,9 @@ public class Bill
     /// <returns>True if the bill was paid, false otherwise.</returns>
     public bool PayBill()
     {
-        if (PlayerManager.Instance.coins >= amountDue && !isPaid)
+        if (PlayerManager.Instance.GetPlayerCoins() >= amountDue && !isPaid)
         {
-            PlayerManager.Instance.coins -= amountDue;
+            PlayerManager.Instance.PurchaseItem(amountDue, PurchaseType.Bill);
             isPaid = true;
             Debug.Log($"Bill '{billName} {billType}  paid. Amount: {amountDue}");
             return true;
@@ -44,6 +44,7 @@ public class Bill
         Debug.Log($"Not enough coins to pay bill '{billName}' or it is already paid.");
         return false;
     }
+    
 
     /// <summary>
     /// Reset the bill status for a new billing cycle.

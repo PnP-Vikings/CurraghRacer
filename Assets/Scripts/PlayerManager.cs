@@ -135,6 +135,12 @@ public class PlayerManager : MonoBehaviour
             Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {cost - coins} coins.");
             return true; // Changed from false to true - purchase went through despite debt
         }
+        else if(!CanAffordPurchase(cost) && purchaseType == PurchaseType.BillAutoPay)
+        {
+            ModifyPlayerCoins(-cost);
+            Debug.Log($"Couldn't purchase Bill Auto Pay. You are now in debt by {cost - coins} coins.");
+            return true; // Changed from false to true - purchase went through despite debt
+        }
         else if (!CanAffordPurchase(cost) && purchaseType != PurchaseType.RaceEntry)
         {
             Debug.LogWarning("Not enough coins to make this purchase.");
@@ -232,6 +238,7 @@ public enum PurchaseType
         RaceEntry,
         HireRacer,
         Bill,
+        BillAutoPay,
         Sleep,
         Training,
         Item

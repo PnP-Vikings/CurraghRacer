@@ -129,7 +129,7 @@ public class BillsController : MonoBehaviour
     
     public bool PayBill(Bill bill)
     {
-        if (PlayerManager.Instance.PurchaseItem(bill.amountDue))
+        if (PlayerManager.Instance.PurchaseItem(bill.amountDue, PurchaseType.Bill))
         {
             if(!bill.isRecurring)
             {
