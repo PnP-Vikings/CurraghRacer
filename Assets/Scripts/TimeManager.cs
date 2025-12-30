@@ -495,6 +495,17 @@ public class TimeManager : MonoBehaviour
         
         RecheckIfRaceDay();
     }
+
+    public float GetTimeOfDay()
+    {
+        return TimeOfDay;
+    }
+    
+    public void SetTimeOfDay(float newTimeOfDay)
+    {
+        timeOfDay = Mathf.Clamp(newTimeOfDay, 0f, 23.99f);
+        timeChangedEvent.Invoke();
+    }
     
     
     public bool realtimeDayDurationEnabled()
