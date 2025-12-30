@@ -1026,7 +1026,6 @@ public class SaveSystem : MonoBehaviour
         }
         
         // Apply Bills Data
-        
         if (BillsController.Instance != null && saveData.billData != null)
         {
             BillsController.Instance.bills = saveData.billData.bills != null ? new List<Bill>(saveData.billData.bills) : new List<Bill>();
@@ -1038,6 +1037,7 @@ public class SaveSystem : MonoBehaviour
                 BillsController.Instance.GenerateBills();
             }
         }
+        
         // Apply Team Manager Data
         if (TeamManager.Instance != null && saveData.teamManagerData != null)
         {
