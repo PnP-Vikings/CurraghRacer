@@ -370,6 +370,12 @@ public class DecisionCardManager : MonoBehaviour
             ApplyMoraleToAllMembers(option.moraleChange);
         }
         
+        if (option.timeLost != 0 && TimeManager.Instance != null)
+        {
+            TimeManager.Instance.AdjustTimeOfDay(+option.timeLost);
+            Debug.Log($"Time adjusted by {+option.timeLost} hours");
+        }
+        
         // Apply to target member (individual effects)
         if (currentTargetMember != null)
         {
@@ -409,6 +415,13 @@ public class DecisionCardManager : MonoBehaviour
                 PlayerManager.Instance.energy + outcome.energyChange,
                 0, 100
             );
+        }
+        
+        // Time adjustment
+        if (outcome.timeLost != 0 && TimeManager.Instance != null)
+        {
+            TimeManager.Instance.AdjustTimeOfDay(+outcome.timeLost);
+            Debug.Log($"Time adjusted by {+outcome.timeLost} hours");
         }
         
         // Apply morale change to ALL team members

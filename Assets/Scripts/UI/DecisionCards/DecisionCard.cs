@@ -51,6 +51,7 @@ public enum CardCategory
     Equipment,       // Boat/equipment decisions
     Event,           // Random events
     Opportunity,     // Special opportunities
+    TimeManagement,  // Time/resource allocation
     Crisis           // Urgent problems
 }
 
@@ -77,6 +78,9 @@ public class DecisionOption
     
     [Tooltip("Happiness change for targeted team member")]
     public int happinessChange = 0;
+    
+    [Tooltip("Time gained/lost")]
+    public int timeLost = 0;
     
     [Header("Stat Effects")]
     [Tooltip("Apply stat changes to the targeted team member")]
@@ -124,6 +128,7 @@ public class ConsequenceOutcome
     public int moraleChange = 0;
     public int happinessChange = 0;
     public int experienceChange = 0;
+    public int timeLost = 0;
     
     [Tooltip("Injury chance (0-100)")]
     [Range(0, 100)]

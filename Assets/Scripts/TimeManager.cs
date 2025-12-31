@@ -509,6 +509,24 @@ public class TimeManager : MonoBehaviour
         timeChangedEvent.Invoke();
     }
     
+    public void AdjustTimeOfDay(float adjustment)
+    {
+        if(adjustment == 0f) return;
+        if (adjustment < -24f || adjustment > 24f)
+        {
+            Debug.LogWarning("Adjustment out of bounds (-24 to 24). No adjustment made.");
+            return;
+        }
+        if(timeOfDay >=23 && adjustment > 0f)
+        {
+            Debug.Log("Time is already at or past 23:00, cannot adjust further forward.");
+            return;
+        }
+        
+        timeOfDay += adjustment;
+        timeOfDay = Mathf.Clamp(timeOfDay, 0f, 23.99f);
+        timeChangedEvent.Invoke();
+    }
     
     public bool RealtimeDayDurationEnabled()
     {
