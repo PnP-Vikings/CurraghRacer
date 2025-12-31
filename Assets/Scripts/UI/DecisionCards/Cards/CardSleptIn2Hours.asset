@@ -19,9 +19,10 @@ MonoBehaviour:
     in Lost 2 hours of the day  '
   cardImage: {fileID: 0}
   category: 6
+  isFollowUpOnly: 1
   minDayToAppear: 1
   canRepeat: 0
-  cooldownDays: 100
+  cooldownDays: 0
   targetsSpecificMember: 0
   specificTargetMember: {fileID: 0}
   requiredAttitudes: 
