@@ -85,12 +85,15 @@ public class DecisionCardManager : MonoBehaviour
         Debug.Log("New day started - generating decision cards");
         
         // Generate today's cards
-        List<DecisionCard> cards = GenerateDailyCards();
+        GenerateDailyCards();
+        
+        // Process follow-up cards AFTER generating daily cards
         ProcessScheduledFollowUps();
-        if (cards.Count > 0 && uiMaster != null)
+        
+        if (todaysCards.Count > 0 && uiMaster != null)
         {
             uiMaster.gameObject.SetActive(true);
-            Debug.Log($"Generated {cards.Count} decision cards for today");
+            Debug.Log($"Generated {todaysCards.Count} decision cards for today (including follow-ups)");
             
             // Tell the UI Master to show the cards
             uiMaster.GenerateTodaysCards();
@@ -100,7 +103,7 @@ public class DecisionCardManager : MonoBehaviour
                TimeManager.Instance.SetTimePauseState(true);
             }
         }
-        else if (cards.Count == 0)
+        else if (todaysCards.Count == 0)
         {
             Debug.Log("No decision cards to show today");
         }
@@ -166,6 +169,13 @@ public class DecisionCardManager : MonoBehaviour
             if (card == null)
             {
                 Debug.LogWarning("Found null card in allDecisionCards list!");
+                continue;
+            }
+            
+            // Skip cards marked as follow-up only
+            if (card.isFollowUpOnly)
+            {
+                Debug.Log($"Card '{card.cardTitle}' not eligible: marked as follow-up only");
                 continue;
             }
             
@@ -576,9 +586,11 @@ public class DecisionCardManager : MonoBehaviour
             }
         }
         
+        // Add follow-up cards to today's cards so they appear
         foreach (var card in cardsToPresent)
         {
             todaysCards.Add(card);
+            Debug.Log($"Follow-up card '{card.cardTitle}' added to today's cards");
         }
     }
     

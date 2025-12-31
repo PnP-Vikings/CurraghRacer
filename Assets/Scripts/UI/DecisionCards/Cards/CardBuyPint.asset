@@ -29,6 +29,7 @@ MonoBehaviour:
     energyChange: 0
     moraleChange: 20
     happinessChange: 0
+    timeLost: 0
     affectsStats: 0
     statChanges:
       strength: 0
@@ -44,6 +45,7 @@ MonoBehaviour:
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -51,6 +53,10 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     failureOutcome:
       outcomeMessage: 
       coinsChange: 0
@@ -58,6 +64,7 @@ MonoBehaviour:
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -65,10 +72,16 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     affectsAvailability: 0
     daysUnavailable: 0
-    followUpCard: {fileID: 0}
+    hasFollowUp: 1
+    followUpCard: {fileID: 11400000, guid: 6cac2e195d7ec2645a53842c424217ae, type: 2}
     daysUntilFollowUp: 1
+    followUpChance: 100
   optionB:
     optionText: Save the Coins but moral may lower
     optionDescription: 
@@ -76,6 +89,7 @@ MonoBehaviour:
     energyChange: 0
     moraleChange: -15
     happinessChange: 0
+    timeLost: 0
     affectsStats: 0
     statChanges:
       strength: 0
@@ -91,6 +105,7 @@ MonoBehaviour:
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -98,6 +113,10 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     failureOutcome:
       outcomeMessage: 
       coinsChange: 0
@@ -105,6 +124,7 @@ MonoBehaviour:
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -112,8 +132,14 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     affectsAvailability: 0
     daysUnavailable: 0
+    hasFollowUp: 0
     followUpCard: {fileID: 0}
     daysUntilFollowUp: 1
+    followUpChance: 100
   appearanceWeight: 50

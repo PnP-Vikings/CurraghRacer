@@ -14,6 +14,9 @@ public class DecisionCard : ScriptableObject
     [Tooltip("Category of this decision card")]
     public CardCategory category = CardCategory.TeamMember;
     
+    [Tooltip("Is this card ONLY for follow-ups? (will not appear in daily card generation)")]
+    public bool isFollowUpOnly = false;
+    
     [Tooltip("Minimum day for this card to appear")]
     public int minDayToAppear = 1;
     
