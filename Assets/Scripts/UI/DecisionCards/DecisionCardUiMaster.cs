@@ -64,8 +64,8 @@ public class DecisionCardUiMaster : MonoBehaviour
            return;
        }
        
-       // Get cards from manager
-       List<DecisionCard> todaysCards = DecisionCardManager.Instance.GenerateDailyCards();
+       // Get cards from manager (without regenerating)
+       List<DecisionCard> todaysCards = DecisionCardManager.Instance.GetTodaysCardList();
        
        Debug.Log($"Received {todaysCards.Count} cards from manager");
        

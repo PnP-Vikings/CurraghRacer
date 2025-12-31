@@ -114,6 +114,14 @@ public class DecisionCardManager : MonoBehaviour
     }
     
     /// <summary>
+    /// Get today's cards (without regenerating)
+    /// </summary>
+    public List<DecisionCard> GetTodaysCardList()
+    {
+        return todaysCards;
+    }
+    
+    /// <summary>
     /// Generate cards for the current day
     /// </summary>
     public List<DecisionCard> GenerateDailyCards()
@@ -600,14 +608,6 @@ public class DecisionCardManager : MonoBehaviour
     public TeamMember GetCurrentTargetMember()
     {
         return currentTargetMember;
-    }
-    
-    /// <summary>
-    /// Get today's cards
-    /// </summary>
-    public List<DecisionCard> GetTodaysCards()
-    {
-        return todaysCards;
     }
     
     /// <summary>
