@@ -49,7 +49,9 @@ public class TimeManager : MonoBehaviour
     [SerializeField, Range(0f, 1f)] private float timeMultiplier = 1f;
     private int daysPassed = 0;
     private bool newItemSpawned = false;
-
+    [SerializeField] private bool isTimePaused = false;
+    
+    
     // Calendar variables
     [SerializeField] private int currentDay = 1;
     [SerializeField] private int currentMonth = 0; // 0-based index (0 = January)
@@ -340,7 +342,7 @@ public class TimeManager : MonoBehaviour
     
     public void Update()
     {
-        if (GameManager.Instance.GameStarted && useRealTimeDayDuration)
+        if (GameManager.Instance.GameStarted && useRealTimeDayDuration && !isTimePaused)
         {
             UpdateTimeRealTime(Time.deltaTime);
         }
@@ -508,9 +510,19 @@ public class TimeManager : MonoBehaviour
     }
     
     
-    public bool realtimeDayDurationEnabled()
+    public bool RealtimeDayDurationEnabled()
     {
         return useRealTimeDayDuration;
+    }
+    
+    public void SetTimePauseState(bool paused)
+    {
+        isTimePaused = paused;
+    }
+    
+    public bool GetIsTimePaused()
+    {
+        return isTimePaused;
     }
     /// <summary>
     /// Alternative method using current date as start date

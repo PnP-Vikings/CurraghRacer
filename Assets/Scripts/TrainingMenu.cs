@@ -230,7 +230,7 @@ public class TrainingMenu : MonoBehaviour
                 PlayerStatsView.Instance.DisplayInfo("It's getting late, consider resting soon.", 1, Color.yellow);
             }
             
-            if(!TimeManager.Instance.realtimeDayDurationEnabled()) 
+            if(!TimeManager.Instance.RealtimeDayDurationEnabled()) 
             {TimeManager.Instance.AdvanceTimeByHours(3);}
         }
         

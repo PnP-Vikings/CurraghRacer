@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class DecisionCardManager : MonoBehaviour
 {
@@ -23,8 +25,10 @@ public class DecisionCardManager : MonoBehaviour
     public UnityEvent<DecisionOption, bool> OnDecisionMade; // option, wasSuccess
     public UnityEvent OnAllCardsProcessed;
     
+    
     // Tracking
     private Dictionary<DecisionCard, int> cardLastShownDay = new Dictionary<DecisionCard, int>();
+    private Dictionary<DecisionCard, int> scheduledFollowUps = new Dictionary<DecisionCard, int>();
     private List<DecisionCard> todaysCards = new List<DecisionCard>();
     private DecisionCard currentCard;
     private TeamMember currentTargetMember;
@@ -55,6 +59,7 @@ public class DecisionCardManager : MonoBehaviour
         if (TimeManager.Instance != null)
         {
             TimeManager.Instance.onNewDay.AddListener(OnNewDay);
+            OnAllCardsProcessed.AddListener(RestartTimeAfterCards);
             Debug.Log("DecisionCardManager subscribed to TimeManager.onNewDay");
         }
         else
@@ -81,13 +86,19 @@ public class DecisionCardManager : MonoBehaviour
         
         // Generate today's cards
         List<DecisionCard> cards = GenerateDailyCards();
-        
+        ProcessScheduledFollowUps();
         if (cards.Count > 0 && uiMaster != null)
         {
             uiMaster.gameObject.SetActive(true);
             Debug.Log($"Generated {cards.Count} decision cards for today");
+            
             // Tell the UI Master to show the cards
             uiMaster.GenerateTodaysCards();
+            
+            if(TimeManager.Instance != null)
+            {
+               TimeManager.Instance.SetTimePauseState(true);
+            }
         }
         else if (cards.Count == 0)
         {
@@ -516,7 +527,32 @@ public class DecisionCardManager : MonoBehaviour
     {
         // This would integrate with your calendar/event system
         Debug.Log($"Follow-up card '{followUp.cardTitle}' scheduled in {daysUntil} days");
-        // TODO: Integrate with CalendarEvents or TimeManager
+        
+        if(!scheduledFollowUps.ContainsKey(followUp))
+        {
+            scheduledFollowUps.Add(followUp, daysUntil);
+        }
+    }
+    
+    private void ProcessScheduledFollowUps()
+    {
+        List<DecisionCard> cardsToPresent = new List<DecisionCard>();
+        
+        List<DecisionCard> keys = new List<DecisionCard>(scheduledFollowUps.Keys);
+        foreach (var card in keys)
+        {
+            scheduledFollowUps[card]--;
+            if (scheduledFollowUps[card] <= 0)
+            {
+                cardsToPresent.Add(card);
+                scheduledFollowUps.Remove(card);
+            }
+        }
+        
+        foreach (var card in cardsToPresent)
+        {
+            todaysCards.Add(card);
+        }
     }
     
     /// <summary>
@@ -597,6 +633,19 @@ public class DecisionCardManager : MonoBehaviour
         currentTargetMember = null;
         
         Debug.Log("DecisionCardManager reset - all card history cleared for new game");
+    }
+    
+    private void RestartTimeAfterCards()
+    {
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.SetTimePauseState(false);
+        }
+    }
+    private void OnDisable()
+    {
+        OnCardPresented.RemoveAllListeners();
+        OnDecisionMade.RemoveAllListeners();
     }
 }
 

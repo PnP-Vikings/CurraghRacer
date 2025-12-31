@@ -17,8 +17,7 @@ public class DecisionCardUiMaster : MonoBehaviour
    [Header("Swipe Settings")]
    public float swipeThreshold = 50f; // Minimum x position to consider as a swipe
    
-   [Header("Events")]
-   public UnityEvent OnAllCardsProcessed;
+   
    
    // State tracking
    public bool isDragging = false;
@@ -30,6 +29,14 @@ public class DecisionCardUiMaster : MonoBehaviour
    {
        // No need to clear cards since we instantiate dynamically
        ResetBackgroundColor();
+   }
+   
+   private void OnEnable()
+   {
+       /*if (TimeManager.Instance != null)
+       {
+           TimeManager.Instance.onNewDay.AddListener(GenerateTodaysCards);
+       }*/
    }
    
    /// <summary>
@@ -65,7 +72,7 @@ public class DecisionCardUiMaster : MonoBehaviour
        if (todaysCards.Count == 0)
        {
            Debug.Log("No cards to show today");
-           OnAllCardsProcessed?.Invoke();
+           DecisionCardManager.Instance.OnAllCardsProcessed?.Invoke();
            return;
        }
        
@@ -145,7 +152,7 @@ public class DecisionCardUiMaster : MonoBehaviour
        {
            // No more cards
            Debug.Log("All cards processed for today");
-           OnAllCardsProcessed?.Invoke();
+           DecisionCardManager.Instance.OnAllCardsProcessed?.Invoke();
            ResetBackgroundColor();
            this.gameObject.SetActive(false); // Hide themaster UI 
        }
@@ -251,4 +258,22 @@ public class DecisionCardUiMaster : MonoBehaviour
            yield return null;
        }
    }
+   
+   
+   public void PauseTimeWhileShowingCards()
+   {
+       if(TimeManager.Instance != null)
+       {
+           TimeManager.Instance.SetTimePauseState(true);
+       }
+   }
+   
+    public void ResumeTimeAfterCards()
+    {
+         if(TimeManager.Instance != null)
+         {
+              TimeManager.Instance.SetTimePauseState(false);
+         }
+    }
+   
 }
