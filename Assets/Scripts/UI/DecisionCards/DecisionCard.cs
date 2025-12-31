@@ -14,6 +14,9 @@ public class DecisionCard : ScriptableObject
     [Tooltip("Category of this decision card")]
     public CardCategory category = CardCategory.TeamMember;
     
+    [Tooltip("Is this card ONLY for follow-ups? (will not appear in daily card generation)")]
+    public bool isFollowUpOnly = false;
+    
     [Tooltip("Minimum day for this card to appear")]
     public int minDayToAppear = 1;
     
@@ -51,6 +54,7 @@ public enum CardCategory
     Equipment,       // Boat/equipment decisions
     Event,           // Random events
     Opportunity,     // Special opportunities
+    TimeManagement,  // Time/resource allocation
     Crisis           // Urgent problems
 }
 
@@ -77,6 +81,9 @@ public class DecisionOption
     
     [Tooltip("Happiness change for targeted team member")]
     public int happinessChange = 0;
+    
+    [Tooltip("Time gained/lost")]
+    public int timeLost = 0;
     
     [Header("Stat Effects")]
     [Tooltip("Apply stat changes to the targeted team member")]
@@ -107,10 +114,17 @@ public class DecisionOption
     
     [Header("Follow-up")]
     [Tooltip("Does this decision trigger a follow-up card?")]
+    public bool hasFollowUp = false;
+    
+    [Tooltip("The follow-up card to trigger")]
     public DecisionCard followUpCard;
     
     [Tooltip("Days until follow-up card appears")]
     public int daysUntilFollowUp = 1;
+    
+    [Tooltip("Probability of follow-up occurring (0-100, 100 = guaranteed)")]
+    [Range(0, 100)]
+    public int followUpChance = 100;
 }
 
 [System.Serializable]
@@ -124,6 +138,7 @@ public class ConsequenceOutcome
     public int moraleChange = 0;
     public int happinessChange = 0;
     public int experienceChange = 0;
+    public int timeLost = 0;
     
     [Tooltip("Injury chance (0-100)")]
     [Range(0, 100)]
@@ -133,5 +148,19 @@ public class ConsequenceOutcome
     public int injuryDays = 0;
     
     public CharacterStats statChanges;
+    
+    [Header("Follow-up")]
+    [Tooltip("Does this outcome trigger a follow-up card?")]
+    public bool hasFollowUp = false;
+    
+    [Tooltip("The follow-up card to trigger")]
+    public DecisionCard followUpCard;
+    
+    [Tooltip("Days until follow-up card appears")]
+    public int daysUntilFollowUp = 1;
+    
+    [Tooltip("Probability of follow-up occurring (0-100, 100 = guaranteed)")]
+    [Range(0, 100)]
+    public int followUpChance = 100;
 }
 

@@ -302,4 +302,6 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         rectTransform.anchoredPosition = originalPosition;
         rectTransform.rotation = Quaternion.identity;
     }
+    
+    
 }

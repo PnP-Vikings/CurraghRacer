@@ -26,6 +26,10 @@ public class SaveData
     
     [Header("Calendar Data")]
     public CalendarSaveData calendarData;
+    
+    [Header("Time Data")]
+    public TimeSaveData timeData;
+    
     [Header("Bill Data")]
     public BillSaveData billData;
     
@@ -34,6 +38,8 @@ public class SaveData
     
     [Header("Decision Card Data")]
     public DecisionCardSaveData decisionCardData;   
+    
+    
 
     public SaveData()
     {
@@ -45,6 +51,7 @@ public class SaveData
         billData = new BillSaveData();
         teamManagerData = new TeamManagerSaveData();
         decisionCardData = new DecisionCardSaveData();
+        timeData = new TimeSaveData();
     }
 }
 
@@ -375,6 +382,11 @@ public class CalendarSaveData
     public DayEventSaveData[] scheduledEvents;
 }
 
+[System.Serializable]
+public class TimeSaveData
+{
+    public float timeOfDay;
+}
 [System.Serializable]
 public class CompletedRaceSaveData
 {
@@ -902,6 +914,12 @@ public class SaveSystem : MonoBehaviour
             saveData.decisionCardData.cardHistory = DecisionCardManager.Instance.GetCardHistory();
         }
 
+        // Save time data
+        if (TimeManager.Instance != null)
+        {
+            saveData.timeData.timeOfDay = TimeManager.Instance.GetTimeOfDay();
+        }
+        
         return saveData;
     }
 
@@ -1008,7 +1026,6 @@ public class SaveSystem : MonoBehaviour
         }
         
         // Apply Bills Data
-        
         if (BillsController.Instance != null && saveData.billData != null)
         {
             BillsController.Instance.bills = saveData.billData.bills != null ? new List<Bill>(saveData.billData.bills) : new List<Bill>();
@@ -1020,6 +1037,7 @@ public class SaveSystem : MonoBehaviour
                 BillsController.Instance.GenerateBills();
             }
         }
+        
         // Apply Team Manager Data
         if (TeamManager.Instance != null && saveData.teamManagerData != null)
         {
@@ -1088,6 +1106,12 @@ public class SaveSystem : MonoBehaviour
         {
             DecisionCardManager.Instance.RestoreCardHistory(saveData.decisionCardData.cardHistory);
             Debug.Log($"Restored {saveData.decisionCardData.cardHistory.Count} card history entries");
+        }
+        
+        // Apply time data
+        if (TimeManager.Instance != null && saveData.timeData != null)
+        {
+            TimeManager.Instance.SetTimeOfDay(saveData.timeData.timeOfDay);
         }
     }
 

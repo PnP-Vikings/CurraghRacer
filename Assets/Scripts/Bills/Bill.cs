@@ -34,15 +34,34 @@ public class Bill
     /// <returns>True if the bill was paid, false otherwise.</returns>
     public bool PayBill()
     {
-        if (PlayerManager.Instance.coins >= amountDue && !isPaid)
+        if (PlayerManager.Instance.GetPlayerCoins() >= amountDue && !isPaid)
         {
-            PlayerManager.Instance.coins -= amountDue;
+            PlayerManager.Instance.PurchaseItem(amountDue, PurchaseType.Bill);
             isPaid = true;
             Debug.Log($"Bill '{billName} {billType}  paid. Amount: {amountDue}");
             return true;
         }
         Debug.Log($"Not enough coins to pay bill '{billName}' or it is already paid.");
         return false;
+    }
+    
+    public bool BillIsOverdueBy(int days)
+    {
+        return isOverdue && (daysUntilDue <= -days);
+    }
+    
+    public void ProcessAutoPay()
+    {
+        if (!isPaid)
+        {
+            PlayerManager.Instance.PurchaseItem(amountDue, PurchaseType.BillAutoPay);
+            isPaid = true;
+            Debug.Log($"Bill '{billName} {billType} auto-paid. Amount: {amountDue}");
+        }
+        else
+        {
+            Debug.Log($"Bill '{billName}' is already paid. No auto-pay needed.");
+        }
     }
 
     /// <summary>
@@ -59,6 +78,7 @@ public class Bill
         amountDue += lateFeeAmount;
         Debug.Log($"Late fee of {lateFeeAmount} applied to bill '{billName}'. New amount: {amountDue}");
     }
+    
 }
 
 public enum BillType

@@ -10,26 +10,30 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: d0662b00c2df38e479533fc145ae5e26, type: 3}
-  m_Name: CardBuyPint
+  m_Name: CardSleptIn2Hours
   m_EditorClassIdentifier: 
-  cardTitle: Buy your team a round
-  cardDescription: Buy your team a round - This will affect your entire team
+  cardTitle: Crazy Night
+  cardDescription: 'You and the team had a crazy night
+
+    and accidentally slept
+    in Lost 2 hours of the day  '
   cardImage: {fileID: 0}
-  category: 1
+  category: 6
+  isFollowUpOnly: 1
   minDayToAppear: 1
-  canRepeat: 1
-  cooldownDays: 3
+  canRepeat: 0
+  cooldownDays: 0
   targetsSpecificMember: 0
   specificTargetMember: {fileID: 0}
   requiredAttitudes: 
   optionA:
-    optionText: Spend 20 On Buying The lads a round may improve team morale
+    optionText: 'Late Start to the day '
     optionDescription: 
-    coinsChange: -20
+    coinsChange: 0
     energyChange: 0
-    moraleChange: 20
+    moraleChange: 0
     happinessChange: 0
-    timeLost: 0
+    timeLost: 2
     affectsStats: 0
     statChanges:
       strength: 0
@@ -78,18 +82,18 @@ MonoBehaviour:
       followUpChance: 100
     affectsAvailability: 0
     daysUnavailable: 0
-    hasFollowUp: 1
-    followUpCard: {fileID: 11400000, guid: 6cac2e195d7ec2645a53842c424217ae, type: 2}
+    hasFollowUp: 0
+    followUpCard: {fileID: 0}
     daysUntilFollowUp: 1
     followUpChance: 100
   optionB:
-    optionText: Save the Coins but moral may lower
+    optionText: Late Start to the day
     optionDescription: 
     coinsChange: 0
     energyChange: 0
-    moraleChange: -15
+    moraleChange: 0
     happinessChange: 0
-    timeLost: 0
+    timeLost: 2
     affectsStats: 0
     statChanges:
       strength: 0

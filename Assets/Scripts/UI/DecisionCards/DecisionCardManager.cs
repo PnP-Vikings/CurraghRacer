@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using UnityEngine.Events;
+using Random = UnityEngine.Random;
 
 public class DecisionCardManager : MonoBehaviour
 {
@@ -23,8 +25,10 @@ public class DecisionCardManager : MonoBehaviour
     public UnityEvent<DecisionOption, bool> OnDecisionMade; // option, wasSuccess
     public UnityEvent OnAllCardsProcessed;
     
+    
     // Tracking
     private Dictionary<DecisionCard, int> cardLastShownDay = new Dictionary<DecisionCard, int>();
+    private Dictionary<DecisionCard, int> scheduledFollowUps = new Dictionary<DecisionCard, int>();
     private List<DecisionCard> todaysCards = new List<DecisionCard>();
     private DecisionCard currentCard;
     private TeamMember currentTargetMember;
@@ -55,6 +59,7 @@ public class DecisionCardManager : MonoBehaviour
         if (TimeManager.Instance != null)
         {
             TimeManager.Instance.onNewDay.AddListener(OnNewDay);
+            OnAllCardsProcessed.AddListener(RestartTimeAfterCards);
             Debug.Log("DecisionCardManager subscribed to TimeManager.onNewDay");
         }
         else
@@ -80,16 +85,25 @@ public class DecisionCardManager : MonoBehaviour
         Debug.Log("New day started - generating decision cards");
         
         // Generate today's cards
-        List<DecisionCard> cards = GenerateDailyCards();
+        GenerateDailyCards();
         
-        if (cards.Count > 0 && uiMaster != null)
+        // Process follow-up cards AFTER generating daily cards
+        ProcessScheduledFollowUps();
+        
+        if (todaysCards.Count > 0 && uiMaster != null)
         {
             uiMaster.gameObject.SetActive(true);
-            Debug.Log($"Generated {cards.Count} decision cards for today");
+            Debug.Log($"Generated {todaysCards.Count} decision cards for today (including follow-ups)");
+            
             // Tell the UI Master to show the cards
             uiMaster.GenerateTodaysCards();
+            
+            if(TimeManager.Instance != null)
+            {
+               TimeManager.Instance.SetTimePauseState(true);
+            }
         }
-        else if (cards.Count == 0)
+        else if (todaysCards.Count == 0)
         {
             Debug.Log("No decision cards to show today");
         }
@@ -97,6 +111,14 @@ public class DecisionCardManager : MonoBehaviour
         {
             Debug.LogWarning("DecisionCardUiMaster not assigned! Cannot display cards.");
         }
+    }
+    
+    /// <summary>
+    /// Get today's cards (without regenerating)
+    /// </summary>
+    public List<DecisionCard> GetTodaysCardList()
+    {
+        return todaysCards;
     }
     
     /// <summary>
@@ -155,6 +177,13 @@ public class DecisionCardManager : MonoBehaviour
             if (card == null)
             {
                 Debug.LogWarning("Found null card in allDecisionCards list!");
+                continue;
+            }
+            
+            // Skip cards marked as follow-up only
+            if (card.isFollowUpOnly)
+            {
+                Debug.Log($"Card '{card.cardTitle}' not eligible: marked as follow-up only");
                 continue;
             }
             
@@ -318,10 +347,14 @@ public class DecisionCardManager : MonoBehaviour
             Debug.Log($"{currentTargetMember.memberName} unavailable for {option.daysUnavailable} days");
         }
         
-        // Schedule follow-up card
-        if (option.followUpCard != null)
+        // Schedule follow-up card if enabled and probability check passes
+        if (option.hasFollowUp && option.followUpCard != null)
         {
-            ScheduleFollowUpCard(option.followUpCard, option.daysUntilFollowUp);
+            int roll = Random.Range(0, 100);
+            if (roll < option.followUpChance)
+            {
+                ScheduleFollowUpCard(option.followUpCard, option.daysUntilFollowUp);
+            }
         }
         
         OnDecisionMade?.Invoke(option, wasSuccess);
@@ -357,6 +390,12 @@ public class DecisionCardManager : MonoBehaviour
         if (option.moraleChange != 0)
         {
             ApplyMoraleToAllMembers(option.moraleChange);
+        }
+        
+        if (option.timeLost != 0 && TimeManager.Instance != null)
+        {
+            TimeManager.Instance.AdjustTimeOfDay(+option.timeLost);
+            Debug.Log($"Time adjusted by {+option.timeLost} hours");
         }
         
         // Apply to target member (individual effects)
@@ -400,6 +439,13 @@ public class DecisionCardManager : MonoBehaviour
             );
         }
         
+        // Time adjustment
+        if (outcome.timeLost != 0 && TimeManager.Instance != null)
+        {
+            TimeManager.Instance.AdjustTimeOfDay(+outcome.timeLost);
+            Debug.Log($"Time adjusted by {+outcome.timeLost} hours");
+        }
+        
         // Apply morale change to ALL team members
         if (outcome.moraleChange != 0)
         {
@@ -438,6 +484,16 @@ public class DecisionCardManager : MonoBehaviour
                     currentTargetMember.fitness.Injure(randomInjury);
                     Debug.Log($"{currentTargetMember.memberName} suffered a {randomInjury} injury!");
                 }
+            }
+        }
+        
+        // Schedule follow-up card if enabled and probability check passes
+        if (outcome.hasFollowUp && outcome.followUpCard != null)
+        {
+            int roll = Random.Range(0, 100);
+            if (roll < outcome.followUpChance)
+            {
+                ScheduleFollowUpCard(outcome.followUpCard, outcome.daysUntilFollowUp);
             }
         }
     }
@@ -516,7 +572,34 @@ public class DecisionCardManager : MonoBehaviour
     {
         // This would integrate with your calendar/event system
         Debug.Log($"Follow-up card '{followUp.cardTitle}' scheduled in {daysUntil} days");
-        // TODO: Integrate with CalendarEvents or TimeManager
+        
+        if(!scheduledFollowUps.ContainsKey(followUp))
+        {
+            scheduledFollowUps.Add(followUp, daysUntil);
+        }
+    }
+    
+    private void ProcessScheduledFollowUps()
+    {
+        List<DecisionCard> cardsToPresent = new List<DecisionCard>();
+        
+        List<DecisionCard> keys = new List<DecisionCard>(scheduledFollowUps.Keys);
+        foreach (var card in keys)
+        {
+            scheduledFollowUps[card]--;
+            if (scheduledFollowUps[card] <= 0)
+            {
+                cardsToPresent.Add(card);
+                scheduledFollowUps.Remove(card);
+            }
+        }
+        
+        // Add follow-up cards to today's cards so they appear
+        foreach (var card in cardsToPresent)
+        {
+            todaysCards.Add(card);
+            Debug.Log($"Follow-up card '{card.cardTitle}' added to today's cards");
+        }
     }
     
     /// <summary>
@@ -525,14 +608,6 @@ public class DecisionCardManager : MonoBehaviour
     public TeamMember GetCurrentTargetMember()
     {
         return currentTargetMember;
-    }
-    
-    /// <summary>
-    /// Get today's cards
-    /// </summary>
-    public List<DecisionCard> GetTodaysCards()
-    {
-        return todaysCards;
     }
     
     /// <summary>
@@ -597,6 +672,19 @@ public class DecisionCardManager : MonoBehaviour
         currentTargetMember = null;
         
         Debug.Log("DecisionCardManager reset - all card history cleared for new game");
+    }
+    
+    private void RestartTimeAfterCards()
+    {
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.SetTimePauseState(false);
+        }
+    }
+    private void OnDisable()
+    {
+        OnCardPresented.RemoveAllListeners();
+        OnDecisionMade.RemoveAllListeners();
     }
 }
 

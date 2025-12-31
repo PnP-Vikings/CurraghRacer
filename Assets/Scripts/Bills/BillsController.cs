@@ -66,6 +66,13 @@ public class BillsController : MonoBehaviour
                     PlayerStatsView.Instance.DisplayInfo($"Your {bill.billName} bill of amount €{bill.amount} is due again", 3);
                 }
             }
+
+            if (bill.BillIsOverdueBy(5) && !bill.isPaid)
+            {
+                float cost = bill.amountDue;
+                bill.ProcessAutoPay();
+                ProcessBillAfterPayment(bill, true, cost);
+            }
         }
         
         // Collect bills that need to be moved from recurringPaidBills to bills
@@ -126,37 +133,13 @@ public class BillsController : MonoBehaviour
     {
         return PlayerManager.Instance.coins >= bill.amountDue;
     }
-    
+
     public bool PayBill(Bill bill)
     {
-        if (PlayerManager.Instance.PurchaseItem(bill.amountDue))
+        float cost = bill.amountDue;
+        if (PlayerManager.Instance.PurchaseItem(bill.amountDue, PurchaseType.Bill))
         {
-            if(!bill.isRecurring)
-            {
-                bill.isPaid = true;
-                if(PlayerStatsView.Instance != null)
-                {
-                    PlayerStatsView.Instance.ClearInfo(); 
-                    PlayerStatsView.Instance.DisplayInfo($"You have paid your {bill.billName} bill of amount €{bill.amountDue}", 3);
-                }
-                bill.amountDue = 0; // Reset amount due
-                bills.Remove(bill);
-            }
-            else
-            {
-                bill.isPaid = true;
-                
-                if(PlayerStatsView.Instance != null)
-                {
-                   PlayerStatsView.Instance.ClearInfo(); 
-                   PlayerStatsView.Instance.DisplayInfo($"You have paid your {bill.billName} bill of amount €{bill.amountDue}", 3);
-                }
-                bill.amountDue = 0; // Reset amount due
-                
-                recurringPaidBills.Add(bill);
-                bills.Remove(bill);
-                
-            }
+            ProcessBillAfterPayment(bill, false, cost);
             
             Debug.Log($"Paid {bill.billName} bill of amount {bill.amount}");
             return true;
@@ -173,6 +156,38 @@ public class BillsController : MonoBehaviour
             return false;
         }
     }
+    
+    
+    private void ProcessBillAfterPayment(Bill bill,bool isAutoPay = false,float cost = 0)
+    {
+        if(!bill.isRecurring)
+        {
+            bill.isPaid = true;
+            bill.amountDue = 0; // Reset amount due
+            bills.Remove(bill);
+        }
+        else
+        {
+            bill.isPaid = true;
+            bill.amountDue = 0; // Reset amount due
+            recurringPaidBills.Add(bill);
+            bills.Remove(bill);
+        }
+        
+        if (PlayerStatsView.Instance == null) return;
+        
+        if (!isAutoPay)
+        {
+            PlayerStatsView.Instance.ClearInfo(); 
+            PlayerStatsView.Instance.DisplayInfo($"You have paid your {bill.billName} bill of amount €{cost}", 3);
+        }
+        else
+        {
+            PlayerStatsView.Instance.DisplayInfo($"Your {bill.billName} bill has been auto-paid due to being overdue for 10 days\n You were Charged {cost}", 3);
+        }
+    }
+    
+   
   
     
    
