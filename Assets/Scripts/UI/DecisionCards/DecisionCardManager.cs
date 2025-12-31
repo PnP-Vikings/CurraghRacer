@@ -329,10 +329,14 @@ public class DecisionCardManager : MonoBehaviour
             Debug.Log($"{currentTargetMember.memberName} unavailable for {option.daysUnavailable} days");
         }
         
-        // Schedule follow-up card
-        if (option.followUpCard != null)
+        // Schedule follow-up card if enabled and probability check passes
+        if (option.hasFollowUp && option.followUpCard != null)
         {
-            ScheduleFollowUpCard(option.followUpCard, option.daysUntilFollowUp);
+            int roll = Random.Range(0, 100);
+            if (roll < option.followUpChance)
+            {
+                ScheduleFollowUpCard(option.followUpCard, option.daysUntilFollowUp);
+            }
         }
         
         OnDecisionMade?.Invoke(option, wasSuccess);
@@ -462,6 +466,16 @@ public class DecisionCardManager : MonoBehaviour
                     currentTargetMember.fitness.Injure(randomInjury);
                     Debug.Log($"{currentTargetMember.memberName} suffered a {randomInjury} injury!");
                 }
+            }
+        }
+        
+        // Schedule follow-up card if enabled and probability check passes
+        if (outcome.hasFollowUp && outcome.followUpCard != null)
+        {
+            int roll = Random.Range(0, 100);
+            if (roll < outcome.followUpChance)
+            {
+                ScheduleFollowUpCard(outcome.followUpCard, outcome.daysUntilFollowUp);
             }
         }
     }

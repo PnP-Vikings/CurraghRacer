@@ -111,10 +111,17 @@ public class DecisionOption
     
     [Header("Follow-up")]
     [Tooltip("Does this decision trigger a follow-up card?")]
+    public bool hasFollowUp = false;
+    
+    [Tooltip("The follow-up card to trigger")]
     public DecisionCard followUpCard;
     
     [Tooltip("Days until follow-up card appears")]
     public int daysUntilFollowUp = 1;
+    
+    [Tooltip("Probability of follow-up occurring (0-100, 100 = guaranteed)")]
+    [Range(0, 100)]
+    public int followUpChance = 100;
 }
 
 [System.Serializable]
@@ -138,5 +145,19 @@ public class ConsequenceOutcome
     public int injuryDays = 0;
     
     public CharacterStats statChanges;
+    
+    [Header("Follow-up")]
+    [Tooltip("Does this outcome trigger a follow-up card?")]
+    public bool hasFollowUp = false;
+    
+    [Tooltip("The follow-up card to trigger")]
+    public DecisionCard followUpCard;
+    
+    [Tooltip("Days until follow-up card appears")]
+    public int daysUntilFollowUp = 1;
+    
+    [Tooltip("Probability of follow-up occurring (0-100, 100 = guaranteed)")]
+    [Range(0, 100)]
+    public int followUpChance = 100;
 }
 
