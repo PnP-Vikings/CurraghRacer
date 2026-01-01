@@ -10,6 +10,7 @@ public class PlayerManager : MonoBehaviour
     public List<TeamMember> team;
     public float energy= 100f; // Default energy value
     public float coins = 50f; // Default coins value
+    public float maxAmountOfDebt = -400f; // Maximum debt allowed
     public PlayerStatsView playerStatsView;
     
     private void Awake()
@@ -23,6 +24,9 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        
+        if(TimeManager.Instance != null)
+            TimeManager.Instance.onNewDay.AddListener(CheckForMaxDebt);
     }
     void Start()
     {
@@ -120,6 +124,7 @@ public class PlayerManager : MonoBehaviour
         coins += amount;
       //  if (coins < 0) coins = 0; // Prevent negative coins
         playerStatsView.UpdatePlayerStats();
+        CheckForDebtWarnings();
     }
     
     private bool CanAffordPurchase(float cost)
@@ -133,14 +138,28 @@ public class PlayerManager : MonoBehaviour
         {
             Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {coins-cost}coins.");
             ModifyPlayerCoins(-cost);
-            return true; // Changed from false to true - purchase went through despite debt
+            return true;
         }
         else if(!CanAffordPurchase(cost) && purchaseType == PurchaseType.BillAutoPay)
         {
             
             Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {coins-cost} coins.");
             ModifyPlayerCoins(-cost);
-            return true; // Changed from false to true - purchase went through despite debt
+            return true; 
+        }
+        else if(!CanAffordPurchase(cost) && purchaseType == PurchaseType.Cards)
+        {
+            
+            Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {coins-cost} coins.");
+            ModifyPlayerCoins(cost);
+            return true; 
+        }
+        else if(CanAffordPurchase(cost) && purchaseType == PurchaseType.Cards)
+        {
+            
+            Debug.Log($"Couldn't purchase {purchaseType}. You are now in debt by {coins-cost} coins.");
+            ModifyPlayerCoins(cost);
+            return true; 
         }
         else if (!CanAffordPurchase(cost) && purchaseType != PurchaseType.RaceEntry)
         {
@@ -228,8 +247,31 @@ public class PlayerManager : MonoBehaviour
         }
     }
 
-
-
+    public void CheckForDebtWarnings()
+    {
+        if (coins < 0)
+        {
+            if (PlayerStatsView.Instance != null)
+            {
+                PlayerStatsView.Instance.DisplayInfo("Warning: You are in debt! Earn more coins to avoid penalties.", 5);
+            }
+            Debug.LogWarning("Player is in debt!");
+        }
+    }
+    
+    public void CheckForMaxDebt()
+    {
+        if (coins <= maxAmountOfDebt)
+        {
+            if (PlayerStatsView.Instance != null)
+            {
+                PlayerStatsView.Instance.DisplayInfo("You have reached the maximum debt limit! Game Over.", 5);
+            }
+            Debug.LogError("Player has reached maximum debt limit!");
+            GameManager.Instance.TriggerGameOver();
+        }
+    }
+    
     
 }
 
@@ -240,6 +282,7 @@ public enum PurchaseType
         HireRacer,
         Bill,
         BillAutoPay,
+        Cards,
         Sleep,
         Training,
         Item
