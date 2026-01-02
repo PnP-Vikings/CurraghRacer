@@ -29,6 +29,7 @@ Shader "Custom/PixelWater"
         
         [Header(Pixelation Optional)]
         _PixelDensity("Pixel Density (0=smooth)", Range(0, 100)) = 0
+        _ColorSteps("Color Steps (0=smooth, 3-8=pixel)", Range(0, 16)) = 0
         
         [Header(Style Tweaks)]
         _Smoothness("Overall Smoothness", Range(0, 1)) = 0.5
@@ -84,6 +85,7 @@ Shader "Custom/PixelWater"
             float _FoamCutoff;
             
             float _PixelDensity;
+            float _ColorSteps;
             
             float _Smoothness;
             float _ColorVariation;
@@ -138,24 +140,29 @@ Shader "Custom/PixelWater"
             {
                 float2 worldUV = i.worldPos.xz;
                 
-                // Optional pixelation
-                float2 uv = worldUV;
+                float time = _Time.y * _WaveSpeed;
+                
+                // Apply pixelation to time as well for more pronounced effect
+                float pixelTime = time;
                 if (_PixelDensity > 0)
                 {
-                    uv = floor(worldUV * _PixelDensity) / _PixelDensity;
+                    // Pixelate the world UVs
+                    worldUV = floor(worldUV * _PixelDensity) / _PixelDensity;
+                    // Also quantize time for more retro feel (optional, but adds to pixel effect)
+                    pixelTime = floor(time * _PixelDensity * 0.5) / (_PixelDensity * 0.5);
                 }
                 
-                float time = _Time.y * _WaveSpeed;
+                float2 uv = worldUV;
                 
                 // Wave direction
                 float2 waveDir = normalize(float2(_WaveDirectionX, _WaveDirectionY) + 0.001);
                 
                 // Main wave pattern - creates the stripe effect
-                float wavePattern = dot(uv, waveDir) * _StripeCount + time * 2.0;
+                float wavePattern = dot(uv, waveDir) * _StripeCount + pixelTime * 2.0;
                 
                 // Add smooth flowing distortion
-                float distortion1 = sin(uv.x * 2.0 + time * 1.5) * cos(uv.y * 2.0 + time * 1.2);
-                float distortion2 = sin(uv.x * 1.3 - time * 1.0) * sin(uv.y * 1.7 + time * 0.8);
+                float distortion1 = sin(uv.x * 2.0 + pixelTime * 1.5) * cos(uv.y * 2.0 + pixelTime * 1.2);
+                float distortion2 = sin(uv.x * 1.3 - pixelTime * 1.0) * sin(uv.y * 1.7 + pixelTime * 0.8);
                 float distortion = (distortion1 + distortion2) * 0.5 * _StripeDistortion;
                 
                 wavePattern += distortion;
@@ -168,7 +175,7 @@ Shader "Custom/PixelWater"
                 wave = pow(wave, 1.0 / max(0.01, _Smoothness));
                 
                 // Add subtle color variation
-                float variation = fbm(uv * 0.5 + time * 0.2) * _ColorVariation;
+                float variation = fbm(uv * 0.5 + pixelTime * 0.2) * _ColorVariation;
                 wave = saturate(wave + variation);
                 
                 // Create three-tone color bands with smooth transitions
@@ -198,7 +205,7 @@ Shader "Custom/PixelWater"
                 }
                 
                 // Foam generation on wave peaks
-                float foamNoise = fbm(uv * _FoamScale + time * _FoamSpeed * 0.5);
+                float foamNoise = fbm(uv * _FoamScale + pixelTime * _FoamSpeed * 0.5);
                 float foamMask = smoothstep(_FoamCutoff, _FoamCutoff + 0.1, wave + foamNoise * 0.2);
                 
                 // Add foam with smooth blending
@@ -207,6 +214,12 @@ Shader "Custom/PixelWater"
                 // Apply brightness adjustment
                 waterColor.rgb += _Brightness;
                 waterColor.rgb = saturate(waterColor.rgb);
+                
+                // Color quantization for pixel art effect
+                if (_ColorSteps > 0)
+                {
+                    waterColor.rgb = floor(waterColor.rgb * _ColorSteps) / _ColorSteps;
+                }
                 
                 // Apply transparency
                 waterColor.a *= _Transparency;

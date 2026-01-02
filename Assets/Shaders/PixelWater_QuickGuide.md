@@ -33,6 +33,12 @@ Foam Details:
 
 Pixelation:
 - Pixel Density: 0 (keep at 0 for smooth water, increase for pixelated look)
+  * Try 30-50 for mild pixelation
+  * Try 60-80 for strong pixel art effect
+- Color Steps: 0 (keep at 0 for smooth colors, 4-8 for pixel art)
+  * 4 = very few color steps (retro pixel look)
+  * 6-8 = more gradual but still pixelated
+  * Works best combined with Pixel Density
 
 Style Tweaks:
 - Overall Smoothness: 0.5 (higher = softer transitions)
@@ -72,7 +78,10 @@ Style Tweaks:
 3. **Smoothness**: Higher values = softer, more organic looking water
 4. **Foam**: Keep foam amount low (0.2-0.4) for subtle effect
 5. **Wave Direction**: X=1, Y=0.25 creates diagonal waves that look natural
-6. **Pixelation**: Only use if you want pixel art style, otherwise keep at 0
+6. **Pixelation**: Use BOTH settings together for best pixel art effect:
+   - Pixel Density: 40-70 (creates chunky pixels)
+   - Color Steps: 4-7 (limits color palette)
+   - Keep both at 0 for smooth modern look
 
 ## Common Issues
 
