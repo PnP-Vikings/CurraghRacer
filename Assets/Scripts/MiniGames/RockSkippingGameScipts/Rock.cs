@@ -10,6 +10,7 @@ public class Rock : MonoBehaviour
     private int currentBounces = 0;
     private Rigidbody rb;
     public bool isThrown = false;
+    public RockType rockType;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -38,6 +39,13 @@ public class Rock : MonoBehaviour
         }
     }
     
+    public void SetStats(float acceleration, float bounceForce, int maxBounces)
+    {
+        this.acceleration = acceleration;
+        this.bounceForce = bounceForce;
+        this.maxBounces = maxBounces;
+    }
+    
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.CompareTag("Water"))
@@ -54,7 +62,7 @@ public class Rock : MonoBehaviour
         }
         else
         {
-            Destroy(gameObject, 2f); // Destroy rock after 2 seconds
+            Destroy(gameObject, 3f); // Destroy rock after 2 seconds
         }
     }
     
@@ -68,7 +76,7 @@ public class Rock : MonoBehaviour
     public void ThrowRock()
     {
         isThrown = true;
-        rb.linearVelocity = transform.forward * speed;
+        rb.linearVelocity = transform.forward * acceleration;
     }
     
    

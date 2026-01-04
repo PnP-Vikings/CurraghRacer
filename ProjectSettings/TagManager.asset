@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Selectable
   - RaceStart
+  - Water
   layers:
   - Default
   - TransparentFX
