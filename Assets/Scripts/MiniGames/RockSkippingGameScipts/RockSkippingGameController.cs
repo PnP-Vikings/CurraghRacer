@@ -12,7 +12,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     public List<Rock> availableRocksForThisSession;
     public Rock currentRock;
     public Transform rockSpawnPoint;
-    public Dictionary<Rock,int> rockScores = new Dictionary<Rock, int>();
+    public Dictionary<int, (Rock rock, int score)> rockScores = new Dictionary<int, (Rock, int)>();
     
     public void Awake()
     {
@@ -25,11 +25,6 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
               Rock selectedRock = rocksTypes[randomIndex];
               availableRocksForThisSession.Add(selectedRock);
               rockCounter++;
-       }
-
-       foreach (Rock rock in availableRocksForThisSession)
-       {
-           rockScores.Add(rock, 0);
        }
        
        
