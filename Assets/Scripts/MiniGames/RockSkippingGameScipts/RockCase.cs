@@ -10,11 +10,14 @@ public class RockCase : MonoBehaviour
    [SerializeField]List<Transform> rockSpawnPoints;
    public Vector3 baseTransform, baseTopRotation, baseTopTransform;
    
+   Sequence openCaseSequence;
    
    public void OpenCase()
    {
-       topCaseTransform.DOLocalRotate(new Vector3(-90,0,0),0.5f).SetEase(Ease.OutBack);
-       wholeCaseTransform.DOLocalMoveY(-0.2f,0.5f).SetEase(Ease.OutBack);
+         openCaseSequence = DOTween.Sequence();
+         openCaseSequence.Append(topCaseTransform.DOLocalRotate(baseTopRotation +new Vector3(-70,2.82f,0),3f).SetEase(Ease.OutBack)
+             ).Join(topCaseTransform.DOMove(baseTopTransform + new Vector3(0,0.2f,-.37f), 3f).SetEase(Ease.OutBack));
+      
    }
 
 
@@ -24,7 +27,7 @@ public class RockCase : MonoBehaviour
        baseTopRotation = topCaseTransform.eulerAngles;
        baseTopTransform = topCaseTransform.position;
        
-       
+       openCaseSequence.Kill();
        DOVirtual.DelayedCall(3 ,() => OpenCase());    
         
    }
