@@ -1,47 +1,185 @@
+using System;
 using DG.Tweening;
 using UnityEngine;
 
 public class RockVisual : MonoBehaviour
 {
-    GameObject rockVisualObject;
-    public bool onHovered = false;
-    public bool onSelected = false;
+    private GameObject rockVisualObject;
+    [SerializeField] private bool isHovered = false;
+    [SerializeField] private bool isSelected = false;
+    [SerializeField] private bool isInteractable = true;
+    
     public Rock rockData;
-    Sequence hoverSequence;
-    public void Initialize(Rock.RockType rockType, Rock Data)
+    private Sequence hoverSequence;
+    private Vector3 originalScale;
+    
+    public event Action<RockVisual> OnRockHoverEnter;
+    public event Action<RockVisual> OnRockHoverExit;
+    public event Action<RockVisual> OnRockClicked;
+    
+    private Material rockMaterial;
+    private Color originalColor;
+    private Color hoverColor = Color.yellow;
+    private Color selectedColor = Color.green;
+    
+    private bool isInitialized = false;
+    
+    public bool IsInteractable => isInteractable && !isSelected;
+    
+    public void Initialize(Rock Data)
     {
         rockData = Data;
+    }
+    
+    /// <summary>
+    /// Call this after the object is instantiated in the scene
+    /// </summary>
+    public void SetupAfterInstantiation()
+    {
+        if (isInitialized) return;
+        
         rockVisualObject = this.gameObject;
-        /*switch (rockType)
+        originalScale = transform.localScale;
+        
+        // Get material for color changes (only works on instantiated objects)
+        Renderer rend = GetComponent<Renderer>();
+        if (rend != null)
         {
-            case Rock.RockType.Small:
-                rockVisualObject.transform.localScale = Vector3.one * 1f;
-                rockVisualObject.GetComponent<Renderer>().material.color = Color.gray;
-                break;
-            case Rock.RockType.Medium:
-                rockVisualObject.transform.localScale = Vector3.one * 2f;
-                rockVisualObject.GetComponent<Renderer>().material.color = Color.blue;
-                break;
-            case Rock.RockType.Large:
-                rockVisualObject.transform.localScale = Vector3.one * 3f;
-                rockVisualObject.GetComponent<Renderer>().material.color = Color.black;
-                break;
-        }*/
+            rockMaterial = rend.material;
+            originalColor = rockMaterial.color;
+        }
+        else
+        {
+            Debug.LogWarning($"RockVisual {gameObject.name} has no Renderer component! Color changes won't work.");
+        }
         
+        // Ensure collider exists for raycast
+        if (GetComponent<Collider>() == null)
+        {
+            gameObject.AddComponent<BoxCollider>();
+            Debug.Log($"Added BoxCollider to {gameObject.name} for interaction");
+        }
         
+        isInitialized = true;
     }
     
-    public void RockIsHovered()
+    public void SetInteractable(bool interactable)
     {
-        onHovered = true;
+        isInteractable = interactable;
+        if (!interactable)
+        {
+            ResetVisuals();
+        }
+    }
+    
+    /// <summary>
+    /// Called when pointer enters this rock (from RockSelectionManager)
+    /// </summary>
+    public void OnPointerEnter()
+    {
+        if (!IsInteractable) return;
+        
+        isHovered = true;
+        OnRockHoverEnter?.Invoke(this);
+        PlayHoverAnimation();
+    }
+    
+    /// <summary>
+    /// Called when pointer exits this rock (from RockSelectionManager)
+    /// </summary>
+    public void OnPointerExit()
+    {
+        if (!IsInteractable && !isHovered) return;
+        
+        isHovered = false;
+        OnRockHoverExit?.Invoke(this);
+        StopHoverAnimation();
+    }
+    
+    /// <summary>
+    /// Called when this rock is clicked (from RockSelectionManager)
+    /// </summary>
+    public void OnPointerClick()
+    {
+        if (!IsInteractable) return;
+
+        if (isSelected)
+        {
+            isSelected = false;
+            OnRockClicked?.Invoke(this);
+            ResetVisuals();
+            return;
+        }
+        
+        isSelected = true;
+        OnRockClicked?.Invoke(this);
+        PlaySelectionAnimation();
+    }
+    
+    private void PlayHoverAnimation()
+    {
+        // Kill any existing sequence
+        hoverSequence?.Kill();
+        
         hoverSequence = DOTween.Sequence();
+        hoverSequence.Append(transform.DOScale(originalScale * 1.2f, 0.3f).SetEase(Ease.OutBack));
         
-        hoverSequence.Append(rockVisualObject.transform.DOScale(rockVisualObject.transform.localScale * 1.2f, 0.3f).SetEase(Ease.OutBack))
-            .Append(rockVisualObject.transform.DORotate(new Vector3(0, 360, 0), 1f, RotateMode.FastBeyond360).SetLoops(-1, LoopType.Restart).SetEase(Ease.Linear));
+        // Change color to hover color
+        if (rockMaterial != null)
+        {
+            rockMaterial.DOColor(hoverColor, 0.3f);
+        }
     }
     
-    public void RockIsSelected()
+    private void StopHoverAnimation()
     {
-        onSelected = true;
+        // Kill hover sequence
+        hoverSequence?.Kill();
+        
+        // Return to original scale and color
+        transform.DOScale(originalScale, 0.2f).SetEase(Ease.InBack);
+        
+        if (rockMaterial != null)
+        {
+            rockMaterial.DOColor(originalColor, 0.2f);
+        }
+    }
+    
+    private void PlaySelectionAnimation()
+    {
+        // Kill any existing sequence
+        hoverSequence?.Kill();
+        
+        // Scale up and change color
+        transform.DOScale(originalScale * 1.3f, 0.3f).SetEase(Ease.OutBack);
+        
+        if (rockMaterial != null)
+        {
+            rockMaterial.DOColor(selectedColor, 0.3f);
+        }
+        
+        // Add a gentle floating/rotating animation
+        hoverSequence = DOTween.Sequence();
+        hoverSequence.Append(transform.DOLocalMoveY(transform.localPosition.y + 0.2f, 0.5f).SetEase(Ease.InOutSine))
+            .SetLoops(-1, LoopType.Yoyo);
+    }
+    
+    public void ResetVisuals()
+    {
+        isHovered = false;
+        isSelected = false;
+        
+        hoverSequence?.Kill();
+        transform.DOScale(originalScale, 0.2f);
+        
+        if (rockMaterial != null)
+        {
+            rockMaterial.DOColor(originalColor, 0.2f);
+        }
+    }
+    
+    private void OnDestroy()
+    {
+        hoverSequence?.Kill();
     }
 }

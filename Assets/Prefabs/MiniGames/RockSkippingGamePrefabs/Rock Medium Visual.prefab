@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 3453713959352256853}
   - component: {fileID: 8929727773826341718}
   - component: {fileID: -4478952777074486313}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Rock Medium Visual
-  m_TagString: Untagged
+  m_TagString: Selectable
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -125,3 +125,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 612143eee51ff9940a3e626c8859d3f5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockVisual
+  isHovered: 0
+  isSelected: 0
+  isInteractable: 1
+  rockData: {fileID: 7214248525779169400, guid: dad2084ab94ae574f90809a850eab261, type: 3}

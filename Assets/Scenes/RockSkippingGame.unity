@@ -14990,6 +14990,7 @@ GameObject:
   m_Component:
   - component: {fileID: 810044237}
   - component: {fileID: 810044236}
+  - component: {fileID: 810044238}
   m_Layer: 0
   m_Name: Controller
   m_TagString: Untagged
@@ -15019,6 +15020,8 @@ MonoBehaviour:
   currentRock: {fileID: 0}
   rockSpawnPoint: {fileID: 0}
   rockCase: {fileID: 1954444127}
+  rockInfoUI: {fileID: 0}
+  rockSelectionManager: {fileID: 810044238}
 --- !u!4 &810044237
 Transform:
   m_ObjectHideFlags: 0
@@ -15034,6 +15037,23 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &810044238
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 810044235}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5d2ed20cc1074b22b613c7c8eaaa3775, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RockSelectionManager
+  raycastCamera: {fileID: 318556195}
+  rockLayer:
+    serializedVersion: 2
+    m_Bits: 512
+  rockTag: Selectable
 --- !u!1001 &811612953
 PrefabInstance:
   m_ObjectHideFlags: 0
