@@ -24,6 +24,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        {
               int randomIndex = Random.Range(0, rocksTypes.Count);
               Rock selectedRock = rocksTypes[randomIndex];
+              selectedRock.Initialize(rocksTypes[randomIndex].rockType);
               availableRocksForThisSession.Add(selectedRock);
               rockCounter++;
        }
@@ -31,12 +32,10 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        List<RockVisual> rocksToSpawn = new List<RockVisual>();
        foreach (var rock in availableRocksForThisSession)
          {
-            // rock.rockVisual.Initialize(rock.rockType);
+             rock.rockVisual.Initialize(rock.rockType,rock);
              rocksToSpawn.Add(rock.rockVisual);
          }
        rockCase.SpawnRocksInCase(rocksToSpawn);
-       
-       
     }
     
     public void Initialize(MiniGameManager manager, MiniGameData gameData)
@@ -59,6 +58,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         throw new System.NotImplementedException();
     }
 
+    
+    
 
     public enum Stages
     {
