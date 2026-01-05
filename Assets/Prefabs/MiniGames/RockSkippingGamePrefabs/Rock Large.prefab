@@ -131,7 +131,8 @@ MonoBehaviour:
   bounceForce: 5
   maxBounces: 3
   isThrown: 0
-  rockType: 1
+  rockType: 2
+  rockVisual: {fileID: 5718115337499312566, guid: a9f8155240233bc4c9ef25e3b6e79503, type: 3}
 --- !u!54 &8451794679427516483
 Rigidbody:
   m_ObjectHideFlags: 0

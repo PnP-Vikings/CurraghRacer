@@ -11,6 +11,7 @@ public class Rock : MonoBehaviour
     private Rigidbody rb;
     public bool isThrown = false;
     public RockType rockType;
+    public RockVisual rockVisual;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -48,6 +49,8 @@ public class Rock : MonoBehaviour
     
     void OnCollisionEnter(Collision collision)
     {
+        if(!isThrown) return;
+        
         if (collision.gameObject.CompareTag("Water"))
         {
             if (currentBounces < maxBounces)

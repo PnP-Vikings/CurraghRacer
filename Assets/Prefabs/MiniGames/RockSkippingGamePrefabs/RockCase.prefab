@@ -229,7 +229,7 @@ Transform:
   m_GameObject: {fileID: 3754739234854539812}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -0.31988525, y: 0.46987915, z: 0.038848877}
+  m_LocalPosition: {x: -0.3398853, y: 0.46987915, z: 0.038848877}
   m_LocalScale: {x: 0.16, y: 0.08, z: 0.16}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -544,7 +544,7 @@ Transform:
   m_GameObject: {fileID: 5085895694534440134}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.05810547, y: 0.46987915, z: 0.038848877}
+  m_LocalPosition: {x: 0.0810547, y: 0.46987915, z: 0.038848877}
   m_LocalScale: {x: 0.16, y: 0.08, z: 0.16}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -729,6 +729,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4824972667151623982}
+  - component: {fileID: 6327453825786568674}
   m_Layer: 0
   m_Name: RockCase
   m_TagString: Untagged
@@ -757,6 +758,29 @@ Transform:
   - {fileID: 7887300320211372825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &6327453825786568674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5839860286904374164}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b7bd7f8cc4ffe644f92bec569e044e9b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::RockCase
+  topCaseTransform: {fileID: 2781744598572315692}
+  wholeCaseTransform: {fileID: 4824972667151623982}
+  rockSpawnPoints:
+  - {fileID: 2581467864939960131}
+  - {fileID: 6956238780258330109}
+  - {fileID: 175409552424200088}
+  - {fileID: 7887300320211372825}
+  wholecaseBaseTransform: {x: 0, y: 0, z: 0}
+  baseTopRotation: {x: 0, y: 0, z: 0}
+  baseTopTransform: {x: 0, y: 0, z: 0}
+  rocksInCase: []
 --- !u!1 &6181874418433390648
 GameObject:
   m_ObjectHideFlags: 0
@@ -784,7 +808,7 @@ Transform:
   m_GameObject: {fileID: 6181874418433390648}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.2541504, y: 0.46987915, z: 0.038848877}
+  m_LocalPosition: {x: 0.3041504, y: 0.46987915, z: 0.038848877}
   m_LocalScale: {x: 0.16, y: 0.08, z: 0.16}
   m_ConstrainProportionsScale: 1
   m_Children: []
