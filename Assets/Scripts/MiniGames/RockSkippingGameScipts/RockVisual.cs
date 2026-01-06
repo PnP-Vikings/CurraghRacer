@@ -77,11 +77,16 @@ public class RockVisual : MonoBehaviour
     /// </summary>
     public void OnPointerEnter()
     {
-        if (!IsInteractable) return;
+        if (!isInteractable) return; // Only check base interactability, not selection state
         
         isHovered = true;
         OnRockHoverEnter?.Invoke(this);
-        PlayHoverAnimation();
+        
+        // Only play hover animation if not already selected
+        if (!isSelected)
+        {
+            PlayHoverAnimation();
+        }
     }
     
     /// <summary>
@@ -89,11 +94,16 @@ public class RockVisual : MonoBehaviour
     /// </summary>
     public void OnPointerExit()
     {
-        if (!IsInteractable && !isHovered) return;
+        if (!isInteractable) return; // Only check base interactability
         
         isHovered = false;
         OnRockHoverExit?.Invoke(this);
-        StopHoverAnimation();
+        
+        // Only stop hover animation if not selected
+        if (!isSelected)
+        {
+            StopHoverAnimation();
+        }
     }
     
     /// <summary>
@@ -101,16 +111,18 @@ public class RockVisual : MonoBehaviour
     /// </summary>
     public void OnPointerClick()
     {
-        if (!IsInteractable) return;
+        if (!isInteractable) return; // Only check base interactability, not selection state
 
         if (isSelected)
         {
+            // Deselect the rock
             isSelected = false;
             OnRockClicked?.Invoke(this);
             ResetVisuals();
             return;
         }
         
+        // Select the rock
         isSelected = true;
         OnRockClicked?.Invoke(this);
         PlaySelectionAnimation();

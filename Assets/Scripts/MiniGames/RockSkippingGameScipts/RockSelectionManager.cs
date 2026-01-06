@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -66,7 +67,7 @@ public class RockSelectionManager : MonoBehaviour
             // Check if we hit a rock
             RockVisual rock = hit.collider.GetComponent<RockVisual>();
             
-            if (rock != null && rock.IsInteractable)
+            if (rock != null)
             {
                 // Handle hover
                 if (currentHoveredRock != rock)
@@ -105,11 +106,22 @@ public class RockSelectionManager : MonoBehaviour
     
     private void ClearHover()
     {
-        if (currentHoveredRock != null)
+        if (RockSkippingGameController.Instance != null)
         {
-            currentHoveredRock.OnPointerExit();
-            lastHoveredRock = currentHoveredRock;
-            currentHoveredRock = null;
+            List<RockVisual> rocks = RockSkippingGameController.Instance.GetSpawnedRocksVisuals();
+            foreach (var rock in rocks)
+            {
+                if(currentHoveredRock != null && rock == currentHoveredRock)
+                {
+                    rock.OnPointerExit();
+                }
+                if (rock != currentHoveredRock)
+                {
+                    rock.OnPointerExit();
+                }
+                lastHoveredRock = currentHoveredRock;
+                currentHoveredRock = null;
+            }
         }
     }
     

@@ -2,14 +2,17 @@ using System.Collections.Generic;
 using JetBrains.Annotations;
 using MiniGames;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class RockSkippingGameController : MonoBehaviour,MiniGame
 {
+    public static RockSkippingGameController Instance { get; private set; }
     Stages stage = Stages.RockPicking;
     public int roundsToPlay = 3;
     public int currentRound = 0;
     public List<Rock> rocksTypes;
     public List<Rock> availableRocksForThisSession;
+    public RockVisual currentSelectedRock;
     public Rock currentRock;
     public Transform rockSpawnPoint;
     public Dictionary<int, (Rock rock, int score)> rockScores = new Dictionary<int, (Rock, int)>();
@@ -17,6 +20,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     
     [Header("Optional UI")]
     [SerializeField] private RockInfoUI rockInfoUI;
+    [SerializeField] private Button confirmSelectionButton;
     
     [Header("Input System Selection")]
     [SerializeField] private RockSelectionManager rockSelectionManager;
@@ -26,6 +30,14 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     
     public void Awake()
     {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
         availableRocksForThisSession = new List<Rock>();
         
        int rockCounter = 0;
@@ -46,10 +58,21 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
          }
        
        // This will instantiate the RockVisuals and call SetupAfterInstantiation
-       rockCase.SpawnRocksInCase(rocksToSpawn);
-       
+       if (rockCase != null)
+       {
+           rockCase.SpawnRocksInCase(rocksToSpawn);
+           rockCase.OnCaseClosed += StartAimingStage;
+       }
+
        // Subscribe to rock events after spawning
        StartCoroutine(SubscribeToRockEvents());
+       if (confirmSelectionButton != null)
+       {
+           confirmSelectionButton.onClick.AddListener(OnConfirmRockSelection);
+           confirmSelectionButton.gameObject.SetActive(false);
+       }
+       
+       
     }
     
     private System.Collections.IEnumerator SubscribeToRockEvents()
@@ -67,7 +90,11 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
             rockVisual.OnRockClicked += OnRockSelected;
         }
     }
-    
+
+    public List<RockVisual> GetSpawnedRocksVisuals()
+    {
+        return spawnedRockVisuals;
+    } 
     private void OnRockHoverEnter(RockVisual rockVisual)
     {
         if (stage != Stages.RockPicking) return;
@@ -88,8 +115,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         
         currentHoveredRock = null;
         
-        // Hide rock stats UI if available
-        if (rockInfoUI != null)
+        // Hide rock stats UI if available, but only if the rock is not currently selected
+        if (rockInfoUI != null && currentSelectedRock == null)
         {
             rockInfoUI.HideInfo();
         }
@@ -100,20 +127,47 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         if (stage != Stages.RockPicking) return;
         
         Debug.Log($"Rock selected: {rockVisual.rockData.rockType}");
+
+        if(currentSelectedRock!= null)
+        {
+            currentSelectedRock.ResetVisuals();
+        }
         
-        // Set as current rock
-        currentRock = rockVisual.rockData;
+        if (currentRock == rockVisual.rockData)
+        { 
+            currentRock = null;
+        }
+        else
+        {
+            
+            // Set as current rock
+            currentRock = rockVisual.rockData;
+            currentSelectedRock = rockVisual;
+        }
+        if(confirmSelectionButton != null)
+            confirmSelectionButton.gameObject.SetActive(currentRock != null);
+    }
+
+    private void OnConfirmRockSelection()
+    {
+        if(currentRock == null) return;
         
         // Disable interaction on all rocks
         foreach (var visual in spawnedRockVisuals)
         {
             visual.SetInteractable(false);
         }
+
+        rockCase.ResetCase();
+    }
+    
+    private void StartAimingStage()
+    {
+        Debug.Log($"Starting aiming stage: {stage}");
         
-        // Move to next stage
         stage = Stages.Aiming;
         
-        // Optional: Spawn the rock at the throw position
+        // Spawn the selected rock for throwing
         SpawnSelectedRockForThrowing();
     }
     
@@ -166,12 +220,25 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
             rockVisual.OnRockHoverExit -= OnRockHoverExit;
             rockVisual.OnRockClicked -= OnRockSelected;
         }
+
+        if (rockInfoUI != null)
+        {
+            rockCase.OnCaseClosed -= StartAimingStage;
+        }
     }
     
     private void OnDestroy()
     {
         EndGame();
+        
+        if (Instance == this)
+        {
+            Instance = null;
+        }
+        
+        
     }
+    
 
     public enum Stages
     {

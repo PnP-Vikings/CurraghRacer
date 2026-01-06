@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.InputSystem;
 using TMPro;
 
 /// <summary>
@@ -28,13 +29,13 @@ public class RockInfoUI : MonoBehaviour
         HideInfo();
     }
     
-    private void Update()
+    /*private void Update()
     {
         if (followMouse && infoPanel.activeSelf)
         {
             FollowMousePosition();
         }
-    }
+    }*/
     
     public void ShowRockInfo(Rock rock)
     {
@@ -55,7 +56,7 @@ public class RockInfoUI : MonoBehaviour
         if (maxBouncesText != null)
             maxBouncesText.text = $"Max Bounces: {rock.maxBounces}";
         
-        FollowMousePosition();
+        //FollowMousePosition();
     }
     
     public void HideInfo()
@@ -67,10 +68,17 @@ public class RockInfoUI : MonoBehaviour
     {
         if (canvas == null || rectTransform == null) return;
         
+        // Get pointer position using new Input System
+        Vector2 pointerPosition;
+        if (!InputHelpers.TryGetPrimaryPointerPosition(out pointerPosition))
+        {
+            return; // No valid input
+        }
+        
         Vector2 localPoint;
         RectTransformUtility.ScreenPointToLocalPointInRectangle(
             canvas.transform as RectTransform,
-            Input.mousePosition,
+            pointerPosition,
             canvas.worldCamera,
             out localPoint
         );
