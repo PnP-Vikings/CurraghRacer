@@ -189,11 +189,17 @@ public class ShipMovement : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.shout.start();
+            AudioManager.instance.rowing.setParameterByName("Rowing Speed", 1f);
         }
         
         // Wait for the boost duration
         yield return new WaitForSeconds(duration);
-        
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.rowing.setParameterByName("Rowing Speed", 0f);
+        }
+
         // Reset boost after duration expires
         shoutSpeedBoost = 1f;
         isShoutBoosting = false;

@@ -105,7 +105,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{d1ef4529-dbb3-4e2e-81e1-c72c2d8d0124}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Do you want a flake</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{0e9b9501-7c07-464e-abf3-3dc11a4875d2}</destination>
@@ -119,7 +119,6 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{fd2673d9-6ad3-440a-9982-4b34693f7db4}">
 		<relationship name="effects">
-			<destination>{aaee4f41-9961-49e0-b46d-3008dd1de80e}</destination>
 			<destination>{75e2b316-5d67-449b-a7cd-63aa6349811d}</destination>
 		</relationship>
 	</object>
@@ -127,18 +126,19 @@
 	<object class="MixerBusFader" id="{4696cab3-fe9c-4064-aee3-7a2a83c57d7a}" />
 	<object class="MixerBusEffectChain" id="{0e9b9501-7c07-464e-abf3-3dc11a4875d2}">
 		<relationship name="effects">
+			<destination>{63a4b06d-dc22-4b04-a538-b797e4fe84a7}</destination>
 			<destination>{68e31da8-2dec-49de-9403-1e8f0e895d8a}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{5917d88f-4789-4a2b-91b1-f37ae9cea534}" />
-	<object class="GainEffect" id="{aaee4f41-9961-49e0-b46d-3008dd1de80e}">
+	<object class="MixerBusFader" id="{75e2b316-5d67-449b-a7cd-63aa6349811d}" />
+	<object class="GainEffect" id="{63a4b06d-dc22-4b04-a538-b797e4fe84a7}">
 		<relationship name="modulators">
-			<destination>{76277e0e-e303-4daa-8aa2-5b936b7ebd04}</destination>
+			<destination>{8db0e980-2df7-4e0e-b7c5-22cf1db85496}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusFader" id="{75e2b316-5d67-449b-a7cd-63aa6349811d}" />
 	<object class="MixerBusFader" id="{68e31da8-2dec-49de-9403-1e8f0e895d8a}" />
-	<object class="ADSRModulator" id="{76277e0e-e303-4daa-8aa2-5b936b7ebd04}">
+	<object class="ADSRModulator" id="{8db0e980-2df7-4e0e-b7c5-22cf1db85496}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>gain</value>
 		</property>

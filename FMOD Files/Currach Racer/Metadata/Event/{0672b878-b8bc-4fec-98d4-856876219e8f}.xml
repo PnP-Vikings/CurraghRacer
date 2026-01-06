@@ -117,7 +117,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{51a3e11d-7b92-467c-826f-34c4c52635af}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Pouring Pint</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{f4362874-4009-4237-8e79-e658e905a453}</destination>
@@ -131,7 +131,6 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{ff6acfb1-b274-4780-92ff-90dd411664df}">
 		<relationship name="effects">
-			<destination>{ccbb85c3-6656-4d49-884f-e65b694d8a05}</destination>
 			<destination>{2a89834e-23a1-4165-9f9e-3d4c53dee560}</destination>
 		</relationship>
 	</object>
@@ -140,23 +139,32 @@
 	<object class="MixerBusEffectChain" id="{f4362874-4009-4237-8e79-e658e905a453}">
 		<relationship name="effects">
 			<destination>{66364a9c-ada8-49fc-87b2-ee894ff5f55f}</destination>
+			<destination>{0f80a2a7-1345-4aab-8adc-d327bf681e27}</destination>
 			<destination>{c053b3f8-93e5-462f-8e51-84a8051c98bd}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{3e0d9a7a-8e1d-48cf-bc81-ea60a666a2f2}" />
-	<object class="GainEffect" id="{ccbb85c3-6656-4d49-884f-e65b694d8a05}">
-		<relationship name="modulators">
-			<destination>{8f51d668-9b1e-40b4-a742-dba54717140c}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusFader" id="{2a89834e-23a1-4165-9f9e-3d4c53dee560}" />
 	<object class="GainEffect" id="{66364a9c-ada8-49fc-87b2-ee894ff5f55f}">
 		<relationship name="automators">
 			<destination>{c484eac3-c0ba-41e5-a0b6-b81d5692df16}</destination>
 		</relationship>
 	</object>
+	<object class="GainEffect" id="{0f80a2a7-1345-4aab-8adc-d327bf681e27}">
+		<relationship name="modulators">
+			<destination>{9318cc80-c153-40a4-a1c7-ac94c567e508}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{c053b3f8-93e5-462f-8e51-84a8051c98bd}" />
-	<object class="ADSRModulator" id="{8f51d668-9b1e-40b4-a742-dba54717140c}">
+	<object class="Automator" id="{c484eac3-c0ba-41e5-a0b6-b81d5692df16}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>gain</value>
+		</property>
+		<relationship name="automationCurves">
+			<destination>{307df7c4-a1fb-4a69-bb0e-4b0cf90f71ca}</destination>
+		</relationship>
+	</object>
+	<object class="ADSRModulator" id="{9318cc80-c153-40a4-a1c7-ac94c567e508}">
 		<property name="nameOfPropertyBeingModulated">
 			<value>gain</value>
 		</property>
@@ -172,14 +180,6 @@
 		<property name="finalValue">
 			<value>-80</value>
 		</property>
-	</object>
-	<object class="Automator" id="{c484eac3-c0ba-41e5-a0b6-b81d5692df16}">
-		<property name="nameOfPropertyBeingAutomated">
-			<value>gain</value>
-		</property>
-		<relationship name="automationCurves">
-			<destination>{307df7c4-a1fb-4a69-bb0e-4b0cf90f71ca}</destination>
-		</relationship>
 	</object>
 	<object class="AutomationCurve" id="{307df7c4-a1fb-4a69-bb0e-4b0cf90f71ca}">
 		<relationship name="parameter">
