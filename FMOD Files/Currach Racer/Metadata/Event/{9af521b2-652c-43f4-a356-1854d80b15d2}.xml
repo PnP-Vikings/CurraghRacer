@@ -122,7 +122,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{f868eba9-fa0b-4f2b-8b9e-acaf55bd8609}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Wood Crunch</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{0b6dd32a-2731-4b94-8d43-7be7e1b47744}</destination>
@@ -145,7 +145,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{4f90efef-6c60-45e3-8f70-ab72ba80d24d}">
 		<property name="name">
-			<value>Audio 2</value>
+			<value>Wood Snap</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{89576794-94bd-4738-87c6-45dfd163dead}</destination>
@@ -168,7 +168,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{c60c945f-40c5-470e-a255-6c2e1e2d0f2f}">
 		<property name="name">
-			<value>Audio 3</value>
+			<value>Ground Impact</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{c2512b25-f161-433e-a373-eda115ff67ff}</destination>

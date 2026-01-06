@@ -227,6 +227,9 @@
 		<relationship name="automators">
 			<destination>{5ece1783-13ba-4cc9-aa86-80985b89c520}</destination>
 		</relationship>
+		<relationship name="modulators">
+			<destination>{6d0f2247-1a87-421f-a0ed-6cfc4a62546a}</destination>
+		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{69814a8f-7786-40f2-b872-ba149ba70bce}" />
 	<object class="MixerBusFader" id="{c8d41d3e-c552-4fab-b8b6-9c3ee9a4a520}" />
@@ -269,6 +272,29 @@
 		<relationship name="automationCurves">
 			<destination>{493a6374-6a9c-4369-8b71-3f7ee54837b5}</destination>
 		</relationship>
+	</object>
+	<object class="ADSRModulator" id="{6d0f2247-1a87-421f-a0ed-6cfc4a62546a}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>2400</value>
+		</property>
+		<property name="attackShape">
+			<value>-0.728825033</value>
+		</property>
+		<property name="releaseTime">
+			<value>3400</value>
+		</property>
+		<property name="releaseShape">
+			<value>-0.179758608</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
 	</object>
 	<object class="AutomationCurve" id="{e453d2b7-5ee6-42b6-af37-55e6081c4b48}">
 		<relationship name="parameter">

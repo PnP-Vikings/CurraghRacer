@@ -72,9 +72,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{ed0eb71a-a4ee-4bb8-a22b-8f9c7492e38a}">
-		<relationship name="modulators">
-			<destination>{039799cf-5136-4ec0-9bed-706d0e0dd794}</destination>
-		</relationship>
 		<relationship name="effectChain">
 			<destination>{96c4e02d-e3c7-4a26-a2f3-7a2a9b2294af}</destination>
 		</relationship>
@@ -119,26 +116,6 @@
 			<destination>{ed0eb71a-a4ee-4bb8-a22b-8f9c7492e38a}</destination>
 		</relationship>
 	</object>
-	<object class="ADSRModulator" id="{039799cf-5136-4ec0-9bed-706d0e0dd794}">
-		<property name="nameOfPropertyBeingModulated">
-			<value>volume</value>
-		</property>
-		<property name="initialValue">
-			<value>-80</value>
-		</property>
-		<property name="attackTime">
-			<value>20</value>
-		</property>
-		<property name="attackShape">
-			<value>-1.00000048</value>
-		</property>
-		<property name="releaseTime">
-			<value>1200</value>
-		</property>
-		<property name="finalValue">
-			<value>-80</value>
-		</property>
-	</object>
 	<object class="MixerBusEffectChain" id="{96c4e02d-e3c7-4a26-a2f3-7a2a9b2294af}">
 		<relationship name="effects">
 			<destination>{643d6cd9-735a-47a6-9c94-a3c0c8d6747e}</destination>
@@ -149,6 +126,7 @@
 	<object class="MixerBusEffectChain" id="{ba2d0b4e-6426-408e-91d1-d406c3be11f8}">
 		<relationship name="effects">
 			<destination>{acfd7d5c-06b2-4abc-a3de-7a48106c41bc}</destination>
+			<destination>{1f130a00-3063-4478-9cfc-0241d4b58379}</destination>
 			<destination>{99c98b24-ab48-4d42-a179-fcf3150fbd9e}</destination>
 		</relationship>
 	</object>
@@ -162,5 +140,27 @@
 			<value>0.100000001</value>
 		</property>
 	</object>
+	<object class="GainEffect" id="{1f130a00-3063-4478-9cfc-0241d4b58379}">
+		<relationship name="modulators">
+			<destination>{5d8c63b5-99f2-4d6b-9975-0a40793d1c25}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{99c98b24-ab48-4d42-a179-fcf3150fbd9e}" />
+	<object class="ADSRModulator" id="{5d8c63b5-99f2-4d6b-9975-0a40793d1c25}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>20</value>
+		</property>
+		<property name="releaseTime">
+			<value>1200</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 </objects>

@@ -102,7 +102,7 @@
 			<value>-1</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Dunk Plate</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{79b261e2-672e-403c-9689-f214be60ab2b}</destination>

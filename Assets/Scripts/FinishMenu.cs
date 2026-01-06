@@ -64,19 +64,18 @@ public class FinishMenu : MonoBehaviour
             if (AudioManager.instance != null)
             {
                 AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
-                AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
                 AudioManager.instance.raceLose.start();
-
-                if (RaceManager.Instance.isRaceDay)
+            }
+            if (RaceManager.Instance.isRaceDay)
+            {
+                if (RadioManager.instance)
                 {
-                    if (RadioManager.instance)
-                    {
                         RadioManager.instance.hasJustLostRace = true;
                         Debug.Log("Player Lost Race - AudioDebug");
-                    }
                 }
             }
         }
+        AudioManager.instance.rowing.stop(STOP_MODE.ALLOWFADEOUT);
     }
 
     private void OnDisable()
