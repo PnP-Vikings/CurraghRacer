@@ -25,7 +25,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     [Header("Input System Selection")]
     [SerializeField] private RockSelectionManager rockSelectionManager;
     
-    private List<RockVisual> spawnedRockVisuals = new List<RockVisual>();
+    [SerializeField] private List<RockVisual> spawnedRockVisuals = new List<RockVisual>();
     private RockVisual currentHoveredRock;
     
     public void Awake()
@@ -218,6 +218,32 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
             rockInfoUI.HideInfo();
         }
         Debug.Log($"Starting aiming stage: {stage}");
+        int rockPlayerIndex = 0;
+        rockScores.Add(rockPlayerIndex, (currentRock, 0));
+        rockPlayerIndex++;
+        availableRocksForThisSession.Remove(currentRock);
+        
+        foreach (var visual in availableRocksForThisSession)
+        {
+                rockScores.Add(rockPlayerIndex, (visual, 0));
+                rockPlayerIndex++;
+            
+        }
+        
+        if(rockScores.Count == 0)
+        {
+            Debug.LogError("No rocks found for scoring!");
+            return;
+        }
+        else if (rockScores.Count>3)
+        {
+            availableRocksForThisSession = new List<Rock>();
+        }
+        
+        foreach (var entry in rockScores)
+        {
+            Debug.Log($"Rock Player {entry.Key}: {entry.Value.rock.rockType} with score {entry.Value.score}");
+        }
         
         stage = Stages.Aiming;
         
