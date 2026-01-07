@@ -33723,6 +33723,8 @@ GameObject:
   - component: {fileID: 1809649799}
   - component: {fileID: 1809649798}
   - component: {fileID: 1809649797}
+  - component: {fileID: 1809649800}
+  - component: {fileID: 1809649801}
   m_Layer: 5
   m_Name: ConfirmSelectionBtn
   m_TagString: Untagged
@@ -33844,6 +33846,32 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1809649795}
   m_CullTransparentMesh: 1
+--- !u!114 &1809649800
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809649795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonPop
+--- !u!114 &1809649801
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1809649795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7702bcd54f80401487aba3c18243a8e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverSound
+  playOnHover: 1
+  soundEventName: UIClick2
 --- !u!1 &1810354568
 GameObject:
   m_ObjectHideFlags: 0

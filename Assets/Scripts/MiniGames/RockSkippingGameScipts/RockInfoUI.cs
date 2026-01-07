@@ -32,13 +32,6 @@ public class RockInfoUI : MonoBehaviour
         HideInfo();
     }
     
-    /*private void Update()
-    {
-        if (followMouse && infoPanel.activeSelf)
-        {
-            FollowMousePosition();
-        }
-    }*/
     
     public void ShowRockInfo(Rock rock)
     {

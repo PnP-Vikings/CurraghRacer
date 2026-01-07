@@ -112,7 +112,11 @@ public class RockVisual : MonoBehaviour
     public void OnPointerClick()
     {
         if (!isInteractable) return;
-
+        if (AudioManager.instance != null )
+        {
+            AudioManager.instance.UIClick1.start();
+        }
+        
         // Just invoke the event - let the controller decide what to do
         OnRockClicked?.Invoke(this);
     }
@@ -169,6 +173,11 @@ public class RockVisual : MonoBehaviour
         if (rockMaterial != null)
         {
             hoverSequence.Join(rockMaterial.DOColor(hoverColor, 0.3f));
+        }
+        
+        if (AudioManager.instance != null )
+        {
+            AudioManager.instance.UIClick2.start();
         }
     }
     

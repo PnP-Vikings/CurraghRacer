@@ -96,10 +96,15 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        if (confirmSelectionButton != null)
        {
            confirmSelectionButton.onClick.AddListener(OnConfirmRockSelection);
+           
+           // Add hover sound component if it doesn't exist
+           if (confirmSelectionButton.GetComponent<ButtonHoverSound>() == null)
+           {
+               confirmSelectionButton.gameObject.AddComponent<ButtonHoverSound>();
+           }
+          
            confirmSelectionButton.gameObject.SetActive(false);
        }
-       
-       
     }
     
     private System.Collections.IEnumerator SubscribeToRockEvents()
@@ -198,6 +203,11 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             rockInfoUI.RockSelected(currentRock);
         }
+        if (AudioManager.instance != null )
+        {
+            AudioManager.instance.UIClick1.start();
+        }
+        
         confirmSelectionButton.gameObject.SetActive(false);
     }
     
