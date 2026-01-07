@@ -48,7 +48,7 @@ public class RockCase : MonoBehaviour
        for (int i = 0; i < rocksToSpawn.Count; i++)
        {
            RockVisual rockVisual = Instantiate(rocksToSpawn[i], rockSpawnPoints[i].position, rocksToSpawn[i].transform.rotation, rockSpawnPoints[i]);
-           
+           rockVisual.gameObject.SetActive(true);
            // Setup the rock visual AFTER instantiation (can't access materials on prefabs)
            rockVisual.SetupAfterInstantiation();
            

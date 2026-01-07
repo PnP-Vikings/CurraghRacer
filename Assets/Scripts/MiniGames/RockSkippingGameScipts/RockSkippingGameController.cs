@@ -43,24 +43,51 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        int rockCounter = 0;
        while (rockCounter < 4)
        {
+              // Pick a random rock type
               int randomIndex = Random.Range(0, rocksTypes.Count);
               Rock selectedRockPrefab = rocksTypes[randomIndex];
-              selectedRockPrefab.Initialize(selectedRockPrefab.rockType);
-              availableRocksForThisSession.Add(selectedRockPrefab);
+              
+              // Instantiate the rock prefab 
+              Rock rockInstance = Instantiate(selectedRockPrefab);
+              rockInstance.gameObject.SetActive(false);
+              
+              // Initialize with base stats for the rock type
+              rockInstance.Initialize(selectedRockPrefab.rockType);
+              
+              
+              
+              // IMPORTANT: Instantiate a new RockVisual for this rock to avoid shared references
+              if (selectedRockPrefab.rockVisual != null)
+              {
+                  RockVisual newRockVisual = Instantiate(selectedRockPrefab.rockVisual);
+                  newRockVisual.gameObject.SetActive(false);
+                  newRockVisual.Initialize(rockInstance);
+                  rockInstance.rockVisual = newRockVisual; // Link the new visual to this rock
+              }
+              
+              availableRocksForThisSession.Add(rockInstance);
               rockCounter++;
        }
        
+       // Collect the rock visuals to spawn in the case
        List<RockVisual> rocksToSpawn = new List<RockVisual>();
        foreach (var rock in availableRocksForThisSession)
-         {
-             rock.rockVisual.Initialize(rock);
-             rocksToSpawn.Add(rock.rockVisual);
-         }
+       {
+           if (rock.rockVisual != null)
+           {
+               rocksToSpawn.Add(rock.rockVisual);
+           }
+           else
+           {
+               Debug.LogError($"Rock {rock.rockType} has no RockVisual assigned!");
+           }
+       }
        
        // This will instantiate the RockVisuals and call SetupAfterInstantiation
        if (rockCase != null)
        {
            rockCase.SpawnRocksInCase(rocksToSpawn);
+           
            rockCase.OnCaseClosed += StartAimingStage;
        }
 
@@ -167,10 +194,19 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         }
 
         rockCase.ResetCase();
+        if(rockInfoUI != null)
+        {
+            rockInfoUI.RockSelected(currentRock);
+        }
+        confirmSelectionButton.gameObject.SetActive(false);
     }
     
     private void StartAimingStage()
     {
+        if(rockInfoUI != null)
+        {
+            rockInfoUI.HideInfo();
+        }
         Debug.Log($"Starting aiming stage: {stage}");
         
         stage = Stages.Aiming;

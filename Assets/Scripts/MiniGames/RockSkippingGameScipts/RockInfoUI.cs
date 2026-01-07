@@ -14,6 +14,8 @@ public class RockInfoUI : MonoBehaviour
     [SerializeField] private TextMeshProUGUI accelerationText;
     [SerializeField] private TextMeshProUGUI bounceForceText;
     [SerializeField] private TextMeshProUGUI maxBouncesText;
+    [SerializeField] private TextMeshProUGUI rockSelectionText;
+    
     
     [Header("Settings")]
     [SerializeField] private Vector2 offset = new Vector2(10, 10);
@@ -26,6 +28,7 @@ public class RockInfoUI : MonoBehaviour
     {
         rectTransform = infoPanel.GetComponent<RectTransform>();
         canvas = GetComponentInParent<Canvas>();
+        rockSelectionText.gameObject.SetActive(false);
         HideInfo();
     }
     
@@ -56,11 +59,21 @@ public class RockInfoUI : MonoBehaviour
         if (maxBouncesText != null)
             maxBouncesText.text = $"Max Bounces: {rock.maxBounces}";
         
+        if(rockSelectionText != null)
+            rockSelectionText.gameObject.SetActive(true);
+            rockSelectionText.text = $"Select this rock to use it!";
         //FollowMousePosition();
+    }
+    
+    public void RockSelected(Rock rock)
+    {
+        if(rockSelectionText != null)
+            rockSelectionText.text = $"{rock.rockType} rock selected!";
     }
     
     public void HideInfo()
     {
+        rockSelectionText.gameObject.SetActive(false);
         infoPanel.SetActive(false);
     }
     
