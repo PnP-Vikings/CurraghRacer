@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 /// </summary>
 public class RockSelectionManager : MonoBehaviour
 {
+    
+    public static RockSelectionManager Instance { get; private set; }
     [SerializeField] private Camera raycastCamera;
     [SerializeField] private LayerMask rockLayer;
     [SerializeField] private string rockTag = "Rock";
@@ -22,6 +24,14 @@ public class RockSelectionManager : MonoBehaviour
         if (raycastCamera == null)
         {
             raycastCamera = Camera.main;
+        }
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
         }
     }
     
@@ -106,22 +116,11 @@ public class RockSelectionManager : MonoBehaviour
     
     private void ClearHover()
     {
-        if (RockSkippingGameController.Instance != null)
+        if (currentHoveredRock != null)
         {
-            List<RockVisual> rocks = RockSkippingGameController.Instance.GetSpawnedRocksVisuals();
-            foreach (var rock in rocks)
-            {
-                if(currentHoveredRock != null && rock == currentHoveredRock)
-                {
-                    rock.OnPointerExit();
-                }
-                if (rock != currentHoveredRock)
-                {
-                    rock.OnPointerExit();
-                }
-                lastHoveredRock = currentHoveredRock;
-                currentHoveredRock = null;
-            }
+            currentHoveredRock.OnPointerExit();
+            lastHoveredRock = currentHoveredRock;
+            currentHoveredRock = null;
         }
     }
     
@@ -152,10 +151,21 @@ public class RockSelectionManager : MonoBehaviour
             ClearHover();
         }
     }
+
+    public RockVisual GetCurrentHoveredRock()
+    {
+        return currentHoveredRock;
+    }
+    
     
     private void OnDisable()
     {
         ClearHover();
+        
+        if (Instance == this)
+        {
+            Instance = null;
+        }
     }
 }
 

@@ -111,27 +111,56 @@ public class RockVisual : MonoBehaviour
     /// </summary>
     public void OnPointerClick()
     {
-        if (!isInteractable) return; // Only check base interactability, not selection state
+        if (!isInteractable) return;
 
+        // Just invoke the event - let the controller decide what to do
+        OnRockClicked?.Invoke(this);
+    }
+
+    public void Select()
+    {
+        if (isSelected) return;
+        
+        isSelected = true;
+        PlaySelectionAnimation();
+    }
+    
+    public void Deselect()
+    {
+        if (!isSelected) return;
+        
+        isSelected = false;
+        
+        // If still hovering, play hover animation, otherwise reset completely
+        if (isHovered)
+        {
+            PlayHoverAnimation();
+        }
+        else
+        {
+            ResetVisuals();
+        }
+    }
+
+    public void SetSelectedVisuals()
+    {
         if (isSelected)
         {
-            // Deselect the rock
-            isSelected = false;
-            OnRockClicked?.Invoke(this);
-            ResetVisuals();
-            return;
+            Deselect();
         }
-        
-        // Select the rock
-        isSelected = true;
-        OnRockClicked?.Invoke(this);
-        PlaySelectionAnimation();
+        else
+        {
+            Select();
+        }
     }
     
     private void PlayHoverAnimation()
     {
         // Kill any existing sequence
-        hoverSequence?.Kill();
+        if (hoverSequence != null && hoverSequence.IsActive())
+        {
+            hoverSequence.Kill(false);
+        }
         
         hoverSequence = DOTween.Sequence();
         hoverSequence.Append(transform.DOScale(originalScale * 1.2f, 0.3f).SetEase(Ease.OutBack));
@@ -139,32 +168,37 @@ public class RockVisual : MonoBehaviour
         // Change color to hover color
         if (rockMaterial != null)
         {
-            rockMaterial.DOColor(hoverColor, 0.3f);
+            hoverSequence.Join(rockMaterial.DOColor(hoverColor, 0.3f));
         }
     }
     
     private void StopHoverAnimation()
     {
         // Kill hover sequence
-        hoverSequence?.Kill();
+        if (hoverSequence != null && hoverSequence.IsActive())
+        {
+            hoverSequence.Kill(false);
+        }
         
-        // Return to original scale and color
-        transform.DOScale(originalScale, 0.2f).SetEase(Ease.InBack);
+        // Create new sequence to return to original state
+        hoverSequence = DOTween.Sequence();
+        hoverSequence.Append(transform.DOScale(originalScale, 0.2f).SetEase(Ease.InBack));
         
         if (rockMaterial != null)
         {
-            rockMaterial.DOColor(originalColor, 0.2f);
+            hoverSequence.Join(rockMaterial.DOColor(originalColor, 0.2f));
         }
     }
     
     private void PlaySelectionAnimation()
     {
         // Kill any existing sequence
-        hoverSequence?.Kill();
+        if (hoverSequence != null && hoverSequence.IsActive())
+        {
+            hoverSequence.Kill(false);
+        }
         
-        // Scale up and change color
-        transform.DOScale(originalScale * 1.3f, 0.3f).SetEase(Ease.OutBack);
-        
+        // Change color immediately
         if (rockMaterial != null)
         {
             rockMaterial.DOColor(selectedColor, 0.3f);
@@ -172,7 +206,8 @@ public class RockVisual : MonoBehaviour
         
         // Add a gentle floating/rotating animation
         hoverSequence = DOTween.Sequence();
-        hoverSequence.Append(transform.DOLocalMoveY(transform.localPosition.y + 0.2f, 0.5f).SetEase(Ease.InOutSine))
+        hoverSequence.Append(transform.DOScale(originalScale * 1.3f, 0.3f).SetEase(Ease.OutBack))
+            .Append(transform.DOLocalMoveY(transform.localPosition.y + 0.2f, 0.5f).SetEase(Ease.InOutSine))
             .SetLoops(-1, LoopType.Yoyo);
     }
     
@@ -181,17 +216,41 @@ public class RockVisual : MonoBehaviour
         isHovered = false;
         isSelected = false;
         
-        hoverSequence?.Kill();
-        transform.DOScale(originalScale, 0.2f);
+        // Kill any existing sequence
+        if (hoverSequence != null && hoverSequence.IsActive())
+        {
+            hoverSequence.Kill(false);
+        }
         
+        // Reset scale
+        transform.DOScale(originalScale, 0.2f).SetEase(Ease.InBack);
+        
+        // Reset color
         if (rockMaterial != null)
         {
             rockMaterial.DOColor(originalColor, 0.2f);
         }
+        
+        // Reset position (in case it was floating from selection animation)
+        transform.DOLocalMoveY(0f, 0.2f).SetEase(Ease.InBack);
     }
     
     private void OnDestroy()
     {
-        hoverSequence?.Kill();
+        // Safely kill the sequence
+        if (hoverSequence != null && hoverSequence.IsActive())
+        {
+            hoverSequence.Kill(false);
+        }
+        hoverSequence = null;
+        
+        // Kill any individual tweens on this transform
+        transform.DOKill();
+        
+        // Kill any material tweens
+        if (rockMaterial != null)
+        {
+            rockMaterial.DOKill();
+        }
     }
 }

@@ -126,24 +126,32 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     {
         if (stage != Stages.RockPicking) return;
         
-        Debug.Log($"Rock selected: {rockVisual.rockData.rockType}");
-
-        if(currentSelectedRock!= null)
-        {
-            currentSelectedRock.ResetVisuals();
-        }
+        Debug.Log($"Rock clicked: {rockVisual.rockData.rockType}");
         
-        if (currentRock == rockVisual.rockData)
-        { 
+        // Check if clicking the same rock (to deselect)
+        if (currentSelectedRock == rockVisual)
+        {
+            // Deselecting current rock
+            rockVisual.Deselect();
             currentRock = null;
+            currentSelectedRock = null;
+            Debug.Log("Rock deselected");
         }
         else
         {
+            // Deselect previous rock if any
+            if(currentSelectedRock != null)
+            {
+                currentSelectedRock.Deselect();
+            }
             
-            // Set as current rock
+            // Select the new rock
+            rockVisual.Select();
             currentRock = rockVisual.rockData;
             currentSelectedRock = rockVisual;
+            Debug.Log($"Rock selected: {rockVisual.rockData.rockType}");
         }
+        
         if(confirmSelectionButton != null)
             confirmSelectionButton.gameObject.SetActive(currentRock != null);
     }

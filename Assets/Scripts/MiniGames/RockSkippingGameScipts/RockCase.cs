@@ -34,9 +34,13 @@ public class RockCase : MonoBehaviour
        baseTopRotation = topCaseTransform.eulerAngles;
        baseTopTransform = topCaseTransform.position;
        
-       openCaseSequence.Kill();
+       // Kill sequence only if it exists and is active
+       if (openCaseSequence != null && openCaseSequence.IsActive())
+       {
+           openCaseSequence.Kill();
+       }
+       
        DOVirtual.DelayedCall(0 ,() => OpenCase());    
-        
     }
    
    public void SpawnRocksInCase(List<RockVisual> rocksToSpawn)
@@ -54,12 +58,20 @@ public class RockCase : MonoBehaviour
    
    public void ResetCase()
    {
-       openCaseSequence.Kill();
-       closeCaseSequence.Kill();
+       // Kill sequences only if they exist and are active
+       if (openCaseSequence != null && openCaseSequence.IsActive())
+       {
+           openCaseSequence.Kill();
+       }
+       
+       if (closeCaseSequence != null && closeCaseSequence.IsActive())
+       {
+           closeCaseSequence.Kill();
+       }
          
        closeCaseSequence = DOTween.Sequence();
        
-       closeCaseSequence .Append(topCaseTransform.DOLocalRotate(new Vector3(0f, 0f, 0), 3f).SetEase(Ease.InBack))
+       closeCaseSequence.Append(topCaseTransform.DOLocalRotate(new Vector3(0f, 0f, 0), 3f).SetEase(Ease.InBack))
            .Join(topCaseTransform.DOMove(topCaseTransform.position + new Vector3(0, -.47f, .13f), 3f).SetEase(Ease.InBack))
            .AppendInterval(0.2f)
            .Append(wholeCaseTransform.DOMove(wholecaseBaseTransform, 3f)).AppendCallback( () =>
@@ -70,18 +82,50 @@ public class RockCase : MonoBehaviour
                }
                rocksInCase.Clear(); 
                
-               OnCaseClosed.Invoke();
+               OnCaseClosed?.Invoke();
                
                /*if(RockSkippingGameController.Instance != null)
                {
                    RockSkippingGameController.Instance.StartAimingStage();
                }*/
-           }) ;
-       
+           });
+   }
+   
+   public void SetAllRocksToNotSelected()
+   {
+       foreach (var rock in rocksInCase)
+       {
+           rock.ResetVisuals();
+       }
    }
    
    public List<RockVisual> GetSpawnedRocks()
    {
        return rocksInCase;
+   }
+   
+   private void OnDestroy()
+   {
+       // Clean up sequences
+       if (openCaseSequence != null && openCaseSequence.IsActive())
+       {
+           openCaseSequence.Kill();
+       }
+       
+       if (closeCaseSequence != null && closeCaseSequence.IsActive())
+       {
+           closeCaseSequence.Kill();
+       }
+       
+       // Kill any tweens on these transforms
+       if (topCaseTransform != null)
+       {
+           topCaseTransform.DOKill();
+       }
+       
+       if (wholeCaseTransform != null)
+       {
+           wholeCaseTransform.DOKill();
+       }
    }
 }
