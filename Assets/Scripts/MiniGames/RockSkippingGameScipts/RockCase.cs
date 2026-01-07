@@ -72,7 +72,13 @@ public class RockCase : MonoBehaviour
        closeCaseSequence = DOTween.Sequence();
        
        closeCaseSequence.Append(topCaseTransform.DOLocalRotate(new Vector3(0f, 0f, 0), 3f).SetEase(Ease.InBack))
-           .Join(topCaseTransform.DOMove(topCaseTransform.position + new Vector3(0, -.47f, .13f), 3f).SetEase(Ease.InBack))
+           .Join(topCaseTransform.DOMove(topCaseTransform.position + new Vector3(0, -.47f, .13f), 3f).SetEase(Ease.InBack).OnComplete( () =>
+           {
+               if (AudioManager.instance != null )
+               {
+                   AudioManager.instance.punchBagAudio.start();
+               }
+           }))
            .AppendInterval(0.2f)
            .Append(wholeCaseTransform.DOMove(wholecaseBaseTransform, 3f)).AppendCallback( () =>
            {

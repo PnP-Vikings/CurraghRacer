@@ -177,7 +177,7 @@ public class RockVisual : MonoBehaviour
         
         if (AudioManager.instance != null )
         {
-            AudioManager.instance.UIClick2.start();
+            AudioManager.instance.placeTurf.start();
         }
     }
     

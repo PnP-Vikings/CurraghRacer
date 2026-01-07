@@ -210,13 +210,9 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         
         confirmSelectionButton.gameObject.SetActive(false);
     }
-    
-    private void StartAimingStage()
+
+    private void SetupScoring()
     {
-        if(rockInfoUI != null)
-        {
-            rockInfoUI.HideInfo();
-        }
         Debug.Log($"Starting aiming stage: {stage}");
         int rockPlayerIndex = 0;
         rockScores.Add(rockPlayerIndex, (currentRock, 0));
@@ -225,9 +221,9 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         
         foreach (var visual in availableRocksForThisSession)
         {
-                rockScores.Add(rockPlayerIndex, (visual, 0));
-                rockPlayerIndex++;
-            
+            rockScores.Add(rockPlayerIndex, (visual, 0));
+            rockPlayerIndex++;
+
         }
         
         if(rockScores.Count == 0)
@@ -244,6 +240,17 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             Debug.Log($"Rock Player {entry.Key}: {entry.Value.rock.rockType} with score {entry.Value.score}");
         }
+
+    }
+    
+    private void StartAimingStage()
+    {
+        if(rockInfoUI != null)
+        {
+            rockInfoUI.HideInfo();
+        }
+
+        SetupScoring();
         
         stage = Stages.Aiming;
         
