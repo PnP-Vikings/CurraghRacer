@@ -16684,7 +16684,7 @@ MonoBehaviour:
   followX: 1
   followY: 1
   followZ: 1
-  lookAtTarget: 0
+  lookAtTarget: 1
   rotationSmoothSpeed: 0.1
 --- !u!114 &774769261
 MonoBehaviour:
@@ -16751,7 +16751,7 @@ Camera:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 774769259}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_ClearFlags: 1
   m_BackGroundColor: {r: 0.19215687, g: 0.3019608, b: 0.4745098, a: 0}
@@ -16777,7 +16777,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 23
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -17512,12 +17512,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 004d741e0b6f4a059cfe7f4c539a8c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockThrowingController
-  currentMode: 1
+  currentMode: 2
   currentRock: {fileID: 0}
   rockSpawnPoint: {fileID: 522164402}
   mainCamera: {fileID: 318556195}
   throwingUI: {fileID: 744658259}
-  cameraFollower: {fileID: 0}
+  cameraFollower: {fileID: 774769260}
   rockFollowOffset: {x: 0, y: 5, z: 10}
   minThrowPower: 8
   maxThrowPower: 25
