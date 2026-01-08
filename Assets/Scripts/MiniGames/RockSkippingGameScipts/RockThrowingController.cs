@@ -159,11 +159,11 @@ public class RockThrowingController : MonoBehaviour
         currentTimingWindow = baseBounceTimingWindow;
         
         // Force correct throw values (override any old serialized values)
-        minThrowPower = 5f;
-        maxThrowPower = 12f;
+        minThrowPower = 15f;   // Increased significantly for distance
+        maxThrowPower = 35f;   // Much higher for far throws
         minThrowAngle = -15f;
         maxThrowAngle = 15f;
-        throwArcHeight = 5f;  // Increased from 4 for better arc to clear obstacles
+        throwArcHeight = 5f;   // Good arc height
         
         Debug.Log($"RockThrowingController initialized: Power {minThrowPower}-{maxThrowPower}, Angle {minThrowAngle}-{maxThrowAngle}");
     }

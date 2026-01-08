@@ -78,11 +78,11 @@ public class AIRockThrower : MonoBehaviour
             mainCamera = Camera.main;
         
         // Force correct throw values (override any old serialized values)
-        minPower = 5f;
-        maxPower = 12f;
+        minPower = 15f;    // Match player
+        maxPower = 35f;    // Match player
         minAngle = -15f;
         maxAngle = 15f;
-        throwArcHeight = 5f;  // Increased for better arc
+        throwArcHeight = 5f;
         
         Debug.Log($"AIRockThrower initialized: Power {minPower}-{maxPower}, Angle {minAngle}-{maxAngle}");
     }

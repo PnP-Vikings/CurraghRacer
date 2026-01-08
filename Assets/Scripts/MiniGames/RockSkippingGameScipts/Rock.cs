@@ -6,8 +6,8 @@ using Random = UnityEngine.Random;
 public class Rock : MonoBehaviour
 {
     [Header("Rock Stats")]
-    public float dragAmount = 0.995f;  // Very slight drag
-    public float bounceForce = 4f;     
+    public float dragAmount = 0.999f;  // Almost no drag - rock maintains speed
+    public float bounceForce = 5f;     // Good bounce height
     public int maxBounces = 3;
     private int currentBounces = 0;
     private Rigidbody rb;
@@ -18,7 +18,7 @@ public class Rock : MonoBehaviour
     
     // Collision settings
     private float throwTime = 0f;
-    private float collisionGracePeriod = 0.5f; // Longer grace period to clear obstacles
+    private float collisionGracePeriod = 0.01f; // Longer grace period to clear obstacles
     private float maxFlightTime = 15f; // Max time before forcing sink
     private bool collisionsEnabled = false;
     private bool hasHitWater = false; // Track if we've hit water at least once
@@ -139,21 +139,21 @@ public class Rock : MonoBehaviour
         {
             case RockType.Small:
                 // Small rocks: light, bounce high but fewer times
-                bounceForce = Random.Range(3f, 4.5f);
+                bounceForce = Random.Range(4f, 6f);
                 maxBounces = Random.Range(2, 4);
-                dragAmount = 0.997f; // Less drag, travels further
+                dragAmount = 0.999f; // Minimal drag
                 break;
             case RockType.Medium:
                 // Medium rocks: balanced
-                bounceForce = Random.Range(3.5f, 5f);
+                bounceForce = Random.Range(5f, 7f);
                 maxBounces = Random.Range(3, 5);
-                dragAmount = 0.995f;
+                dragAmount = 0.998f;
                 break;
             case RockType.Large:
-                // Large rocks: heavier, more bounces but lower
-                bounceForce = Random.Range(3f, 4f);
+                // Large rocks: heavier, more bounces
+                bounceForce = Random.Range(4f, 5f);
                 maxBounces = Random.Range(4, 7);
-                dragAmount = 0.993f; // Slightly more drag
+                dragAmount = 0.997f;
                 break;
         }
     }
@@ -169,30 +169,13 @@ public class Rock : MonoBehaviour
     {
         if(!isThrown) return;
         
+        // Only care about water collisions
         if (collision.gameObject.CompareTag("Water"))
         {
             hasHitWater = true;
             HandleWaterContact();
         }
-        else
-        {
-            // Hit something other than water
-            Debug.Log($"Hit object: {collision.gameObject.name}");
-            
-            // Only end throw if we've hit water at least once
-            // This prevents ending when brushing past obstacles on the way to water
-            if (hasHitWater)
-            {
-                float finalDistance = CalculateTotalDistance();
-                OnRockSunk?.Invoke(finalDistance);
-                isThrown = false; // Stop processing
-                Destroy(gameObject, 2f);
-            }
-            else
-            {
-                Debug.Log($"Ignoring collision with {collision.gameObject.name} - haven't hit water yet");
-            }
-        }
+        // Ignore all other collisions - rock passes through/over obstacles
     }
     
     void Update()
