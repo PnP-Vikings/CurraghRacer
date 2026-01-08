@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Rock : MonoBehaviour
 {
@@ -12,10 +14,26 @@ public class Rock : MonoBehaviour
     public bool isThrown = false;
     public RockType rockType;
     public RockVisual rockVisual;
+    
+    // Distance tracking
+    private Vector3 startPosition;
+    private float totalDistanceTraveled = 0f;
+    private Vector3 lastPosition;
+    
+    // Bounce timing system
+    private float pendingBounceMultiplier = 1f;
+    private bool hasPendingMultiplier = false;
+    
+    // Events for timing system
+    public event Action OnWaterContact;
+    public event Action<float> OnRockSunk;
+    
     void Start()
     {
         rb = GetComponent<Rigidbody>();
         rb.linearVelocity = transform.forward * speed;
+        startPosition = transform.position;
+        lastPosition = transform.position;
     }
     
     public void Initialize(RockType rockType)
@@ -55,23 +73,46 @@ public class Rock : MonoBehaviour
         {
             if (currentBounces < maxBounces)
             {
-                rb.linearVelocity = new Vector3(rb.linearVelocity.x, bounceForce, rb.linearVelocity.z);
+                // Fire event for timing system
+                OnWaterContact?.Invoke();
+                
+                // Apply pending multiplier from timing system
+                float effectiveBounceForce = bounceForce;
+                if (hasPendingMultiplier)
+                {
+                    effectiveBounceForce *= pendingBounceMultiplier;
+                    hasPendingMultiplier = false;
+                    pendingBounceMultiplier = 1f;
+                }
+                
+                rb.linearVelocity = new Vector3(rb.linearVelocity.x, effectiveBounceForce, rb.linearVelocity.z);
                 currentBounces++;
             }
             else
             {
-                Destroy(gameObject, 2f); // Destroy rock after 2 seconds
+                // Rock has sunk - calculate final distance
+                float finalDistance = CalculateTotalDistance();
+                OnRockSunk?.Invoke(finalDistance);
+                Destroy(gameObject, 2f);
             }
         }
         else
         {
-            Destroy(gameObject, 3f); // Destroy rock after 2 seconds
+            // Hit something other than water
+            float finalDistance = CalculateTotalDistance();
+            OnRockSunk?.Invoke(finalDistance);
+            Destroy(gameObject, 3f);
         }
     }
     
     void Update()
     {
         if (!isThrown) return;
+        
+        // Track distance traveled
+        totalDistanceTraveled += Vector3.Distance(transform.position, lastPosition);
+        lastPosition = transform.position;
+        
         speed += acceleration * Time.deltaTime;
         rb.linearVelocity = rb.linearVelocity.normalized * speed;
     }
@@ -79,8 +120,40 @@ public class Rock : MonoBehaviour
     public void ThrowRock()
     {
         isThrown = true;
+        startPosition = transform.position;
+        lastPosition = transform.position;
+        totalDistanceTraveled = 0f;
         rb.linearVelocity = transform.forward * acceleration;
     }
+    
+    /// <summary>
+    /// Apply a multiplier to the next bounce (from timing system)
+    /// </summary>
+    public void ApplyBounceMultiplier(float multiplier)
+    {
+        pendingBounceMultiplier = multiplier;
+        hasPendingMultiplier = true;
+    }
+    
+    /// <summary>
+    /// Calculate total horizontal distance from start position
+    /// </summary>
+    public float CalculateTotalDistance()
+    {
+        Vector3 flatStart = new Vector3(startPosition.x, 0, startPosition.z);
+        Vector3 flatEnd = new Vector3(transform.position.x, 0, transform.position.z);
+        return Vector3.Distance(flatStart, flatEnd);
+    }
+    
+    /// <summary>
+    /// Get the current bounce count
+    /// </summary>
+    public int GetCurrentBounces() => currentBounces;
+    
+    /// <summary>
+    /// Get total distance traveled (including vertical movement)
+    /// </summary>
+    public float GetTotalDistanceTraveled() => totalDistanceTraveled;
     
    
     

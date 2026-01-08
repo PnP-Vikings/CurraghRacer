@@ -1,8 +1,11 @@
+using System;
+using System.Collections;
 using System.Collections.Generic;
 using JetBrains.Annotations;
 using MiniGames;
 using UnityEngine;
 using UnityEngine.UI;
+using Random = UnityEngine.Random;
 
 public class RockSkippingGameController : MonoBehaviour,MiniGame
 {
@@ -25,8 +28,25 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     [Header("Input System Selection")]
     [SerializeField] private RockSelectionManager rockSelectionManager;
     
+    [Header("Throwing System")]
+    [SerializeField] private RockThrowingController throwingController;
+    [SerializeField] private RockThrowingUI throwingUI;
+    [SerializeField] private AIRockThrower aiThrower;
+    
+    [Header("Skip Button")]
+    [SerializeField] private Button skipAIButton;
+    
+    [Header("Results UI")]
+    [SerializeField] private RockSkippingResultsUI resultsUI;
+    
     [SerializeField] private List<RockVisual> spawnedRockVisuals = new List<RockVisual>();
     private RockVisual currentHoveredRock;
+    
+    // Scoring - tracks distances per player per round
+    // Key: playerIndex (0 = player, 1-3 = AI), Value: list of distances per round
+    private Dictionary<int, List<float>> playerRoundDistances = new Dictionary<int, List<float>>();
+    private int currentPlayerTurn = 0; // 0 = player, 1-3 = AI opponents
+    private const int TOTAL_PLAYERS = 4; // 1 player + 3 AI
     
     public void Awake()
     {
@@ -39,6 +59,12 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
             Destroy(gameObject);
         }
         availableRocksForThisSession = new List<Rock>();
+        
+        // Initialize scoring for all players
+        for (int i = 0; i < TOTAL_PLAYERS; i++)
+        {
+            playerRoundDistances[i] = new List<float>();
+        }
         
        int rockCounter = 0;
        while (rockCounter < 4)
@@ -104,6 +130,26 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
            }
           
            confirmSelectionButton.gameObject.SetActive(false);
+       }
+       
+       // Setup skip button
+       if (skipAIButton != null)
+       {
+           skipAIButton.onClick.AddListener(OnSkipAIButtonPressed);
+           skipAIButton.gameObject.SetActive(false);
+       }
+       
+       // Setup throwing controller reference
+       if (throwingController != null && rockSpawnPoint != null)
+       {
+           throwingController.rockSpawnPoint = rockSpawnPoint;
+           throwingController.throwingUI = throwingUI;
+       }
+       
+       // Setup AI thrower reference
+       if (aiThrower != null && rockSpawnPoint != null)
+       {
+           // AIThrower will use the same spawn point
        }
     }
     
@@ -253,9 +299,31 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         SetupScoring();
         
         stage = Stages.Aiming;
+        currentPlayerTurn = 0; // Player goes first
+        currentRound = 1;
         
-        // Spawn the selected rock for throwing
-        SpawnSelectedRockForThrowing();
+        // Prepare player throw
+        StartPlayerThrow();
+    }
+    
+    private void StartPlayerThrow()
+    {
+        stage = Stages.Throwing;
+        
+        if (throwingController != null && currentRock != null)
+        {
+            // Subscribe to rock landed event
+            throwingController.OnRockLanded -= OnRockFinished; // Unsubscribe first to avoid duplicates
+            throwingController.OnRockLanded += OnRockFinished;
+            
+            throwingController.PrepareThrow(currentRock);
+            Debug.Log($"Round {currentRound}: Player's turn to throw!");
+        }
+        else
+        {
+            // Fallback to old behavior if no throwing controller
+            SpawnSelectedRockForThrowing();
+        }
     }
     
     private void SpawnSelectedRockForThrowing()
@@ -267,6 +335,154 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         throwableRock.gameObject.SetActive(true);
         
         Debug.Log("Rock ready to throw!");
+    }
+    
+    /// <summary>
+    /// Called when a rock finishes (lands/sinks) - either player or AI
+    /// </summary>
+    public void OnRockFinished(float distance)
+    {
+        Debug.Log($"Rock finished! Player {currentPlayerTurn} distance: {distance:F1}m");
+        
+        // Record the distance
+        playerRoundDistances[currentPlayerTurn].Add(distance);
+        
+        // Update results UI if available
+        if (resultsUI != null)
+        {
+            resultsUI.UpdateScore(currentPlayerTurn, currentRound, distance);
+        }
+        
+        // Move to next turn
+        StartCoroutine(ProcessNextTurn());
+    }
+    
+    private IEnumerator ProcessNextTurn()
+    {
+        yield return new WaitForSeconds(2f); // Brief pause between turns
+        
+        currentPlayerTurn++;
+        
+        if (currentPlayerTurn >= TOTAL_PLAYERS)
+        {
+            // All players have thrown this round
+            currentPlayerTurn = 0;
+            currentRound++;
+            
+            if (currentRound > roundsToPlay)
+            {
+                // Game over - calculate winner
+                EndGameAndShowResults();
+                yield break;
+            }
+            
+            // Start next round with player
+            Debug.Log($"Starting Round {currentRound}");
+            StartPlayerThrow();
+        }
+        else
+        {
+            // AI turn
+            StartAITurn(currentPlayerTurn);
+        }
+    }
+    
+    private void StartAITurn(int aiIndex)
+    {
+        stage = Stages.AIThrowing;
+        
+        // Show skip button
+        if (skipAIButton != null)
+        {
+            skipAIButton.gameObject.SetActive(true);
+        }
+        
+        // Get AI's rock (from rockScores)
+        Rock aiRock = null;
+        if (rockScores.ContainsKey(aiIndex))
+        {
+            aiRock = rockScores[aiIndex].rock;
+        }
+        
+        if (aiRock == null)
+        {
+            Debug.LogError($"No rock found for AI {aiIndex}!");
+            OnRockFinished(0f);
+            return;
+        }
+        
+        if (aiThrower != null)
+        {
+            Debug.Log($"Round {currentRound}: AI {aiIndex}'s turn to throw!");
+            aiThrower.ExecuteAIThrow(aiRock, aiIndex - 1, (distance) => {
+                // Hide skip button after AI finishes
+                if (skipAIButton != null)
+                {
+                    skipAIButton.gameObject.SetActive(false);
+                }
+                OnRockFinished(distance);
+            });
+        }
+        else
+        {
+            // No AI thrower - simulate result
+            float simulatedDistance = Random.Range(15f, 45f);
+            OnRockFinished(simulatedDistance);
+        }
+    }
+    
+    private void OnSkipAIButtonPressed()
+    {
+        if (aiThrower != null)
+        {
+            aiThrower.SkipAllAIThrows();
+        }
+        
+        if (skipAIButton != null)
+        {
+            skipAIButton.gameObject.SetActive(false);
+        }
+        
+        Debug.Log("Skipping AI throws...");
+    }
+    
+    private void EndGameAndShowResults()
+    {
+        stage = Stages.GameOver;
+        
+        // Calculate totals and determine winner
+        Dictionary<int, float> totalDistances = new Dictionary<int, float>();
+        
+        for (int i = 0; i < TOTAL_PLAYERS; i++)
+        {
+            float total = 0f;
+            foreach (float distance in playerRoundDistances[i])
+            {
+                total += distance;
+            }
+            totalDistances[i] = total;
+            Debug.Log($"Player {i} total distance: {total:F1}m");
+        }
+        
+        // Find winner
+        int winner = 0;
+        float maxDistance = 0f;
+        foreach (var kvp in totalDistances)
+        {
+            if (kvp.Value > maxDistance)
+            {
+                maxDistance = kvp.Value;
+                winner = kvp.Key;
+            }
+        }
+        
+        Debug.Log($"Winner: Player {winner} with {maxDistance:F1}m total!");
+        
+        // Show results UI
+        if (resultsUI != null)
+        {
+            resultsUI.ShowFinalResults(playerRoundDistances, winner);
+        }
     }
     
     public void ResetRockSelection()
@@ -331,6 +547,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     {
         RockPicking,
         Aiming,
+        Throwing,      // Player is throwing
+        AIThrowing,    // AI is throwing
         Observing,
         GameOver
     }

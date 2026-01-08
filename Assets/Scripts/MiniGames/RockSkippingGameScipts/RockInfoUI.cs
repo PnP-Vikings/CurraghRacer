@@ -19,7 +19,6 @@ public class RockInfoUI : MonoBehaviour
     
     [Header("Settings")]
     [SerializeField] private Vector2 offset = new Vector2(10, 10);
-    [SerializeField] private bool followMouse = true;
     
     private RectTransform rectTransform;
     private Canvas canvas;
