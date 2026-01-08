@@ -22,11 +22,13 @@ public class AIRockThrower : MonoBehaviour
     [SerializeField] private float[] aiDifficulties = { 0.4f, 0.6f, 0.8f };
     
     [Header("Throw Parameters")]
-    [SerializeField] private float minPower = 10f;
-    [SerializeField] private float maxPower = 22f;
-    [SerializeField] private float minAngle = -20f;
-    [SerializeField] private float maxAngle = 20f;
-    [SerializeField] private float throwArcHeight = 8f;
+    [SerializeField] private float minPower = 5f;   // Match player settings
+    [SerializeField] private float maxPower = 12f;  
+    [SerializeField] private float minAngle = -15f; 
+    [SerializeField] private float maxAngle = 15f;  
+    [SerializeField] private float throwArcHeight = 4f;
+    [Tooltip("Base direction for throwing. Set to (0,0,-1) if water is in -Z direction")]
+    [SerializeField] private Vector3 baseThrowDirection = new Vector3(0, 0, -1f);
     
     [Header("Timing Simulation")]
     [SerializeField] private float baseBounceWindow = 0.4f;
@@ -74,6 +76,15 @@ public class AIRockThrower : MonoBehaviour
         
         if (mainCamera == null)
             mainCamera = Camera.main;
+        
+        // Force correct throw values (override any old serialized values)
+        minPower = 5f;
+        maxPower = 12f;
+        minAngle = -15f;
+        maxAngle = 15f;
+        throwArcHeight = 5f;  // Increased for better arc
+        
+        Debug.Log($"AIRockThrower initialized: Power {minPower}-{maxPower}, Angle {minAngle}-{maxAngle}");
     }
     
     #region Public Methods
@@ -235,26 +246,37 @@ public class AIRockThrower : MonoBehaviour
         currentAIRock = Instantiate(rock, spawnPos, spawnRot);
         currentAIRock.gameObject.SetActive(true);
         
+        // Wait a frame to ensure Awake/Start have run
+        yield return null;
+        
         // Subscribe to rock events
         currentAIRock.OnWaterContact += OnAIRockWaterContact;
         currentAIRock.OnRockSunk += OnAIRockSunk;
         
-        // Calculate throw direction
+        // Calculate throw direction using base direction (default -Z towards water)
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        Vector3 throwDirection = rotation * (rockSpawnPoint != null ? rockSpawnPoint.forward : Vector3.forward);
+        Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
-        // Apply velocity
-        Rigidbody rb = currentAIRock.GetComponent<Rigidbody>();
-        if (rb != null)
+        // Calculate velocity
+        Vector3 velocity = throwDirection * actualPower;
+        velocity.y = throwArcHeight * normalizedPower;
+        
+        // Throw with calculated velocity
+        currentAIRock.ThrowRock(velocity);
+        
+        // Have camera follow AI rock too
+        if (RockThrowingController.Instance != null)
         {
-            Vector3 velocity = throwDirection * actualPower;
-            velocity.y = throwArcHeight * normalizedPower;
-            rb.linearVelocity = velocity;
+            var controller = RockThrowingController.Instance;
+            if (controller.cameraFollower != null)
+            {
+                controller.cameraFollower.SetTarget(currentAIRock.transform);
+                controller.cameraFollower.SetOffset(controller.rockFollowOffset);
+                controller.cameraFollower.enabled = true;
+            }
         }
         
-        currentAIRock.ThrowRock();
-        
-        Debug.Log($"AI {aiIndex + 1} threw rock! Power: {actualPower:F1}, Angle: {angle:F1}°");
+        Debug.Log($"AI {aiIndex + 1} threw rock! Power: {actualPower:F1}, Angle: {angle:F1}°, Velocity: {velocity}");
         
         // Wait for rock to sink
         float timeout = 30f;

@@ -29,13 +29,21 @@ public class RockThrowingController : MonoBehaviour
     public Transform rockSpawnPoint;
     public Camera mainCamera;
     public RockThrowingUI throwingUI;
+    public CameraSmoothlyFollowGameObject cameraFollower;
+    
+    [Header("Camera Settings")]
+    public Vector3 rockFollowOffset = new Vector3(0, 5f, 10f); // Offset when following rock
+    private Vector3 originalCameraPosition;
+    private bool wasFollowingRock = false;
     
     [Header("Throwing Settings")]
-    public float minThrowPower = 8f;
-    public float maxThrowPower = 25f;
-    public float minThrowAngle = -30f;
-    public float maxThrowAngle = 30f;
-    public float throwArcHeight = 8f;
+    public float minThrowPower = 5f;   // Balanced - enough to reach water
+    public float maxThrowPower = 12f;  // Balanced - good distance but not too fast
+    public float minThrowAngle = -15f; // Slight angle variance
+    public float maxThrowAngle = 15f;  
+    public float throwArcHeight = 4f;  // Nice arc to see the rock fly
+    [Tooltip("Base direction for throwing. Set to (0,0,-1) if water is in -Z direction")]
+    public Vector3 baseThrowDirection = new Vector3(0, 0, -1f); // Default to -Z (towards water)
     
     [Header("Oscillator Mode Settings (Option C)")]
     public float oscillatorSpeed = 2.5f;
@@ -45,6 +53,10 @@ public class RockThrowingController : MonoBehaviour
     private float currentPowerCharge = 0f;
     private bool isCharging = false;
     private bool oscillatorActive = false;
+    
+    [Header("Preview Rock")]
+    public Vector3 previewRockOffset = new Vector3(0, 1f, 1f); // Offset from spawn point for preview
+    private Rock previewRock; // Rock shown while aiming/charging
     
     [Header("Flick Mode Settings (Option A)")]
     public float flickMinDistance = 50f;
@@ -112,8 +124,48 @@ public class RockThrowingController : MonoBehaviour
         
         if (mainCamera == null)
             mainCamera = Camera.main;
+        
+        // Find or setup camera follower
+        if (cameraFollower == null && mainCamera != null)
+        {
+            cameraFollower = mainCamera.GetComponent<CameraSmoothlyFollowGameObject>();
+            if (cameraFollower == null)
+            {
+                cameraFollower = mainCamera.gameObject.AddComponent<CameraSmoothlyFollowGameObject>();
+                Debug.Log("Added CameraSmoothlyFollowGameObject to main camera");
+            }
+        }
+        
+        // Save original camera position
+        if (mainCamera != null)
+        {
+            originalCameraPosition = mainCamera.transform.position;
+        }
+        
+        // Try to find throwing UI if not assigned
+        if (throwingUI == null)
+        {
+            throwingUI = FindFirstObjectByType<RockThrowingUI>();
+            if (throwingUI != null)
+            {
+                Debug.Log("Found RockThrowingUI in scene");
+            }
+            else
+            {
+                Debug.LogWarning("RockThrowingUI not found - power bar will not update!");
+            }
+        }
             
         currentTimingWindow = baseBounceTimingWindow;
+        
+        // Force correct throw values (override any old serialized values)
+        minThrowPower = 5f;
+        maxThrowPower = 12f;
+        minThrowAngle = -15f;
+        maxThrowAngle = 15f;
+        throwArcHeight = 5f;  // Increased from 4 for better arc to clear obstacles
+        
+        Debug.Log($"RockThrowingController initialized: Power {minThrowPower}-{maxThrowPower}, Angle {minThrowAngle}-{maxThrowAngle}");
     }
     
     private void Update()
@@ -150,6 +202,9 @@ public class RockThrowingController : MonoBehaviour
         currentTimingWindow = baseBounceTimingWindow;
         isCharging = false;
         
+        // Spawn preview rock that floats while aiming
+        SpawnPreviewRock();
+        
         switch (currentMode)
         {
             case ThrowingMode.Oscillator:
@@ -172,6 +227,40 @@ public class RockThrowingController : MonoBehaviour
         Debug.Log($"Throw prepared with mode: {currentMode}");
     }
     
+    private void SpawnPreviewRock()
+    {
+        // Clean up any existing preview
+        if (previewRock != null)
+        {
+            Destroy(previewRock.gameObject);
+        }
+        
+        if (currentRock == null || rockSpawnPoint == null) return;
+        
+        // Calculate preview position - offset in the throw direction (towards water)
+        Vector3 offsetDirection = baseThrowDirection.normalized;
+        Vector3 previewPos = rockSpawnPoint.position + 
+                            offsetDirection * previewRockOffset.z + 
+                            Vector3.up * previewRockOffset.y;
+        
+        // Instantiate preview rock
+        previewRock = Instantiate(currentRock, previewPos, rockSpawnPoint.rotation);
+        previewRock.gameObject.SetActive(true);
+        previewRock.StartPreviewMode(previewPos);
+        
+        Debug.Log("Preview rock spawned and floating");
+    }
+    
+    private void DestroyPreviewRock()
+    {
+        if (previewRock != null)
+        {
+            previewRock.StopPreviewMode();
+            Destroy(previewRock.gameObject);
+            previewRock = null;
+        }
+    }
+    
     public void CancelThrow()
     {
         canThrow = false;
@@ -179,6 +268,8 @@ public class RockThrowingController : MonoBehaviour
         rhythmModeActive = false;
         isCharging = false;
         currentPowerCharge = 0f;
+        
+        DestroyPreviewRock();
         
         if (throwingUI != null)
         {
@@ -227,11 +318,14 @@ public class RockThrowingController : MonoBehaviour
         }
         
         // Handle charging
-        if (IsThrowButtonHeld())
+        bool buttonHeld = IsThrowButtonHeld();
+        
+        if (buttonHeld)
         {
             if (!isCharging)
             {
                 isCharging = true;
+                Debug.Log($"Started charging... (UI connected: {throwingUI != null})");
             }
             
             currentPowerCharge += (powerChargeSpeed / maxChargeTime) * Time.deltaTime;
@@ -242,13 +336,30 @@ public class RockThrowingController : MonoBehaviour
             {
                 throwingUI.UpdatePowerBar(currentPowerCharge);
             }
+            
+            // Debug every 0.5 seconds while charging
+            if (Time.frameCount % 30 == 0)
+            {
+                Debug.Log($"Charging: {currentPowerCharge:P0}");
+            }
         }
         else if (isCharging)
         {
-            // Released - execute throw
-            ExecuteThrow(currentPowerCharge, currentOscillatorValue);
-            isCharging = false;
-            oscillatorActive = false;
+            // Released - attempt to throw
+            Debug.Log($"Released at power: {currentPowerCharge:P0}");
+            bool throwSucceeded = ExecuteThrow(currentPowerCharge, currentOscillatorValue);
+            
+            if (throwSucceeded)
+            {
+                isCharging = false;
+                oscillatorActive = false;
+            }
+            else
+            {
+                // Throw failed (not enough power), reset for another attempt
+                isCharging = false;
+                // oscillatorActive stays true so player can try again
+            }
         }
     }
     
@@ -415,9 +526,30 @@ public class RockThrowingController : MonoBehaviour
     
     #region Throw Execution
     
-    private void ExecuteThrow(float powerNormalized, float angleNormalized)
+    /// <summary>
+    /// Execute the throw with given power and angle.
+    /// Returns true if throw succeeded, false if rejected (e.g., not enough power)
+    /// </summary>
+    private bool ExecuteThrow(float powerNormalized, float angleNormalized)
     {
-        if (!canThrow || currentRock == null) return;
+        if (!canThrow || currentRock == null) return false;
+        
+        // Require minimum power to throw
+        if (powerNormalized < 0.1f)
+        {
+            Debug.Log("Not enough power to throw! Hold longer to charge.");
+            if (throwingUI != null)
+            {
+                throwingUI.ShowMessage("Hold to charge power!", 1f);
+            }
+            
+            // Reset charging state so player can try again
+            currentPowerCharge = 0f;
+            isCharging = false;
+            // Keep oscillatorActive true so the mode keeps running
+            // Keep canThrow true so another attempt is allowed
+            return false;
+        }
         
         canThrow = false;
         oscillatorActive = false;
@@ -427,31 +559,45 @@ public class RockThrowingController : MonoBehaviour
         float power = Mathf.Lerp(minThrowPower, maxThrowPower, powerNormalized);
         float angle = Mathf.Lerp(minThrowAngle, maxThrowAngle, (angleNormalized + 1f) / 2f);
         
-        // Spawn the rock
-        activeRock = Instantiate(currentRock, rockSpawnPoint.position, rockSpawnPoint.rotation);
-        activeRock.gameObject.SetActive(true);
+        // Use the preview rock if it exists, otherwise spawn a new one
+        if (previewRock != null)
+        {
+            activeRock = previewRock;
+            previewRock = null; // Clear reference so we don't destroy it
+            
+            // Move to spawn point for throw
+            activeRock.transform.position = rockSpawnPoint.position;
+            activeRock.transform.rotation = rockSpawnPoint.rotation;
+        }
+        else
+        {
+            activeRock = Instantiate(currentRock, rockSpawnPoint.position, rockSpawnPoint.rotation);
+            activeRock.gameObject.SetActive(true);
+        }
+        
         rockStartPosition = rockSpawnPoint.position;
         
         // Setup bounce timing callbacks
         activeRock.OnWaterContact += HandleWaterContact;
         activeRock.OnRockSunk += HandleRockSunk;
         
-        // Calculate throw direction
+        // Calculate throw direction using base direction (default -Z towards water)
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        Vector3 throwDirection = rotation * rockSpawnPoint.forward;
+        Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
-        // Apply initial velocity
-        Rigidbody rb = activeRock.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            Vector3 velocity = throwDirection * power;
-            velocity.y = throwArcHeight * Mathf.Max(0.5f, powerNormalized);
-            rb.linearVelocity = velocity;
-        }
+        // Calculate initial velocity
+        Vector3 velocity = throwDirection * power;
+        velocity.y = throwArcHeight * Mathf.Max(0.5f, powerNormalized);
         
-        activeRock.ThrowRock();
+        // Throw with calculated velocity
+        activeRock.ThrowRock(velocity);
+        
         isRockInFlight = true;
         bounceInputEnabled = true;
+        wasFollowingRock = true;
+        
+        // Start camera following the rock
+        StartCameraFollow(activeRock.transform);
         
         if (throwingUI != null)
         {
@@ -460,7 +606,9 @@ public class RockThrowingController : MonoBehaviour
         }
         
         OnThrowExecuted?.Invoke();
-        Debug.Log($"Rock thrown! Power: {power:F1}, Angle: {angle:F1}°");
+        Debug.Log($"Rock thrown! Power: {power:F1}, Angle: {angle:F1}°, Velocity: {velocity}");
+        
+        return true;
     }
     
     /// <summary>
@@ -479,20 +627,17 @@ public class RockThrowingController : MonoBehaviour
             onComplete?.Invoke(distance);
         };
         
-        // Calculate throw direction
+        // Calculate throw direction using base direction (default -Z towards water)
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        Vector3 throwDirection = rotation * rockSpawnPoint.forward;
+        Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
-        // Apply velocity
-        Rigidbody rb = activeRock.GetComponent<Rigidbody>();
-        if (rb != null)
-        {
-            Vector3 velocity = throwDirection * power;
-            velocity.y = throwArcHeight * (power / maxThrowPower);
-            rb.linearVelocity = velocity;
-        }
+        // Calculate velocity
+        Vector3 velocity = throwDirection * power;
+        velocity.y = throwArcHeight * (power / maxThrowPower);
         
-        activeRock.ThrowRock();
+        // Throw with calculated velocity
+        activeRock.ThrowRock(velocity);
+        
         isRockInFlight = true;
         bounceInputEnabled = false; // AI doesn't use input
         
@@ -612,6 +757,9 @@ public class RockThrowingController : MonoBehaviour
             bounceTimingCoroutine = null;
         }
         
+        // Stop camera following and return to original position
+        StopCameraFollow();
+        
         CleanupActiveRock();
         
         if (throwingUI != null)
@@ -682,9 +830,43 @@ public class RockThrowingController : MonoBehaviour
     
     #endregion
     
+    #region Camera Follow
+    
+    private void StartCameraFollow(Transform target)
+    {
+        if (cameraFollower != null && target != null)
+        {
+            cameraFollower.SetTarget(target);
+            cameraFollower.SetOffset(rockFollowOffset);
+            cameraFollower.enabled = true;
+            Debug.Log("Camera now following rock");
+        }
+    }
+    
+    private void StopCameraFollow()
+    {
+        if (cameraFollower != null)
+        {
+            cameraFollower.SetTarget(null);
+            cameraFollower.enabled = false;
+        }
+        
+        // Smoothly return camera to original position
+        if (mainCamera != null && wasFollowingRock)
+        {
+            mainCamera.transform.DOMove(originalCameraPosition, 1f).SetEase(Ease.OutQuad);
+            wasFollowingRock = false;
+            Debug.Log("Camera returning to original position");
+        }
+    }
+    
+    #endregion
+    
     private void OnDestroy()
     {
         CleanupActiveRock();
+        DestroyPreviewRock();
+        StopCameraFollow();
         
         if (Instance == this)
             Instance = null;

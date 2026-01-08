@@ -143,7 +143,23 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        if (throwingController != null && rockSpawnPoint != null)
        {
            throwingController.rockSpawnPoint = rockSpawnPoint;
+           
+           // Auto-find throwingUI if not assigned
+           if (throwingUI == null)
+           {
+               throwingUI = FindFirstObjectByType<RockThrowingUI>();
+           }
+           
            throwingController.throwingUI = throwingUI;
+           
+           if (throwingUI != null)
+           {
+               Debug.Log("ThrowingUI connected to throwing controller");
+           }
+           else
+           {
+               Debug.LogWarning("ThrowingUI not found - UI feedback will not work!");
+           }
        }
        
        // Setup AI thrower reference
