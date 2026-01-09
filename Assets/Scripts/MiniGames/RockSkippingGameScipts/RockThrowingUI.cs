@@ -14,7 +14,7 @@ public class RockThrowingUI : MonoBehaviour
     [SerializeField] private GameObject throwingPanel;
     
     [Header("Power Bar")]
-    [SerializeField] private GameObject powerBarSlider;
+    [SerializeField] private Slider powerBarSlider;
     [SerializeField] private Image powerBarFill;
     [SerializeField] private Image powerBarBackground;
     [SerializeField] private Gradient powerGradient;
@@ -134,7 +134,8 @@ public class RockThrowingUI : MonoBehaviour
         
         if (bounceTimingPanel != null) bounceTimingPanel.SetActive(false);
         if (resultPopup != null) resultPopup.SetActive(false);
-        if (powerBarSlider != null) powerBarSlider.SetActive(false);
+        if (powerBarSlider != null) powerBarSlider.gameObject.SetActive(false);
+        if (angleIndicator != null) angleIndicator.gameObject.SetActive(false);
         if (distancePanel != null) distancePanel.SetActive(false);
         if (aiDistancePanel != null) aiDistancePanel.SetActive(false);
         if (messagePanel != null) messagePanel.SetActive(false);
@@ -146,7 +147,8 @@ public class RockThrowingUI : MonoBehaviour
     {
         if (bounceTimingPanel != null) bounceTimingPanel.SetActive(false);
         if (resultPopup != null) resultPopup.SetActive(false);
-        if (powerBarSlider != null) powerBarSlider.SetActive(false);
+        if (powerBarSlider != null) powerBarSlider.gameObject.SetActive(false);
+        if (angleIndicator != null) angleIndicator.gameObject.SetActive(false);
         if (messagePanel != null) messagePanel.SetActive(false);
         if (beatIndicator != null) beatIndicator.SetActive(false);
         if (instructionText != null) instructionText.gameObject.SetActive(false);
@@ -186,7 +188,7 @@ public class RockThrowingUI : MonoBehaviour
         if (messagePanel != null) messagePanel.SetActive(false);
         if (beatIndicator != null) beatIndicator.SetActive(false);
         if (instructionText != null) instructionText.gameObject.SetActive(false);
-        if(powerBarSlider != null) powerBarSlider.SetActive(false);
+        if(powerBarSlider != null) powerBarSlider.gameObject.SetActive(false);
     }
     
     #endregion
@@ -196,9 +198,11 @@ public class RockThrowingUI : MonoBehaviour
     public void UpdatePowerBar(float normalizedPower)
     {
         if (powerBarFill == null) return;
-        powerBarSlider?.SetActive(true);
+        powerBarSlider?.gameObject.SetActive(true);
         powerBarFill.fillAmount = normalizedPower;
         powerBarFill.color = powerGradient.Evaluate(normalizedPower);
+        
+        powerBarSlider.value = normalizedPower;
         
         // Add pulse effect at max power
         if (normalizedPower >= 0.95f)
