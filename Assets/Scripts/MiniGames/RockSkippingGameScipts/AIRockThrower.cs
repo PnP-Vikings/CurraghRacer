@@ -22,11 +22,11 @@ public class AIRockThrower : MonoBehaviour
     [SerializeField] private float[] aiDifficulties = { 0.4f, 0.6f, 0.8f };
     
     [Header("Throw Parameters")]
-    [SerializeField] private float minPower = 5f;   // Match player settings
-    [SerializeField] private float maxPower = 12f;  
+    [SerializeField] private float minPower = 15f;   // Match player settings
+    [SerializeField] private float maxPower = 35f;  
     [SerializeField] private float minAngle = -15f; 
     [SerializeField] private float maxAngle = 15f;  
-    [SerializeField] private float throwArcHeight = 4f;
+    [SerializeField] private float throwArcHeight = 5f;
     [Tooltip("Base direction for throwing. Set to (0,0,-1) if water is in -Z direction")]
     [SerializeField] private Vector3 baseThrowDirection = new Vector3(0, 0, -1f);
     
@@ -78,7 +78,7 @@ public class AIRockThrower : MonoBehaviour
             mainCamera = Camera.main;
         
         // Force correct throw values (override any old serialized values)
-        minPower = 15f;    // Match player
+        minPower = 25f;    // Match player
         maxPower = 35f;    // Match player
         minAngle = -15f;
         maxAngle = 15f;
@@ -270,10 +270,9 @@ public class AIRockThrower : MonoBehaviour
             var controller = RockThrowingController.Instance;
             if (controller.cameraFollower != null)
             {
-                controller.cameraFollower.SetTarget(currentAIRock.transform);
-                controller.cameraFollower.SetOffset(controller.rockFollowOffset);
-                controller.cameraFollower.enabled = true;
+               controller.StartCameraFollow(currentAIRock.transform);
             }
+            RockThrowingController.Instance.UiUpdatePlayerThrowing(aiIndex+2);
         }
         
         Debug.Log($"AI {aiIndex + 1} threw rock! Power: {actualPower:F1}, Angle: {angle:F1}°, Velocity: {velocity}");
@@ -299,6 +298,7 @@ public class AIRockThrower : MonoBehaviour
                 float instantDistance = CalculateInstantResult(rock, aiIndex);
                 OnAIThrowComplete?.Invoke(aiIndex, instantDistance);
                 onComplete?.Invoke(instantDistance);
+                throwingController?.UiUpdateAiDistance(instantDistance);
                 isAIThrowing = false;
                 yield break;
             }
@@ -321,7 +321,11 @@ public class AIRockThrower : MonoBehaviour
         
         OnAIThrowComplete?.Invoke(aiIndex, finalDistance);
         onComplete?.Invoke(finalDistance);
+        throwingController?.UiUpdateAiDistance(finalDistance);
         isAIThrowing = false;
+        throwingController?.StopCameraFollow();
+          
+        
     }
     
     private IEnumerator AllAIThrowsCoroutine(List<(Rock rock, int aiIndex)> throws, Action<List<(int, float)>> onAllComplete)

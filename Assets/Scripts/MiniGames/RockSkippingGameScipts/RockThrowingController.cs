@@ -29,6 +29,7 @@ public class RockThrowingController : MonoBehaviour
     public Transform rockSpawnPoint;
     public Camera mainCamera;
     public RockThrowingUI throwingUI;
+    [SerializeField] Camera followCamera;
     public CameraSmoothlyFollowGameObject cameraFollower;
     
     [Header("Camera Settings")]
@@ -142,6 +143,12 @@ public class RockThrowingController : MonoBehaviour
             originalCameraPosition = mainCamera.transform.position;
         }
         
+        if(cameraFollower != null)
+        {
+            cameraFollower.enabled = false; // Start disabled
+            followCamera = cameraFollower.GetComponent<Camera>();
+        }
+        
         // Try to find throwing UI if not assigned
         if (throwingUI == null)
         {
@@ -189,10 +196,23 @@ public class RockThrowingController : MonoBehaviour
         }
     }
     
+    public void SwapCameras()
+    {
+        if(mainCamera != null && followCamera != null)
+        {
+            bool mainActive = mainCamera.gameObject.activeSelf;
+            mainCamera.gameObject.SetActive(!mainActive);
+            followCamera.gameObject.SetActive(mainActive);
+        }
+    }
+    
     #region Public Methods
     
     public void PrepareThrow(Rock rock)
     {
+        mainCamera.gameObject.SetActive(true);
+        followCamera.gameObject.SetActive(false);
+        
         currentRock = rock;
         canThrow = true;
         isRockInFlight = false;
@@ -315,6 +335,7 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.UpdateAngleIndicator(currentOscillatorValue);
+            throwingUI.UpdatePowerBar(currentPowerCharge);
         }
         
         // Handle charging
@@ -533,6 +554,8 @@ public class RockThrowingController : MonoBehaviour
     private bool ExecuteThrow(float powerNormalized, float angleNormalized)
     {
         if (!canThrow || currentRock == null) return false;
+
+        UiUpdatePlayerThrowing(0 + 1);
         
         // Require minimum power to throw
         if (powerNormalized < 0.1f)
@@ -596,8 +619,12 @@ public class RockThrowingController : MonoBehaviour
         bounceInputEnabled = true;
         wasFollowingRock = true;
         
-        // Start camera following the rock
-        StartCameraFollow(activeRock.transform);
+        if(cameraFollower != null)
+        {
+            // Start camera following the rock
+            StartCameraFollow(activeRock.transform);
+        }
+       
         
         if (throwingUI != null)
         {
@@ -757,6 +784,7 @@ public class RockThrowingController : MonoBehaviour
             bounceTimingCoroutine = null;
         }
         
+        
         // Stop camera following and return to original position
         StopCameraFollow();
         
@@ -765,6 +793,7 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.HideBounceUI();
+            throwingUI.HideThrowingUI();
             throwingUI.ShowDistanceResult(totalDistance);
         }
         
@@ -790,6 +819,11 @@ public class RockThrowingController : MonoBehaviour
         if (mainCamera != null)
         {
             mainCamera.transform.DOShakePosition(duration, strength, 10, 90f, false, true)
+                .SetUpdate(true);
+        }
+        else if(followCamera != null)
+        {
+            followCamera.transform.DOShakePosition(duration, strength, 10, 90f, false, true)
                 .SetUpdate(true);
         }
     }
@@ -832,8 +866,9 @@ public class RockThrowingController : MonoBehaviour
     
     #region Camera Follow
     
-    private void StartCameraFollow(Transform target)
+    public void StartCameraFollow(Transform target)
     {
+        SwapCameras();
         if (cameraFollower != null && target != null)
         {
             cameraFollower.SetTarget(target);
@@ -843,8 +878,9 @@ public class RockThrowingController : MonoBehaviour
         }
     }
     
-    private void StopCameraFollow()
+    public void StopCameraFollow()
     {
+        SwapCameras();
         if (cameraFollower != null)
         {
             cameraFollower.SetTarget(null);
@@ -858,9 +894,36 @@ public class RockThrowingController : MonoBehaviour
             wasFollowingRock = false;
             Debug.Log("Camera returning to original position");
         }
+        
+        
     }
     
     #endregion
+    
+    public void UiUpdatePlayerThrowing(int playerId)
+    {
+        // Placeholder for updating UI with player info
+        Debug.Log($"UI updated for player {playerId} throwing");
+        
+        string playerName = $"Player {playerId}";
+        if (throwingUI != null)
+        {
+            throwingUI.UpdateInstructionText(playerName);
+            
+        }
+       
+    }
+    
+    public void UiUpdateAiDistance(float distance)
+    {
+        // Placeholder for updating UI with AI distance info
+        Debug.Log($"UI updated with AI distance: {distance:F1} meters");
+        
+        if (throwingUI != null)
+        {
+            throwingUI.ShowAIDistanceResult(distance);
+        }
+    }
     
     private void OnDestroy()
     {

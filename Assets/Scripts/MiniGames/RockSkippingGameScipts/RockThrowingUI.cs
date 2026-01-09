@@ -14,6 +14,7 @@ public class RockThrowingUI : MonoBehaviour
     [SerializeField] private GameObject throwingPanel;
     
     [Header("Power Bar")]
+    [SerializeField] private GameObject powerBarSlider;
     [SerializeField] private Image powerBarFill;
     [SerializeField] private Image powerBarBackground;
     [SerializeField] private Gradient powerGradient;
@@ -36,6 +37,10 @@ public class RockThrowingUI : MonoBehaviour
     [Header("Distance Display")]
     [SerializeField] private GameObject distancePanel;
     [SerializeField] private TextMeshProUGUI distanceText;
+    
+    [Header("Ai Distance Display")]
+    [SerializeField] private GameObject aiDistancePanel;
+    [SerializeField] private TextMeshProUGUI aiDistanceText;
     
     [Header("Message Display")]
     [SerializeField] private GameObject messagePanel;
@@ -124,11 +129,27 @@ public class RockThrowingUI : MonoBehaviour
     
     public void HideThrowingUI()
     {
-        if (throwingPanel != null)
-            throwingPanel.SetActive(false);
+        /*if (throwingPanel != null)
+            throwingPanel.SetActive(false);*/
         
-        if (instructionText != null)
-            instructionText.gameObject.SetActive(false);
+        if (bounceTimingPanel != null) bounceTimingPanel.SetActive(false);
+        if (resultPopup != null) resultPopup.SetActive(false);
+        if (powerBarSlider != null) powerBarSlider.SetActive(false);
+        if (distancePanel != null) distancePanel.SetActive(false);
+        if (aiDistancePanel != null) aiDistancePanel.SetActive(false);
+        if (messagePanel != null) messagePanel.SetActive(false);
+        if (beatIndicator != null) beatIndicator.SetActive(false);
+        if (instructionText != null) instructionText.gameObject.SetActive(false);
+    }
+    
+    public void HideThrowingInterface()
+    {
+        if (bounceTimingPanel != null) bounceTimingPanel.SetActive(false);
+        if (resultPopup != null) resultPopup.SetActive(false);
+        if (powerBarSlider != null) powerBarSlider.SetActive(false);
+        if (messagePanel != null) messagePanel.SetActive(false);
+        if (beatIndicator != null) beatIndicator.SetActive(false);
+        if (instructionText != null) instructionText.gameObject.SetActive(false);
     }
     
     public void ShowBounceUI()
@@ -156,13 +177,16 @@ public class RockThrowingUI : MonoBehaviour
     
     private void HideAll()
     {
+        if(angleIndicator != null) angleIndicator.gameObject.SetActive(false);
         if (throwingPanel != null) throwingPanel.SetActive(false);
         if (bounceTimingPanel != null) bounceTimingPanel.SetActive(false);
         if (resultPopup != null) resultPopup.SetActive(false);
         if (distancePanel != null) distancePanel.SetActive(false);
+        if (aiDistancePanel != null) aiDistancePanel.SetActive(false);
         if (messagePanel != null) messagePanel.SetActive(false);
         if (beatIndicator != null) beatIndicator.SetActive(false);
         if (instructionText != null) instructionText.gameObject.SetActive(false);
+        if(powerBarSlider != null) powerBarSlider.SetActive(false);
     }
     
     #endregion
@@ -172,7 +196,7 @@ public class RockThrowingUI : MonoBehaviour
     public void UpdatePowerBar(float normalizedPower)
     {
         if (powerBarFill == null) return;
-        
+        powerBarSlider?.SetActive(true);
         powerBarFill.fillAmount = normalizedPower;
         powerBarFill.color = powerGradient.Evaluate(normalizedPower);
         
@@ -187,6 +211,7 @@ public class RockThrowingUI : MonoBehaviour
     public void UpdateAngleIndicator(float normalizedAngle)
     {
         if (angleIndicator == null) return;
+        angleIndicator.gameObject.SetActive(true);
         
         // normalizedAngle is -1 to 1, map to pixel position
         float xPos = normalizedAngle * angleIndicatorRange;
@@ -351,7 +376,7 @@ public class RockThrowingUI : MonoBehaviour
         float currentValue = 0f;
         DOTween.To(() => currentValue, x => {
             currentValue = x;
-            distanceText.text = $"{currentValue:F1}m";
+            distanceText.text = $"Player Distance: {currentValue:F1}m";
         }, distance, distanceCountDuration).SetEase(Ease.OutQuad);
         
         // Punch scale on complete
@@ -366,6 +391,29 @@ public class RockThrowingUI : MonoBehaviour
         {
             distancePanel.transform.DOScale(0f, 0.2f).SetEase(Ease.InBack)
                 .OnComplete(() => distancePanel.SetActive(false));
+        }
+    }
+    
+    public void ShowAIDistanceResult(float distance)
+    {
+        if (aiDistancePanel == null || aiDistanceText == null) return;
+        
+        aiDistancePanel.SetActive(true);
+        aiDistanceText.text = $"AI Distance: {distance:F1}m";
+        
+        // Animate punch
+        aiDistanceText.transform.DOKill();
+        aiDistanceText.transform.localScale = Vector3.one;
+        aiDistanceText.transform.DOPunchScale(Vector3.one * 0.2f, 0.3f, 5);
+    }
+    
+    
+    public void HideAIDistanceResult()
+    {
+        if (aiDistancePanel != null)
+        {
+            aiDistancePanel.transform.DOScale(0f, 0.2f).SetEase(Ease.InBack)
+                .OnComplete(() => aiDistancePanel.SetActive(false));
         }
     }
     
@@ -401,6 +449,15 @@ public class RockThrowingUI : MonoBehaviour
     }
     
     #endregion
+    
+    public void UpdateInstructionText(string instruction)
+    {
+        if (instructionText != null)
+        {
+            instructionText.text = instruction;
+            instructionText.gameObject.SetActive(true);
+        }
+    }
     
     #region Rhythm Mode
     

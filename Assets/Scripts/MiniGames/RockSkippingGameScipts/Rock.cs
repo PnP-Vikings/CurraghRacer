@@ -158,13 +158,6 @@ public class Rock : MonoBehaviour
         }
     }
     
-    public void SetStats(float newAcceleration, float newBounceForce, int newMaxBounces)
-    {
-        this.acceleration = newAcceleration;
-        this.bounceForce = newBounceForce;
-        this.maxBounces = newMaxBounces;
-    }
-    
     void OnCollisionEnter(Collision collision)
     {
         if(!isThrown) return;
