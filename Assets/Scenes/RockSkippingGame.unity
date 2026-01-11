@@ -18686,8 +18686,8 @@ MonoBehaviour:
   rockSpawnPoint: {fileID: 522164402}
   mainCamera: {fileID: 318556195}
   aiDifficulties:
-  - 0.4
   - 0.6
+  - 0.7
   - 0.8
   minPower: 10
   maxPower: 22
@@ -18715,7 +18715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 004d741e0b6f4a059cfe7f4c539a8c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockThrowingController
-  currentMode: 0
+  currentMode: 2
   currentRock: {fileID: 0}
   rockSpawnPoint: {fileID: 522164402}
   mainCamera: {fileID: 318556195}

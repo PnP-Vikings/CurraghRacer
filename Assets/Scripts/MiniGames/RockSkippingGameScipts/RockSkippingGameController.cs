@@ -169,7 +169,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        }
     }
     
-    private System.Collections.IEnumerator SubscribeToRockEvents()
+    private IEnumerator SubscribeToRockEvents()
     {
         // Wait one frame for rocks to be spawned
         yield return null;

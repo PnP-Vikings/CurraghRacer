@@ -44,6 +44,9 @@ public class Rock : MonoBehaviour
     private Tweener floatTweener;
     private bool isPreviewMode = false;
     
+    public float timeSinceRockWasThrown =0f;
+    public float timeRockHasBeforeTouchingWater = 2f;
+    
     void Awake()
     {
         EnsureRigidbody();
@@ -225,6 +228,18 @@ public class Rock : MonoBehaviour
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
             Destroy(gameObject, 1f);
+        }
+        
+        if(!hasHitWater)
+        {
+            timeSinceRockWasThrown += Time.deltaTime;
+            if(timeSinceRockWasThrown >= timeRockHasBeforeTouchingWater)
+            {
+                Debug.Log("Rock did not hit water in time - forcing sink");
+                float finalDistance = CalculateTotalDistance();
+                OnRockSunk?.Invoke(finalDistance);
+                Destroy(gameObject, 1f);
+            }
         }
     }
     

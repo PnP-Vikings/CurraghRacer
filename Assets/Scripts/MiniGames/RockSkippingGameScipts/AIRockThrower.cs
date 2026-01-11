@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using DG.Tweening;
 using Random = UnityEngine.Random;
 
 /// <summary>
@@ -19,7 +20,7 @@ public class AIRockThrower : MonoBehaviour
     
     [Header("AI Difficulty Settings")]
     [Tooltip("Difficulty per AI opponent (0 = bad, 1 = perfect)")]
-    [SerializeField] private float[] aiDifficulties = { 0.4f, 0.6f, 0.8f };
+    [SerializeField] private float[] aiDifficulties = { 0.7f, 0.75f, 0.8f };
     
     [Header("Throw Parameters")]
     [SerializeField] private float minPower = 15f;   // Match player settings
@@ -78,8 +79,8 @@ public class AIRockThrower : MonoBehaviour
             mainCamera = Camera.main;
         
         // Force correct throw values (override any old serialized values)
-        minPower = 25f;    // Match player
-        maxPower = 35f;    // Match player
+        minPower = 30f;    // Match player
+        maxPower = 40f;    // Match player
         minAngle = -15f;
         maxAngle = 15f;
         throwArcHeight = 5f;
@@ -145,7 +146,7 @@ public class AIRockThrower : MonoBehaviour
         // Simulate throw power (higher difficulty = more consistent high power)
         float powerVariance = (1f - difficulty) * 0.4f;
         float basePower = Mathf.Lerp(0.6f, 0.9f, difficulty);
-        float normalizedPower = basePower + Random.Range(-powerVariance, powerVariance);
+        float normalizedPower = basePower + Random.Range(-.15f, powerVariance);
         normalizedPower = Mathf.Clamp01(normalizedPower);
         
         float actualPower = Mathf.Lerp(minPower, maxPower, normalizedPower);
@@ -226,12 +227,12 @@ public class AIRockThrower : MonoBehaviour
         }
         
         // Calculate throw parameters based on difficulty
-        float powerVariance = (1f - currentDifficulty) * 0.3f;
-        float basePower = Mathf.Lerp(0.65f, 0.85f, currentDifficulty);
+        float powerVariance = (1f - currentDifficulty) * 0.1f; // Was 0.15f - tighter variance
+        float basePower = Mathf.Lerp(0.85f, 0.98f, currentDifficulty); // Was 0.75-0.95, now higher floor
         float normalizedPower = basePower + Random.Range(-powerVariance, powerVariance);
-        normalizedPower = Mathf.Clamp01(normalizedPower);
-        
-        float angleVariance = (1f - currentDifficulty) * 20f;
+        normalizedPower = Mathf.Clamp(normalizedPower, 0.75f, 1f); // Was 0.6f min, now 0.75f
+
+        float angleVariance = (1f - currentDifficulty) * 5f; // Was 8f - even tighter angles
         float angle = Random.Range(-angleVariance, angleVariance);
         
         float actualPower = Mathf.Lerp(minPower, maxPower, normalizedPower);
@@ -241,10 +242,25 @@ public class AIRockThrower : MonoBehaviour
         
         // Spawn and throw the rock
         Vector3 spawnPos = rockSpawnPoint != null ? rockSpawnPoint.position : transform.position;
-        Quaternion spawnRot = rockSpawnPoint != null ? rockSpawnPoint.rotation : Quaternion.identity;
         
-        currentAIRock = Instantiate(rock, spawnPos, spawnRot);
+        // Use a flat rotation facing the throw direction - rock should be horizontal like a skipping stone
+        // Don't inherit the source rock's rotation which may be weird from preview spinning
+        Quaternion flatRotation = Quaternion.LookRotation(baseThrowDirection, Vector3.up);
+        
+        currentAIRock = Instantiate(rock, spawnPos, flatRotation);
         currentAIRock.gameObject.SetActive(true);
+        
+        // Kill any DOTween animations that might have been copied from the original rock
+        currentAIRock.transform.DOKill();
+        
+        // Ensure the rock's rigidbody has no angular velocity
+        Rigidbody rockRb = currentAIRock.GetComponent<Rigidbody>();
+        if (rockRb != null)
+        {
+            rockRb.angularVelocity = Vector3.zero;
+            // Freeze rotation so rock stays flat while skipping
+            rockRb.freezeRotation = true;
+        }
         
         // Wait a frame to ensure Awake/Start have run
         yield return null;
@@ -257,9 +273,14 @@ public class AIRockThrower : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
         Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
-        // Calculate velocity
+        // Calculate velocity - need proper arc for skipping
+        // Rock needs shallow entry angle (10-20 degrees) to skip well
         Vector3 velocity = throwDirection * actualPower;
-        velocity.y = throwArcHeight * normalizedPower;
+        
+        // Scale Y velocity based on horizontal speed to maintain good skip angle
+        // A ratio of about 0.15-0.2 gives a good shallow angle for skipping
+        float arcMultiplier = 0.18f + (currentDifficulty * 0.05f); // Better AI = better angle
+        velocity.y = actualPower * arcMultiplier;
         
         // Throw with calculated velocity
         currentAIRock.ThrowRock(velocity);
