@@ -366,6 +366,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         // Update results UI if available
         if (resultsUI != null)
         {
+            
             resultsUI.UpdateScore(currentPlayerTurn, currentRound, distance);
         }
         
@@ -376,7 +377,10 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     private IEnumerator ProcessNextTurn()
     {
         yield return new WaitForSeconds(2f); // Brief pause between turns
-        
+        if(resultsUI != null)
+        {
+            resultsUI.HideInGameScorePanel();
+        }
         currentPlayerTurn++;
         
         if (currentPlayerTurn >= TOTAL_PLAYERS)
@@ -399,7 +403,12 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         else
         {
             // AI turn
+            resultsUI.HideInGameScorePanel();
             StartAITurn(currentPlayerTurn);
+        }
+        if (resultsUI != null)
+        {
+            resultsUI.UpdateTurnIndicator(currentPlayerTurn, currentRound);
         }
     }
     

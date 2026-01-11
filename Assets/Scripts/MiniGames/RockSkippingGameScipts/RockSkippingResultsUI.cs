@@ -147,6 +147,14 @@ public class RockSkippingResultsUI : MonoBehaviour
         }
     }
     
+    public void HideInGameScorePanel()
+    {
+        if (inGameScorePanel != null)
+        {
+            inGameScorePanel.SetActive(false);
+        }
+    }
+    
     /// <summary>
     /// Update current turn indicator
     /// </summary>
@@ -154,6 +162,7 @@ public class RockSkippingResultsUI : MonoBehaviour
     {
         if (currentTurnText != null)
         {
+            currentTurnText.gameObject.SetActive(true);
             string playerName = playerIndex < playerNames.Length ? playerNames[playerIndex] : $"Player {playerIndex}";
             currentTurnText.text = $"{playerName}'s Turn";
             currentTurnText.color = playerIndex < playerColors.Length ? playerColors[playerIndex] : Color.white;
@@ -161,6 +170,7 @@ public class RockSkippingResultsUI : MonoBehaviour
         
         if (currentRoundText != null)
         {
+            currentRoundText.gameObject.SetActive(true);
             currentRoundText.text = $"Round {round}/3";
         }
         
