@@ -165,7 +165,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
        // Setup AI thrower reference
        if (aiThrower != null && rockSpawnPoint != null)
        {
-           // AIThrower will use the same spawn point
+           // AIThrower will use the same spawn point as player
+           aiThrower.SetSpawnPoint(rockSpawnPoint);
        }
     }
     

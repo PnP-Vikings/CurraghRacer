@@ -101,6 +101,14 @@ public class AIRockThrower : MonoBehaviour
     }
     
     /// <summary>
+    /// Set the spawn point for AI rock throws
+    /// </summary>
+    public void SetSpawnPoint(Transform spawnPoint)
+    {
+        rockSpawnPoint = spawnPoint;
+    }
+    
+    /// <summary>
     /// Set difficulty for a specific AI opponent
     /// </summary>
     public void SetDifficulty(int aiIndex, float difficulty)
@@ -144,53 +152,51 @@ public class AIRockThrower : MonoBehaviour
         float difficulty = GetDifficulty(aiIndex);
         
         // Simulate throw power (higher difficulty = more consistent high power)
-        float powerVariance = (1f - difficulty) * 0.4f;
-        float basePower = Mathf.Lerp(0.6f, 0.9f, difficulty);
-        float normalizedPower = basePower + Random.Range(-.15f, powerVariance);
-        normalizedPower = Mathf.Clamp01(normalizedPower);
+        float powerVariance = (1f - difficulty) * 0.3f;
+        float basePower = Mathf.Lerp(0.5f, 0.85f, difficulty);
+        float normalizedPower = basePower + Random.Range(-0.1f, powerVariance);
+        normalizedPower = Mathf.Clamp(normalizedPower, 0.3f, 0.95f);
         
-        float actualPower = Mathf.Lerp(minPower, maxPower, normalizedPower);
+        // Base distance scales with power - realistic max around 15-20m from throw alone
+        float baseDistance = normalizedPower * 18f;
         
         // Simulate bounces
         int maxBounces = rock.maxBounces;
-        float totalDistance = 0f;
-        float currentBounceForce = rock.bounceForce;
+        float totalDistance = baseDistance;
         float bounceWindow = baseBounceWindow;
         
-        // Base distance from throw power
-        totalDistance = actualPower * 2f;
-        
+        // Each bounce can add distance based on timing result
         for (int i = 0; i < maxBounces; i++)
         {
             BounceResult result = SimulateBounceResult(difficulty, bounceWindow);
             
-            float multiplier = result switch
+            // Distance added per bounce (realistic: 3-8m per good bounce)
+            float bounceDistance = result switch
             {
-                BounceResult.Perfect => perfectMultiplier,
-                BounceResult.Good => goodMultiplier,
-                BounceResult.Okay => okayMultiplier,
-                BounceResult.Miss => missMultiplier,
-                _ => 1f
+                BounceResult.Perfect => Random.Range(6f, 8f),
+                BounceResult.Good => Random.Range(4f, 6f),
+                BounceResult.Okay => Random.Range(2f, 4f),
+                BounceResult.Miss => Random.Range(0.5f, 1.5f),
+                _ => 2f
             };
             
-            // Each bounce adds distance based on bounce force and multiplier
-            float bounceDistance = currentBounceForce * multiplier * 1.5f;
             totalDistance += bounceDistance;
             
-            // Update for next bounce
-            currentBounceForce *= multiplier;
+            // Update window for next bounce
             bounceWindow = Mathf.Max(minWindow, bounceWindow - windowShrinkPerBounce);
             
-            // Miss might end the run early
-            if (result == BounceResult.Miss && Random.value < 0.3f)
+            // Miss might end the run early (higher chance than before)
+            if (result == BounceResult.Miss && Random.value < 0.5f)
             {
                 break;
             }
         }
         
-        // Add some random variation
+        // Add small random variation
         totalDistance *= Random.Range(0.9f, 1.1f);
         
+        // Clamp to realistic maximum (around 40-45m)
+        totalDistance = Mathf.Clamp(totalDistance, 3f, 45f);
         return Mathf.Max(5f, totalDistance);
     }
     
