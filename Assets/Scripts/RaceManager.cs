@@ -559,7 +559,7 @@ public class RaceManager : MonoBehaviour
             AudioManager.instance.raceAmbience.start();
             AudioManager.instance.raceAmbience.setParameterByName("Crowd Volume", 1f);
             AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 1f);
-            AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 1f);
+            AudioManager.instance.rowing.start();
 
             if (!isRaceDay)
             {

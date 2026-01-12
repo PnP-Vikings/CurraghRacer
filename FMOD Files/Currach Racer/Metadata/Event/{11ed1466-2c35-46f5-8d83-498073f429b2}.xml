@@ -106,7 +106,7 @@
 	<object class="MixerBusPanner" id="{c594c229-4f30-497a-a587-f8c399508d31}" />
 	<object class="SingleSound" id="{e854f67d-ec0b-471d-be40-d306694b5199}">
 		<property name="length">
-			<value>23.300000000000001</value>
+			<value>3</value>
 		</property>
 		<property name="volume">
 			<value>-14</value>
@@ -120,7 +120,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{22106bee-20b5-454e-aa75-76576bd982fd}">
 		<property name="name">
-			<value>Angelus</value>
+			<value>Angelus 23s</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{204c47a5-0262-4f18-81ad-c313877c2612}</destination>
@@ -164,7 +164,7 @@
 	<object class="MixerBusFader" id="{5d7ae7be-701b-4ea5-87b4-6fbe9ed0c720}" />
 	<object class="AutomationPoint" id="{0ee79b0b-7e48-4d2a-bc57-39963a04dbff}">
 		<property name="position">
-			<value>22.371997604374958</value>
+			<value>2.0719976043749568</value>
 		</property>
 		<property name="value">
 			<value>1</value>
@@ -175,7 +175,7 @@
 	</object>
 	<object class="AutomationPoint" id="{88b88bd8-22e1-4ee6-bf86-2ccb13e868e6}">
 		<property name="position">
-			<value>23.300000000000001</value>
+			<value>3</value>
 		</property>
 		<property name="value">
 			<value>0</value>

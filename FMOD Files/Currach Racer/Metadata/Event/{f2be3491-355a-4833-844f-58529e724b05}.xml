@@ -103,7 +103,7 @@
 			<value>-3</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Card</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{4b6911fe-d77d-48ab-8ddb-d9a85a0bcb2b}</destination>

@@ -74,9 +74,6 @@
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{50d1422d-2e31-4cbb-9d43-d427bd9a6171}">
-		<relationship name="modulators">
-			<destination>{b0462e3a-0892-45a8-b9a0-0733c4bfd4d5}</destination>
-		</relationship>
 		<relationship name="effectChain">
 			<destination>{361c781f-cdbb-462a-9f29-e0104824f736}</destination>
 		</relationship>
@@ -132,26 +129,6 @@
 			<destination>{50d1422d-2e31-4cbb-9d43-d427bd9a6171}</destination>
 		</relationship>
 	</object>
-	<object class="ADSRModulator" id="{b0462e3a-0892-45a8-b9a0-0733c4bfd4d5}">
-		<property name="nameOfPropertyBeingModulated">
-			<value>volume</value>
-		</property>
-		<property name="initialValue">
-			<value>-80</value>
-		</property>
-		<property name="attackTime">
-			<value>20</value>
-		</property>
-		<property name="attackShape">
-			<value>-1.00000048</value>
-		</property>
-		<property name="releaseTime">
-			<value>1200</value>
-		</property>
-		<property name="finalValue">
-			<value>-80</value>
-		</property>
-	</object>
 	<object class="MixerBusEffectChain" id="{361c781f-cdbb-462a-9f29-e0104824f736}">
 		<relationship name="effects">
 			<destination>{5b600374-3e63-4d9e-8759-475ce97d37a2}</destination>
@@ -161,10 +138,33 @@
 	<object class="MixerBusFader" id="{9b4fc7c5-7b5c-4cf9-9829-fa836e163c3c}" />
 	<object class="MixerBusEffectChain" id="{93e2090e-528d-46bf-b5b7-a7e987c42849}">
 		<relationship name="effects">
+			<destination>{08a5c937-37ea-4434-9e80-27245efa18c2}</destination>
 			<destination>{6fec536d-edd5-4397-94c5-06c965d89845}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{c70c6995-1217-4c04-a38b-32d271952a4c}" />
 	<object class="MixerBusFader" id="{5b600374-3e63-4d9e-8759-475ce97d37a2}" />
+	<object class="GainEffect" id="{08a5c937-37ea-4434-9e80-27245efa18c2}">
+		<relationship name="modulators">
+			<destination>{08dff09e-40ef-4b42-a7ce-d2de3c17bf3f}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{6fec536d-edd5-4397-94c5-06c965d89845}" />
+	<object class="ADSRModulator" id="{08dff09e-40ef-4b42-a7ce-d2de3c17bf3f}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>gain</value>
+		</property>
+		<property name="initialValue">
+			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>20</value>
+		</property>
+		<property name="releaseTime">
+			<value>1200</value>
+		</property>
+		<property name="finalValue">
+			<value>-80</value>
+		</property>
+	</object>
 </objects>
