@@ -18689,11 +18689,11 @@ MonoBehaviour:
   - 0.6
   - 0.7
   - 0.8
-  minPower: 10
-  maxPower: 22
-  minAngle: -20
-  maxAngle: 20
-  throwArcHeight: 8
+  minPower: 15
+  maxPower: 35
+  minAngle: -15
+  maxAngle: 15
+  throwArcHeight: 5
   baseThrowDirection: {x: 0, y: 0, z: -1}
   baseBounceWindow: 0.4
   windowShrinkPerBounce: 0.05
@@ -18715,7 +18715,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 004d741e0b6f4a059cfe7f4c539a8c88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockThrowingController
-  currentMode: 2
+  currentMode: 0
   currentRock: {fileID: 0}
   rockSpawnPoint: {fileID: 522164402}
   mainCamera: {fileID: 318556195}
@@ -18824,6 +18824,10 @@ PrefabInstance:
     - target: {fileID: 919132149155446097, guid: 8d5d3882d84d10442b79f7688513a39e, type: 3}
       propertyPath: m_Name
       value: Jetty
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8d5d3882d84d10442b79f7688513a39e, type: 3}
+      propertyPath: m_TagString
+      value: Ground
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
