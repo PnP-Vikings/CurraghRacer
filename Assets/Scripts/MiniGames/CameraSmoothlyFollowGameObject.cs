@@ -32,14 +32,22 @@ public class CameraSmoothlyFollowGameObject : MonoBehaviour
     public float rotationSmoothSpeed = 0.1f;
     
     private Vector3 velocity = Vector3.zero;
+    private bool hasWarnedNoTarget = false;
 
     void LateUpdate()
     {
         if (target == null)
         {
-            Debug.LogWarning("CameraSmoothlyFollowGameObject: No target assigned!");
+            if (!hasWarnedNoTarget)
+            {
+                // Only warn once to avoid spamming console
+                // Debug.LogWarning("CameraSmoothlyFollowGameObject: No target assigned!");
+                hasWarnedNoTarget = true;
+            }
             return;
         }
+        
+        hasWarnedNoTarget = false; // Reset so it can warn again if target is lost later
         
         // Calculate the desired position
         Vector3 desiredPosition = target.position + offset;

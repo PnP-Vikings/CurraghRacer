@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using League;
 using UnityEngine;
 using UnityEngine.Events;
@@ -12,6 +13,7 @@ public class GameManager : MonoBehaviour
    public static GameManager Instance { get; private set; }
    public bool isRewarded = false;
    public bool GameStarted = false;
+   public bool isGameOver = false;
    public Transform cameraStartPosition;
    public int racesTillNextAd = 3;
    public string startSceneName = "Main Menu";
@@ -40,6 +42,8 @@ public class GameManager : MonoBehaviour
        
    }
 
+   
+   
     private IEnumerator TrackPlayTime()
    {
          while (true)
@@ -263,4 +267,29 @@ public class GameManager : MonoBehaviour
             SleepAudioChangesCoroutineIsActive = false;
         }
     }
+    
+    public bool IsGameOver()
+    {
+        return isGameOver;
+    }
+    
+    public void TriggerGameOver()
+    {
+        isGameOver = true;
+        GameStarted = false;
+        SceneManager.LoadScene(startSceneName);
+        //DOVirtual.DelayedCall(.1f, () => ShowGameOverText());
+        ShowGameOverText();
+
+    }
+    
+    public void ShowGameOverText()
+    {
+        if (PlayerStatsView.Instance != null)
+        {
+            PlayerStatsView.Instance.ClearInfo();
+            PlayerStatsView.Instance.DisplayEndGame("GAME OVER\nThe mob got tired of waiting for you to pay up\nand destroyed the boat \nYou were forced to flee the country", 5);
+        }
+    }
+    
 }
