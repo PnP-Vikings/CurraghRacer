@@ -79,8 +79,8 @@ public class AIRockThrower : MonoBehaviour
             mainCamera = Camera.main;
         
         // Force correct throw values (override any old serialized values)
-        minPower = 30f;    // Match player
-        maxPower = 40f;    // Match player
+        minPower = 10f;    // Match player
+        maxPower = 30f;    // Match player
         minAngle = -15f;
         maxAngle = 15f;
         throwArcHeight = 5f;
@@ -286,20 +286,21 @@ public class AIRockThrower : MonoBehaviour
         if(rockRb  != null)
         {
             rockRb.freezeRotation = false; // Unfreeze rotation to allow natural spinning after throw
-            
+            rockRb.useGravity = false;
             // Align rock's forward direction with throw direction
-            rockRb.linearVelocity = throwDirection * actualPower;
+           // rockRb.linearVelocity = throwDirection * actualPower;
             
         }
         
         // Calculate velocity - need proper arc for skipping
         // Rock needs shallow entry angle (10-20 degrees) to skip well
+        // Rock needs enough height to clear dock, then descend at good skip angle
         Vector3 velocity = throwDirection * actualPower;
         
-        // Scale Y velocity based on horizontal speed to maintain good skip angle
-        // A ratio of about 0.15-0.2 gives a good shallow angle for skipping
-        float arcMultiplier = 0.18f + (currentDifficulty * 0.05f); // Better AI = better angle
-        velocity.y = actualPower * arcMultiplier;
+        // Scale Y velocity based on horizontal speed - ensure minimum to clear dock
+        // Higher arc multiplier ensures rock clears obstacles
+        float arcMultiplier = 0.25f + (currentDifficulty * 0.05f); // Better AI = better angle
+        velocity.y = Mathf.Max(5f, actualPower * arcMultiplier); // Minimum Y of 5 to clear dock
         
         
         // Throw with calculated velocity

@@ -202,6 +202,11 @@ public class RockThrowingController : MonoBehaviour
         {
             bool mainActive = mainCamera.gameObject.activeSelf;
             mainCamera.gameObject.SetActive(!mainActive);
+
+            if (cameraFollower.gameObject.activeSelf)
+            {
+                cameraFollower.gameObject.transform.position = mainCamera.transform.position;
+            }
             followCamera.gameObject.SetActive(mainActive);
         }
     }
@@ -610,7 +615,8 @@ public class RockThrowingController : MonoBehaviour
         
         // Calculate initial velocity
         Vector3 velocity = throwDirection * power;
-        velocity.y = throwArcHeight * Mathf.Max(0.5f, powerNormalized);
+        // Ensure minimum Y velocity to clear dock - at least 4 even at low power
+        velocity.y = Mathf.Max(4f, throwArcHeight * Mathf.Max(0.5f, powerNormalized));
         
         // Throw with calculated velocity
         activeRock.ThrowRock(velocity);
