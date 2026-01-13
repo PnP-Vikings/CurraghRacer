@@ -261,6 +261,7 @@ public class AIRockThrower : MonoBehaviour
         
         // Ensure the rock's rigidbody has no angular velocity
         Rigidbody rockRb = currentAIRock.GetComponent<Rigidbody>();
+        
         if (rockRb != null)
         {
             rockRb.angularVelocity = Vector3.zero;
@@ -268,8 +269,11 @@ public class AIRockThrower : MonoBehaviour
             rockRb.freezeRotation = true;
         }
         
+        
         // Wait a frame to ensure Awake/Start have run
         yield return null;
+        
+        
         
         // Subscribe to rock events
         currentAIRock.OnWaterContact += OnAIRockWaterContact;
@@ -279,6 +283,15 @@ public class AIRockThrower : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
         Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
+        if(rockRb  != null)
+        {
+            rockRb.freezeRotation = false; // Unfreeze rotation to allow natural spinning after throw
+            
+            // Align rock's forward direction with throw direction
+            rockRb.linearVelocity = throwDirection * actualPower;
+            
+        }
+        
         // Calculate velocity - need proper arc for skipping
         // Rock needs shallow entry angle (10-20 degrees) to skip well
         Vector3 velocity = throwDirection * actualPower;
@@ -287,6 +300,7 @@ public class AIRockThrower : MonoBehaviour
         // A ratio of about 0.15-0.2 gives a good shallow angle for skipping
         float arcMultiplier = 0.18f + (currentDifficulty * 0.05f); // Better AI = better angle
         velocity.y = actualPower * arcMultiplier;
+        
         
         // Throw with calculated velocity
         currentAIRock.ThrowRock(velocity);

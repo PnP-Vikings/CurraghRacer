@@ -638,39 +638,6 @@ public class RockThrowingController : MonoBehaviour
         return true;
     }
     
-    /// <summary>
-    /// Direct throw for AI use - no player input needed
-    /// </summary>
-    public void ExecuteAIThrow(Rock rock, float power, float angle, Action<float> onComplete)
-    {
-        // Spawn the rock
-        activeRock = Instantiate(rock, rockSpawnPoint.position, rockSpawnPoint.rotation);
-        activeRock.gameObject.SetActive(true);
-        rockStartPosition = rockSpawnPoint.position;
-        
-        // Setup callbacks
-        activeRock.OnRockSunk += (distance) => {
-            CleanupActiveRock();
-            onComplete?.Invoke(distance);
-        };
-        
-        // Calculate throw direction using base direction (default -Z towards water)
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        Vector3 throwDirection = rotation * baseThrowDirection.normalized;
-        
-        // Calculate velocity
-        Vector3 velocity = throwDirection * power;
-        velocity.y = throwArcHeight * (power / maxThrowPower);
-        
-        // Throw with calculated velocity
-        activeRock.ThrowRock(velocity);
-        
-        isRockInFlight = true;
-        bounceInputEnabled = false; // AI doesn't use input
-        
-        Debug.Log($"AI Rock thrown! Power: {power:F1}, Angle: {angle:F1}°");
-    }
-    
     #endregion
     
     #region Bounce Timing
