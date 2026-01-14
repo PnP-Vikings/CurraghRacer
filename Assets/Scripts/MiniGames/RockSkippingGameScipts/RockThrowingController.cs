@@ -38,11 +38,13 @@ public class RockThrowingController : MonoBehaviour
     private bool wasFollowingRock = false;
     
     [Header("Throwing Settings")]
-    public float minThrowPower = 5f;   // Balanced - enough to reach water
-    public float maxThrowPower = 12f;  // Balanced - good distance but not too fast
+    public float minThrowPower = 15f;   // Balanced - enough to reach water
+    public float maxThrowPower = 35f;  // Balanced - good distance but not too fast
     public float minThrowAngle = -15f; // Slight angle variance
     public float maxThrowAngle = 15f;  
-    public float throwArcHeight = 4f;  // Nice arc to see the rock fly
+    public float throwArcHeight = 5f;  // Nice arc to see the rock fly
+    
+   
     [Tooltip("Base direction for throwing. Set to (0,0,-1) if water is in -Z direction")]
     public Vector3 baseThrowDirection = new Vector3(0, 0, -1f); // Default to -Z (towards water)
     
@@ -165,12 +167,7 @@ public class RockThrowingController : MonoBehaviour
             
         currentTimingWindow = baseBounceTimingWindow;
         
-        // Force correct throw values (override any old serialized values)
-        minThrowPower = 15f;   // Increased significantly for distance
-        maxThrowPower = 35f;   // Much higher for far throws
-        minThrowAngle = -15f;
-        maxThrowAngle = 15f;
-        throwArcHeight = 5f;   // Good arc height
+       
         
         Debug.Log($"RockThrowingController initialized: Power {minThrowPower}-{maxThrowPower}, Angle {minThrowAngle}-{maxThrowAngle}");
     }

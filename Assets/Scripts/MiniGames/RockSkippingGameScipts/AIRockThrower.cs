@@ -78,13 +78,6 @@ public class AIRockThrower : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
         
-        // Force correct throw values (override any old serialized values)
-        minPower = 10f;    // Match player
-        maxPower = 30f;    // Match player
-        minAngle = -15f;
-        maxAngle = 15f;
-        throwArcHeight = 5f;
-        
         Debug.Log($"AIRockThrower initialized: Power {minPower}-{maxPower}, Angle {minAngle}-{maxAngle}");
     }
     
@@ -243,6 +236,8 @@ public class AIRockThrower : MonoBehaviour
         
         float actualPower = Mathf.Lerp(minPower, maxPower, normalizedPower);
         
+        
+        
         // Brief delay before throw
         yield return new WaitForSeconds(0.5f);
         
@@ -259,21 +254,18 @@ public class AIRockThrower : MonoBehaviour
         // Kill any DOTween animations that might have been copied from the original rock
         currentAIRock.transform.DOKill();
         
-        // Ensure the rock's rigidbody has no angular velocity
+        // Ensure the rock's rigidbody is ready for physics
         Rigidbody rockRb = currentAIRock.GetComponent<Rigidbody>();
         
         if (rockRb != null)
         {
             rockRb.angularVelocity = Vector3.zero;
-            // Freeze rotation so rock stays flat while skipping
-            rockRb.freezeRotation = true;
+            rockRb.linearVelocity = Vector3.zero;
+            // Gravity will be enabled by ThrowRock() method
         }
-        
         
         // Wait a frame to ensure Awake/Start have run
         yield return null;
-        
-        
         
         // Subscribe to rock events
         currentAIRock.OnWaterContact += OnAIRockWaterContact;
@@ -283,25 +275,14 @@ public class AIRockThrower : MonoBehaviour
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
         Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
-        if(rockRb  != null)
-        {
-            rockRb.freezeRotation = false; // Unfreeze rotation to allow natural spinning after throw
-            rockRb.useGravity = false;
-            // Align rock's forward direction with throw direction
-           // rockRb.linearVelocity = throwDirection * actualPower;
-            
-        }
-        
         // Calculate velocity - need proper arc for skipping
-        // Rock needs shallow entry angle (10-20 degrees) to skip well
-        // Rock needs enough height to clear dock, then descend at good skip angle
+        // Higher power to ensure rock clears dock and reaches water
         Vector3 velocity = throwDirection * actualPower;
         
-        // Scale Y velocity based on horizontal speed - ensure minimum to clear dock
-        // Higher arc multiplier ensures rock clears obstacles
-        float arcMultiplier = 0.25f + (currentDifficulty * 0.05f); // Better AI = better angle
-        velocity.y = Mathf.Max(5f, actualPower * arcMultiplier); // Minimum Y of 5 to clear dock
-        
+        // Scale Y velocity - need enough height to arc over dock but not too steep
+        // Good skip angle is about 10-20 degrees entry
+        float arcMultiplier = 0.25f + (currentDifficulty * 0.05f);
+        velocity.y = actualPower * arcMultiplier;
         
         // Throw with calculated velocity
         currentAIRock.ThrowRock(velocity);
