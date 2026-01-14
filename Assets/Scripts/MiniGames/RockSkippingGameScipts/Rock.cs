@@ -18,7 +18,7 @@ public class Rock : MonoBehaviour
     
     // Collision settings
     private float throwTime = 0f;
-    private float collisionGracePeriod = 0.01f; // Longer grace period to clear obstacles
+    private float collisionGracePeriod = 0.5f; // Grace period to clear dock/obstacles
     private float maxFlightTime = 15f; // Max time before forcing sink
     private bool collisionsEnabled = false;
     private bool hasHitWater = false; // Track if we've hit water at least once
@@ -35,6 +35,9 @@ public class Rock : MonoBehaviour
     // Bounce timing system
     private float pendingBounceMultiplier = 1f;
     private bool hasPendingMultiplier = false;
+    
+    // Store velocity before collisions - used to preserve horizontal momentum on bounce
+    private Vector3 preCollisionVelocity;
     
     // Events for timing system
     public event Action OnWaterContact;
@@ -174,6 +177,19 @@ public class Rock : MonoBehaviour
         // Ignore all other collisions - rock passes through/over obstacles
     }
     
+    /// <summary>
+    /// FixedUpdate runs before physics collision processing
+    /// Store velocity here so we have the "before collision" value
+    /// </summary>
+    void FixedUpdate()
+    {
+        if (!isThrown || rb == null) return;
+        
+        // Store velocity BEFORE collision response modifies it
+        // This is crucial for preserving horizontal momentum on bounce
+        preCollisionVelocity = rb.linearVelocity;
+    }
+    
     void Update()
     {
         if (!isThrown) return;
@@ -273,11 +289,12 @@ public class Rock : MonoBehaviour
                 pendingBounceMultiplier = 1f;
             }
             
-            // Apply bounce - keep horizontal velocity, add upward force
+            // Apply bounce - use PRE-COLLISION velocity to preserve horizontal momentum!
+            // The physics engine collision response kills horizontal velocity, so we restore it
             if (rb != null)
             {
-                Vector3 currentVel = rb.linearVelocity;
-                rb.linearVelocity = new Vector3(currentVel.x, effectiveBounceForce, currentVel.z);
+                // Use the velocity stored in FixedUpdate BEFORE collision processing
+                rb.linearVelocity = new Vector3(preCollisionVelocity.x, effectiveBounceForce, preCollisionVelocity.z);
             }
             
             currentBounces++;
@@ -323,15 +340,18 @@ public class Rock : MonoBehaviour
         rb.isKinematic = false;
         rb.useGravity = true;
         
+        
         // Use provided velocity or default to forward * acceleration
         if (initialVelocity.HasValue)
         {
             rb.linearVelocity = initialVelocity.Value;
+            preCollisionVelocity = initialVelocity.Value; // Initialize for first bounce
             speed = initialVelocity.Value.magnitude;
         }
         else
         {
             rb.linearVelocity = transform.forward * acceleration;
+            preCollisionVelocity = rb.linearVelocity; // Initialize for first bounce
             speed = acceleration;
         }
         

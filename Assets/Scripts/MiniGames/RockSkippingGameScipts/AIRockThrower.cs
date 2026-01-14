@@ -78,13 +78,6 @@ public class AIRockThrower : MonoBehaviour
         if (mainCamera == null)
             mainCamera = Camera.main;
         
-        // Force correct throw values (override any old serialized values)
-        minPower = 30f;    // Match player
-        maxPower = 40f;    // Match player
-        minAngle = -15f;
-        maxAngle = 15f;
-        throwArcHeight = 5f;
-        
         Debug.Log($"AIRockThrower initialized: Power {minPower}-{maxPower}, Angle {minAngle}-{maxAngle}");
     }
     
@@ -243,6 +236,8 @@ public class AIRockThrower : MonoBehaviour
         
         float actualPower = Mathf.Lerp(minPower, maxPower, normalizedPower);
         
+        
+        
         // Brief delay before throw
         yield return new WaitForSeconds(0.5f);
         
@@ -259,13 +254,14 @@ public class AIRockThrower : MonoBehaviour
         // Kill any DOTween animations that might have been copied from the original rock
         currentAIRock.transform.DOKill();
         
-        // Ensure the rock's rigidbody has no angular velocity
+        // Ensure the rock's rigidbody is ready for physics
         Rigidbody rockRb = currentAIRock.GetComponent<Rigidbody>();
+        
         if (rockRb != null)
         {
             rockRb.angularVelocity = Vector3.zero;
-            // Freeze rotation so rock stays flat while skipping
-            rockRb.freezeRotation = true;
+            rockRb.linearVelocity = Vector3.zero;
+            // Gravity will be enabled by ThrowRock() method
         }
         
         // Wait a frame to ensure Awake/Start have run
@@ -280,12 +276,12 @@ public class AIRockThrower : MonoBehaviour
         Vector3 throwDirection = rotation * baseThrowDirection.normalized;
         
         // Calculate velocity - need proper arc for skipping
-        // Rock needs shallow entry angle (10-20 degrees) to skip well
+        // Higher power to ensure rock clears dock and reaches water
         Vector3 velocity = throwDirection * actualPower;
         
-        // Scale Y velocity based on horizontal speed to maintain good skip angle
-        // A ratio of about 0.15-0.2 gives a good shallow angle for skipping
-        float arcMultiplier = 0.18f + (currentDifficulty * 0.05f); // Better AI = better angle
+        // Scale Y velocity - need enough height to arc over dock but not too steep
+        // Good skip angle is about 10-20 degrees entry
+        float arcMultiplier = 0.25f + (currentDifficulty * 0.05f);
         velocity.y = actualPower * arcMultiplier;
         
         // Throw with calculated velocity

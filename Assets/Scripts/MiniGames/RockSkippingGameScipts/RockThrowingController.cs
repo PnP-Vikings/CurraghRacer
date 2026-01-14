@@ -38,11 +38,13 @@ public class RockThrowingController : MonoBehaviour
     private bool wasFollowingRock = false;
     
     [Header("Throwing Settings")]
-    public float minThrowPower = 5f;   // Balanced - enough to reach water
-    public float maxThrowPower = 12f;  // Balanced - good distance but not too fast
+    public float minThrowPower = 15f;   // Balanced - enough to reach water
+    public float maxThrowPower = 35f;  // Balanced - good distance but not too fast
     public float minThrowAngle = -15f; // Slight angle variance
     public float maxThrowAngle = 15f;  
-    public float throwArcHeight = 4f;  // Nice arc to see the rock fly
+    public float throwArcHeight = 5f;  // Nice arc to see the rock fly
+    
+   
     [Tooltip("Base direction for throwing. Set to (0,0,-1) if water is in -Z direction")]
     public Vector3 baseThrowDirection = new Vector3(0, 0, -1f); // Default to -Z (towards water)
     
@@ -165,12 +167,7 @@ public class RockThrowingController : MonoBehaviour
             
         currentTimingWindow = baseBounceTimingWindow;
         
-        // Force correct throw values (override any old serialized values)
-        minThrowPower = 15f;   // Increased significantly for distance
-        maxThrowPower = 35f;   // Much higher for far throws
-        minThrowAngle = -15f;
-        maxThrowAngle = 15f;
-        throwArcHeight = 5f;   // Good arc height
+       
         
         Debug.Log($"RockThrowingController initialized: Power {minThrowPower}-{maxThrowPower}, Angle {minThrowAngle}-{maxThrowAngle}");
     }
@@ -202,6 +199,11 @@ public class RockThrowingController : MonoBehaviour
         {
             bool mainActive = mainCamera.gameObject.activeSelf;
             mainCamera.gameObject.SetActive(!mainActive);
+
+            if (cameraFollower.gameObject.activeSelf)
+            {
+                cameraFollower.gameObject.transform.position = mainCamera.transform.position;
+            }
             followCamera.gameObject.SetActive(mainActive);
         }
     }
@@ -610,7 +612,8 @@ public class RockThrowingController : MonoBehaviour
         
         // Calculate initial velocity
         Vector3 velocity = throwDirection * power;
-        velocity.y = throwArcHeight * Mathf.Max(0.5f, powerNormalized);
+        // Ensure minimum Y velocity to clear dock - at least 4 even at low power
+        velocity.y = Mathf.Max(4f, throwArcHeight * Mathf.Max(0.5f, powerNormalized));
         
         // Throw with calculated velocity
         activeRock.ThrowRock(velocity);
@@ -636,39 +639,6 @@ public class RockThrowingController : MonoBehaviour
         Debug.Log($"Rock thrown! Power: {power:F1}, Angle: {angle:F1}°, Velocity: {velocity}");
         
         return true;
-    }
-    
-    /// <summary>
-    /// Direct throw for AI use - no player input needed
-    /// </summary>
-    public void ExecuteAIThrow(Rock rock, float power, float angle, Action<float> onComplete)
-    {
-        // Spawn the rock
-        activeRock = Instantiate(rock, rockSpawnPoint.position, rockSpawnPoint.rotation);
-        activeRock.gameObject.SetActive(true);
-        rockStartPosition = rockSpawnPoint.position;
-        
-        // Setup callbacks
-        activeRock.OnRockSunk += (distance) => {
-            CleanupActiveRock();
-            onComplete?.Invoke(distance);
-        };
-        
-        // Calculate throw direction using base direction (default -Z towards water)
-        Quaternion rotation = Quaternion.Euler(0, angle, 0);
-        Vector3 throwDirection = rotation * baseThrowDirection.normalized;
-        
-        // Calculate velocity
-        Vector3 velocity = throwDirection * power;
-        velocity.y = throwArcHeight * (power / maxThrowPower);
-        
-        // Throw with calculated velocity
-        activeRock.ThrowRock(velocity);
-        
-        isRockInFlight = true;
-        bounceInputEnabled = false; // AI doesn't use input
-        
-        Debug.Log($"AI Rock thrown! Power: {power:F1}, Angle: {angle:F1}°");
     }
     
     #endregion
