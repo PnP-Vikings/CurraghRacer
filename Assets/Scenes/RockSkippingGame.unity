@@ -18668,18 +18668,18 @@ MonoBehaviour:
   - 0.85
   - 1
   minPower: 5
-  maxPower: 35
+  maxPower: 32
   minAngle: -15
   maxAngle: 15
-  throwArcHeight: 5
+  throwArcHeight: 3
   baseThrowDirection: {x: 0, y: 0, z: -1}
   baseBounceWindow: 0.4
   windowShrinkPerBounce: 0.05
   minWindow: 0.15
-  perfectMultiplier: 1.5
-  goodMultiplier: 1.2
-  okayMultiplier: 1
-  missMultiplier: 0.7
+  perfectMultiplier: 1.2
+  goodMultiplier: 1.1
+  okayMultiplier: 1.05
+  missMultiplier: 0
   delayBetweenAIThrows: 1.5
 --- !u!114 &810044240
 MonoBehaviour:
@@ -18702,16 +18702,16 @@ MonoBehaviour:
   cameraFollower: {fileID: 774769260}
   rockFollowOffset: {x: 0, y: 5, z: 10}
   minThrowPower: 5
-  maxThrowPower: 35
+  maxThrowPower: 32
   minThrowAngle: -15
   maxThrowAngle: 15
-  throwArcHeight: 5
+  throwArcHeight: 3
   baseThrowDirection: {x: 0, y: 0, z: -1}
   oscillatorSpeed: 2.5
   powerChargeSpeed: 1.2
   maxChargeTime: 2
   previewRockOffset: {x: 0, y: 0, z: 0}
-  flickMinDistance: 50
+  flickMinDistance: 35
   flickMaxTime: 0.5
   flickPowerMultiplier: 0.15
   beatInterval: 2
@@ -18722,7 +18722,7 @@ MonoBehaviour:
   minTimingWindow: 0.15
   perfectBounceMultiplier: 1.5
   goodBounceMultiplier: 1.2
-  missBounceMultiplier: 0.7
+  missBounceMultiplier: 0
   perfectShakeStrength: 0.3
   perfectShakeDuration: 0.2
   goodShakeStrength: 0.15

@@ -111,7 +111,7 @@ public class RockThrowingController : MonoBehaviour
     [SerializeField] private bool isRockInFlight;
     private Rock activeRock;
     private Vector3 rockStartPosition;
-    private bool bounceInputEnabled;
+    [SerializeField] private bool bounceInputEnabled;
     private Coroutine bounceTimingCoroutine;
     
     private void Awake()
@@ -613,7 +613,7 @@ public class RockThrowingController : MonoBehaviour
         // Calculate initial velocity
         Vector3 velocity = throwDirection * power;
         // Ensure minimum Y velocity to clear dock - at least 4 even at low power
-        velocity.y = Mathf.Max(4f, throwArcHeight * Mathf.Max(0.5f, powerNormalized));
+        velocity.y = Mathf.Max(2f, throwArcHeight * Mathf.Max(0.5f, powerNormalized));
         
         // Throw with calculated velocity
         activeRock.ThrowRock(velocity);

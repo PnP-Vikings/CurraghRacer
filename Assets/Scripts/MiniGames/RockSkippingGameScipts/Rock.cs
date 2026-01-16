@@ -294,7 +294,8 @@ public class Rock : MonoBehaviour
             if (rb != null)
             {
                 // Use the velocity stored in FixedUpdate BEFORE collision processing
-                rb.linearVelocity = new Vector3(preCollisionVelocity.x, effectiveBounceForce, preCollisionVelocity.z);
+                rb.linearVelocity = new Vector3(preCollisionVelocity.x, effectiveBounceForce/2, preCollisionVelocity.z +(-effectiveBounceForce ));
+                
             }
             
             currentBounces++;
