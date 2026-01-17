@@ -22,7 +22,8 @@ public class RadioManager : MonoBehaviour
     private bool radioAdOrNewsHasJustPlayed = false;
     private bool storyUpdate1HasPlayed = false;
     public bool hasJustLostRace = false;
-    private int previousRandomNumberRadio = 0;
+    private int previousRandomNumberAd = 0;
+    //private int previousRandomNumberSong = 0;
 
     void Awake()
     {
@@ -47,7 +48,7 @@ public class RadioManager : MonoBehaviour
     {
         PlayRadioSong();                                                    // A random song plays
 
-        float randomNumber = Random.Range(3f, 5f);                          // A random number between the given numbers is assigned to the float 'randomNumber'
+        float randomNumber = Random.Range(5f, 6f);                          // A random number between the given numbers is assigned to the float 'randomNumber'
 
         yield return new WaitForSeconds(randomNumber);                      // Waits randomNumber seconds
 
@@ -181,78 +182,87 @@ public class RadioManager : MonoBehaviour
 
     private void PlayRadioSong()
     {
-        int randomNumber = Random.Range(1, 6);
+        int newRandomNumberSong = Random.Range(1, 6);
+        //Debug.Log("newRandomNumberSong is " + newRandomNumberSong);
+
+        //while (newRandomNumberSong == previousRandomNumberSong)
+        //{
+        //    Debug.Log("a newRandomNumberSong was chosen as it was equal to previousRandomNumberSong");
+        //    newRandomNumberSong = Random.Range(1, 3);
+        //    Debug.Log("newRandomNumberSong is " + newRandomNumberSong);
+        //}
 
         if (AudioManager.instance != null)
         {
-            if (randomNumber == 1)
+            if (newRandomNumberSong == 1)
             {
                 StopAllRadioSongs();
                 AudioManager.instance.radioSong1.start();
             }
-            else if (randomNumber == 2)
+            else if (newRandomNumberSong == 2)
             {
                 StopAllRadioSongs();
                 AudioManager.instance.radioSong2.start();
             }
-            else if (randomNumber == 3)
+            else if (newRandomNumberSong == 3)
             {
                 StopAllRadioSongs();
                 AudioManager.instance.radioSong3.start();
             }
-            else if (randomNumber == 4)
+            else if (newRandomNumberSong == 4)
             {
                 StopAllRadioSongs();
                 AudioManager.instance.radioSong4.start();
             }
-            else if (randomNumber == 5)
+            else if (newRandomNumberSong == 5)
             {
                 StopAllRadioSongs();
                 AudioManager.instance.radioSong5.start();
             }
         }
+        //previousRandomNumberSong = newRandomNumberSong;
     }
 
     private void PlayRadioAdOrNews()
     {
-        int newRandomNumber = Random.Range(1, 3);
-        Debug.Log("newRandomNumber is " + newRandomNumber);
+        int newRandomNumberAd = Random.Range(1, 7);
+        Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
 
-        while (newRandomNumber == previousRandomNumberRadio)
+        while (newRandomNumberAd == previousRandomNumberAd)
         {
-            Debug.Log("newRandomNumber is reset as it was equal to previousRandomNumberRadio");
-            newRandomNumber = Random.Range(1, 3);
-            Debug.Log("newRandomNumber is " + newRandomNumber);
+            Debug.Log("a newRandomNumberAd was chosen as it was equal to previousRandomNumberAd");
+            newRandomNumberAd = Random.Range(1, 3);
+            Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
         }
 
         if (AudioManager.instance != null)
         {
-            if (newRandomNumber == 1)
+            if (newRandomNumberAd == 1)
             {
                 AudioManager.instance.angelus.start();
             }
-            else if (newRandomNumber == 2)
+            else if (newRandomNumberAd == 2)
             {
                 AudioManager.instance.radioAdOrNews1.start();
             }
-            else if (newRandomNumber == 3)
+            else if (newRandomNumberAd == 3)
             {
                 AudioManager.instance.radioAdOrNews2.start();
             }
-            else if (newRandomNumber == 4)
+            else if (newRandomNumberAd == 4)
             {
                 AudioManager.instance.radioAdOrNews3.start();
             }
-            else if (newRandomNumber == 5)
+            else if (newRandomNumberAd == 5)
             {
                 AudioManager.instance.radioAdOrNews4.start();
             }
-            else if (newRandomNumber == 6)
+            else if (newRandomNumberAd == 6)
             {
                 AudioManager.instance.radioAdOrNews5.start();
             }
         }
-        previousRandomNumberRadio = newRandomNumber;
+        previousRandomNumberAd = newRandomNumberAd;
     }
     public void StopAllAdOrNews()
     {
