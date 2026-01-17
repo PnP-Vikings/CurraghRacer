@@ -651,6 +651,9 @@ public class RockThrowingController : MonoBehaviour
         
         OnBounceWindowStart?.Invoke();
         
+        //Setting Bouce Input to false so I can test bounce objects gameplay without manual bouncing
+        bounceInputEnabled = false;
+        
         if (bounceInputEnabled)
         {
             if (bounceTimingCoroutine != null)
@@ -819,13 +822,18 @@ public class RockThrowingController : MonoBehaviour
     
     private bool IsThrowButtonPressed()
     {
+        
         var mouse = Mouse.current;
         var touch = Touchscreen.current?.primaryTouch;
         var keyboard = Keyboard.current;
         var gamepad = Gamepad.current;
         
         if (touch != null && touch.press.wasPressedThisFrame) return true;
-        if (mouse != null && mouse.leftButton.wasPressedThisFrame) return true;
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+        {
+            Debug.Log("Mouse left button pressed this frame");
+            return true;
+        }
         if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame) return true;
         if (gamepad != null && gamepad.aButton.wasPressedThisFrame) return true;
         

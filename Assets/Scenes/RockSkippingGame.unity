@@ -18717,9 +18717,9 @@ MonoBehaviour:
   beatInterval: 2
   perfectTimingWindow: 0.3
   goodTimingWindow: 0.6
-  baseBounceTimingWindow: 0.4
-  timingWindowShrinkPerBounce: 0.05
-  minTimingWindow: 0.15
+  baseBounceTimingWindow: 0.5
+  timingWindowShrinkPerBounce: 0.1
+  minTimingWindow: 0.2
   perfectBounceMultiplier: 1.5
   goodBounceMultiplier: 1.2
   missBounceMultiplier: 0
@@ -18731,6 +18731,7 @@ MonoBehaviour:
   missShakeDuration: 0.3
   canThrow: 0
   isRockInFlight: 0
+  bounceInputEnabled: 0
 --- !u!1001 &811612953
 PrefabInstance:
   m_ObjectHideFlags: 0
