@@ -24,6 +24,30 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-8707715287398357658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Song 2/Radio Song 3 Volume
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: Radio Song 3 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1730785757
+    data2: 1584388376
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-8599118059440351735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,7 +486,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639033014049171335
+  lastModified: 639033044884426858
   FileSizes:
   - Name: 
     Value: 5296
@@ -1044,6 +1068,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 359
+--- !u!114 &-1456785234064499749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Song 3/Radio Song 2 Volume
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: Radio Song 2 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1425908478
+    data2: 2172817081
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-1318205178700359581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1149,7 +1197,7 @@ MonoBehaviour:
   - {fileID: 3144202322166324598}
   MinDistance: 1
   MaxDistance: 20
-  Length: 1900
+  Length: 3640
 --- !u!114 &-946158723694413133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1375,7 +1423,7 @@ MonoBehaviour:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639033014049171335
+  cacheTime: 639033044884426858
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1445,20 +1493,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Radio/Radio Song 2
   Guid:
-    Data1: -899735294
-    Data2: 1220028772
-    Data3: -1686701681
-    Data4: -898121761
+    Data1: -681093101
+    Data2: 1174218885
+    Data3: -2034844276
+    Data4: -405872742
   Banks:
   - {fileID: 7439203710798878255}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 8385188642393100925}
+  - {fileID: -8707715287398357658}
   MinDistance: 1
   MaxDistance: 20
-  Length: 116821
+  Length: 190588
 --- !u!114 &1357243760738233091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1486,7 +1534,7 @@ MonoBehaviour:
   - {fileID: -6467503577722605017}
   MinDistance: 1
   MaxDistance: 20
-  Length: 3000
+  Length: 11600
 --- !u!114 &1368624529269836364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1668,30 +1716,6 @@ MonoBehaviour:
   ID:
     data1: 1500088272
     data2: 3560357178
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &2091211635671113743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Radio Song 3/Radio Song 3 Volume
-  m_EditorClassIdentifier: 
-  Name: Radio Song 3 Volume
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1730785757
-    data2: 1584388376
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -2398,7 +2422,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639033014049125747
+  lastModified: 639033044884386118
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726
@@ -2483,30 +2507,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 28993
---- !u!114 &8385188642393100925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Radio Song 2/Radio Song 2 Volume
-  m_EditorClassIdentifier: 
-  Name: Radio Song 2 Volume
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1425908478
-    data2: 2172817081
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &8414186806441808117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2549,20 +2549,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Radio/Radio Song 3
   Guid:
-    Data1: -681093101
-    Data2: 1174218885
-    Data3: -2034844276
-    Data4: -405872742
+    Data1: -899735294
+    Data2: 1220028772
+    Data3: -1686701681
+    Data4: -898121761
   Banks:
   - {fileID: 7439203710798878255}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 2091211635671113743}
+  - {fileID: -1456785234064499749}
   MinDistance: 1
   MaxDistance: 20
-  Length: 190588
+  Length: 116821
 --- !u!114 &8751745750506016009
 MonoBehaviour:
   m_ObjectHideFlags: 0
