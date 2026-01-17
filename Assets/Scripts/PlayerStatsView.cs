@@ -53,6 +53,11 @@ public class PlayerStatsView : MonoBehaviour
     
     public void DisplayInfo(string info, float duration = 3,Color txtColor = default)
     {
+        if (GameManager.Instance != null)
+        {
+            if (GameManager.Instance.IsGameOver())
+                return; // Exit if the player is busy
+        }
         if(txtColor == default)
         {
             txtColor = Color.white;
@@ -74,6 +79,32 @@ public class PlayerStatsView : MonoBehaviour
        
         Invoke(nameof(ClearInfo), duration);
     }
+    
+    public void DisplayEndGame(string info, float duration = 3,Color txtColor = default)
+    {
+     
+        if(txtColor == default)
+        {
+            txtColor = Color.white;
+        }
+        
+        _displayInfoBackground.style.display = DisplayStyle.Flex;
+        
+        if (_displayInfo.text.Length > 0 && _displayInfo.text != info)
+        {
+            _displayInfo.text += "\n"; // Add a new line if there is existing text
+            _displayInfo.text += info;
+            _displayInfo.style.color = txtColor;
+        }
+        else
+        {
+            _displayInfo.text = info;
+            _displayInfo.style.color = txtColor;
+        }
+       
+        Invoke(nameof(ClearInfo), duration);
+    }
+
     
     public void ClearInfo()
     {

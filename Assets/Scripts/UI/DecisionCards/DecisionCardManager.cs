@@ -84,6 +84,12 @@ public class DecisionCardManager : MonoBehaviour
     {
         Debug.Log("New day started - generating decision cards");
         
+        if(GameManager.Instance != null && GameManager.Instance.IsGameOver())
+        {
+            Debug.Log("Game is over - skipping decision card generation");
+            return;
+        }
+        
         // Generate today's cards
         GenerateDailyCards();
         
@@ -373,7 +379,7 @@ public class DecisionCardManager : MonoBehaviour
         // Apply coins
         if (option.coinsChange != 0 && PlayerManager.Instance != null)
         {
-            PlayerManager.Instance.coins += option.coinsChange;
+            PlayerManager.Instance.PurchaseItem(option.coinsChange ,PurchaseType.Cards);
             Debug.Log($"Coins changed by {option.coinsChange}. New balance: {PlayerManager.Instance.coins}");
         }
         
@@ -432,7 +438,8 @@ public class DecisionCardManager : MonoBehaviour
         // Apply resource changes
         if (PlayerManager.Instance != null)
         {
-            PlayerManager.Instance.coins += outcome.coinsChange;
+            PlayerManager.Instance.PurchaseItem(outcome.coinsChange ,PurchaseType.Cards);
+            
             PlayerManager.Instance.energy = Mathf.Clamp(
                 PlayerManager.Instance.energy + outcome.energyChange,
                 0, 100

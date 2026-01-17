@@ -55,6 +55,7 @@ Material:
     - _Outline_Thickness: 0.0077
     - _QueueControl: 0
     - _QueueOffset: 0
+    - _XRMotionVectorsPass: 1
     m_Colors:
     - _Outline_Colour: {r: 0, g: 0, b: 0, a: 0}
   m_BuildTextureStacks: []
