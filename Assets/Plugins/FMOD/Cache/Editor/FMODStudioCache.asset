@@ -486,10 +486,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639033044884426858
+  lastModified: 639042953776687458
   FileSizes:
   - Name: 
-    Value: 5296
+    Value: 5466
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -1014,6 +1014,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-1738294619888965142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Rock Skip
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Rock Skip
+  Guid:
+    Data1: -1766346146
+    Data2: 1241134928
+    Data3: -1230796148
+    Data4: -2036407954
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 913
 --- !u!114 &-1618051181059981873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1418,12 +1445,15 @@ MonoBehaviour:
   - {fileID: -4057881698284028633}
   - {fileID: -1618051181059981873}
   - {fileID: 8751745750506016009}
+  - {fileID: 5371443492734823877}
+  - {fileID: 6320112803562672345}
+  - {fileID: -1738294619888965142}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639033044884426858
+  cacheTime: 639042953776687458
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -2147,6 +2177,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
+--- !u!114 &5371443492734823877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Rock Select
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Rock Select
+  Guid:
+    Data1: 1274506254
+    Data2: 1081574242
+    Data3: -68724546
+    Data4: 834380143
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 210
 --- !u!114 &5387323638058673786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2301,6 +2358,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1176
+--- !u!114 &6320112803562672345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Close Rock Case
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Close Rock Case
+  Guid:
+    Data1: 1626976455
+    Data2: 1310905437
+    Data3: -1311157607
+    Data4: 1778489937
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1789
 --- !u!114 &6495100567271991320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2422,7 +2506,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639033044884386118
+  lastModified: 639042953776637063
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726
