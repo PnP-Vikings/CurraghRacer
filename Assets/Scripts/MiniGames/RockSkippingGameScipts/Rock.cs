@@ -367,6 +367,11 @@ public class Rock : MonoBehaviour
         pendingBounceMultiplier = multiplier;
         hasPendingMultiplier = true;
     }
+
+    public float GetBounceForce()
+	{
+		return bounceForce;
+	}
     
     /// <summary>
     /// Calculate total horizontal distance from start position
