@@ -333,10 +333,12 @@ public class RockThrowingUI : MonoBehaviour
             switch (result)
             {
                 case BounceResult.Perfect:
-                    AudioManager.instance.rowingGameSuccess.start();
+                    //AudioManager.instance.rowingGameSuccess.start();
+                    AudioManager.instance.rockSkip.start();
                     break;
                 case BounceResult.Miss:
-                    AudioManager.instance.rowingGameFail.start();
+                    //AudioManager.instance.rowingGameFail.start();
+                    AudioManager.instance.rockSkip.start();
                     break;
             }
         }
