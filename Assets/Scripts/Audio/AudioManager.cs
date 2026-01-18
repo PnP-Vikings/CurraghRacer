@@ -83,6 +83,10 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance rowing;
 
+    public EventInstance rockSelect;
+    public EventInstance closeRockCase;
+    public EventInstance rockSkip;
+
     private Scene activeScene;
     void Awake()
     {
@@ -181,6 +185,9 @@ public class AudioManager : MonoBehaviour
         slide = RuntimeManager.CreateInstance("event:/Foot Race/Slide");
         crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
 
+        rockSelect = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Select");
+        closeRockCase = RuntimeManager.CreateInstance("event:/Rock Skipping/Close Rock Case");
+        rockSkip = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Skip");
     }
 
     private void Update()
