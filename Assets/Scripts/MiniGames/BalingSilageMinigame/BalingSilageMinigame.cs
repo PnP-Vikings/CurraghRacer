@@ -9,16 +9,23 @@ namespace MiniGames.BalingSilageMinigame
     {
         private MiniGameManager gameManager;
         private MiniGameData gameData;
+        public Tractor tractorPrefab;
 
         public void Initialize(MiniGameManager manager, MiniGameData data)
         {
             gameManager = manager;
             gameData = data;
+
         }
 
         public void StartGame()
         {
             
+        }
+
+        public void Start()
+        {
+            Instantiate(tractorPrefab, new Vector3(0, 0, -1), Quaternion.identity);
         }
 
         public void Update()
