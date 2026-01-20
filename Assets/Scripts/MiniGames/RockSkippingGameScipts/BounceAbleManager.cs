@@ -6,7 +6,7 @@ public class BounceAbleManager : MonoBehaviour
     public List<RockSkippingObject>  objects;
     public static BounceAbleManager Instance { get; private set; }
     
-    public List<RockSkippingObject>  rockSkippinginstances = new List<RockSkippingObject>();
+    public List<Bounceable>  rockSkippingObjectsInstances = new List<Bounceable>();
     
     private void Awake()
     {
@@ -22,11 +22,13 @@ public class BounceAbleManager : MonoBehaviour
     
     private void InstantiateObjectPools()
     {
+        if(rockSkippingObjectsInstances.Count <= 0) return;
+        
         foreach (var obj in objects)
         {
             for (int i = 0; i < 5; i++)
             {
-                rockSkippinginstances.Add(obj);
+                rockSkippingObjectsInstances.Add(obj.CreateInstance());
             }
         }
     }
