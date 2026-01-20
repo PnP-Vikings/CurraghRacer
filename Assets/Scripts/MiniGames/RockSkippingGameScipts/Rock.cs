@@ -274,7 +274,12 @@ public class Rock : MonoBehaviour
     private void HandleWaterContact()
     {
         Debug.Log($"Water contact! Bounce {currentBounces + 1}/{maxBounces}");
-        
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.rockSkip.start();
+        }
+
         if (currentBounces < maxBounces)
         {
             // Fire event for timing system

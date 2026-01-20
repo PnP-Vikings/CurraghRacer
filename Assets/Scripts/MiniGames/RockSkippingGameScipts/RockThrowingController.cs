@@ -637,6 +637,11 @@ public class RockThrowingController : MonoBehaviour
         
         OnThrowExecuted?.Invoke();
         Debug.Log($"Rock thrown! Power: {power:F1}, Angle: {angle:F1}°, Velocity: {velocity}");
+
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.rockThrow.start();
+        }
         
         return true;
     }
