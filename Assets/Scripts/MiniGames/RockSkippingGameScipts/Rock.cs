@@ -310,6 +310,16 @@ public class Rock : MonoBehaviour
             Destroy(gameObject, 2f);
         }
     }
+
+    public void HandleExternalBounce(float force)
+    {
+        if (rb != null)
+        {
+            Debug.Log("External Bounce applied to rock");
+            // Use the velocity stored in FixedUpdate BEFORE collision processing
+            rb.linearVelocity = new Vector3(preCollisionVelocity.x, force/2, preCollisionVelocity.z +(-force ));
+        }
+    }
     
     public void ThrowRock(Vector3? initialVelocity = null)
     {
