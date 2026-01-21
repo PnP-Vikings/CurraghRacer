@@ -112,7 +112,7 @@ SphereCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Radius: 0.5
+  m_Radius: 0.23
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!114 &7214248525779169400
 MonoBehaviour:
@@ -126,13 +126,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a737ec76dabec324a8d0f06876d3d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Rock
-  acceleration: 5
-  speed: 0
+  dragAmount: 0.999
   bounceForce: 5
   maxBounces: 3
   isThrown: 0
+  hasSunk: 0
   rockType: 1
   rockVisual: {fileID: -4478952777074486313, guid: 899c32877acac8748891a7ae6aa7906f, type: 3}
+  acceleration: 5
+  speed: 0
+  timeSinceRockWasThrown: 0
+  timeRockHasBeforeTouchingWater: 2
 --- !u!54 &7454174989021009813
 Rigidbody:
   m_ObjectHideFlags: 0

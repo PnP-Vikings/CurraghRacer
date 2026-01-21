@@ -22,7 +22,11 @@ public class RockSkippingBounceGameObject : MonoBehaviour ,Bounceable
            ApplyBounceToTarget(other.gameObject);
        }
    }
-   
+
+   public void Update()
+   {
+       transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
+   }
    
    
     
@@ -32,7 +36,6 @@ public class RockSkippingBounceGameObject : MonoBehaviour ,Bounceable
         Rock rock = gobject.GetComponent<Rock>();
         if (rock != null)
         {
-          
             rock.HandleExternalBounce(bounceForce);
         }
     }

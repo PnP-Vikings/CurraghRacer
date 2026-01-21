@@ -244,6 +244,10 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.ShowThrowingUI(currentMode);
+            if(bounceInputEnabled == false)
+            {
+                throwingUI.HideBounceUI();
+            }
         }
         
         Debug.Log($"Throw prepared with mode: {currentMode}");
@@ -619,7 +623,7 @@ public class RockThrowingController : MonoBehaviour
         activeRock.ThrowRock(velocity);
         
         isRockInFlight = true;
-        bounceInputEnabled = true;
+        //bounceInputEnabled = true; Disabling bounce input for testing without manual bouncing
         wasFollowingRock = true;
         
         if(cameraFollower != null)
@@ -632,7 +636,9 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.HideThrowingUI();
-            throwingUI.ShowBounceUI();
+            
+            if(bounceInputEnabled)
+                throwingUI.ShowBounceUI();
         }
         
         OnThrowExecuted?.Invoke();
@@ -662,10 +668,31 @@ public class RockThrowingController : MonoBehaviour
             }
             bounceTimingCoroutine = StartCoroutine(BounceTimingWindowCoroutine());
         }
+        else
+        {
+            if (throwingUI != null)
+            {
+                
+               throwingUI.HideBounceUI();
+            }
+            
+            
+          
+        }
     }
     
     private IEnumerator BounceTimingWindowCoroutine()
     {
+        
+        if(bounceInputEnabled == false)
+        {
+            if (throwingUI != null)
+            {
+                
+               throwingUI.HideBounceUi();
+            }
+            yield break;
+        }
         float elapsed = 0f;
         bool inputReceived = false;
         BounceResult result = BounceResult.Miss;
