@@ -7,6 +7,10 @@ public class BounceAbleManager : MonoBehaviour
     public static BounceAbleManager Instance { get; private set; }
     
     public List<Bounceable>  rockSkippingObjectsInstances = new List<Bounceable>();
+
+    [SerializeField] private List<Transform> spawnLocations;
+    
+    [SerializeField] private int currentSpawnIndex = 0;
     
     private void Awake()
     {
@@ -18,6 +22,7 @@ public class BounceAbleManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        InstantiateObjectPools();
     }
     
     private void InstantiateObjectPools()
@@ -28,7 +33,10 @@ public class BounceAbleManager : MonoBehaviour
         {
             for (int i = 0; i < 5; i++)
             {
-                rockSkippingObjectsInstances.Add(obj.CreateInstance());
+                rockSkippingObjectsInstances.Add(obj.CreateInstance(spawnLocations[currentSpawnIndex]));
+                currentSpawnIndex++;
+                if (currentSpawnIndex >= spawnLocations.Count)
+                    currentSpawnIndex = 0;
             }
         }
     }
