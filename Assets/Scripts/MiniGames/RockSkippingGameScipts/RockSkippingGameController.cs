@@ -266,11 +266,11 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             rockInfoUI.RockSelected(currentRock);
         }
-        if (AudioManager.instance != null )
+        if (AudioManager.instance != null)
         {
             AudioManager.instance.UIClick1.start();
         }
-        
+
         confirmSelectionButton.gameObject.SetActive(false);
     }
 

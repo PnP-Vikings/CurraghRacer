@@ -24,6 +24,30 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-8707715287398357658
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Song 2/Radio Song 3 Volume
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: Radio Song 3 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1730785757
+    data2: 1584388376
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-8599118059440351735
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -462,10 +486,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639033014049171335
+  lastModified: 639045177404421243
   FileSizes:
   - Name: 
-    Value: 5296
+    Value: 5516
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -990,6 +1014,33 @@ MonoBehaviour:
   IsGlobal: 0
   Labels: []
   Exists: 1
+--- !u!114 &-1738294619888965142
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Rock Skip
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Rock Skip
+  Guid:
+    Data1: -1766346146
+    Data2: 1241134928
+    Data3: -1230796148
+    Data4: -2036407954
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 913
 --- !u!114 &-1618051181059981873
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1044,6 +1095,30 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 359
+--- !u!114 &-1456785234064499749
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
+  m_Name: parameter:/Radio Song 3/Radio Song 2 Volume
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorParamRef
+  Name: Radio Song 2 Volume
+  StudioPath: 
+  Min: 0
+  Max: 1
+  Default: 1
+  ID:
+    data1: 1425908478
+    data2: 2172817081
+  Type: 0
+  IsGlobal: 0
+  Labels: []
+  Exists: 1
 --- !u!114 &-1318205178700359581
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1149,7 +1224,7 @@ MonoBehaviour:
   - {fileID: 3144202322166324598}
   MinDistance: 1
   MaxDistance: 20
-  Length: 1900
+  Length: 3640
 --- !u!114 &-946158723694413133
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1370,12 +1445,16 @@ MonoBehaviour:
   - {fileID: -4057881698284028633}
   - {fileID: -1618051181059981873}
   - {fileID: 8751745750506016009}
+  - {fileID: 5371443492734823877}
+  - {fileID: 6320112803562672345}
+  - {fileID: -1738294619888965142}
+  - {fileID: 4758589274831344729}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639033014049171335
+  cacheTime: 639045177404421243
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1445,20 +1524,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Radio/Radio Song 2
   Guid:
-    Data1: -899735294
-    Data2: 1220028772
-    Data3: -1686701681
-    Data4: -898121761
+    Data1: -681093101
+    Data2: 1174218885
+    Data3: -2034844276
+    Data4: -405872742
   Banks:
   - {fileID: 7439203710798878255}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 8385188642393100925}
+  - {fileID: -8707715287398357658}
   MinDistance: 1
   MaxDistance: 20
-  Length: 116821
+  Length: 190588
 --- !u!114 &1357243760738233091
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1486,7 +1565,7 @@ MonoBehaviour:
   - {fileID: -6467503577722605017}
   MinDistance: 1
   MaxDistance: 20
-  Length: 3000
+  Length: 11600
 --- !u!114 &1368624529269836364
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1668,30 +1747,6 @@ MonoBehaviour:
   ID:
     data1: 1500088272
     data2: 3560357178
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
---- !u!114 &2091211635671113743
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Radio Song 3/Radio Song 3 Volume
-  m_EditorClassIdentifier: 
-  Name: Radio Song 3 Volume
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1730785757
-    data2: 1584388376
   Type: 0
   IsGlobal: 0
   Labels: []
@@ -2042,6 +2097,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3000
+--- !u!114 &4758589274831344729
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Rock Throwing
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Rock Throwing
+  Guid:
+    Data1: 410062515
+    Data2: 1196533815
+    Data3: -1421935171
+    Data4: -1116561781
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1407
 --- !u!114 &5139689008638949749
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2123,6 +2205,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 4000
+--- !u!114 &5371443492734823877
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Rock Select
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Rock Select
+  Guid:
+    Data1: 1274506254
+    Data2: 1081574242
+    Data3: -68724546
+    Data4: 834380143
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 210
 --- !u!114 &5387323638058673786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2277,6 +2386,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1176
+--- !u!114 &6320112803562672345
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Rock Skipping/Close Rock Case
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Rock Skipping/Close Rock Case
+  Guid:
+    Data1: 1626976455
+    Data2: 1310905437
+    Data3: -1311157607
+    Data4: 1778489937
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 1789
 --- !u!114 &6495100567271991320
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2398,7 +2534,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639033014049125747
+  lastModified: 639045177404374786
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726
@@ -2483,30 +2619,6 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 28993
---- !u!114 &8385188642393100925
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fecb8ef7f94ca804a8ab72049b86782e, type: 3}
-  m_Name: parameter:/Radio Song 2/Radio Song 2 Volume
-  m_EditorClassIdentifier: 
-  Name: Radio Song 2 Volume
-  StudioPath: 
-  Min: 0
-  Max: 1
-  Default: 1
-  ID:
-    data1: 1425908478
-    data2: 2172817081
-  Type: 0
-  IsGlobal: 0
-  Labels: []
-  Exists: 1
 --- !u!114 &8414186806441808117
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2549,20 +2661,20 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Path: event:/Radio/Radio Song 3
   Guid:
-    Data1: -681093101
-    Data2: 1174218885
-    Data3: -2034844276
-    Data4: -405872742
+    Data1: -899735294
+    Data2: 1220028772
+    Data3: -1686701681
+    Data4: -898121761
   Banks:
   - {fileID: 7439203710798878255}
   IsStream: 1
   Is3D: 0
   IsOneShot: 0
   Parameters:
-  - {fileID: 2091211635671113743}
+  - {fileID: -1456785234064499749}
   MinDistance: 1
   MaxDistance: 20
-  Length: 190588
+  Length: 116821
 --- !u!114 &8751745750506016009
 MonoBehaviour:
   m_ObjectHideFlags: 0

@@ -174,10 +174,10 @@ public class RockVisual : MonoBehaviour
         {
             hoverSequence.Join(rockMaterial.DOColor(hoverColor, 0.3f));
         }
-        
-        if (AudioManager.instance != null )
+
+        if (AudioManager.instance != null)
         {
-            AudioManager.instance.placeTurf.start();
+            AudioManager.instance.rockSelect.start();
         }
     }
     
