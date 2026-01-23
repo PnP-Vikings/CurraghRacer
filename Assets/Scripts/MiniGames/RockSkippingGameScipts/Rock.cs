@@ -13,12 +13,13 @@ public class Rock : MonoBehaviour
     private Rigidbody rb;
     private Collider rockCollider;
     public bool isThrown = false;
+    public bool hasSunk = false;
     public RockType rockType;
     public RockVisual rockVisual;
     
     // Collision settings
     private float throwTime = 0f;
-    private float collisionGracePeriod = 0.5f; // Grace period to clear dock/obstacles
+    private float collisionGracePeriod = 0.1f; // Grace period to clear dock/obstacles
     private float maxFlightTime = 15f; // Max time before forcing sink
     private bool collisionsEnabled = false;
     private bool hasHitWater = false; // Track if we've hit water at least once
@@ -174,7 +175,19 @@ public class Rock : MonoBehaviour
             hasHitWater = true;
             HandleWaterContact();
         }
-        // Ignore all other collisions - rock passes through/over obstacles
+    }
+    
+    // Use trigger for water to get more reliable bouncing
+    void OnTriggerEnter(Collider other)
+    {
+        if (!isThrown) return;
+        
+        if (other.CompareTag("Water"))
+        {
+            hasHitWater = true;
+            HandleWaterContact();
+        }
+        
     }
     
     /// <summary>
@@ -259,17 +272,7 @@ public class Rock : MonoBehaviour
         }
     }
     
-    // Use trigger for water to get more reliable bouncing
-    void OnTriggerEnter(Collider other)
-    {
-        if (!isThrown) return;
-        
-        if (other.CompareTag("Water"))
-        {
-            hasHitWater = true;
-            HandleWaterContact();
-        }
-    }
+    
     
     private void HandleWaterContact()
     {
@@ -299,7 +302,8 @@ public class Rock : MonoBehaviour
             if (rb != null)
             {
                 // Use the velocity stored in FixedUpdate BEFORE collision processing
-                rb.linearVelocity = new Vector3(preCollisionVelocity.x, effectiveBounceForce, preCollisionVelocity.z);
+                rb.linearVelocity = new Vector3(preCollisionVelocity.x, effectiveBounceForce/2, preCollisionVelocity.z +(-effectiveBounceForce ));
+                
             }
             
             currentBounces++;
@@ -311,7 +315,20 @@ public class Rock : MonoBehaviour
             float finalDistance = CalculateTotalDistance();
             Debug.Log($"Rock sunk at distance: {finalDistance}m");
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 2f);
+        }
+    }
+
+    public void HandleExternalBounce(float force)
+    {
+        if (hasSunk) return;
+        
+        if (rb != null)
+        {
+            Debug.Log("External Bounce applied to rock");
+            // Use the velocity stored in FixedUpdate BEFORE collision processing
+            rb.linearVelocity = new Vector3(preCollisionVelocity.x, force/2, preCollisionVelocity.z +(-force ));
         }
     }
     
@@ -371,6 +388,11 @@ public class Rock : MonoBehaviour
         pendingBounceMultiplier = multiplier;
         hasPendingMultiplier = true;
     }
+
+    public float GetBounceForce()
+	{
+		return bounceForce;
+	}
     
     /// <summary>
     /// Calculate total horizontal distance from start position

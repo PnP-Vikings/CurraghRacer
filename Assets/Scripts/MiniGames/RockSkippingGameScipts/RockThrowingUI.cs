@@ -342,6 +342,24 @@ public class RockThrowingUI : MonoBehaviour
         }
     }
     
+    public void HideBounceResult()
+    {
+        if (resultPopup != null)
+        {
+            resultPopup.transform.DOScale(0f, 0.2f).SetEase(Ease.InBack)
+                .OnComplete(() => resultPopup.SetActive(false));
+        }
+    }
+    
+    public void HideBounceUi()
+    {
+        if (resultPopup != null)
+        {
+            resultPopup.SetActive(false);
+            bounceTimingPanel.SetActive(false);
+        }
+    }
+    
     public void ShowTimingResult(string text)
     {
         if (resultPopup == null || resultText == null) return;

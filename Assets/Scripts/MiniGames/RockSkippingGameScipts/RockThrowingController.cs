@@ -111,7 +111,7 @@ public class RockThrowingController : MonoBehaviour
     [SerializeField] private bool isRockInFlight;
     private Rock activeRock;
     private Vector3 rockStartPosition;
-    private bool bounceInputEnabled;
+    [SerializeField] private bool bounceInputEnabled;
     private Coroutine bounceTimingCoroutine;
     
     private void Awake()
@@ -244,6 +244,10 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.ShowThrowingUI(currentMode);
+            if(bounceInputEnabled == false)
+            {
+                throwingUI.HideBounceUI();
+            }
         }
         
         Debug.Log($"Throw prepared with mode: {currentMode}");
@@ -613,13 +617,13 @@ public class RockThrowingController : MonoBehaviour
         // Calculate initial velocity
         Vector3 velocity = throwDirection * power;
         // Ensure minimum Y velocity to clear dock - at least 4 even at low power
-        velocity.y = Mathf.Max(4f, throwArcHeight * Mathf.Max(0.5f, powerNormalized));
+        velocity.y = Mathf.Max(2f, throwArcHeight * Mathf.Max(0.5f, powerNormalized));
         
         // Throw with calculated velocity
         activeRock.ThrowRock(velocity);
         
         isRockInFlight = true;
-        bounceInputEnabled = true;
+        //bounceInputEnabled = true; Disabling bounce input for testing without manual bouncing
         wasFollowingRock = true;
         
         if(cameraFollower != null)
@@ -632,7 +636,9 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.HideThrowingUI();
-            throwingUI.ShowBounceUI();
+            
+            if(bounceInputEnabled)
+                throwingUI.ShowBounceUI();
         }
         
         OnThrowExecuted?.Invoke();
@@ -656,6 +662,9 @@ public class RockThrowingController : MonoBehaviour
         
         OnBounceWindowStart?.Invoke();
         
+        //Setting Bouce Input to false so I can test bounce objects gameplay without manual bouncing
+        bounceInputEnabled = false;
+        
         if (bounceInputEnabled)
         {
             if (bounceTimingCoroutine != null)
@@ -664,10 +673,31 @@ public class RockThrowingController : MonoBehaviour
             }
             bounceTimingCoroutine = StartCoroutine(BounceTimingWindowCoroutine());
         }
+        else
+        {
+            if (throwingUI != null)
+            {
+                
+               throwingUI.HideBounceUI();
+            }
+            
+            
+          
+        }
     }
     
     private IEnumerator BounceTimingWindowCoroutine()
     {
+        
+        if(bounceInputEnabled == false)
+        {
+            if (throwingUI != null)
+            {
+                
+               throwingUI.HideBounceUi();
+            }
+            yield break;
+        }
         float elapsed = 0f;
         bool inputReceived = false;
         BounceResult result = BounceResult.Miss;
@@ -824,13 +854,18 @@ public class RockThrowingController : MonoBehaviour
     
     private bool IsThrowButtonPressed()
     {
+        
         var mouse = Mouse.current;
         var touch = Touchscreen.current?.primaryTouch;
         var keyboard = Keyboard.current;
         var gamepad = Gamepad.current;
         
         if (touch != null && touch.press.wasPressedThisFrame) return true;
-        if (mouse != null && mouse.leftButton.wasPressedThisFrame) return true;
+        if (mouse != null && mouse.leftButton.wasPressedThisFrame)
+        {
+            Debug.Log("Mouse left button pressed this frame");
+            return true;
+        }
         if (keyboard != null && keyboard.spaceKey.wasPressedThisFrame) return true;
         if (gamepad != null && gamepad.aButton.wasPressedThisFrame) return true;
         

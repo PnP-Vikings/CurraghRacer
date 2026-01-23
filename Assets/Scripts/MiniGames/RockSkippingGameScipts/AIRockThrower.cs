@@ -110,6 +110,7 @@ public class AIRockThrower : MonoBehaviour
             aiDifficulties[aiIndex] = Mathf.Clamp01(difficulty);
     }
     
+    
     /// <summary>
     /// Execute a physical AI throw with full simulation
     /// </summary>
@@ -279,10 +280,11 @@ public class AIRockThrower : MonoBehaviour
         // Higher power to ensure rock clears dock and reaches water
         Vector3 velocity = throwDirection * actualPower;
         
-        // Scale Y velocity - need enough height to arc over dock but not too steep
+        /*// Scale Y velocity - need enough height to arc over dock but not too steep
         // Good skip angle is about 10-20 degrees entry
-        float arcMultiplier = 0.25f + (currentDifficulty * 0.05f);
-        velocity.y = actualPower * arcMultiplier;
+        float arcMultiplier = (currentDifficulty * 0.05f);
+        velocity.y = actualPower * arcMultiplier;*/
+        velocity.y = throwArcHeight;
         
         // Throw with calculated velocity
         currentAIRock.ThrowRock(velocity);
