@@ -23,12 +23,14 @@ public class RockSkippingBounceGameObject : MonoBehaviour ,Bounceable
        }
    }
 
-   public void Update()
+   public void OnCollisionEnter(Collision other)
    {
-       transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
+       Debug.Log("Collision detected with " + other.gameObject.name);
+       if (other.gameObject.GetComponent<Rock>() != null)
+       {
+           ApplyBounceToTarget(other.gameObject);
+       }
    }
-   
-   
     
   
     public void ApplyBounceToTarget(GameObject gobject)

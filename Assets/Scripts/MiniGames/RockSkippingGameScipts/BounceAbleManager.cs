@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using UnityEngine;
 
 public class BounceAbleManager : MonoBehaviour
@@ -25,6 +26,39 @@ public class BounceAbleManager : MonoBehaviour
             Destroy(gameObject);
         }
         InstantiateObjectPools();
+        
+        
+    }
+    
+    
+    private void Update()
+    {
+     if(!managerOn || rockSkippingObjectsInstances.Count <=0) return; 
+     
+     foreach(var obj in rockSkippingObjectsInstances)
+     {
+         if(obj == null) continue;
+         
+         Transform rockSkippingObj = ((MonoBehaviour)obj).transform;
+         if (rockSkippingObj.position.x < -750f)
+         {
+                rockSkippingObj.position = spawnLocations[currentSpawnIndex].position;
+                currentSpawnIndex++;
+                if (currentSpawnIndex >= spawnLocations.Count)
+                    currentSpawnIndex = 0;
+         }
+         else
+         {
+             float movementSpeed = 1f;
+             if (obj is RockSkippingBounceGameObject rockSkippingBounceGameObject)
+             {
+                  movementSpeed = rockSkippingBounceGameObject.movementSpeed;
+             }
+             rockSkippingObj.Translate(Vector3.left * movementSpeed * Time.deltaTime );
+         }
+     }
+     
+     
     }
     
     private void InstantiateObjectPools()
@@ -35,10 +69,14 @@ public class BounceAbleManager : MonoBehaviour
         {
             for (int i = 0; i < 5; i++)
             {
-                rockSkippingObjectsInstances.Add(obj.CreateInstance(spawnLocations[currentSpawnIndex]));
-                currentSpawnIndex++;
-                if (currentSpawnIndex >= spawnLocations.Count)
-                    currentSpawnIndex = 0;
+                DOVirtual.DelayedCall(i * 5f, () =>
+                {
+
+                    rockSkippingObjectsInstances.Add(obj.CreateInstance(spawnLocations[currentSpawnIndex]));
+                    currentSpawnIndex++;
+                    if (currentSpawnIndex >= spawnLocations.Count)
+                        currentSpawnIndex = 0;
+                });
             }
         }
     }
