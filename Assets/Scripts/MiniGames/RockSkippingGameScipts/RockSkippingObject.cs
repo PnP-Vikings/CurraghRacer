@@ -1,6 +1,6 @@
 using UnityEngine;
 
-[CreateAssetMenu(fileName = "New RockSkippingObject", menuName = "RockSkippingGame/RockSkippingObject")]
+[CreateAssetMenu(fileName = "New RockSkippingObject", menuName = "MiniGames/RockSkippingGame/RockSkippingObject")]
 public class RockSkippingObject : ScriptableObject 
 {
     public string objectName;

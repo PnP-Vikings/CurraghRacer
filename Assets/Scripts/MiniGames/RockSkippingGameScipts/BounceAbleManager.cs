@@ -11,6 +11,8 @@ public class BounceAbleManager : MonoBehaviour
     [SerializeField] private List<Transform> spawnLocations;
     
     [SerializeField] private int currentSpawnIndex = 0;
+
+    [SerializeField] private bool managerOn = true;
     
     private void Awake()
     {
@@ -27,7 +29,7 @@ public class BounceAbleManager : MonoBehaviour
     
     private void InstantiateObjectPools()
     {
-        if(rockSkippingObjectsInstances.Count <= 0) return;
+        if (objects == null || objects.Count <= 0 || managerOn == false) return;
         
         foreach (var obj in objects)
         {
