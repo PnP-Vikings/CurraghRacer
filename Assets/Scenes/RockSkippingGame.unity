@@ -7759,7 +7759,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5689455462472072897, guid: 13a2a6256c5c3514981ef4c699bb3934, type: 3}
       propertyPath: m_LocalScale.y
-      value: -2276.617
+      value: -4542
       objectReference: {fileID: 0}
     - target: {fileID: 5689455462472072897, guid: 13a2a6256c5c3514981ef4c699bb3934, type: 3}
       propertyPath: m_LocalScale.z
@@ -7767,15 +7767,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5689455462472072897, guid: 13a2a6256c5c3514981ef4c699bb3934, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -1.4051
+      value: -1.4012548
       objectReference: {fileID: 0}
     - target: {fileID: 5689455462472072897, guid: 13a2a6256c5c3514981ef4c699bb3934, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -2.6803
+      value: -2.6830008
       objectReference: {fileID: 0}
     - target: {fileID: 5689455462472072897, guid: 13a2a6256c5c3514981ef4c699bb3934, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -39.532
+      value: -54.565693
       objectReference: {fileID: 0}
     - target: {fileID: 5689455462472072897, guid: 13a2a6256c5c3514981ef4c699bb3934, type: 3}
       propertyPath: m_LocalRotation.w
@@ -17306,7 +17306,7 @@ MonoBehaviour:
   powerChargeSpeed: 1.2
   maxChargeTime: 2
   previewRockOffset: {x: 0, y: 0, z: 0}
-  flickMinDistance: 35
+  flickMinDistance: 10
   flickMaxTime: 0.5
   flickPowerMultiplier: 0.15
   beatInterval: 2
@@ -17326,6 +17326,7 @@ MonoBehaviour:
   missShakeDuration: 0.3
   canThrow: 0
   isRockInFlight: 0
+  randomBounceMode: 1
   bounceInputEnabled: 0
 --- !u!1001 &811612953
 PrefabInstance:
@@ -33246,6 +33247,7 @@ MonoBehaviour:
   - {fileID: 930046004}
   - {fileID: 2040674303}
   currentSpawnIndex: 0
+  amountOfEachObjectToSpawn: 8
   managerOn: 1
 --- !u!4 &1570194772
 Transform:

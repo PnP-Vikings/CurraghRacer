@@ -12,6 +12,7 @@ public class BounceAbleManager : MonoBehaviour
     [SerializeField] private List<Transform> spawnLocations;
     
     [SerializeField] private int currentSpawnIndex = 0;
+    [SerializeField] private int amountOfEachObjectToSpawn = 8;
 
     [SerializeField] private bool managerOn = true;
     
@@ -67,7 +68,7 @@ public class BounceAbleManager : MonoBehaviour
         
         foreach (var obj in objects)
         {
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < amountOfEachObjectToSpawn; i++)
             {
                 DOVirtual.DelayedCall(i * 5f, () =>
                 {

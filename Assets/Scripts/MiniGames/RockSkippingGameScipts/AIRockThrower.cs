@@ -450,28 +450,33 @@ public class AIRockThrower : MonoBehaviour
         // Higher difficulty = higher chance of good results
         // Smaller window = harder to get perfect
         
-        float windowDifficultyModifier = windowSize / baseBounceWindow;
-        float effectiveDifficulty = difficulty * windowDifficultyModifier;
+        /*float windowDifficultyModifier = windowSize / baseBounceWindow;
+        float effectiveDifficulty = difficulty * windowDifficultyModifier;*/
         
-        float roll = Random.value;
+        float roll = UnityEngine.Random.value;
+        BounceResult result = roll switch
+        {
+            <= 0.10f => BounceResult.Perfect,  // 10%
+            <= 0.55f => BounceResult.Good,     // 45%
+            <= 0.85f => BounceResult.Okay,     // 30%
+            _ => BounceResult.Miss             // 15% (0.85 to 1.0)
+        };
+            
+        if(currentAIRock.currentBounces == 0)
+        {
+            if(result == BounceResult.Miss)
+            { //This Should Reduce the chance of getting a miss on the first bounce
+                roll = UnityEngine.Random.value;
+                result = roll switch
+                {
+                    <= 0.20f => BounceResult.Good, // 20%
+                    <= 0.60f => BounceResult.Okay, // 40%
+                    _ => BounceResult.Miss    // 40% (0.60 to 1.0)
+                };
+            }
+        }
         
-        // Perfect chance: high difficulty, larger window
-        float perfectChance = effectiveDifficulty * 0.4f;
-        if (roll < perfectChance)
-            return BounceResult.Perfect;
-        
-        // Good chance
-        float goodChance = perfectChance + effectiveDifficulty * 0.35f;
-        if (roll < goodChance)
-            return BounceResult.Good;
-        
-        // Okay chance
-        float okayChance = goodChance + 0.25f;
-        if (roll < okayChance)
-            return BounceResult.Okay;
-        
-        // Miss
-        return BounceResult.Miss;
+       return result;
     }
     
     #endregion

@@ -9,7 +9,7 @@ public class Rock : MonoBehaviour
     public float dragAmount = 0.999f;  // Almost no drag - rock maintains speed
     public float bounceForce = 5f;     // Good bounce height
     public int maxBounces = 3;
-    private int currentBounces = 0;
+    public int currentBounces = 0;
     private Rigidbody rb;
     private Collider rockCollider;
     public bool isThrown = false;
@@ -238,15 +238,17 @@ public class Rock : MonoBehaviour
             Debug.Log("Rock lost momentum and sank");
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 2f);
         }
         
         // Safety: if rock falls below certain Y level, it sank
-        if (transform.position.y < -10f)
+        if (transform.position.y < 242.5f)
         {
             Debug.Log("Rock fell too far - ending throw");
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 1f);
         }
         
@@ -256,6 +258,7 @@ public class Rock : MonoBehaviour
             Debug.Log("Rock flight timeout - ending throw");
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 1f);
         }
         
@@ -267,6 +270,7 @@ public class Rock : MonoBehaviour
                 Debug.Log("Rock did not hit water in time - forcing sink");
                 float finalDistance = CalculateTotalDistance();
                 OnRockSunk?.Invoke(finalDistance);
+                hasSunk = true;
                 Destroy(gameObject, 1f);
             }
         }
@@ -316,8 +320,10 @@ public class Rock : MonoBehaviour
             Debug.Log($"Rock sunk at distance: {finalDistance}m");
             OnRockSunk?.Invoke(finalDistance);
             hasSunk = true;
-            Destroy(gameObject, 2f);
+            Destroy(gameObject, 1.5f);
         }
+        
+      
     }
 
     public void HandleExternalBounce(float force)
