@@ -10396,6 +10396,7 @@ MonoBehaviour:
   bounceForce: 5
   movementSpeed: 3
   col: {fileID: 0}
+  bounceAble: 1
 --- !u!54 &504092809
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -17097,6 +17098,9 @@ MonoBehaviour:
   skipAIButton: {fileID: 63607012}
   resultsUI: {fileID: 372092004}
   spawnedRockVisuals: []
+  cameraFollower: {fileID: 774769260}
+  cameraShakeIntensity: 0.2
+  cameraShakeDuration: 0.1
 --- !u!4 &810044237
 Transform:
   m_ObjectHideFlags: 0
@@ -36631,71 +36635,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
---- !u!1001 &1771650315
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -685.4673
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 245.97
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: -364.831
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 1009236727650030966, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4177448670564091263, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_ExcludeLayers.m_Bits
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4177448670564091263, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_IncludeLayers.m_Bits
-      value: 4071
-      objectReference: {fileID: 0}
-    - target: {fileID: 4289042368657174859, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
-      propertyPath: m_Name
-      value: Wooden Board
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: bc725d0ea25ba134c809fe0c26e45c97, type: 3}
 --- !u!1 &1772683505
 GameObject:
   m_ObjectHideFlags: 0
@@ -45725,4 +45664,3 @@ SceneRoots:
   - {fileID: 522164402}
   - {fileID: 734436798}
   - {fileID: 504092813}
-  - {fileID: 1771650315}

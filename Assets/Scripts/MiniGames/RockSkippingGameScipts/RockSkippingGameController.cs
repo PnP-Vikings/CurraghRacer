@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 using JetBrains.Annotations;
 using MiniGames;
 using UnityEngine;
@@ -20,6 +21,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     public Transform rockSpawnPoint;
     public Dictionary<int, (Rock rock, int score)> rockScores = new Dictionary<int, (Rock, int)>();
     public RockCase rockCase;
+    
     
     [Header("Optional UI")]
     [SerializeField] private RockInfoUI rockInfoUI;
@@ -41,6 +43,13 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     
     [SerializeField] private List<RockVisual> spawnedRockVisuals = new List<RockVisual>();
     private RockVisual currentHoveredRock;
+    
+    [Header("Camera Settings")]
+    public CameraSmoothlyFollowGameObject cameraFollower; // Reference to the camera for shake effect
+    public float cameraShakeIntensity = 0.15f; // How strong the shake is
+    public float cameraShakeDuration = 0.2f; // How long the shake lasts
+    private Vector3 cameraOriginalPosition; // Store camera's starting position
+    [SerializeField] private bool cameraShake = false;
     
     // Scoring - tracks distances per player per round
     // Key: playerIndex (0 = player, 1-3 = AI), Value: list of distances per round
@@ -524,6 +533,41 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         
         stage = Stages.RockPicking;
     }
+
+   public void ShakeCamera()
+{
+    if (cameraFollower == null || cameraShake == true) return;
+    
+    // Kill any existing tweens
+    cameraFollower.transform.DOKill();
+    
+    // 1. Camera shake (rotation-based works better for following cameras)
+    cameraFollower.transform.DOShakeRotation(
+        cameraShakeDuration, 
+        cameraShakeIntensity,  // Increased intensity
+        vibrato: 15, 
+        randomness: 90, 
+        fadeOut: true
+    );
+    
+    /*// 2. Quick zoom punch effect (brief FOV change for impact)
+    Camera cam = cameraFollower.GetComponent<Camera>();
+    if (cam != null)
+    {
+        float originalFOV = cam.fieldOfView;
+        DOTween.Sequence()
+            .Append(DOTween.To(() => cam.fieldOfView, x => cam.fieldOfView = x, originalFOV - 3f, 0.05f))
+            .Append(DOTween.To(() => cam.fieldOfView, x => cam.fieldOfView = x, originalFOV, 0.15f).SetEase(Ease.OutElastic));
+    }*/
+    
+    
+    // 5. Time scale hit-stop effect (brief pause for impact feel)
+    DOTween.Sequence()
+        .AppendCallback(() => Time.timeScale = 0.71f)
+        .AppendInterval(0.1f)
+        .AppendCallback(() => Time.timeScale = 1f)
+        .SetUpdate(true);  // Use unscaled time
+}
     
     public void Initialize(MiniGameManager manager, MiniGameData gameData)
     {

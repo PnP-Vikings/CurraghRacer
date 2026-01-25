@@ -162,6 +162,8 @@ public class AIRockThrower : MonoBehaviour
         // Each bounce can add distance based on timing result
         for (int i = 0; i < maxBounces; i++)
         {
+            
+            
             BounceResult result = SimulateBounceResult(difficulty, bounceWindow);
             
             // Distance added per bounce (realistic: 3-8m per good bounce)
@@ -191,6 +193,7 @@ public class AIRockThrower : MonoBehaviour
         
         // Clamp to realistic maximum (around 40-45m)
         totalDistance = Mathf.Clamp(totalDistance, 3f, 45f);
+        
         return Mathf.Max(5f, totalDistance);
     }
     
@@ -317,7 +320,7 @@ public class AIRockThrower : MonoBehaviour
                     currentAIRock.OnWaterContact -= OnAIRockWaterContact;
                     currentAIRock.OnRockSunk -= OnAIRockSunk;
                     Destroy(currentAIRock.gameObject);
-                    currentAIRock = null;
+                   
                 }
                 
                 float instantDistance = CalculateInstantResult(rock, aiIndex);
@@ -447,11 +450,8 @@ public class AIRockThrower : MonoBehaviour
     
     private BounceResult SimulateBounceResult(float difficulty, float windowSize)
     {
-        // Higher difficulty = higher chance of good results
-        // Smaller window = harder to get perfect
-        
-        /*float windowDifficultyModifier = windowSize / baseBounceWindow;
-        float effectiveDifficulty = difficulty * windowDifficultyModifier;*/
+        if(currentAIRock == null)
+            return BounceResult.Miss;
         
         float roll = UnityEngine.Random.value;
         BounceResult result = roll switch

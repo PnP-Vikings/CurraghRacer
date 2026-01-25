@@ -25,7 +25,7 @@ public class Rock : MonoBehaviour
     private bool hasHitWater = false; // Track if we've hit water at least once
     
     // These are kept for compatibility but not used for acceleration anymore
-    [HideInInspector] public float acceleration = 1f;
+    [HideInInspector] public float acceleration = 5f;
     [HideInInspector] public float speed = 0f;
     
     // Distance tracking
@@ -148,18 +148,21 @@ public class Rock : MonoBehaviour
                 // Small rocks: light, bounce high but fewer times
                 bounceForce = Random.Range(4f, 6f);
                 maxBounces = Random.Range(2, 4);
+                acceleration = Random.Range(7f, 10f);
                 dragAmount = 0.999f; // Minimal drag
                 break;
             case RockType.Medium:
                 // Medium rocks: balanced
                 bounceForce = Random.Range(5f, 7f);
                 maxBounces = Random.Range(3, 5);
+                acceleration = Random.Range(6f, 8f);
                 dragAmount = 0.998f;
                 break;
             case RockType.Large:
                 // Large rocks: heavier, more bounces
                 bounceForce = Random.Range(4f, 5f);
-                maxBounces = Random.Range(4, 7);
+                acceleration = Random.Range(5f, 6f);
+                maxBounces = Random.Range(4, 8);
                 dragAmount = 0.997f;
                 break;
         }

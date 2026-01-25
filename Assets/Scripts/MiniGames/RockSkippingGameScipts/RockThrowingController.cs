@@ -611,6 +611,11 @@ public class RockThrowingController : MonoBehaviour
         activeRock.OnWaterContact += HandleWaterContact;
         activeRock.OnRockSunk += HandleRockSunk;
         
+        if(RockSkippingGameController.Instance != null)
+        {
+            activeRock.OnWaterContact += RockSkippingGameController.Instance.ShakeCamera;
+        }
+        
         // Calculate throw direction using base direction (default -Z towards water)
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
         Vector3 throwDirection = rotation * baseThrowDirection.normalized;
@@ -854,6 +859,10 @@ public class RockThrowingController : MonoBehaviour
         {
             activeRock.OnWaterContact -= HandleWaterContact;
             activeRock.OnRockSunk -= HandleRockSunk;
+            if(RockSkippingGameController .Instance != null)
+            {
+                activeRock.OnWaterContact -= RockSkippingGameController.Instance.ShakeCamera;
+            }
             activeRock = null;
         }
     }
