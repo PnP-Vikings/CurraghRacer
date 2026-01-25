@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using DG.Tweening;
+using NUnit.Framework.Interfaces;
 using UnityEngine;
 
 public class BounceAbleManager : MonoBehaviour
@@ -61,27 +62,25 @@ public class BounceAbleManager : MonoBehaviour
      
      
     }
-    
+
     private void InstantiateObjectPools()
     {
         if (objects == null || objects.Count <= 0 || managerOn == false) return;
-        
-        foreach (var obj in objects)
+        for (int i = 0; i < amountOfEachObjectToSpawn * objects.Count; i++)
         {
-            for (int i = 0; i < amountOfEachObjectToSpawn; i++)
+            int itemToSpawnIndex = Random.Range(0, objects.Count);
+            RockSkippingObject objectToSpawn = objects[itemToSpawnIndex];
+            
+            DOVirtual.DelayedCall(i * 5f, () =>
             {
-                DOVirtual.DelayedCall(i * 5f, () =>
-                {
 
-                    rockSkippingObjectsInstances.Add(obj.CreateInstance(spawnLocations[currentSpawnIndex]));
-                    currentSpawnIndex++;
-                    if (currentSpawnIndex >= spawnLocations.Count)
-                        currentSpawnIndex = 0;
-                });
-            }
+                rockSkippingObjectsInstances.Add(objectToSpawn.CreateInstance(spawnLocations[currentSpawnIndex]));
+                currentSpawnIndex++;
+                if (currentSpawnIndex >= spawnLocations.Count)
+                    currentSpawnIndex = 0;
+            });
         }
     }
-    
     
     private void OnDestroy()
     {

@@ -172,6 +172,12 @@ public class Rock : MonoBehaviour
         // Only care about water collisions
         if (collision.gameObject.CompareTag("Water"))
         {
+            if (transform.position.y > 245f) // Water level threshold
+            {
+                Debug.Log("Ignoring water contact - rock is above water level");
+                return;
+            }
+            
             hasHitWater = true;
             HandleWaterContact();
         }
@@ -310,6 +316,7 @@ public class Rock : MonoBehaviour
                 
             }
             
+           
             currentBounces++;
             Debug.Log($"Bounced! New velocity: {rb.linearVelocity}");
         }
@@ -328,14 +335,32 @@ public class Rock : MonoBehaviour
 
     public void HandleExternalBounce(float force)
     {
-        if (hasSunk) return;
-        
-        if (rb != null)
+        Debug.Log($"HandleExternalBounce called - hasSunk: {hasSunk}, rb: {rb != null}, isThrown: {isThrown}");
+    
+        if (!hasHitWater)
         {
-            Debug.Log("External Bounce applied to rock");
-            // Use the velocity stored in FixedUpdate BEFORE collision processing
-            rb.linearVelocity = new Vector3(preCollisionVelocity.x, force/2, preCollisionVelocity.z +(-force ));
+            hasHitWater = true; // Mark as having hit water as rock has been thrown far enough
+        }    
+        
+        if (hasSunk) return;
+        if (rb == null) return;
+        
+        if(!isThrown)
+        {
+            Debug.Log("Rock not thrown yet - ignoring external bounce");
+            return;
         }
+       
+        // Use current velocity if preCollisionVelocity is zero
+        Vector3 currentVel = preCollisionVelocity.sqrMagnitude > 0.01f 
+            ? preCollisionVelocity 
+            : rb.linearVelocity;
+    
+        force = Mathf.Abs(force); // Ensure force is positive
+        force *= Random.Range(1,bounceForce);
+        Debug.Log($"External Bounce applied - force: {force}, currentVel: {currentVel}");
+    
+        rb.linearVelocity = new Vector3(currentVel.x, force / 2, currentVel.z - force);
     }
     
     public void ThrowRock(Vector3? initialVelocity = null)
