@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using JetBrains.Annotations;
 using MiniGames;
@@ -518,6 +519,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             resultsUI.ShowFinalResults(playerRoundDistances, winner);
         }
+
+        EndGame();
     }
     
     public void ResetRockSelection()
@@ -536,12 +539,12 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
 
    public void ShakeCamera()
 {
-    if (cameraFollower == null || cameraShake == true) return;
+    if (cameraFollower == null || cameraShake == false) return;
     
     // Kill any existing tweens
     cameraFollower.transform.DOKill();
     
-    // 1. Camera shake (rotation-based works better for following cameras)
+    //Camera shake (rotation-based works better for following cameras)
     cameraFollower.transform.DOShakeRotation(
         cameraShakeDuration, 
         cameraShakeIntensity,  // Increased intensity
@@ -550,18 +553,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         fadeOut: true
     );
     
-    /*// 2. Quick zoom punch effect (brief FOV change for impact)
-    Camera cam = cameraFollower.GetComponent<Camera>();
-    if (cam != null)
-    {
-        float originalFOV = cam.fieldOfView;
-        DOTween.Sequence()
-            .Append(DOTween.To(() => cam.fieldOfView, x => cam.fieldOfView = x, originalFOV - 3f, 0.05f))
-            .Append(DOTween.To(() => cam.fieldOfView, x => cam.fieldOfView = x, originalFOV, 0.15f).SetEase(Ease.OutElastic));
-    }*/
     
-    
-    // 5. Time scale hit-stop effect (brief pause for impact feel)
+    //Time scale hit-stop effect (brief pause for impact feel)
     DOTween.Sequence()
         .AppendCallback(() => Time.timeScale = 0.71f)
         .AppendInterval(0.1f)
@@ -573,15 +566,15 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     {
         
     }
+    
+    public void UpdateGame()
+    {
+        // Game update logic if needed
+    }
 
     public void StartGame()
     {
         stage = Stages.RockPicking;
-    }
-
-    public void UpdateGame()
-    {
-        // Handle game state updates
     }
 
     public void EndGame()
@@ -598,11 +591,17 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             rockCase.OnCaseClosed -= StartAimingStage;
         }
+        
+        if(MiniGameManager.Instance != null)
+        {
+            int playerTotalScore = Mathf.RoundToInt(playerRoundDistances[0].Sum());
+            MiniGameManager.Instance.CompleteGame(playerTotalScore,9);
+        }
     }
     
     private void OnDestroy()
     {
-        EndGame();
+        
         
         if (Instance == this)
         {

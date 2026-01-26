@@ -179,6 +179,11 @@ namespace MiniGames
                 Debug.Log($"Quote: {activity.startQuote}");
             }
             
+            if(PlayerStatsView.Instance != null)
+            {
+                PlayerStatsView.Instance.HideStatsView();
+            }
+            
             // Check energy cost
             if (playerManager != null && !playerManager.PlayerHasEnoughEnergy(activity.energyCost))
             {
@@ -301,7 +306,10 @@ namespace MiniGames
                 PlayerFailedMiniGame();
             }
             
-           
+           if(PlayerStatsView.Instance != null)
+            {
+                PlayerStatsView.Instance.ShowStatsView();
+            }
         }
         
         private void CalculateAndShowResults()
