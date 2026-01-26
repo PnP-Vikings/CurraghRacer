@@ -1,6 +1,8 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+using DG.Tweening;
 using JetBrains.Annotations;
 using MiniGames;
 using UnityEngine;
@@ -20,6 +22,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     public Transform rockSpawnPoint;
     public Dictionary<int, (Rock rock, int score)> rockScores = new Dictionary<int, (Rock, int)>();
     public RockCase rockCase;
+    
     
     [Header("Optional UI")]
     [SerializeField] private RockInfoUI rockInfoUI;
@@ -41,6 +44,13 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     
     [SerializeField] private List<RockVisual> spawnedRockVisuals = new List<RockVisual>();
     private RockVisual currentHoveredRock;
+    
+    [Header("Camera Settings")]
+    public CameraSmoothlyFollowGameObject cameraFollower; // Reference to the camera for shake effect
+    public float cameraShakeIntensity = 0.15f; // How strong the shake is
+    public float cameraShakeDuration = 0.2f; // How long the shake lasts
+    private Vector3 cameraOriginalPosition; // Store camera's starting position
+    [SerializeField] private bool cameraShake = false;
     
     // Scoring - tracks distances per player per round
     // Key: playerIndex (0 = player, 1-3 = AI), Value: list of distances per round
@@ -509,6 +519,8 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             resultsUI.ShowFinalResults(playerRoundDistances, winner);
         }
+
+        EndGame();
     }
     
     public void ResetRockSelection()
@@ -524,20 +536,45 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         
         stage = Stages.RockPicking;
     }
+
+   public void ShakeCamera()
+{
+    if (cameraFollower == null || cameraShake == false) return;
+    
+    // Kill any existing tweens
+    cameraFollower.transform.DOKill();
+    
+    //Camera shake (rotation-based works better for following cameras)
+    cameraFollower.transform.DOShakeRotation(
+        cameraShakeDuration, 
+        cameraShakeIntensity,  // Increased intensity
+        vibrato: 15, 
+        randomness: 90, 
+        fadeOut: true
+    );
+    
+    
+    //Time scale hit-stop effect (brief pause for impact feel)
+    DOTween.Sequence()
+        .AppendCallback(() => Time.timeScale = 0.71f)
+        .AppendInterval(0.1f)
+        .AppendCallback(() => Time.timeScale = 1f)
+        .SetUpdate(true);  // Use unscaled time
+}
     
     public void Initialize(MiniGameManager manager, MiniGameData gameData)
     {
         
     }
+    
+    public void UpdateGame()
+    {
+        // Game update logic if needed
+    }
 
     public void StartGame()
     {
         stage = Stages.RockPicking;
-    }
-
-    public void UpdateGame()
-    {
-        // Handle game state updates
     }
 
     public void EndGame()
@@ -554,11 +591,17 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
         {
             rockCase.OnCaseClosed -= StartAimingStage;
         }
+        
+        if(MiniGameManager.Instance != null)
+        {
+            int playerTotalScore = Mathf.RoundToInt(playerRoundDistances[0].Sum());
+            MiniGameManager.Instance.CompleteGame(playerTotalScore,9);
+        }
     }
     
     private void OnDestroy()
     {
-        EndGame();
+        
         
         if (Instance == this)
         {

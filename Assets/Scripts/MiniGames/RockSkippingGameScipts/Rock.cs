@@ -9,7 +9,7 @@ public class Rock : MonoBehaviour
     public float dragAmount = 0.999f;  // Almost no drag - rock maintains speed
     public float bounceForce = 5f;     // Good bounce height
     public int maxBounces = 3;
-    private int currentBounces = 0;
+    public int currentBounces = 0;
     private Rigidbody rb;
     private Collider rockCollider;
     public bool isThrown = false;
@@ -25,7 +25,7 @@ public class Rock : MonoBehaviour
     private bool hasHitWater = false; // Track if we've hit water at least once
     
     // These are kept for compatibility but not used for acceleration anymore
-    [HideInInspector] public float acceleration = 1f;
+    [HideInInspector] public float acceleration = 5f;
     [HideInInspector] public float speed = 0f;
     
     // Distance tracking
@@ -148,18 +148,21 @@ public class Rock : MonoBehaviour
                 // Small rocks: light, bounce high but fewer times
                 bounceForce = Random.Range(4f, 6f);
                 maxBounces = Random.Range(2, 4);
+                acceleration = Random.Range(7f, 10f);
                 dragAmount = 0.999f; // Minimal drag
                 break;
             case RockType.Medium:
                 // Medium rocks: balanced
                 bounceForce = Random.Range(5f, 7f);
                 maxBounces = Random.Range(3, 5);
+                acceleration = Random.Range(6f, 8f);
                 dragAmount = 0.998f;
                 break;
             case RockType.Large:
                 // Large rocks: heavier, more bounces
                 bounceForce = Random.Range(4f, 5f);
-                maxBounces = Random.Range(4, 7);
+                acceleration = Random.Range(5f, 6f);
+                maxBounces = Random.Range(4, 8);
                 dragAmount = 0.997f;
                 break;
         }
@@ -172,6 +175,12 @@ public class Rock : MonoBehaviour
         // Only care about water collisions
         if (collision.gameObject.CompareTag("Water"))
         {
+            if (transform.position.y > 245f) // Water level threshold
+            {
+                Debug.Log("Ignoring water contact - rock is above water level");
+                return;
+            }
+            
             hasHitWater = true;
             HandleWaterContact();
         }
@@ -238,15 +247,17 @@ public class Rock : MonoBehaviour
             Debug.Log("Rock lost momentum and sank");
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 2f);
         }
         
         // Safety: if rock falls below certain Y level, it sank
-        if (transform.position.y < -10f)
+        if (transform.position.y < 242.5f)
         {
             Debug.Log("Rock fell too far - ending throw");
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 1f);
         }
         
@@ -256,6 +267,7 @@ public class Rock : MonoBehaviour
             Debug.Log("Rock flight timeout - ending throw");
             float finalDistance = CalculateTotalDistance();
             OnRockSunk?.Invoke(finalDistance);
+            hasSunk = true;
             Destroy(gameObject, 1f);
         }
         
@@ -267,6 +279,7 @@ public class Rock : MonoBehaviour
                 Debug.Log("Rock did not hit water in time - forcing sink");
                 float finalDistance = CalculateTotalDistance();
                 OnRockSunk?.Invoke(finalDistance);
+                hasSunk = true;
                 Destroy(gameObject, 1f);
             }
         }
@@ -306,6 +319,7 @@ public class Rock : MonoBehaviour
                 
             }
             
+           
             currentBounces++;
             Debug.Log($"Bounced! New velocity: {rb.linearVelocity}");
         }
@@ -316,20 +330,40 @@ public class Rock : MonoBehaviour
             Debug.Log($"Rock sunk at distance: {finalDistance}m");
             OnRockSunk?.Invoke(finalDistance);
             hasSunk = true;
-            Destroy(gameObject, 2f);
+            Destroy(gameObject, 1.5f);
         }
+        
+      
     }
 
     public void HandleExternalBounce(float force)
     {
-        if (hasSunk) return;
-        
-        if (rb != null)
+        Debug.Log($"HandleExternalBounce called - hasSunk: {hasSunk}, rb: {rb != null}, isThrown: {isThrown}");
+    
+        if (!hasHitWater)
         {
-            Debug.Log("External Bounce applied to rock");
-            // Use the velocity stored in FixedUpdate BEFORE collision processing
-            rb.linearVelocity = new Vector3(preCollisionVelocity.x, force/2, preCollisionVelocity.z +(-force ));
+            hasHitWater = true; // Mark as having hit water as rock has been thrown far enough
+        }    
+        
+        if (hasSunk) return;
+        if (rb == null) return;
+        
+        if(!isThrown)
+        {
+            Debug.Log("Rock not thrown yet - ignoring external bounce");
+            return;
         }
+       
+        // Use current velocity if preCollisionVelocity is zero
+        Vector3 currentVel = preCollisionVelocity.sqrMagnitude > 0.01f 
+            ? preCollisionVelocity 
+            : rb.linearVelocity;
+    
+        force = Mathf.Abs(force); // Ensure force is positive
+        force *= Random.Range(1,bounceForce);
+        Debug.Log($"External Bounce applied - force: {force}, currentVel: {currentVel}");
+    
+        rb.linearVelocity = new Vector3(currentVel.x, force / 2, currentVel.z - force);
     }
     
     public void ThrowRock(Vector3? initialVelocity = null)

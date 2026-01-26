@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using DG.Tweening;
+using NUnit.Framework.Interfaces;
 using UnityEngine;
 
 public class BounceAbleManager : MonoBehaviour
@@ -7,6 +9,13 @@ public class BounceAbleManager : MonoBehaviour
     public static BounceAbleManager Instance { get; private set; }
     
     public List<Bounceable>  rockSkippingObjectsInstances = new List<Bounceable>();
+
+    [SerializeField] private List<Transform> spawnLocations;
+    
+    [SerializeField] private int currentSpawnIndex = 0;
+    [SerializeField] private int amountOfEachObjectToSpawn = 8;
+
+    [SerializeField] private bool managerOn = true;
     
     private void Awake()
     {
@@ -18,21 +27,60 @@ public class BounceAbleManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
+        InstantiateObjectPools();
+        
+        
     }
     
+    
+    private void Update()
+    {
+     if(!managerOn || rockSkippingObjectsInstances.Count <=0) return; 
+     
+     foreach(var obj in rockSkippingObjectsInstances)
+     {
+         if(obj == null) continue;
+         
+         Transform rockSkippingObj = ((MonoBehaviour)obj).transform;
+         if (rockSkippingObj.position.x < -750f)
+         {
+                rockSkippingObj.position = spawnLocations[currentSpawnIndex].position;
+                currentSpawnIndex++;
+                if (currentSpawnIndex >= spawnLocations.Count)
+                    currentSpawnIndex = 0;
+         }
+         else
+         {
+             float movementSpeed = 1f;
+             if (obj is RockSkippingBounceGameObject rockSkippingBounceGameObject)
+             {
+                  movementSpeed = rockSkippingBounceGameObject.movementSpeed;
+             }
+             rockSkippingObj.Translate(Vector3.left * movementSpeed * Time.deltaTime );
+         }
+     }
+     
+     
+    }
+
     private void InstantiateObjectPools()
     {
-        if(rockSkippingObjectsInstances.Count <= 0) return;
-        
-        foreach (var obj in objects)
+        if (objects == null || objects.Count <= 0 || managerOn == false) return;
+        for (int i = 0; i < amountOfEachObjectToSpawn * objects.Count; i++)
         {
-            for (int i = 0; i < 5; i++)
+            int itemToSpawnIndex = Random.Range(0, objects.Count);
+            RockSkippingObject objectToSpawn = objects[itemToSpawnIndex];
+            
+            DOVirtual.DelayedCall(i * 5f, () =>
             {
-                rockSkippingObjectsInstances.Add(obj.CreateInstance());
-            }
+
+                rockSkippingObjectsInstances.Add(objectToSpawn.CreateInstance(spawnLocations[currentSpawnIndex]));
+                currentSpawnIndex++;
+                if (currentSpawnIndex >= spawnLocations.Count)
+                    currentSpawnIndex = 0;
+            });
         }
     }
-    
     
     private void OnDestroy()
     {

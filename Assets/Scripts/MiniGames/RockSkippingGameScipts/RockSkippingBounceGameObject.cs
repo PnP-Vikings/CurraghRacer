@@ -7,7 +7,7 @@ public class RockSkippingBounceGameObject : MonoBehaviour ,Bounceable
    public float bounceForce = 5f;
    public float movementSpeed = 10f;
    public Collider col;
-   
+   [SerializeField] private bool bounceAble = true;
 
    public void Awake()
    {
@@ -17,18 +17,20 @@ public class RockSkippingBounceGameObject : MonoBehaviour ,Bounceable
    public void OnTriggerEnter(Collider other)
    {
        Debug.Log("Collision detected with " + other.gameObject.name);
-       if (other.gameObject.GetComponent<Rock>() != null)
+       if (other.gameObject.GetComponent<Rock>() != null && bounceAble)
        {
            ApplyBounceToTarget(other.gameObject);
        }
    }
 
-   public void Update()
+   public void OnCollisionEnter(Collision other)
    {
-       transform.Translate(Vector3.left * movementSpeed * Time.deltaTime);
+       Debug.Log("Collision detected with " + other.gameObject.name);
+       if (other.gameObject.GetComponent<Rock>() != null && bounceAble)
+       {
+           ApplyBounceToTarget(other.gameObject);
+       }
    }
-   
-   
     
   
     public void ApplyBounceToTarget(GameObject gobject)

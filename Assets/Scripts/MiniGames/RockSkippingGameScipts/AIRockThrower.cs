@@ -162,6 +162,8 @@ public class AIRockThrower : MonoBehaviour
         // Each bounce can add distance based on timing result
         for (int i = 0; i < maxBounces; i++)
         {
+            
+            
             BounceResult result = SimulateBounceResult(difficulty, bounceWindow);
             
             // Distance added per bounce (realistic: 3-8m per good bounce)
@@ -191,6 +193,7 @@ public class AIRockThrower : MonoBehaviour
         
         // Clamp to realistic maximum (around 40-45m)
         totalDistance = Mathf.Clamp(totalDistance, 3f, 45f);
+        
         return Mathf.Max(5f, totalDistance);
     }
     
@@ -317,7 +320,7 @@ public class AIRockThrower : MonoBehaviour
                     currentAIRock.OnWaterContact -= OnAIRockWaterContact;
                     currentAIRock.OnRockSunk -= OnAIRockSunk;
                     Destroy(currentAIRock.gameObject);
-                    currentAIRock = null;
+                   
                 }
                 
                 float instantDistance = CalculateInstantResult(rock, aiIndex);
@@ -447,31 +450,33 @@ public class AIRockThrower : MonoBehaviour
     
     private BounceResult SimulateBounceResult(float difficulty, float windowSize)
     {
-        // Higher difficulty = higher chance of good results
-        // Smaller window = harder to get perfect
+        if(currentAIRock == null)
+            return BounceResult.Miss;
         
-        float windowDifficultyModifier = windowSize / baseBounceWindow;
-        float effectiveDifficulty = difficulty * windowDifficultyModifier;
+        float roll = UnityEngine.Random.value;
+        BounceResult result = roll switch
+        {
+            <= 0.10f => BounceResult.Perfect,  // 10%
+            <= 0.55f => BounceResult.Good,     // 45%
+            <= 0.85f => BounceResult.Okay,     // 30%
+            _ => BounceResult.Miss             // 15% (0.85 to 1.0)
+        };
+            
+        if(currentAIRock.currentBounces == 0)
+        {
+            if(result == BounceResult.Miss)
+            { //This Should Reduce the chance of getting a miss on the first bounce
+                roll = UnityEngine.Random.value;
+                result = roll switch
+                {
+                    <= 0.20f => BounceResult.Good, // 20%
+                    <= 0.60f => BounceResult.Okay, // 40%
+                    _ => BounceResult.Miss    // 40% (0.60 to 1.0)
+                };
+            }
+        }
         
-        float roll = Random.value;
-        
-        // Perfect chance: high difficulty, larger window
-        float perfectChance = effectiveDifficulty * 0.4f;
-        if (roll < perfectChance)
-            return BounceResult.Perfect;
-        
-        // Good chance
-        float goodChance = perfectChance + effectiveDifficulty * 0.35f;
-        if (roll < goodChance)
-            return BounceResult.Good;
-        
-        // Okay chance
-        float okayChance = goodChance + 0.25f;
-        if (roll < okayChance)
-            return BounceResult.Okay;
-        
-        // Miss
-        return BounceResult.Miss;
+       return result;
     }
     
     #endregion

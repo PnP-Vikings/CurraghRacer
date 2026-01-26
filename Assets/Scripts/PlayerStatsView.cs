@@ -106,6 +106,18 @@ public class PlayerStatsView : MonoBehaviour
     }
 
     
+    public void HideStatsView()
+    {
+        _playerEnergyLabel.style.display = DisplayStyle.None;
+        _playerCurrencyLabel.style.display = DisplayStyle.None;
+    }
+    
+    public void ShowStatsView()
+    {
+        _playerEnergyLabel.style.display = DisplayStyle.Flex;
+        _playerCurrencyLabel.style.display = DisplayStyle.Flex;
+    }
+    
     public void ClearInfo()
     {
         _displayInfoBackground.style.display = DisplayStyle.None;

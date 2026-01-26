@@ -109,6 +109,7 @@ public class RockThrowingController : MonoBehaviour
     [Header("State")]
     [SerializeField] private bool canThrow;
     [SerializeField] private bool isRockInFlight;
+    [SerializeField] private bool randomBounceMode;
     private Rock activeRock;
     private Vector3 rockStartPosition;
     [SerializeField] private bool bounceInputEnabled;
@@ -244,7 +245,7 @@ public class RockThrowingController : MonoBehaviour
         if (throwingUI != null)
         {
             throwingUI.ShowThrowingUI(currentMode);
-            if(bounceInputEnabled == false)
+            if(bounceInputEnabled == false || randomBounceMode == true)
             {
                 throwingUI.HideBounceUI();
             }
@@ -610,6 +611,11 @@ public class RockThrowingController : MonoBehaviour
         activeRock.OnWaterContact += HandleWaterContact;
         activeRock.OnRockSunk += HandleRockSunk;
         
+        if(RockSkippingGameController.Instance != null)
+        {
+            activeRock.OnWaterContact += RockSkippingGameController.Instance.ShakeCamera;
+        }
+        
         // Calculate throw direction using base direction (default -Z towards water)
         Quaternion rotation = Quaternion.Euler(0, angle, 0);
         Vector3 throwDirection = rotation * baseThrowDirection.normalized;
@@ -623,7 +629,7 @@ public class RockThrowingController : MonoBehaviour
         activeRock.ThrowRock(velocity);
         
         isRockInFlight = true;
-        //bounceInputEnabled = true; Disabling bounce input for testing without manual bouncing
+        bounceInputEnabled = true;
         wasFollowingRock = true;
         
         if(cameraFollower != null)
@@ -637,7 +643,7 @@ public class RockThrowingController : MonoBehaviour
         {
             throwingUI.HideThrowingUI();
             
-            if(bounceInputEnabled)
+            if(bounceInputEnabled == true && randomBounceMode == false)
                 throwingUI.ShowBounceUI();
         }
         
@@ -662,10 +668,8 @@ public class RockThrowingController : MonoBehaviour
         
         OnBounceWindowStart?.Invoke();
         
-        //Setting Bouce Input to false so I can test bounce objects gameplay without manual bouncing
-        bounceInputEnabled = false;
         
-        if (bounceInputEnabled)
+        if (bounceInputEnabled == true && randomBounceMode == false)
         {
             if (bounceTimingCoroutine != null)
             {
@@ -677,19 +681,20 @@ public class RockThrowingController : MonoBehaviour
         {
             if (throwingUI != null)
             {
-                
                throwingUI.HideBounceUI();
             }
-            
-            
-          
+        }
+        
+        if (randomBounceMode == true)
+        {
+            DoRandomBounce();
         }
     }
     
     private IEnumerator BounceTimingWindowCoroutine()
     {
         
-        if(bounceInputEnabled == false)
+        if(bounceInputEnabled == false || randomBounceMode == true)
         {
             if (throwingUI != null)
             {
@@ -777,6 +782,49 @@ public class RockThrowingController : MonoBehaviour
         OnBounceResult?.Invoke(result);
         Debug.Log($"Bounce: {result} | Combo: {consecutivePerfectBounces} | Next window: {currentTimingWindow:F2}s");
     }
+
+    private void DoRandomBounce()
+    {
+        // Apply result to rock
+        if (activeRock != null)
+        {
+            float roll = UnityEngine.Random.value;
+            BounceResult result = roll switch
+            {
+                <= 0.10f => BounceResult.Perfect,  // 10%
+                <= 0.55f => BounceResult.Good,     // 45%
+                <= 0.85f => BounceResult.Okay,     // 30%
+                _ => BounceResult.Miss             // 15% (0.85 to 1.0)
+            };
+            
+            if(activeRock.currentBounces == 0)
+            {
+                if(result == BounceResult.Miss)
+                { //This Should Reduce the chance of getting a miss on the first bounce
+                    roll = UnityEngine.Random.value;
+                    result = roll switch
+                  {
+                      <= 0.20f => BounceResult.Good, // 20%
+                      <= 0.60f => BounceResult.Okay, // 40%
+                      _ => BounceResult.Miss    // 40% (0.60 to 1.0)
+                  };
+                }
+            }
+            
+           
+            
+            float multiplier = result switch
+            {
+                BounceResult.Perfect => perfectBounceMultiplier,
+                BounceResult.Good => goodBounceMultiplier,
+                BounceResult.Okay => 1f,
+                BounceResult.Miss => missBounceMultiplier,
+                _ => 1f
+            };
+            
+            activeRock.ApplyBounceMultiplier(multiplier);
+        }
+    }
     
     private void HandleRockSunk(float totalDistance)
     {
@@ -811,6 +859,10 @@ public class RockThrowingController : MonoBehaviour
         {
             activeRock.OnWaterContact -= HandleWaterContact;
             activeRock.OnRockSunk -= HandleRockSunk;
+            if(RockSkippingGameController .Instance != null)
+            {
+                activeRock.OnWaterContact -= RockSkippingGameController.Instance.ShakeCamera;
+            }
             activeRock = null;
         }
     }
