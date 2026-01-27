@@ -25,7 +25,7 @@ namespace MiniGames.BalingSilageMinigame
 
         public void Start()
         {
-            Instantiate(tractorPrefab, new Vector3(0, 0, -1), Quaternion.identity);
+            Instantiate(tractorPrefab, new Vector3(0, 0, -0.5f), Quaternion.identity);
         }
 
         public void Update()
