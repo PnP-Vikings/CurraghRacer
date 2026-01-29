@@ -87,6 +87,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance closeRockCase;
     public EventInstance rockSkip;
     public EventInstance rockThrow;
+    public EventInstance rockBounceOnWood;
 
     private Scene activeScene;
     void Awake()
@@ -190,6 +191,7 @@ public class AudioManager : MonoBehaviour
         closeRockCase = RuntimeManager.CreateInstance("event:/Rock Skipping/Close Rock Case");
         rockSkip = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Skip");
         rockThrow = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Throwing");
+        rockBounceOnWood = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Bounce On Wood");
     }
 
     private void Update()
