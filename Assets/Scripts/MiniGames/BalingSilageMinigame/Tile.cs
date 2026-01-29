@@ -1,3 +1,4 @@
+using TMPro;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -6,10 +7,11 @@ public class Tile : MonoBehaviour
     public Material dirtMaterial;
     public MeshRenderer tileRenderer;
     public bool highlight;
+    private float timeIn;
 
     void Start()
     {
-        
+        timeIn = 0;
     }
 
     // Update is called once per frame
@@ -17,12 +19,21 @@ public class Tile : MonoBehaviour
     {
         if (highlight == true)
         {
-            tileRenderer.material = dirtMaterial;
+            if (timeIn < 5)
+            {
+                timeIn += Time.deltaTime;
+            }
+
+            if (timeIn > 5)
+            {
+                timeIn = 0;
+                tileRenderer.material = dirtMaterial;
+            }
         }
 
         if (highlight == false)
         {
-            tileRenderer.material = tileMaterial;
+            timeIn = 0;
         }
     }
 
@@ -31,12 +42,12 @@ public class Tile : MonoBehaviour
         
     }
 
-    void OnMouseEnter()
+    void OnTriggerEnter(Collider other)
     {
         highlight = true;
     }
 
-    void OnMouseExit()
+    void OnTriggerExit(Collider other)
     {
         highlight = false;
     }
