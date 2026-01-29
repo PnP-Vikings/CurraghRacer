@@ -308,6 +308,7 @@ public class RockSkippingResultsUI : MonoBehaviour
         {
             if (winnerIndex == 0)
             {
+                AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
                 AudioManager.instance.raceWin.start();
             }
             else

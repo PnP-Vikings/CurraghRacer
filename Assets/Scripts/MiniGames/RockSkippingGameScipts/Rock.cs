@@ -364,6 +364,11 @@ public class Rock : MonoBehaviour
         Debug.Log($"External Bounce applied - force: {force}, currentVel: {currentVel}");
     
         rb.linearVelocity = new Vector3(currentVel.x, force / 2, currentVel.z - force);
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.rockBounceOnWood.start();
+        }
     }
     
     public void ThrowRock(Vector3? initialVelocity = null)
