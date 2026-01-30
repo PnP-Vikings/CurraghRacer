@@ -486,10 +486,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639052925946781481
+  lastModified: 639053755754099447
   FileSizes:
   - Name: 
-    Value: 5562
+    Value: 5618
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -1477,12 +1477,13 @@ MonoBehaviour:
   - {fileID: -1738294619888965142}
   - {fileID: 4758589274831344729}
   - {fileID: -3150062783668590138}
+  - {fileID: 7706665125271307041}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639052925946781481
+  cacheTime: 639053755754099447
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -2562,7 +2563,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639052925946725857
+  lastModified: 639053755754054340
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726
@@ -2592,6 +2593,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 1307
+--- !u!114 &7706665125271307041
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bailing/Tractor
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Bailing/Tractor
+  Guid:
+    Data1: 145230778
+    Data2: 1163764072
+    Data3: -1001152326
+    Data4: 258326836
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 1
+  Is3D: 1
+  IsOneShot: 0
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 21743
 --- !u!114 &8155522247790703682
 MonoBehaviour:
   m_ObjectHideFlags: 0
