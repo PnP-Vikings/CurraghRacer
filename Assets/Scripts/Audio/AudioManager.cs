@@ -89,6 +89,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance rockThrow;
     public EventInstance rockBounceOnWood;
 
+    public EventInstance tractor;
+
     private Scene activeScene;
     void Awake()
     {
@@ -192,6 +194,8 @@ public class AudioManager : MonoBehaviour
         rockSkip = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Skip");
         rockThrow = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Throwing");
         rockBounceOnWood = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Bounce On Wood");
+
+        tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
     }
 
     private void Update()
