@@ -32,7 +32,7 @@ public class BillsController : MonoBehaviour
     private void OnEnable()
     {
         if(TimeManager.Instance != null)
-            TimeManager.Instance.onNewDay.AddListener(HandleNewDay);
+                TimeManager.Instance.onNewDay.AddListener(HandleNewDay);
     }
     void OnDisable()
     {
@@ -42,6 +42,7 @@ public class BillsController : MonoBehaviour
 
     public void HandleNewDay()
     {
+        Debug.Log("A new day has started, updating bills.");
         // Update all active bills
         foreach (var bill in bills)
         {

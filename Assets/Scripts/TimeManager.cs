@@ -109,6 +109,10 @@ public class TimeManager : MonoBehaviour
         if(RaceManager.Instance != null)
             todaysEvents.AddListener(RaceManager.Instance.CheckForRaceDay);
         
+        if(BillsController.Instance != null)
+        {
+            onNewDay.AddListener(BillsController.Instance.HandleNewDay);
+        }
     }
     
     public void RecheckIfRaceDay()
