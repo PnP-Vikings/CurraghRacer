@@ -300,6 +300,11 @@ public class BeerGameController : MonoBehaviour
                 // Check if round is complete
                 CheckRoundComplete();
                 
+                if(AudioManager.instance != null)
+                {
+                    AudioManager.instance.setDownPint.start();
+                }
+
                 break; // Process one beer at a time
             }
         }

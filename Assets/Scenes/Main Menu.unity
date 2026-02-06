@@ -12004,6 +12004,7 @@ MonoBehaviour:
   - FootRacingMiniGameScene
   - FootingTurfMinigame
   - RockSkippingGame
+  - BalingSilageMinigame
   levelButtonPrefab: {fileID: 6310733950840898568, guid: 737099f3e3bf02e40ad14565496c8790, type: 3}
   levelButtonContainer: {fileID: 1690503160}
 --- !u!1001 &592652701
