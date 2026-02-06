@@ -41,6 +41,9 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/RockSkippingGame.unity
     guid: 6c511b683549518408e649958f1ef4c1
+  - enabled: 1
+    path: Assets/Scenes/BalingSilageMinigame.unity
+    guid: c5ea0c04bcd16b94d98d7265aa72fa17
   m_configObjects:
     com.unity.adaptivePerformance.basic.provider_settings: {fileID: 11400000, guid: e3720b109b8380946be0172658a2fcef, type: 2}
     com.unity.adaptiveperformance.google.android.provider_settings: {fileID: 11400000, guid: 7ada5aaf1775ce74bb2c6bc9df2b768f, type: 2}

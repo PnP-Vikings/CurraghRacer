@@ -28,6 +28,11 @@ public class Tile : MonoBehaviour
             {
                 timeIn = 0;
                 tileRenderer.material = dirtMaterial;
+
+                //if (AudioManager.instance != null)
+                //{
+                //    AudioManager.instance.bailingAreaComplete.start();
+                //}
             }
         }
 

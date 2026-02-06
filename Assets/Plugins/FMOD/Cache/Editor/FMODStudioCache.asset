@@ -486,10 +486,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639053755754099447
+  lastModified: 639056395250730674
   FileSizes:
   - Name: 
-    Value: 5618
+    Value: 5682
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -1478,12 +1478,13 @@ MonoBehaviour:
   - {fileID: 4758589274831344729}
   - {fileID: -3150062783668590138}
   - {fileID: 7706665125271307041}
+  - {fileID: 7375662254740383028}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639053755754099447
+  cacheTime: 639056395250730674
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -2548,6 +2549,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 2242
+--- !u!114 &7375662254740383028
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/Bailing/Bailing Area Complete
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/Bailing/Bailing Area Complete
+  Guid:
+    Data1: -1687435891
+    Data2: 1304169820
+    Data3: 792283292
+    Data4: 281279637
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3488
 --- !u!114 &7439203710798878255
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2563,7 +2591,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639053755754054340
+  lastModified: 639056395250685372
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726

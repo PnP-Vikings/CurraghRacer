@@ -13,7 +13,10 @@ public class Tractor : MonoBehaviour
 
     void Start()
     {
-
+        //if (AudioManager.instance != null)
+        //{
+        //    AudioManager.instance.tractor.start();
+        //}
     }
 
     // Update is called once per frame

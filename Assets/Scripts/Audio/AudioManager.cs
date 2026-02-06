@@ -65,6 +65,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance pouringPint;
     public EventInstance acceptablePour;
     public EventInstance poorPour;
+    public EventInstance setDownPint;
 
     public EventInstance punchBagAudio;
 
@@ -90,6 +91,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance rockBounceOnWood;
 
     public EventInstance tractor;
+    public EventInstance bailingAreaComplete;
 
     private Scene activeScene;
     void Awake()
@@ -173,6 +175,8 @@ public class AudioManager : MonoBehaviour
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
         acceptablePour = RuntimeManager.CreateInstance("event:/Bar/Acceptable Pour");
         poorPour = RuntimeManager.CreateInstance("event:/Bar/Poor Pour");
+        setDownPint = RuntimeManager.CreateInstance("event:/Bar/Set Pint Down");
+
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         
@@ -196,6 +200,7 @@ public class AudioManager : MonoBehaviour
         rockBounceOnWood = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Bounce On Wood");
 
         tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
+        bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
     }
 
     private void Update()
@@ -205,6 +210,11 @@ public class AudioManager : MonoBehaviour
         {
             acceptablePour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             poorPour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
+
+        if(activeScene.name != "Garage")
+        {
+            angelus.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
     }
 
