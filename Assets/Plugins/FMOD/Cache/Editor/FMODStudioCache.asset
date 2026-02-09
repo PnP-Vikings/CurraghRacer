@@ -486,10 +486,10 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.strings.bank
   Name: Master.strings
   StudioPath: bank:/Master.strings
-  lastModified: 639056395250730674
+  lastModified: 639062480321018460
   FileSizes:
   - Name: 
-    Value: 5682
+    Value: 5714
   Exists: 1
 --- !u!114 &-6497653646043772243
 MonoBehaviour:
@@ -1479,12 +1479,13 @@ MonoBehaviour:
   - {fileID: -3150062783668590138}
   - {fileID: 7706665125271307041}
   - {fileID: 7375662254740383028}
+  - {fileID: 1461030316788530668}
   EditorParameters: []
   MasterBanks:
   - {fileID: 7439203710798878255}
   StringsBanks:
   - {fileID: -6506864257628799812}
-  cacheTime: 639056395250730674
+  cacheTime: 639062480321018460
   cacheVersion: 131624
 --- !u!114 &131833492334411032
 MonoBehaviour:
@@ -1647,6 +1648,33 @@ MonoBehaviour:
   MinDistance: 1
   MaxDistance: 20
   Length: 3950
+--- !u!114 &1461030316788530668
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ceb653cd98e289a4e8697a1af55201f2, type: 3}
+  m_Name: event:/UI/Click 3
+  m_EditorClassIdentifier: FMODUnityEditor::FMODUnity.EditorEventRef
+  Path: event:/UI/Click 3
+  Guid:
+    Data1: 1818225570
+    Data2: 1081746767
+    Data3: -1935316590
+    Data4: -1177363460
+  Banks:
+  - {fileID: 7439203710798878255}
+  IsStream: 0
+  Is3D: 0
+  IsOneShot: 1
+  Parameters: []
+  MinDistance: 1
+  MaxDistance: 20
+  Length: 3519
 --- !u!114 &1476694197085884601
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2591,7 +2619,7 @@ MonoBehaviour:
   Path: Assets/FMOD Banks/Desktop/Master.bank
   Name: Master
   StudioPath: bank:/Master
-  lastModified: 639056395250685372
+  lastModified: 639062480320956253
   FileSizes: []
   Exists: 1
 --- !u!114 &7518721589535716726

@@ -348,7 +348,7 @@ public class RockSkippingResultsUI : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.UIClick1.start();
+            AudioManager.instance.UIClick2.start();
         }
         
         // Return to main menu or previous scene

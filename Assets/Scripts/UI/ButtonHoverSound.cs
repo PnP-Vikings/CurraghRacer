@@ -9,7 +9,7 @@ public class ButtonHoverSound : MonoBehaviour, IPointerEnterHandler
 {
     [Header("Sound Settings")]
     [SerializeField] private bool playOnHover = true;
-    [SerializeField] private string soundEventName = "UIClick2"; // Default sound
+    [SerializeField] private string soundEventName = "UIClick3"; // Default sound
     
     public void OnPointerEnter(PointerEventData eventData)
     {
@@ -28,12 +28,12 @@ public class ButtonHoverSound : MonoBehaviour, IPointerEnterHandler
             case "UIClick1":
                 AudioManager.instance.UIClick1.start();
                 break;
-            case "UIClick2":
-                AudioManager.instance.UIClick2.start();
+            case "UIClick3":
+                AudioManager.instance.UIClick3.start();
                 break;
             // Add more cases here for other sounds if needed
             default:
-                AudioManager.instance.UIClick2.start();
+                AudioManager.instance.UIClick3.start();
                 break;
         }
     }
