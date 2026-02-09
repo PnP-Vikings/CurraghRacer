@@ -11,6 +11,7 @@ public class AudioManager : MonoBehaviour
         // UI
     public EventInstance UIClick1;
     public EventInstance UIClick2;
+    public EventInstance UIClick3;
         // Main Menu
     public EventInstance deleteSave;
         // Race
@@ -121,6 +122,7 @@ public class AudioManager : MonoBehaviour
     {
         UIClick1 = RuntimeManager.CreateInstance("event:/UI/Click 1");
         UIClick2 = RuntimeManager.CreateInstance("event:/UI/Click 2");
+        UIClick3 = RuntimeManager.CreateInstance("event:/UI/Click 3");
 
         deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
 
