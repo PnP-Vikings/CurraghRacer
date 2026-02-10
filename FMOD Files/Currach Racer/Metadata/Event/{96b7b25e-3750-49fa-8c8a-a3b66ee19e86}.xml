@@ -161,10 +161,10 @@
 			<value>1</value>
 		</property>
 		<property name="frequencyA">
-			<value>340</value>
+			<value>360</value>
 		</property>
 		<property name="frequencyE">
-			<value>19000</value>
+			<value>17000</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
