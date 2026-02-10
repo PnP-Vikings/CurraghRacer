@@ -9,9 +9,9 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
     private Bus masterBus;
         // UI
-    public EventInstance UIClick1;
-    public EventInstance UIClick2;
-    public EventInstance UIClick3;
+    public EventInstance UIClick1; // Confirm selection 
+    public EventInstance UIClick2; // Return
+    public EventInstance UIClick3; // Hover
         // Main Menu
     public EventInstance deleteSave;
         // Race
