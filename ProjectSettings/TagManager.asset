@@ -8,6 +8,7 @@ TagManager:
   - RaceStart
   - Water
   - Ground
+  - StopLine
   layers:
   - Default
   - TransparentFX
