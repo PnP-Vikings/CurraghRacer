@@ -9,8 +9,9 @@ public class AudioManager : MonoBehaviour
     public static AudioManager instance;
     private Bus masterBus;
         // UI
-    public EventInstance UIClick1;
-    public EventInstance UIClick2;
+    public EventInstance UIClick1; // Confirm selection 
+    public EventInstance UIClick2; // Return
+    public EventInstance UIClick3; // Hover
         // Main Menu
     public EventInstance deleteSave;
         // Race
@@ -65,6 +66,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance pouringPint;
     public EventInstance acceptablePour;
     public EventInstance poorPour;
+    public EventInstance setDownPint;
 
     public EventInstance punchBagAudio;
 
@@ -87,6 +89,10 @@ public class AudioManager : MonoBehaviour
     public EventInstance closeRockCase;
     public EventInstance rockSkip;
     public EventInstance rockThrow;
+    public EventInstance rockBounceOnWood;
+
+    public EventInstance tractor;
+    public EventInstance bailingAreaComplete;
 
     private Scene activeScene;
     void Awake()
@@ -116,6 +122,7 @@ public class AudioManager : MonoBehaviour
     {
         UIClick1 = RuntimeManager.CreateInstance("event:/UI/Click 1");
         UIClick2 = RuntimeManager.CreateInstance("event:/UI/Click 2");
+        UIClick3 = RuntimeManager.CreateInstance("event:/UI/Click 3");
 
         deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
 
@@ -170,6 +177,8 @@ public class AudioManager : MonoBehaviour
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
         acceptablePour = RuntimeManager.CreateInstance("event:/Bar/Acceptable Pour");
         poorPour = RuntimeManager.CreateInstance("event:/Bar/Poor Pour");
+        setDownPint = RuntimeManager.CreateInstance("event:/Bar/Set Pint Down");
+
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         
@@ -190,6 +199,10 @@ public class AudioManager : MonoBehaviour
         closeRockCase = RuntimeManager.CreateInstance("event:/Rock Skipping/Close Rock Case");
         rockSkip = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Skip");
         rockThrow = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Throwing");
+        rockBounceOnWood = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Bounce On Wood");
+
+        tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
+        bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
     }
 
     private void Update()
@@ -199,6 +212,11 @@ public class AudioManager : MonoBehaviour
         {
             acceptablePour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             poorPour.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
+
+        if(activeScene.name != "Garage")
+        {
+            angelus.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
     }
 

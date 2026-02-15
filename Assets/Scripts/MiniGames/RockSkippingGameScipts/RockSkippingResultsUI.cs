@@ -308,6 +308,7 @@ public class RockSkippingResultsUI : MonoBehaviour
         {
             if (winnerIndex == 0)
             {
+                AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
                 AudioManager.instance.raceWin.start();
             }
             else
@@ -347,7 +348,7 @@ public class RockSkippingResultsUI : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.UIClick1.start();
+            AudioManager.instance.UIClick2.start();
         }
         
         // Return to main menu or previous scene

@@ -131,7 +131,7 @@
 			<value>31.927505668934241</value>
 		</property>
 		<property name="volume">
-			<value>-2</value>
+			<value>-3</value>
 		</property>
 		<property name="polyphony">
 			<value>1</value>
@@ -157,7 +157,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{b95fab5d-753d-4fce-adf1-2d91c82775c7}">
 		<property name="volume">
-			<value>-5</value>
+			<value>-6</value>
 		</property>
 		<property name="name">
 			<value>Cows</value>
@@ -200,6 +200,7 @@
 	<object class="MixerBusFader" id="{a1ae2b54-7372-41af-8ce2-2df0c11c9400}" />
 	<object class="MixerBusEffectChain" id="{af0a3c31-6f94-4291-8f2d-b974ae79cc9d}">
 		<relationship name="effects">
+			<destination>{24053fea-7b18-4682-af7c-e6c8fdba64d8}</destination>
 			<destination>{c94ee9b8-7031-430c-a7cc-c239bd8d8b84}</destination>
 		</relationship>
 	</object>
@@ -248,6 +249,29 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{14bfdd6f-ceb4-45d7-a389-fca24db29e44}" />
+	<object class="MultibandEqEffect" id="{24053fea-7b18-4682-af7c-e6c8fdba64d8}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="filterTypeC">
+			<value>9</value>
+		</property>
+		<property name="frequencyA">
+			<value>20</value>
+		</property>
+		<property name="frequencyC">
+			<value>284</value>
+		</property>
+		<property name="qualityA">
+			<value>0.280000001</value>
+		</property>
+		<property name="qualityC">
+			<value>0.359999985</value>
+		</property>
+		<property name="gainC">
+			<value>-3.4000001</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{c94ee9b8-7031-430c-a7cc-c239bd8d8b84}" />
 	<object class="SingleSound" id="{6e13e8b6-0147-4cda-aeb8-826d72ee8aa9}">
 		<property name="volume">
@@ -280,6 +304,18 @@
 		</property>
 		<property name="initialValue">
 			<value>-80</value>
+		</property>
+		<property name="attackTime">
+			<value>900</value>
+		</property>
+		<property name="attackShape">
+			<value>-0.312405944</value>
+		</property>
+		<property name="releaseTime">
+			<value>900</value>
+		</property>
+		<property name="releaseShape">
+			<value>0.271852642</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>

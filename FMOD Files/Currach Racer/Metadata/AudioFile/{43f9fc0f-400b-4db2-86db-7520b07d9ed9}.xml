@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{9012a9f6-00af-4d01-b9fb-5a3b37320faa}">
+	<object class="AudioFile" id="{43f9fc0f-400b-4db2-86db-7520b07d9ed9}">
 		<property name="assetPath">
-			<value>Rock Splash 1.wav</value>
+			<value>Rock On Wood 2.wav</value>
 		</property>
 		<property name="frequencyInKHz">
 			<value>44.0999985</value>
@@ -11,7 +11,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>0.91324263038548747</value>
+			<value>0.58825396825396825</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>

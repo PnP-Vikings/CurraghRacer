@@ -1380,7 +1380,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverSound
   playOnHover: 1
-  soundEventName: UIClick2
+  soundEventName: UIClick3
 --- !u!114 &63607011
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17101,6 +17101,7 @@ MonoBehaviour:
   cameraFollower: {fileID: 774769260}
   cameraShakeIntensity: 0.2
   cameraShakeDuration: 0.1
+  cameraShake: 0
 --- !u!4 &810044237
 Transform:
   m_ObjectHideFlags: 0
@@ -26523,7 +26524,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverSound
   playOnHover: 1
-  soundEventName: UIClick2
+  soundEventName: UIClick3
 --- !u!114 &1243158852
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -37566,7 +37567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonHoverSound
   playOnHover: 1
-  soundEventName: UIClick2
+  soundEventName: UIClick3
 --- !u!1 &1810354568
 GameObject:
   m_ObjectHideFlags: 0
