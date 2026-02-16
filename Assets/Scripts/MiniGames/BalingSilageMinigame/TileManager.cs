@@ -40,7 +40,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -5);
+        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
     }
 
     public Tile GetTileAtPosition(Vector2 pos)

@@ -7,16 +7,11 @@ public class Tractor : MonoBehaviour
 {
     private Vector3 mousePosition;
     public float moveSpeed = 1;
-    private float timeIn;
-    public TextMeshPro timerAmount;
 
 
     void Start()
     {
-        //if (AudioManager.instance != null)
-        //{
-        //    AudioManager.instance.tractor.start();
-        //}
+        
     }
 
     // Update is called once per frame

@@ -10,6 +10,7 @@ namespace MiniGames.BalingSilageMinigame
         private MiniGameManager gameManager;
         private MiniGameData gameData;
         public Tractor tractorPrefab;
+        private float gameTimer;
 
         public void Initialize(MiniGameManager manager, MiniGameData data)
         {
@@ -35,7 +36,7 @@ namespace MiniGames.BalingSilageMinigame
 
         public void UpdateGame()
         {
-            
+            gameTimer = Time.time;
         }
 
         public void EndGame()
