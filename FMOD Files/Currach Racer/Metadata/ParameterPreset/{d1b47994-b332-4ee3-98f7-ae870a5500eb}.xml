@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{d1b47994-b332-4ee3-98f7-ae870a5500eb}">
+		<property name="name">
+			<value>Rock Select Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{c4a4a014-d72e-424a-b6dc-dfb47b85fd5f}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{c4a4a014-d72e-424a-b6dc-dfb47b85fd5f}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
