@@ -5,13 +5,15 @@ public class Tile : MonoBehaviour
 {
     public Material tileMaterial;
     public Material dirtMaterial;
+    public Material collectedMaterial;
     public MeshRenderer tileRenderer;
     public bool highlight;
-    private float timeIn;
+    public bool collected;
 
     void Start()
     {
-        timeIn = 0;
+        highlight = false;
+        collected = false;
     }
 
     // Update is called once per frame
@@ -19,26 +21,12 @@ public class Tile : MonoBehaviour
     {
         if (highlight == true)
         {
-            if (timeIn < 5)
-            {
-                timeIn += Time.deltaTime;
-            }
-
-            if (timeIn > 5)
-            {
-                timeIn = 0;
-                tileRenderer.material = dirtMaterial;
-
-                //if (AudioManager.instance != null)
-                //{
-                //    AudioManager.instance.bailingAreaComplete.start();
-                //}
-            }
+            tileRenderer.material = dirtMaterial;
         }
 
-        if (highlight == false)
+        if (highlight == true && collected == true)
         {
-            timeIn = 0;
+            tileRenderer.material = collectedMaterial;
         }
     }
 
