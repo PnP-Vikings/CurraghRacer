@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{c7596766-1d2c-48fb-8ffc-b6bfafd56e18}">
+		<property name="name">
+			<value>UI Click 1 Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e081fed1-8eb3-4aa4-a8f4-916bdc3c8018}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e081fed1-8eb3-4aa4-a8f4-916bdc3c8018}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>
