@@ -4389,7 +4389,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1512312958}
   - component: {fileID: 1512312957}
-  - component: {fileID: 1512312956}
   - component: {fileID: 1512312959}
   - component: {fileID: 1512312960}
   m_Layer: 0
@@ -4399,14 +4398,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1512312956
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512312955}
-  m_Enabled: 1
 --- !u!20 &1512312957
 Camera:
   m_ObjectHideFlags: 0
@@ -4467,7 +4458,7 @@ Transform:
   m_GameObject: {fileID: 1512312955}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 2.5, z: -36.84}
+  m_LocalPosition: {x: 0.24, y: 2.5, z: 100.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -6547,6 +6538,7 @@ GameObject:
   - component: {fileID: 2059391186}
   - component: {fileID: 2059391185}
   - component: {fileID: 2059391190}
+  - component: {fileID: 2059391191}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6670,7 +6662,7 @@ Transform:
   m_GameObject: {fileID: 2059391184}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 1.92, z: -25.97}
+  m_LocalPosition: {x: -4.46, y: 1.92, z: 139.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6707,6 +6699,20 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &2059391191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059391184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 2059391184}
 --- !u!1 &2116817045
 GameObject:
   m_ObjectHideFlags: 0
