@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{a05392bc-705a-4f0f-a8eb-140a2009ee89}">
 		<property name="name">
-			<value>Car</value>
+			<value>Car Engine</value>
 		</property>
 		<property name="outputFormat">
 			<value>2</value>
@@ -71,7 +71,7 @@
 			<value>4</value>
 		</property>
 		<property name="minimumDistance">
-			<value>0.5</value>
+			<value>0.900000036</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{b1345506-8db1-4090-99f2-ffc089d43d37}" />
@@ -199,6 +199,7 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{5e5df9eb-8497-4053-a16b-51fd4183484b}">
 		<relationship name="effects">
+			<destination>{648366de-6de3-4817-be7b-a7cec7000950}</destination>
 			<destination>{d350d5d3-9b70-4afa-8424-afcc53b13d42}</destination>
 		</relationship>
 	</object>
@@ -232,6 +233,11 @@
 			<destination>{53db304d-4ab2-4db1-bde7-fa0ab2f13990}</destination>
 			<destination>{eb2a09a3-8af9-401d-9bea-b881b6beab47}</destination>
 		</relationship>
+	</object>
+	<object class="GainEffect" id="{648366de-6de3-4817-be7b-a7cec7000950}">
+		<property name="gain">
+			<value>-11</value>
+		</property>
 	</object>
 	<object class="MixerBusFader" id="{d350d5d3-9b70-4afa-8424-afcc53b13d42}" />
 	<object class="AutomationPoint" id="{1575012e-084f-4cd2-97a2-2545fffe83f9}">
