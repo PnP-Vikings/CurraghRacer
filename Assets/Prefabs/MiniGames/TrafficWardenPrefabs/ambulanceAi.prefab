@@ -14,6 +14,8 @@ GameObject:
   - component: {fileID: 5145377155762894293}
   - component: {fileID: 2850407011794745726}
   - component: {fileID: -3660111531498809799}
+  - component: {fileID: 6288500904402770664}
+  - component: {fileID: 2812329410015382963}
   m_Layer: 0
   m_Name: ambulanceAi
   m_TagString: Untagged
@@ -158,3 +160,51 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 116
   m_CollisionDetection: 0
+--- !u!114 &6288500904402770664
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2361148028497039113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: -509357795
+      Data2: 1325702227
+      Data3: 905325444
+      Data4: -975991049
+    Path: event:/Traffic Warden/Ambulance Siren
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params:
+  - Name: Ambulance Pitch
+    Value: 0.5
+  OverrideAttenuation: 0
+  OverrideMinDistance: 0.5
+  OverrideMaxDistance: 20
+--- !u!114 &2812329410015382963
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2361148028497039113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 100b89c51cb5b5f49930bd57cee85286, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AmbulanceAudio
+  Player: {fileID: 0}
+  Ambulance: {fileID: 2361148028497039113}
+  AmbulanceSirenEmitter: {fileID: 6288500904402770664}

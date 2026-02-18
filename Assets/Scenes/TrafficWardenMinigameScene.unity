@@ -2109,7 +2109,7 @@ GameObject:
   - component: {fileID: 746810453}
   - component: {fileID: 746810452}
   m_Layer: 0
-  m_Name: FootRaceAmbience
+  m_Name: VillageAmbience
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2130,11 +2130,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -1209046793
-      Data2: 1114385868
-      Data3: -852164987
-      Data4: -1128160590
-    Path: event:/Main Menu/Main Menu
+      Data1: -1323077960
+      Data2: 1153186779
+      Data3: -54222662
+      Data4: -105983704
+    Path: event:/Ambiences/Village Ambience
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2

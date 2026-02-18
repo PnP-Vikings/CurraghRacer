@@ -26,12 +26,12 @@ public class CarAudio : MonoBehaviour
 
         yield return null;
 
-        if (distance1 > distance2)
+        if (distance1 < 15 & distance1 > distance2)
         {
             carEngineEmitter.SetParameter("Engine Pitch", 1f, false);
             Debug.Log("Car approaching - AudioDebug");
         }
-        else if (distance1 < distance2)
+        else if (distance1 < 15 & distance1 < distance2)
         {
             carEngineEmitter.SetParameter("Engine Pitch", 0f, false);
             Debug.Log("Car is drving away - AudioDebug");
@@ -63,8 +63,9 @@ public class CarAudio : MonoBehaviour
             Debug.Log("Engine is stopped as it is far away - AudioDebug");
         }
 
+        Debug.Log($"Car distance 1 is {distance1}");
 
-            yield return null;
+        yield return null;
 
         StartCoroutine(DistanceCalculator());
     }
