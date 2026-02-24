@@ -1,3 +1,4 @@
+using MiniGames.BalingSilageMinigame;
 using TMPro;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -7,6 +8,8 @@ public class Tractor : MonoBehaviour
 {
     private Vector3 mousePosition;
     public float moveSpeed = 1;
+    public Material tractorMaterial;
+    public MeshRenderer tractorRenderer;
 
 
     void Start()
@@ -20,6 +23,10 @@ public class Tractor : MonoBehaviour
         mousePosition = Mouse.current.position.ReadValue();
         mousePosition.z = 4;
         transform.position = Vector3.MoveTowards (transform.position, new Vector3 (Camera.main.ScreenToWorldPoint (mousePosition).x, Camera.main.ScreenToWorldPoint(mousePosition).y, -0.5f), moveSpeed * Time.deltaTime);
+        if (FindFirstObjectByType<BalingSilageMinigame>().isGrass == false)
+        {
+            tractorRenderer.material = tractorMaterial;
+        }
     }
 
     public void Init(bool isOffset)

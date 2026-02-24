@@ -128,6 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tractor
   moveSpeed: 1
+  tractorMaterial: {fileID: 2100000, guid: 531dff85c3da4604a99853bc74d282c9, type: 2}
+  tractorRenderer: {fileID: 1236892895128777404}
 --- !u!54 &5414262319855668033
 Rigidbody:
   m_ObjectHideFlags: 0
