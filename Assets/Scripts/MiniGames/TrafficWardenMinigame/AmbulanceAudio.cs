@@ -45,7 +45,7 @@ public class AmbulanceAudio : MonoBehaviour
         }
 
 
-        if (distance1 <= 35f)
+        if (distance1 <= 30f)
         {
             AmbulanceSirenEmitter.SetParameter("Siren Volume", 1f, false);
             //Debug.Log("Siren is unmuted - AudioDebug");

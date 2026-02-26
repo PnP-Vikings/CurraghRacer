@@ -206,5 +206,5 @@ MonoBehaviour:
   - Name: Engine Pitch
     Value: 0.5
   OverrideAttenuation: 0
-  OverrideMinDistance: 0.5
-  OverrideMaxDistance: 20
+  OverrideMinDistance: 1.2
+  OverrideMaxDistance: 14.5

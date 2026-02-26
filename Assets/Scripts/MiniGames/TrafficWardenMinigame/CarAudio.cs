@@ -45,7 +45,7 @@ public class CarAudio : MonoBehaviour
         }
 
 
-        if (distance1 <= 35f)
+        if (distance1 <= 30f)
         {
             carEngineEmitter.SetParameter("Engine Volume", 1f, false);
             //Debug.Log("Engine is unmuted - AudioDebug");
