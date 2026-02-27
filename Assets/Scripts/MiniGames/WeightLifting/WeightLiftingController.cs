@@ -920,9 +920,9 @@ public class WeightLiftingController : MonoBehaviour
 
     private void PlayBarSlideAudioFunction()
     {
-        if (barTiltAngle > 10 | barTiltAngle < -10)
+        if (barTiltAngle > 8 | barTiltAngle < -8)
         {
-            Debug.Log("Bar is sliding");
+            Debug.Log("Weight is sliding");
 
             if (AudioManager.instance != null)
             {
