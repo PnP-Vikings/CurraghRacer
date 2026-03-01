@@ -1270,6 +1270,114 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
                     ""isPartOfComposite"": false
                 }
             ]
+        },
+        {
+            ""name"": ""TrafficWardenGame"",
+            ""id"": ""cd7e13f6-8fd3-49f5-b9b8-0bfdbd793a81"",
+            ""actions"": [
+                {
+                    ""name"": ""ToggleLane1"",
+                    ""type"": ""Button"",
+                    ""id"": ""4f402841-d630-433a-af41-74695c448843"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleLane2"",
+                    ""type"": ""Button"",
+                    ""id"": ""57b2a861-fc9d-4b6d-a04c-6b1340c271be"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleLane3"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb7c1c95-7de8-4c8a-b900-f48bf511a5ab"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleLane4"",
+                    ""type"": ""Button"",
+                    ""id"": ""3e4667ca-fefa-411d-ada3-66c2d0c5f060"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""ToggleAllLanes"",
+                    ""type"": ""Button"",
+                    ""id"": ""5482fb0b-1f51-4a61-a8f5-aa08d79659c1"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                }
+            ],
+            ""bindings"": [
+                {
+                    ""name"": """",
+                    ""id"": ""4144f307-bace-4766-b558-350d3747de10"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleLane1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""56704337-e979-482c-a0a2-a03619722df5"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleLane2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f99223f-a731-409b-82f2-a7514ed73e3a"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleLane3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ae9488f1-7d15-45bf-806d-43c25b55b040"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleLane4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""54a78582-8e20-417a-adc2-1333ccb77ee5"",
+                    ""path"": ""<Keyboard>/e"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""ToggleAllLanes"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                }
+            ]
         }
     ],
     ""controlSchemes"": [
@@ -1367,6 +1475,13 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         m_RunningGame = asset.FindActionMap("RunningGame", throwIfNotFound: true);
         m_RunningGame_Jump = m_RunningGame.FindAction("Jump", throwIfNotFound: true);
         m_RunningGame_Slide = m_RunningGame.FindAction("Slide", throwIfNotFound: true);
+        // TrafficWardenGame
+        m_TrafficWardenGame = asset.FindActionMap("TrafficWardenGame", throwIfNotFound: true);
+        m_TrafficWardenGame_ToggleLane1 = m_TrafficWardenGame.FindAction("ToggleLane1", throwIfNotFound: true);
+        m_TrafficWardenGame_ToggleLane2 = m_TrafficWardenGame.FindAction("ToggleLane2", throwIfNotFound: true);
+        m_TrafficWardenGame_ToggleLane3 = m_TrafficWardenGame.FindAction("ToggleLane3", throwIfNotFound: true);
+        m_TrafficWardenGame_ToggleLane4 = m_TrafficWardenGame.FindAction("ToggleLane4", throwIfNotFound: true);
+        m_TrafficWardenGame_ToggleAllLanes = m_TrafficWardenGame.FindAction("ToggleAllLanes", throwIfNotFound: true);
     }
 
     ~@PlayerInputs()
@@ -1375,6 +1490,7 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         UnityEngine.Debug.Assert(!m_UI.enabled, "This will cause a leak and performance issues, PlayerInputs.UI.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_RythmGame.enabled, "This will cause a leak and performance issues, PlayerInputs.RythmGame.Disable() has not been called.");
         UnityEngine.Debug.Assert(!m_RunningGame.enabled, "This will cause a leak and performance issues, PlayerInputs.RunningGame.Disable() has not been called.");
+        UnityEngine.Debug.Assert(!m_TrafficWardenGame.enabled, "This will cause a leak and performance issues, PlayerInputs.TrafficWardenGame.Disable() has not been called.");
     }
 
     /// <summary>
@@ -2050,6 +2166,146 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
     /// Provides a new <see cref="RunningGameActions" /> instance referencing this action map.
     /// </summary>
     public RunningGameActions @RunningGame => new RunningGameActions(this);
+
+    // TrafficWardenGame
+    private readonly InputActionMap m_TrafficWardenGame;
+    private List<ITrafficWardenGameActions> m_TrafficWardenGameActionsCallbackInterfaces = new List<ITrafficWardenGameActions>();
+    private readonly InputAction m_TrafficWardenGame_ToggleLane1;
+    private readonly InputAction m_TrafficWardenGame_ToggleLane2;
+    private readonly InputAction m_TrafficWardenGame_ToggleLane3;
+    private readonly InputAction m_TrafficWardenGame_ToggleLane4;
+    private readonly InputAction m_TrafficWardenGame_ToggleAllLanes;
+    /// <summary>
+    /// Provides access to input actions defined in input action map "TrafficWardenGame".
+    /// </summary>
+    public struct TrafficWardenGameActions
+    {
+        private @PlayerInputs m_Wrapper;
+
+        /// <summary>
+        /// Construct a new instance of the input action map wrapper class.
+        /// </summary>
+        public TrafficWardenGameActions(@PlayerInputs wrapper) { m_Wrapper = wrapper; }
+        /// <summary>
+        /// Provides access to the underlying input action "TrafficWardenGame/ToggleLane1".
+        /// </summary>
+        public InputAction @ToggleLane1 => m_Wrapper.m_TrafficWardenGame_ToggleLane1;
+        /// <summary>
+        /// Provides access to the underlying input action "TrafficWardenGame/ToggleLane2".
+        /// </summary>
+        public InputAction @ToggleLane2 => m_Wrapper.m_TrafficWardenGame_ToggleLane2;
+        /// <summary>
+        /// Provides access to the underlying input action "TrafficWardenGame/ToggleLane3".
+        /// </summary>
+        public InputAction @ToggleLane3 => m_Wrapper.m_TrafficWardenGame_ToggleLane3;
+        /// <summary>
+        /// Provides access to the underlying input action "TrafficWardenGame/ToggleLane4".
+        /// </summary>
+        public InputAction @ToggleLane4 => m_Wrapper.m_TrafficWardenGame_ToggleLane4;
+        /// <summary>
+        /// Provides access to the underlying input action "TrafficWardenGame/ToggleAllLanes".
+        /// </summary>
+        public InputAction @ToggleAllLanes => m_Wrapper.m_TrafficWardenGame_ToggleAllLanes;
+        /// <summary>
+        /// Provides access to the underlying input action map instance.
+        /// </summary>
+        public InputActionMap Get() { return m_Wrapper.m_TrafficWardenGame; }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Enable()" />
+        public void Enable() { Get().Enable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.Disable()" />
+        public void Disable() { Get().Disable(); }
+        /// <inheritdoc cref="UnityEngine.InputSystem.InputActionMap.enabled" />
+        public bool enabled => Get().enabled;
+        /// <summary>
+        /// Implicitly converts an <see ref="TrafficWardenGameActions" /> to an <see ref="InputActionMap" /> instance.
+        /// </summary>
+        public static implicit operator InputActionMap(TrafficWardenGameActions set) { return set.Get(); }
+        /// <summary>
+        /// Adds <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <param name="instance">Callback instance.</param>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c> or <paramref name="instance"/> have already been added this method does nothing.
+        /// </remarks>
+        /// <seealso cref="TrafficWardenGameActions" />
+        public void AddCallbacks(ITrafficWardenGameActions instance)
+        {
+            if (instance == null || m_Wrapper.m_TrafficWardenGameActionsCallbackInterfaces.Contains(instance)) return;
+            m_Wrapper.m_TrafficWardenGameActionsCallbackInterfaces.Add(instance);
+            @ToggleLane1.started += instance.OnToggleLane1;
+            @ToggleLane1.performed += instance.OnToggleLane1;
+            @ToggleLane1.canceled += instance.OnToggleLane1;
+            @ToggleLane2.started += instance.OnToggleLane2;
+            @ToggleLane2.performed += instance.OnToggleLane2;
+            @ToggleLane2.canceled += instance.OnToggleLane2;
+            @ToggleLane3.started += instance.OnToggleLane3;
+            @ToggleLane3.performed += instance.OnToggleLane3;
+            @ToggleLane3.canceled += instance.OnToggleLane3;
+            @ToggleLane4.started += instance.OnToggleLane4;
+            @ToggleLane4.performed += instance.OnToggleLane4;
+            @ToggleLane4.canceled += instance.OnToggleLane4;
+            @ToggleAllLanes.started += instance.OnToggleAllLanes;
+            @ToggleAllLanes.performed += instance.OnToggleAllLanes;
+            @ToggleAllLanes.canceled += instance.OnToggleAllLanes;
+        }
+
+        /// <summary>
+        /// Removes <see cref="InputAction.started"/>, <see cref="InputAction.performed"/> and <see cref="InputAction.canceled"/> callbacks provided via <param cref="instance" /> on all input actions contained in this map.
+        /// </summary>
+        /// <remarks>
+        /// Calling this method when <paramref name="instance" /> have not previously been registered has no side-effects.
+        /// </remarks>
+        /// <seealso cref="TrafficWardenGameActions" />
+        private void UnregisterCallbacks(ITrafficWardenGameActions instance)
+        {
+            @ToggleLane1.started -= instance.OnToggleLane1;
+            @ToggleLane1.performed -= instance.OnToggleLane1;
+            @ToggleLane1.canceled -= instance.OnToggleLane1;
+            @ToggleLane2.started -= instance.OnToggleLane2;
+            @ToggleLane2.performed -= instance.OnToggleLane2;
+            @ToggleLane2.canceled -= instance.OnToggleLane2;
+            @ToggleLane3.started -= instance.OnToggleLane3;
+            @ToggleLane3.performed -= instance.OnToggleLane3;
+            @ToggleLane3.canceled -= instance.OnToggleLane3;
+            @ToggleLane4.started -= instance.OnToggleLane4;
+            @ToggleLane4.performed -= instance.OnToggleLane4;
+            @ToggleLane4.canceled -= instance.OnToggleLane4;
+            @ToggleAllLanes.started -= instance.OnToggleAllLanes;
+            @ToggleAllLanes.performed -= instance.OnToggleAllLanes;
+            @ToggleAllLanes.canceled -= instance.OnToggleAllLanes;
+        }
+
+        /// <summary>
+        /// Unregisters <param cref="instance" /> and unregisters all input action callbacks via <see cref="TrafficWardenGameActions.UnregisterCallbacks(ITrafficWardenGameActions)" />.
+        /// </summary>
+        /// <seealso cref="TrafficWardenGameActions.UnregisterCallbacks(ITrafficWardenGameActions)" />
+        public void RemoveCallbacks(ITrafficWardenGameActions instance)
+        {
+            if (m_Wrapper.m_TrafficWardenGameActionsCallbackInterfaces.Remove(instance))
+                UnregisterCallbacks(instance);
+        }
+
+        /// <summary>
+        /// Replaces all existing callback instances and previously registered input action callbacks associated with them with callbacks provided via <param cref="instance" />.
+        /// </summary>
+        /// <remarks>
+        /// If <paramref name="instance" /> is <c>null</c>, calling this method will only unregister all existing callbacks but not register any new callbacks.
+        /// </remarks>
+        /// <seealso cref="TrafficWardenGameActions.AddCallbacks(ITrafficWardenGameActions)" />
+        /// <seealso cref="TrafficWardenGameActions.RemoveCallbacks(ITrafficWardenGameActions)" />
+        /// <seealso cref="TrafficWardenGameActions.UnregisterCallbacks(ITrafficWardenGameActions)" />
+        public void SetCallbacks(ITrafficWardenGameActions instance)
+        {
+            foreach (var item in m_Wrapper.m_TrafficWardenGameActionsCallbackInterfaces)
+                UnregisterCallbacks(item);
+            m_Wrapper.m_TrafficWardenGameActionsCallbackInterfaces.Clear();
+            AddCallbacks(instance);
+        }
+    }
+    /// <summary>
+    /// Provides a new <see cref="TrafficWardenGameActions" /> instance referencing this action map.
+    /// </summary>
+    public TrafficWardenGameActions @TrafficWardenGame => new TrafficWardenGameActions(this);
     private int m_KeyboardMouseSchemeIndex = -1;
     /// <summary>
     /// Provides access to the input control scheme.
@@ -2314,5 +2570,48 @@ public partial class @PlayerInputs: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnSlide(InputAction.CallbackContext context);
+    }
+    /// <summary>
+    /// Interface to implement callback methods for all input action callbacks associated with input actions defined by "TrafficWardenGame" which allows adding and removing callbacks.
+    /// </summary>
+    /// <seealso cref="TrafficWardenGameActions.AddCallbacks(ITrafficWardenGameActions)" />
+    /// <seealso cref="TrafficWardenGameActions.RemoveCallbacks(ITrafficWardenGameActions)" />
+    public interface ITrafficWardenGameActions
+    {
+        /// <summary>
+        /// Method invoked when associated input action "ToggleLane1" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleLane1(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleLane2" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleLane2(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleLane3" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleLane3(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleLane4" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleLane4(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "ToggleAllLanes" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnToggleAllLanes(InputAction.CallbackContext context);
     }
 }

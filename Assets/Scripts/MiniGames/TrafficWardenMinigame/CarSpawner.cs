@@ -5,7 +5,7 @@ public class CarSpawner : MonoBehaviour
     public CarAI carPrefab;
     public CarAI ambulancePrefab; // optional; can reuse carPrefab with different visuals
     public Transform spawnPoint;
-
+    public StopLine spawnLine;
     public float interval = 1.2f;
     public float violatorChance = 0.15f;
 
@@ -43,6 +43,11 @@ public class CarSpawner : MonoBehaviour
             {
                 ai.shouldObey = Random.value > violatorChance;
             }
+        }
+
+        if (spawnLine != null)
+        {
+           ai.SetCurrentStopLine(spawnLine); // will check any stop line
         }
     }
 

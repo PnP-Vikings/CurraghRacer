@@ -16,17 +16,29 @@ public class CarAI : MonoBehaviour
 
     bool nearStopLine;
     bool hasCrossedLine;
+    StopLine currentStopLine; // Track which specific stop line we're near
 
     void Start()
     {
         speed = Random.Range(maxSpeed * 0.6f, maxSpeed * 1.1f);
         dir = transform.forward; // Use the car's local forward direction at spawn
     }
+    
+    public void SetCurrentStopLine(StopLine line)
+    {
+        currentStopLine = line;
+    }
 
     void Update()
     {
         var mg = TrafficWardenMinigameController.I;
-        bool stopActive = mg != null && mg.IsStopActive();
+        
+        // Check specific stop line state if we have one, otherwise check any
+        bool stopActive;
+        if (currentStopLine != null)
+            stopActive = mg != null && mg.IsStopActive(currentStopLine);
+        else
+            stopActive = mg != null && mg.IsStopActive();
 
         float effectiveBrake = brake;
         if (mg != null && mg.activeEvent == TrafficEventType.Rain)
@@ -49,6 +61,10 @@ public class CarAI : MonoBehaviour
         if (other.CompareTag("StopLine"))
         {
             nearStopLine = true;
+            // Try to get the StopLine component from the collider or its parent
+            /*currentStopLine = other.GetComponent<StopLine>();
+            if (currentStopLine == null)
+                currentStopLine = other.GetComponentInParent<StopLine>();*/
         }
     }
 
@@ -64,7 +80,12 @@ public class CarAI : MonoBehaviour
         var mg = TrafficWardenMinigameController.I;
         if (mg == null) return;
 
-        bool stopActive = mg.IsStopActive();
+        // Check specific stop line state
+        StopLine exitedLine = other.GetComponent<StopLine>();
+        if (exitedLine == null)
+            exitedLine = other.GetComponentInParent<StopLine>();
+        
+        bool stopActive = exitedLine != null ? mg.IsStopActive(exitedLine) : mg.IsStopActive();
 
         // If STOP is active:
         if (stopActive)
@@ -86,5 +107,8 @@ public class CarAI : MonoBehaviour
             // GO is active
             mg.AwardCorrect("Flowed on GO");
         }
+        
+        // Clear the stop line reference after crossing
+        currentStopLine = null;
     }
 }
