@@ -1184,6 +1184,114 @@
                     "isPartOfComposite": false
                 }
             ]
+        },
+        {
+            "name": "TrafficWardenGame",
+            "id": "cd7e13f6-8fd3-49f5-b9b8-0bfdbd793a81",
+            "actions": [
+                {
+                    "name": "ToggleLane1",
+                    "type": "Button",
+                    "id": "4f402841-d630-433a-af41-74695c448843",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleLane2",
+                    "type": "Button",
+                    "id": "57b2a861-fc9d-4b6d-a04c-6b1340c271be",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleLane3",
+                    "type": "Button",
+                    "id": "eb7c1c95-7de8-4c8a-b900-f48bf511a5ab",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleLane4",
+                    "type": "Button",
+                    "id": "3e4667ca-fefa-411d-ada3-66c2d0c5f060",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "ToggleAllLanes",
+                    "type": "Button",
+                    "id": "5482fb0b-1f51-4a61-a8f5-aa08d79659c1",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "4144f307-bace-4766-b558-350d3747de10",
+                    "path": "<Keyboard>/1",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleLane1",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "56704337-e979-482c-a0a2-a03619722df5",
+                    "path": "<Keyboard>/2",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleLane2",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "7f99223f-a731-409b-82f2-a7514ed73e3a",
+                    "path": "<Keyboard>/3",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleLane3",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "ae9488f1-7d15-45bf-806d-43c25b55b040",
+                    "path": "<Keyboard>/4",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleLane4",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "54a78582-8e20-417a-adc2-1333ccb77ee5",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleAllLanes",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
         }
     ],
     "controlSchemes": [

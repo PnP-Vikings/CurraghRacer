@@ -1,14 +1,12 @@
 using UnityEngine;
 
-public enum CrossingState { Go, Stop }
 public enum TrafficEventType { None, Ambulance, Rain, Roadworks }
 
 public class TrafficWardenMinigameController : MonoBehaviour
 {
     public static TrafficWardenMinigameController I;
 
-    [Header("State")]
-    public CrossingState state = CrossingState.Go;
+    public PlayerInputs playerInputs;
 
     [Header("Timing")]
     public float minStopTime = 1.5f;
@@ -39,11 +37,22 @@ public class TrafficWardenMinigameController : MonoBehaviour
     float lastToggleTime;
     float nextEventTime;
     float eventEndTime;
+    
+    [Header("Stop Lines")]
+    public StopLine[] stopLines;
 
     void Awake()
     {
         I = this;
         lastToggleTime = -999f;
+        playerInputs = new PlayerInputs();
+        playerInputs.Enable();
+        playerInputs.TrafficWardenGame.Enable();
+        playerInputs.TrafficWardenGame.ToggleLane1.performed += ctx => ToggleLane1();
+        playerInputs.TrafficWardenGame.ToggleLane2.performed += ctx => ToggleLane2();
+        playerInputs.TrafficWardenGame.ToggleLane3.performed += ctx => ToggleLane3();
+        playerInputs.TrafficWardenGame.ToggleLane4.performed += ctx => ToggleLane4();
+        playerInputs.TrafficWardenGame.ToggleAllLanes.performed += ctx => Toggle();
         ScheduleNextEvent();
     }
 
@@ -57,27 +66,115 @@ public class TrafficWardenMinigameController : MonoBehaviour
     // STATE TOGGLE
     // -----------------------------
 
+
+    public void ToggleLane1()
+    {
+        if (stopLines[0] != null)
+        {
+          
+            if (activeEvent == TrafficEventType.Ambulance && stopLines[0].GetState() == CrossingState.Go)
+            {
+                AddStrike("Stopped during Ambulance event");
+                ResetCombo();
+                return;
+            }
+
+            stopLines[0].ChangeState();
+            Debug.Log($"Toggling lane 1 and to state  {stopLines[0].GetState()}");
+            lastToggleTime = Time.time;
+        }
+    }
+    
+    public void ToggleLane2()
+    {
+        if (stopLines[1] != null)
+        {
+            if (activeEvent == TrafficEventType.Ambulance && stopLines[1].GetState() == CrossingState.Go)
+            {
+                AddStrike("Stopped during Ambulance event");
+                ResetCombo();
+                return;
+            }
+
+            stopLines[1].ChangeState();
+            Debug.Log($"Toggling lane 2 and to state  {stopLines[1].GetState()}");
+            lastToggleTime = Time.time;
+        }
+    }
+    
+    public void ToggleLane3()
+    {
+        if (stopLines[2] != null)
+        {
+            if (activeEvent == TrafficEventType.Ambulance && stopLines[2].GetState() == CrossingState.Go)
+            {
+                AddStrike("Stopped during Ambulance event");
+                ResetCombo();
+                return;
+            }
+
+            stopLines[2].ChangeState();
+            Debug.Log($"Toggling lane 3 and to state  {stopLines[2].GetState()}");
+            lastToggleTime = Time.time;
+        }
+    }
+    
+    public void ToggleLane4()
+    {
+        if (stopLines[3] != null)
+        {
+            if (activeEvent == TrafficEventType.Ambulance && stopLines[3].GetState() == CrossingState.Go)
+            {
+                AddStrike("Stopped during Ambulance event");
+                ResetCombo();
+                return;
+            }
+
+            stopLines[3].ChangeState();
+            Debug.Log($"Toggling lane 4 and to state  {stopLines[3].GetState()}");
+            lastToggleTime = Time.time;
+        }
+    }
+    
     public void Toggle()
     {
         if (!CanToggle()) return;
-
-        if (activeEvent == TrafficEventType.Ambulance && state == CrossingState.Go)
+        foreach (StopLine stopLine in stopLines)
         {
-            AddStrike("Stopped during Ambulance event");
-            ResetCombo();
-            return;
-        }
+            if (activeEvent == TrafficEventType.Ambulance && stopLine.GetState() == CrossingState.Go)
+            {
+                AddStrike("Stopped during Ambulance event");
+                ResetCombo();
+                return;
+            }
 
-        state = (state == CrossingState.Go) ? CrossingState.Stop : CrossingState.Go;
-        lastToggleTime = Time.time;
+            stopLine.ChangeState();
+            lastToggleTime = Time.time;
+        }
     }
 
-    public bool IsStopActive() => state == CrossingState.Stop;
+    // Returns true if ANY stop line is in Stop state
+    public bool IsStopActive()
+    {
+        foreach (StopLine stopLine in stopLines)
+        {
+            if (stopLine != null && stopLine.GetState() == CrossingState.Stop)
+                return true;
+        }
+        return false;
+    }
+    
+    // Check if a specific stop line is in Stop state
+    public bool IsStopActive(StopLine specificLine)
+    {
+        return specificLine != null && specificLine.GetState() == CrossingState.Stop;
+    }
 
     bool CanToggle()
     {
         float t = Time.time - lastToggleTime;
-        return state == CrossingState.Stop ? t >= minStopTime : t >= minGoTime;
+        bool anyStopActive = IsStopActive();
+        return anyStopActive ? t >= minStopTime : t >= minGoTime;
     }
 
     // -----------------------------
@@ -91,7 +188,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (activeEvent == TrafficEventType.Roadworks)
             gain *= 1.6f;
 
-        if (state == CrossingState.Stop)
+        bool anyStopActive = IsStopActive();
+        
+        if (anyStopActive)
             anger = Mathf.Clamp01(anger + gain * Time.deltaTime);
         else
             anger = Mathf.Clamp01(anger - angerReliefPerSecond_Go * Time.deltaTime);
