@@ -68,6 +68,17 @@ public class CarAI : MonoBehaviour
         }
     }
 
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.GetComponent<CarAI>() != null)
+        {
+            CarAI car = collision.gameObject.GetComponent<CarAI>();
+            if(car.isStopped || isStopped) return;
+            Debug.Log("Car AI Collision");
+            Destroy(this.gameObject);
+        }
+    }
+
     void OnTriggerExit(Collider other)
     {
         if (!other.CompareTag("StopLine")) return;

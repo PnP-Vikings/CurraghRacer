@@ -1749,8 +1749,8 @@ MonoBehaviour:
   stopLines:
   - {fileID: 2116817050}
   - {fileID: 1515496194}
-  - {fileID: 596717071}
   - {fileID: 1300436927}
+  - {fileID: 596717071}
 --- !u!1 &1144698704
 GameObject:
   m_ObjectHideFlags: 0
