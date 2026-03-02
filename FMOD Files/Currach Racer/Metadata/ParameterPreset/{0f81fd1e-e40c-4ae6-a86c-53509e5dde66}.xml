@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{0f81fd1e-e40c-4ae6-a86c-53509e5dde66}">
+		<property name="name">
+			<value>Radioify Boom Bap</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{bc49389d-4d46-494c-8d93-bd5900074602}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{bc49389d-4d46-494c-8d93-bd5900074602}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

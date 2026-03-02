@@ -2089,7 +2089,7 @@ GameObject:
   - component: {fileID: 746810453}
   - component: {fileID: 746810452}
   m_Layer: 0
-  m_Name: FootRaceAmbience
+  m_Name: VillageAmbience
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2110,11 +2110,11 @@ MonoBehaviour:
   CollisionTag: 
   EventReference:
     Guid:
-      Data1: -1209046793
-      Data2: 1114385868
-      Data3: -852164987
-      Data4: -1128160590
-    Path: event:/Main Menu/Main Menu
+      Data1: -1323077960
+      Data2: 1153186779
+      Data3: -54222662
+      Data4: -105983704
+    Path: event:/Ambiences/Village Ambience
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
@@ -4590,7 +4590,6 @@ GameObject:
   m_Component:
   - component: {fileID: 1512312958}
   - component: {fileID: 1512312957}
-  - component: {fileID: 1512312956}
   - component: {fileID: 1512312959}
   m_Layer: 0
   m_Name: Main Camera
@@ -4599,14 +4598,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1512312956
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512312955}
-  m_Enabled: 1
 --- !u!20 &1512312957
 Camera:
   m_ObjectHideFlags: 0
@@ -6810,6 +6801,7 @@ GameObject:
   - component: {fileID: 2059391186}
   - component: {fileID: 2059391185}
   - component: {fileID: 2059391190}
+  - component: {fileID: 2059391191}
   m_Layer: 0
   m_Name: Player
   m_TagString: Player
@@ -6933,7 +6925,7 @@ Transform:
   m_GameObject: {fileID: 2059391184}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.7, y: 1.92, z: -25.97}
+  m_LocalPosition: {x: -4.46, y: 1.92, z: 139.67}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -6987,6 +6979,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::StopLine
 --- !u!1 &2118247798
+--- !u!114 &2059391191
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2059391184}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 2059391184}
+--- !u!1 &2116817045
 GameObject:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

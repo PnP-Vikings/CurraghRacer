@@ -69,6 +69,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance setDownPint;
 
     public EventInstance punchBagAudio;
+    public EventInstance weightliftingSuccess;
 
         //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
@@ -93,6 +94,8 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance tractor;
     public EventInstance bailingAreaComplete;
+
+    //public EventInstance carEngine;
 
     private Scene activeScene;
     void Awake()
@@ -181,6 +184,7 @@ public class AudioManager : MonoBehaviour
 
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
+        weightliftingSuccess = RuntimeManager.CreateInstance("event:/Notifications/Weightlifting Success");
         
         //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
         turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");

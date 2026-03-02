@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{4213e121-d5d7-4fbe-be81-056fb428900f}">
+		<property name="name">
+			<value>Siren Pitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{9ba195a4-0b45-4128-add3-0b2d5319c0d2}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{9ba195a4-0b45-4128-add3-0b2d5319c0d2}">
+		<property name="initialValue">
+			<value>0.5</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.68000000715255737</value>
+		</property>
+	</object>
+</objects>

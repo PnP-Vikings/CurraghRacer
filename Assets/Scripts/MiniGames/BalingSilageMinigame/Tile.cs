@@ -1,3 +1,4 @@
+using MiniGames.BalingSilageMinigame;
 using TMPro;
 using UnityEngine;
 
@@ -24,7 +25,7 @@ public class Tile : MonoBehaviour
             tileRenderer.material = dirtMaterial;
         }
 
-        if (highlight == true && collected == true)
+        if (collected == true)
         {
             tileRenderer.material = collectedMaterial;
         }
@@ -37,11 +38,19 @@ public class Tile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        highlight = true;
+        if (FindFirstObjectByType<BalingSilageMinigame>().isGrass == true)
+        {
+            highlight = true;
+        }
+
+        if (FindFirstObjectByType<BalingSilageMinigame>().isGrass == false && highlight == true)
+        {
+            collected = true;
+        }
     }
 
     void OnTriggerExit(Collider other)
     {
-        highlight = false;
+        
     }
 }

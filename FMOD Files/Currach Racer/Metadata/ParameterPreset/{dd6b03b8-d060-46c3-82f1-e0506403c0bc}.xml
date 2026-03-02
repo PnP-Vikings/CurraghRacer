@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{dd6b03b8-d060-46c3-82f1-e0506403c0bc}">
+		<property name="name">
+			<value>Siren Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{39711132-8bda-46e6-9f20-c1f3f51ea722}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{39711132-8bda-46e6-9f20-c1f3f51ea722}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.74000000953674316</value>
+		</property>
+	</object>
+</objects>

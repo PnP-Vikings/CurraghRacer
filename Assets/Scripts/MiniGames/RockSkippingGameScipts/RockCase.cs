@@ -161,31 +161,22 @@ public class RockCase : MonoBehaviour
 
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.15f);
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.15f);
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.15f);
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.15f);
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);
+            yield return new WaitForSeconds(0.15f);
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);  
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);  
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.10f);   
+            yield return new WaitForSeconds(0.15f);   
 
             AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 1f);
             AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 1f);

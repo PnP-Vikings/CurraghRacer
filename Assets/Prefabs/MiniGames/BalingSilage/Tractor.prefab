@@ -14,6 +14,7 @@ GameObject:
   - component: {fileID: 1837769624811238063}
   - component: {fileID: -8462961556285662793}
   - component: {fileID: 5414262319855668033}
+  - component: {fileID: 65690802447571487}
   m_Layer: 0
   m_Name: Tractor
   m_TagString: Untagged
@@ -127,7 +128,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Tractor
   moveSpeed: 1
-  timerAmount: {fileID: 0}
+  tractorMaterial: {fileID: 2100000, guid: 531dff85c3da4604a99853bc74d282c9, type: 2}
+  tractorRenderer: {fileID: 1236892895128777404}
 --- !u!54 &5414262319855668033
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -155,3 +157,34 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
+--- !u!114 &65690802447571487
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5247629575120045795}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 145230778
+      Data2: 1163764072
+      Data3: -1001152326
+      Data4: 258326836
+    Path: event:/Bailing/Tractor
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20

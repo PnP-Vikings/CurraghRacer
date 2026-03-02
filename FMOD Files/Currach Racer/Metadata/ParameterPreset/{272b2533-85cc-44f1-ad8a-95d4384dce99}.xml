@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{272b2533-85cc-44f1-ad8a-95d4384dce99}">
+		<property name="name">
+			<value>Radioify Dance Track</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{6737c45d-5b71-4429-a62e-fce2488656cb}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{6737c45d-5b71-4429-a62e-fce2488656cb}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

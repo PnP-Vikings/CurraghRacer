@@ -185,6 +185,8 @@ public class WeightLiftingController : MonoBehaviour
     private bool isProcessingPhaseTransition; // Prevent multiple transitions
 
     private Tween currentDelayTween;
+
+    private bool barSlideAudioIsPlaying = false;
     
     private void Awake()
     {
@@ -920,15 +922,19 @@ public class WeightLiftingController : MonoBehaviour
 
     private void PlayBarSlideAudioFunction()
     {
-        if (barTiltAngle > 10 | barTiltAngle < -10)
+        if (!barSlideAudioIsPlaying)
         {
-            Debug.Log("Bar is sliding");
-
-            if (AudioManager.instance != null)
+            if (barTiltAngle > 11 | barTiltAngle < -11)
             {
-                AudioManager.instance.dumbbellSlide.start();
+                StartCoroutine(BarSlideCoroutine());
+                Debug.Log("Weight is sliding");
+
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.dumbbellSlide.start();
+                }
             }
-        }
+        } 
     }
 
     #endregion
@@ -975,7 +981,9 @@ public class WeightLiftingController : MonoBehaviour
         totalStrengthGained += strengthGain;
         
         Debug.Log("Successful lift! Weight: " + currentWeight + "kg, Strength gained: " + strengthGain);
-        
+
+        PlayBoxingSuccessSound();
+
         if(successfulReps >= maxSuccessfulReps)
         {
             EndGame();
@@ -1289,6 +1297,21 @@ public class WeightLiftingController : MonoBehaviour
         {
             AudioManager.instance.dumbbellSlide.start();
         }
+    }
+
+    public void PlayBoxingSuccessSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.weightliftingSuccess.start();
+        }
+    }
+
+    IEnumerator BarSlideCoroutine()
+    {
+        barSlideAudioIsPlaying = true;
+        yield return new WaitForSeconds(2.45f);
+        barSlideAudioIsPlaying = false;
     }
     #endregion
     
