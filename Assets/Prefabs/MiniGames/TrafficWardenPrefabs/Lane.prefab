@@ -29,12 +29,12 @@ Transform:
   m_GameObject: {fileID: 4623640738924244201}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.52, z: 50.08538}
+  m_LocalPosition: {x: -14.75855, y: 2.02, z: 25.232674}
   m_LocalScale: {x: 8, y: 3, z: 4}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1379195707690429949}
-  m_Father: {fileID: 2346698751650570788}
+  m_Father: {fileID: 7536853571189246881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &6879534283666817305
 MeshFilter:
@@ -273,8 +273,7 @@ Transform:
   m_LocalPosition: {x: -14.75855, y: 0.49999994, z: -24.852707}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children:
-  - {fileID: 5605766220520789706}
+  m_Children: []
   m_Father: {fileID: 7536853571189246881}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!33 &8309522119282991837
@@ -371,6 +370,8 @@ MonoBehaviour:
   ambulancePrefab: {fileID: 2850407011794745726, guid: f75f69fd6de690f48bed9be6c41c316c, type: 3}
   spawnPoint: {fileID: 2346698751650570788}
   spawnLine: {fileID: 5927496644200560060}
+  minInterval: 3
+  maxInterval: 6
   interval: 1.2
   violatorChance: 0.15
 --- !u!1 &8728479954665350639
@@ -403,5 +404,6 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 2346698751650570788}
+  - {fileID: 5605766220520789706}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
