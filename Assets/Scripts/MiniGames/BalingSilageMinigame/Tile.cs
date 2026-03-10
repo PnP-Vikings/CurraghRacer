@@ -38,12 +38,12 @@ public class Tile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (FindFirstObjectByType<BalingSilageMinigame>().isGrass == true)
+        if (FindFirstObjectByType<BalingSilageMinigame>().cutting == true)
         {
             highlight = true;
         }
 
-        if (FindFirstObjectByType<BalingSilageMinigame>().isGrass == false && highlight == true)
+        if (FindFirstObjectByType<BalingSilageMinigame>().collecting == true && highlight == true)
         {
             collected = true;
         }
