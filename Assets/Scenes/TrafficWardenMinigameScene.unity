@@ -966,6 +966,17 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 599154022}
   m_Mesh: {fileID: 8541192488089176603, guid: 59ce172c17eef594bafd119def075d53, type: 3}
+--- !u!114 &633891098 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+  m_PrefabInstance: {fileID: 5641347675537644076}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610243403a6c3a94784cc95ad1b1f8ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarSpawner
 --- !u!1001 &673240818
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1406,11 +1417,33 @@ PrefabInstance:
       addedObject: {fileID: 518376493}
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+--- !u!114 &913150910 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+  m_PrefabInstance: {fileID: 1936419300}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610243403a6c3a94784cc95ad1b1f8ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarSpawner
 --- !u!4 &956397052 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 59ce172c17eef594bafd119def075d53, type: 3}
   m_PrefabInstance: {fileID: 673240818}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &989360500 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+  m_PrefabInstance: {fileID: 775334697}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610243403a6c3a94784cc95ad1b1f8ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarSpawner
 --- !u!1 &997406250
 GameObject:
   m_ObjectHideFlags: 0
@@ -1749,8 +1782,19 @@ MonoBehaviour:
   stopLines:
   - {fileID: 2116817050}
   - {fileID: 1515496194}
-  - {fileID: 596717071}
   - {fileID: 1300436927}
+  - {fileID: 596717071}
+  spawners:
+  - {fileID: 633891098}
+  - {fileID: 989360500}
+  - {fileID: 1727657617}
+  - {fileID: 913150910}
+  difficultyRampTime: 120
+  minIntervalAtMax: 0.5
+  maxSpeedAtMax: 1.4
+  maxViolatorBonus: 0.2
+  patternMinInterval: 12
+  patternMaxInterval: 25
 --- !u!1 &1144698704
 GameObject:
   m_ObjectHideFlags: 0
@@ -3390,6 +3434,17 @@ GameObject:
   m_CorrespondingSourceObject: {fileID: 5217088364178624398, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
   m_PrefabInstance: {fileID: 101484903}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1727657617 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+  m_PrefabInstance: {fileID: 101484903}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 610243403a6c3a94784cc95ad1b1f8ca, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CarSpawner
 --- !u!1001 &1728330789
 PrefabInstance:
   m_ObjectHideFlags: 0
