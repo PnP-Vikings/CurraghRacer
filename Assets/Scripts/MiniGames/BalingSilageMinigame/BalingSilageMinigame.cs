@@ -10,10 +10,12 @@ namespace MiniGames.BalingSilageMinigame
         private MiniGameManager gameManager;
         private MiniGameData gameData;
         public Tractor tractorPrefab;
+        public GameObject Collector;
         private float gameTimer;
         public TextMeshProUGUI timerText;
         public TextMeshProUGUI grassText;
-        public bool isGrass;
+        public bool cutting;
+        public bool collecting;
 
         public void Initialize(MiniGameManager manager, MiniGameData data)
         {
@@ -30,7 +32,7 @@ namespace MiniGames.BalingSilageMinigame
         public void Start()
         {
             Instantiate(tractorPrefab, new Vector3(0, 0, -0.5f), Quaternion.identity);
-            isGrass = true;
+            cutting = true;
             grassText.text = "Cut the grass";
         }
 
@@ -47,17 +49,17 @@ namespace MiniGames.BalingSilageMinigame
                 timerText.text = gameTimer.ToString("F2");
             }
 
-            if (gameTimer >= 30 && isGrass == true) 
+            if (gameTimer >= 30 && cutting == true) 
             {
-                isGrass = false;
-                gameTimer = 0;
+                cutting = false;
+                gameTimer = 30;
                 timerText.text = gameTimer.ToString("F2");
-                grassText.text = "Collect the grass";
+                grassText.text = "Attach the collector";
             }
 
-            if (gameTimer >= 30 && isGrass == false)
+            if (collecting == true)
             {
-                EndGame();
+                grassText.text = "Collect the grass";
             }
         }
 
