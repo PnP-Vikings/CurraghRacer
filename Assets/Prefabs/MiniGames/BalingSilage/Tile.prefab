@@ -128,6 +128,7 @@ MonoBehaviour:
   tileMaterial: {fileID: -876546973899608171, guid: ad106e7b7f0f99147bb4a62e44ffb2ef, type: 3}
   dirtMaterial: {fileID: 2100000, guid: 37c6646644837a74194602b81ab63c4d, type: 2}
   collectedMaterial: {fileID: 2100000, guid: 4a3fe68cf2f7a2143a384a8cc86dff16, type: 2}
+  inactiveMaterial: {fileID: -6087771358165109452, guid: 17cb3f4a66143d34bb6cbebcd3dce935, type: 3}
   tileRenderer: {fileID: 920687620994407508}
   highlight: 0
   collected: 0
