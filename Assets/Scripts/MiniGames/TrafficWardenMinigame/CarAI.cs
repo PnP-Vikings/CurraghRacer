@@ -23,6 +23,15 @@ public class CarAI : MonoBehaviour
     bool hasCrossedLine;
     StopLine currentStopLine; // Track which specific stop line we're near
 
+    /// <summary>Which lane this car belongs to (-1 = unassigned).</summary>
+    [HideInInspector] public int laneIndex = -1;
+
+    /// <summary>When true the car ignores stop lines and floors it.</summary>
+    [HideInInspector] public bool isRogue;
+
+    /// <summary>The spawner that created this car (for deregistration).</summary>
+    [HideInInspector] public CarSpawner ownerSpawner;
+
     // Cached for follow behavior
     CarAI carAhead;
     float distToCarAhead;
@@ -42,11 +51,18 @@ public class CarAI : MonoBehaviour
         currentStopLine = line;
     }
 
+    /// <summary>Force the car to ignore the stop line and accelerate through.</summary>
+    public void GoRogue()
+    {
+        isRogue = true;
+        shouldObey = false;
+    }
+
     void Update()
     {
         var mg = TrafficWardenMinigameController.I;
-        
-        // Check specific stop line state if we have one, otherwise check any
+
+        // Check specific stop line state
         bool stopActive;
         if (currentStopLine != null)
             stopActive = mg != null && mg.IsStopActive(currentStopLine);
@@ -59,15 +75,41 @@ public class CarAI : MonoBehaviour
 
         float target = maxSpeed;
 
+        // ── Anger impatience: cars speed up as their lane gets angrier ──
+        if (mg != null && laneIndex >= 0)
+        {
+            float anger = mg.GetLaneAnger(laneIndex);
+            // At 0 anger: normal speed. At 1.0 anger: +40% speed boost
+            target *= (1f + anger * 0.4f);
+
+            // High anger makes obeying cars more likely to run the stop
+            if (shouldObey && !isRogue && anger > 0.7f)
+            {
+                // 30% chance per frame-check to go rogue at high anger (checked once)
+                if (!hasCrossedLine && nearStopLine && Random.value < 0.002f * (anger - 0.7f) / 0.3f)
+                {
+                    GoRogue();
+                    Debug.Log($"Lane {laneIndex + 1} car went rogue from impatience! (anger: {anger:F2})");
+                }
+            }
+        }
+
+        // Rogue cars ignore stop lines entirely
+        if (isRogue)
+        {
+            target = maxSpeed * 1.5f; // floor it
+        }
         // Stop line logic
-        if (nearStopLine && stopActive && shouldObey && !hasCrossedLine)
+        else if (nearStopLine && stopActive && shouldObey && !hasCrossedLine)
+        {
             target = 0f;
+        }
 
         // Check for car ahead (simple raycast)
         CheckCarAhead();
         
         // Follow distance logic - slow down if too close to car ahead
-        if (carAhead != null)
+        if (carAhead != null && !isRogue) // rogue cars don't slow for others
         {
             if (distToCarAhead < minFollowDistance)
             {
@@ -108,6 +150,12 @@ public class CarAI : MonoBehaviour
                 distToCarAhead = hit.distance;
             }
         }
+    }
+
+    void OnDestroy()
+    {
+        if (ownerSpawner != null)
+            ownerSpawner.Unregister(this);
     }
 
     void OnTriggerEnter(Collider other)

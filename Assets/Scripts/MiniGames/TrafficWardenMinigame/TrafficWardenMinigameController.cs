@@ -25,8 +25,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
     public int strikes;
     public int maxStrikes = 3;
 
-    [Header("Anger Meter (0..1)")]
-    [Range(0, 1)] public float anger;
+    [Header("Anger Meter (per lane, 0..1)")]
+    public float[] laneAnger;                                   // one per stop line
     public float angerGainPerSecond_Stop = 0.10f;
     public float angerReliefPerSecond_Go = 0.18f;
 
@@ -45,10 +45,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
     public CarSpawner[] spawners;                     // Assign in inspector
 
     [Header("Difficulty Ramp")]
-    public float difficultyRampTime = 120f;           // Seconds to reach max difficulty
-    public float minIntervalAtMax = 0.5f;             // Fastest spawn interval multiplier
-    public float maxSpeedAtMax = 1.4f;                // Car speed multiplier at max difficulty
-    public float maxViolatorBonus = 0.20f;            // Extra violator chance at max
+    public float difficultyRampTime = 120f;
+    public float minIntervalAtMax = 0.5f;
+    public float maxSpeedAtMax = 1.4f;
+    public float maxViolatorBonus = 0.20f;
 
     [Header("Spawn Patterns")]
     public float patternMinInterval = 12f;
@@ -59,6 +59,11 @@ public class TrafficWardenMinigameController : MonoBehaviour
     float nextEventTime;
     float eventEndTime;
     float gameStartTime;
+
+    // Per-lane spawn timers (owned by controller)
+    float[] laneTimers;
+    float[] laneIntervals;
+    bool[]  lanePaused;
 
     // Pattern state
     float nextPatternTime;
@@ -87,6 +92,22 @@ public class TrafficWardenMinigameController : MonoBehaviour
         lastToggleTime = -999f;
         gameStartTime = Time.time;
 
+        // Initialise per-lane timers
+        int count = spawners != null ? spawners.Length : 0;
+        laneTimers    = new float[count];
+        laneIntervals = new float[count];
+        lanePaused    = new bool[count];
+        for (int i = 0; i < count; i++)
+        {
+            RollLaneInterval(i);
+            if (spawners[i] != null)
+                spawners[i].laneIndex = i;
+        }
+
+        // Initialise per-lane anger
+        int laneCount = stopLines != null ? stopLines.Length : 0;
+        laneAnger = new float[laneCount];
+
         playerInputs = new PlayerInputs();
         playerInputs.Enable();
         playerInputs.TrafficWardenGame.Enable();
@@ -103,9 +124,21 @@ public class TrafficWardenMinigameController : MonoBehaviour
     void Update()
     {
         UpdateDifficulty();
+        UpdateSpawning();
+        CleanupLanes();
         UpdateAnger();
         UpdateEvents();
         UpdatePatterns();
+    }
+
+    /// <summary>Tell each spawner to destroy cars that have gone too far.</summary>
+    void CleanupLanes()
+    {
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            if (spawners[i] != null)
+                spawners[i].CleanupDistant();
+        }
     }
 
     // ═══════════════════════════════════════════════════
@@ -119,8 +152,6 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         float t = DifficultyT;
 
-        // Gradually tighten spawn intervals & boost car speed across ALL spawners
-        float intervalMul = Mathf.Lerp(1f, minIntervalAtMax, t);
         float speedMul    = Mathf.Lerp(1f, maxSpeedAtMax, t);
         float violatorAdd = Mathf.Lerp(0f, maxViolatorBonus, t);
 
@@ -128,18 +159,48 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (spawners[i] == null) continue;
 
-            spawners[i].intervalMultiplier = intervalMul;
-            spawners[i].speedMultiplier    = speedMul;
-            spawners[i].violatorBonus      = violatorAdd;
+            spawners[i].speedMultiplier = speedMul;
+            spawners[i].violatorBonus   = violatorAdd;
 
-            // Handle roadworks blocking
+            // Determine if this lane is paused
             if (activeEvent == TrafficEventType.Roadworks && i == roadworksBlockedLane)
-                spawners[i].paused = true;
+                lanePaused[i] = true;
             else if (activePattern != SpawnPattern.Normal)
-                ApplyPatternToSpawner(i);
+                ApplyPatternToLane(i);
             else
-                spawners[i].paused = false;
+                lanePaused[i] = false;
         }
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  CENTRALIZED SPAWNING (replaces CarSpawner.Update)
+    // ═══════════════════════════════════════════════════
+
+    void UpdateSpawning()
+    {
+        float t = DifficultyT;
+        float intervalMul = Mathf.Lerp(1f, minIntervalAtMax, t);
+
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            if (spawners[i] == null || lanePaused[i]) continue;
+
+            laneTimers[i] += Time.deltaTime;
+            if (laneTimers[i] >= laneIntervals[i])
+            {
+                laneTimers[i] = 0f;
+                spawners[i].ForceSpawn();
+                RollLaneInterval(i, intervalMul);
+            }
+        }
+    }
+
+    /// <summary>Roll a new random interval for the given lane, applying the difficulty multiplier.</summary>
+    void RollLaneInterval(int lane, float intervalMul = 1f)
+    {
+        if (spawners[lane] == null) return;
+        var s = spawners[lane];
+        laneIntervals[lane] = Random.Range(s.minInterval, s.maxInterval) * intervalMul;
     }
 
     // ═══════════════════════════════════════════════════
@@ -255,8 +316,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 var car = spawners[convoyLane].ForceSpawn();
                 if (car != null)
                 {
-                    car.shouldObey = true; // convoys always obey
-                    car.maxSpeed *= 0.85f; // slightly slower, tight pack
+                    car.shouldObey = true;
+                    car.maxSpeed *= 0.85f;
                 }
             }
             convoyRemaining--;
@@ -270,33 +331,30 @@ public class TrafficWardenMinigameController : MonoBehaviour
         patternEndTime = Time.time + Random.Range(4f, 7f);
     }
 
-    /// <summary>Apply per-spawner overrides based on current pattern.</summary>
-    void ApplyPatternToSpawner(int i)
+    /// <summary>Apply per-lane overrides based on current pattern (sets lanePaused and tweaks laneIntervals).</summary>
+    void ApplyPatternToLane(int i)
     {
-        var s = spawners[i];
         switch (activePattern)
         {
             case SpawnPattern.RushHour:
-                // Rush-hour lane spawns 3× faster, others are normal
-                s.paused = false;
+                lanePaused[i] = false;
                 if (i == rushHourLane)
-                    s.intervalMultiplier *= 0.35f;
+                    laneIntervals[i] *= 0.35f; // rush-hour lane spawns ~3× faster
                 break;
 
             case SpawnPattern.Burst:
-                // Burst lane pauses normal spawning (ForceSpawn handles it)
-                s.paused = (i == burstLane);
+                // Burst lane pauses normal spawning (TickBurst handles ForceSpawn)
+                lanePaused[i] = (i == burstLane);
                 break;
 
             case SpawnPattern.Convoy:
-                // Convoy lane pauses normal spawning (ForceSpawn handles it)
-                s.paused = (i == convoyLane);
+                // Convoy lane pauses normal spawning (TickConvoy handles ForceSpawn)
+                lanePaused[i] = (i == convoyLane);
                 break;
 
             case SpawnPattern.Chaos:
-                // Everything spawns fast
-                s.paused = false;
-                s.intervalMultiplier *= 0.4f;
+                lanePaused[i] = false;
+                laneIntervals[i] *= 0.4f; // everything spawns fast
                 break;
         }
     }
@@ -415,38 +473,84 @@ public class TrafficWardenMinigameController : MonoBehaviour
     }
 
     // ═══════════════════════════════════════════════════
-    //  ANGER SYSTEM
+    //  ANGER SYSTEM  (per-lane)
     // ═══════════════════════════════════════════════════
+
+    /// <summary>Highest anger value across all lanes (handy for UI).</summary>
+    public float MaxAnger
+    {
+        get
+        {
+            float max = 0f;
+            for (int i = 0; i < laneAnger.Length; i++)
+                if (laneAnger[i] > max) max = laneAnger[i];
+            return max;
+        }
+    }
+
+    /// <summary>Get anger for a specific lane.</summary>
+    public float GetLaneAnger(int lane)
+    {
+        if (lane >= 0 && lane < laneAnger.Length)
+            return laneAnger[lane];
+        return 0f;
+    }
 
     void UpdateAnger()
     {
-        float gain = angerGainPerSecond_Stop;
+        float baseGain = angerGainPerSecond_Stop;
 
+        // Global modifiers
         if (activeEvent == TrafficEventType.Roadworks)
-            gain *= 1.6f;
-
-        // Chaos pattern also raises anger faster
+            baseGain *= 1.6f;
         if (activePattern == SpawnPattern.Chaos)
-            gain *= 1.3f;
+            baseGain *= 1.3f;
 
-        bool anyStopActive = IsStopActive();
-
-        if (anyStopActive)
-            anger = Mathf.Clamp01(anger + gain * Time.deltaTime);
-        else
-            anger = Mathf.Clamp01(anger - angerReliefPerSecond_Go * Time.deltaTime);
-
-        if (anger >= 1f)
+        for (int i = 0; i < stopLines.Length && i < laneAnger.Length; i++)
         {
-            AddStrike("Traffic anger overflow");
-            anger = 0f;
-            ResetCombo();
+            if (stopLines[i] == null) continue;
+
+            bool laneStopped = stopLines[i].GetState() == CrossingState.Stop;
+
+            float gain = baseGain;
+
+            // Rush-hour lane builds anger faster
+            if (activePattern == SpawnPattern.RushHour && i == rushHourLane)
+                gain *= 1.5f;
+
+            // Roadworks-blocked lane doesn't build anger (no cars coming)
+            if (activeEvent == TrafficEventType.Roadworks && i == roadworksBlockedLane)
+            {
+                laneAnger[i] = Mathf.Clamp01(laneAnger[i] - angerReliefPerSecond_Go * Time.deltaTime);
+                continue;
+            }
+
+            if (laneStopped)
+                laneAnger[i] = Mathf.Clamp01(laneAnger[i] + gain * Time.deltaTime);
+            else
+                laneAnger[i] = Mathf.Clamp01(laneAnger[i] - angerReliefPerSecond_Go * Time.deltaTime);
+
+            if (laneAnger[i] >= 1f)
+            {
+                // Unleash all cars on this lane — they floor it through the stop
+                UnleashLane(i);
+                AddStrike($"Lane {i + 1} anger overflow!");
+                laneAnger[i] = 0f;
+                ResetCombo();
+            }
         }
     }
 
     // ═══════════════════════════════════════════════════
     //  EVENTS
     // ═══════════════════════════════════════════════════
+
+    /// <summary>Make every car on the given lane go rogue (ignore stops, floor it).</summary>
+    void UnleashLane(int lane)
+    {
+        if (lane >= 0 && lane < spawners.Length && spawners[lane] != null)
+            spawners[lane].UnleashAll();
+    }
 
     void UpdateEvents()
     {
@@ -476,14 +580,12 @@ public class TrafficWardenMinigameController : MonoBehaviour
         else if (r < 0.7f)
         {
             activeEvent = TrafficEventType.Roadworks;
-            // Pick a random lane to block
             if (spawners.Length > 0)
                 roadworksBlockedLane = Random.Range(0, spawners.Length);
         }
         else
         {
             activeEvent = TrafficEventType.Ambulance;
-            // Force-spawn an ambulance on a random lane
             if (spawners.Length > 0)
             {
                 int lane = Random.Range(0, spawners.Length);
@@ -500,11 +602,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         Debug.Log("Event ended: " + activeEvent);
 
-        // Un-pause roadworks lane
         if (activeEvent == TrafficEventType.Roadworks && roadworksBlockedLane >= 0
-            && roadworksBlockedLane < spawners.Length && spawners[roadworksBlockedLane] != null)
+            && roadworksBlockedLane < spawners.Length)
         {
-            spawners[roadworksBlockedLane].paused = false;
+            lanePaused[roadworksBlockedLane] = false;
         }
 
         roadworksBlockedLane = -1;
@@ -524,13 +625,24 @@ public class TrafficWardenMinigameController : MonoBehaviour
         int gained = basePoints + Mathf.FloorToInt(combo * 0.25f);
         score += gained;
 
-        anger = Mathf.Clamp01(anger - 0.04f);
+        // Relieve a little anger on the lane that scored (optional: pass lane index)
     }
 
     public void AwardCorrect(string reason)
     {
         AwardCorrect();
         Debug.Log("Correct: " + reason);
+    }
+
+    /// <summary>Award points and relieve anger on a specific lane.</summary>
+    public void AwardCorrect(string reason, int lane)
+    {
+        AwardCorrect();
+        Debug.Log("Correct: " + reason);
+
+        // Relieve anger on the lane that earned the point
+        if (lane >= 0 && lane < laneAnger.Length)
+            laneAnger[lane] = Mathf.Clamp01(laneAnger[lane] - 0.04f);
     }
 
     public void Penalize(string reason)

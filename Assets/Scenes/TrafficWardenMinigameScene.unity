@@ -244,6 +244,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: despawnDistance
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane (3)
@@ -1401,6 +1405,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: despawnDistance
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane (2)
@@ -1771,7 +1779,7 @@ MonoBehaviour:
   basePoints: 1
   strikes: 0
   maxStrikes: 3
-  anger: 0
+  laneAnger: []
   angerGainPerSecond_Stop: 0.1
   angerReliefPerSecond_Go: 0.18
   activeEvent: 0
@@ -3691,6 +3699,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: despawnDistance
+      value: 160
+      objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane (1)
@@ -4505,6 +4517,10 @@ PrefabInstance:
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: despawnDistance
+      value: 160
       objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
