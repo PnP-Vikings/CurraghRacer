@@ -60,7 +60,7 @@ public class CarAI : MonoBehaviour
 
     void Update()
     {
-        var mg = TrafficWardenMinigameController.I;
+        var mg = TrafficWardenMinigameController.Instance;
 
         // Check specific stop line state
         bool stopActive;
@@ -177,6 +177,10 @@ public class CarAI : MonoBehaviour
             CarAI car = collision.gameObject.GetComponent<CarAI>();
             if(car.isStopped || isStopped) return;
             Debug.Log("Car AI Collision");
+            
+            if(TrafficWardenMinigameController.Instance != null)
+                TrafficWardenMinigameController.Instance.onCarCrashed.Invoke();
+            
             Destroy(this.gameObject);
         }
     }
@@ -190,7 +194,7 @@ public class CarAI : MonoBehaviour
         nearStopLine = false;
         hasCrossedLine = true;
 
-        var mg = TrafficWardenMinigameController.I;
+        var mg = TrafficWardenMinigameController.Instance;
         if (mg == null) return;
 
         // Check specific stop line state

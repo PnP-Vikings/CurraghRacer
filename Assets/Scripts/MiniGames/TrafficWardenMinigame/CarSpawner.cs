@@ -35,7 +35,7 @@ public class CarSpawner : MonoBehaviour
 
     CarAI SpawnCar(bool forceAmbulance)
     {
-        var mg = TrafficWardenMinigameController.I;
+        var mg = TrafficWardenMinigameController.Instance;
 
         bool spawnAmbulance = forceAmbulance ||
             (mg != null && mg.activeEvent == TrafficEventType.Ambulance && Random.value < 0.35f);

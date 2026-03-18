@@ -458,6 +458,17 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 14ebd6b993a59e24dac0429bc8f60e8b, type: 3}
+--- !u!114 &387214528 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6807400039332883010, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+  m_PrefabInstance: {fileID: 2108784734}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: da03c51eea3d836429a8101b234fa37f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &477714578
 GameObject:
   m_ObjectHideFlags: 0
@@ -1779,6 +1790,10 @@ MonoBehaviour:
   basePoints: 1
   strikes: 0
   maxStrikes: 3
+  penaltyCooldown: 0.5
+  onCarCrashed:
+    m_PersistentCalls:
+      m_Calls: []
   laneAnger: []
   angerGainPerSecond_Stop: 0.1
   angerReliefPerSecond_Go: 0.18
@@ -1803,6 +1818,7 @@ MonoBehaviour:
   maxViolatorBonus: 0.2
   patternMinInterval: 12
   patternMaxInterval: 25
+  minigameCanvasUI: {fileID: 387214528}
 --- !u!1 &1144698704
 GameObject:
   m_ObjectHideFlags: 0

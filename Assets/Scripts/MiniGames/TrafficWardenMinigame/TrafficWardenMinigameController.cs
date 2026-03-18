@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum TrafficEventType { None, Ambulance, Rain, Roadworks }
 
@@ -7,7 +8,7 @@ public enum SpawnPattern { Normal, Burst, RushHour, Convoy, Chaos }
 
 public class TrafficWardenMinigameController : MonoBehaviour
 {
-    public static TrafficWardenMinigameController I;
+    public static TrafficWardenMinigameController Instance;
 
     public PlayerInputs playerInputs;
 
@@ -24,7 +25,12 @@ public class TrafficWardenMinigameController : MonoBehaviour
     [Header("Strikes")]
     public int strikes;
     public int maxStrikes = 3;
+    [Tooltip("Cooldown (seconds) between penalties so a single crash doesn't count twice.")]
+    public float penaltyCooldown = 0.5f;
+    float lastPenaltyTime = -999f;
 
+    public UnityEvent onCarCrashed;
+    
     [Header("Anger Meter (per lane, 0..1)")]
     public float[] laneAnger;                                   // one per stop line
     public float angerGainPerSecond_Stop = 0.10f;
@@ -91,7 +97,12 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     void Awake()
     {
-        I = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
         lastToggleTime = -999f;
         gameStartTime = Time.time;
 
@@ -123,6 +134,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         ScheduleNextEvent();
         ScheduleNextPattern();
         SetupUi();
+        onCarCrashed.AddListener(() => Penalize("Car crashed"));
     }
 
     void Update()
@@ -654,6 +666,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     public void Penalize(string reason)
     {
+        // Cooldown: ignore rapid-fire penalties (e.g. two cars in the same crash)
+        if (Time.time - lastPenaltyTime < penaltyCooldown) return;
+        lastPenaltyTime = Time.time;
+
         AddStrike(reason);
         ResetCombo();
     }
