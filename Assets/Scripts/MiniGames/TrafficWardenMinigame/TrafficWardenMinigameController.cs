@@ -53,6 +53,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
     [Header("Spawn Patterns")]
     public float patternMinInterval = 12f;
     public float patternMaxInterval = 25f;
+    
+    [Header("UI")]
+    [SerializeField] MinigameCanvasUI  minigameCanvasUI;
 
     // ── Private state ────────────────────────────────
     float lastToggleTime;
@@ -119,6 +122,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
         ScheduleNextEvent();
         ScheduleNextPattern();
+        SetupUi();
     }
 
     void Update()
@@ -130,6 +134,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
         UpdateEvents();
         UpdatePatterns();
     }
+    
+ 
+    
 
     /// <summary>Tell each spawner to destroy cars that have gone too far.</summary>
     void CleanupLanes()
@@ -624,7 +631,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
         int gained = basePoints + Mathf.FloorToInt(combo * 0.25f);
         score += gained;
-
+        UpdateUi();
         // Relieve a little anger on the lane that scored (optional: pass lane index)
     }
 
@@ -660,10 +667,37 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         strikes++;
         Debug.Log($"Strike: {reason} ({strikes}/{maxStrikes})");
-
+        UpdateUi();
         if (strikes >= maxStrikes)
         {
             Debug.Log("Traffic Warden Game Over");
+            if(minigameCanvasUI != null)
+                minigameCanvasUI.ShowGameOver();
+        }
+    }
+    
+    
+    // ═══════════════════════════════════════════════════
+    //  UI
+    // ═══════════════════════════════════════════════════
+
+    private void SetupUi()
+    {
+        if (minigameCanvasUI != null)
+        {
+            minigameCanvasUI.SetUpUI(true,false,true,false,false);
+            
+            minigameCanvasUI.UpdateScore(score);
+            minigameCanvasUI.UpdatePlayerLives(strikes + "/" + maxStrikes);
+        }
+    }
+
+    private void UpdateUi()
+    {
+        if (minigameCanvasUI != null)
+        {
+            minigameCanvasUI.UpdateScore(score);
+            minigameCanvasUI.UpdatePlayerLives(strikes + "/" + maxStrikes);
         }
     }
 }
