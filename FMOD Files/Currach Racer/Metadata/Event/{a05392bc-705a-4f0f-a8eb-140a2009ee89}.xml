@@ -75,7 +75,7 @@
 			<value>1.20000005</value>
 		</property>
 		<property name="maximumDistance">
-			<value>14.5</value>
+			<value>10</value>
 		</property>
 	</object>
 	<object class="MarkerTrack" id="{b1345506-8db1-4090-99f2-ffc089d43d37}" />
@@ -148,9 +148,15 @@
 		<property name="length">
 			<value>9.5114044098601926</value>
 		</property>
+		<property name="volume">
+			<value>0.5</value>
+		</property>
 		<property name="pitch">
 			<value>2</value>
 		</property>
+		<relationship name="modulators">
+			<destination>{d8a4120d-6279-46c9-9723-67a9836012c3}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{42e67e25-eeff-4572-948d-e974c0ddb339}</destination>
 		</relationship>
@@ -204,12 +210,21 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{4c373d8b-6350-4a81-99fd-186937c51bf8}">
 		<relationship name="effects">
+			<destination>{e2f82f5a-59d0-4abe-baf3-e243a96fbaa2}</destination>
 			<destination>{f902f925-b882-421e-ab1f-167f43d617fb}</destination>
 			<destination>{1093108e-7a7c-4218-a255-68ed885b6dc3}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{53ca616b-f0b7-4306-bd7a-6abcee28991d}" />
 	<object class="MixerBusFader" id="{3a970309-9ddd-45be-b298-e29d205de83a}" />
+	<object class="RandomizerModulator" id="{d8a4120d-6279-46c9-9723-67a9836012c3}">
+		<property name="nameOfPropertyBeingModulated">
+			<value>pitch</value>
+		</property>
+		<property name="amount">
+			<value>2.5</value>
+		</property>
+	</object>
 	<object class="Automator" id="{fb91c20f-4c9f-4474-b2b1-a84aad85ca80}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>volume</value>
@@ -246,6 +261,11 @@
 			<destination>{c174525c-e157-46e6-bd7a-8eb14fde168b}</destination>
 		</relationship>
 	</object>
+	<object class="GainEffect" id="{e2f82f5a-59d0-4abe-baf3-e243a96fbaa2}">
+		<property name="gain">
+			<value>-2</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{f902f925-b882-421e-ab1f-167f43d617fb}" />
 	<object class="SpatialiserEffect" id="{1093108e-7a7c-4218-a255-68ed885b6dc3}">
 		<property name="distanceRolloffType">
@@ -280,18 +300,18 @@
 			<value>11000</value>
 		</property>
 		<property name="frequencyB">
-			<value>20</value>
+			<value>46</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
 		</property>
 		<property name="qualityB">
-			<value>0.179999992</value>
+			<value>0.100000001</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{648366de-6de3-4817-be7b-a7cec7000950}">
 		<property name="gain">
-			<value>-8</value>
+			<value>-7</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{d350d5d3-9b70-4afa-8424-afcc53b13d42}" />
@@ -332,7 +352,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-7</value>
+			<value>-6</value>
 		</property>
 	</object>
 	<object class="AutomationPoint" id="{53db304d-4ab2-4db1-bde7-fa0ab2f13990}">
