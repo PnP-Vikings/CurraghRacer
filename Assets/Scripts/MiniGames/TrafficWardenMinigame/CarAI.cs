@@ -130,6 +130,11 @@ public class CarAI : MonoBehaviour
             if(car.isStopped || isStopped) return;
             Debug.Log("Car AI Collision");
             Destroy(this.gameObject);
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.carCrash.start();
+            }
         }
     }
 

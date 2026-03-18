@@ -96,6 +96,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance bailingAreaComplete;
 
     //public EventInstance carEngine;
+    public EventInstance carCrash;
 
     private Scene activeScene;
     void Awake()
@@ -207,6 +208,8 @@ public class AudioManager : MonoBehaviour
 
         tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
         bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
+
+        carCrash = RuntimeManager.CreateInstance("event:/Traffic Warden/Car Crash");
     }
 
     private void Update()
