@@ -211,7 +211,7 @@ public class CarAI : MonoBehaviour
             {
                 // Obeying cars should be stopped when they pass the line
                 if (!isStopped) mg.Penalize("Car crossed during STOP");
-                else mg.AwardCorrect("Stopped correctly");
+                else mg.AwardCorrect("Stopped correctly",laneIndex);
             }
             else
             {
@@ -222,7 +222,7 @@ public class CarAI : MonoBehaviour
         else
         {
             // GO is active
-            mg.AwardCorrect("Flowed on GO");
+            mg.AwardCorrect("Flowed on GO",laneIndex);
         }
         
         // Clear the stop line reference after crossing
