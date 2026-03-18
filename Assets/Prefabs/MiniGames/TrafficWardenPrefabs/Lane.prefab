@@ -642,7 +642,7 @@ Transform:
   m_GameObject: {fileID: 7879638387590726724}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -14.75855, y: 0.49999994, z: -24.852707}
+  m_LocalPosition: {x: -14.758553, y: 0.49999994, z: -6.000001}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -744,8 +744,11 @@ MonoBehaviour:
   spawnLine: {fileID: 5927496644200560060}
   minInterval: 3
   maxInterval: 6
-  interval: 1.2
   violatorChance: 0.15
+  despawnDistance: 80
+  speedMultiplier: 1
+  violatorBonus: 0
+  laneIndex: -1
 --- !u!1 &8728479954665350639
 GameObject:
   m_ObjectHideFlags: 0
