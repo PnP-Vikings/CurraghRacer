@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class CarSpawner : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class CarSpawner : MonoBehaviour
     [Header("Spawn Setup")]
     public Transform spawnPoint;
     public StopLine spawnLine;
+    public Image laneAngerIndicator; // Optional UI element to show lane status
 
     [Header("Base Values (read by controller)")]
     public float minInterval = 1.2f;
