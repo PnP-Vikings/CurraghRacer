@@ -557,6 +557,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 laneAnger[i] = 0f;
                 ResetCombo();
             }
+
+            // Push anger value to the stop line so it can swap mood sprites
+            stopLines[i].SetAnger(laneAnger[i]);
         }
     }
 
