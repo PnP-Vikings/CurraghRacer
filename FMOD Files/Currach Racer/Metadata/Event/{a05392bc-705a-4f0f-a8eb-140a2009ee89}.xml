@@ -222,7 +222,7 @@
 			<value>pitch</value>
 		</property>
 		<property name="amount">
-			<value>2.5</value>
+			<value>1.5</value>
 		</property>
 	</object>
 	<object class="Automator" id="{fb91c20f-4c9f-4474-b2b1-a84aad85ca80}">
@@ -300,7 +300,7 @@
 			<value>11000</value>
 		</property>
 		<property name="frequencyB">
-			<value>46</value>
+			<value>60</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>

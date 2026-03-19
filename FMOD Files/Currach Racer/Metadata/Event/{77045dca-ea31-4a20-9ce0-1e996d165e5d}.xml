@@ -109,7 +109,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{10284c30-2810-4698-9b36-4a3fcba1c4a0}">
 		<property name="volume">
-			<value>-15</value>
+			<value>-18</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{d3f2d759-7638-449e-8041-d201335484e1}</destination>
@@ -150,7 +150,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{7efa7aec-44f0-4d00-9649-fe3de792ab25}">
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Mid</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{5452971c-f850-45c0-967d-a3c79571f825}</destination>
@@ -163,6 +163,9 @@
 		</relationship>
 	</object>
 	<object class="MultiSound" id="{2dcffab7-b569-4627-a040-d092e65f9e42}">
+		<property name="start">
+			<value>0.035000000000000003</value>
+		</property>
 		<property name="length">
 			<value>0.58825396825396825</value>
 		</property>
@@ -175,10 +178,10 @@
 	</object>
 	<object class="EventMixerGroup" id="{5e4f1b97-c175-4a9b-ab6e-7660d02e8d3c}">
 		<property name="volume">
-			<value>-1</value>
+			<value>-2</value>
 		</property>
 		<property name="name">
-			<value>Audio 3</value>
+			<value>High</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{caf529f0-acd3-482f-8d1f-d5f81a1e9d0e}</destination>
@@ -191,6 +194,9 @@
 		</relationship>
 	</object>
 	<object class="MultiSound" id="{5beb1b33-30bc-4a28-9ade-a2f3e7fc78da}">
+		<property name="start">
+			<value>0.070000000000000007</value>
+		</property>
 		<property name="length">
 			<value>0.58825396825396825</value>
 		</property>
@@ -203,7 +209,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{79f82ee6-1a36-4f23-8ead-05123b09a344}">
 		<property name="name">
-			<value>Audio 2</value>
+			<value>Low</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{61e541e7-27f3-41fb-a17f-4230509c4858}</destination>
@@ -318,6 +324,9 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{25d97199-594a-4ac4-ab57-d8d33eed3324}">
+		<property name="pitch">
+			<value>1</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{8b605d22-087b-434b-8290-34d6c74af4f2}</destination>
 		</relationship>
@@ -326,6 +335,9 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{efd5e6c7-f395-4ada-b0f5-7b7274477b0b}">
+		<property name="pitch">
+			<value>1</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{35d9706e-635a-474c-a6f7-e6358fa81775}</destination>
 		</relationship>

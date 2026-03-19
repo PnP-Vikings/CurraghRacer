@@ -63,7 +63,7 @@ public class AmbulanceAudio : MonoBehaviour
         //    Debug.Log("Siren is stopped as it is far away - AudioDebug");
         //}
 
-        Debug.Log($"Ambulance distance 1 is {distance1} - AudioDebug");
+        //Debug.Log($"Ambulance distance 1 is {distance1} - AudioDebug");
 
         yield return null;
 
