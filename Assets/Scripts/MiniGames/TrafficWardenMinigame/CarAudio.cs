@@ -63,7 +63,7 @@ public class CarAudio : MonoBehaviour
         //    Debug.Log("Engine is stopped as it is far away - AudioDebug");
         //}
 
-        Debug.Log($"Car distance 1 is {distance1} - AudioDebug");
+        //Debug.Log($"Car distance 1 is {distance1} - AudioDebug");
 
         yield return null;
 
