@@ -375,6 +375,7 @@ MonoBehaviour:
   - {fileID: 0}
   moodRenderer: {fileID: 0}
   currentMood: 0
+  laneAngerIndicator: {fileID: 8472601206795233200}
   happyThreshold: 0.33
   angryThreshold: 0.66
 --- !u!1 &5217088364178624398
@@ -751,7 +752,6 @@ MonoBehaviour:
   ambulancePrefab: {fileID: 2850407011794745726, guid: f75f69fd6de690f48bed9be6c41c316c, type: 3}
   spawnPoint: {fileID: 2346698751650570788}
   spawnLine: {fileID: 5927496644200560060}
-  laneAngerIndicator: {fileID: 8472601206795233200}
   minInterval: 3
   maxInterval: 6
   violatorChance: 0.15
@@ -776,7 +776,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &8599982127338071230
 RectTransform:
   m_ObjectHideFlags: 0

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public enum CrossingState { Go, Stop }
 public enum AngerMood { Happy, Neutral, Angry }
@@ -21,6 +22,9 @@ public class StopLine : MonoBehaviour
 
     [Tooltip("Current mood — updated automatically by the controller.")]
     public AngerMood currentMood = AngerMood.Happy;
+    
+    
+    public Image laneAngerIndicator; // Optional UI element to show lane status
 
     [Header("Mood Thresholds")]
     [Tooltip("Anger value below this → Happy")]
