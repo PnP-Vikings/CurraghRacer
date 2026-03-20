@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -31,6 +32,11 @@ public class StopLine : MonoBehaviour
     public float happyThreshold = 0.33f;
     [Tooltip("Anger value below this → Neutral (above → Angry)")]
     public float angryThreshold = 0.66f;
+
+    public void Start()
+    {
+        UpdateMoodSprite();
+    }
 
     public void ChangeState()
     {
