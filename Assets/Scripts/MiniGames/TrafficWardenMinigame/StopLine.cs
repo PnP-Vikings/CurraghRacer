@@ -84,10 +84,29 @@ public class StopLine : MonoBehaviour
 
     void UpdateMoodSprite()
     {
+        if (laneAngerIndicator != null)
+        {
+            laneAngerIndicator.gameObject.SetActive(true);
+            switch(currentMood)
+            {
+                case AngerMood.Happy:
+                    laneAngerIndicator.color = Color.green;
+                    break;
+                case AngerMood.Neutral:
+                    laneAngerIndicator.color = Color.yellow;
+                    break;
+                case AngerMood.Angry:
+                    laneAngerIndicator.color = Color.red;
+                    break;
+            }
+        }
+        
         if (moodRenderer == null || moodSprites == null) return;
 
         int index = (int)currentMood; // Happy=0, Neutral=1, Angry=2
         if (index >= 0 && index < moodSprites.Length && moodSprites[index] != null)
             moodRenderer.sprite = moodSprites[index];
+        
+        
     }
 }
