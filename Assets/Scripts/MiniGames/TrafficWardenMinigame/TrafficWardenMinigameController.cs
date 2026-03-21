@@ -50,6 +50,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
     [Header("Spawner Control")]
     public CarSpawner[] spawners;                     // Assign in inspector
 
+    [Header("Initial Spawn")]
+    [Tooltip("Seconds before the very first car appears. Set to 0 for instant spawns.")]
+    public float initialSpawnDelay = 0.5f;
+
     [Header("Difficulty Ramp")]
     public float difficultyRampTime = 120f;
     public float minIntervalAtMax = 0.5f;
@@ -91,6 +95,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     float convoyTimer;
     float convoyInterval;
     int convoyLane;
+    int spawnedConvoyCars; // To track how many cars we've spawned in the current convoy pattern
 
     // Roadworks blocked lane
     int roadworksBlockedLane = -1;
@@ -114,6 +119,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
         for (int i = 0; i < count; i++)
         {
             RollLaneInterval(i);
+            // Pre-fill timer so the first car only waits 'initialSpawnDelay' seconds
+            laneTimers[i] = Mathf.Max(0f, laneIntervals[i] - initialSpawnDelay);
             if (spawners[i] != null)
                 spawners[i].laneIndex = i;
         }
@@ -337,7 +344,14 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 {
                     car.shouldObey = true;
                     car.maxSpeed *= 0.85f;
+
+                    if (spawnedConvoyCars <= 4)
+                    {
+                        car.maxSpeed *= 1.5f;
+                        
+                    }
                 }
+                spawnedConvoyCars++;
             }
             convoyRemaining--;
         }

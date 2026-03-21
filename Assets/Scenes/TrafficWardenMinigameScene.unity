@@ -1812,6 +1812,7 @@ MonoBehaviour:
   - {fileID: 989360500}
   - {fileID: 1727657617}
   - {fileID: 913150910}
+  initialSpawnDelay: 0.5
   difficultyRampTime: 120
   minIntervalAtMax: 0.5
   maxSpeedAtMax: 1.4
