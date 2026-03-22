@@ -31,6 +31,17 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     public UnityEvent onCarCrashed;
     
+    [Header("Game Timer & Win Condition")]
+    public float gameDuration = 120f; // 2 minutes
+    public float timeRemaining;
+    public bool gameEnded;
+    
+    [Header("Crash Tracking & Bonuses")]
+    public int totalCrashes;
+    public int crashFreeBonus = 500;
+    public int lowCrashBonus = 250; // Bonus if 1-2 crashes
+    public int perfectComboBonus = 300; // Bonus for best combo >= 10
+    
     [Header("Anger Meter (per lane, 0..1)")]
     public float[] laneAnger;                                   // one per stop line
     public float angerGainPerSecond_Stop = 0.10f;
@@ -66,6 +77,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
     
     [Header("UI")]
     [SerializeField] MinigameCanvasUI  minigameCanvasUI;
+    public TMPro.TMP_Text gameOverText;
+    public GameObject testDemoButtons;
+    public bool showRestartButtons;
 
     // ── Private state ────────────────────────────────
     float lastToggleTime;
@@ -110,6 +124,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
         Instance = this;
         lastToggleTime = -999f;
         gameStartTime = Time.time;
+        timeRemaining = gameDuration;
+        gameEnded = false;
+        totalCrashes = 0;
 
         // Initialise per-lane timers
         int count = spawners != null ? spawners.Length : 0;
@@ -141,11 +158,17 @@ public class TrafficWardenMinigameController : MonoBehaviour
         ScheduleNextEvent();
         ScheduleNextPattern();
         SetupUi();
-        onCarCrashed.AddListener(() => Penalize("Car crashed"));
+        onCarCrashed.AddListener(() => { 
+            Penalize("Car crashed");
+            totalCrashes++;
+        });
     }
 
     void Update()
     {
+        if (gameEnded) return;
+        
+        UpdateGameTimer();
         UpdateDifficulty();
         UpdateSpawning();
         CleanupLanes();
@@ -154,6 +177,92 @@ public class TrafficWardenMinigameController : MonoBehaviour
         UpdatePatterns();
     }
     
+    // ═══════════════════════════════════════════════════
+    //  GAME TIMER & WIN/LOSE CONDITIONS
+    // ═══════════════════════════════════════════════════
+
+    void UpdateGameTimer()
+    {
+        timeRemaining -= Time.deltaTime;
+        
+        if (minigameCanvasUI != null)
+        {
+            int minutes = Mathf.FloorToInt(timeRemaining / 60f);
+            int seconds = Mathf.FloorToInt(timeRemaining % 60f);
+            minigameCanvasUI.UpdateTimer($"Time: {minutes}:{seconds:00}");
+        }
+
+        if (timeRemaining <= 0f && !gameEnded)
+        {
+            timeRemaining = 0f;
+            EndGame(true); // Won by surviving the timer
+        }
+    }
+
+    void EndGame(bool won)
+    {
+        gameEnded = true;
+        
+        if (won)
+        {
+            // Calculate final score with bonuses
+            int finalScore = score;
+            
+            // Crash-free bonus
+            if (totalCrashes == 0)
+            {
+                finalScore += crashFreeBonus;
+                Debug.Log($"Perfect! No crashes! Bonus: +{crashFreeBonus}");
+            }
+            else if (totalCrashes <= 2)
+            {
+                finalScore += lowCrashBonus;
+                Debug.Log($"Good job! Low crashes. Bonus: +{lowCrashBonus}");
+            }
+            
+            // Best combo bonus
+            if (bestCombo >= 10)
+            {
+                int comboBonus = perfectComboBonus + (bestCombo - 10) * 20;
+                finalScore += comboBonus;
+                Debug.Log($"Amazing combo streak of {bestCombo}! Bonus: +{comboBonus}");
+            }
+            
+            score = finalScore;
+            
+            if (minigameCanvasUI != null)
+            {
+                minigameCanvasUI.UpdateScore(finalScore);
+                minigameCanvasUI.ShowVictory();
+            }
+            
+            if (gameOverText != null)
+            {
+                gameOverText.gameObject.SetActive(true);
+                gameOverText.text = $"Victory!\n\nFinal Score: {finalScore}\nBest Combo: {bestCombo}\nCrashes: {totalCrashes}";
+            }
+            
+            if (showRestartButtons && testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(true);
+            }
+            
+            Debug.Log($"Traffic Warden Victory! Final Score: {finalScore}, Crashes: {totalCrashes}, Best Combo: {bestCombo}");
+        }
+        else
+        {
+            Debug.Log("Traffic Warden Game Over - Too many strikes");
+            if (minigameCanvasUI != null)
+            {
+                minigameCanvasUI.ShowGameOver();
+            }
+            
+            if (showRestartButtons && testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(true);
+            }
+        }
+    }
  
     
 
@@ -703,9 +812,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         UpdateUi();
         if (strikes >= maxStrikes)
         {
-            Debug.Log("Traffic Warden Game Over");
-            if(minigameCanvasUI != null)
-                minigameCanvasUI.ShowGameOver();
+            EndGame(false); // Lost by too many strikes
         }
     }
     
@@ -718,10 +825,11 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         if (minigameCanvasUI != null)
         {
-            minigameCanvasUI.SetUpUI(true,false,true,false,false);
+            minigameCanvasUI.SetUpUI(true, true, true, false, false); // Enable timer
             
             minigameCanvasUI.UpdateScore(score);
             minigameCanvasUI.UpdatePlayerLives(strikes + "/" + maxStrikes);
+            minigameCanvasUI.UpdateTimer("Time: 2:00");
         }
     }
 
