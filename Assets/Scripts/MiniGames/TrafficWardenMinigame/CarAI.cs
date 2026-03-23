@@ -40,6 +40,9 @@ public class CarAI : MonoBehaviour
     CarAI carAhead;
     float distToCarAhead;
 
+    /// <summary>Set to true when the game ends – car freezes in place.</summary>
+    bool gameStopped;
+
     void Start()
     {
         speed = Random.Range(maxSpeed * 0.6f, maxSpeed * 1.1f);
@@ -48,6 +51,10 @@ public class CarAI : MonoBehaviour
         // Auto-detect car layer if not set
         if (carLayer == 0)
             carLayer = LayerMask.GetMask("Default");
+        
+        // Listen for game end
+        if (TrafficWardenMinigameController.Instance != null)
+            TrafficWardenMinigameController.Instance.onGameEnded.AddListener(OnGameEnded);
     }
     
     public void SetCurrentStopLine(StopLine line)
@@ -64,6 +71,8 @@ public class CarAI : MonoBehaviour
 
     void Update()
     {
+        if (gameStopped) return;
+        
         var mg = TrafficWardenMinigameController.Instance;
 
         // Check specific stop line state
@@ -156,8 +165,18 @@ public class CarAI : MonoBehaviour
         }
     }
 
+    void OnGameEnded()
+    {
+        gameStopped = true;
+        speed = 0f;
+        isStopped = true;
+    }
+
     void OnDestroy()
     {
+        if (TrafficWardenMinigameController.Instance != null)
+            TrafficWardenMinigameController.Instance.onGameEnded.RemoveListener(OnGameEnded);
+        
         if (ownerSpawner != null)
             ownerSpawner.Unregister(this);
     }

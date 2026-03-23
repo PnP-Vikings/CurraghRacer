@@ -35,6 +35,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     private Coroutine strikeReasonCoroutine;
 
     public UnityEvent onCarCrashed;
+    public UnityEvent onGameEnded;
     
     [Header("Game Timer & Win Condition")]
     public float gameDuration = 120f; // 2 minutes
@@ -208,6 +209,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     void EndGame(bool won)
     {
         gameEnded = true;
+        onGameEnded?.Invoke();
         
         if (won)
         {
