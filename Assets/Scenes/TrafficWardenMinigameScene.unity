@@ -1791,9 +1791,17 @@ MonoBehaviour:
   strikes: 0
   maxStrikes: 3
   penaltyCooldown: 0.5
+  strikeDecayTime: 10
   onCarCrashed:
     m_PersistentCalls:
       m_Calls: []
+  gameDuration: 120
+  timeRemaining: 0
+  gameEnded: 0
+  totalCrashes: 0
+  crashFreeBonus: 500
+  lowCrashBonus: 250
+  perfectComboBonus: 300
   laneAnger: []
   angerGainPerSecond_Stop: 0.1
   angerReliefPerSecond_Go: 0.18
@@ -1820,6 +1828,9 @@ MonoBehaviour:
   patternMinInterval: 12
   patternMaxInterval: 25
   minigameCanvasUI: {fileID: 387214528}
+  gameOverText: {fileID: 0}
+  testDemoButtons: {fileID: 0}
+  showRestartButtons: 0
 --- !u!1 &1144698704
 GameObject:
   m_ObjectHideFlags: 0

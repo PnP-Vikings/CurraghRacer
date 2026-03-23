@@ -23,6 +23,10 @@ public class CarAI : MonoBehaviour
     bool hasCrossedLine;
     StopLine currentStopLine; // Track which specific stop line we're near
 
+    // Snapshot taken when car enters the stop-line trigger
+    bool stopWasActiveOnEntry;
+    bool shouldObeyOnEntry;
+
     /// <summary>Which lane this car belongs to (-1 = unassigned).</summary>
     [HideInInspector] public int laneIndex = -1;
 
@@ -163,10 +167,21 @@ public class CarAI : MonoBehaviour
         if (other.CompareTag("StopLine"))
         {
             nearStopLine = true;
-            // Try to get the StopLine component from the collider or its parent
-            /*currentStopLine = other.GetComponent<StopLine>();
-            if (currentStopLine == null)
-                currentStopLine = other.GetComponentInParent<StopLine>();*/
+            
+            // Snapshot the state at entry so exit evaluation is fair
+            shouldObeyOnEntry = shouldObey;
+            
+            var mg = TrafficWardenMinigameController.Instance;
+            if (mg != null)
+            {
+                StopLine enteredLine = other.GetComponent<StopLine>();
+                if (enteredLine == null)
+                    enteredLine = other.GetComponentInParent<StopLine>();
+                    
+                stopWasActiveOnEntry = enteredLine != null 
+                    ? mg.IsStopActive(enteredLine) 
+                    : mg.IsStopActive();
+            }
         }
     }
 
@@ -197,32 +212,43 @@ public class CarAI : MonoBehaviour
         var mg = TrafficWardenMinigameController.Instance;
         if (mg == null) return;
 
-        // Check specific stop line state
+        // Check specific stop line state at the moment of exit
         StopLine exitedLine = other.GetComponent<StopLine>();
         if (exitedLine == null)
             exitedLine = other.GetComponentInParent<StopLine>();
         
-        bool stopActive = exitedLine != null ? mg.IsStopActive(exitedLine) : mg.IsStopActive();
+        bool stopActiveNow = exitedLine != null ? mg.IsStopActive(exitedLine) : mg.IsStopActive();
 
-        // If STOP is active:
-        if (stopActive)
+        if (stopActiveNow)
         {
-            if (shouldObey)
+            if (shouldObeyOnEntry)
             {
-                // Obeying cars should be stopped when they pass the line
-                if (!isStopped) mg.Penalize("Car crossed during STOP");
-                else mg.AwardCorrect("Stopped correctly",laneIndex);
+                // Car was a law-abiding car when it entered
+                if (!isStopped)
+                {
+                    // Only penalize if the stop was already active when the car entered
+                    // (don't punish for a light that changed while car was mid-crossing)
+                    if (stopWasActiveOnEntry)
+                        mg.Penalize("Car crossed during STOP");
+                    // else: car entered on green, light changed mid-crossing — no penalty
+                }
+                else
+                {
+                    mg.AwardCorrect("Stopped correctly", laneIndex);
+                }
             }
             else
             {
-                // Violator ran the stop
-                mg.Penalize("Violator ran STOP");
+               
+                if (stopWasActiveOnEntry)
+                    Debug.Log($"Violator ran STOP on lane {laneIndex + 1} — no player penalty.");
+                
             }
         }
         else
         {
             // GO is active
-            mg.AwardCorrect("Flowed on GO",laneIndex);
+            mg.AwardCorrect("Flowed on GO", laneIndex);
         }
         
         // Clear the stop line reference after crossing

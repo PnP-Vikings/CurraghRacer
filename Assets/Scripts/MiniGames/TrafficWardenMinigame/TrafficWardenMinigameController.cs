@@ -28,6 +28,11 @@ public class TrafficWardenMinigameController : MonoBehaviour
     [Tooltip("Cooldown (seconds) between penalties so a single crash doesn't count twice.")]
     public float penaltyCooldown = 0.5f;
     float lastPenaltyTime = -999f;
+    
+    [Tooltip("Seconds before an individual strike expires")]
+    public float strikeDecayTime = 2f;
+    private System.Collections.Generic.List<float> strikeTimestamps = new System.Collections.Generic.List<float>();
+    private Coroutine strikeReasonCoroutine;
 
     public UnityEvent onCarCrashed;
     
@@ -169,6 +174,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (gameEnded) return;
         
         UpdateGameTimer();
+        UpdateStrikeDecay();
         UpdateDifficulty();
         UpdateSpawning();
         CleanupLanes();
@@ -808,15 +814,71 @@ public class TrafficWardenMinigameController : MonoBehaviour
     void AddStrike(string reason)
     {
         strikes++;
+        strikeTimestamps.Add(Time.time);
         Debug.Log($"Strike: {reason} ({strikes}/{maxStrikes})");
         UpdateUi();
+        
+        // Show strike reason on screen
+        if (minigameCanvasUI != null)
+        {
+            if (strikeReasonCoroutine != null) StopCoroutine(strikeReasonCoroutine);
+            strikeReasonCoroutine = StartCoroutine(ShowStrikeReason(reason));
+        }
+        
         if (strikes >= maxStrikes)
         {
             EndGame(false); // Lost by too many strikes
         }
     }
     
-    
+    // ═══════════════════════════════════════════════════
+    //  STRIKE DECAY
+    // ═══════════════════════════════════════════════════
+
+    void UpdateStrikeDecay()
+    {
+        if (strikeTimestamps.Count == 0) return;
+
+        bool changed = false;
+        for (int i = strikeTimestamps.Count - 1; i >= 0; i--)
+        {
+            if (Time.time - strikeTimestamps[i] >= strikeDecayTime)
+            {
+                strikeTimestamps.RemoveAt(i);
+                strikes = Mathf.Max(0, strikes - 1);
+                changed = true;
+                Debug.Log($"Strike decayed! ({strikes}/{maxStrikes})");
+            }
+        }
+
+        if (changed)
+        {
+            UpdateUi();
+            if (minigameCanvasUI != null)
+            {
+                if (strikeReasonCoroutine != null) StopCoroutine(strikeReasonCoroutine);
+                strikeReasonCoroutine = StartCoroutine(ShowStrikeRecovery());
+            }
+        }
+    }
+
+    System.Collections.IEnumerator ShowStrikeRecovery()
+    {
+        minigameCanvasUI.ShowAdditionalInfo();
+        minigameCanvasUI.UpdateAdditionalInfo("✓ Strike Removed!");
+        yield return new WaitForSeconds(1.5f);
+        minigameCanvasUI.HideAdditionalInfo();
+    }
+
+    System.Collections.IEnumerator ShowStrikeReason(string reason)
+    {
+        minigameCanvasUI.ShowAdditionalInfo();
+        minigameCanvasUI.UpdateAdditionalInfo($"⚠️ STRIKE: {reason}");
+        yield return new WaitForSeconds(2f);
+        minigameCanvasUI.HideAdditionalInfo();
+    }
+
+
     // ═══════════════════════════════════════════════════
     //  UI
     // ═══════════════════════════════════════════════════
@@ -825,11 +887,12 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         if (minigameCanvasUI != null)
         {
-            minigameCanvasUI.SetUpUI(true, true, true, false, false); // Enable timer
+            minigameCanvasUI.SetUpUI(true, true, true, false, true); // Enable timer & additional info
             
             minigameCanvasUI.UpdateScore(score);
             minigameCanvasUI.UpdatePlayerLives(strikes + "/" + maxStrikes);
             minigameCanvasUI.UpdateTimer("Time: 2:00");
+            minigameCanvasUI.HideAdditionalInfo(); // Start hidden
         }
     }
 
