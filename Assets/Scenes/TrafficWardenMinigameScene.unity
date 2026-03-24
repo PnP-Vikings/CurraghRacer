@@ -1795,13 +1795,32 @@ MonoBehaviour:
   onCarCrashed:
     m_PersistentCalls:
       m_Calls: []
-  gameDuration: 120
+  onGameEnded:
+    m_PersistentCalls:
+      m_Calls: []
+  gameDuration: 60
   timeRemaining: 0
   gameEnded: 0
   totalCrashes: 0
   crashFreeBonus: 500
   lowCrashBonus: 250
   perfectComboBonus: 300
+  comboTier1: 5
+  comboTier2: 10
+  comboTier3: 20
+  milestone1Bonus: 50
+  milestone2Bonus: 100
+  milestone3Bonus: 200
+  milestone4Bonus: 500
+  timePressureThreshold: 30
+  timePressureMultiplier: 2
+  closeCallBonus: 25
+  closeCallCooldown: 2
+  quickToggleRequirement: 3
+  quickToggleWindow: 1.5
+  quickToggleBonus: 75
+  nearMissBonus: 30
+  warningDuration: 2
   laneAnger: []
   angerGainPerSecond_Stop: 0.1
   angerReliefPerSecond_Go: 0.18
@@ -2661,6 +2680,9 @@ MonoBehaviour:
   playerLivesText: {fileID: 229966109}
   gameOverText: {fileID: 477714580}
   additionalInfoText: {fileID: 0}
+  bonusFlashText: {fileID: 0}
+  warningText: {fileID: 0}
+  multiplierText: {fileID: 0}
   testDemoButtons: {fileID: 1450603467}
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}

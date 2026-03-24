@@ -750,10 +750,14 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CarSpawner
   carPrefab: {fileID: 3602262369877467797, guid: 2a5a8b2c4d125f844bb321793b41d8b5, type: 3}
   ambulancePrefab: {fileID: 2850407011794745726, guid: f75f69fd6de690f48bed9be6c41c316c, type: 3}
+  carTypes:
+  - {fileID: 3602262369877467797, guid: 2a5a8b2c4d125f844bb321793b41d8b5, type: 3}
+  - {fileID: 3602262369877467797, guid: 928c0d41498718a49938823029bee70d, type: 3}
   spawnPoint: {fileID: 2346698751650570788}
   spawnLine: {fileID: 5927496644200560060}
   minInterval: 3
   maxInterval: 6
+  impatientChance: 0.25
   violatorChance: 0.15
   despawnDistance: 80
   speedMultiplier: 1

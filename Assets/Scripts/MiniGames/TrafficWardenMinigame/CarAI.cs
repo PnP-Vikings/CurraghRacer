@@ -1,5 +1,12 @@
 using UnityEngine;
 
+/// <summary>
+/// Ordinary  – always obeys stop lines, never goes rogue.
+/// Impatient – obeys most of the time but can occasionally run the line (anger / random).
+/// Violator  – never obeys stop lines.
+/// </summary>
+public enum CarBehaviourType { Ordinary, Impatient, Violator }
+
 public class CarAI : MonoBehaviour
 {
     [Header("Movement")]
@@ -13,8 +20,16 @@ public class CarAI : MonoBehaviour
     public LayerMask carLayer;             // Set this to the car layer in inspector
 
     [Header("Logic")]
-    public bool shouldObey = true; // set by spawner
+    [Tooltip("Set in inspector or by spawner. Ordinary always stops, Impatient mostly stops, Violator never stops.")]
+    public CarBehaviourType behaviourType = CarBehaviourType.Ordinary;
+    
+    /// <summary>Runtime flag – true when this car should stop at lines right now.</summary>
+    public bool shouldObey = true; // derived from behaviourType at spawn
     public bool isStopped;
+    
+    [Header("Impatient Settings")]
+    [Tooltip("Chance per second that an Impatient car decides to run a red (before anger modifier).")]
+    public float impatientRunChancePerSec = 0.03f;
 
     float speed;
     Vector3 dir; // Remove the = Vector3.forward initialization
@@ -26,6 +41,7 @@ public class CarAI : MonoBehaviour
     // Snapshot taken when car enters the stop-line trigger
     bool stopWasActiveOnEntry;
     bool shouldObeyOnEntry;
+    float speedOnEntry; // speed when entering the stop-line zone
 
     /// <summary>Which lane this car belongs to (-1 = unassigned).</summary>
     [HideInInspector] public int laneIndex = -1;
@@ -39,12 +55,31 @@ public class CarAI : MonoBehaviour
     // Cached for follow behavior
     CarAI carAhead;
     float distToCarAhead;
+    
+    // Close-call detection
+    [Header("Close Call")]
+    public float closeCallThreshold = 1.8f;
+    bool closeCallTriggered;
 
     /// <summary>Set to true when the game ends – car freezes in place.</summary>
     bool gameStopped;
 
     void Start()
     {
+        // Derive shouldObey from the behaviour type
+        switch (behaviourType)
+        {
+            case CarBehaviourType.Ordinary:
+                shouldObey = true;
+                break;
+            case CarBehaviourType.Impatient:
+                shouldObey = true; // starts obeying, may change at runtime
+                break;
+            case CarBehaviourType.Violator:
+                shouldObey = false;
+                break;
+        }
+        
         speed = Random.Range(maxSpeed * 0.6f, maxSpeed * 1.1f);
         dir = transform.forward; // Use the car's local forward direction at spawn
         
@@ -95,14 +130,21 @@ public class CarAI : MonoBehaviour
             // At 0 anger: normal speed. At 1.0 anger: +40% speed boost
             target *= (1f + anger * 0.4f);
 
-            // High anger makes obeying cars more likely to run the stop
-            if (shouldObey && !isRogue && anger > 0.7f)
+            // Only Impatient cars can go rogue from anger / randomness.
+            // Ordinary cars ALWAYS obey. Violators are already non-obeying.
+            if (behaviourType == CarBehaviourType.Impatient && shouldObey && !isRogue)
             {
-                // 30% chance per frame-check to go rogue at high anger (checked once)
-                if (!hasCrossedLine && nearStopLine && Random.value < 0.002f * (anger - 0.7f) / 0.3f)
+                // Base random chance per second
+                float runChance = impatientRunChancePerSec * Time.deltaTime;
+                
+                // Anger amplifies the chance — at anger > 0.5 it starts climbing fast
+                if (anger > 0.5f)
+                    runChance += 0.06f * ((anger - 0.5f) / 0.5f) * Time.deltaTime;
+
+                if (!hasCrossedLine && nearStopLine && Random.value < runChance)
                 {
                     GoRogue();
-                    Debug.Log($"Lane {laneIndex + 1} car went rogue from impatience! (anger: {anger:F2})");
+                    Debug.Log($"Lane {laneIndex + 1} Impatient car went rogue! (anger: {anger:F2})");
                 }
             }
         }
@@ -161,6 +203,20 @@ public class CarAI : MonoBehaviour
             {
                 carAhead = other;
                 distToCarAhead = hit.distance;
+                
+                // Close call detection: both cars moving, very close but no crash
+                if (!closeCallTriggered && distToCarAhead < closeCallThreshold 
+                    && !isStopped && !other.isStopped
+                    && speed > maxSpeed * 0.4f)
+                {
+                    closeCallTriggered = true;
+                    if (TrafficWardenMinigameController.Instance != null)
+                        TrafficWardenMinigameController.Instance.AwardCloseCall();
+                }
+                
+                // Reset close-call flag once they separate
+                if (closeCallTriggered && distToCarAhead > closeCallThreshold * 2f)
+                    closeCallTriggered = false;
             }
         }
     }
@@ -189,6 +245,7 @@ public class CarAI : MonoBehaviour
             
             // Snapshot the state at entry so exit evaluation is fair
             shouldObeyOnEntry = shouldObey;
+            speedOnEntry = speed;
             
             var mg = TrafficWardenMinigameController.Instance;
             if (mg != null)
@@ -254,6 +311,12 @@ public class CarAI : MonoBehaviour
                 else
                 {
                     mg.AwardCorrect("Stopped correctly", laneIndex);
+                    
+                    // Near-miss bonus: entered fast and managed to stop
+                    if (speedOnEntry > maxSpeed * 0.7f)
+                    {
+                        mg.AwardNearMiss(laneIndex);
+                    }
                 }
             }
             else
