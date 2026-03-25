@@ -61,6 +61,17 @@ public class CarAI : MonoBehaviour
     public float closeCallThreshold = 1.8f;
     bool closeCallTriggered;
 
+    [Header("Cross-Traffic Awareness")]
+    [Tooltip("How far to the each side the car looks for crossing traffic.")]
+    public float crossTrafficDetectRange = 6f;
+    [Tooltip("Ordinary cars brake to this fraction of max speed when cross-traffic is detected.")]
+    public float ordinaryCrossSlowdown = 0.25f;
+    [Tooltip("Impatient cars brake to this fraction of max speed when cross-traffic is detected.")]
+    public float impatientCrossSlowdown = 0.65f;
+    
+    // Internal cross-traffic state
+    bool crossTrafficDetected;
+
     /// <summary>Set to true when the game ends – car freezes in place.</summary>
     bool gameStopped;
 
@@ -169,6 +180,9 @@ public class CarAI : MonoBehaviour
         // Check for car ahead (simple raycast)
         CheckCarAhead();
         
+        // Check for cross-traffic from other lanes
+        CheckCrossTraffic();
+        
         // Follow distance logic - slow down if too close to car ahead
         if (carAhead != null && !isRogue) // rogue cars don't slow for others
         {
@@ -184,6 +198,25 @@ public class CarAI : MonoBehaviour
                 float followSpeed = Mathf.Lerp(carAhead.speed, maxSpeed, t);
                 target = Mathf.Min(target, followSpeed);
             }
+        }
+
+        // ── Cross-traffic caution: slow down if a car from another lane is crossing ahead ──
+        if (crossTrafficDetected && !isRogue)
+        {
+            float crossTarget;
+            switch (behaviourType)
+            {
+                case CarBehaviourType.Ordinary:
+                    crossTarget = maxSpeed * ordinaryCrossSlowdown;
+                    break;
+                case CarBehaviourType.Impatient:
+                    crossTarget = maxSpeed * impatientCrossSlowdown;
+                    break;
+                default: // Violator — doesn't care
+                    crossTarget = target;
+                    break;
+            }
+            target = Mathf.Min(target, crossTarget);
         }
 
         float rate = (target < speed) ? effectiveBrake : accel;
@@ -223,6 +256,40 @@ public class CarAI : MonoBehaviour
                 // Reset close-call flag once they separate
                 if (closeCallTriggered && distToCarAhead > closeCallThreshold * 2f)
                     closeCallTriggered = false;
+            }
+        }
+    }
+
+    /// <summary>Raycast left and right to detect cars from other lanes crossing our path.</summary>
+    void CheckCrossTraffic()
+    {
+        crossTrafficDetected = false;
+        
+        // No need to check if we're a Violator or rogue — we skip the result in Update anyway
+        if (behaviourType == CarBehaviourType.Violator || isRogue) return;
+
+        Vector3 right = Vector3.Cross(Vector3.up, dir).normalized;
+        Vector3 origin = transform.position + dir * 1.5f; // check slightly ahead of us
+
+        // Cast both left and right
+        for (int side = -1; side <= 1; side += 2)
+        {
+            Vector3 castDir = right * side;
+            if (Physics.Raycast(origin, castDir, out RaycastHit hit, crossTrafficDetectRange, carLayer))
+            {
+                CarAI other = hit.collider.GetComponent<CarAI>();
+                if (other == null)
+                    other = hit.collider.GetComponentInParent<CarAI>();
+
+                // Only react to moving cars from a different lane
+                if (other != null && other != this
+                    && other.laneIndex != laneIndex
+                    && !other.isStopped
+                    && other.speed > other.maxSpeed * 0.3f)
+                {
+                    crossTrafficDetected = true;
+                    return;
+                }
             }
         }
     }
