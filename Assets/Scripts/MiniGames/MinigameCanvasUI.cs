@@ -5,11 +5,13 @@ using UnityEngine.UI;
 
 public class MinigameCanvasUI : MonoBehaviour
 {
-    
-    public TMPro.TMP_Text scoreText,timerText,playerLivesText,gameOverText,additionalInfoText;
+
+    public TMPro.TMP_Text scoreText, timerText, playerLivesText, gameOverText, additionalInfoText;
     bool showRestartButtons = false;
     public GameObject testDemoButtons;
     public Button backToMainMenuButton, restartMinigameButton;
+    [SerializeField] BoxingAudio boxingAudio;
+
 
     public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
     {
@@ -85,6 +87,13 @@ public class MinigameCanvasUI : MonoBehaviour
         if(playerLivesText != null)
         {
             playerLivesText.text = "Lives: " + lives.ToString();
+            if(AudioManager.instance != null)
+            {
+                if(lives < 3 && lives > 0)
+                {
+                    AudioManager.instance.lifeLost.start();
+                }
+            }
         }
     }
     
@@ -102,6 +111,13 @@ public class MinigameCanvasUI : MonoBehaviour
         {
             gameOverText.gameObject.SetActive(true);
             gameOverText.text = "Game Over!";
+
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.gameOver.start();
+                boxingAudio.DecreaseBoomBapVolume();
+                //boxingAudio.StartCoroutine(TemporarilyDecreaseBoomBapVolume());
+            }
         }
 
         if (showRestartButtons)
