@@ -64,6 +64,11 @@ public class CarAI : MonoBehaviour
     /// <summary>Set to true when the game ends – car freezes in place.</summary>
     bool gameStopped;
 
+    /// <summary>Grace period after spawn during which collisions are ignored.</summary>
+    [Header("Spawn Protection")]
+    public float spawnGracePeriod = 0.5f;
+    float spawnTime;
+
     void Start()
     {
         // Derive shouldObey from the behaviour type
@@ -82,6 +87,7 @@ public class CarAI : MonoBehaviour
         
         speed = Random.Range(maxSpeed * 0.6f, maxSpeed * 1.1f);
         dir = transform.forward; // Use the car's local forward direction at spawn
+        spawnTime = Time.time;
         
         // Auto-detect car layer if not set
         if (carLayer == 0)
@@ -263,10 +269,16 @@ public class CarAI : MonoBehaviour
 
     void OnCollisionEnter(Collision collision)
     {
+        // Ignore collisions during spawn grace period
+        if (Time.time - spawnTime < spawnGracePeriod) return;
+
         if (collision.gameObject.GetComponent<CarAI>() != null)
         {
             CarAI car = collision.gameObject.GetComponent<CarAI>();
-            if(car.isStopped || isStopped) return;
+            // Also check the other car's grace period
+            if (car.isStopped || isStopped) return;
+            if (Time.time - car.spawnTime < car.spawnGracePeriod) return;
+            
             Debug.Log("Car AI Collision");
             
             if(TrafficWardenMinigameController.Instance != null)
@@ -304,7 +316,7 @@ public class CarAI : MonoBehaviour
                 {
                     // Only penalize if the stop was already active when the car entered
                     // (don't punish for a light that changed while car was mid-crossing)
-                    if (stopWasActiveOnEntry)
+                    if (stopWasActiveOnEntry && laneIndex == exitedLine.GetLaneIndex())
                         mg.Penalize("Car crossed during STOP");
                     // else: car entered on green, light changed mid-crossing — no penalty
                 }

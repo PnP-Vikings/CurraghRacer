@@ -185,6 +185,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
             laneTimers[i] = Mathf.Max(0f, laneIntervals[i] - initialSpawnDelay);
             if (spawners[i] != null)
                 spawners[i].laneIndex = i;
+            
+            if(stopLines != null && i < stopLines.Length && stopLines[i] != null)
+                stopLines[i].SetLaneIndex(i);
         }
 
         // Initialise per-lane anger
@@ -376,7 +379,18 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (spawners[i] == null || lanePaused[i]) continue;
 
             laneTimers[i] += Time.deltaTime;
-            if (laneTimers[i] >= laneIntervals[i])
+
+            // Apply pattern speed-up at check time instead of mutating the stored interval
+            float effectiveInterval = laneIntervals[i];
+            if (activePattern == SpawnPattern.RushHour && i == rushHourLane)
+                effectiveInterval *= 0.35f;
+            else if (activePattern == SpawnPattern.Chaos)
+                effectiveInterval *= 0.4f;
+
+            // Safety: never let effective interval drop below a hard floor
+            effectiveInterval = Mathf.Max(effectiveInterval, 0.3f);
+
+            if (laneTimers[i] >= effectiveInterval)
             {
                 laneTimers[i] = 0f;
                 spawners[i].ForceSpawn();
@@ -423,6 +437,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     void StartRandomPattern()
     {
+        // Prevent re-entry: block UpdatePatterns from calling this again during the warning delay
+        nextPatternTime = float.MaxValue;
+
         // Pick a weighted random pattern; heavier ones appear later
         float r = Random.value;
         float t = DifficultyT;
@@ -529,6 +546,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         convoyRemaining = Random.Range(4, 7);
         convoyInterval = 0.8f;
         convoyTimer = 0f;
+        spawnedConvoyCars = 0;
     }
 
     void TickConvoy()
@@ -566,15 +584,14 @@ public class TrafficWardenMinigameController : MonoBehaviour
         patternEndTime = Time.time + Random.Range(4f, 7f);
     }
 
-    /// <summary>Apply per-lane overrides based on current pattern (sets lanePaused and tweaks laneIntervals).</summary>
+    /// <summary>Apply per-lane overrides based on current pattern (sets lanePaused only — interval speed-ups are handled in UpdateSpawning).</summary>
     void ApplyPatternToLane(int i)
     {
         switch (activePattern)
         {
             case SpawnPattern.RushHour:
                 lanePaused[i] = false;
-                if (i == rushHourLane)
-                    laneIntervals[i] *= 0.35f; // rush-hour lane spawns ~3× faster
+                // Rush-hour lane spawns ~3× faster — applied in UpdateSpawning
                 break;
 
             case SpawnPattern.Burst:
@@ -589,7 +606,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
             case SpawnPattern.Chaos:
                 lanePaused[i] = false;
-                laneIntervals[i] *= 0.4f; // everything spawns fast
+                // All lanes spawn faster — applied in UpdateSpawning
                 break;
         }
     }
@@ -815,6 +832,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     void StartRandomEvent()
     {
+        // Prevent re-entry: block UpdateEvents from calling this again during the warning delay
+        nextEventTime = float.MaxValue;
+
         float r = Random.value;
 
         TrafficEventType chosenEvent;

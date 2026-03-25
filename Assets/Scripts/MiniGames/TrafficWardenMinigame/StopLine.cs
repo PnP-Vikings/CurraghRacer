@@ -26,6 +26,8 @@ public class StopLine : MonoBehaviour
     
     
     public Image laneAngerIndicator; // Optional UI element to show lane status
+    
+    public int laneIndex = -1; // Set by controller to identify which lane this is (0, 1, or 2)
 
     [Header("Mood Thresholds")]
     [Tooltip("Anger value below this → Happy")]
@@ -38,6 +40,16 @@ public class StopLine : MonoBehaviour
         UpdateMoodSprite();
     }
 
+    public void SetLaneIndex(int laneIndex)
+    {
+        this.laneIndex = laneIndex;
+    }
+
+    public int GetLaneIndex()
+    {
+        return laneIndex;
+    }
+    
     public void ChangeState()
     {
         if (state == CrossingState.Go)
