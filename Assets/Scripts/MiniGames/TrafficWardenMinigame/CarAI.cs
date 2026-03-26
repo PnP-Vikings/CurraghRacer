@@ -1,5 +1,12 @@
 using UnityEngine;
 
+/// <summary>
+/// Ordinary  – always obeys stop lines, never goes rogue.
+/// Impatient – obeys most of the time but can occasionally run the line (anger / random).
+/// Violator  – never obeys stop lines.
+/// </summary>
+public enum CarBehaviourType { Ordinary, Impatient, Violator }
+
 public class CarAI : MonoBehaviour
 {
     [Header("Movement")]
@@ -13,8 +20,16 @@ public class CarAI : MonoBehaviour
     public LayerMask carLayer;             // Set this to the car layer in inspector
 
     [Header("Logic")]
-    public bool shouldObey = true; // set by spawner
+    [Tooltip("Set in inspector or by spawner. Ordinary always stops, Impatient mostly stops, Violator never stops.")]
+    public CarBehaviourType behaviourType = CarBehaviourType.Ordinary;
+    
+    /// <summary>Runtime flag – true when this car should stop at lines right now.</summary>
+    public bool shouldObey = true; // derived from behaviourType at spawn
     public bool isStopped;
+    
+    [Header("Impatient Settings")]
+    [Tooltip("Chance per second that an Impatient car decides to run a red (before anger modifier).")]
+    public float impatientRunChancePerSec = 0.03f;
 
     float speed;
     Vector3 dir; // Remove the = Vector3.forward initialization
@@ -23,18 +38,75 @@ public class CarAI : MonoBehaviour
     bool hasCrossedLine;
     StopLine currentStopLine; // Track which specific stop line we're near
 
+    // Snapshot taken when car enters the stop-line trigger
+    bool stopWasActiveOnEntry;
+    bool shouldObeyOnEntry;
+    float speedOnEntry; // speed when entering the stop-line zone
+
+    /// <summary>Which lane this car belongs to (-1 = unassigned).</summary>
+    [HideInInspector] public int laneIndex = -1;
+
+    /// <summary>When true the car ignores stop lines and floors it.</summary>
+    [HideInInspector] public bool isRogue;
+
+    /// <summary>The spawner that created this car (for deregistration).</summary>
+    [HideInInspector] public CarSpawner ownerSpawner;
+
     // Cached for follow behavior
     CarAI carAhead;
     float distToCarAhead;
+    
+    // Close-call detection
+    [Header("Close Call")]
+    public float closeCallThreshold = 1.8f;
+    bool closeCallTriggered;
+
+    [Header("Cross-Traffic Awareness")]
+    [Tooltip("How far to the each side the car looks for crossing traffic.")]
+    public float crossTrafficDetectRange = 6f;
+    [Tooltip("Ordinary cars brake to this fraction of max speed when cross-traffic is detected.")]
+    public float ordinaryCrossSlowdown = 0.25f;
+    [Tooltip("Impatient cars brake to this fraction of max speed when cross-traffic is detected.")]
+    public float impatientCrossSlowdown = 0.65f;
+    
+    // Internal cross-traffic state
+    bool crossTrafficDetected;
+
+    /// <summary>Set to true when the game ends – car freezes in place.</summary>
+    bool gameStopped;
+
+    /// <summary>Grace period after spawn during which collisions are ignored.</summary>
+    [Header("Spawn Protection")]
+    public float spawnGracePeriod = 0.5f;
+    float spawnTime;
 
     void Start()
     {
+        // Derive shouldObey from the behaviour type
+        switch (behaviourType)
+        {
+            case CarBehaviourType.Ordinary:
+                shouldObey = true;
+                break;
+            case CarBehaviourType.Impatient:
+                shouldObey = true; // starts obeying, may change at runtime
+                break;
+            case CarBehaviourType.Violator:
+                shouldObey = false;
+                break;
+        }
+        
         speed = Random.Range(maxSpeed * 0.6f, maxSpeed * 1.1f);
         dir = transform.forward; // Use the car's local forward direction at spawn
+        spawnTime = Time.time;
         
         // Auto-detect car layer if not set
         if (carLayer == 0)
             carLayer = LayerMask.GetMask("Default");
+        
+        // Listen for game end
+        if (TrafficWardenMinigameController.Instance != null)
+            TrafficWardenMinigameController.Instance.onGameEnded.AddListener(OnGameEnded);
     }
     
     public void SetCurrentStopLine(StopLine line)
@@ -42,11 +114,20 @@ public class CarAI : MonoBehaviour
         currentStopLine = line;
     }
 
+    /// <summary>Force the car to ignore the stop line and accelerate through.</summary>
+    public void GoRogue()
+    {
+        isRogue = true;
+        shouldObey = false;
+    }
+
     void Update()
     {
-        var mg = TrafficWardenMinigameController.I;
+        if (gameStopped) return;
         
-        // Check specific stop line state if we have one, otherwise check any
+        var mg = TrafficWardenMinigameController.Instance;
+
+        // Check specific stop line state
         bool stopActive;
         if (currentStopLine != null)
             stopActive = mg != null && mg.IsStopActive(currentStopLine);
@@ -59,15 +140,51 @@ public class CarAI : MonoBehaviour
 
         float target = maxSpeed;
 
+        // ── Anger impatience: cars speed up as their lane gets angrier ──
+        if (mg != null && laneIndex >= 0)
+        {
+            float anger = mg.GetLaneAnger(laneIndex);
+            // At 0 anger: normal speed. At 1.0 anger: +40% speed boost
+            target *= (1f + anger * 0.4f);
+
+            // Only Impatient cars can go rogue from anger / randomness.
+            // Ordinary cars ALWAYS obey. Violators are already non-obeying.
+            if (behaviourType == CarBehaviourType.Impatient && shouldObey && !isRogue)
+            {
+                // Base random chance per second
+                float runChance = impatientRunChancePerSec * Time.deltaTime;
+                
+                // Anger amplifies the chance — at anger > 0.5 it starts climbing fast
+                if (anger > 0.5f)
+                    runChance += 0.06f * ((anger - 0.5f) / 0.5f) * Time.deltaTime;
+
+                if (!hasCrossedLine && nearStopLine && Random.value < runChance)
+                {
+                    GoRogue();
+                    Debug.Log($"Lane {laneIndex + 1} Impatient car went rogue! (anger: {anger:F2})");
+                }
+            }
+        }
+
+        // Rogue cars ignore stop lines entirely
+        if (isRogue)
+        {
+            target = maxSpeed * 1.5f; // floor it
+        }
         // Stop line logic
-        if (nearStopLine && stopActive && shouldObey && !hasCrossedLine)
+        else if (nearStopLine && stopActive && shouldObey && !hasCrossedLine)
+        {
             target = 0f;
+        }
 
         // Check for car ahead (simple raycast)
         CheckCarAhead();
         
+        // Check for cross-traffic from other lanes
+        CheckCrossTraffic();
+        
         // Follow distance logic - slow down if too close to car ahead
-        if (carAhead != null)
+        if (carAhead != null && !isRogue) // rogue cars don't slow for others
         {
             if (distToCarAhead < minFollowDistance)
             {
@@ -81,6 +198,25 @@ public class CarAI : MonoBehaviour
                 float followSpeed = Mathf.Lerp(carAhead.speed, maxSpeed, t);
                 target = Mathf.Min(target, followSpeed);
             }
+        }
+
+        // ── Cross-traffic caution: slow down if a car from another lane is crossing ahead ──
+        if (crossTrafficDetected && !isRogue)
+        {
+            float crossTarget;
+            switch (behaviourType)
+            {
+                case CarBehaviourType.Ordinary:
+                    crossTarget = maxSpeed * ordinaryCrossSlowdown;
+                    break;
+                case CarBehaviourType.Impatient:
+                    crossTarget = maxSpeed * impatientCrossSlowdown;
+                    break;
+                default: // Violator — doesn't care
+                    crossTarget = target;
+                    break;
+            }
+            target = Mathf.Min(target, crossTarget);
         }
 
         float rate = (target < speed) ? effectiveBrake : accel;
@@ -106,8 +242,72 @@ public class CarAI : MonoBehaviour
             {
                 carAhead = other;
                 distToCarAhead = hit.distance;
+                
+                // Close call detection: both cars moving, very close but no crash
+                if (!closeCallTriggered && distToCarAhead < closeCallThreshold 
+                    && !isStopped && !other.isStopped
+                    && speed > maxSpeed * 0.4f)
+                {
+                    closeCallTriggered = true;
+                    if (TrafficWardenMinigameController.Instance != null)
+                        TrafficWardenMinigameController.Instance.AwardCloseCall();
+                }
+                
+                // Reset close-call flag once they separate
+                if (closeCallTriggered && distToCarAhead > closeCallThreshold * 2f)
+                    closeCallTriggered = false;
             }
         }
+    }
+
+    /// <summary>Raycast left and right to detect cars from other lanes crossing our path.</summary>
+    void CheckCrossTraffic()
+    {
+        crossTrafficDetected = false;
+        
+        // No need to check if we're a Violator or rogue — we skip the result in Update anyway
+        if (behaviourType == CarBehaviourType.Violator || isRogue) return;
+
+        Vector3 right = Vector3.Cross(Vector3.up, dir).normalized;
+        Vector3 origin = transform.position + dir * 1.5f; // check slightly ahead of us
+
+        // Cast both left and right
+        for (int side = -1; side <= 1; side += 2)
+        {
+            Vector3 castDir = right * side;
+            if (Physics.Raycast(origin, castDir, out RaycastHit hit, crossTrafficDetectRange, carLayer))
+            {
+                CarAI other = hit.collider.GetComponent<CarAI>();
+                if (other == null)
+                    other = hit.collider.GetComponentInParent<CarAI>();
+
+                // Only react to moving cars from a different lane
+                if (other != null && other != this
+                    && other.laneIndex != laneIndex
+                    && !other.isStopped
+                    && other.speed > other.maxSpeed * 0.3f)
+                {
+                    crossTrafficDetected = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    void OnGameEnded()
+    {
+        gameStopped = true;
+        speed = 0f;
+        isStopped = true;
+    }
+
+    void OnDestroy()
+    {
+        if (TrafficWardenMinigameController.Instance != null)
+            TrafficWardenMinigameController.Instance.onGameEnded.RemoveListener(OnGameEnded);
+        
+        if (ownerSpawner != null)
+            ownerSpawner.Unregister(this);
     }
 
     void OnTriggerEnter(Collider other)
@@ -115,20 +315,42 @@ public class CarAI : MonoBehaviour
         if (other.CompareTag("StopLine"))
         {
             nearStopLine = true;
-            // Try to get the StopLine component from the collider or its parent
-            /*currentStopLine = other.GetComponent<StopLine>();
-            if (currentStopLine == null)
-                currentStopLine = other.GetComponentInParent<StopLine>();*/
+            
+            // Snapshot the state at entry so exit evaluation is fair
+            shouldObeyOnEntry = shouldObey;
+            speedOnEntry = speed;
+            
+            var mg = TrafficWardenMinigameController.Instance;
+            if (mg != null)
+            {
+                StopLine enteredLine = other.GetComponent<StopLine>();
+                if (enteredLine == null)
+                    enteredLine = other.GetComponentInParent<StopLine>();
+                    
+                stopWasActiveOnEntry = enteredLine != null 
+                    ? mg.IsStopActive(enteredLine) 
+                    : mg.IsStopActive();
+            }
         }
     }
 
     void OnCollisionEnter(Collision collision)
     {
+        // Ignore collisions during spawn grace period
+        if (Time.time - spawnTime < spawnGracePeriod) return;
+
         if (collision.gameObject.GetComponent<CarAI>() != null)
         {
             CarAI car = collision.gameObject.GetComponent<CarAI>();
-            if(car.isStopped || isStopped) return;
+            // Also check the other car's grace period
+            if (car.isStopped || isStopped) return;
+            if (Time.time - car.spawnTime < car.spawnGracePeriod) return;
+            
             Debug.Log("Car AI Collision");
+            
+            if(TrafficWardenMinigameController.Instance != null)
+                TrafficWardenMinigameController.Instance.onCarCrashed.Invoke();
+            
             Destroy(this.gameObject);
 
             if (AudioManager.instance != null)
@@ -147,35 +369,52 @@ public class CarAI : MonoBehaviour
         nearStopLine = false;
         hasCrossedLine = true;
 
-        var mg = TrafficWardenMinigameController.I;
+        var mg = TrafficWardenMinigameController.Instance;
         if (mg == null) return;
 
-        // Check specific stop line state
+        // Check specific stop line state at the moment of exit
         StopLine exitedLine = other.GetComponent<StopLine>();
         if (exitedLine == null)
             exitedLine = other.GetComponentInParent<StopLine>();
         
-        bool stopActive = exitedLine != null ? mg.IsStopActive(exitedLine) : mg.IsStopActive();
+        bool stopActiveNow = exitedLine != null ? mg.IsStopActive(exitedLine) : mg.IsStopActive();
 
-        // If STOP is active:
-        if (stopActive)
+        if (stopActiveNow)
         {
-            if (shouldObey)
+            if (shouldObeyOnEntry)
             {
-                // Obeying cars should be stopped when they pass the line
-                if (!isStopped) mg.Penalize("Car crossed during STOP");
-                else mg.AwardCorrect("Stopped correctly");
+                // Car was a law-abiding car when it entered
+                if (!isStopped)
+                {
+                    // Only penalize if the stop was already active when the car entered
+                    // (don't punish for a light that changed while car was mid-crossing)
+                    if (stopWasActiveOnEntry && laneIndex == exitedLine.GetLaneIndex())
+                        mg.Penalize("Car crossed during STOP");
+                    // else: car entered on green, light changed mid-crossing — no penalty
+                }
+                else
+                {
+                    mg.AwardCorrect("Stopped correctly", laneIndex);
+                    
+                    // Near-miss bonus: entered fast and managed to stop
+                    if (speedOnEntry > maxSpeed * 0.7f)
+                    {
+                        mg.AwardNearMiss(laneIndex);
+                    }
+                }
             }
             else
             {
-                // Violator ran the stop
-                mg.Penalize("Violator ran STOP");
+               
+                if (stopWasActiveOnEntry)
+                    Debug.Log($"Violator ran STOP on lane {laneIndex + 1} — no player penalty.");
+                
             }
         }
         else
         {
             // GO is active
-            mg.AwardCorrect("Flowed on GO");
+            mg.AwardCorrect("Flowed on GO", laneIndex);
         }
         
         // Clear the stop line reference after crossing

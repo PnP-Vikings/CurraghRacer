@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
 public enum TrafficEventType { None, Ambulance, Rain, Roadworks }
 
@@ -7,7 +9,7 @@ public enum SpawnPattern { Normal, Burst, RushHour, Convoy, Chaos }
 
 public class TrafficWardenMinigameController : MonoBehaviour
 {
-    public static TrafficWardenMinigameController I;
+    public static TrafficWardenMinigameController Instance;
 
     public PlayerInputs playerInputs;
 
@@ -24,9 +26,68 @@ public class TrafficWardenMinigameController : MonoBehaviour
     [Header("Strikes")]
     public int strikes;
     public int maxStrikes = 3;
+    [Tooltip("Cooldown (seconds) between penalties so a single crash doesn't count twice.")]
+    public float penaltyCooldown = 0.5f;
+    float lastPenaltyTime = -999f;
+    
+    [Tooltip("Seconds before an individual strike expires")]
+    public float strikeDecayTime = 2f;
+    private System.Collections.Generic.List<float> strikeTimestamps = new System.Collections.Generic.List<float>();
+    private Coroutine strikeReasonCoroutine;
 
-    [Header("Anger Meter (0..1)")]
-    [Range(0, 1)] public float anger;
+    public UnityEvent onCarCrashed;
+    public UnityEvent onGameEnded;
+    
+    [Header("Game Timer & Win Condition")]
+    public float gameDuration = 120f; // 2 minutes
+    public float timeRemaining;
+    public bool gameEnded;
+    
+    [Header("Crash Tracking & Bonuses")]
+    public int totalCrashes;
+    public int crashFreeBonus = 500;
+    public int lowCrashBonus = 250; // Bonus if 1-2 crashes
+    public int perfectComboBonus = 300; // Bonus for best combo >= 10
+    
+    [Header("Combo Multiplier")]
+    [Tooltip("Combo thresholds → multiplier: 5→2x, 10→3x, 20→5x")]
+    public int comboTier1 = 5;
+    public int comboTier2 = 10;
+    public int comboTier3 = 20;
+    
+    [Header("Combo Milestones")]
+    public int milestone1Bonus = 50;
+    public int milestone2Bonus = 100;
+    public int milestone3Bonus = 200;
+    public int milestone4Bonus = 500;
+    private int lastMilestoneHit;
+    
+    [Header("Time Pressure Bonus")]
+    [Tooltip("Seconds remaining at which time-pressure multiplier kicks in")]
+    public float timePressureThreshold = 30f;
+    public float timePressureMultiplier = 2f;
+    
+    [Header("Close Call Bonus")]
+    public int closeCallBonus = 25;
+    public float closeCallCooldown = 2f;
+    float lastCloseCallTime = -999f;
+    
+    [Header("Quick Toggle Bonus")]
+    [Tooltip("How many distinct lanes toggled within the window to trigger the bonus")]
+    public int quickToggleRequirement = 3;
+    public float quickToggleWindow = 1.5f;
+    public int quickToggleBonus = 75;
+    private List<float> recentToggleTimes = new List<float>();
+    private List<int> recentToggleLanes = new List<int>();
+    
+    [Header("Near-Miss Bonus")]
+    public int nearMissBonus = 30;
+    
+    [Header("Event Warnings")]
+    public float warningDuration = 2f;
+    
+    [Header("Anger Meter (per lane, 0..1)")]
+    public float[] laneAnger;                                   // one per stop line
     public float angerGainPerSecond_Stop = 0.10f;
     public float angerReliefPerSecond_Go = 0.18f;
 
@@ -44,21 +105,36 @@ public class TrafficWardenMinigameController : MonoBehaviour
     [Header("Spawner Control")]
     public CarSpawner[] spawners;                     // Assign in inspector
 
+    [Header("Initial Spawn")]
+    [Tooltip("Seconds before the very first car appears. Set to 0 for instant spawns.")]
+    public float initialSpawnDelay = 0.5f;
+
     [Header("Difficulty Ramp")]
-    public float difficultyRampTime = 120f;           // Seconds to reach max difficulty
-    public float minIntervalAtMax = 0.5f;             // Fastest spawn interval multiplier
-    public float maxSpeedAtMax = 1.4f;                // Car speed multiplier at max difficulty
-    public float maxViolatorBonus = 0.20f;            // Extra violator chance at max
+    public float difficultyRampTime = 120f;
+    public float minIntervalAtMax = 0.5f;
+    public float maxSpeedAtMax = 1.4f;
+    public float maxViolatorBonus = 0.20f;
 
     [Header("Spawn Patterns")]
     public float patternMinInterval = 12f;
     public float patternMaxInterval = 25f;
+    
+    [Header("UI")]
+    [SerializeField] MinigameCanvasUI  minigameCanvasUI;
+    public TMPro.TMP_Text gameOverText;
+    public GameObject testDemoButtons;
+    public bool showRestartButtons;
 
     // ── Private state ────────────────────────────────
     float lastToggleTime;
     float nextEventTime;
     float eventEndTime;
     float gameStartTime;
+
+    // Per-lane spawn timers (owned by controller)
+    float[] laneTimers;
+    float[] laneIntervals;
+    bool[]  lanePaused;
 
     // Pattern state
     float nextPatternTime;
@@ -77,15 +153,46 @@ public class TrafficWardenMinigameController : MonoBehaviour
     float convoyTimer;
     float convoyInterval;
     int convoyLane;
+    int spawnedConvoyCars; // To track how many cars we've spawned in the current convoy pattern
 
     // Roadworks blocked lane
     int roadworksBlockedLane = -1;
 
     void Awake()
     {
-        I = this;
+        if (Instance != null && Instance != this)
+        {
+            Destroy(this);
+            return;
+        }
+        Instance = this;
         lastToggleTime = -999f;
         gameStartTime = Time.time;
+        timeRemaining = gameDuration;
+        gameEnded = false;
+        totalCrashes = 0;
+        lastMilestoneHit = 0;
+
+        // Initialise per-lane timers
+        int count = spawners != null ? spawners.Length : 0;
+        laneTimers    = new float[count];
+        laneIntervals = new float[count];
+        lanePaused    = new bool[count];
+        for (int i = 0; i < count; i++)
+        {
+            RollLaneInterval(i);
+            // Pre-fill timer so the first car only waits 'initialSpawnDelay' seconds
+            laneTimers[i] = Mathf.Max(0f, laneIntervals[i] - initialSpawnDelay);
+            if (spawners[i] != null)
+                spawners[i].laneIndex = i;
+            
+            if(stopLines != null && i < stopLines.Length && stopLines[i] != null)
+                stopLines[i].SetLaneIndex(i);
+        }
+
+        // Initialise per-lane anger
+        int laneCount = stopLines != null ? stopLines.Length : 0;
+        laneAnger = new float[laneCount];
 
         playerInputs = new PlayerInputs();
         playerInputs.Enable();
@@ -98,14 +205,133 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
         ScheduleNextEvent();
         ScheduleNextPattern();
+        SetupUi();
+        onCarCrashed.AddListener(() => { 
+            Penalize("Car crashed");
+            totalCrashes++;
+        });
     }
 
     void Update()
     {
+        if (gameEnded) return;
+        
+        UpdateGameTimer();
+        UpdateStrikeDecay();
         UpdateDifficulty();
+        UpdateSpawning();
+        CleanupLanes();
         UpdateAnger();
         UpdateEvents();
         UpdatePatterns();
+    }
+    
+    // ═══════════════════════════════════════════════════
+    //  GAME TIMER & WIN/LOSE CONDITIONS
+    // ═══════════════════════════════════════════════════
+
+    void UpdateGameTimer()
+    {
+        timeRemaining -= Time.deltaTime;
+        
+        if (minigameCanvasUI != null)
+        {
+            int minutes = Mathf.FloorToInt(timeRemaining / 60f);
+            int seconds = Mathf.FloorToInt(timeRemaining % 60f);
+            
+            string timerPrefix = timeRemaining <= timePressureThreshold ? "<color=#FF4444>! </color>" : "";
+            minigameCanvasUI.UpdateTimer($"{timerPrefix}Time: {minutes}:{seconds:00}");
+        }
+
+        if (timeRemaining <= 0f && !gameEnded)
+        {
+            timeRemaining = 0f;
+            EndGame(true); // Won by surviving the timer
+        }
+    }
+
+    void EndGame(bool won)
+    {
+        gameEnded = true;
+        onGameEnded?.Invoke();
+        
+        if (won)
+        {
+            // Calculate final score with bonuses
+            int finalScore = score;
+            string bonusSummary = "";
+            
+            // Crash-free bonus
+            if (totalCrashes == 0)
+            {
+                finalScore += crashFreeBonus;
+                bonusSummary += $"\n<color=#44AAFF>[SHIELD]</color> No Crashes: +{crashFreeBonus}";
+                Debug.Log($"Perfect! No crashes! Bonus: +{crashFreeBonus}");
+            }
+            else if (totalCrashes <= 2)
+            {
+                finalScore += lowCrashBonus;
+                bonusSummary += $"\n<color=#44AAFF>[SHIELD]</color> Low Crashes: +{lowCrashBonus}";
+                Debug.Log($"Good job! Low crashes. Bonus: +{lowCrashBonus}");
+            }
+            
+            // Best combo bonus
+            if (bestCombo >= 10)
+            {
+                int comboBonus = perfectComboBonus + (bestCombo - 10) * 20;
+                finalScore += comboBonus;
+                bonusSummary += $"\n<color=#FF6600>[FIRE]</color> Best Combo x{bestCombo}: +{comboBonus}";
+                Debug.Log($"Amazing combo streak of {bestCombo}! Bonus: +{comboBonus}");
+            }
+            
+            score = finalScore;
+            
+            if (minigameCanvasUI != null)
+            {
+                minigameCanvasUI.UpdateScore(finalScore);
+                minigameCanvasUI.ShowVictory();
+                minigameCanvasUI.HideMultiplier();
+            }
+            
+            if (gameOverText != null)
+            {
+                gameOverText.gameObject.SetActive(true);
+                gameOverText.text = $"<color=#FFD700>[TROPHY]</color> Victory!\n\nFinal Score: {finalScore}\nBest Combo: x{bestCombo}\nCrashes: {totalCrashes}{bonusSummary}";
+            }
+            
+            if (showRestartButtons && testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(true);
+            }
+            
+            Debug.Log($"Traffic Warden Victory! Final Score: {finalScore}, Crashes: {totalCrashes}, Best Combo: {bestCombo}");
+        }
+        else
+        {
+            Debug.Log("Traffic Warden Game Over - Too many strikes");
+            if (minigameCanvasUI != null)
+            {
+                minigameCanvasUI.ShowGameOver();
+                minigameCanvasUI.HideMultiplier();
+            }
+            
+            if (showRestartButtons && testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(true);
+            }
+        }
+    }
+ 
+    
+
+    /// <summary>Tell each spawner to destroy cars that have gone too far.</summary>
+    void CleanupLanes()
+    {
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            if (spawners[i] != null)
+                spawners[i].CleanupDistant();
+        }
     }
 
     // ═══════════════════════════════════════════════════
@@ -119,8 +345,6 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         float t = DifficultyT;
 
-        // Gradually tighten spawn intervals & boost car speed across ALL spawners
-        float intervalMul = Mathf.Lerp(1f, minIntervalAtMax, t);
         float speedMul    = Mathf.Lerp(1f, maxSpeedAtMax, t);
         float violatorAdd = Mathf.Lerp(0f, maxViolatorBonus, t);
 
@@ -128,18 +352,59 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (spawners[i] == null) continue;
 
-            spawners[i].intervalMultiplier = intervalMul;
-            spawners[i].speedMultiplier    = speedMul;
-            spawners[i].violatorBonus      = violatorAdd;
+            spawners[i].speedMultiplier = speedMul;
+            spawners[i].violatorBonus   = violatorAdd;
 
-            // Handle roadworks blocking
+            // Determine if this lane is paused
             if (activeEvent == TrafficEventType.Roadworks && i == roadworksBlockedLane)
-                spawners[i].paused = true;
+                lanePaused[i] = true;
             else if (activePattern != SpawnPattern.Normal)
-                ApplyPatternToSpawner(i);
+                ApplyPatternToLane(i);
             else
-                spawners[i].paused = false;
+                lanePaused[i] = false;
         }
+    }
+
+    // ═══════════════════════════════════════════════════
+    //  CENTRALIZED SPAWNING (replaces CarSpawner.Update)
+    // ═══════════════════════════════════════════════════
+
+    void UpdateSpawning()
+    {
+        float t = DifficultyT;
+        float intervalMul = Mathf.Lerp(1f, minIntervalAtMax, t);
+
+        for (int i = 0; i < spawners.Length; i++)
+        {
+            if (spawners[i] == null || lanePaused[i]) continue;
+
+            laneTimers[i] += Time.deltaTime;
+
+            // Apply pattern speed-up at check time instead of mutating the stored interval
+            float effectiveInterval = laneIntervals[i];
+            if (activePattern == SpawnPattern.RushHour && i == rushHourLane)
+                effectiveInterval *= 0.35f;
+            else if (activePattern == SpawnPattern.Chaos)
+                effectiveInterval *= 0.4f;
+
+            // Safety: never let effective interval drop below a hard floor
+            effectiveInterval = Mathf.Max(effectiveInterval, 0.3f);
+
+            if (laneTimers[i] >= effectiveInterval)
+            {
+                laneTimers[i] = 0f;
+                spawners[i].ForceSpawn();
+                RollLaneInterval(i, intervalMul);
+            }
+        }
+    }
+
+    /// <summary>Roll a new random interval for the given lane, applying the difficulty multiplier.</summary>
+    void RollLaneInterval(int lane, float intervalMul = 1f)
+    {
+        if (spawners[lane] == null) return;
+        var s = spawners[lane];
+        laneIntervals[lane] = Random.Range(s.minInterval, s.maxInterval) * intervalMul;
     }
 
     // ═══════════════════════════════════════════════════
@@ -172,21 +437,62 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     void StartRandomPattern()
     {
+        // Prevent re-entry: block UpdatePatterns from calling this again during the warning delay
+        nextPatternTime = float.MaxValue;
+
         // Pick a weighted random pattern; heavier ones appear later
         float r = Random.value;
         float t = DifficultyT;
 
+        SpawnPattern chosenPattern;
+        string warningMsg;
+        
         if (r < 0.30f)
-            StartBurst();
+        {
+            chosenPattern = SpawnPattern.Burst;
+            warningMsg = "<color=#FF4400>* BURST!</color> Rapid cars on one lane!";
+        }
         else if (r < 0.55f)
-            StartRushHour();
+        {
+            chosenPattern = SpawnPattern.RushHour;
+            warningMsg = "<color=#FFAA00>RUSH HOUR!</color> Heavy traffic ahead!";
+        }
         else if (r < 0.80f)
-            StartConvoy();
+        {
+            chosenPattern = SpawnPattern.Convoy;
+            warningMsg = "<color=#FFAA00>CONVOY!</color> Tight formation incoming!";
+        }
         else if (t > 0.5f) // Chaos only after halfway through difficulty curve
-            StartChaos();
+        {
+            chosenPattern = SpawnPattern.Chaos;
+            warningMsg = "<color=#FF0000>!! CHAOS !!</color> ALL lanes flooding!";
+        }
         else
-            StartBurst(); // fallback
+        {
+            chosenPattern = SpawnPattern.Burst;
+            warningMsg = "<color=#FF4400>* BURST!</color> Rapid cars on one lane!";
+        }
 
+        // Show warning, then activate after a short heads-up
+        float patternWarning = 1.5f; // shorter warning for patterns
+        if (minigameCanvasUI != null)
+            minigameCanvasUI.ShowWarning(warningMsg, patternWarning);
+        
+        StartCoroutine(ActivatePatternDelayed(chosenPattern, patternWarning));
+    }
+    
+    System.Collections.IEnumerator ActivatePatternDelayed(SpawnPattern pattern, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (gameEnded) yield break;
+        
+        switch (pattern)
+        {
+            case SpawnPattern.Burst:   StartBurst();     break;
+            case SpawnPattern.RushHour: StartRushHour();  break;
+            case SpawnPattern.Convoy:  StartConvoy();    break;
+            case SpawnPattern.Chaos:   StartChaos();     break;
+        }
         Debug.Log($"Spawn pattern started: {activePattern}");
     }
 
@@ -240,6 +546,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         convoyRemaining = Random.Range(4, 7);
         convoyInterval = 0.8f;
         convoyTimer = 0f;
+        spawnedConvoyCars = 0;
     }
 
     void TickConvoy()
@@ -255,9 +562,16 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 var car = spawners[convoyLane].ForceSpawn();
                 if (car != null)
                 {
-                    car.shouldObey = true; // convoys always obey
-                    car.maxSpeed *= 0.85f; // slightly slower, tight pack
+                    car.shouldObey = true;
+                    car.maxSpeed *= 0.85f;
+
+                    if (spawnedConvoyCars <= 4)
+                    {
+                        car.maxSpeed *= 1.5f;
+                        
+                    }
                 }
+                spawnedConvoyCars++;
             }
             convoyRemaining--;
         }
@@ -270,33 +584,29 @@ public class TrafficWardenMinigameController : MonoBehaviour
         patternEndTime = Time.time + Random.Range(4f, 7f);
     }
 
-    /// <summary>Apply per-spawner overrides based on current pattern.</summary>
-    void ApplyPatternToSpawner(int i)
+    /// <summary>Apply per-lane overrides based on current pattern (sets lanePaused only — interval speed-ups are handled in UpdateSpawning).</summary>
+    void ApplyPatternToLane(int i)
     {
-        var s = spawners[i];
         switch (activePattern)
         {
             case SpawnPattern.RushHour:
-                // Rush-hour lane spawns 3× faster, others are normal
-                s.paused = false;
-                if (i == rushHourLane)
-                    s.intervalMultiplier *= 0.35f;
+                lanePaused[i] = false;
+                // Rush-hour lane spawns ~3× faster — applied in UpdateSpawning
                 break;
 
             case SpawnPattern.Burst:
-                // Burst lane pauses normal spawning (ForceSpawn handles it)
-                s.paused = (i == burstLane);
+                // Burst lane pauses normal spawning (TickBurst handles ForceSpawn)
+                lanePaused[i] = (i == burstLane);
                 break;
 
             case SpawnPattern.Convoy:
-                // Convoy lane pauses normal spawning (ForceSpawn handles it)
-                s.paused = (i == convoyLane);
+                // Convoy lane pauses normal spawning (TickConvoy handles ForceSpawn)
+                lanePaused[i] = (i == convoyLane);
                 break;
 
             case SpawnPattern.Chaos:
-                // Everything spawns fast
-                s.paused = false;
-                s.intervalMultiplier *= 0.4f;
+                lanePaused[i] = false;
+                // All lanes spawn faster — applied in UpdateSpawning
                 break;
         }
     }
@@ -319,6 +629,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             stopLines[0].ChangeState();
             Debug.Log($"Toggling lane 1 to state {stopLines[0].GetState()}");
             lastToggleTime = Time.time;
+            RecordToggle(0);
         }
     }
 
@@ -336,6 +647,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             stopLines[1].ChangeState();
             Debug.Log($"Toggling lane 2 to state {stopLines[1].GetState()}");
             lastToggleTime = Time.time;
+            RecordToggle(1);
         }
     }
 
@@ -353,6 +665,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             stopLines[2].ChangeState();
             Debug.Log($"Toggling lane 3 to state {stopLines[2].GetState()}");
             lastToggleTime = Time.time;
+            RecordToggle(2);
         }
     }
 
@@ -370,6 +683,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             stopLines[3].ChangeState();
             Debug.Log($"Toggling lane 4 to state {stopLines[3].GetState()}");
             lastToggleTime = Time.time;
+            RecordToggle(3);
         }
     }
 
@@ -415,38 +729,87 @@ public class TrafficWardenMinigameController : MonoBehaviour
     }
 
     // ═══════════════════════════════════════════════════
-    //  ANGER SYSTEM
+    //  ANGER SYSTEM  (per-lane)
     // ═══════════════════════════════════════════════════
+
+    /// <summary>Highest anger value across all lanes (handy for UI).</summary>
+    public float MaxAnger
+    {
+        get
+        {
+            float max = 0f;
+            for (int i = 0; i < laneAnger.Length; i++)
+                if (laneAnger[i] > max) max = laneAnger[i];
+            return max;
+        }
+    }
+
+    /// <summary>Get anger for a specific lane.</summary>
+    public float GetLaneAnger(int lane)
+    {
+        if (lane >= 0 && lane < laneAnger.Length)
+            return laneAnger[lane];
+        return 0f;
+    }
 
     void UpdateAnger()
     {
-        float gain = angerGainPerSecond_Stop;
+        float baseGain = angerGainPerSecond_Stop;
 
+        // Global modifiers
         if (activeEvent == TrafficEventType.Roadworks)
-            gain *= 1.6f;
-
-        // Chaos pattern also raises anger faster
+            baseGain *= 1.6f;
         if (activePattern == SpawnPattern.Chaos)
-            gain *= 1.3f;
+            baseGain *= 1.3f;
 
-        bool anyStopActive = IsStopActive();
-
-        if (anyStopActive)
-            anger = Mathf.Clamp01(anger + gain * Time.deltaTime);
-        else
-            anger = Mathf.Clamp01(anger - angerReliefPerSecond_Go * Time.deltaTime);
-
-        if (anger >= 1f)
+        for (int i = 0; i < stopLines.Length && i < laneAnger.Length; i++)
         {
-            AddStrike("Traffic anger overflow");
-            anger = 0f;
-            ResetCombo();
+            if (stopLines[i] == null) continue;
+
+            bool laneStopped = stopLines[i].GetState() == CrossingState.Stop;
+
+            float gain = baseGain;
+
+            // Rush-hour lane builds anger faster
+            if (activePattern == SpawnPattern.RushHour && i == rushHourLane)
+                gain *= 1.5f;
+
+            // Roadworks-blocked lane doesn't build anger (no cars coming)
+            if (activeEvent == TrafficEventType.Roadworks && i == roadworksBlockedLane)
+            {
+                laneAnger[i] = Mathf.Clamp01(laneAnger[i] - angerReliefPerSecond_Go * Time.deltaTime);
+                continue;
+            }
+
+            if (laneStopped)
+                laneAnger[i] = Mathf.Clamp01(laneAnger[i] + gain * Time.deltaTime);
+            else
+                laneAnger[i] = Mathf.Clamp01(laneAnger[i] - angerReliefPerSecond_Go * Time.deltaTime);
+
+            if (laneAnger[i] >= 1f)
+            {
+                // Unleash all cars on this lane — they floor it through the stop
+                UnleashLane(i);
+                AddStrike($"Lane {i + 1} anger overflow!");
+                laneAnger[i] = 0f;
+                ResetCombo();
+            }
+
+            // Push anger value to the stop line so it can swap mood sprites
+            stopLines[i].SetAnger(laneAnger[i]);
         }
     }
 
     // ═══════════════════════════════════════════════════
     //  EVENTS
     // ═══════════════════════════════════════════════════
+
+    /// <summary>Make every car on the given lane go rogue (ignore stops, floor it).</summary>
+    void UnleashLane(int lane)
+    {
+        if (lane >= 0 && lane < spawners.Length && spawners[lane] != null)
+            spawners[lane].UnleashAll();
+    }
 
     void UpdateEvents()
     {
@@ -469,27 +832,51 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     void StartRandomEvent()
     {
+        // Prevent re-entry: block UpdateEvents from calling this again during the warning delay
+        nextEventTime = float.MaxValue;
+
         float r = Random.value;
 
+        TrafficEventType chosenEvent;
+        string warningMsg;
+        
         if (r < 0.4f)
-            activeEvent = TrafficEventType.Rain;
+        {
+            chosenEvent = TrafficEventType.Rain;
+            warningMsg = "<color=#4488FF>RAIN INCOMING!</color> Cars will slide!";
+        }
         else if (r < 0.7f)
         {
-            activeEvent = TrafficEventType.Roadworks;
-            // Pick a random lane to block
-            if (spawners.Length > 0)
-                roadworksBlockedLane = Random.Range(0, spawners.Length);
+            chosenEvent = TrafficEventType.Roadworks;
+            warningMsg = "<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
         }
         else
         {
-            activeEvent = TrafficEventType.Ambulance;
-            // Force-spawn an ambulance on a random lane
-            if (spawners.Length > 0)
-            {
-                int lane = Random.Range(0, spawners.Length);
-                if (spawners[lane] != null)
-                    spawners[lane].ForceSpawn(forceAmbulance: true);
-            }
+            chosenEvent = TrafficEventType.Ambulance;
+            warningMsg = "<color=#FF4444>AMBULANCE!</color> Keep lanes open!";
+        }
+        
+        // Show warning, then activate after delay
+        if (minigameCanvasUI != null)
+            minigameCanvasUI.ShowWarning(warningMsg, warningDuration);
+        
+        StartCoroutine(ActivateEventDelayed(chosenEvent, warningDuration));
+    }
+    
+    System.Collections.IEnumerator ActivateEventDelayed(TrafficEventType eventType, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (gameEnded) yield break;
+        
+        activeEvent = eventType;
+        
+        if (eventType == TrafficEventType.Roadworks && spawners.Length > 0)
+            roadworksBlockedLane = Random.Range(0, spawners.Length);
+        else if (eventType == TrafficEventType.Ambulance && spawners.Length > 0)
+        {
+            int lane = Random.Range(0, spawners.Length);
+            if (spawners[lane] != null)
+                spawners[lane].ForceSpawn(forceAmbulance: true);
         }
 
         eventEndTime = Time.time + Random.Range(eventDurationMin, eventDurationMax);
@@ -500,11 +887,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
     {
         Debug.Log("Event ended: " + activeEvent);
 
-        // Un-pause roadworks lane
         if (activeEvent == TrafficEventType.Roadworks && roadworksBlockedLane >= 0
-            && roadworksBlockedLane < spawners.Length && spawners[roadworksBlockedLane] != null)
+            && roadworksBlockedLane < spawners.Length)
         {
-            spawners[roadworksBlockedLane].paused = false;
+            lanePaused[roadworksBlockedLane] = false;
         }
 
         roadworksBlockedLane = -1;
@@ -516,15 +902,38 @@ public class TrafficWardenMinigameController : MonoBehaviour
     //  SCORING
     // ═══════════════════════════════════════════════════
 
+    /// <summary>Returns the combo-based score multiplier (1x → 2x → 3x → 5x).</summary>
+    public int GetComboMultiplier()
+    {
+        if (combo >= comboTier3) return 5;
+        if (combo >= comboTier2) return 3;
+        if (combo >= comboTier1) return 2;
+        return 1;
+    }
+    
+    /// <summary>Returns the combined multiplier including time pressure.</summary>
+    float GetTotalMultiplier()
+    {
+        float mul = GetComboMultiplier();
+        if (timeRemaining <= timePressureThreshold)
+            mul *= timePressureMultiplier;
+        return mul;
+    }
+
     public void AwardCorrect()
     {
         combo++;
         if (combo > bestCombo) bestCombo = combo;
 
         int gained = basePoints + Mathf.FloorToInt(combo * 0.25f);
+        gained = Mathf.FloorToInt(gained * GetTotalMultiplier());
         score += gained;
-
-        anger = Mathf.Clamp01(anger - 0.04f);
+        
+        // Check combo milestones
+        CheckComboMilestones();
+        
+        UpdateUi();
+        UpdateMultiplierDisplay();
     }
 
     public void AwardCorrect(string reason)
@@ -533,8 +942,140 @@ public class TrafficWardenMinigameController : MonoBehaviour
         Debug.Log("Correct: " + reason);
     }
 
+    /// <summary>Award points and relieve anger on a specific lane.</summary>
+    public void AwardCorrect(string reason, int lane)
+    {
+        AwardCorrect();
+        Debug.Log("Correct: " + reason);
+
+        // Relieve anger on the lane that earned the point
+        if (lane >= 0 && lane < laneAnger.Length)
+            laneAnger[lane] = Mathf.Clamp01(laneAnger[lane] - 0.04f);
+    }
+    
+    // ── Combo Milestones ────────────────────────────
+    
+    void CheckComboMilestones()
+    {
+        int milestone = 0;
+        int bonus = 0;
+        string label = "";
+        
+        if (combo >= comboTier3 && lastMilestoneHit < comboTier3)
+        {
+            milestone = comboTier3;
+            bonus = milestone4Bonus;
+            label = "<color=#FF2200>*** UNSTOPPABLE</color>";
+        }
+        else if (combo >= 15 && lastMilestoneHit < 15)
+        {
+            milestone = 15;
+            bonus = milestone3Bonus;
+            label = "<color=#FF4400>** ON FIRE</color>";
+        }
+        else if (combo >= comboTier2 && lastMilestoneHit < comboTier2)
+        {
+            milestone = comboTier2;
+            bonus = milestone2Bonus;
+            label = "<color=#FF6600>* GREAT STREAK</color>";
+        }
+        else if (combo >= comboTier1 && lastMilestoneHit < comboTier1)
+        {
+            milestone = comboTier1;
+            bonus = milestone1Bonus;
+            label = "<color=#FFDD00>* NICE COMBO</color>";
+        }
+        
+        if (milestone > 0)
+        {
+            lastMilestoneHit = milestone;
+            score += bonus;
+            Debug.Log($"Combo milestone {milestone}! Bonus: +{bonus}");
+            if (minigameCanvasUI != null)
+                minigameCanvasUI.ShowBonusFlash($"{label}! x{combo} Combo! +{bonus}");
+        }
+    }
+    
+    // ── Near-Miss Bonus ─────────────────────────────
+    
+    /// <summary>Called by CarAI when a car stops very close to the line at high speed.</summary>
+    public void AwardNearMiss(int lane)
+    {
+        score += nearMissBonus;
+        combo++;
+        if (combo > bestCombo) bestCombo = combo;
+        Debug.Log($"NEAR MISS on lane {lane + 1}! +{nearMissBonus}");
+        if (minigameCanvasUI != null)
+            minigameCanvasUI.ShowBonusFlash($"<color=#00FF88>NEAR MISS!</color> +{nearMissBonus}");
+        UpdateUi();
+    }
+    
+    // ── Close Call Bonus ────────────────────────────
+    
+    /// <summary>Called by CarAI when two cars come very close but don't crash.</summary>
+    public void AwardCloseCall()
+    {
+        if (Time.time - lastCloseCallTime < closeCallCooldown) return;
+        lastCloseCallTime = Time.time;
+        
+        score += closeCallBonus;
+        Debug.Log($"CLOSE CALL! +{closeCallBonus}");
+        if (minigameCanvasUI != null)
+            minigameCanvasUI.ShowBonusFlash($"<color=#FF44FF>CLOSE CALL!</color> +{closeCallBonus}");
+        UpdateUi();
+    }
+    
+    // ── Quick Toggle Bonus ──────────────────────────
+    
+    void RecordToggle(int laneIndex)
+    {
+        float now = Time.time;
+        
+        // Purge old entries outside the window
+        while (recentToggleTimes.Count > 0 && now - recentToggleTimes[0] > quickToggleWindow)
+        {
+            recentToggleTimes.RemoveAt(0);
+            recentToggleLanes.RemoveAt(0);
+        }
+        
+        // Only count distinct lanes
+        if (!recentToggleLanes.Contains(laneIndex))
+        {
+            recentToggleTimes.Add(now);
+            recentToggleLanes.Add(laneIndex);
+        }
+        
+        if (recentToggleLanes.Count >= quickToggleRequirement)
+        {
+            score += quickToggleBonus;
+            Debug.Log($"QUICK TOGGLE! {recentToggleLanes.Count} lanes in {quickToggleWindow}s! +{quickToggleBonus}");
+            if (minigameCanvasUI != null)
+                minigameCanvasUI.ShowBonusFlash($"<color=#00DDFF>QUICK TOGGLE!</color> +{quickToggleBonus}");
+            recentToggleTimes.Clear();
+            recentToggleLanes.Clear();
+            UpdateUi();
+        }
+    }
+    
+    // ── Multiplier Display ──────────────────────────
+    
+    void UpdateMultiplierDisplay()
+    {
+        if (minigameCanvasUI == null) return;
+        
+        float mul = GetTotalMultiplier();
+        if (mul > 1f)
+            minigameCanvasUI.UpdateMultiplier($"x{mul:F0} MULTIPLIER");
+        else
+            minigameCanvasUI.HideMultiplier();
+    }
+
     public void Penalize(string reason)
     {
+        // Cooldown: ignore rapid-fire penalties (e.g. two cars in the same crash)
+        if (Time.time - lastPenaltyTime < penaltyCooldown) return;
+        lastPenaltyTime = Time.time;
+
         AddStrike(reason);
         ResetCombo();
     }
@@ -542,16 +1083,103 @@ public class TrafficWardenMinigameController : MonoBehaviour
     void ResetCombo()
     {
         combo = 0;
+        lastMilestoneHit = 0;
+        UpdateMultiplierDisplay();
     }
 
     void AddStrike(string reason)
     {
         strikes++;
+        strikeTimestamps.Add(Time.time);
         Debug.Log($"Strike: {reason} ({strikes}/{maxStrikes})");
-
+        UpdateUi();
+        
+        // Show strike reason on screen
+        if (minigameCanvasUI != null)
+        {
+            if (strikeReasonCoroutine != null) StopCoroutine(strikeReasonCoroutine);
+            strikeReasonCoroutine = StartCoroutine(ShowStrikeReason(reason));
+        }
+        
         if (strikes >= maxStrikes)
         {
-            Debug.Log("Traffic Warden Game Over");
+            EndGame(false); // Lost by too many strikes
+        }
+    }
+    
+    // ═══════════════════════════════════════════════════
+    //  STRIKE DECAY
+    // ═══════════════════════════════════════════════════
+
+    void UpdateStrikeDecay()
+    {
+        if (strikeTimestamps.Count == 0) return;
+
+        bool changed = false;
+        for (int i = strikeTimestamps.Count - 1; i >= 0; i--)
+        {
+            if (Time.time - strikeTimestamps[i] >= strikeDecayTime)
+            {
+                strikeTimestamps.RemoveAt(i);
+                strikes = Mathf.Max(0, strikes - 1);
+                changed = true;
+                Debug.Log($"Strike decayed! ({strikes}/{maxStrikes})");
+            }
+        }
+
+        if (changed)
+        {
+            UpdateUi();
+            if (minigameCanvasUI != null)
+            {
+                if (strikeReasonCoroutine != null) StopCoroutine(strikeReasonCoroutine);
+                strikeReasonCoroutine = StartCoroutine(ShowStrikeRecovery());
+            }
+        }
+    }
+
+    System.Collections.IEnumerator ShowStrikeRecovery()
+    {
+        minigameCanvasUI.ShowAdditionalInfo();
+        minigameCanvasUI.UpdateAdditionalInfo("<color=#44FF44>Strike Removed!</color>");
+        yield return new WaitForSeconds(1.5f);
+        minigameCanvasUI.HideAdditionalInfo();
+    }
+
+    System.Collections.IEnumerator ShowStrikeReason(string reason)
+    {
+        minigameCanvasUI.ShowAdditionalInfo();
+        minigameCanvasUI.UpdateAdditionalInfo($"<color=#FF4444>STRIKE:</color> {reason}");
+        yield return new WaitForSeconds(2f);
+        minigameCanvasUI.HideAdditionalInfo();
+    }
+
+
+    // ═══════════════════════════════════════════════════
+    //  UI
+    // ═══════════════════════════════════════════════════
+
+    private void SetupUi()
+    {
+        if (minigameCanvasUI != null)
+        {
+            minigameCanvasUI.SetUpUI(true, true, true, false, true); // Enable timer & additional info
+            
+            minigameCanvasUI.UpdateScore(score);
+            minigameCanvasUI.UpdatePlayerLives($"Strikes: {strikes}/{maxStrikes}");
+            minigameCanvasUI.UpdateTimer("Time: 2:00");
+            minigameCanvasUI.HideAdditionalInfo(); // Start hidden
+        }
+    }
+
+    private void UpdateUi()
+    {
+        if (minigameCanvasUI != null)
+        {
+            minigameCanvasUI.UpdateScore(combo > 0 
+                ? $"Score: {score}  |  Combo: x{combo}" 
+                : $"Score: {score}");
+            minigameCanvasUI.UpdatePlayerLives($"Strikes: {strikes}/{maxStrikes}");
         }
     }
 }
