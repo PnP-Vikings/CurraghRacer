@@ -19,7 +19,7 @@ public class StopLine : MonoBehaviour
     public Sprite[] moodSprites = new Sprite[3];
 
     [Tooltip("The SpriteRenderer (or UI Image) that shows the mood icon.")]
-    public SpriteRenderer moodRenderer;
+    public Image moodRenderer;
 
     [Tooltip("Current mood — updated automatically by the controller.")]
     public AngerMood currentMood = AngerMood.Happy;
