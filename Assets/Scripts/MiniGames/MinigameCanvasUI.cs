@@ -112,11 +112,14 @@ public class MinigameCanvasUI : MonoBehaviour
             gameOverText.gameObject.SetActive(true);
             gameOverText.text = "Game Over!";
 
-            if(AudioManager.instance != null)
+            if (AudioManager.instance != null)
             {
                 AudioManager.instance.gameOver.start();
-                boxingAudio.DecreaseBoomBapVolume();
-                //boxingAudio.StartCoroutine(TemporarilyDecreaseBoomBapVolume());
+
+                if (boxingAudio != null)
+                {
+                    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
+                }
             }
         }
 
