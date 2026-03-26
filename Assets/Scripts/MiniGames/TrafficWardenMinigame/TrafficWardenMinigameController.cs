@@ -239,7 +239,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             int minutes = Mathf.FloorToInt(timeRemaining / 60f);
             int seconds = Mathf.FloorToInt(timeRemaining % 60f);
             
-            string timerPrefix = timeRemaining <= timePressureThreshold ? "⏰ " : "";
+            string timerPrefix = timeRemaining <= timePressureThreshold ? "<color=#FF4444>! </color>" : "";
             minigameCanvasUI.UpdateTimer($"{timerPrefix}Time: {minutes}:{seconds:00}");
         }
 
@@ -265,13 +265,13 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (totalCrashes == 0)
             {
                 finalScore += crashFreeBonus;
-                bonusSummary += $"\n🛡️ No Crashes: +{crashFreeBonus}";
+                bonusSummary += $"\n<color=#44AAFF>[SHIELD]</color> No Crashes: +{crashFreeBonus}";
                 Debug.Log($"Perfect! No crashes! Bonus: +{crashFreeBonus}");
             }
             else if (totalCrashes <= 2)
             {
                 finalScore += lowCrashBonus;
-                bonusSummary += $"\n🛡️ Low Crashes: +{lowCrashBonus}";
+                bonusSummary += $"\n<color=#44AAFF>[SHIELD]</color> Low Crashes: +{lowCrashBonus}";
                 Debug.Log($"Good job! Low crashes. Bonus: +{lowCrashBonus}");
             }
             
@@ -280,7 +280,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             {
                 int comboBonus = perfectComboBonus + (bestCombo - 10) * 20;
                 finalScore += comboBonus;
-                bonusSummary += $"\n🔥 Best Combo x{bestCombo}: +{comboBonus}";
+                bonusSummary += $"\n<color=#FF6600>[FIRE]</color> Best Combo x{bestCombo}: +{comboBonus}";
                 Debug.Log($"Amazing combo streak of {bestCombo}! Bonus: +{comboBonus}");
             }
             
@@ -296,7 +296,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (gameOverText != null)
             {
                 gameOverText.gameObject.SetActive(true);
-                gameOverText.text = $"🏆 Victory!\n\nFinal Score: {finalScore}\nBest Combo: x{bestCombo}\nCrashes: {totalCrashes}{bonusSummary}";
+                gameOverText.text = $"<color=#FFD700>[TROPHY]</color> Victory!\n\nFinal Score: {finalScore}\nBest Combo: x{bestCombo}\nCrashes: {totalCrashes}{bonusSummary}";
             }
             
             if (showRestartButtons && testDemoButtons != null)
@@ -450,27 +450,27 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (r < 0.30f)
         {
             chosenPattern = SpawnPattern.Burst;
-            warningMsg = "💥 BURST! Rapid cars on one lane!";
+            warningMsg = "<color=#FF4400>* BURST!</color> Rapid cars on one lane!";
         }
         else if (r < 0.55f)
         {
             chosenPattern = SpawnPattern.RushHour;
-            warningMsg = "🚗 RUSH HOUR! Heavy traffic ahead!";
+            warningMsg = "<color=#FFAA00>RUSH HOUR!</color> Heavy traffic ahead!";
         }
         else if (r < 0.80f)
         {
             chosenPattern = SpawnPattern.Convoy;
-            warningMsg = "🚛 CONVOY! Tight formation incoming!";
+            warningMsg = "<color=#FFAA00>CONVOY!</color> Tight formation incoming!";
         }
         else if (t > 0.5f) // Chaos only after halfway through difficulty curve
         {
             chosenPattern = SpawnPattern.Chaos;
-            warningMsg = "⚠️ CHAOS! ALL lanes flooding!";
+            warningMsg = "<color=#FF0000>!! CHAOS !!</color> ALL lanes flooding!";
         }
         else
         {
             chosenPattern = SpawnPattern.Burst;
-            warningMsg = "💥 BURST! Rapid cars on one lane!";
+            warningMsg = "<color=#FF4400>* BURST!</color> Rapid cars on one lane!";
         }
 
         // Show warning, then activate after a short heads-up
@@ -843,17 +843,17 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (r < 0.4f)
         {
             chosenEvent = TrafficEventType.Rain;
-            warningMsg = "🌧️ RAIN INCOMING! Cars will slide!";
+            warningMsg = "<color=#4488FF>RAIN INCOMING!</color> Cars will slide!";
         }
         else if (r < 0.7f)
         {
             chosenEvent = TrafficEventType.Roadworks;
-            warningMsg = "🚧 ROADWORKS! A lane will be blocked!";
+            warningMsg = "<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
         }
         else
         {
             chosenEvent = TrafficEventType.Ambulance;
-            warningMsg = "🚑 AMBULANCE! Keep lanes open!";
+            warningMsg = "<color=#FF4444>AMBULANCE!</color> Keep lanes open!";
         }
         
         // Show warning, then activate after delay
@@ -965,25 +965,25 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             milestone = comboTier3;
             bonus = milestone4Bonus;
-            label = "🔥🔥🔥 UNSTOPPABLE";
+            label = "<color=#FF2200>*** UNSTOPPABLE</color>";
         }
         else if (combo >= 15 && lastMilestoneHit < 15)
         {
             milestone = 15;
             bonus = milestone3Bonus;
-            label = "🔥🔥 ON FIRE";
+            label = "<color=#FF4400>** ON FIRE</color>";
         }
         else if (combo >= comboTier2 && lastMilestoneHit < comboTier2)
         {
             milestone = comboTier2;
             bonus = milestone2Bonus;
-            label = "🔥 GREAT STREAK";
+            label = "<color=#FF6600>* GREAT STREAK</color>";
         }
         else if (combo >= comboTier1 && lastMilestoneHit < comboTier1)
         {
             milestone = comboTier1;
             bonus = milestone1Bonus;
-            label = "⭐ NICE COMBO";
+            label = "<color=#FFDD00>* NICE COMBO</color>";
         }
         
         if (milestone > 0)
@@ -1006,7 +1006,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (combo > bestCombo) bestCombo = combo;
         Debug.Log($"NEAR MISS on lane {lane + 1}! +{nearMissBonus}");
         if (minigameCanvasUI != null)
-            minigameCanvasUI.ShowBonusFlash($"🎯 NEAR MISS! +{nearMissBonus}");
+            minigameCanvasUI.ShowBonusFlash($"<color=#00FF88>NEAR MISS!</color> +{nearMissBonus}");
         UpdateUi();
     }
     
@@ -1021,7 +1021,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         score += closeCallBonus;
         Debug.Log($"CLOSE CALL! +{closeCallBonus}");
         if (minigameCanvasUI != null)
-            minigameCanvasUI.ShowBonusFlash($"😱 CLOSE CALL! +{closeCallBonus}");
+            minigameCanvasUI.ShowBonusFlash($"<color=#FF44FF>CLOSE CALL!</color> +{closeCallBonus}");
         UpdateUi();
     }
     
@@ -1050,7 +1050,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             score += quickToggleBonus;
             Debug.Log($"QUICK TOGGLE! {recentToggleLanes.Count} lanes in {quickToggleWindow}s! +{quickToggleBonus}");
             if (minigameCanvasUI != null)
-                minigameCanvasUI.ShowBonusFlash($"⚡ QUICK TOGGLE! +{quickToggleBonus}");
+                minigameCanvasUI.ShowBonusFlash($"<color=#00DDFF>QUICK TOGGLE!</color> +{quickToggleBonus}");
             recentToggleTimes.Clear();
             recentToggleLanes.Clear();
             UpdateUi();
@@ -1141,7 +1141,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     System.Collections.IEnumerator ShowStrikeRecovery()
     {
         minigameCanvasUI.ShowAdditionalInfo();
-        minigameCanvasUI.UpdateAdditionalInfo("✓ Strike Removed!");
+        minigameCanvasUI.UpdateAdditionalInfo("<color=#44FF44>Strike Removed!</color>");
         yield return new WaitForSeconds(1.5f);
         minigameCanvasUI.HideAdditionalInfo();
     }
@@ -1149,7 +1149,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     System.Collections.IEnumerator ShowStrikeReason(string reason)
     {
         minigameCanvasUI.ShowAdditionalInfo();
-        minigameCanvasUI.UpdateAdditionalInfo($"⚠️ STRIKE: {reason}");
+        minigameCanvasUI.UpdateAdditionalInfo($"<color=#FF4444>STRIKE:</color> {reason}");
         yield return new WaitForSeconds(2f);
         minigameCanvasUI.HideAdditionalInfo();
     }
@@ -1166,7 +1166,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             minigameCanvasUI.SetUpUI(true, true, true, false, true); // Enable timer & additional info
             
             minigameCanvasUI.UpdateScore(score);
-            minigameCanvasUI.UpdatePlayerLives(strikes + "/" + maxStrikes);
+            minigameCanvasUI.UpdatePlayerLives($"Strikes: {strikes}/{maxStrikes}");
             minigameCanvasUI.UpdateTimer("Time: 2:00");
             minigameCanvasUI.HideAdditionalInfo(); // Start hidden
         }
@@ -1179,7 +1179,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             minigameCanvasUI.UpdateScore(combo > 0 
                 ? $"Score: {score}  |  Combo: x{combo}" 
                 : $"Score: {score}");
-            minigameCanvasUI.UpdatePlayerLives(strikes + "/" + maxStrikes);
+            minigameCanvasUI.UpdatePlayerLives($"Strikes: {strikes}/{maxStrikes}");
         }
     }
 }
