@@ -342,6 +342,12 @@ public class CarAI : MonoBehaviour
         if (collision.gameObject.GetComponent<CarAI>() != null)
         {
             CarAI car = collision.gameObject.GetComponent<CarAI>();
+            
+            if(car != null && car.laneIndex == laneIndex)
+            {
+                // Ignore collisions with cars in the same lane (they should be following, not crashing)
+                return;
+            }
             // Also check the other car's grace period
             if (car.isStopped || isStopped) return;
             if (Time.time - car.spawnTime < car.spawnGracePeriod) return;
