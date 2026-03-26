@@ -509,6 +509,7 @@ MonoBehaviour:
   testDemoButtons: {fileID: 7592330430329010395}
   backToMainMenuButton: {fileID: 7592330430329010394}
   restartMinigameButton: {fileID: 7592330430329010393}
+  boxingAudio: {fileID: 1980710210}
   healthIndicator: {fileID: 1331882503}
 --- !u!1 &1512312955
 GameObject:
@@ -828,6 +829,7 @@ GameObject:
   - component: {fileID: 1980710208}
   - component: {fileID: 1980710207}
   - component: {fileID: 1980710209}
+  - component: {fileID: 1980710210}
   m_Layer: 0
   m_Name: Boxing Ambience
   m_TagString: Untagged
@@ -911,9 +913,24 @@ MonoBehaviour:
   Params:
   - Name: Radioify Boom Bap
     Value: 1
+  - Name: Boom Bap Volume
+    Value: 1
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &1980710210
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1980710206}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ae65717281c43cd4fb8eb8ce0cbed006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::BoxingAudio
+  boomBapEmitter: {fileID: 1980710209}
 --- !u!1 &2025547713
 GameObject:
   m_ObjectHideFlags: 0

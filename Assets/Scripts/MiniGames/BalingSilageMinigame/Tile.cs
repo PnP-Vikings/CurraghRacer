@@ -7,6 +7,7 @@ public class Tile : MonoBehaviour
     public Material tileMaterial;
     public Material dirtMaterial;
     public Material collectedMaterial;
+    public Material inactiveMaterial;
     public MeshRenderer tileRenderer;
     public bool highlight;
     public bool collected;
@@ -46,6 +47,12 @@ public class Tile : MonoBehaviour
         if (FindFirstObjectByType<BalingSilageMinigame>().collecting == true && highlight == true)
         {
             collected = true;
+        }
+
+        if (FindFirstObjectByType<BalingSilageMinigame>().collecting == false && FindFirstObjectByType<BalingSilageMinigame>().cutting == false && highlight == true)
+        {
+            tileRenderer.material = inactiveMaterial;
+            highlight = false;
         }
     }
 

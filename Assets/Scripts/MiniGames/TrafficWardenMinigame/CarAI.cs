@@ -352,6 +352,11 @@ public class CarAI : MonoBehaviour
                 TrafficWardenMinigameController.Instance.onCarCrashed.Invoke();
             
             Destroy(this.gameObject);
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.carCrash.start();
+            }
         }
     }
 
