@@ -1,4 +1,6 @@
+using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 /// <summary>
 /// Ordinary  – always obeys stop lines, never goes rogue.
@@ -79,6 +81,9 @@ public class CarAI : MonoBehaviour
     [Header("Spawn Protection")]
     public float spawnGracePeriod = 0.5f;
     float spawnTime;
+    
+    public Image behaviourImage,behaviourBackgroundImage;
+    public List<Sprite> moodSprites;
 
     void Start()
     {
@@ -107,6 +112,8 @@ public class CarAI : MonoBehaviour
         // Listen for game end
         if (TrafficWardenMinigameController.Instance != null)
             TrafficWardenMinigameController.Instance.onGameEnded.AddListener(OnGameEnded);
+        
+        SetBehaviourSprite(behaviourType);
     }
     
     public void SetCurrentStopLine(StopLine line)
@@ -119,6 +126,7 @@ public class CarAI : MonoBehaviour
     {
         isRogue = true;
         shouldObey = false;
+        SwitchBehaviourSpriteOnGoRogue();
     }
 
     void Update()
@@ -425,5 +433,37 @@ public class CarAI : MonoBehaviour
         
         // Clear the stop line reference after crossing
         currentStopLine = null;
+    }
+    
+    public void SetBehaviourSprite(CarBehaviourType type)
+    {
+        if (behaviourImage == null || moodSprites == null) return;
+
+        if (type != CarBehaviourType.Ordinary)
+        {
+            behaviourImage.gameObject.SetActive(true);
+            behaviourBackgroundImage.gameObject.SetActive(true);
+        }
+
+        Sprite newSprite = null;
+        switch (type)
+        {
+            case CarBehaviourType.Impatient:
+                newSprite = moodSprites[0];
+                break;
+            case CarBehaviourType.Violator:
+                newSprite = moodSprites[1];
+                break;
+        }
+
+        if (newSprite != null)
+            behaviourImage.sprite = newSprite;
+        
+        
+    }
+    
+    public void SwitchBehaviourSpriteOnGoRogue()
+    {
+        SetBehaviourSprite(CarBehaviourType.Violator);
     }
 }
