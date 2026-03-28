@@ -85,6 +85,8 @@ public class CarAI : MonoBehaviour
     public Image behaviourImage,behaviourBackgroundImage;
     public List<Sprite> moodSprites;
 
+    public float StopLineCrossed = 0;
+    
     void Start()
     {
         // Derive shouldObey from the behaviour type
@@ -359,7 +361,7 @@ public class CarAI : MonoBehaviour
             // Also check the other car's grace period
             if (car.isStopped || isStopped) return;
             if (Time.time - car.spawnTime < car.spawnGracePeriod) return;
-            
+            if(StopLineCrossed>1) return;
             Debug.Log("Car AI Collision");
             
             if(TrafficWardenMinigameController.Instance != null)
@@ -376,18 +378,22 @@ public class CarAI : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (!other.CompareTag("StopLine")) return;
+
+        other.gameObject.TryGetComponent<StopLine>(out StopLine exitedLine);
+        if (!exitedLine.CompareTag("StopLine")) return;
 
         Debug.Log("Collided with " + other.name);
         // Crossed the line
         nearStopLine = false;
         hasCrossedLine = true;
+        
+        StopLineCrossed++;
+
 
         var mg = TrafficWardenMinigameController.Instance;
         if (mg == null) return;
 
         // Check specific stop line state at the moment of exit
-        StopLine exitedLine = other.GetComponent<StopLine>();
         if (exitedLine == null)
             exitedLine = other.GetComponentInParent<StopLine>();
         
