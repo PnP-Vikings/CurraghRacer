@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public enum TrafficEventType { None, Ambulance, Rain, Roadworks }
+public enum TrafficEventType { None, Ambulance, Rain, Roadworks, OldPerson }
 
 /// <summary>Spawn patterns the controller can trigger on the managed spawners.</summary>
 public enum SpawnPattern { Normal, Burst, RushHour, Convoy, Chaos }
@@ -157,6 +157,14 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     // Roadworks blocked lane
     int roadworksBlockedLane = -1;
+
+    // Old Person event
+    [Header("Old Person Event")]
+    [Tooltip("Speed multiplier applied to cars on the affected lane (e.g. 0.35 = 35% speed).")]
+    public float oldPersonSpeedFactor = 0.35f;
+    [Tooltip("Spawn interval multiplier – higher means bigger gaps between slow cars.")]
+    public float oldPersonIntervalFactor = 2.5f;
+    int oldPersonLane = -1;
 
     void Awake()
     {
@@ -355,6 +363,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
             spawners[i].speedMultiplier = speedMul;
             spawners[i].violatorBonus   = violatorAdd;
 
+            // Old Person event: slow down the affected lane
+            if (activeEvent == TrafficEventType.OldPerson && i == oldPersonLane)
+                spawners[i].speedMultiplier = speedMul * oldPersonSpeedFactor;
+
             // Determine if this lane is paused
             if (activeEvent == TrafficEventType.Roadworks && i == roadworksBlockedLane)
                 lanePaused[i] = true;
@@ -386,6 +398,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 effectiveInterval *= 0.35f;
             else if (activePattern == SpawnPattern.Chaos)
                 effectiveInterval *= 0.4f;
+
+            // Old Person event: widen the gap between spawns on the slow lane
+            if (activeEvent == TrafficEventType.OldPerson && i == oldPersonLane)
+                effectiveInterval *= oldPersonIntervalFactor;
 
             // Safety: never let effective interval drop below a hard floor
             effectiveInterval = Mathf.Max(effectiveInterval, 0.3f);
@@ -774,6 +790,10 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (activePattern == SpawnPattern.RushHour && i == rushHourLane)
                 gain *= 1.5f;
 
+            // Old Person lane builds anger a bit faster (cars crawl, drivers get impatient)
+            if (activeEvent == TrafficEventType.OldPerson && i == oldPersonLane)
+                gain *= 1.3f;
+
             // Roadworks-blocked lane doesn't build anger (no cars coming)
             if (activeEvent == TrafficEventType.Roadworks && i == roadworksBlockedLane)
             {
@@ -840,15 +860,20 @@ public class TrafficWardenMinigameController : MonoBehaviour
         TrafficEventType chosenEvent;
         string warningMsg;
         
-        if (r < 0.4f)
+        if (r < 0.30f)
         {
             chosenEvent = TrafficEventType.Rain;
             warningMsg = "<color=#4488FF>RAIN INCOMING!</color> Cars will slide!";
         }
-        else if (r < 0.7f)
+        else if (r < 0.55f)
         {
             chosenEvent = TrafficEventType.Roadworks;
             warningMsg = "<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
+        }
+        else if (r < 0.75f)
+        {
+            chosenEvent = TrafficEventType.OldPerson;
+            warningMsg = "<color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!";
         }
         else
         {
@@ -872,6 +897,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
         
         if (eventType == TrafficEventType.Roadworks && spawners.Length > 0)
             roadworksBlockedLane = Random.Range(0, spawners.Length);
+        else if (eventType == TrafficEventType.OldPerson && spawners.Length > 0)
+            oldPersonLane = Random.Range(0, spawners.Length);
         else if (eventType == TrafficEventType.Ambulance && spawners.Length > 0)
         {
             int lane = Random.Range(0, spawners.Length);
@@ -894,6 +921,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         }
 
         roadworksBlockedLane = -1;
+        oldPersonLane = -1;
         activeEvent = TrafficEventType.None;
         ScheduleNextEvent();
     }
