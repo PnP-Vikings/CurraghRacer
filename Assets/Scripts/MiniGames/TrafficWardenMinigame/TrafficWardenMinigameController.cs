@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public enum TrafficEventType { None, Ambulance, Rain, Roadworks, OldPerson }
 
@@ -124,7 +125,11 @@ public class TrafficWardenMinigameController : MonoBehaviour
     public TMPro.TMP_Text gameOverText;
     public GameObject testDemoButtons;
     public bool showRestartButtons;
-
+    public Image eventIcon;
+    public Image eventIconBackground;
+    public List<Sprite> eventIcons;
+    
+    
     // ── Private state ────────────────────────────────
     float lastToggleTime;
     float nextEventTime;
@@ -881,6 +886,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
             warningMsg = "<color=#FF4444>AMBULANCE!</color> Keep lanes open!";
         }
         
+        ShowEventIcon(chosenEvent);
+        
         // Show warning, then activate after delay
         if (minigameCanvasUI != null)
             minigameCanvasUI.ShowWarning(warningMsg, warningDuration);
@@ -913,7 +920,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     void EndEvent()
     {
         Debug.Log("Event ended: " + activeEvent);
-
+        HideEventIcon();
         if (activeEvent == TrafficEventType.Roadworks && roadworksBlockedLane >= 0
             && roadworksBlockedLane < spawners.Length)
         {
@@ -924,6 +931,53 @@ public class TrafficWardenMinigameController : MonoBehaviour
         oldPersonLane = -1;
         activeEvent = TrafficEventType.None;
         ScheduleNextEvent();
+    }
+    
+    private void ShowEventIcon(TrafficEventType eventType)
+    {
+        if (eventIcon == null || eventIcons == null || eventIcons.Count == 0) return;
+        
+        Sprite iconSprite = null;
+        switch (eventType)
+        {
+            case TrafficEventType.Rain:
+                iconSprite = eventIcons.Find(s => s.name == "RainIcon");
+                break;
+            case TrafficEventType.Roadworks:
+                iconSprite = eventIcons.Find(s => s.name == "RoadworksIcon");
+                break;
+            case TrafficEventType.OldPerson:
+                iconSprite = eventIcons.Find(s => s.name == "OldPersonIcon");
+                break;
+            case TrafficEventType.Ambulance:
+                iconSprite = eventIcons.Find(s => s.name == "AmbulanceIcon");
+                break;
+        }
+
+        if (iconSprite != null)
+        {
+            eventIcon.sprite = iconSprite;
+            eventIcon.gameObject.SetActive(true);
+        }
+        
+        /*if(eventIconBackground != null)
+            eventIconBackground.gameObject.SetActive(true);*/
+
+        if (iconSprite == null)
+        {
+            Debug.LogWarning($"No icon found for event type {eventType}");
+            eventIcon.gameObject.SetActive(false);
+            eventIconBackground.gameObject.SetActive(false);
+        }
+
+    }
+    
+    private void HideEventIcon()
+    {
+        if (eventIcon != null)
+            eventIcon.gameObject.SetActive(false);
+        if (eventIconBackground != null)
+            eventIconBackground.gameObject.SetActive(false);
     }
 
     // ═══════════════════════════════════════════════════
