@@ -26,7 +26,7 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
   - 🎨 **8 color labels** — None, Green, Blue, Yellow, Orange, Red, Purple, Teal
   - 🔥 **Priority levels** — None, Low, Medium, High, Urgent (with emoji indicators)
   - 📅 **Smart due dates** — quick-set buttons (Today, +1d, +3d, +1w, +2w, +1m), overdue/due-today/due-soon alerts with color-coded indicators right on the card
-  - ☑ **Checklists** with progress tracking
+  - ☑ **Checklists** with progress tracking — inline checklist visible on the board with per-card **▾/▸ toggle** to show/hide tasks, plus toolbar **Show All / Hide All** buttons
   - 📦 Archive cards to declutter without deleting
 - **Drag & drop** cards between columns with Trello-style ghost card visual
 - **Reorder** cards within columns (▲/▼)
@@ -153,12 +153,15 @@ Assets/Plugins/AwesomeTaskManager/
 - **Import notes** — Click 📥 to import .md, .txt, or other text files directly as notes
 - **Animated GIFs** — Attach a .gif to a card or note and it will animate live in the editor
 - **Category colors** — Set a default color per category in the Category Manager (🏷 button in the toolbar); new cards auto-inherit the color
+- **Show/Hide checklists** — Use the **▾ Show All** / **▸ Hide All** toolbar buttons to expand or collapse all card checklists at once, or toggle individual cards with the **▾/▸** button on each card
 
 ---
 
 ## 📄 Changelog
 
 ### v1.2.0
+- **Added** ☑ **Checklist visibility controls** — per-card ▾/▸ toggle to show or hide checklist tasks on the board, plus **Show All / Hide All** toolbar buttons for batch control
+- **Added** 🚫 **Cancel confirmation** — when creating a new card, pressing Cancel with unsaved changes now prompts you to confirm
 - **Added** 🎞 Animated GIF playback — GIFs now animate live on the board and in card detail panels via a built-in GIF decoder (no external dependencies)
 - **Added** 📝 Obsidian-style markdown notes — Edit/Preview toggle with inline image rendering via `![[image.png]]` syntax
 - **Added** Markdown preview renderer — headers, bullet lists, numbered lists, interactive checkboxes, horizontal rules, bold/italic/code formatting

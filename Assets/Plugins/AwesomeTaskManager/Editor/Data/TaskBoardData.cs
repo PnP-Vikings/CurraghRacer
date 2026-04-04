@@ -19,6 +19,7 @@ namespace AwesomeTaskManager.Data
         public List<string> checklistItems  = new List<string>();
         public List<bool>   checklistStates = new List<bool>();
         public string imagePath; // relative or absolute path to attached image/gif
+        public bool showChecklist = true; // per-card toggle for showing checklist on board
 
         public TaskCard() { id = Guid.NewGuid().ToString(); createdDate = Now(); category = ""; }
         public TaskCard(string title) : this() { this.title = title; description = ""; }

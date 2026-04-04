@@ -193,6 +193,23 @@ namespace AwesomeTaskManager.Editor
                 EditorGUILayout.LabelField("🔍", GUILayout.Width(18));
                 _searchFilter = EditorGUILayout.TextField(_searchFilter, EditorStyles.toolbarSearchField, GUILayout.Width(140));
 
+                GUILayout.Space(8);
+                if (GUILayout.Button("▾ Show All", EditorStyles.toolbarButton, GUILayout.Width(70)))
+                {
+                    var board2 = _data.boards[_boardIndex];
+                    foreach (var c in board2.columns)
+                        foreach (var card in c.cards)
+                            card.showChecklist = true;
+                    Save();
+                }
+                if (GUILayout.Button("▸ Hide All", EditorStyles.toolbarButton, GUILayout.Width(68)))
+                {
+                    var board2 = _data.boards[_boardIndex];
+                    foreach (var c in board2.columns)
+                        foreach (var card in c.cards)
+                            card.showChecklist = false;
+                    Save();
+                }
                 
             }
             GUILayout.FlexibleSpace();
@@ -438,7 +455,45 @@ namespace AwesomeTaskManager.Editor
             if (card.checklistItems.Count > 0)
             {
                 int done = card.checklistStates.Count(s => s);
-                EditorGUILayout.LabelField($"☑ {done}/{card.checklistItems.Count}", EditorStyles.miniLabel);
+                bool allDone = done == card.checklistItems.Count;
+                var summaryStyle = new GUIStyle(EditorStyles.miniLabel)
+                {
+                    fontStyle = FontStyle.Bold,
+                    normal = { textColor = allDone ? new Color(0.3f, 0.85f, 0.4f) : new Color(0.7f, 0.7f, 0.7f) }
+                };
+
+                EditorGUILayout.BeginHorizontal();
+                EditorGUILayout.LabelField(allDone ? $"✅ {done}/{card.checklistItems.Count} complete" : $"☑ {done}/{card.checklistItems.Count}", summaryStyle);
+                string toggleLabel = card.showChecklist ? "▾" : "▸";
+                if (GUILayout.Button(toggleLabel, TBStyles.IconButton, GUILayout.Width(20), GUILayout.Height(16)))
+                {
+                    card.showChecklist = !card.showChecklist;
+                    Save();
+                }
+                EditorGUILayout.EndHorizontal();
+                
+                // Show individual checklist items inline
+                if (card.showChecklist)
+                {
+                    for (int ci = 0; ci < card.checklistItems.Count; ci++)
+                    {
+                        EditorGUILayout.BeginHorizontal();
+                        GUILayout.Space(8);
+                        bool wasDone = card.checklistStates[ci];
+                        bool nowDone = EditorGUILayout.Toggle(wasDone, GUILayout.Width(16));
+                        if (nowDone != wasDone)
+                        {
+                            card.checklistStates[ci] = nowDone;
+                            Save();
+                        }
+                        var itemStyle = new GUIStyle(EditorStyles.miniLabel);
+                        if (wasDone) itemStyle.fontStyle = FontStyle.Italic;
+                        string itemText = card.checklistItems[ci];
+                        if (itemText.Length > 40) itemText = itemText.Substring(0, 40) + "…";
+                        EditorGUILayout.LabelField(itemText, itemStyle);
+                        EditorGUILayout.EndHorizontal();
+                    }
+                }
             }
 
             // Image thumbnail

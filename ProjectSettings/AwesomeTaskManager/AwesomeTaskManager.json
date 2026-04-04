@@ -34,11 +34,6 @@
         "Bug",
         "Feature"
     ],
-    "categoryColors": [
-        {
-            "category": "poopy",
-            "colorIndex": 4
-        }
-    ],
+    "categoryColors": [],
     "lastBoardIndex": 0
 }

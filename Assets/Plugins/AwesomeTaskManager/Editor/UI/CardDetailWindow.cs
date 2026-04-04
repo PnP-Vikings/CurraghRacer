@@ -364,8 +364,21 @@ namespace AwesomeTaskManager.Editor
                 GUILayout.Space(4);
                 if (GUILayout.Button("Cancel", GUILayout.Height(24)))
                 {
-                    Close();
-                    GUIUtility.ExitGUI();
+                    if (IsNewCardDirty())
+                    {
+                        if (EditorUtility.DisplayDialog("Discard New Card?",
+                            "You have unsaved changes. Are you sure you want to discard this card?",
+                            "Discard", "Keep Editing"))
+                        {
+                            Close();
+                            GUIUtility.ExitGUI();
+                        }
+                    }
+                    else
+                    {
+                        Close();
+                        GUIUtility.ExitGUI();
+                    }
                 }
             }
             else
@@ -405,6 +418,19 @@ namespace AwesomeTaskManager.Editor
                 _lastGifRepaintTime = EditorApplication.timeSinceStartup;
                 EditorApplication.delayCall += Repaint;
             }
+        }
+
+        private bool IsNewCardDirty()
+        {
+            if (!string.IsNullOrWhiteSpace(_card.title)) return true;
+            if (!string.IsNullOrWhiteSpace(_card.description)) return true;
+            if (!string.IsNullOrEmpty(_card.category)) return true;
+            if (!string.IsNullOrEmpty(_card.imagePath)) return true;
+            if (!string.IsNullOrWhiteSpace(_card.dueDate)) return true;
+            if (_card.checklistItems != null && _card.checklistItems.Count > 0) return true;
+            if (_card.colorLabel > 0) return true;
+            if (_card.priority > 0) return true;
+            return false;
         }
 
         private void MarkDirty()
