@@ -1,0 +1,39 @@
+{
+    "boards": [
+        {
+            "id": "a86cd2be-ec5b-4cf9-a069-f5d9be861920",
+            "name": "My First Board",
+            "columns": [
+                {
+                    "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
+                    "title": "📋 To Do",
+                    "cards": []
+                },
+                {
+                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
+                    "title": "🔨 In Progress",
+                    "cards": []
+                },
+                {
+                    "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
+                    "title": "✅ Done",
+                    "cards": []
+                }
+            ],
+            "createdDate": "2026-04-04 01:25"
+        }
+    ],
+    "notes": [],
+    "noteFolders": [],
+    "categories": [
+        "Audio",
+        "Art",
+        "Code",
+        "Design",
+        "UI",
+        "Bug",
+        "Feature"
+    ],
+    "categoryColors": [],
+    "lastBoardIndex": 0
+}
