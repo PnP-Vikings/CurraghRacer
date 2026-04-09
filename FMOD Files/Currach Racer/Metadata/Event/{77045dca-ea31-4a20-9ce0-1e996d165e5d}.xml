@@ -141,6 +141,9 @@
 		<property name="length">
 			<value>0.58870748299319731</value>
 		</property>
+		<property name="pitch">
+			<value>-3</value>
+		</property>
 		<relationship name="sounds">
 			<destination>{fe5ebcef-3cc9-48f8-8875-bd1de8c52ef1}</destination>
 			<destination>{49898fbc-d817-4477-b490-a452ebf2139b}</destination>
@@ -168,6 +171,9 @@
 		</property>
 		<property name="length">
 			<value>0.58825396825396825</value>
+		</property>
+		<property name="pitch">
+			<value>-3</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{7305b465-1ecc-48e3-804d-30c14595ba03}</destination>
@@ -199,6 +205,9 @@
 		</property>
 		<property name="length">
 			<value>0.58825396825396825</value>
+		</property>
+		<property name="pitch">
+			<value>-3</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{69e994d0-c498-49b4-af07-a5d08d2fc456}</destination>
