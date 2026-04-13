@@ -176,6 +176,24 @@ namespace AwesomeTaskManager.Editor
             }
             GUILayout.Space(8);
 
+            // ── Completed Toggle ──
+            EditorGUILayout.BeginHorizontal();
+            {
+                var compStyle = new GUIStyle(EditorStyles.boldLabel);
+                if (_card.completed) compStyle.normal = new GUIStyleState { textColor = new Color(0.3f, 0.85f, 0.4f) };
+                EditorGUILayout.LabelField(_card.completed ? "✅ Completed" : "Status", compStyle, GUILayout.Width(100));
+
+                GUI.backgroundColor = _card.completed ? new Color(0.3f, 0.85f, 0.4f) : Color.white;
+                if (GUILayout.Button(_card.completed ? "Mark Incomplete" : "Mark Complete", GUILayout.Height(22)))
+                {
+                    _card.completed = !_card.completed;
+                    _dirty = true;
+                }
+                GUI.backgroundColor = Color.white;
+            }
+            EditorGUILayout.EndHorizontal();
+            GUILayout.Space(4);
+
             // ── Due Date ──
             EditorGUILayout.LabelField("Due Date", EditorStyles.boldLabel);
             EditorGUILayout.BeginHorizontal();
@@ -187,11 +205,20 @@ namespace AwesomeTaskManager.Editor
                 {
                     DateTime parsed = DateTime.Parse(_card.dueDate);
                     int daysUntil = (parsed.Date - DateTime.Today).Days;
-                    string statusIcon = daysUntil < 0 ? "🔴" : daysUntil == 0 ? "🟠" : daysUntil <= 3 ? "🟡" : "📅";
-                    string statusText = daysUntil < 0 ? $"Overdue by {-daysUntil}d"
-                        : daysUntil == 0 ? "Due today!"
-                        : daysUntil <= 3 ? $"Due in {daysUntil}d"
-                        : $"Due {parsed:MMM dd, yyyy}";
+                    string statusIcon, statusText;
+                    if (_card.completed)
+                    {
+                        statusIcon = "✅";
+                        statusText = $"Completed (was due {parsed:MMM dd})";
+                    }
+                    else
+                    {
+                        statusIcon = daysUntil < 0 ? "🔴" : daysUntil == 0 ? "🟠" : daysUntil <= 3 ? "🟡" : "📅";
+                        statusText = daysUntil < 0 ? $"Overdue by {-daysUntil}d"
+                            : daysUntil == 0 ? "Due today!"
+                            : daysUntil <= 3 ? $"Due in {daysUntil}d"
+                            : $"Due {parsed:MMM dd, yyyy}";
+                    }
 
                     EditorGUILayout.LabelField($"{statusIcon} {statusText}", GUILayout.Width(180));
                 }
