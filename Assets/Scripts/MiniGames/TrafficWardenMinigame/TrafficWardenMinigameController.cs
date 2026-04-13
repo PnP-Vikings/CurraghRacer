@@ -1222,6 +1222,11 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
     System.Collections.IEnumerator ShowStrikeRecovery()
     {
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.scribble.start();
+        }
+
         minigameCanvasUI.ShowAdditionalInfo();
         minigameCanvasUI.UpdateAdditionalInfo("<color=#44FF44>Strike Removed!</color>");
         yield return new WaitForSeconds(1.5f);

@@ -1220,6 +1220,7 @@ MonoBehaviour:
   phaseTransitionCamera: {fileID: 1068836513}
   transitionDuration: 1
   lookAtBenchLocation: {fileID: 296186913}
+  weightLiftingAudio: {fileID: 809329824}
 --- !u!4 &345291561
 Transform:
   m_ObjectHideFlags: 0
@@ -2825,6 +2826,7 @@ GameObject:
   - component: {fileID: 809329821}
   - component: {fileID: 809329822}
   - component: {fileID: 809329823}
+  - component: {fileID: 809329824}
   m_Layer: 0
   m_Name: WeightLifting Ambience
   m_TagString: Untagged
@@ -2908,9 +2910,26 @@ MonoBehaviour:
   Params:
   - Name: Radioify
     Value: 1
+  - Name: Dance Track Volume
+    Value: 0.95
+  - Name: Radioify Dance Track
+    Value: 0
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
+--- !u!114 &809329824
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 809329820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 784299e23723c504a945d01a16bf4eb1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeightLiftingAudio
+  danceTrackEmitter: {fileID: 809329823}
 --- !u!1 &813386867
 GameObject:
   m_ObjectHideFlags: 0

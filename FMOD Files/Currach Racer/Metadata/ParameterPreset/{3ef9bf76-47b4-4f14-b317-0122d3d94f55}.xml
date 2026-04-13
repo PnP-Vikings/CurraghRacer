@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{3ef9bf76-47b4-4f14-b317-0122d3d94f55}">
+		<property name="name">
+			<value>Power Meter Pitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{c32296ef-d701-471f-8b19-ff5e70d3df36}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{c32296ef-d701-471f-8b19-ff5e70d3df36}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.61000001430511475</value>
+		</property>
+	</object>
+</objects>

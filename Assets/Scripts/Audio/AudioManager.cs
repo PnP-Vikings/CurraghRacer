@@ -101,6 +101,11 @@ public class AudioManager : MonoBehaviour
     //public EventInstance carEngine;
     public EventInstance carCrash;
 
+    public EventInstance strikeRemoved;
+    public EventInstance scribble;
+
+    public EventInstance PowerMeter;
+
     private Scene activeScene;
     void Awake()
     {
@@ -216,6 +221,10 @@ public class AudioManager : MonoBehaviour
         bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
 
         carCrash = RuntimeManager.CreateInstance("event:/Traffic Warden/Car Crash");
+
+        scribble = RuntimeManager.CreateInstance("event:/UI/Scribble On Bulletin Board");
+
+        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
     }
 
     private void Update()
