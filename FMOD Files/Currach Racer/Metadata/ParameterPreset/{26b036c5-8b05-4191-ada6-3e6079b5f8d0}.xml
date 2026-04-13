@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{26b036c5-8b05-4191-ada6-3e6079b5f8d0}">
+		<property name="name">
+			<value>Dance Track Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{f52a38a7-7a4e-4f5e-a347-4165cc3fe3d9}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{f52a38a7-7a4e-4f5e-a347-4165cc3fe3d9}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

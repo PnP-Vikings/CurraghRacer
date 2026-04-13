@@ -33,6 +33,7 @@
 		</relationship>
 		<relationship name="parameters">
 			<destination>{edc09056-a3fd-44c9-b2ff-4aed3efae876}</destination>
+			<destination>{8803ca70-31dc-4354-85bb-fbab73cb57e8}</destination>
 		</relationship>
 		<relationship name="banks">
 			<destination>{011f741e-96fd-4906-9cbc-ed3ad1af43d5}</destination>
@@ -70,6 +71,7 @@
 			<destination>{1a6a4ace-5ef8-4413-b05d-31807479cd06}</destination>
 			<destination>{4909887c-919f-4b15-be74-4d466dc12717}</destination>
 			<destination>{f4d774a1-4b94-482a-b5af-b1433d1a4786}</destination>
+			<destination>{5ac30bf9-5b95-4673-80bc-614b303a24c3}</destination>
 		</relationship>
 		<relationship name="modules">
 			<destination>{9e4fd697-93c2-4325-a9fc-6835163fd69d}</destination>
@@ -89,6 +91,11 @@
 	<object class="ParameterProxy" id="{edc09056-a3fd-44c9-b2ff-4aed3efae876}">
 		<relationship name="preset">
 			<destination>{6737c45d-5b71-4429-a62e-fce2488656cb}</destination>
+		</relationship>
+	</object>
+	<object class="ParameterProxy" id="{8803ca70-31dc-4354-85bb-fbab73cb57e8}">
+		<relationship name="preset">
+			<destination>{f52a38a7-7a4e-4f5e-a347-4165cc3fe3d9}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerMaster" id="{fa932b09-6636-4a0f-92ac-56e318dcea68}">
@@ -143,10 +150,18 @@
 			<destination>{02bf8764-69e8-4b7f-bbb5-1ac10f57b62f}</destination>
 		</relationship>
 	</object>
+	<object class="AutomationTrack" id="{5ac30bf9-5b95-4673-80bc-614b303a24c3}">
+		<relationship name="automator">
+			<destination>{8248e4a8-4d00-40d8-a136-8c05cd875df6}</destination>
+		</relationship>
+	</object>
 	<object class="SingleSound" id="{9e4fd697-93c2-4325-a9fc-6835163fd69d}">
 		<property name="length">
 			<value>53.333333333333336</value>
 		</property>
+		<relationship name="automators">
+			<destination>{8248e4a8-4d00-40d8-a136-8c05cd875df6}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{33da7034-a908-4e4c-ac78-4b8a5085dbb0}</destination>
 		</relationship>
@@ -187,6 +202,14 @@
 	</object>
 	<object class="MixerBusPanner" id="{8eff43e0-cd69-4014-85fe-b4b2599942b8}" />
 	<object class="MixerBusFader" id="{17e214ae-17b5-4652-bbde-edf8f6bc15f6}" />
+	<object class="Automator" id="{8248e4a8-4d00-40d8-a136-8c05cd875df6}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>volume</value>
+		</property>
+		<relationship name="automationCurves">
+			<destination>{4115e57b-f482-4f33-883e-896e62a85ef3}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{2c4af69d-8256-4267-bd60-de882fb98342}">
 		<relationship name="effects">
 			<destination>{b7219bb3-facd-4703-9029-28fb2e6378d2}</destination>
@@ -202,6 +225,15 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{17012d53-8755-4932-9bcb-48af67c6e511}" />
+	<object class="AutomationCurve" id="{4115e57b-f482-4f33-883e-896e62a85ef3}">
+		<relationship name="parameter">
+			<destination>{f52a38a7-7a4e-4f5e-a347-4165cc3fe3d9}</destination>
+		</relationship>
+		<relationship name="automationPoints">
+			<destination>{3c4f8912-5fce-4c76-9aa1-dcaa1a974741}</destination>
+			<destination>{1d3b0293-9bd8-4e80-b2f1-f795927eb80f}</destination>
+		</relationship>
+	</object>
 	<object class="DistortionEffect" id="{b7219bb3-facd-4703-9029-28fb2e6378d2}">
 		<property name="level">
 			<value>0.314999998</value>
@@ -227,6 +259,22 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{daa3bdf8-1859-4f19-8c62-57935881571e}" />
+	<object class="AutomationPoint" id="{3c4f8912-5fce-4c76-9aa1-dcaa1a974741}">
+		<property name="position">
+			<value>1</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{1d3b0293-9bd8-4e80-b2f1-f795927eb80f}">
+		<property name="position">
+			<value>0</value>
+		</property>
+		<property name="value">
+			<value>-80</value>
+		</property>
+	</object>
 	<object class="Automator" id="{1a409f22-e7a4-42d8-8d22-4a54fef8019b}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>level</value>
