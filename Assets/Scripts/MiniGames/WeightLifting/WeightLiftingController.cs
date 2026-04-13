@@ -187,7 +187,8 @@ public class WeightLiftingController : MonoBehaviour
     private Tween currentDelayTween;
 
     private bool barSlideAudioIsPlaying = false;
-    
+    [SerializeField] WeightLiftingAudio weightLiftingAudio;
+
     private void Awake()
     {
         if (Instance == null)
@@ -635,6 +636,10 @@ public class WeightLiftingController : MonoBehaviour
                 goMessageTimer = 0f; // Start GO message timer
                 UpdatePhaseUI("PHASE 2: LIFT", "GO!\nTap when the meter hits the green zone!");
                 phaseTimer = 0f; // Reset timer for lift duration
+
+
+                weightLiftingAudio.StartPowerMeterAudio();
+                //StartCoroutine(weightLiftingAudio.StartPowerMeterAudio());
             }
             else
             {
@@ -747,6 +752,8 @@ public class WeightLiftingController : MonoBehaviour
             .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
             .AppendInterval(1f)
             .AppendCallback(() => TransitionToHoldPhase());
+
+        weightLiftingAudio.StopPowerMeterAudio();
     }
     
     #endregion
@@ -982,7 +989,7 @@ public class WeightLiftingController : MonoBehaviour
         
         Debug.Log("Successful lift! Weight: " + currentWeight + "kg, Strength gained: " + strengthGain);
 
-        PlayBoxingSuccessSound();
+        StartCoroutine(weightLiftingAudio.PlayBoxingSuccessAudio());
 
         if(successfulReps >= maxSuccessfulReps)
         {
@@ -1296,14 +1303,6 @@ public class WeightLiftingController : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.dumbbellSlide.start();
-        }
-    }
-
-    public void PlayBoxingSuccessSound()
-    {
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.weightliftingSuccess.start();
         }
     }
 
