@@ -2863,6 +2863,7 @@ MonoBehaviour:
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}
   boxingAudio: {fileID: 0}
+  trafficWardenAudio: {fileID: 1853407906}
 --- !u!1 &1450603467
 GameObject:
   m_ObjectHideFlags: 0
@@ -3873,6 +3874,51 @@ RectTransform:
   m_AnchoredPosition: {x: 345.36, y: -1.8}
   m_SizeDelta: {x: 336.04, y: 112.3}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!1 &1853407905
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1853407907}
+  - component: {fileID: 1853407906}
+  m_Layer: 0
+  m_Name: Audio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1853407906
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853407905}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cc4010d5699a3a478f0868a29c862cf, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::TrafficWardenAudio
+  trafficWardenMinigameController: {fileID: 1132238285}
+--- !u!4 &1853407907
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1853407905}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.68853, y: -6.04, z: 24.17798}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &1936419300
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5106,3 +5152,4 @@ SceneRoots:
   - {fileID: 775334697}
   - {fileID: 101484903}
   - {fileID: 2108784734}
+  - {fileID: 1853407907}

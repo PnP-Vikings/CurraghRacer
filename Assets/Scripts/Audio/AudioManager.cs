@@ -100,6 +100,8 @@ public class AudioManager : MonoBehaviour
 
     //public EventInstance carEngine;
     public EventInstance carCrash;
+    public EventInstance rain;
+    public EventInstance roadworks;
 
     public EventInstance strikeRemoved;
     public EventInstance scribble;
@@ -221,6 +223,8 @@ public class AudioManager : MonoBehaviour
         bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
 
         carCrash = RuntimeManager.CreateInstance("event:/Traffic Warden/Car Crash");
+        rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");
+        roadworks = RuntimeManager.CreateInstance("event:/Ambiences/Roadworks");
 
         scribble = RuntimeManager.CreateInstance("event:/UI/Scribble On Bulletin Board");
 
