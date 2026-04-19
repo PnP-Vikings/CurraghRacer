@@ -155,13 +155,22 @@ namespace AwesomeTaskManager.Editor
 
                 if (GUILayout.Button("+", EditorStyles.toolbarButton, GUILayout.Width(22)))
                 {
-                    _data.boards.Add(new TaskBoard("New Board"));
+                    string baseName = "New Board";
+                    string newName = baseName;
+                    int suffix = 2;
+                    while (_data.boards.Any(b => b.name == newName))
+                    {
+                        newName = $"{baseName} {suffix}";
+                        suffix++;
+                    }
+                    _data.boards.Add(new TaskBoard(newName));
                     _boardIndex = _data.boards.Count - 1;
                     Save();
                 }
                 if (_data.boards.Count > 1 && GUILayout.Button("✕", EditorStyles.toolbarButton, GUILayout.Width(22)))
                 {
-                    if (EditorUtility.DisplayDialog("Delete Board", $"Delete \"{Board.name}\"?", "Delete", "Cancel"))
+                    string boardName = _data.boards[_boardIndex].name;
+                    if (EditorUtility.DisplayDialog("Delete Board", $"Delete \"{boardName}\"?", "Delete", "Cancel"))
                     {
                         _data.boards.RemoveAt(_boardIndex);
                         _boardIndex = Mathf.Clamp(_boardIndex, 0, _data.boards.Count - 1);
@@ -285,9 +294,10 @@ namespace AwesomeTaskManager.Editor
             // ── Status bar ──
             var allCards = board.columns.SelectMany(c => c.cards).Where(c => !c.archived).ToList();
             int totalCards = allCards.Count;
-            int overdueCount = allCards.Count(c => !string.IsNullOrWhiteSpace(c.dueDate)
+            int completedCount = allCards.Count(c => c.completed);
+            int overdueCount = allCards.Count(c => !c.completed && !string.IsNullOrWhiteSpace(c.dueDate)
                 && DateTime.TryParse(c.dueDate, out var d) && d.Date < DateTime.Today);
-            int dueTodayCount = allCards.Count(c => !string.IsNullOrWhiteSpace(c.dueDate)
+            int dueTodayCount = allCards.Count(c => !c.completed && !string.IsNullOrWhiteSpace(c.dueDate)
                 && DateTime.TryParse(c.dueDate, out var d) && d.Date == DateTime.Today);
 
             var statusRect = GUILayoutUtility.GetRect(0, 20, GUILayout.ExpandWidth(true));
@@ -295,6 +305,7 @@ namespace AwesomeTaskManager.Editor
                 ? new Color(0.16f, 0.16f, 0.16f) : new Color(0.85f, 0.85f, 0.85f));
 
             string statusText = $"  {totalCards} card(s)";
+            if(completedCount > 0) statusText += $"  •  🟢 {completedCount} Completed";
             if (overdueCount > 0) statusText += $"  •  🔴 {overdueCount} overdue";
             if (dueTodayCount > 0) statusText += $"  •  🟠 {dueTodayCount} due today";
             statusText += $"  •  {board.columns.Count} column(s)";
@@ -421,9 +432,22 @@ namespace AwesomeTaskManager.Editor
             }
 
             EditorGUILayout.BeginHorizontal();
+            // Completed toggle
+            string compIcon = card.completed ? "✅" : "⬜";
+            if (GUILayout.Button(compIcon, TBStyles.IconButton, GUILayout.Width(24), GUILayout.Height(20)))
+            {
+                card.completed = !card.completed;
+                Save();
+            }
             if (card.priority > 0)
                 EditorGUILayout.LabelField(TBStyles.PriorityIcons[card.priority], GUILayout.Width(18));
-            EditorGUILayout.LabelField(card.title, TBStyles.CardTitle);
+            var titleStyle = new GUIStyle(TBStyles.CardTitle);
+            if (card.completed)
+            {
+                titleStyle.fontStyle = FontStyle.Italic;
+                titleStyle.normal = new GUIStyleState { textColor = new Color(0.5f, 0.8f, 0.5f) };
+            }
+            EditorGUILayout.LabelField(card.title, titleStyle);
             Rect dragHandleRect = GUILayoutUtility.GetRect(new GUIContent("↕"), TBStyles.IconButton, GUILayout.Width(26), GUILayout.Height(24));
             GUI.Box(dragHandleRect, "↕", TBStyles.IconButton);
             HandleCardDragHandle(card, col, dragHandleRect);
@@ -507,7 +531,13 @@ namespace AwesomeTaskManager.Editor
                 var dueDateStyle = new GUIStyle(EditorStyles.miniLabel);
                 string dueDateText = $"📅 {card.dueDate}";
 
-                if (DateTime.TryParse(card.dueDate, out DateTime parsedDue))
+                if (card.completed)
+                {
+                    dueDateText = "✅ Completed";
+                    dueDateStyle.normal = new GUIStyleState { textColor = new Color(0.3f, 0.85f, 0.4f) };
+                    dueDateStyle.fontStyle = FontStyle.Bold;
+                }
+                else if (DateTime.TryParse(card.dueDate, out DateTime parsedDue))
                 {
                     var today = DateTime.Today;
                     int daysUntil = (parsedDue.Date - today).Days;
