@@ -26,6 +26,7 @@ public class MinigameCanvasUI : MonoBehaviour
     Coroutine warningCoroutine;
 
     [SerializeField] BoxingAudio boxingAudio;
+    [SerializeField] TrafficWardenAudio trafficWardenAudio;
 
     public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
     {
@@ -133,6 +134,11 @@ public class MinigameCanvasUI : MonoBehaviour
                 if (boxingAudio != null)
                 {
                     StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
+                }
+
+                if (trafficWardenAudio != null)
+                {
+                    trafficWardenAudio.MuteRainAndRoadworks();
                 }
             }
         }
