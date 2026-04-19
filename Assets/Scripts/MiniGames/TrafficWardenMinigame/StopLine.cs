@@ -28,6 +28,9 @@ public class StopLine : MonoBehaviour
     public Image laneAngerIndicator; // Optional UI element to show lane status
     
     public int laneIndex = -1; // Set by controller to identify which lane this is (0, 1, or 2)
+    
+    [Header("View from TopdownCamera")]
+    public string laneOrientation = "Left"; 
 
     [Header("Mood Thresholds")]
     [Tooltip("Anger value below this → Happy")]

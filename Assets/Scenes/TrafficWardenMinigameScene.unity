@@ -204,6 +204,10 @@ PrefabInstance:
       propertyPath: stopStopLines
       value: 
       objectReference: {fileID: 1695512241}
+    - target: {fileID: 5927496644200560060, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: laneOrientation
+      value: Bottom
+      objectReference: {fileID: 0}
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 30
@@ -1468,6 +1472,10 @@ PrefabInstance:
       propertyPath: stopStopLines
       value: 
       objectReference: {fileID: 1259216562}
+    - target: {fileID: 5927496644200560060, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: laneOrientation
+      value: Top
+      objectReference: {fileID: 0}
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -40
@@ -1881,7 +1889,7 @@ MonoBehaviour:
   bestCombo: 0
   basePoints: 1
   strikes: 0
-  maxStrikes: 3
+  maxStrikes: 5
   penaltyCooldown: 0.5
   strikeDecayTime: 10
   onCarCrashed:
@@ -3959,6 +3967,10 @@ PrefabInstance:
       propertyPath: stopStopLines
       value: 
       objectReference: {fileID: 580732237}
+    - target: {fileID: 5927496644200560060, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: laneOrientation
+      value: Right
+      objectReference: {fileID: 0}
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalPosition.x
       value: -19.833454
@@ -4006,6 +4018,10 @@ PrefabInstance:
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -5056,6 +5072,10 @@ PrefabInstance:
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane
+      objectReference: {fileID: 0}
+    - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
