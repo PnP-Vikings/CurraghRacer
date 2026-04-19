@@ -468,20 +468,26 @@ public class TrafficWardenMinigameController : MonoBehaviour
         SpawnPattern chosenPattern;
         string warningMsg;
         
+        // Pre-pick the target lane so we can show the orientation in the warning
+        int chosenLane = Random.Range(0, spawners.Length);
+        string laneDir = (stopLines != null && chosenLane < stopLines.Length && stopLines[chosenLane] != null)
+            ? stopLines[chosenLane].laneOrientation
+            : $"Lane {chosenLane + 1}";
+        
         if (r < 0.30f)
         {
             chosenPattern = SpawnPattern.Burst;
-            warningMsg = "<color=#FF4400>* BURST!</color> Rapid cars on one lane!";
+            warningMsg = $"<color=#FF4400>* BURST!</color> Rapid cars from the <color=#FFFFFF>{laneDir}</color>!";
         }
         else if (r < 0.55f)
         {
             chosenPattern = SpawnPattern.RushHour;
-            warningMsg = "<color=#FFAA00>RUSH HOUR!</color> Heavy traffic ahead!";
+            warningMsg = $"<color=#FFAA00>RUSH HOUR!</color> Heavy traffic from the <color=#FFFFFF>{laneDir}</color>!";
         }
         else if (r < 0.80f)
         {
             chosenPattern = SpawnPattern.Convoy;
-            warningMsg = "<color=#FFAA00>CONVOY!</color> Tight formation incoming!";
+            warningMsg = $"<color=#FFAA00>CONVOY!</color> Tight formation from the <color=#FFFFFF>{laneDir}</color>!";
         }
         else if (t > 0.5f) // Chaos only after halfway through difficulty curve
         {
@@ -491,7 +497,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         else
         {
             chosenPattern = SpawnPattern.Burst;
-            warningMsg = "<color=#FF4400>* BURST!</color> Rapid cars on one lane!";
+            warningMsg = $"<color=#FF4400>* BURST!</color> Rapid cars from the <color=#FFFFFF>{laneDir}</color>!";
         }
 
         // Show warning, then activate after a short heads-up
@@ -499,19 +505,19 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (minigameCanvasUI != null)
             minigameCanvasUI.ShowWarning(warningMsg, patternWarning);
         
-        StartCoroutine(ActivatePatternDelayed(chosenPattern, patternWarning));
+        StartCoroutine(ActivatePatternDelayed(chosenPattern, patternWarning, chosenLane));
     }
     
-    System.Collections.IEnumerator ActivatePatternDelayed(SpawnPattern pattern, float delay)
+    System.Collections.IEnumerator ActivatePatternDelayed(SpawnPattern pattern, float delay, int lane)
     {
         yield return new WaitForSeconds(delay);
         if (gameEnded) yield break;
         
         switch (pattern)
         {
-            case SpawnPattern.Burst:   StartBurst();     break;
-            case SpawnPattern.RushHour: StartRushHour();  break;
-            case SpawnPattern.Convoy:  StartConvoy();    break;
+            case SpawnPattern.Burst:   StartBurst(lane);     break;
+            case SpawnPattern.RushHour: StartRushHour(lane);  break;
+            case SpawnPattern.Convoy:  StartConvoy(lane);    break;
             case SpawnPattern.Chaos:   StartChaos();     break;
         }
         Debug.Log($"Spawn pattern started: {activePattern}");
@@ -526,11 +532,11 @@ public class TrafficWardenMinigameController : MonoBehaviour
     }
 
     // ── Burst: rapid-fire 3-5 cars on a random lane ──
-    void StartBurst()
+    void StartBurst(int lane)
     {
         activePattern = SpawnPattern.Burst;
         patternEndTime = Time.time + 5f;
-        burstLane = Random.Range(0, spawners.Length);
+        burstLane = lane;
         burstRemaining = Random.Range(3, 6);
         burstInterval = 0.4f;
         burstTimer = 0f;
@@ -551,19 +557,19 @@ public class TrafficWardenMinigameController : MonoBehaviour
     }
 
     // ── Rush Hour: one lane spawns much faster ──
-    void StartRushHour()
+    void StartRushHour(int lane)
     {
         activePattern = SpawnPattern.RushHour;
         patternEndTime = Time.time + Random.Range(6f, 10f);
-        rushHourLane = Random.Range(0, spawners.Length);
+        rushHourLane = lane;
     }
 
     // ── Convoy: cars spawn in a tight single-file ──
-    void StartConvoy()
+    void StartConvoy(int lane)
     {
         activePattern = SpawnPattern.Convoy;
         patternEndTime = Time.time + 6f;
-        convoyLane = Random.Range(0, spawners.Length);
+        convoyLane = lane;
         convoyRemaining = Random.Range(4, 7);
         convoyInterval = 0.8f;
         convoyTimer = 0f;
@@ -815,7 +821,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             {
                 // Unleash all cars on this lane — they floor it through the stop
                 UnleashLane(i);
-                AddStrike($"Lane {i + 1} anger overflow!");
+                AddStrike($"{stopLines[i].laneOrientation} Lane anger overflow!");
                 laneAnger[i] = 0f;
                 ResetCombo();
             }
@@ -874,11 +880,19 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             chosenEvent = TrafficEventType.Roadworks;
             warningMsg = "<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
+            if (stopLines[roadworksBlockedLane] != null)
+            {
+                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[roadworksBlockedLane].laneOrientation} lane is crawling!";
+            }
         }
         else if (r < 0.75f)
         {
             chosenEvent = TrafficEventType.OldPerson;
             warningMsg = "<color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!";
+            if (stopLines[oldPersonLane] != null)
+            {
+                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[oldPersonLane].laneOrientation} lane is crawling!";
+            }
         }
         else
         {
@@ -967,7 +981,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             Debug.LogWarning($"No icon found for event type {eventType}");
             eventIcon.gameObject.SetActive(false);
-            eventIconBackground.gameObject.SetActive(false);
+            if (eventIconBackground != null)
+                eventIconBackground.gameObject.SetActive(false);
         }
 
     }

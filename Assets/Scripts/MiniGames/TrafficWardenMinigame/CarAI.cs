@@ -34,7 +34,8 @@ public class CarAI : MonoBehaviour
     public float impatientRunChancePerSec = 0.03f;
 
     float speed;
-    Vector3 dir; // Remove the = Vector3.forward initialization
+    Vector3 dir;
+    Rigidbody rb;
 
     bool nearStopLine;
     bool hasCrossedLine;
@@ -106,6 +107,16 @@ public class CarAI : MonoBehaviour
         speed = Random.Range(maxSpeed * 0.6f, maxSpeed * 1.1f);
         dir = transform.forward; // Use the car's local forward direction at spawn
         spawnTime = Time.time;
+        
+        // Lock Rigidbody rotation & lateral drift so physics collisions
+        // can't knock the car off its straight-line path.
+        rb = GetComponent<Rigidbody>();
+        if (rb != null)
+        {
+            rb.constraints = RigidbodyConstraints.FreezeRotation
+                           | RigidbodyConstraints.FreezePositionY;
+            rb.interpolation = RigidbodyInterpolation.None;
+        }
         
         // Auto-detect car layer if not set
         if (carLayer == 0)
@@ -234,6 +245,13 @@ public class CarAI : MonoBehaviour
         isStopped = speed <= 0.05f;
 
         transform.position += dir * (speed * Time.deltaTime);
+
+        // Correct any lateral drift caused by physics collision impulses
+        if (rb != null)
+        {
+            rb.linearVelocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+        }
     }
 
     void CheckCarAhead()
@@ -408,8 +426,8 @@ public class CarAI : MonoBehaviour
                 {
                     // Only penalize if the stop was already active when the car entered
                     // (don't punish for a light that changed while car was mid-crossing)
-                    if (stopWasActiveOnEntry && laneIndex == exitedLine.GetLaneIndex())
-                        mg.Penalize("Car crossed during STOP");
+                    /*if (stopWasActiveOnEntry && laneIndex == exitedLine.GetLaneIndex())
+                        mg.Penalize("Car crossed during STOP");*/
                     // else: car entered on green, light changed mid-crossing — no penalty
                 }
                 else
@@ -450,15 +468,17 @@ public class CarAI : MonoBehaviour
             behaviourImage.gameObject.SetActive(true);
             behaviourBackgroundImage.gameObject.SetActive(true);
         }
-
+        behaviourBackgroundImage.color = Color.black; // default background for Ordinary or reset
         Sprite newSprite = null;
         switch (type)
         {
             case CarBehaviourType.Impatient:
                 newSprite = moodSprites[0];
+                behaviourBackgroundImage.color = Color.orange; // more orange background for Impatient
                 break;
             case CarBehaviourType.Violator:
                 newSprite = moodSprites[1];
+                behaviourBackgroundImage.color = new Color(0.8f, 0.3f, 0.3f); // more red background for Violators
                 break;
         }
 

@@ -9,7 +9,7 @@ public class TrafficWardenAudio : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Active event is " + trafficWardenMinigameController.activeEvent + " - AudioDebug");
+        //Debug.Log("Active event is " + trafficWardenMinigameController.activeEvent + " - AudioDebug");
         
 
         if (AudioManager.instance != null)
