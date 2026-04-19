@@ -175,7 +175,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: -5382686370942620851, guid: 4a772cea97627924e8f9202f9849c74b, type: 3}
+  - {fileID: -7345717220280518711, guid: a6bb431b2ebb13944bb862f8d8115e1f, type: 3}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -257,6 +257,7 @@ MonoBehaviour:
   moodSprites:
   - {fileID: 21300000, guid: 457553bef96917e4f9f785d0d7422b2f, type: 3}
   - {fileID: 21300000, guid: 679e7e5ad688a77469801f75422caf15, type: 3}
+  StopLineCrossed: 0
 --- !u!54 &112914660092935947
 Rigidbody:
   m_ObjectHideFlags: 0

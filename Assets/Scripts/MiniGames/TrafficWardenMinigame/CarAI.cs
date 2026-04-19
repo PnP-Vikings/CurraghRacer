@@ -450,15 +450,17 @@ public class CarAI : MonoBehaviour
             behaviourImage.gameObject.SetActive(true);
             behaviourBackgroundImage.gameObject.SetActive(true);
         }
-
+        behaviourBackgroundImage.color = Color.black; // default background for Ordinary or reset
         Sprite newSprite = null;
         switch (type)
         {
             case CarBehaviourType.Impatient:
                 newSprite = moodSprites[0];
+                behaviourBackgroundImage.color = Color.orange; // more orange background for Impatient
                 break;
             case CarBehaviourType.Violator:
                 newSprite = moodSprites[1];
+                behaviourBackgroundImage.color = new Color(0.8f, 0.3f, 0.3f); // more red background for Violators
                 break;
         }
 
