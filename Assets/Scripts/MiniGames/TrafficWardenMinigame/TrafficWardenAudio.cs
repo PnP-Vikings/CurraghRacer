@@ -10,7 +10,6 @@ public class TrafficWardenAudio : MonoBehaviour
     void Update()
     {
         //Debug.Log("Active event is " + trafficWardenMinigameController.activeEvent + " - AudioDebug");
-        
 
         if (AudioManager.instance != null)
         {
@@ -20,13 +19,13 @@ public class TrafficWardenAudio : MonoBehaviour
             switch (trafficWardenMinigameController.activeEvent)
             {
                 case TrafficEventType.None:
-                    MuteRainAndRoadworks();
+                    StopRainAndRoadworks();
                     break;
                 case TrafficEventType.OldPerson:
-                    MuteRainAndRoadworks();
+                    StopRainAndRoadworks();
                     break;
                 case TrafficEventType.Ambulance:
-                    MuteRainAndRoadworks();
+                    StopRainAndRoadworks();
                     break;
                 case TrafficEventType.Rain:
                     if(rainPlaybackState == PLAYBACK_STATE.STOPPED)
@@ -45,7 +44,7 @@ public class TrafficWardenAudio : MonoBehaviour
             }
         }
     }
-    public void MuteRainAndRoadworks()
+    public void StopRainAndRoadworks()
     {
         AudioManager.instance.rain.stop(STOP_MODE.ALLOWFADEOUT);
         AudioManager.instance.roadworks.stop(STOP_MODE.ALLOWFADEOUT);
