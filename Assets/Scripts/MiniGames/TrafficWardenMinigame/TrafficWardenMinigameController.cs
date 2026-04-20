@@ -471,7 +471,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         // Pre-pick the target lane so we can show the orientation in the warning
         int chosenLane = Random.Range(0, spawners.Length);
         string laneDir = (stopLines != null && chosenLane < stopLines.Length && stopLines[chosenLane] != null)
-            ? stopLines[chosenLane].laneOrientation
+            ? stopLines[chosenLane].laneOrientation + " Lane"
             : $"Lane {chosenLane + 1}";
         
         if (r < 0.30f)

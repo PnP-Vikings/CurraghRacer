@@ -7,7 +7,30 @@
                 {
                     "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
                     "title": "📋 To Do",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "8719b392-2845-4b10-83d5-fc77c45cbe10",
+                            "title": "Add Traffic Warden Game to list of jobs",
+                            "description": "",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-04-20 19:54",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Intregrate the games win conditon with the rest of the minigame menu",
+                                "Intregrate the games LOSS conditon with the rest of the minigame menu"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false
+                        }
+                    ]
                 },
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
@@ -18,6 +41,28 @@
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
                     "title": "✅ Done",
                     "cards": []
+                },
+                {
+                    "id": "f33aae9a-eb35-4d85-873d-6607e6087c3b",
+                    "title": "Would be nice",
+                    "cards": [
+                        {
+                            "id": "b4756212-036f-4e7e-a228-d764623da45f",
+                            "title": "Traffic Warden Game Add particles on crash ",
+                            "description": "",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-04-20 19:56",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false
+                        }
+                    ]
                 }
             ],
             "createdDate": "2026-04-04 01:25"
@@ -32,8 +77,18 @@
         "Design",
         "UI",
         "Bug",
-        "Feature"
+        "Feature",
+        "Gameplay"
     ],
-    "categoryColors": [],
+    "categoryColors": [
+        {
+            "category": "Gameplay",
+            "colorIndex": 1
+        },
+        {
+            "category": "Art",
+            "colorIndex": 2
+        }
+    ],
     "lastBoardIndex": 0
 }
