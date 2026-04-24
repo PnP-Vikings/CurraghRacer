@@ -32,39 +32,42 @@ namespace AwesomeTaskManager.Editor
                 return;
             }
 
-            _scroll = EditorGUILayout.BeginScrollView(_scroll);
+            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+            {
+                _scroll = scope.scrollPosition;
 
-            EditorGUILayout.LabelField("Category Manager", EditorStyles.boldLabel);
-            EditorGUILayout.HelpBox("Add, rename, delete categories and choose each category's default card color.", MessageType.None);
-            GUILayout.Space(4);
+                EditorGUILayout.LabelField("Category Manager", EditorStyles.boldLabel);
+                EditorGUILayout.HelpBox("Add, rename, delete categories and choose each category's default card color.", MessageType.None);
+                GUILayout.Space(4);
 
-            DrawAddCategorySection();
-            GUILayout.Space(8);
-            DrawSeparator();
-            GUILayout.Space(8);
-            DrawCategoryList();
-
-            EditorGUILayout.EndScrollView();
+                DrawAddCategorySection();
+                GUILayout.Space(8);
+                DrawSeparator();
+                GUILayout.Space(8);
+                DrawCategoryList();
+            }
         }
 
         private void DrawAddCategorySection()
         {
             EditorGUILayout.LabelField("Add Category", EditorStyles.boldLabel);
-            EditorGUILayout.BeginHorizontal();
-            _newCategoryName = EditorGUILayout.TextField(_newCategoryName);
-            _newCategoryColor = EditorGUILayout.Popup(_newCategoryColor, TBStyles.LabelNames, GUILayout.Width(90));
-            GUI.enabled = !string.IsNullOrWhiteSpace(_newCategoryName) && !_data.categories.Contains(_newCategoryName.Trim());
-            if (GUILayout.Button("Add", GUILayout.Width(54)))
+            using (new EditorGUILayout.HorizontalScope())
             {
-                string categoryName = _newCategoryName.Trim();
-                _data.categories.Add(categoryName);
-                _data.SetCategoryColor(categoryName, _newCategoryColor);
-                _newCategoryName = "";
-                _newCategoryColor = 0;
-                NotifyChanged();
+                _newCategoryName = EditorGUILayout.TextField(_newCategoryName);
+                _newCategoryColor = EditorGUILayout.Popup(_newCategoryColor, TBStyles.LabelNames, GUILayout.Width(90));
+                GUI.enabled = !string.IsNullOrWhiteSpace(_newCategoryName) && !_data.categories.Contains(_newCategoryName.Trim());
+                if (GUILayout.Button(new GUIContent("Add", "Add a new category"), GUILayout.Width(54)))
+                {
+                    string categoryName = _newCategoryName.Trim();
+                    _data.categories.Add(categoryName);
+                    _data.SetCategoryColor(categoryName, _newCategoryColor);
+                    _newCategoryName = "";
+                    _newCategoryColor = 0;
+                    NotifyChanged();
+                    GUIUtility.ExitGUI();
+                }
+                GUI.enabled = true;
             }
-            GUI.enabled = true;
-            EditorGUILayout.EndHorizontal();
         }
 
         private void DrawCategoryList()
@@ -85,54 +88,54 @@ namespace AwesomeTaskManager.Editor
                 if (!_renameBuffers.ContainsKey(category))
                     _renameBuffers[category] = category;
 
-                EditorGUILayout.BeginVertical("box");
-
-                EditorGUILayout.BeginHorizontal();
-                Rect colorRect = GUILayoutUtility.GetRect(14, 18, GUILayout.Width(14));
-                EditorGUI.DrawRect(colorRect, TBStyles.LabelColors[Mathf.Clamp(_data.GetCategoryColor(category), 0, TBStyles.LabelColors.Length - 1)]);
-
-                _renameBuffers[category] = EditorGUILayout.TextField(_renameBuffers[category]);
-
-                int newColor = EditorGUILayout.Popup(_data.GetCategoryColor(category), TBStyles.LabelNames, GUILayout.Width(90));
-                if (newColor != _data.GetCategoryColor(category))
+                using (new EditorGUILayout.VerticalScope("box"))
                 {
-                    _data.SetCategoryColor(category, newColor);
-                    NotifyChanged();
-                }
-
-                GUI.enabled = !string.IsNullOrWhiteSpace(_renameBuffers[category].Trim())
-                              && _renameBuffers[category].Trim() != category
-                              && !_data.categories.Contains(_renameBuffers[category].Trim());
-                if (GUILayout.Button("Rename", GUILayout.Width(62)))
-                {
-                    string renamed = _renameBuffers[category].Trim();
-                    if (_data.RenameCategory(category, renamed))
+                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        _renameBuffers.Remove(category);
-                        _renameBuffers[renamed] = renamed;
-                        NotifyChanged();
-                        shouldExitGUI = true;
+                        Rect colorRect = GUILayoutUtility.GetRect(14, 18, GUILayout.Width(14));
+                        EditorGUI.DrawRect(colorRect, TBStyles.LabelColors[Mathf.Clamp(_data.GetCategoryColor(category), 0, TBStyles.LabelColors.Length - 1)]);
+
+                        _renameBuffers[category] = EditorGUILayout.TextField(_renameBuffers[category]);
+
+                        int newColor = EditorGUILayout.Popup(_data.GetCategoryColor(category), TBStyles.LabelNames, GUILayout.Width(90));
+                        if (newColor != _data.GetCategoryColor(category))
+                        {
+                            _data.SetCategoryColor(category, newColor);
+                            NotifyChanged();
+                        }
+
+                        GUI.enabled = !string.IsNullOrWhiteSpace(_renameBuffers[category].Trim())
+                                      && _renameBuffers[category].Trim() != category
+                                      && !_data.categories.Contains(_renameBuffers[category].Trim());
+                        if (GUILayout.Button(new GUIContent("Rename", "Rename the selected category"), GUILayout.Width(62)))
+                        {
+                            string renamed = _renameBuffers[category].Trim();
+                            if (_data.RenameCategory(category, renamed))
+                            {
+                                _renameBuffers.Remove(category);
+                                _renameBuffers[renamed] = renamed;
+                                NotifyChanged();
+                                shouldExitGUI = true;
+                            }
+                        }
+                        GUI.enabled = true;
+
+                        GUI.backgroundColor = new Color(1f, 0.45f, 0.45f);
+                        if (GUILayout.Button(new GUIContent("Delete", "Delete the selected category"), GUILayout.Width(54)))
+                        {
+                            if (EditorUtility.DisplayDialog("Delete Category",
+                                $"Delete category \"{category}\"?\nCards using it will be cleared to no category.",
+                                "Delete", "Cancel"))
+                            {
+                                _data.DeleteCategory(category);
+                                _renameBuffers.Remove(category);
+                                NotifyChanged();
+                                shouldExitGUI = true;
+                            }
+                        }
+                        GUI.backgroundColor = Color.white;
                     }
                 }
-                GUI.enabled = true;
-
-                GUI.backgroundColor = new Color(1f, 0.45f, 0.45f);
-                if (GUILayout.Button("Delete", GUILayout.Width(54)))
-                {
-                    if (EditorUtility.DisplayDialog("Delete Category",
-                        $"Delete category \"{category}\"?\nCards using it will be cleared to no category.",
-                        "Delete", "Cancel"))
-                    {
-                        _data.DeleteCategory(category);
-                        _renameBuffers.Remove(category);
-                        NotifyChanged();
-                        shouldExitGUI = true;
-                    }
-                }
-                GUI.backgroundColor = Color.white;
-                EditorGUILayout.EndHorizontal();
-
-                EditorGUILayout.EndVertical();
                 GUILayout.Space(2);
 
                 if (shouldExitGUI) break;

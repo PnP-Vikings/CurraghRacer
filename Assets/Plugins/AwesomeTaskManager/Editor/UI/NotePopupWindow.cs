@@ -15,6 +15,9 @@ namespace AwesomeTaskManager.Editor
         private SaveData _saveData;
         private System.Action _onChanged;
         private Vector2 _scroll;
+        private bool _isPreview;
+        private bool _hasAnimatedGif;
+        private double _lastGifRepaintTime;
 
         public static NotePopupWindow Open(QuickNote note, SaveData saveData, System.Action onChanged)
         {
@@ -29,51 +32,77 @@ namespace AwesomeTaskManager.Editor
             return win;
         }
 
+        public static NotePopupWindow OpenInPreviewMode(QuickNote note, SaveData saveData, System.Action onChanged)
+        {
+            // Allow multiple instances (one per note)
+            var win = CreateInstance<NotePopupWindow>();
+            win.titleContent = new GUIContent($"📝 {note.title}");
+            win._note = note;
+            win._saveData = saveData;
+            win._onChanged = onChanged;
+            win.minSize = new Vector2(360, 300);
+            win.Show();
+            win._isPreview = true;
+            return win;
+            
+        }
+
         private void OnGUI()
         {
             if (_note == null) { Close(); return; }
 
+            _hasAnimatedGif = false;
+
             // Title bar
-            EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
-            string newTitle = EditorGUILayout.TextField(_note.title, EditorStyles.toolbarTextField);
-            if (newTitle != _note.title)
+            using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
             {
-                _note.title = newTitle;
-                titleContent = new GUIContent($"📝 {_note.title}");
-                MarkModified();
-            }
-
-            // Pin
-            if (GUILayout.Button(_note.pinned ? "📌" : "Pin", EditorStyles.toolbarButton, GUILayout.Width(34)))
-            {
-                _note.pinned = !_note.pinned;
-                MarkModified();
-            }
-
-            // Color
-            int newCol = EditorGUILayout.Popup(_note.colorIndex, TBStyles.LabelNames, EditorStyles.toolbarPopup, GUILayout.Width(65));
-            if (newCol != _note.colorIndex) { _note.colorIndex = newCol; MarkModified(); }
-
-            // Folder
-            if (_saveData != null && GUILayout.Button("📁", EditorStyles.toolbarButton, GUILayout.Width(26)))
-            {
-                var menu = new GenericMenu();
-                menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(_note.folderId), () =>
+                string newTitle = EditorGUILayout.TextField(_note.title, EditorStyles.toolbarTextField);
+                if (newTitle != _note.title)
                 {
-                    _note.folderId = ""; MarkModified();
-                });
-                foreach (var folder in _saveData.noteFolders)
-                {
-                    string fid = folder.id;
-                    menu.AddItem(new GUIContent(folder.name), _note.folderId == fid, () =>
-                    {
-                        _note.folderId = fid; MarkModified();
-                    });
+                    _note.title = newTitle;
+                    titleContent = new GUIContent($"📝 {_note.title}");
+                    MarkModified();
                 }
-                menu.ShowAsContext();
-            }
 
-            EditorGUILayout.EndHorizontal();
+                // Preview Toggle
+                GUI.backgroundColor = _isPreview ? new Color(0.3f, 0.7f, 0.95f) : Color.white;
+                if (GUILayout.Button(_isPreview ? new GUIContent( "✍ Edit", "Switch to Preview Note Mode") : new GUIContent("👁 Preview", "Switch to Edit Note Mode"), EditorStyles.toolbarButton, GUILayout.Width(75)))
+                {
+                    _isPreview = !_isPreview;
+                    GUI.FocusControl(null);
+                }
+                GUI.backgroundColor = Color.white;
+
+                // Pin
+                if (GUILayout.Button(_note.pinned ? new GUIContent( "📌","Unpin Card") : new GUIContent("Pin", "Pin Card"), EditorStyles.toolbarButton, GUILayout.Width(34)))
+                {
+                    _note.pinned = !_note.pinned;
+                    MarkModified();
+                }
+
+                // Color
+                int newCol = EditorGUILayout.Popup(_note.colorIndex, TBStyles.LabelNames, EditorStyles.toolbarPopup, GUILayout.Width(65));
+                if (newCol != _note.colorIndex) { _note.colorIndex = newCol; MarkModified(); }
+
+                // Folder
+                if (_saveData != null && GUILayout.Button(new GUIContent("📁", "Select Folder"), EditorStyles.toolbarButton, GUILayout.Width(26)))
+                {
+                    var menu = new GenericMenu();
+                    menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(_note.folderId), () =>
+                    {
+                        _note.folderId = ""; MarkModified();
+                    });
+                    foreach (var folder in _saveData.noteFolders)
+                    {
+                        string fid = folder.id;
+                        menu.AddItem(new GUIContent(folder.name), _note.folderId == fid, () =>
+                        {
+                            _note.folderId = fid; MarkModified();
+                        });
+                    }
+                    menu.ShowAsContext();
+                }
+            }
 
             // Color strip
             if (_note.colorIndex > 0)
@@ -96,18 +125,45 @@ namespace AwesomeTaskManager.Editor
                 EditorStyles.miniLabel);
             GUILayout.Space(2);
 
-            // Content
-            _scroll = EditorGUILayout.BeginScrollView(_scroll);
-            string newContent = EditorGUILayout.TextArea(_note.content, new GUIStyle(EditorStyles.textArea)
+            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
             {
-                wordWrap = true, fontSize = 13, padding = new RectOffset(8, 8, 8, 8)
-            }, GUILayout.ExpandHeight(true));
-            EditorGUILayout.EndScrollView();
+                _scroll = scope.scrollPosition;
+                
+                if (!_isPreview)
+                {
+                    // ── Ctrl+V / Cmd+V to paste images from clipboard ──
+                    if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && (Event.current.control || Event.current.command))
+                    {
+                        if (MarkdownRenderer.TryPasteImageFromClipboard(_note, n => MarkModified(), Repaint))
+                        {
+                            GUI.FocusControl(null);
+                            Event.current.Use();
+                        }
+                    }
 
-            if (newContent != _note.content)
-            {
-                _note.content = newContent;
-                MarkModified();
+                    // ── Drag and Drop images ──
+                    MarkdownRenderer.HandleNoteDragDropImages(_note, n => MarkModified(), Repaint);
+
+                    string newContent = EditorGUILayout.TextArea(_note.content, new GUIStyle(EditorStyles.textArea)
+                    {
+                        wordWrap = true,
+                        fontSize = 13,
+                        padding = new RectOffset(8, 8, 8, 8)
+                    }, GUILayout.ExpandHeight(true));
+
+                    if (newContent != _note.content)
+                    {
+                        _note.content = newContent;
+                        MarkModified();
+                    }
+                }
+                else
+                {
+                    if (MarkdownRenderer.DrawMarkdownPreview(_note, (n) => MarkModified()))
+                    {
+                        _hasAnimatedGif = true;
+                    }
+                }
             }
 
             // Bottom status
@@ -118,6 +174,13 @@ namespace AwesomeTaskManager.Editor
             EditorGUI.LabelField(statusRect,
                 $"  {_note.WordCount} words  •  {_note.CharCount} chars  •  Created: {_note.createdDate}",
                 EditorStyles.miniLabel);
+
+            // GIF repaint
+            if (_hasAnimatedGif && EditorApplication.timeSinceStartup - _lastGifRepaintTime > 0.066)
+            {
+                _lastGifRepaintTime = EditorApplication.timeSinceStartup;
+                EditorApplication.delayCall += Repaint;
+            }
         }
 
         private void MarkModified()

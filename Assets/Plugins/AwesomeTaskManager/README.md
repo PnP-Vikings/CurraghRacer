@@ -10,8 +10,9 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 
 1. **Import** the package into your Unity project
 2. Open via the menu: **Tools → Awesome Task Manager** (or press `Ctrl+Alt+T`)
-3. Your first board is already created — start adding cards!
-4. Switch to the **Notes** tab to start writing — use `![[image.png]]` to embed images inline
+3. **New Shortcuts**: Press `Alt+Shift+C` to quickly create a card on the active board or `Ctrl+Alt+N` for a new note from anywhere in Unity.
+4. Your first board is already created — start adding cards!
+5. Switch to the **Notes** tab to start writing — use `![[image.png]]` to embed images inline
 
 ---
 
@@ -19,22 +20,32 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 
 ### 📋 Kanban Task Board
 - **Unlimited boards** — organize tasks by feature, milestone, sprint, or however you like
+- **Board Templates** — jumpstart your project with premade templates (Agile, Game Design, Bug Tracker, Simple To-Do) or save your own custom layouts
 - **Customizable columns** — add, rename, reorder, and delete columns (default: To Do → In Progress → Done)
 - **Powerful task cards** with:
   - 📝 Title & rich description
   - 🏷 **Category tags** with customizable default colors (Audio, Art, Code, Bug, etc.)
-  - 🎨 **8 color labels** — None, Green, Blue, Yellow, Orange, Red, Purple, Teal
+  - 🎨 **17 color labels** — expanded palette including Grey, Green, Blue, Yellow, Orange, Red, Purple, Teal, Pink, Lime, Indigo, Cyan, Amber, Deep Orange, Deep Purple, Blue Grey, and Brown
   - 🔥 **Priority levels** — None, Low, Medium, High, Urgent (with emoji indicators)
   - 📅 **Smart due dates** — quick-set buttons (Today, +1d, +3d, +1w, +2w, +1m), overdue/due-today/due-soon alerts with color-coded indicators right on the card
   - ☑ **Checklists** with progress tracking — inline checklist visible on the board with per-card **▾/▸ toggle** to show/hide tasks, plus toolbar **Show All / Hide All** buttons
-  - 📦 Archive cards to declutter without deleting
+  - 📦 Archive cards to declutter with visual markers and quick toggle
 - **Drag & drop** cards between columns with Trello-style ghost card visual
 - **Reorder** cards within columns (▲/▼)
+- **Card Duplication & Copy-Paste** — instantly duplicate cards or copy them across different boards to maintain consistency between workflows
 - **Search & filter** by text or category across all columns
 - **Full card detail editor** popup with inline category management
 - **Category Manager** — add, rename, recolor, and delete categories globally
+- **👥 Assignees** — manage project members globally and assign them to cards with circular profile icons (initials or custom images) and customizable border colors
 - **🖼 Image & GIF attachments** — attach images (PNG, JPG, GIF, BMP, TGA, PSD, TIFF) to any card with inline preview
+- **🔍 Large Image Preview** — click any image or GIF in the card details or note preview to open a larger, dedicated viewer window
 - **🎞 Animated GIF playback** — GIFs animate live on the board and in card detail views
+- **🔗 Note & URL Linking** — link Quick Notes and web URLs directly to task cards for easy access
+- **🔃 Unified Linked Items** — assets, scene objects, notes, and URLs are combined into a single list with ▲/▼ reordering
+- **🚀 Smart Navigation** — click a linked note to open it instantly, or a URL to open it in your browser (with confirmation)
+- **✨ Auto-Link URLs** — pasted links in notes are automatically converted into clickable buttons in Preview mode
+- **🚀 Smart Scene Navigation** — clicking a linked scene object pings it in the Hierarchy and automatically switches scenes if needed (with confirmation)
+- **👤 Assignee Filtering** — filter the board to show only tasks assigned to specific members; hover over icons on a card to see full names
 
 ### 📝 Quick Notes System
 - **Markdown-powered notepad** with Edit / Preview toggle
@@ -50,8 +61,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **Drag & drop images** — drag image files from Explorer directly into notes
 - **Folder organization** — create folders, drag notes between them, "Unfiled" for loose notes
 - **Pin** important notes to the top
-- **Color-code** notes with 8 label colors
-- **Pop-out** any note into its own floating editor window
+- **Color-code** notes with 17 label colors
+- **Pop-out** any note into its own floating editor window 
 - **Search** notes by title or content
 - **Word & character count** — live stats in the editor
 - **Export** individual notes or entire folders as Markdown (.md) files
@@ -68,6 +79,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - Status bar with live card count, overdue alerts, and column count
 - Tab interface: switch between Board and Notes instantly
 - Keyboard shortcut: **Ctrl+Alt+T** to open
+- Keyboard shortcut: **Alt+Shift+C** to quick-create a Task Card from anywhere (works in background)
+- Keyboard shortcut: **Ctrl+Alt+N** to quick-create a Note from anywhere (works in background)
 - **Ctrl+V** to paste clipboard images directly into notes
 - Drag-and-drop with visual feedback (banner, drop zones, folder highlights)
 - All data auto-saves on every change — no "Save" button needed
@@ -153,11 +166,70 @@ Assets/Plugins/AwesomeTaskManager/
 - **Import notes** — Click 📥 to import .md, .txt, or other text files directly as notes
 - **Animated GIFs** — Attach a .gif to a card or note and it will animate live in the editor
 - **Category colors** — Set a default color per category in the Category Manager (🏷 button in the toolbar); new cards auto-inherit the color
+- **Scene Linking Navigation** — Click a linked scene object on a task card to find it instantly in the Hierarchy. If it's in a different scene, a confirmation dialog will help you switch and navigate to it automatically.
+- **Link Notes to Cards** — Drag a note from the Notes list onto a task card on the board to link them. Or use the "Link Note" button in the card detail editor.
+- **Auto-Link in Preview** — Paste any `http://` or `https://` URL into a note. In Preview mode, it will be rendered as a clickable blue link.
+- **Background Shortcuts** — Use `Alt+Shift+C` or `Ctrl+Alt+N` to quickly capture ideas or tasks without having the main window open. They save to your most recent folder/primary board.
 - **Show/Hide checklists** — Use the **▾ Show All** / **▸ Hide All** toolbar buttons to expand or collapse all card checklists at once, or toggle individual cards with the **▾/▸** button on each card
+- **Large Image Previews** — Click on any image or GIF attachment in the card details or markdown preview to open a larger, dedicated preview window.
+- **👥 Assignees** — Add members via the 👥 button in the toolbar. Assign them in the card detail editor. They appear as overlapping initials bubbles or profile icons with custom borders on the board.
+- **Link Note Submenus** — When linking a note to a card, notes are now organized by their folders in the context menu for easier navigation.
+- **URL Confirmation** — Clicking a linked URL now shows a confirmation dialog before opening your web browser, preventing accidental exits from Unity.
+- **Note Popup Preview** — You can now toggle between Edit and Preview modes even in standalone note windows. It also supports image pasting (Ctrl+V) and drag-and-drop just like the main window.
+- **Board Templates** — Use the "Board Options" dropdown to save your current board layout as a template. You can choose to include existing cards or just the column structure.
+- **Transfer Cards** — Use the ⋮ menu on a card to "Copy to Board >" and select any other board for an instant transfer.
 
 ---
 
 ## 📄 Changelog
+
+### v1.5.0
+- **Added** 👥 **Assignees System** — manage project members globally and assign them to specific task cards
+- **Added** 🎨 **Member Initials & Profile Icons** — assignees are displayed as overlapping circular icons (initials or custom images) with customizable border colors
+- **Added** 👤 **Assignee Filtering** — new toolbar filter allows you to show only tasks assigned to specific members
+- **Added** 🔍 **Hover-Expand Assignees** — hover over profile icons on a card to see all assigned members and their full names
+- **Added** 👥 **Assignee Manager** — a dedicated window to manage team members, supporting profile image drag-and-drop, clipboard pasting, and external file browsing
+- **Added** 📋 **Board Templates System** — create new boards using premade layouts (Agile, Game Design, Bug Tracker, Simple To-Do) or save your own custom templates
+- **Added** 💾 **Template Options** — choose whether to include cards or just the column structure when saving a new template
+- **Added** 👯 **Card Duplication** — quickly duplicate any card within a column with one click
+- **Added** 📋 **Cross-Board Copy-Paste** — copy a card to the internal clipboard and paste it into any column or even transfer it to a completely different board
+- **Added** ✨ **Success Notifications** — added a sleek success popup that appears when moving cards between columns or notes between folders
+- **Added** 📁 **Archiving System** — you can now archive completed tasks to declutter your board without permanently deleting them
+- **Added** 📂 **Archived Toggle** — new toolbar button (📦/🗃️) allows you to toggle the visibility of archived cards instantly
+- **Added** 🏷 **Archived Marker** — archived cards display a "📦 ARCHIVED" badge on the board for easy identification
+- **Added** ⚙ **Card Context Menu** — added a dedicated ⋮ options button to every card for quick access to Archiving and Deletion
+- **Improved** 🏗 **Card Dragging** — archived cards now have a distinct visual style (grey border) when being dragged to distinguish them from active tasks
+- **Improved** ⌨ **Toolbar Tooltips** — icon-only buttons now display their names as tooltips when hovered for better discoverability
+- **Improved** 🖼 **Flexible Image Handling** — profile icons now support the same powerful pasting and drag-and-drop logic as notes and cards
+- **Improved** 👥 **Responsive UI** — redesigned the Assignee Manager with a more flexible layout that remains visible on smaller windows
+
+### v1.4.0
+- **Added** 🔍 **Large Image Preview** — click any image or GIF in card details or notes to open it in a larger viewer window
+- **Added** 👁 **Note Popup Preview** — standalone note windows now feature a Preview/Edit toggle with full Markdown support
+- **Added** 🎨 **Expanded Colors** — increased available label colors from 8 to 17, including Pink, Lime, Indigo, Cyan, Amber, Brown, and more
+- **Added** 📁 **Link Note Submenus** — the "Link Note" context menu now groups notes by folder for better organization
+- **Added** ⚠️ **URL Confirmation** — clicking external links now prompts for confirmation to prevent accidental browser opens
+- **Improved** 🖼 **Image Handling** — centralized Markdown rendering and image pasting logic; added clipboard image support to note popups
+- **Improved** 📏 **UI & Layout** — increased image preview size in card details and optimized note list item layout to prevent text overlap
+
+### v1.3.1
+- **Added** 📝 **Note Linking** — link any note to a task card via drag-and-drop or the "Link Note" button in the card editor
+- **Added** 🔗 **URL Linking** — add web links to task cards for quick access to documentation, Trello, or other external resources
+- **Added** ✨ **Auto-Linking** — URLs pasted into notes are now automatically detected and rendered as clickable links in Preview mode
+- **Added** 📂 **Shared Dialogs** — extracted `EditorInputDialog` to a shared utility for reuse across different windows
+- **Improved** 🖼 **Linked Item Icons** — unique icons for Assets, Scene Objects, Notes, and URLs to help distinguish them at a glance
+- **Improved** 🖱 **Drag & Drop** — enhanced card drop logic to support multiple item types (Assets, Scene, Notes) simultaneously
+
+### v1.3.0
+- **Added** 🔗 **Scene Object Linking** — link GameObjects and scene assets directly to task cards via drag-and-drop
+- **Added** 🚀 **Smart Scene Navigation** — clicking a linked scene object now prompts to open the correct scene (if needed) and automatically pings/selects the object in the Hierarchy
+- **Added** 🏷 **Scene Context Labels** — linked scene objects are labeled as `[SceneName] ObjectName` for better clarity
+- **Added** 🔃 **Unified Item Reordering** — assets and scene objects are now combined into a single "Linked Items" list with ▲/▼ buttons for custom reordering
+- **Added** ⌨ **Global Shortcuts** — new shortcuts to create items without focusing the main window:
+  - `Alt+Shift+C` — New Task Card
+  - `Ctrl+Alt+N` — New Note
+- **Improved** 🏗 **Background Workflow** — shortcuts now work even when the main window is closed, spawning a standalone popup editor and saving data to the primary board/folder
+- **Improved** 🔄 **Data Migration** — automatic migration of legacy linked assets and scene objects into the new unified list format on first load
 
 ### v1.2.0
 - **Added** ☑ **Checklist visibility controls** — per-card ▾/▸ toggle to show or hide checklist tasks on the board, plus **Show All / Hide All** toolbar buttons for batch control
