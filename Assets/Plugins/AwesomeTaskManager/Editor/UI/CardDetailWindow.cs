@@ -9,6 +9,7 @@ using UnityEngine;
 
 namespace AwesomeTaskManager.Editor
 {
+    //Card Detail Script
     public class CardDetailWindow : EditorWindow
     {
         private TaskCard _card;
@@ -61,13 +62,26 @@ namespace AwesomeTaskManager.Editor
             win.ShowUtility();
         }
 
+        private void OpenURL(string url)
+        {
+            EditorApplication.delayCall += () =>
+            {
+                if (EditorUtility.DisplayDialog("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
+                {
+                    Application.OpenURL(url);
+                }
+            };
+        }
+
         private void OnGUI()
         {
             if (_card == null) { Close(); return; }
 
             _hasAnimatedGif = false;
 
-            _scroll = EditorGUILayout.BeginScrollView(_scroll);
+            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+            {
+                _scroll = scope.scrollPosition;
 
             // ── Color label bar ──
             var labelColor = TBStyles.LabelColors[Mathf.Clamp(_card.colorLabel, 0, TBStyles.LabelColors.Length - 1)];
@@ -83,7 +97,7 @@ namespace AwesomeTaskManager.Editor
 
             // ── Category ──
             EditorGUILayout.LabelField("Category", EditorStyles.boldLabel);
-            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUILayout.HorizontalScope())
             {
                 var catOptions = new List<string> { "None" };
                 catOptions.AddRange(_categories);
@@ -107,33 +121,38 @@ namespace AwesomeTaskManager.Editor
                     }
                     MarkDirty();
                 }
-            }
-            // Add new category
-            _newCategory = EditorGUILayout.TextField(_newCategory, GUILayout.Width(80));
-            if (GUILayout.Button("+", TBStyles.IconButton) && !string.IsNullOrWhiteSpace(_newCategory))
-            {
-                string nc = _newCategory.Trim();
-                if (!_categories.Contains(nc))
-                    _categories.Add(nc);
-                _card.category = nc;
-                int defaultColor = _saveData != null ? _saveData.GetCategoryColor(nc) : 0;
-                if (defaultColor > 0) _card.colorLabel = defaultColor;
-                _newCategory = "";
-                MarkDirty();
-            }
-            // Remove selected category from the global list
-            if (!string.IsNullOrEmpty(_card.category) && GUILayout.Button("🗑", TBStyles.IconButton))
-            {
-                if (EditorUtility.DisplayDialog("Remove Category",
-                    $"Remove \"{_card.category}\" from the category list?\n(Cards already using it will keep it as text.)",
-                    "Remove", "Cancel"))
+
+                // Add new category
+                _newCategory = EditorGUILayout.TextField(_newCategory, GUILayout.Width(80));
+                if (GUILayout.Button(new GUIContent("+","Add New Category"), TBStyles.IconButton) && !string.IsNullOrWhiteSpace(_newCategory))
                 {
-                    _categories.Remove(_card.category);
-                    _card.category = "";
+                    string nc = _newCategory.Trim();
+                    if (!_categories.Contains(nc))
+                        _categories.Add(nc);
+                    _card.category = nc;
+                    int defaultColor = _saveData != null ? _saveData.GetCategoryColor(nc) : 0;
+                    if (defaultColor > 0) _card.colorLabel = defaultColor;
+                    _newCategory = "";
                     MarkDirty();
+                    GUIUtility.ExitGUI();
+                }
+                // Remove selected category from the global list
+                if (!string.IsNullOrEmpty(_card.category) && GUILayout.Button(new GUIContent("🗑","Delete Category"), TBStyles.IconButton))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        if (EditorUtility.DisplayDialog("Remove Category",
+                            $"Remove \"{_card.category}\" from the category list?\n(Cards already using it will keep it as text.)",
+                            "Remove", "Cancel"))
+                        {
+                            _categories.Remove(_card.category);
+                            _card.category = "";
+                            MarkDirty();
+                            Repaint();
+                        }
+                    };
                 }
             }
-            EditorGUILayout.EndHorizontal();
             GUILayout.Space(8);
 
             // ── Description ──
@@ -146,20 +165,52 @@ namespace AwesomeTaskManager.Editor
             GUILayout.Space(8);
 
             // ── Color Label & Priority ──
-            EditorGUILayout.BeginHorizontal();
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Color Label", EditorStyles.boldLabel);
-            int newColor = EditorGUILayout.Popup(_card.colorLabel, TBStyles.LabelNames);
-            if (newColor != _card.colorLabel) { _card.colorLabel = newColor; MarkDirty(); }
-            EditorGUILayout.EndVertical();
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    EditorGUILayout.LabelField("Color Label", EditorStyles.boldLabel);
+                    int newColor = EditorGUILayout.Popup(_card.colorLabel, TBStyles.LabelNames);
+                    if (newColor != _card.colorLabel) { _card.colorLabel = newColor; MarkDirty(); }
+                }
+                GUILayout.Space(12);
+                using (new EditorGUILayout.VerticalScope())
+                {
+                    EditorGUILayout.LabelField("Priority", EditorStyles.boldLabel);
+                    int newPri = EditorGUILayout.Popup(_card.priority, TBStyles.PriorityNames);
+                    if (newPri != _card.priority) { _card.priority = newPri; MarkDirty(); }
+                }
+            }
             GUILayout.Space(12);
-            EditorGUILayout.BeginVertical();
-            EditorGUILayout.LabelField("Priority", EditorStyles.boldLabel);
-            int newPri = EditorGUILayout.Popup(_card.priority, TBStyles.PriorityNames);
-            if (newPri != _card.priority) { _card.priority = newPri; MarkDirty(); }
-            EditorGUILayout.EndVertical();
-            EditorGUILayout.EndHorizontal();
-            GUILayout.Space(4);
+
+            // ── Assignees ──
+            EditorGUILayout.LabelField("Assignees", EditorStyles.boldLabel);
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (_card.assigneeIds != null)
+                {
+                    foreach (var id in _card.assigneeIds.ToList())
+                    {
+                        var assignee = _saveData.assignees.FirstOrDefault(a => a.id == id);
+                        if (assignee != null)
+                        {
+                            DrawAssigneeCircle(assignee, true);
+                            GUILayout.Space(4);
+                        }
+                        else
+                        {
+                            _card.assigneeIds.Remove(id);
+                        }
+                    }
+                }
+
+                if (GUILayout.Button(new GUIContent("+","Add Assignee"), TBStyles.IconButton))
+                {
+                    ShowAssigneePicker();
+                }
+                GUILayout.FlexibleSpace();
+            }
+            GUILayout.Space(8);
 
             // ── Set as default color for this category ──
             if (!string.IsNullOrEmpty(_card.category) && _saveData != null)
@@ -177,7 +228,7 @@ namespace AwesomeTaskManager.Editor
             GUILayout.Space(8);
 
             // ── Completed Toggle ──
-            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUILayout.HorizontalScope())
             {
                 var compStyle = new GUIStyle(EditorStyles.boldLabel);
                 if (_card.completed) compStyle.normal = new GUIStyleState { textColor = new Color(0.3f, 0.85f, 0.4f) };
@@ -191,12 +242,11 @@ namespace AwesomeTaskManager.Editor
                 }
                 GUI.backgroundColor = Color.white;
             }
-            EditorGUILayout.EndHorizontal();
             GUILayout.Space(4);
 
             // ── Due Date ──
             EditorGUILayout.LabelField("Due Date", EditorStyles.boldLabel);
-            EditorGUILayout.BeginHorizontal();
+            using (new EditorGUILayout.HorizontalScope())
             {
                 // Parse existing date or show empty
                 bool hasDueDate = !string.IsNullOrWhiteSpace(_card.dueDate) && DateTime.TryParse(_card.dueDate, out _);
@@ -274,12 +324,10 @@ namespace AwesomeTaskManager.Editor
                     }
                 }
             }
-            EditorGUILayout.EndHorizontal();
 
             // Quick-set buttons
-            if (!string.IsNullOrWhiteSpace(_card.dueDate) || true)
+            using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.BeginHorizontal();
                 GUILayout.Space(4);
                 if (GUILayout.Button("Today", EditorStyles.miniButton, GUILayout.Width(50)))
                 { _card.dueDate = DateTime.Today.ToString("yyyy-MM-dd"); MarkDirty(); }
@@ -293,7 +341,6 @@ namespace AwesomeTaskManager.Editor
                 { _card.dueDate = DateTime.Today.AddDays(14).ToString("yyyy-MM-dd"); MarkDirty(); }
                 if (GUILayout.Button("+1m", EditorStyles.miniButton, GUILayout.Width(38)))
                 { _card.dueDate = DateTime.Today.AddMonths(1).ToString("yyyy-MM-dd"); MarkDirty(); }
-                EditorGUILayout.EndHorizontal();
             }
 
             GUILayout.Space(4);
@@ -306,71 +353,321 @@ namespace AwesomeTaskManager.Editor
             EditorGUILayout.LabelField("Checklist", EditorStyles.boldLabel);
             for (int i = 0; i < _card.checklistItems.Count; i++)
             {
-                EditorGUILayout.BeginHorizontal();
-                bool done = EditorGUILayout.Toggle(_card.checklistStates[i], GUILayout.Width(20));
-                if (done != _card.checklistStates[i]) { _card.checklistStates[i] = done; MarkDirty(); }
-
-                var style = new GUIStyle(EditorStyles.textField);
-                if (done) style.fontStyle = FontStyle.Italic;
-                string itemText = EditorGUILayout.TextField(_card.checklistItems[i], style);
-                if (itemText != _card.checklistItems[i]) { _card.checklistItems[i] = itemText; MarkDirty(); }
-
-                if (GUILayout.Button("✕", TBStyles.IconButton))
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    _card.checklistItems.RemoveAt(i);
-                    _card.checklistStates.RemoveAt(i);
-                    MarkDirty();
-                    GUIUtility.ExitGUI();
+                    bool done = EditorGUILayout.Toggle(_card.checklistStates[i], GUILayout.Width(20));
+                    if (done != _card.checklistStates[i]) { _card.checklistStates[i] = done; MarkDirty(); }
+
+                    var style = new GUIStyle(EditorStyles.textField);
+                    if (done) style.fontStyle = FontStyle.Italic;
+                    string itemText = EditorGUILayout.TextField(_card.checklistItems[i], style);
+                    if (itemText != _card.checklistItems[i]) { _card.checklistItems[i] = itemText; MarkDirty(); }
+
+                    if (GUILayout.Button(new GUIContent("✕","Remove Checklist Item"), TBStyles.IconButton))
+                    {
+                        _card.checklistItems.RemoveAt(i);
+                        _card.checklistStates.RemoveAt(i);
+                        MarkDirty();
+                        GUIUtility.ExitGUI();
+                    }
                 }
-                EditorGUILayout.EndHorizontal();
             }
 
-            EditorGUILayout.BeginHorizontal();
-            _newChecklistItem = EditorGUILayout.TextField(_newChecklistItem);
-            if (GUILayout.Button("+", TBStyles.IconButton) && !string.IsNullOrWhiteSpace(_newChecklistItem))
+            using (new EditorGUILayout.HorizontalScope())
             {
-                _card.checklistItems.Add(_newChecklistItem.Trim());
-                _card.checklistStates.Add(false);
-                _newChecklistItem = "";
-                MarkDirty();
+                _newChecklistItem = EditorGUILayout.TextField(_newChecklistItem);
+                if (GUILayout.Button(new GUIContent("+","Add Checklist Item"), TBStyles.IconButton) && !string.IsNullOrWhiteSpace(_newChecklistItem))
+                {
+                    _card.checklistItems.Add(_newChecklistItem.Trim());
+                    _card.checklistStates.Add(false);
+                    _newChecklistItem = "";
+                    MarkDirty();
+                }
             }
-            EditorGUILayout.EndHorizontal();
+
+            GUILayout.Space(16);
+
+            // ── Linked Assets & Notes ──
+            EditorGUILayout.LabelField("Linked Items (Assets, Scene, Notes, URLs)", EditorStyles.boldLabel);
+            var dropRect = GUILayoutUtility.GetRect(0, 40, GUILayout.ExpandWidth(true));
+            GUI.Box(dropRect, "Drag & Drop Assets, Scene Objects or Notes here", EditorStyles.helpBox);
+            
+            Event currentEvent = Event.current;
+            if (dropRect.Contains(currentEvent.mousePosition))
+            {
+                if (currentEvent.type == EventType.DragUpdated)
+                {
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    currentEvent.Use();
+                }
+                else if (currentEvent.type == EventType.DragPerform)
+                {
+                    DragAndDrop.AcceptDrag();
+                    
+                    // 1. Handle Object References (Assets, Scene Objects)
+                    foreach (UnityEngine.Object draggedObject in DragAndDrop.objectReferences)
+                    {
+                        if (AssetDatabase.Contains(draggedObject))
+                        {
+                            string path = AssetDatabase.GetAssetPath(draggedObject);
+                            string guid = AssetDatabase.AssetPathToGUID(path);
+                            if (!string.IsNullOrEmpty(guid) && !_card.linkedItems.Any(li => !li.isSceneObject && !li.isNote && !li.isUrl && li.guid == guid))
+                            {
+                                _card.linkedItems.Add(new LinkedItem(guid));
+                                MarkDirty();
+                            }
+                        }
+                        else if (draggedObject is GameObject go && go.scene.IsValid())
+                        {
+                            string scenePath = go.scene.path;
+                            string gid = GlobalObjectId.GetGlobalObjectIdSlow(draggedObject).ToString();
+                            if (!_card.linkedItems.Any(li => li.isSceneObject && li.sceneObject != null && li.sceneObject.globalObjectId == gid))
+                            {
+                                _card.linkedItems.Add(new LinkedItem(new SceneObjectReference(scenePath, gid, go.name)));
+                                MarkDirty();
+                            }
+                        }
+                    }
+
+                    // 2. Handle Notes (Generic Data)
+                    var noteId = DragAndDrop.GetGenericData("AwesomeTaskNoteId") as string;
+                    if (!string.IsNullOrEmpty(noteId))
+                    {
+                        if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
+                        {
+                            _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
+                            MarkDirty();
+                        }
+                    }
+                    currentEvent.Use();
+                }
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                if (GUILayout.Button("🔗 Add URL", GUILayout.Height(24)))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        string res = EditorInputDialog.Show("Add Link", "Paste URL here:", "https://");
+                        if (!string.IsNullOrEmpty(res) && res.StartsWith("http"))
+                        {
+                            _card.linkedItems.Add(LinkedItem.CreateUrl(res));
+                            MarkDirty();
+                            Repaint();
+                        }
+                    };
+                }
+                if (GUILayout.Button("📝 Link Note", GUILayout.Height(24)))
+                {
+                    GenericMenu menu = new GenericMenu();
+                    if (_saveData != null && _saveData.notes.Count > 0)
+                    {
+                        var folders = _saveData.noteFolders;
+
+                        // 1. Notes in Folders
+                        foreach (var folder in folders)
+                        {
+                            var notesInFolder = _saveData.notes.Where(n => n.folderId == folder.id).OrderBy(n => n.title).ToList();
+                            if (notesInFolder.Count == 0) continue;
+
+                            foreach (var note in notesInFolder)
+                            {
+                                string noteId = note.id;
+                                string title = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
+                                string fullPath = $"{folder.name}/{title}";
+
+                                menu.AddItem(new GUIContent(fullPath), false, () =>
+                                {
+                                    if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
+                                    {
+                                        _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
+                                        MarkDirty();
+                                    }
+                                });
+                            }
+                        }
+
+                        // 2. Unfiled Notes
+                        var unfiledNotes = _saveData.notes
+                            .Where(n => string.IsNullOrEmpty(n.folderId) || !folders.Any(f => f.id == n.folderId))
+                            .OrderBy(n => n.title)
+                            .ToList();
+
+                        if (unfiledNotes.Count > 0)
+                        {
+                            if (folders.Count > 0) menu.AddSeparator("");
+
+                            foreach (var note in unfiledNotes)
+                            {
+                                string noteId = note.id;
+                                string title = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
+
+                                menu.AddItem(new GUIContent(title), false, () =>
+                                {
+                                    if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
+                                    {
+                                        _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
+                                        MarkDirty();
+                                    }
+                                });
+                            }
+                        }
+                    }
+                    else
+                    {
+                        menu.AddDisabledItem(new GUIContent("No notes found"));
+                    }
+                    menu.ShowAsContext();
+                }
+            }
+            GUILayout.Space(4);
+
+            for (int i = 0; i < _card.linkedItems.Count; i++)
+            {
+                var item = _card.linkedItems[i];
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (item.isSceneObject)
+                    {
+                        var sceneRef = item.sceneObject;
+                        string sceneName = Path.GetFileNameWithoutExtension(sceneRef.scenePath);
+                        var sceneIcon = EditorGUIUtility.IconContent("SceneAsset Icon").image;
+                        if (GUILayout.Button(sceneIcon, GUILayout.Width(20), GUILayout.Height(20)))
+                        {
+                            EditorApplication.delayCall += () => HandleSceneObjectClick(sceneRef);
+                        }
+                        string displayLabel = $"[{sceneName}] {sceneRef.name}";
+                        if (GUILayout.Button(TBStyles.TruncateString(displayLabel, 50), EditorStyles.label))
+                        {
+                            EditorApplication.delayCall += () => HandleSceneObjectClick(sceneRef);
+                        }
+                    }
+                    else if (item.isNote)
+                    {
+                        var note = _saveData?.notes.FirstOrDefault(n => n.id == item.guid);
+                        var noteIcon = EditorGUIUtility.IconContent("TextAsset Icon").image;
+                        if (GUILayout.Button(noteIcon, GUILayout.Width(20), GUILayout.Height(20)))
+                        {
+                            if (note != null) NotePopupWindow.Open(note, _saveData, MarkDirty);
+                        }
+                        string noteTitle = note != null ? note.title : "Missing Note";
+                        string displayLabel = $"[Note] {noteTitle}";
+                        if (GUILayout.Button(TBStyles.TruncateString(displayLabel, 50), EditorStyles.label))
+                        {
+                            if (note != null) NotePopupWindow.Open(note, _saveData, MarkDirty);
+                        }
+                    }
+                    else if (item.isUrl)
+                    {
+                        var urlIcon = EditorGUIUtility.IconContent("BuildSettings.Web.Small").image;
+                        if (GUILayout.Button(urlIcon, GUILayout.Width(20), GUILayout.Height(20)))
+                        {
+                            OpenURL(item.url);
+                        }
+                        string label = string.IsNullOrEmpty(item.displayName) ? item.url : item.displayName;
+                        if (GUILayout.Button(TBStyles.TruncateString(label, 50), EditorStyles.label))
+                        {
+                            OpenURL(item.url);
+                        }
+                    }
+                    else
+                    {
+                        string guid = item.guid;
+                        string path = AssetDatabase.GUIDToAssetPath(guid);
+                        UnityEngine.Object obj = AssetDatabase.LoadAssetAtPath<UnityEngine.Object>(path);
+
+                        if (obj != null)
+                        {
+                            if (GUILayout.Button(EditorGUIUtility.ObjectContent(obj, obj.GetType()).image, GUILayout.Width(20), GUILayout.Height(20)))
+                            {
+                                EditorGUIUtility.PingObject(obj);
+                                Selection.activeObject = obj;
+                                EditorUtility.FocusProjectWindow();
+                            }
+                            if (GUILayout.Button(TBStyles.TruncateString(obj.name, 50), EditorStyles.label))
+                            {
+                                EditorGUIUtility.PingObject(obj);
+                                Selection.activeObject = obj;
+                                EditorUtility.FocusProjectWindow();
+                            }
+                        }
+                        else
+                        {
+                            EditorGUILayout.LabelField("Missing Asset", EditorStyles.label);
+                        }
+                    }
+
+                    if (i > 0 && GUILayout.Button(new GUIContent("▲","Move Up"), TBStyles.IconButton))
+                    {
+                        _card.linkedItems.RemoveAt(i); _card.linkedItems.Insert(i - 1, item);
+                        MarkDirty(); GUIUtility.ExitGUI();
+                    }
+                    if (i < _card.linkedItems.Count - 1 && GUILayout.Button(new GUIContent("▼","Move Down"), TBStyles.IconButton))
+                    {
+                        _card.linkedItems.RemoveAt(i); _card.linkedItems.Insert(i + 1, item);
+                        MarkDirty(); GUIUtility.ExitGUI();
+                    }
+
+                    if (GUILayout.Button(new GUIContent("✕","Remove Link"), TBStyles.IconButton))
+                    {
+                        _card.linkedItems.RemoveAt(i);
+                        MarkDirty();
+                        GUIUtility.ExitGUI();
+                    }
+                }
+            }
 
             GUILayout.Space(16);
 
             // ── Image Attachment ──
             EditorGUILayout.LabelField("Image / GIF", EditorStyles.boldLabel);
-            EditorGUILayout.BeginHorizontal();
-            if (!string.IsNullOrEmpty(_card.imagePath))
+            using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField($"🖼 {Path.GetFileName(_card.imagePath)}", EditorStyles.miniLabel);
-                if (GUILayout.Button("✕", TBStyles.IconButton))
+                if (!string.IsNullOrEmpty(_card.imagePath))
                 {
-                    _card.imagePath = "";
-                    MarkDirty();
+                    EditorGUILayout.LabelField($"🖼 {Path.GetFileName(_card.imagePath)}", EditorStyles.miniLabel);
+                    if (GUILayout.Button(new GUIContent("✕","Remove Image"), TBStyles.IconButton))
+                    {
+                        _card.imagePath = "";
+                        MarkDirty();
+                    }
+                }
+                else
+                {
+                    EditorGUILayout.LabelField("No image attached (Drag & Drop or Paste)", EditorStyles.miniLabel);
+                }
+                if (GUILayout.Button(new GUIContent("Browse…", "Attach Image"), GUILayout.Width(70), GUILayout.Height(20)))
+                {
+                    EditorApplication.delayCall += () =>
+                    {
+                        string imgPath = EditorUtility.OpenFilePanel("Attach Image", "",
+                            "png,jpg,jpeg,gif,bmp,tga,psd,tiff");
+                        if (!string.IsNullOrEmpty(imgPath))
+                        {
+                            _card.imagePath = MarkdownRenderer.CopyImageToProject(imgPath);
+                            MarkDirty();
+                            Repaint();
+                        }
+                    };
                 }
             }
-            else
+
+            // Handle Drag & Drop / Paste for the image attachment
+            if (Event.current.type != EventType.Layout)
             {
-                EditorGUILayout.LabelField("No image attached", EditorStyles.miniLabel);
+                var imageSectionRect = GUILayoutUtility.GetLastRect();
+                HandleImageAttachmentEvents(imageSectionRect);
             }
-            if (GUILayout.Button("Browse…", GUILayout.Width(70), GUILayout.Height(20)))
-            {
-                string imgPath = EditorUtility.OpenFilePanel("Attach Image", "",
-                    "png,jpg,jpeg,gif,bmp,tga,psd,tiff");
-                if (!string.IsNullOrEmpty(imgPath))
-                {
-                    _card.imagePath = CopyImageToProject(imgPath);
-                    MarkDirty();
-                }
-            }
-            EditorGUILayout.EndHorizontal();
 
             // Display image preview
             if (!string.IsNullOrEmpty(_card.imagePath))
             {
                 GUILayout.Space(4);
-                DrawCardImage(_card.imagePath, 180f);
+                if (MarkdownRenderer.DrawImageThumbnail(_card.imagePath, 350f))
+                {
+                    _hasAnimatedGif = true;
+                }
             }
 
             GUILayout.Space(16);
@@ -393,13 +690,15 @@ namespace AwesomeTaskManager.Editor
                 {
                     if (IsNewCardDirty())
                     {
-                        if (EditorUtility.DisplayDialog("Discard New Card?",
-                            "You have unsaved changes. Are you sure you want to discard this card?",
-                            "Discard", "Keep Editing"))
+                        EditorApplication.delayCall += () =>
                         {
-                            Close();
-                            GUIUtility.ExitGUI();
-                        }
+                            if (EditorUtility.DisplayDialog("Discard New Card?",
+                                "You have unsaved changes. Are you sure you want to discard this card?",
+                                "Discard", "Keep Editing"))
+                            {
+                                Close();
+                            }
+                        };
                     }
                     else
                     {
@@ -427,17 +726,19 @@ namespace AwesomeTaskManager.Editor
                 GUI.backgroundColor = new Color(1f, 0.4f, 0.4f);
                 if (GUILayout.Button("🗑  Delete Card", GUILayout.Height(28)))
                 {
-                    if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{_card.title}\"?", "Delete", "Cancel"))
+                    EditorApplication.delayCall += () =>
                     {
-                        _onDelete?.Invoke();
-                        Close();
-                        GUIUtility.ExitGUI();
-                    }
+                        if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{_card.title}\"?", "Delete", "Cancel"))
+                        {
+                            _onDelete?.Invoke();
+                            Close();
+                        }
+                    };
                 }
                 GUI.backgroundColor = Color.white;
             }
 
-            EditorGUILayout.EndScrollView();
+            } // end scroll view scope
 
             // Throttled repaint for GIF animation
             if (_hasAnimatedGif && EditorApplication.timeSinceStartup - _lastGifRepaintTime > 0.066)
@@ -466,150 +767,156 @@ namespace AwesomeTaskManager.Editor
             if (!_isNewCard) _onChanged?.Invoke(); // live-save for existing cards
         }
 
-        private static readonly Dictionary<string, Texture2D> _cardImageCache = new Dictionary<string, Texture2D>();
-        private static readonly Dictionary<string, GifDecoder> _cardGifCache = new Dictionary<string, GifDecoder>();
-
-        private static string CopyImageToProject(string externalPath)
+        private void DrawAssigneeCircle(Assignee assignee, bool clickable)
         {
-            if (string.IsNullOrEmpty(externalPath) || !File.Exists(externalPath)) return externalPath;
+            var rect = GUILayoutUtility.GetRect(30, 30);
+            string initials = GetInitials(assignee.name);
 
-            string dataPath = Application.dataPath.Replace('\\', '/');
-            string normalizedInput = externalPath.Replace('\\', '/');
-            if (normalizedInput.StartsWith(dataPath))
-                return "Assets" + normalizedInput.Substring(dataPath.Length);
-
-            string destDir = Path.Combine(Application.dataPath, "Plugins", "AwesomeTaskManager", "Editor", "AttachedImages");
-            if (!Directory.Exists(destDir)) Directory.CreateDirectory(destDir);
-
-            string fileName = Path.GetFileName(externalPath);
-            string destPath = Path.Combine(destDir, fileName);
-            if (File.Exists(destPath))
+            if (clickable && GUI.Button(rect, new GUIContent("", assignee.name), GUIStyle.none))
             {
-                string nameNoExt = Path.GetFileNameWithoutExtension(fileName);
-                string ext = Path.GetExtension(fileName);
-                destPath = Path.Combine(destDir, $"{nameNoExt}_{DateTime.Now:yyyyMMdd_HHmmss}{ext}");
+                GenericMenu menu = new GenericMenu();
+                menu.AddItem(new GUIContent("Remove"), false, () => {
+                    _card.assigneeIds.Remove(assignee.id);
+                    MarkDirty();
+                });
+                menu.ShowAsContext();
             }
 
-            File.Copy(externalPath, destPath, false);
-
-            // Defer Refresh to avoid calling during OnGUI (causes crashes / domain-reload mid-layout)
-            EditorApplication.delayCall += () => AssetDatabase.Refresh();
-
-            return "Assets" + destPath.Replace('\\', '/').Substring(dataPath.Length);
+            // Mask color matches window background
+            Color maskColor = EditorGUIUtility.isProSkin ? new Color(0.2f, 0.2f, 0.2f) : new Color(0.7f, 0.7f, 0.7f);
+            var circleStyle = new GUIStyle(TBStyles.AssigneeCircle) { fixedWidth = 30, fixedHeight = 30, fontSize = 11 };
+            
+            TBStyles.DrawAssigneeIcon(rect, assignee, initials, circleStyle, maskColor);
         }
 
-        private void DrawCardImage(string imagePath, float maxHeight)
+        private string GetInitials(string name)
         {
-            if (string.IsNullOrEmpty(imagePath)) return;
+            if (string.IsNullOrWhiteSpace(name)) return "?";
+            var words = name.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (words.Length == 1) return words[0].Substring(0, Mathf.Min(2, words[0].Length)).ToUpper();
+            return (words[0][0].ToString() + words[words.Length - 1][0].ToString()).ToUpper();
+        }
 
-            string ext = Path.GetExtension(imagePath).ToLowerInvariant();
-
-            // Animated GIF
-            if (ext == ".gif")
+        private void ShowAssigneePicker()
+        {
+            GenericMenu menu = new GenericMenu();
+            foreach (var a in _saveData.assignees)
             {
-                if (!_cardGifCache.TryGetValue(imagePath, out var gif))
+                bool assigned = _card.assigneeIds.Contains(a.id);
+                menu.AddItem(new GUIContent(a.name), assigned, () => {
+                    if (assigned) _card.assigneeIds.Remove(a.id);
+                    else _card.assigneeIds.Add(a.id);
+                    MarkDirty();
+                });
+            }
+
+            if (_saveData.assignees.Count > 0) menu.AddSeparator("");
+
+            menu.AddItem(new GUIContent("Manage Assignees..."), false, () => {
+                AssigneeManagerWindow.ShowWindow(_saveData, () => {
+                    MarkDirty();
+                    Repaint();
+                });
+            });
+
+            menu.ShowAsContext();
+        }
+
+        private void HandleImageAttachmentEvents(Rect rect)
+        {
+            var evt = Event.current;
+            if (!rect.Contains(evt.mousePosition)) return;
+
+            // 1. Paste
+            if (evt.type == EventType.KeyDown && (evt.keyCode == KeyCode.V && (evt.control || evt.command)))
+            {
+                string assetPath = MarkdownRenderer.TryPasteImageToProject();
+                if (!string.IsNullOrEmpty(assetPath))
                 {
-                    try
-                    {
-                        string fullPath = imagePath;
-                        if (imagePath.StartsWith("Assets"))
-                            fullPath = Path.Combine(Application.dataPath, "..", imagePath);
-                        gif = GifDecoder.Load(fullPath);
-                    }
-                    catch (Exception e)
-                    {
-                        Debug.LogWarning($"[CardDetail] Failed to load GIF: {e.Message}");
-                        gif = null;
-                    }
-                    _cardGifCache[imagePath] = gif;
+                    _card.imagePath = assetPath;
+                    MarkDirty();
+                    evt.Use();
+                }
+            }
+
+            // 2. Drag & Drop
+            if (evt.type == EventType.DragUpdated || evt.type == EventType.DragPerform)
+            {
+                bool hasImage = false;
+                if (DragAndDrop.paths != null && DragAndDrop.paths.Length > 0)
+                {
+                    string p = DragAndDrop.paths[0];
+                    string ext = Path.GetExtension(p).ToLowerInvariant();
+                    if (Array.Exists(MarkdownRenderer.ImageExtensions, e => e == ext))
+                        hasImage = true;
                 }
 
-                if (gif != null && gif.FrameCount > 0)
+                if (hasImage)
                 {
-                    int frameIdx = gif.GetFrameIndex(EditorApplication.timeSinceStartup);
-                    var frame = gif.Frames[frameIdx];
-                    if (frame.texture != null)
-                        DrawTex(frame.texture, maxHeight);
-                    if (gif.FrameCount > 1)
-                        _hasAnimatedGif = true;
+                    DragAndDrop.visualMode = DragAndDropVisualMode.Copy;
+                    if (evt.type == EventType.DragPerform)
+                    {
+                        DragAndDrop.AcceptDrag();
+                        string p = DragAndDrop.paths[0];
+                        _card.imagePath = MarkdownRenderer.CopyImageToProject(p);
+                        MarkDirty();
+                    }
+                    evt.Use();
+                }
+            }
+        }
+
+        private void HandleSceneObjectClick(SceneObjectReference sceneRef)
+        {
+            if (string.IsNullOrEmpty(sceneRef.scenePath)) return;
+            
+            if (UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path != sceneRef.scenePath)
+            {
+                string sceneName = Path.GetFileNameWithoutExtension(sceneRef.scenePath);
+            
+                if(sceneName == "")
+                    sceneName = "a different scene";
+                if(UnityEditor.EditorApplication.isPlaying)
+                {
+                    if (!EditorUtility.DisplayDialog("Cannot open scene in play mode",
+                        $"This is an asset that was linked from {sceneName}. Please stop playing scene and try again.",
+                        "OK"))
+                    {
+                        return;
+                    }
                     return;
                 }
-                // Fallback to static
-            }
-
-            Texture2D tex = null;
-            if (_cardImageCache.TryGetValue(imagePath, out var cached) && cached != null)
-            {
-                tex = cached;
-            }
-            else
-            {
-                string assetPath = imagePath.Replace('\\', '/');
-                string dataPath = Application.dataPath.Replace('\\', '/');
-                if (assetPath.StartsWith(dataPath))
-                    assetPath = "Assets" + assetPath.Substring(dataPath.Length);
-
-                if (assetPath.StartsWith("Assets"))
-                    tex = AssetDatabase.LoadAssetAtPath<Texture2D>(assetPath);
-
-                if (tex == null && File.Exists(imagePath))
+                
+                if (!EditorUtility.DisplayDialog("Open Scene?",
+                    $"This is an asset that was linked from {sceneName}. Would you like to open that scene and select the {sceneRef.name} item?",
+                    "Yes", "No"))
                 {
-                    try
-                    {
-                        if (ext == ".psd" || ext == ".tiff" || ext == ".tif" || ext == ".bmp" || ext == ".gif")
-                        {
-                            string newPath = CopyImageToProject(imagePath);
-                            if (newPath.StartsWith("Assets"))
-                                tex = AssetDatabase.LoadAssetAtPath<Texture2D>(newPath);
-                        }
-                        else
-                        {
-                            byte[] data = File.ReadAllBytes(imagePath);
-                            tex = new Texture2D(2, 2);
-                            if (!tex.LoadImage(data))
-                            {
-                                UnityEngine.Object.DestroyImmediate(tex);
-                                tex = null;
-                            }
-                            else
-                            {
-                                tex.hideFlags = HideFlags.DontSave;
-                            }
-                        }
-                    }
-                    catch { tex = null; }
+                    return;
                 }
 
-                if (tex != null)
-                    _cardImageCache[imagePath] = tex;
+                if (UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                {
+                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(sceneRef.scenePath);
+                }
+                else
+                {
+                    return;
+                }
             }
 
-            if (tex != null)
+            if (GlobalObjectId.TryParse(sceneRef.globalObjectId, out var gid))
             {
-                DrawTex(tex, maxHeight);
+                var obj = GlobalObjectId.GlobalObjectIdentifierToObjectSlow(gid);
+                if (obj != null)
+                {
+                    EditorGUIUtility.PingObject(obj);
+                    Selection.activeObject = obj;
+                }
+                else
+                {
+                    Debug.LogWarning($"[Task Manager] Could not find scene object: {sceneRef.name}");
+                }
             }
-            else
-            {
-                EditorGUILayout.LabelField($"⚠ Image not found: {Path.GetFileName(imagePath)}",
-                    EditorStyles.miniLabel);
-            }
-        }
-
-        private void DrawTex(Texture2D tex, float maxHeight)
-        {
-            float aspect = (float)tex.width / tex.height;
-            float displayHeight = Mathf.Min(maxHeight, tex.height);
-            float displayWidth = displayHeight * aspect;
-            float availWidth = EditorGUIUtility.currentViewWidth - 40f;
-            if (displayWidth > availWidth)
-            {
-                displayWidth = availWidth;
-                displayHeight = displayWidth / aspect;
-            }
-
-            var imgRect = GUILayoutUtility.GetRect(displayWidth, displayHeight,
-                GUILayout.MaxWidth(displayWidth), GUILayout.MaxHeight(displayHeight));
-            GUI.DrawTexture(imgRect, tex, ScaleMode.ScaleToFit);
         }
     }
 }

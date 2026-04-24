@@ -1,9 +1,53 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 
 namespace AwesomeTaskManager.Data
 {
+    //Data Structure for Task Board
+    [Serializable]
+    public class SceneObjectReference
+    {
+        public string scenePath;
+        public string globalObjectId;
+        public string name;
+
+        public SceneObjectReference() { }
+        public SceneObjectReference(string scenePath, string globalObjectId, string name)
+        {
+            this.scenePath = scenePath;
+            this.globalObjectId = globalObjectId;
+            this.name = name;
+        }
+    }
+
+    [Serializable]
+    public class LinkedItem
+    {
+        public bool isSceneObject;
+        public bool isNote;
+        public bool isUrl;
+        public string guid; // for assets or note ID
+        public SceneObjectReference sceneObject; // for scene objects
+        public string url; // for URLs
+        public string displayName; // for URLs or Notes if we want to cache it
+
+        public LinkedItem() { }
+        public LinkedItem(string guid) { this.guid = guid; isSceneObject = false; isNote = false; isUrl = false; }
+        public LinkedItem(SceneObjectReference sref) { this.sceneObject = sref; isSceneObject = true; isNote = false; isUrl = false; }
+
+        public static LinkedItem CreateNote(string noteId)
+        {
+            return new LinkedItem { guid = noteId, isNote = true, isSceneObject = false, isUrl = false };
+        }
+
+        public static LinkedItem CreateUrl(string url, string name = "")
+        {
+            return new LinkedItem { url = url, displayName = name, isUrl = true, isSceneObject = false, isNote = false };
+        }
+    }
+
     [Serializable]
     public class TaskCard
     {
@@ -18,13 +62,30 @@ namespace AwesomeTaskManager.Data
         public bool archived;
         public List<string> checklistItems  = new List<string>();
         public List<bool>   checklistStates = new List<bool>();
+        public List<string> linkedAssetGuids = new List<string>();
+        public List<SceneObjectReference> linkedSceneObjects = new List<SceneObjectReference>();
+        public List<LinkedItem> linkedItems = new List<LinkedItem>();
         public string imagePath; // relative or absolute path to attached image/gif
         public bool showChecklist = true; // per-card toggle for showing checklist on board
         public bool completed; // manually mark card as completed (overrides overdue styling)
+        public List<string> assigneeIds = new List<string>();
+        public bool isArchived; // for explicit archival logic
 
         public TaskCard() { id = Guid.NewGuid().ToString(); createdDate = Now(); category = ""; }
         public TaskCard(string title) : this() { this.title = title; description = ""; }
         static string Now() => DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+        public TaskCard Clone(bool resetId = true)
+        {
+            string json = JsonUtility.ToJson(this);
+            TaskCard clone = JsonUtility.FromJson<TaskCard>(json);
+            if (resetId)
+            {
+                clone.id = Guid.NewGuid().ToString();
+                clone.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            }
+            return clone;
+        }
     }
 
     [Serializable]
@@ -52,6 +113,54 @@ namespace AwesomeTaskManager.Data
             columns.Add(new TaskColumn("📋 To Do"));
             columns.Add(new TaskColumn("🔨 In Progress"));
             columns.Add(new TaskColumn("✅ Done"));
+        }
+
+        public TaskBoard Clone(bool resetIds = true, bool includeCards = true)
+        {
+            string json = JsonUtility.ToJson(this);
+            TaskBoard clone = JsonUtility.FromJson<TaskBoard>(json);
+
+            if (!includeCards)
+            {
+                foreach (var col in clone.columns)
+                {
+                    col.cards.Clear();
+                }
+            }
+
+            if (resetIds)
+            {
+                clone.id = Guid.NewGuid().ToString();
+                clone.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                foreach (var col in clone.columns)
+                {
+                    col.id = Guid.NewGuid().ToString();
+                    foreach (var card in col.cards)
+                    {
+                        card.id = Guid.NewGuid().ToString();
+                        card.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    }
+                }
+            }
+            return clone;
+        }
+    }
+
+    [Serializable]
+    public class Assignee
+    {
+        public string id;
+        public string name;
+        public string profileImageGuid;
+        public int colorIndex;
+        public int borderColorIndex;
+
+        public Assignee()
+        {
+            id = Guid.NewGuid().ToString();
+            name = "User";
+            colorIndex = 1; // Default to Green
+            borderColorIndex = 0; // Default to None/Grey
         }
     }
 
@@ -119,10 +228,12 @@ namespace AwesomeTaskManager.Data
     public class SaveData
     {
         public List<TaskBoard> boards = new List<TaskBoard>();
+        public List<TaskBoard> templates = new List<TaskBoard>();
         public List<QuickNote> notes  = new List<QuickNote>();
         public List<NoteFolder> noteFolders = new List<NoteFolder>();
         public List<string> categories = new List<string> { "Audio", "Art", "Code", "Design", "UI", "Bug", "Feature" };
         public List<CategoryColorEntry> categoryColors = new List<CategoryColorEntry>();
+        public List<Assignee> assignees = new List<Assignee>();
         public int lastBoardIndex;
 
         public int GetCategoryColor(string category)
@@ -196,8 +307,12 @@ namespace AwesomeTaskManager.Data
             categories ??= new List<string>();
             categoryColors ??= new List<CategoryColorEntry>();
             boards ??= new List<TaskBoard>();
+            templates ??= new List<TaskBoard>();
             notes ??= new List<QuickNote>();
             noteFolders ??= new List<NoteFolder>();
+            assignees ??= new List<Assignee>();
+
+            if (templates.Count == 0) AddDefaultTemplates();
 
             categories = categories
                 .Where(x => !string.IsNullOrWhiteSpace(x))
@@ -213,6 +328,34 @@ namespace AwesomeTaskManager.Data
                 {
                     column.cards ??= new List<TaskCard>();
                     column.cards.RemoveAll(IsStrayBlankCard);
+                    foreach (var card in column.cards)
+                    {
+                        card.linkedAssetGuids ??= new List<string>();
+                        card.linkedSceneObjects ??= new List<SceneObjectReference>();
+                        card.linkedItems ??= new List<LinkedItem>();
+                        card.assigneeIds ??= new List<string>();
+
+                        // Migrate old separate lists to unified linkedItems
+                        if (card.linkedAssetGuids.Count > 0)
+                        {
+                            foreach (var guid in card.linkedAssetGuids)
+                            {
+                                if (!card.linkedItems.Any(li => !li.isSceneObject && li.guid == guid))
+                                    card.linkedItems.Add(new LinkedItem(guid));
+                            }
+                            card.linkedAssetGuids.Clear();
+                        }
+
+                        if (card.linkedSceneObjects.Count > 0)
+                        {
+                            foreach (var sref in card.linkedSceneObjects)
+                            {
+                                if (!card.linkedItems.Any(li => li.isSceneObject && li.sceneObject != null && li.sceneObject.globalObjectId == sref.globalObjectId))
+                                    card.linkedItems.Add(new LinkedItem(sref));
+                            }
+                            card.linkedSceneObjects.Clear();
+                        }
+                    }
                 }
             }
 
@@ -245,6 +388,46 @@ namespace AwesomeTaskManager.Data
                 .GroupBy(x => x.category)
                 .Select(x => x.Last())
                 .ToList();
+        }
+
+        private void AddDefaultTemplates()
+        {
+            // Software Development
+            var agile = new TaskBoard("Software Development (Agile)");
+            agile.columns.Clear();
+            agile.columns.Add(new TaskColumn("📋 Backlog"));
+            agile.columns.Add(new TaskColumn("⏳ To Do"));
+            agile.columns.Add(new TaskColumn("🔨 In Progress"));
+            agile.columns.Add(new TaskColumn("🔍 QA / Review"));
+            agile.columns.Add(new TaskColumn("✅ Done"));
+            templates.Add(agile);
+
+            // Game Design
+            var gameDesign = new TaskBoard("Game Design");
+            gameDesign.columns.Clear();
+            gameDesign.columns.Add(new TaskColumn("💡 Concepts"));
+            gameDesign.columns.Add(new TaskColumn("⚙️ Mechanics"));
+            gameDesign.columns.Add(new TaskColumn("🗺️ Level Design"));
+            gameDesign.columns.Add(new TaskColumn("🎨 Art / Assets"));
+            gameDesign.columns.Add(new TaskColumn("✨ Polish"));
+            gameDesign.columns.Add(new TaskColumn("✅ Completed"));
+            templates.Add(gameDesign);
+
+            // Bug Tracker
+            var bugs = new TaskBoard("Bug Tracker");
+            bugs.columns.Clear();
+            bugs.columns.Add(new TaskColumn("🔴 Critical"));
+            bugs.columns.Add(new TaskColumn("🟠 Major"));
+            bugs.columns.Add(new TaskColumn("🟡 Minor"));
+            bugs.columns.Add(new TaskColumn("🟢 Fixed"));
+            templates.Add(bugs);
+
+            // Simple To-Do
+            var todo = new TaskBoard("Simple To-Do");
+            todo.columns.Clear();
+            todo.columns.Add(new TaskColumn("📝 To Do"));
+            todo.columns.Add(new TaskColumn("✅ Done"));
+            templates.Add(todo);
         }
 
         private static bool IsStrayBlankCard(TaskCard card)

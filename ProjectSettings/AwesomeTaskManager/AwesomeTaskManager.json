@@ -7,7 +7,35 @@
                 {
                     "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
                     "title": "📋 To Do",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "8719b392-2845-4b10-83d5-fc77c45cbe10",
+                            "title": "Add Traffic Warden Game to list of jobs",
+                            "description": "",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-04-20 19:54",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Intregrate the games win conditon with the rest of the minigame menu",
+                                "Intregrate the games LOSS conditon with the rest of the minigame menu"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        }
+                    ]
                 },
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
@@ -18,9 +46,151 @@
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
                     "title": "✅ Done",
                     "cards": []
+                },
+                {
+                    "id": "f33aae9a-eb35-4d85-873d-6607e6087c3b",
+                    "title": "Would be nice",
+                    "cards": [
+                        {
+                            "id": "b4756212-036f-4e7e-a228-d764623da45f",
+                            "title": "Traffic Warden Game Add particles on crash ",
+                            "description": "",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-04-20 19:56",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        }
+                    ]
                 }
             ],
             "createdDate": "2026-04-04 01:25"
+        }
+    ],
+    "templates": [
+        {
+            "id": "258440fa-499f-415d-b139-f1b1affcb95c",
+            "name": "Software Development (Agile)",
+            "columns": [
+                {
+                    "id": "5ed4ce8d-a266-4443-bb5a-82dcd3622a63",
+                    "title": "📋 Backlog",
+                    "cards": []
+                },
+                {
+                    "id": "79f0ad76-55a7-4d3e-85f0-171d5503e000",
+                    "title": "⏳ To Do",
+                    "cards": []
+                },
+                {
+                    "id": "515de867-43bd-40e8-9ff4-57b6d3526733",
+                    "title": "🔨 In Progress",
+                    "cards": []
+                },
+                {
+                    "id": "432f4604-ed27-4078-ae8d-52048a86483c",
+                    "title": "🔍 QA / Review",
+                    "cards": []
+                },
+                {
+                    "id": "c14ebfee-8fdd-456c-9df8-b1b3b07f38f5",
+                    "title": "✅ Done",
+                    "cards": []
+                }
+            ],
+            "createdDate": "2026-04-25 00:34"
+        },
+        {
+            "id": "7fe88129-5862-4e78-a128-004ba6d4e6e6",
+            "name": "Game Design",
+            "columns": [
+                {
+                    "id": "73510dab-d036-4e13-a0ef-f5207b9b04d7",
+                    "title": "💡 Concepts",
+                    "cards": []
+                },
+                {
+                    "id": "35723b93-5a7f-4546-af79-8d5166d2b534",
+                    "title": "⚙️ Mechanics",
+                    "cards": []
+                },
+                {
+                    "id": "fddb0cf0-bddb-4726-adc7-c756a9af3581",
+                    "title": "🗺️ Level Design",
+                    "cards": []
+                },
+                {
+                    "id": "1ec9be5b-30eb-40d5-a533-7c1d45207c9b",
+                    "title": "🎨 Art / Assets",
+                    "cards": []
+                },
+                {
+                    "id": "672e817e-bcb9-4c43-98d4-e099e025a4ce",
+                    "title": "✨ Polish",
+                    "cards": []
+                },
+                {
+                    "id": "52ca02c1-d476-42ef-8331-617dfe3e0a7b",
+                    "title": "✅ Completed",
+                    "cards": []
+                }
+            ],
+            "createdDate": "2026-04-25 00:34"
+        },
+        {
+            "id": "136c5b5b-cb52-4b1a-af23-d20e219be941",
+            "name": "Bug Tracker",
+            "columns": [
+                {
+                    "id": "7d4da4f4-d9bd-4204-ae5d-ad8f7c9f7709",
+                    "title": "🔴 Critical",
+                    "cards": []
+                },
+                {
+                    "id": "7c154dfa-d0fa-4d99-be4e-6582e7788e92",
+                    "title": "🟠 Major",
+                    "cards": []
+                },
+                {
+                    "id": "6bac0eeb-d568-49e5-b916-800f46ffa6a8",
+                    "title": "🟡 Minor",
+                    "cards": []
+                },
+                {
+                    "id": "094d8a5d-83e0-4728-a550-00fd678d1260",
+                    "title": "🟢 Fixed",
+                    "cards": []
+                }
+            ],
+            "createdDate": "2026-04-25 00:34"
+        },
+        {
+            "id": "5b487712-4d48-4b3a-899c-76073a14ecc6",
+            "name": "Simple To-Do",
+            "columns": [
+                {
+                    "id": "9aea061f-7d6b-4bcf-98e4-a1a46a136aef",
+                    "title": "📝 To Do",
+                    "cards": []
+                },
+                {
+                    "id": "a8d22530-0b26-4961-ac33-a6f3c373c2a7",
+                    "title": "✅ Done",
+                    "cards": []
+                }
+            ],
+            "createdDate": "2026-04-25 00:34"
         }
     ],
     "notes": [],
@@ -32,8 +202,19 @@
         "Design",
         "UI",
         "Bug",
-        "Feature"
+        "Feature",
+        "Gameplay"
     ],
-    "categoryColors": [],
+    "categoryColors": [
+        {
+            "category": "Gameplay",
+            "colorIndex": 1
+        },
+        {
+            "category": "Art",
+            "colorIndex": 2
+        }
+    ],
+    "assignees": [],
     "lastBoardIndex": 0
 }
