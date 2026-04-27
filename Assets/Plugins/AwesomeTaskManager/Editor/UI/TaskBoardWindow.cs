@@ -418,7 +418,10 @@ namespace AwesomeTaskManager.Editor
                 }
                 else
                 {
-                    EditorGUILayout.LabelField($"🎯 {board.name}", TBStyles.BoardHeader, GUILayout.Height(30));
+                    string headerText = $"🎯 {TBStyles.TruncateString(board.name, 50)}";
+                    Vector2 headerSize = TBStyles.BoardHeader.CalcSize(new GUIContent(headerText));
+                    EditorGUILayout.LabelField(headerText, TBStyles.BoardHeader, GUILayout.Width(headerSize.x + 4), GUILayout.Height(30));
+                    
                     if (GUILayout.Button(new GUIContent("✏", "Rename Board"), GUILayout.Width(26), GUILayout.Height(24)))
                     {
                         _renamingBoard = true;

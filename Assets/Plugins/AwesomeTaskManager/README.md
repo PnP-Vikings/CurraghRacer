@@ -183,6 +183,9 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 📄 Changelog
 
+### v1.5.1
+- *Improved** **Board Title** — Added more responsive you ui to accommodate bigger board names without breaking the layout
+
 ### v1.5.0
 - **Added** 👥 **Assignees System** — manage project members globally and assign them to specific task cards
 - **Added** 🎨 **Member Initials & Profile Icons** — assignees are displayed as overlapping circular icons (initials or custom images) with customizable border colors

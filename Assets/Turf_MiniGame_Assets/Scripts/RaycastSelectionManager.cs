@@ -38,10 +38,17 @@ public class RaycastSelectionManager : MonoBehaviour
 
     if (inputDetected && !InputHelpers.IsPointerOverUI(inputPosition))
     {
-      if (_lastSelectedStack != null)
+      
+      if (_lastSelectedStack != null &&!_lastSelectedStack.isCompleted)
+      {
+        _gameFTController.SetSelectedStack(_lastSelectedStack);
+        return;
+      }
+      
+      if (_lastSelectedStack != null && _lastSelectedStack.isCompleted)
       {
         _lastSelectedStack.SetSelectedVisible(false);
-        _gameFTController.SelectedStack = null;
+        _gameFTController.SetSelectedStack(null);
         _lastSelectedStack = null;
       }
 
@@ -50,14 +57,16 @@ public class RaycastSelectionManager : MonoBehaviour
 
       if (!InputHelpers.IsPointerOverUI(inputPosition) && Physics.Raycast(ray, out rayCastHit, 500.0f))
       {
+        
+        
         //Debug.DrawRay(ray.origin, ray.direction * rayCastHit.distance, Color.green, 5.0f);
         if (rayCastHit.transform.CompareTag(_selectableTag))
         {
           _lastSelectedStack = rayCastHit.transform.GetComponent<UnitStack>();
-          if (_lastSelectedStack != null)
+          if (_lastSelectedStack != null && !_lastSelectedStack.isCompleted)
           {
             _lastSelectedStack.SetSelectedVisible(true);
-            _gameFTController.SelectedStack = _lastSelectedStack;
+            _gameFTController.SetSelectedStack(_lastSelectedStack);
           }
         }
         else

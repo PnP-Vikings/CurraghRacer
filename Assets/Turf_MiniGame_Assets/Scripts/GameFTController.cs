@@ -1,11 +1,13 @@
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class GameFTController : MonoBehaviour
 {
   // display finished stacks
   [SerializeField]
   private TextMeshProUGUI _Counter;
+  [SerializeField] private Button stackButton;
 
   // Current selected stack
   [SerializeField]
@@ -20,7 +22,20 @@ public class GameFTController : MonoBehaviour
 
   private void Start()
   {
+    if (stackButton != null)
+    {
+      stackButton.gameObject.SetActive(false);
+    }
+  }
 
+  public void SetSelectedStack(UnitStack stack)
+  {
+    _selectedStack = stack;
+    
+    if (stackButton != null)
+    {
+      stackButton.gameObject.SetActive(_selectedStack != null);
+    }
   }
   private bool AnimatorIsPlaying(Animator animator)
   {
@@ -46,11 +61,12 @@ public class GameFTController : MonoBehaviour
       {
         _StacksDone++; // add fineshed stack to counter.
         _Counter.text = string.Format("X {0}", _StacksDone); // Update display counter
-          
+        _selectedStack.SetCompleted(true); // mark stack as completed to be unselectable and hide selection marker.
         if (AudioManager.instance != null)
         {
             AudioManager.instance.turfStackComplete.start();
         }       
+       
       }
     }
     //animator.SetTrigger(triggerName); // Trigger the animation using a parameter

@@ -23,6 +23,9 @@ public class UnitStack : MonoBehaviour
   // Selection marker GO
   [SerializeField]
   private GameObject _selectedMark;
+  [SerializeField] public bool isCompleted = false;
+  
+  
 
   private void Awake()
   {
@@ -42,5 +45,16 @@ public class UnitStack : MonoBehaviour
       return;
     }
     _selectedMark.SetActive(visible);
+  }
+  
+  public void SetCompleted(bool completed)
+  {
+    if (_selectedMark == null)
+    {
+      return;
+    }
+    isCompleted = completed;
+    _selectedMark.SetActive(!completed);
+   
   }
 }
