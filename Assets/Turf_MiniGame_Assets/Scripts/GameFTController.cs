@@ -6,7 +6,7 @@ public class GameFTController : MonoBehaviour
 {
   // display finished stacks
   [SerializeField]
-  private TextMeshProUGUI _Counter;
+  private TextMeshProUGUI _Counter,selectAStackText;
   [SerializeField] private Button stackButton;
 
   // Current selected stack
@@ -22,21 +22,34 @@ public class GameFTController : MonoBehaviour
 
   private void Start()
   {
-    if (stackButton != null)
-    {
-      stackButton.gameObject.SetActive(false);
-    }
+    SetStackBtnVisible(false);
+    SetSelectAStackTextVisible(true);
   }
 
   public void SetSelectedStack(UnitStack stack)
   {
     _selectedStack = stack;
-    
+    SetStackBtnVisible(_selectedStack != null);
+    SetSelectAStackTextVisible(_selectedStack == null);
+   
+  }
+
+  public void SetStackBtnVisible(bool visible)
+  {
     if (stackButton != null)
     {
-      stackButton.gameObject.SetActive(_selectedStack != null);
+      stackButton.gameObject.SetActive(visible);
     }
   }
+  
+  public void SetSelectAStackTextVisible(bool visible)
+  {
+    if (selectAStackText != null)
+    {
+      selectAStackText.gameObject.SetActive(visible);
+    }
+  }
+ 
   private bool AnimatorIsPlaying(Animator animator)
   {
     return animator.GetCurrentAnimatorStateInfo(0).length > animator.GetCurrentAnimatorStateInfo(0).normalizedTime;
@@ -60,8 +73,10 @@ public class GameFTController : MonoBehaviour
       if (_selectedStack.Index == _selectedStack.Animators.Count)
       {
         _StacksDone++; // add fineshed stack to counter.
-        _Counter.text = string.Format("X {0}", _StacksDone); // Update display counter
+        _Counter.text = string.Format("Stack Completed X {0}", _StacksDone); // Update display counter
         _selectedStack.SetCompleted(true); // mark stack as completed to be unselectable and hide selection marker.
+        SetStackBtnVisible(false);
+        SetSelectAStackTextVisible(true);
         if (AudioManager.instance != null)
         {
             AudioManager.instance.turfStackComplete.start();
@@ -98,6 +113,8 @@ public class GameFTController : MonoBehaviour
       buttonRectTransform.anchoredPosition = new Vector2(randomX2, randomY);
     }    
   }
+  
+  
 
     public void PlayPlaceTurfAudio()
     {
