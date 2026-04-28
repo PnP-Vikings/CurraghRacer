@@ -11,8 +11,9 @@ namespace MiniGames.BalingSilageMinigame
         private MiniGameData gameData;
         public Tractor tractorPrefab;
         public GameObject Collector;
-        private float gameTimer;
-        public TextMeshProUGUI timerText;
+        private float score;
+        public float grassCounter;
+        public TextMeshProUGUI scoreText;
         public TextMeshProUGUI grassText;
         public bool cutting;
         public bool collecting;
@@ -43,30 +44,22 @@ namespace MiniGames.BalingSilageMinigame
 
         public void UpdateGame()
         {
-            gameTimer += Time.deltaTime;
-            if (gameTimer <= 30)
-            {
-                timerText.text = gameTimer.ToString("F2");
-            }
-
-            if (gameTimer >= 30 && cutting == true) 
-            {
-                cutting = false;
-                gameTimer = 30;
-                timerText.text = gameTimer.ToString("F2");
-                grassText.text = "Attach the collector";
-            }
-
             if (collecting == true)
             {
                 grassText.text = "Collect the grass";
+            }
+
+            if (grassCounter > 3)
+            {
+                grassCounter = 0;
+                score++;
+                scoreText.text = score.ToString();
             }
         }
 
         public void EndGame()
         {
-            gameTimer = 30;
-            timerText.text = gameTimer.ToString();
+            
         }
 
         public int GetCurrentScore()
