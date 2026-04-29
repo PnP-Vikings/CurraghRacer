@@ -26,6 +26,8 @@ namespace AwesomeTaskManager.Editor
         private bool _dirty;
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
+        private bool _shouldFocusTitle;
+        private bool _shouldFocusChecklist;
 
         // ── Open existing card ──
         public static void Show(TaskCard card, SaveData saveData, System.Action onChanged, System.Action onDelete)
@@ -43,6 +45,7 @@ namespace AwesomeTaskManager.Editor
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
             win.saveChangesMessage = "You have unsaved changes to this card. Do you want to save them before closing?";
+            win._shouldFocusTitle = true;
             win.ShowUtility();
         }
 
@@ -64,6 +67,7 @@ namespace AwesomeTaskManager.Editor
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
             win.saveChangesMessage = "You have unsaved changes. Do you want to create the card before closing?";
+            win._shouldFocusTitle = true;
             win.ShowUtility();
         }
 
@@ -118,8 +122,16 @@ namespace AwesomeTaskManager.Editor
 
             // ── Title ──
             EditorGUILayout.LabelField(_isNewCard ? "Card Title" : "Title", EditorStyles.boldLabel);
+            GUI.SetNextControlName("CardTitleField");
             string newTitle = EditorGUILayout.TextField(_card.title);
             if (newTitle != _card.title) { _card.title = newTitle; MarkDirty(); }
+
+            if (_shouldFocusTitle)
+            {
+                _shouldFocusTitle = false;
+                GUI.FocusControl("CardTitleField");
+                EditorGUI.FocusTextInControl("CardTitleField");
+            }
             GUILayout.Space(8);
 
             // ── Category ──
@@ -402,13 +414,32 @@ namespace AwesomeTaskManager.Editor
 
             using (new EditorGUILayout.HorizontalScope())
             {
+                bool enterPressed = Event.current.type == EventType.KeyDown && 
+                                   (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) &&
+                                   GUI.GetNameOfFocusedControl() == "NewChecklistItemField";
+
+                GUI.SetNextControlName("NewChecklistItemField");
                 _newChecklistItem = EditorGUILayout.TextField(_newChecklistItem);
-                if (GUILayout.Button(new GUIContent("+","Add Checklist Item"), TBStyles.IconButton) && !string.IsNullOrWhiteSpace(_newChecklistItem))
+
+                if (_shouldFocusChecklist)
+                {
+                    _shouldFocusChecklist = false;
+                    GUI.FocusControl("NewChecklistItemField");
+                    EditorGUI.FocusTextInControl("NewChecklistItemField");
+                }
+
+                if ((GUILayout.Button(new GUIContent("+","Add Checklist Item"), TBStyles.IconButton) || enterPressed) && !string.IsNullOrWhiteSpace(_newChecklistItem))
                 {
                     _card.checklistItems.Add(_newChecklistItem.Trim());
                     _card.checklistStates.Add(false);
                     _newChecklistItem = "";
                     MarkDirty();
+                    if (enterPressed)
+                    {
+                        Event.current.Use();
+                    }
+                    _shouldFocusChecklist = true;
+                    Repaint();
                 }
             }
 
