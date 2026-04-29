@@ -38,7 +38,7 @@
                         {
                             "id": "bba55898-5c7d-40b5-a413-634175fe87a6",
                             "title": "Fix FootTurfMinigame ",
-                            "description": "Finish foot turf mingame so we can add it to job list ",
+                            "description": "Finish foot turf mingame so we can add it to job list",
                             "category": "Gameplay",
                             "colorLabel": 1,
                             "priority": 0,
@@ -49,10 +49,12 @@
                                 "Add Timer",
                                 "Hide Stack btn when no btn selected or stack compeleted",
                                 "Add Scoring system",
-                                "Remove streak if player does not click on stack btn"
+                                "Remove streak if player does not click on stack btn",
+                                "Add Character that goes towards selected turf"
                             ],
                             "checklistStates": [
                                 true,
+                                false,
                                 false,
                                 false,
                                 false

@@ -183,8 +183,13 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 📄 Changelog
 
+### v1.5.2
+- **Added** 💾 **Preview & Save Workflow** — editing an existing card now works on a temporary clone; changes are only applied to the board when you click "Save Changes"
+- **Added** ⚠️ **Unsaved Changes Protection** — closing a card window (new or existing) via the default 'X' button now prompts to save or discard changes if there are unsaved edits
+- **Added** 🚫 **Title Validation** — preventing saving of new cards without a title, with clear error messaging in both the editor and the close prompt
+
 ### v1.5.1
-- *Improved** **Board Title** — Added more responsive you ui to accommodate bigger board names without breaking the layout
+- **Improved** **Board Title** — Added more responsive UI to accommodate bigger board names without breaking the layout
 
 ### v1.5.0
 - **Added** 👥 **Assignees System** — manage project members globally and assign them to specific task cards

@@ -13,6 +13,7 @@ namespace AwesomeTaskManager.Editor
     public class CardDetailWindow : EditorWindow
     {
         private TaskCard _card;
+        private TaskCard _originalCard;
         private System.Action _onChanged;
         private System.Action _onDelete;
         private System.Action<TaskCard> _onCreated;
@@ -30,7 +31,8 @@ namespace AwesomeTaskManager.Editor
         public static void Show(TaskCard card, SaveData saveData, System.Action onChanged, System.Action onDelete)
         {
             var win = GetWindow<CardDetailWindow>(true, "📝 Card Details", true);
-            win._card = card;
+            win._originalCard = card;
+            win._card = card.Clone(false);
             win._saveData = saveData;
             win._categories = saveData.categories;
             win._onChanged = onChanged;
@@ -40,6 +42,7 @@ namespace AwesomeTaskManager.Editor
             win._dirty = false;
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
+            win.saveChangesMessage = "You have unsaved changes to this card. Do you want to save them before closing?";
             win.ShowUtility();
         }
 
@@ -54,11 +57,13 @@ namespace AwesomeTaskManager.Editor
             win._onChanged = null;
             win._onDelete = null;
             win._isNewCard = true;
+            win._originalCard = null;
             win._newChecklistItem = "";
             win._newCategory = "";
             win._dirty = false;
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
+            win.saveChangesMessage = "You have unsaved changes. Do you want to create the card before closing?";
             win.ShowUtility();
         }
 
@@ -77,6 +82,25 @@ namespace AwesomeTaskManager.Editor
         {
             if (_card == null) { Close(); return; }
 
+            if (_isNewCard)
+            {
+                bool isDirty = IsNewCardDirty();
+                hasUnsavedChanges = isDirty;
+                if (isDirty && string.IsNullOrWhiteSpace(_card.title))
+                {
+                    saveChangesMessage = "A title is required to save this card. If you close now, your changes will be lost. Click 'Cancel' to go back and add a title.";
+                }
+                else
+                {
+                    saveChangesMessage = "You have unsaved changes. Do you want to create the card before closing?";
+                }
+            }
+            else
+            {
+                hasUnsavedChanges = _dirty;
+                saveChangesMessage = "You have unsaved changes to this card. Do you want to save them before closing?";
+            }
+
             _hasAnimatedGif = false;
 
             using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
@@ -85,8 +109,11 @@ namespace AwesomeTaskManager.Editor
 
             // ── Color label bar ──
             var labelColor = TBStyles.LabelColors[Mathf.Clamp(_card.colorLabel, 0, TBStyles.LabelColors.Length - 1)];
-            var barRect = GUILayoutUtility.GetRect(0, 6, GUILayout.ExpandWidth(true));
-            EditorGUI.DrawRect(barRect, labelColor);
+            if(labelColor != TBStyles.LabelColors[0])
+            {
+                var barRect = GUILayoutUtility.GetRect(0, 6, GUILayout.ExpandWidth(true));
+                EditorGUI.DrawRect(barRect, labelColor);
+            }
             GUILayout.Space(10);
 
             // ── Title ──
@@ -676,14 +703,19 @@ namespace AwesomeTaskManager.Editor
             if (_isNewCard)
             {
                 GUI.backgroundColor = new Color(0.3f, 0.75f, 0.35f);
-                GUI.enabled = !string.IsNullOrWhiteSpace(_card.title);
                 if (GUILayout.Button("✅  Create Card", GUILayout.Height(32)))
                 {
-                    _onCreated?.Invoke(_card);
-                    Close();
-                    GUIUtility.ExitGUI();
+                    if (string.IsNullOrWhiteSpace(_card.title))
+                    {
+                        EditorUtility.DisplayDialog("Title Required", "A card requires a title to be saved.", "OK");
+                    }
+                    else
+                    {
+                        _onCreated?.Invoke(_card);
+                        Close();
+                        GUIUtility.ExitGUI();
+                    }
                 }
-                GUI.enabled = true;
                 GUI.backgroundColor = Color.white;
                 GUILayout.Space(4);
                 if (GUILayout.Button("Cancel", GUILayout.Height(24)))
@@ -696,12 +728,14 @@ namespace AwesomeTaskManager.Editor
                                 "You have unsaved changes. Are you sure you want to discard this card?",
                                 "Discard", "Keep Editing"))
                             {
+                                hasUnsavedChanges = false;
                                 Close();
                             }
                         };
                     }
                     else
                     {
+                        hasUnsavedChanges = false;
                         Close();
                         GUIUtility.ExitGUI();
                     }
@@ -714,8 +748,7 @@ namespace AwesomeTaskManager.Editor
                 GUI.backgroundColor = _dirty ? new Color(0.3f, 0.7f, 0.95f) : Color.grey;
                 if (GUILayout.Button(_dirty ? "💾  Save Changes" : "✔  All Saved", GUILayout.Height(30)))
                 {
-                    _onChanged?.Invoke();
-                    _dirty = false;
+                    SaveChanges();
                 }
                 GUI.enabled = true;
                 GUI.backgroundColor = Color.white;
@@ -731,6 +764,7 @@ namespace AwesomeTaskManager.Editor
                         if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{_card.title}\"?", "Delete", "Cancel"))
                         {
                             _onDelete?.Invoke();
+                            hasUnsavedChanges = false;
                             Close();
                         }
                     };
@@ -761,10 +795,36 @@ namespace AwesomeTaskManager.Editor
             return false;
         }
 
+        public override void SaveChanges()
+        {
+            if (_isNewCard)
+            {
+                if (!string.IsNullOrWhiteSpace(_card.title))
+                {
+                    _onCreated?.Invoke(_card);
+                    base.SaveChanges();
+                }
+                else
+                {
+                    EditorUtility.DisplayDialog("Title Required", "A card requires a title to be saved. Please enter a title before saving, or choose 'Discard' to exit without creating the card.", "OK");
+                }
+            }
+            else
+            {
+                if (_dirty && _originalCard != null)
+                {
+                    string json = JsonUtility.ToJson(_card);
+                    JsonUtility.FromJsonOverwrite(json, _originalCard);
+                    _onChanged?.Invoke();
+                    _dirty = false;
+                }
+                base.SaveChanges();
+            }
+        }
+
         private void MarkDirty()
         {
             _dirty = true;
-            if (!_isNewCard) _onChanged?.Invoke(); // live-save for existing cards
         }
 
         private void DrawAssigneeCircle(Assignee assignee, bool clickable)
