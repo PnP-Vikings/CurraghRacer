@@ -1,7 +1,9 @@
 using System.Collections;
 using DG.Tweening;
+using MiniGames;
 using UnityEngine;
 using TMPro;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class GameFTController : MonoBehaviour
@@ -16,6 +18,8 @@ public class GameFTController : MonoBehaviour
   [SerializeField] private int minStackFlippedRequired = 7;
   [SerializeField] private bool timerCompleted = false;
   [SerializeField] public bool gameStarted = false;
+  [SerializeField] public bool gameOver = false;
+  [SerializeField] private TurfFlipperController turfFlipperController;
   
 
   // Current selected stack
@@ -59,6 +63,12 @@ public class GameFTController : MonoBehaviour
   public void SetSelectedStack(UnitStack stack)
   {
     _selectedStack = stack;
+    if(turfFlipperController != null && stack != null)
+    {
+      turfFlipperController.GoTowardsTarget(_selectedStack.transform);
+    }
+     
+   
     SetStackBtnVisible(_selectedStack != null);
     SetSelectAStackTextVisible(_selectedStack == null);
    
@@ -92,7 +102,9 @@ public class GameFTController : MonoBehaviour
     {
       return;
     }
-
+  
+    if(gameOver)
+      return;
     // Play Stack anim 
     // get next animator only if its exist on list and has been assigned.
     if (_selectedStack.Index < _selectedStack.Animators.Count && _selectedStack.Animators[_selectedStack.Index] != null)
@@ -106,6 +118,10 @@ public class GameFTController : MonoBehaviour
         _Counter.text = string.Format("Stack Completed X {0}", _StacksDone); // Update display counter
         DisplayStackComplete();
         _selectedStack.SetCompleted(true); // mark stack as completed to be unselectable and hide selection marker.
+        if(turfFlipperController != null)
+        {
+          turfFlipperController.ReturnHome();
+        }
         SetStackBtnVisible(false);
         SetSelectAStackTextVisible(true);
         if (AudioManager.instance != null)
@@ -152,6 +168,7 @@ public class GameFTController : MonoBehaviour
   {
     if (timerCompleted )
     {
+      gameOver = true;
       if (minStackFlippedRequired <= _StacksDone)
       {
         minigameCanvasUI.ShowGameOver($"Time's Up!\n Congrats You flipped {_StacksDone}  stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
@@ -161,6 +178,22 @@ public class GameFTController : MonoBehaviour
       {
         minigameCanvasUI.ShowGameOver($"Time's Up!\n You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
         Debug.Log("Game Over: Timer completed but minimum stacks flipped requirement not met.");
+      }
+      
+      if (MiniGameManager.Instance != null)
+      {
+        Debug.Log($"Calling MiniGameManager.CompleteGame with score: {_StacksDone}");
+        MiniGameManager.Instance.CompleteGame(_StacksDone,2f);
+      }
+      else
+      {
+        Debug.LogError("MiniGameManager.Instance is null!");
+        if (GameManager.Instance != null)
+        {
+          GameManager.Instance.PlayerWorked();
+          SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+        }
+      
       }
     }
   }
