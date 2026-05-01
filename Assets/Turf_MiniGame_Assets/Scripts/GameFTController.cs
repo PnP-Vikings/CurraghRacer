@@ -1,3 +1,5 @@
+using System.Collections;
+using DG.Tweening;
 using UnityEngine;
 using TMPro;
 using UnityEngine.UI;
@@ -6,8 +8,15 @@ public class GameFTController : MonoBehaviour
 {
   // display finished stacks
   [SerializeField]
-  private TextMeshProUGUI _Counter,selectAStackText;
+  private TextMeshProUGUI _Counter,selectAStackText,startGameText;
   [SerializeField] private Button stackButton;
+  [SerializeField] private MinigameCanvasUI minigameCanvasUI;
+  [SerializeField] private int maxRoundTime =180;
+  [SerializeField] private int currentRoundTime = 0;
+  [SerializeField] private int minStackFlippedRequired = 7;
+  [SerializeField] private bool timerCompleted = false;
+  [SerializeField] public bool gameStarted = false;
+  
 
   // Current selected stack
   [SerializeField]
@@ -19,13 +28,34 @@ public class GameFTController : MonoBehaviour
   }
 
   private int _StacksDone = 0;
+  
+  private void Awake()
+  {
+    currentRoundTime = maxRoundTime;
+  }
 
   private void Start()
   {
+    
     SetStackBtnVisible(false);
-    SetSelectAStackTextVisible(true);
+    _Counter.gameObject.SetActive(false);
+    SetSelectAStackTextVisible(false);
+    
+    startGameText.text = $"Click on a stack to select it \nthen press stack button to flip it \nYou need to flip at least {minStackFlippedRequired} stacks before time runs out to win!";
   }
 
+  public void StartGame()
+  {
+    StartCoroutine(TimerLoop());
+    gameStarted = true;
+    
+    
+    minigameCanvasUI.SetUpUI(false, true, false, false, false);
+    _Counter.gameObject.SetActive(true);
+    SetSelectAStackTextVisible(true);
+  }
+  
+  
   public void SetSelectedStack(UnitStack stack)
   {
     _selectedStack = stack;
@@ -74,6 +104,7 @@ public class GameFTController : MonoBehaviour
       {
         _StacksDone++; // add fineshed stack to counter.
         _Counter.text = string.Format("Stack Completed X {0}", _StacksDone); // Update display counter
+        DisplayStackComplete();
         _selectedStack.SetCompleted(true); // mark stack as completed to be unselectable and hide selection marker.
         SetStackBtnVisible(false);
         SetSelectAStackTextVisible(true);
@@ -113,7 +144,52 @@ public class GameFTController : MonoBehaviour
       buttonRectTransform.anchoredPosition = new Vector2(randomX2, randomY);
     }    
   }
+
   
+  
+
+  private void DisplayGameOver()
+  {
+    if (timerCompleted )
+    {
+      if (minStackFlippedRequired <= _StacksDone)
+      {
+        minigameCanvasUI.ShowGameOver($"Time's Up!\n Congrats You flipped {_StacksDone}  stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
+        Debug.Log("Game Over: Timer completed and minimum stacks flipped requirement met.");
+      }
+      else
+      {
+        minigameCanvasUI.ShowGameOver($"Time's Up!\n You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
+        Debug.Log("Game Over: Timer completed but minimum stacks flipped requirement not met.");
+      }
+    }
+  }
+
+  private void DisplayStackComplete()
+  {
+    minigameCanvasUI.UpdateMultiplier("Stack Complete");
+    
+    StartCoroutine(minigameCanvasUI.FadeTextRoutine(minigameCanvasUI.multiplierText, 1.5f));
+  }
+  
+ 
+  
+  private IEnumerator TimerLoop()
+  {
+    Debug.Log("Timer loop started with maxRoundTime: " + maxRoundTime);
+    while (currentRoundTime > 0)
+    {
+      minigameCanvasUI.UpdateTimer(currentRoundTime,true);
+      yield return new WaitForSeconds(1f); // waits 1 scaled second
+      currentRoundTime--;
+    }
+
+    minigameCanvasUI.UpdateTimer(0);
+    timerCompleted = true;
+    DisplayGameOver();
+
+  }
+
   
 
     public void PlayPlaceTurfAudio()

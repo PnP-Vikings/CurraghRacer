@@ -17,6 +17,16 @@ public class RaycastSelectionManager : MonoBehaviour
   // Update is called once per frame
   void Update()
   {
+    if(_gameFTController == null)
+    {
+      Debug.LogWarning("GameFTController reference is missing in RaycastSelectionManager.");
+      return;
+    }
+    if(_gameFTController.gameStarted == false)
+    {
+      return;
+    }
+    
     bool inputDetected = false;
     Vector2 inputPosition = Vector2.zero;
 
