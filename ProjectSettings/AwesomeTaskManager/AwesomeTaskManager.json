@@ -9,18 +9,18 @@
                     "title": "📋 To Do",
                     "cards": [
                         {
-                            "id": "8719b392-2845-4b10-83d5-fc77c45cbe10",
-                            "title": "Add Traffic Warden Game to list of jobs",
-                            "description": "",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
+                            "id": "95a6f3c3-83fa-481d-9f69-4b503fefe7ed",
+                            "title": "Confirm That both traffic and turf game are allowing players to pass",
+                            "description": "I think that I have won the minigames before but it still showed a \nmanager is angry with you \n",
+                            "category": "Bug",
+                            "colorLabel": 16,
                             "priority": 0,
-                            "createdDate": "2026-04-20 19:54",
+                            "createdDate": "2026-05-02 19:43",
                             "dueDate": "",
                             "archived": false,
                             "checklistItems": [
-                                "Intregrate the games win conditon with the rest of the minigame menu",
-                                "Intregrate the games LOSS conditon with the rest of the minigame menu"
+                                "Traffic is working",
+                                "Foot Turfing is working"
                             ],
                             "checklistStates": [
                                 false,
@@ -28,13 +28,100 @@
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
-                            "linkedItems": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d9ea1e419eff46e4eb9d372bd978623e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/Main Menu.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1539091530887075933-579750602",
+                                        "name": "GameManager"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d808c0220f7366949a781e1bf202fc56",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "cb99f032137a27d40b80b3ad1ef51835",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,
-                            "assigneeIds": [],
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
                             "isArchived": false
-                        },
+                        }
+                    ]
+                },
+                {
+                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
+                    "title": "🔨 In Progress",
+                    "cards": [
                         {
                             "id": "bba55898-5c7d-40b5-a413-634175fe87a6",
                             "title": "Fix FootTurfMinigame ",
@@ -126,14 +213,37 @@
                     ]
                 },
                 {
-                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
-                    "title": "🔨 In Progress",
-                    "cards": []
-                },
-                {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
                     "title": "✅ Done",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "8719b392-2845-4b10-83d5-fc77c45cbe10",
+                            "title": "Add Traffic Warden Game to list of jobs",
+                            "description": "",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-04-20 19:54",
+                            "dueDate": "",
+                            "archived": true,
+                            "checklistItems": [
+                                "Intregrate the games win conditon with the rest of the minigame menu",
+                                "Intregrate the games LOSS conditon with the rest of the minigame menu"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        }
+                    ]
                 },
                 {
                     "id": "f33aae9a-eb35-4d85-873d-6607e6087c3b",
@@ -301,6 +411,10 @@
         {
             "category": "Art",
             "colorIndex": 2
+        },
+        {
+            "category": "Bug",
+            "colorIndex": 16
         }
     ],
     "assignees": [
