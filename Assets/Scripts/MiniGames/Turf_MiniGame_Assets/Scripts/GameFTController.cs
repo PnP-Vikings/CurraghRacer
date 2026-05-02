@@ -31,7 +31,7 @@ public class GameFTController : MonoBehaviour
     set => _selectedStack = value;
   }
 
-  private int _StacksDone = 0;
+  [SerializeField] private int _StacksDone = 0;
   
   private void Awake()
   {

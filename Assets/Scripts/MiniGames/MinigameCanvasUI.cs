@@ -195,7 +195,7 @@ public class MinigameCanvasUI : MonoBehaviour
 
                 if (trafficWardenAudio != null)
                 {
-                    trafficWardenAudio.MuteRainAndRoadworks();
+                    trafficWardenAudio.StopRainAndRoadworks();
                 }
             }
         }
