@@ -1,5 +1,6 @@
 using MiniGames;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -89,6 +90,30 @@ public class MinigameCanvasUI : MonoBehaviour
             timerText.text = "Time: " + Mathf.CeilToInt(timeRemaining).ToString();
         }
     }
+    public void UpdateTimer(float timeRemaining, bool showDifferentColors)
+    {
+        if (showDifferentColors)
+        {
+            timerText.color = Color.white;
+            if(timeRemaining <= 10f)
+            {
+                timerText.color = Color.red;
+            }
+            else if(timeRemaining <= 20f)
+            {
+                timerText.color = Color.yellow;
+            }
+            else if (timeRemaining <= 30f)
+            {
+                timerText.color = Color.orange;
+            }
+           
+        }
+        if(timerText != null)
+        {
+            timerText.text = "Time: " + Mathf.CeilToInt(timeRemaining).ToString();
+        }
+    }
     
     public void UpdateTimer(string timeRemaining)
     {
@@ -139,6 +164,38 @@ public class MinigameCanvasUI : MonoBehaviour
                 if (trafficWardenAudio != null)
                 {
                     trafficWardenAudio.StopRainAndRoadworks();
+                }
+            }
+        }
+
+        if (showRestartButtons)
+        {
+            if (testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(true);
+            }
+        }
+    }
+    
+    public virtual void ShowGameOver(string message)
+    {
+        if(timerText != null)
+        {
+            gameOverText.gameObject.SetActive(true);
+            gameOverText.text = message;
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.gameOver.start();
+
+                if (boxingAudio != null)
+                {
+                    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
+                }
+
+                if (trafficWardenAudio != null)
+                {
+                    trafficWardenAudio.MuteRainAndRoadworks();
                 }
             }
         }
@@ -331,6 +388,18 @@ public class MinigameCanvasUI : MonoBehaviour
             multiplierText.gameObject.SetActive(true);
             multiplierText.text = text;
         }
+    }
+
+  
+     public  IEnumerator FadeTextRoutine(TMP_Text text, float duration)
+    {
+        text.color = new Color(1f, 1f, 1f, 1f);
+        while (text.color.a > 0f)
+        {
+            text.color = new Color(text.color.r, text.color.g, text.color.b, text.color.a - Time.deltaTime / duration);
+            yield return null;
+        }
+        text.gameObject.SetActive(false);
     }
     
     public void HideMultiplier()

@@ -34,6 +34,94 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "bba55898-5c7d-40b5-a413-634175fe87a6",
+                            "title": "Fix FootTurfMinigame ",
+                            "description": "Finish foot turf mingame so we can add it to job list",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-04-28 22:17",
+                            "dueDate": "2026-05-05",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Timer",
+                                "Hide Stack btn when no btn selected or stack compeleted",
+                                "Add Scoring system",
+                                "Remove streak if player does not click on stack btn",
+                                "Add Character that goes towards selected turf"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1732423707-0",
+                                        "name": "Canvas"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-629005217-0",
+                                        "name": "StackBtn"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1133713054-0",
+                                        "name": "GameManager"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "0c9af5a3d507ce847b7b292e877e3ab8",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260428_215615_20260428_221916.png",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -215,6 +303,14 @@
             "colorIndex": 2
         }
     ],
-    "assignees": [],
+    "assignees": [
+        {
+            "id": "8910e6f1-befc-4526-8924-25f6df0bd590",
+            "name": "Vitor",
+            "profileImageGuid": "",
+            "colorIndex": 1,
+            "borderColorIndex": 15
+        }
+    ],
     "lastBoardIndex": 0
 }

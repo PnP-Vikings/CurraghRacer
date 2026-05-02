@@ -46,6 +46,7 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **✨ Auto-Link URLs** — pasted links in notes are automatically converted into clickable buttons in Preview mode
 - **🚀 Smart Scene Navigation** — clicking a linked scene object pings it in the Hierarchy and automatically switches scenes if needed (with confirmation)
 - **👤 Assignee Filtering** — filter the board to show only tasks assigned to specific members; hover over icons on a card to see full names
+- **🔥 Priority Filtering** — quickly filter the board by priority level to focus on what matters most
 
 ### 📝 Quick Notes System
 - **Markdown-powered notepad** with Edit / Preview toggle
@@ -182,6 +183,18 @@ Assets/Plugins/AwesomeTaskManager/
 ---
 
 ## 📄 Changelog
+
+### v1.5.2
+- **Added** 💾 **Preview & Save Workflow** — editing an existing card now works on a temporary clone; changes are only applied to the board when you click "Save Changes"
+- **Added** ⚠️ **Unsaved Changes Protection** — closing a card window (new or existing) via the default 'X' button now prompts to save or discard changes if there are unsaved edits
+- **Added** 🚫 **Title Validation** — preventing saving of new cards without a title, with clear error messaging in both the editor and the close prompt
+- **Improved** ⌨ **Checklist Enter & Focus** — support for pressing Enter to quickly add checklist items, with fixed deferred focus management to ensure the input field reliably regains focus for rapid entries without resetting window focus
+- **Improved** 🎯 **Automatic Field Selection** — new and existing cards now automatically focus the title field when opened for faster data entry
+- **Priority Filtering** — Added a new dropdown to the board toolbar to filter tasks by priority (None, Low, Medium, High, Urgent).
+- **Improved Filter Persistence** — All filters (Search, Category, Assignee, Priority) now reset correctly when creating new cards via shortcuts or switching boards.
+
+### v1.5.1
+- **Improved** **Board Title** — Added more responsive UI to accommodate bigger board names without breaking the layout
 
 ### v1.5.0
 - **Added** 👥 **Assignees System** — manage project members globally and assign them to specific task cards

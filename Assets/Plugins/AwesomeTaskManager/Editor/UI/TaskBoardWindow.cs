@@ -27,6 +27,7 @@ namespace AwesomeTaskManager.Editor
         private string _searchFilter = "";
         private string _categoryFilter = "";
         private string _assigneeFilter = ""; // New filter
+        private int _priorityFilter = 0; // 0 = All
         private string _newColumnTitle = "";
         private bool _showAddColumn;
         private string _renameBoardName = "";
@@ -127,6 +128,8 @@ namespace AwesomeTaskManager.Editor
             _tab = 0; // Switch to Board tab
             _searchFilter = ""; // Clear filters to ensure the new card is visible
             _categoryFilter = "";
+            _priorityFilter = 0;
+            _assigneeFilter = "";
             
             var board = Board;
             if (board.columns.Count == 0)
@@ -275,7 +278,7 @@ namespace AwesomeTaskManager.Editor
                 if (newIdx != _boardIndex)
                 {
                     _boardIndex = newIdx;
-                    _searchFilter = ""; _categoryFilter = ""; _assigneeFilter = "";
+                    _searchFilter = ""; _categoryFilter = ""; _assigneeFilter = ""; _priorityFilter = 0;
                     GUIUtility.ExitGUI();
                 }
 
@@ -367,7 +370,13 @@ namespace AwesomeTaskManager.Editor
                 {
                     AssigneeManagerWindow.ShowWindow(_data, () => { Save(); Repaint(); });
                 }
-                
+
+                GUILayout.Space(8);
+                EditorGUILayout.LabelField(new GUIContent("Priority:", "Filter tasks by priority"), GUILayout.Width(52));
+                var priorityOptions = new List<string> { "All" };
+                priorityOptions.AddRange(TBStyles.PriorityNames);
+                _priorityFilter = EditorGUILayout.Popup(_priorityFilter, priorityOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(80));
+
                 GUILayout.Space(8);
 
                 EditorGUILayout.LabelField(new GUIContent("🔍", "Search Tasks"), GUILayout.Width(18));
@@ -418,7 +427,10 @@ namespace AwesomeTaskManager.Editor
                 }
                 else
                 {
-                    EditorGUILayout.LabelField($"🎯 {board.name}", TBStyles.BoardHeader, GUILayout.Height(30));
+                    string headerText = $"🎯 {TBStyles.TruncateString(board.name, 50)}";
+                    Vector2 headerSize = TBStyles.BoardHeader.CalcSize(new GUIContent(headerText));
+                    EditorGUILayout.LabelField(headerText, TBStyles.BoardHeader, GUILayout.Width(headerSize.x + 4), GUILayout.Height(30));
+                    
                     if (GUILayout.Button(new GUIContent("✏", "Rename Board"), GUILayout.Width(26), GUILayout.Height(24)))
                     {
                         _renamingBoard = true;
@@ -521,6 +533,7 @@ namespace AwesomeTaskManager.Editor
                     {
                         int columnsCardCountWithFliter = col.cards.Count(c => (_showArchived || !c.archived) && (string.IsNullOrWhiteSpace(_categoryFilter) || (c.category ?? "") == _categoryFilter)
                             && (string.IsNullOrEmpty(_assigneeFilter) || c.assigneeIds.Contains(_assigneeFilter))
+                            && (_priorityFilter == 0 || c.priority == _priorityFilter - 1)
                             && (string.IsNullOrWhiteSpace(_searchFilter) || c.title.ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant())
                                 || (c.description ?? "").ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant())
                                 || (c.category ?? "").ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant())));
@@ -587,6 +600,7 @@ namespace AwesomeTaskManager.Editor
                     string filter = hasTextFilter ? _searchFilter.ToLowerInvariant() : "";
                     bool hasCatFilter = !string.IsNullOrEmpty(_categoryFilter);
                     bool hasAssFilter = !string.IsNullOrEmpty(_assigneeFilter);
+                    bool hasPriFilter = _priorityFilter > 0;
 
                     for (int i = 0; i < col.cards.Count; i++)
                     {
@@ -594,6 +608,7 @@ namespace AwesomeTaskManager.Editor
                         if (!_showArchived && card.archived) continue;
                         if (hasCatFilter && (card.category ?? "") != _categoryFilter) continue;
                         if (hasAssFilter && !card.assigneeIds.Contains(_assigneeFilter)) continue;
+                        if (hasPriFilter && card.priority != _priorityFilter - 1) continue;
                         if (hasTextFilter && !card.title.ToLowerInvariant().Contains(filter)
                                           && !(card.description ?? "").ToLowerInvariant().Contains(filter)
                                           && !(card.category ?? "").ToLowerInvariant().Contains(filter))

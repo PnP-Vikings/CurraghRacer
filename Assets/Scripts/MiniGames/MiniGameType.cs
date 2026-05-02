@@ -5,6 +5,7 @@ public enum  MiniGameType
     // Work Activities (Earn Money)
     WashingDishes,
     DiggingTurf,
+    FootingTurf,
     MilkingCows,
     ShearingSheep,
     StackingHay,
@@ -12,6 +13,7 @@ public enum  MiniGameType
     FixingDryStoneWall,
     CollectingEggs,
     PouringPint,
+    TrafficWarden,
     
     // Training Activities (Improve Rowing Skills)
     ChoppingWood,
