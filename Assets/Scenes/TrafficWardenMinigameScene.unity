@@ -4791,6 +4791,10 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.y
       value: 174.2
       objectReference: {fileID: 0}
+    - target: {fileID: 6807400039332883010, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: trafficWardenAudio
+      value: 
+      objectReference: {fileID: 1853407906}
     - target: {fileID: 7413206986963564239, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_SizeDelta.x
       value: 304.9

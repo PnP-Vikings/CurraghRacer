@@ -4,6 +4,7 @@ using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 public class Tractor : MonoBehaviour
 {
@@ -21,12 +22,12 @@ public class Tractor : MonoBehaviour
     void Update()
     {
         mousePosition = Mouse.current.position.ReadValue();
-        mousePosition.z = 4;
-        transform.position = Vector3.MoveTowards (transform.position, new Vector3 (Camera.main.ScreenToWorldPoint (mousePosition).x, Camera.main.ScreenToWorldPoint(mousePosition).y, -0.5f), moveSpeed * Time.deltaTime);
-        if (FindFirstObjectByType<BalingSilageMinigame>().collecting == true)
-        {
-            collectorPrefab.SetActive(true);
-        }
+           mousePosition.z = 4;
+           transform.position = Vector3.MoveTowards (transform.position, new Vector3 (Camera.main.ScreenToWorldPoint (mousePosition).x, Camera.main.ScreenToWorldPoint(mousePosition).y, -0.5f), moveSpeed * Time.deltaTime);
+           if (FindFirstObjectByType<BalingSilageMinigame>().collecting == true)
+           {
+               collectorPrefab.SetActive(true);
+           } 
     }
 
     public void Init(bool isOffset)
@@ -36,10 +37,11 @@ public class Tractor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (FindFirstObjectByType<BalingSilageMinigame>().Collector == other.gameObject && FindFirstObjectByType<BalingSilageMinigame>().cutting == false)
+        if (FindFirstObjectByType<BalingSilageMinigame>().Collector == other.gameObject && FindFirstObjectByType<BalingSilageMinigame>().cutting == true)
         {
             Destroy(FindFirstObjectByType<BalingSilageMinigame>().Collector);
             FindFirstObjectByType<BalingSilageMinigame>().collecting = true;
+            FindFirstObjectByType<BalingSilageMinigame>().cutting = false;
         }
     }
 }

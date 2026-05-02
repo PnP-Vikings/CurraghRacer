@@ -11,6 +11,7 @@ public class Tile : MonoBehaviour
     public MeshRenderer tileRenderer;
     public bool highlight;
     public bool collected;
+    public bool inactive;
 
     void Start()
     {
@@ -30,6 +31,12 @@ public class Tile : MonoBehaviour
         {
             tileRenderer.material = collectedMaterial;
         }
+
+        if (inactive == true)
+        {
+            tileRenderer.material = inactiveMaterial;
+        }
+
     }
 
     public void Init(bool isOffset)
@@ -39,7 +46,7 @@ public class Tile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (FindFirstObjectByType<BalingSilageMinigame>().cutting == true)
+        if (FindFirstObjectByType<BalingSilageMinigame>().cutting == true && highlight == false)
         {
             highlight = true;
         }
@@ -47,17 +54,18 @@ public class Tile : MonoBehaviour
         if (FindFirstObjectByType<BalingSilageMinigame>().collecting == true && highlight == true)
         {
             collected = true;
+            FindFirstObjectByType<BalingSilageMinigame>().grassCounter++;
         }
 
         if (FindFirstObjectByType<BalingSilageMinigame>().collecting == false && FindFirstObjectByType<BalingSilageMinigame>().cutting == false && highlight == true)
         {
-            tileRenderer.material = inactiveMaterial;
             highlight = false;
+            inactive = true;
         }
     }
 
     void OnTriggerExit(Collider other)
     {
-        
+
     }
 }

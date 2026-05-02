@@ -163,7 +163,7 @@ public class MinigameCanvasUI : MonoBehaviour
 
                 if (trafficWardenAudio != null)
                 {
-                    trafficWardenAudio.MuteRainAndRoadworks();
+                    trafficWardenAudio.StopRainAndRoadworks();
                 }
             }
         }
@@ -262,6 +262,7 @@ public class MinigameCanvasUI : MonoBehaviour
         if(timerText != null)
         {
             timerText.text = "Victory!";
+            trafficWardenAudio.StopRainAndRoadworks();
         }
     }
     
