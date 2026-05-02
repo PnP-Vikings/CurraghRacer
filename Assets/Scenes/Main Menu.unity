@@ -11692,6 +11692,18 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: workActivities.Array.size
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'workActivities.Array.data[2]'
+      value: 
+      objectReference: {fileID: 11400000, guid: d808c0220f7366949a781e1bf202fc56, type: 2}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'workActivities.Array.data[3]'
+      value: 
+      objectReference: {fileID: 11400000, guid: cb99f032137a27d40b80b3ad1ef51835, type: 2}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: trainingActivities.Array.size
       value: 5
       objectReference: {fileID: 0}

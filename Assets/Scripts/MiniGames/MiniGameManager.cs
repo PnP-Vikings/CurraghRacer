@@ -425,7 +425,7 @@ namespace MiniGames
             }
         }
         
-        private void PlayerFailedMiniGame()
+        public void PlayerFailedMiniGame()
         {
             Debug.Log("Player failed the mini game.");
             

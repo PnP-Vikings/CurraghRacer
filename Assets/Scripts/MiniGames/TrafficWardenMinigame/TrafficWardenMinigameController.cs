@@ -1,6 +1,8 @@
 using System.Collections.Generic;
+using MiniGames;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public enum TrafficEventType { None, Ambulance, Rain, Roadworks, OldPerson }
@@ -318,6 +320,21 @@ public class TrafficWardenMinigameController : MonoBehaviour
             }
             
             Debug.Log($"Traffic Warden Victory! Final Score: {finalScore}, Crashes: {totalCrashes}, Best Combo: {bestCombo}");
+            if (MiniGameManager.Instance != null)
+            {
+                Debug.Log($"Calling MiniGameManager.CompleteGame with score: {score}");
+                MiniGameManager.Instance.CompleteGame(score,2f);
+            }
+            else
+            {
+                Debug.LogError("MiniGameManager.Instance is null!");
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.PlayerWorked();
+                    SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+                }
+      
+            }
         }
         else
         {
@@ -327,12 +344,32 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 minigameCanvasUI.ShowGameOver();
                 minigameCanvasUI.HideMultiplier();
             }
-            
-            if (showRestartButtons && testDemoButtons != null)
+            if (MiniGameManager.Instance != null)
+            {
+                MiniGameManager.Instance.PlayerFailedMiniGame();
+            }
+            else
+            {
+                Debug.LogError("MiniGameManager.Instance is null!");
+                if (GameManager.Instance != null)
+                {
+                    GameManager.Instance.PlayerWorked();
+                    SceneManager.LoadScene(GameManager.Instance.mainSceneName);
+                }
+      
+            }
+            /*if (showRestartButtons && testDemoButtons != null)
             {
                 testDemoButtons.SetActive(true);
-            }
+            }*/
+            
+           
+           
         }
+        
+      
+        
+        
     }
  
     
