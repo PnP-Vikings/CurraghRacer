@@ -66,7 +66,7 @@ namespace MiniGames
             {
                 gameTimer -= Time.deltaTime;
                 
-                if (gameTimer <= 0)
+                if (gameTimer <= 0 && currentGame.isTimed)
                 {
                     EndGame();
                     //MiniGameTimerRunsOutEvent.Invoke();
@@ -299,10 +299,12 @@ namespace MiniGames
 
             if (currentGame.DidPlayerPass(currentScore))
             {
+                Debug.Log($"Player passed the {currentGame} mini game with {currentScore}!");
                 CalculateAndShowResults();
             }
             else
             {
+                Debug.Log($"Player failed the {currentGame} mini game with {currentScore}!");
                 PlayerFailedMiniGame();
             }
             

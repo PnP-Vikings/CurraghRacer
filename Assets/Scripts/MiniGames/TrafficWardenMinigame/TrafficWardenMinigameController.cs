@@ -917,19 +917,13 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             chosenEvent = TrafficEventType.Roadworks;
             warningMsg = "<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
-            if (stopLines[roadworksBlockedLane] != null)
-            {
-                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[roadworksBlockedLane].laneOrientation} lane is crawling!";
-            }
+           
         }
         else if (r < 0.75f)
         {
             chosenEvent = TrafficEventType.OldPerson;
             warningMsg = "<color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!";
-            if (stopLines[oldPersonLane] != null)
-            {
-                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[oldPersonLane].laneOrientation} lane is crawling!";
-            }
+            
         }
         else
         {
@@ -937,22 +931,34 @@ public class TrafficWardenMinigameController : MonoBehaviour
             warningMsg = "<color=#FF4444>AMBULANCE!</color> Keep lanes open!";
         }
         
-        ShowEventIcon(chosenEvent);
         
+        
+        ShowEventIcon(chosenEvent);
+        ProcessActiveLanes(chosenEvent);
+
+        if (chosenEvent == TrafficEventType.Roadworks)
+        {
+            if (stopLines[roadworksBlockedLane] != null)
+            {
+                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[roadworksBlockedLane].laneOrientation} lane is crawling!";
+            }
+        }
+        else if (chosenEvent == TrafficEventType.OldPerson)
+        {
+            if (stopLines[oldPersonLane] != null)
+            {
+                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[oldPersonLane].laneOrientation} lane is crawling!";
+            }
+        }
         // Show warning, then activate after delay
         if (minigameCanvasUI != null)
             minigameCanvasUI.ShowWarning(warningMsg, warningDuration);
         
         StartCoroutine(ActivateEventDelayed(chosenEvent, warningDuration));
     }
-    
-    System.Collections.IEnumerator ActivateEventDelayed(TrafficEventType eventType, float delay)
+
+    void ProcessActiveLanes(TrafficEventType eventType)
     {
-        yield return new WaitForSeconds(delay);
-        if (gameEnded) yield break;
-        
-        activeEvent = eventType;
-        
         if (eventType == TrafficEventType.Roadworks && spawners.Length > 0)
             roadworksBlockedLane = Random.Range(0, spawners.Length);
         else if (eventType == TrafficEventType.OldPerson && spawners.Length > 0)
@@ -963,6 +969,14 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (spawners[lane] != null)
                 spawners[lane].ForceSpawn(forceAmbulance: true);
         }
+    }
+    
+    System.Collections.IEnumerator ActivateEventDelayed(TrafficEventType eventType, float delay)
+    {
+        yield return new WaitForSeconds(delay);
+        if (gameEnded) yield break;
+        
+        activeEvent = eventType;
 
         eventEndTime = Time.time + Random.Range(eventDurationMin, eventDurationMax);
         Debug.Log("Event started: " + activeEvent);

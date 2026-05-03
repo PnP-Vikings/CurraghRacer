@@ -7,116 +7,7 @@
                 {
                     "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
                     "title": "📋 To Do",
-                    "cards": [
-                        {
-                            "id": "95a6f3c3-83fa-481d-9f69-4b503fefe7ed",
-                            "title": "Confirm That both traffic and turf game are allowing players to pass",
-                            "description": "I think that I have won the minigames before but it still showed a \nmanager is angry with you \n",
-                            "category": "Bug",
-                            "colorLabel": 16,
-                            "priority": 0,
-                            "createdDate": "2026-05-02 19:43",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Traffic is working",
-                                "Foot Turfing is working"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d9ea1e419eff46e4eb9d372bd978623e",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Scenes/Main Menu.unity",
-                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1539091530887075933-579750602",
-                                        "name": "GameManager"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d808c0220f7366949a781e1bf202fc56",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "cb99f032137a27d40b80b3ad1ef51835",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                }
-                            ],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [
-                                "8910e6f1-befc-4526-8924-25f6df0bd590"
-                            ],
-                            "isArchived": false
-                        }
-                    ]
+                    "cards": []
                 },
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
@@ -144,7 +35,7 @@
                                 true,
                                 true,
                                 false,
-                                false
+                                true
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
@@ -241,6 +132,114 @@
                             "showChecklist": true,
                             "completed": true,
                             "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "95a6f3c3-83fa-481d-9f69-4b503fefe7ed",
+                            "title": "Confirm That both traffic and turf game are allowing players to pass",
+                            "description": "I think that I have won the minigames before but it still showed a \nmanager is angry with you \n",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-05-02 19:43",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Traffic is working",
+                                "Foot Turfing is working"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d9ea1e419eff46e4eb9d372bd978623e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/Main Menu.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1539091530887075933-579750602",
+                                        "name": "GameManager"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d808c0220f7366949a781e1bf202fc56",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "cb99f032137a27d40b80b3ad1ef51835",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
                             "isArchived": false
                         }
                     ]
