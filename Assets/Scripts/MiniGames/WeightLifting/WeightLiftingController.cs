@@ -738,6 +738,7 @@ public class WeightLiftingController : MonoBehaviour
         {
             Debug.Log("Poor lift timing!");
             FailLift("Missed the timing window!");
+            weightLiftingAudio.StopPowerMeterAudio();
         }
     }
     
@@ -989,7 +990,7 @@ public class WeightLiftingController : MonoBehaviour
         
         Debug.Log("Successful lift! Weight: " + currentWeight + "kg, Strength gained: " + strengthGain);
 
-        StartCoroutine(weightLiftingAudio.PlayBoxingSuccessAudio());
+        StartCoroutine(weightLiftingAudio.PlayGameOver_Win_Audio());
 
         if(successfulReps >= maxSuccessfulReps)
         {
