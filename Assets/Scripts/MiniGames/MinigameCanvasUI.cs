@@ -154,7 +154,7 @@ public class MinigameCanvasUI : MonoBehaviour
 
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.gameOver.start();
+                AudioManager.instance.gameOver_Lost.start();
 
                 if (boxingAudio != null)
                 {
@@ -186,7 +186,7 @@ public class MinigameCanvasUI : MonoBehaviour
 
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.gameOver.start();
+                AudioManager.instance.gameOver_Lost.start();
 
                 if (boxingAudio != null)
                 {
