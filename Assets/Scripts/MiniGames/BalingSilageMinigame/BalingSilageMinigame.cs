@@ -13,6 +13,7 @@ namespace MiniGames.BalingSilageMinigame
         public GameObject Collector;
         private float score;
         public float grassCounter;
+        public float gameTimer;
         public TextMeshProUGUI scoreText;
         public TextMeshProUGUI grassText;
         public bool cutting;
