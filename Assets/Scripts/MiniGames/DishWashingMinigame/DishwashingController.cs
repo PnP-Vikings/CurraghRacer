@@ -388,9 +388,12 @@ public class DishwashingController : MonoBehaviour
                }
                SceneManager.LoadScene(GameManager.Instance.mainSceneName);
            }
-       }
-       
-      
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.gameOver_Win.start();
+            }
+        }
     }
     private void StartSplashParticles()
     {

@@ -451,6 +451,7 @@ public class BoxingMinigameManager : MonoBehaviour
             {
                 Debug.Log($"Calling MiniGameManager.CompleteGame with score: {score}");
                 MiniGameManager.Instance.CompleteGame((score));
+                StartCoroutine(BoxingAudio.instance.BoxingGameOverAudio());
             };
         }
     }

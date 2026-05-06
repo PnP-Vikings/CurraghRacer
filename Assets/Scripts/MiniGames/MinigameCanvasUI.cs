@@ -26,7 +26,7 @@ public class MinigameCanvasUI : MonoBehaviour
     Coroutine bonusFlashCoroutine;
     Coroutine warningCoroutine;
 
-    [SerializeField] BoxingAudio boxingAudio;
+    //[SerializeField] BoxingAudio boxingAudio;
     [SerializeField] TrafficWardenAudio trafficWardenAudio;
 
     public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
@@ -156,10 +156,10 @@ public class MinigameCanvasUI : MonoBehaviour
             {
                 //AudioManager.instance.gameOver_Lost.start();
 
-                if (boxingAudio != null)
-                {
-                    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
-                }
+                //if (boxingAudio != null)
+                //{
+                //    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
+                //}
 
                 if (trafficWardenAudio != null)
                 {
@@ -188,10 +188,10 @@ public class MinigameCanvasUI : MonoBehaviour
             {
                 //AudioManager.instance.gameOver_Lost.start();
 
-                if (boxingAudio != null)
-                {
-                    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
-                }
+                //if (boxingAudio != null)
+                //{
+                //    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
+                //}
 
                 if (trafficWardenAudio != null)
                 {
