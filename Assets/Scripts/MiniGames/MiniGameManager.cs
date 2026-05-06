@@ -70,6 +70,10 @@ namespace MiniGames
                 {
                     EndGame();
                     //MiniGameTimerRunsOutEvent.Invoke();
+                    if(AudioManager.instance != null)
+                    {
+                        AudioManager.instance.gameOver_Lost.start();
+                    }
                 }
                 
                 currentGameInstance?.UpdateGame();
