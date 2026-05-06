@@ -1962,6 +1962,7 @@ MonoBehaviour:
   gameOver: 0
   turfFlipperController: {fileID: 1496061662}
   _selectedStack: {fileID: 0}
+  _StacksDone: 0
 --- !u!114 &1133713056
 MonoBehaviour:
   m_ObjectHideFlags: 0
