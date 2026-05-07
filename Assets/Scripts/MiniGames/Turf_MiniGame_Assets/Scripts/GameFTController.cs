@@ -173,11 +173,13 @@ public class GameFTController : MonoBehaviour
       {
         minigameCanvasUI.ShowGameOver($"Time's Up!\n Congrats You flipped {_StacksDone}  stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
         Debug.Log("Game Over: Timer completed and minimum stacks flipped requirement met.");
+        MiniGameAudio.instance.PlayGameOverWin();
       }
       else
       {
         minigameCanvasUI.ShowGameOver($"Time's Up!\n You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
         Debug.Log("Game Over: Timer completed but minimum stacks flipped requirement not met.");
+        MiniGameAudio.instance.PlayGameOverLost();
       }
       
       if (MiniGameManager.Instance != null)
@@ -222,8 +224,6 @@ public class GameFTController : MonoBehaviour
     DisplayGameOver();
 
   }
-
-  
 
     public void PlayPlaceTurfAudio()
     {

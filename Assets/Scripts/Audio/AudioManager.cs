@@ -70,8 +70,8 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance punchBagAudio;
     public EventInstance lifeLost;
-    public EventInstance weightliftingSuccess;
-    public EventInstance gameOver;
+    public EventInstance gameOver_Win;
+    public EventInstance gameOver_Lost;
 
         //public EventInstance footingTurfAmbience;
     public EventInstance turfStackComplete;
@@ -195,9 +195,9 @@ public class AudioManager : MonoBehaviour
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         lifeLost = RuntimeManager.CreateInstance("event:/Boxing/Life Lost");
-        weightliftingSuccess = RuntimeManager.CreateInstance("event:/Notifications/Weightlifting Success");
 
-        gameOver = RuntimeManager.CreateInstance("event:/Notifications/Game Over");
+        gameOver_Win = RuntimeManager.CreateInstance("event:/Notifications/Game Over _ Win");
+        gameOver_Lost = RuntimeManager.CreateInstance("event:/Notifications/Game Over _ Lost");
 
         //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
         turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
@@ -228,7 +228,8 @@ public class AudioManager : MonoBehaviour
 
         scribble = RuntimeManager.CreateInstance("event:/UI/Scribble On Bulletin Board");
 
-        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
+        //PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
+        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter Moving");
     }
 
     private void Update()

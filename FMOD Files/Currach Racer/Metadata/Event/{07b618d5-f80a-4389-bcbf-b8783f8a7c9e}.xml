@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{07b618d5-f80a-4389-bcbf-b8783f8a7c9e}">
 		<property name="name">
-			<value>Weightlifting Success</value>
+			<value>Game Over _ Win</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -98,7 +98,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{899c5d3f-e4bd-4910-b6b8-c63740a54bd4}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-3</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>

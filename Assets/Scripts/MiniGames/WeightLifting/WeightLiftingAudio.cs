@@ -12,6 +12,7 @@ public class WeightLiftingAudio : MonoBehaviour
         {
             AudioManager.instance.PowerMeter.start();
             //AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 1f);
+            //Debug.Log("Power Meter sound");
         }
     }
 
@@ -27,23 +28,30 @@ public class WeightLiftingAudio : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PowerMeter.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-
         }
     }
 
-    public IEnumerator PlayBoxingSuccessAudio()
+    public IEnumerator PlayGameOver_Win_Audio()
     {
-        AudioManager.instance.weightliftingSuccess.start();
-        danceTrackEmitter.SetParameter("Dance Track Volume", 0.75f, false);
+        AudioManager.instance.gameOver_Win.start();
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
         yield return new WaitForSeconds(1f);
-        danceTrackEmitter.SetParameter("Dance Track Volume", 0.95f, false);
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
+    }
+
+    public IEnumerator PlayGameOver_Lost_Audio()
+    {
+        AudioManager.instance.gameOver_Lost.start();
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
+        yield return new WaitForSeconds(1.5f);
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
     }
 
     void Update()
     {
         if(WeightLiftingController.Instance != null)
         {
-            Debug.Log("Power Meter Position is " + WeightLiftingController.Instance.powerMeterPosition);
+            //Debug.Log("Power Meter Position is " + WeightLiftingController.Instance.powerMeterPosition);
             if (WeightLiftingController.Instance.powerMeterPosition <= 0.01)
             {
                 if(AudioManager.instance != null)

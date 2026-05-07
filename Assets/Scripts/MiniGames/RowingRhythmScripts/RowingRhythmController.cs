@@ -370,6 +370,11 @@ public class RowingRhythmController : MonoBehaviour
       Debug.Log($"Calling MiniGameManager.CompleteGame with score: {score}");
       MiniGameManager.Instance.CompleteGame((int)Math.Round(score));
     }
+
+    if(AudioManager.instance != null)
+    {
+        AudioManager.instance.gameOver_Lost.start();
+    }
   }
   
   private void CheckPaddleOnLeft()

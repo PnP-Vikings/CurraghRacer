@@ -335,9 +335,19 @@ public class TrafficWardenMinigameController : MonoBehaviour
                 }
       
             }
+
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.gameOver_Win.start();
+            }
         }
         else
         {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.gameOver_Lost.start();
+            }
+
             Debug.Log("Traffic Warden Game Over - Too many strikes");
             if (minigameCanvasUI != null)
             {
@@ -362,9 +372,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             {
                 testDemoButtons.SetActive(true);
             }*/
-            
-           
-           
+
         }
         
       
