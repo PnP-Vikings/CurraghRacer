@@ -15,7 +15,7 @@ MonoBehaviour:
   gameName: Beer Pouring
   description: 
   funnyQuote: 
-  gameType: 8
+  gameType: 9
   category: 0
   baseDifficulty: 1
   trainingAttribute: 5
@@ -23,16 +23,20 @@ MonoBehaviour:
   sceneName: BeerPourMinigame
   useSceneLoading: 1
   returnSceneName: Garage
+  returnDelay: 2
   baseEarnings: 50
   baseGain: 0
   difficultyMultiplier: 1
   enablePerfectBonus: 1
   perfectBonus: 1.5
   minimumPerformanceForReward: 0.3
+  isTimed: 0
   timeLimit: 60
-  perfectScore: 100
   hasTimeBonus: 1
   timeBonusMultiplier: 1
+  isScoreBased: 0
+  perfectScore: 100
+  passingScore: 60
   energyCost: 25
   difficultyScoreMultiplier:
     serializedVersion: 2
