@@ -228,7 +228,8 @@ public class AudioManager : MonoBehaviour
 
         scribble = RuntimeManager.CreateInstance("event:/UI/Scribble On Bulletin Board");
 
-        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
+        //PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
+        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter Moving");
     }
 
     private void Update()

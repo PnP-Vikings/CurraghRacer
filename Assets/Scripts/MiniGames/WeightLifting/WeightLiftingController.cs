@@ -1088,6 +1088,8 @@ public class WeightLiftingController : MonoBehaviour
             UpdatePhaseUI("Game Finished", "Congratulations!\nYou are a Beast!");
         else
             UpdatePhaseUI("Game Finished", "Oops\nYou Suck Man!");
+
+        StartCoroutine(weightLiftingAudio.PlayGameOver_Lost_Audio());
         
         Debug.Log("=== Training Complete ===");
         Debug.Log("Successful Reps: " + successfulReps);

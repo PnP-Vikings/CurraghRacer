@@ -12,6 +12,7 @@ public class WeightLiftingAudio : MonoBehaviour
         {
             AudioManager.instance.PowerMeter.start();
             //AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 1f);
+            //Debug.Log("Power Meter sound");
         }
     }
 
@@ -33,9 +34,17 @@ public class WeightLiftingAudio : MonoBehaviour
     public IEnumerator PlayGameOver_Win_Audio()
     {
         AudioManager.instance.gameOver_Win.start();
-        danceTrackEmitter.SetParameter("Dance Track Volume", 0.75f, false);
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
         yield return new WaitForSeconds(1f);
-        danceTrackEmitter.SetParameter("Dance Track Volume", 0.95f, false);
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
+    }
+
+    public IEnumerator PlayGameOver_Lost_Audio()
+    {
+        AudioManager.instance.gameOver_Lost.start();
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
+        yield return new WaitForSeconds(1.5f);
+        danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
     }
 
     void Update()
