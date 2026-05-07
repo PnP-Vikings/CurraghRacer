@@ -63,7 +63,9 @@ public class AIRockThrower : MonoBehaviour
     
     // Results storage for skip mode
     private List<(int aiIndex, float distance)> pendingResults = new List<(int, float)>();
-    
+
+    [SerializeField] RockSkippingAudio RockSkippingAudio;
+
     private void Awake()
     {
         if (Instance == null)
@@ -442,6 +444,11 @@ public class AIRockThrower : MonoBehaviour
         }
         
         Debug.Log($"AI {currentAIIndex + 1} rock sunk at {totalDistance:F1}m");
+
+        if (RockSkippingAudio != null)
+        {
+            RockSkippingAudio.PlayRockSinkAudio();
+        }
     }
     
     #endregion

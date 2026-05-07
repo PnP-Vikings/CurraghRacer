@@ -114,7 +114,8 @@ public class RockThrowingController : MonoBehaviour
     private Vector3 rockStartPosition;
     [SerializeField] private bool bounceInputEnabled;
     private Coroutine bounceTimingCoroutine;
-    
+
+    [SerializeField] RockSkippingAudio RockSkippingAudio;
     private void Awake()
     {
         if (Instance == null)
@@ -836,8 +837,13 @@ public class RockThrowingController : MonoBehaviour
             StopCoroutine(bounceTimingCoroutine);
             bounceTimingCoroutine = null;
         }
-        
-        
+
+        if (RockSkippingAudio != null)
+        {
+            RockSkippingAudio.PlayRockSinkAudio();
+        }
+
+
         // Stop camera following and return to original position
         StopCameraFollow();
         
