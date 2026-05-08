@@ -391,7 +391,7 @@ public class DishwashingController : MonoBehaviour
 
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.gameOver_Win.start();
+                AudioManager.instance.miniGame_Win.start();
             }
         }
     }

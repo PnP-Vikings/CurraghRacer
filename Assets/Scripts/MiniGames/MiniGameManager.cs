@@ -72,7 +72,7 @@ namespace MiniGames
                     //MiniGameTimerRunsOutEvent.Invoke();
                     if(AudioManager.instance != null)
                     {
-                        AudioManager.instance.gameOver_Lost.start();
+                        AudioManager.instance.miniGame_Over.start();
                     }
                 }
                 

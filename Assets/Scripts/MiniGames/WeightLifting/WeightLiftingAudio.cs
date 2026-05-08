@@ -33,7 +33,7 @@ public class WeightLiftingAudio : MonoBehaviour
 
     public IEnumerator PlayGameOver_Win_Audio()
     {
-        AudioManager.instance.gameOver_Win.start();
+        AudioManager.instance.miniGame_Win.start();
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
         yield return new WaitForSeconds(1f);
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
@@ -41,7 +41,7 @@ public class WeightLiftingAudio : MonoBehaviour
 
     public IEnumerator PlayGameOver_Lost_Audio()
     {
-        AudioManager.instance.gameOver_Lost.start();
+        AudioManager.instance.miniGame_Over.start();
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
         yield return new WaitForSeconds(1.5f);
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
