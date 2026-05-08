@@ -69,12 +69,14 @@ public class AudioManager : MonoBehaviour
     public EventInstance setDownPint;
 
     public EventInstance punchBagAudio;
+
     public EventInstance lifeLost;
-    public EventInstance gameOver_Win;
-    public EventInstance gameOver_Lost;
+    public EventInstance miniGameProgression;
+    public EventInstance miniGame_Win;
+    public EventInstance miniGame_Over;
 
         //public EventInstance footingTurfAmbience;
-    public EventInstance turfStackComplete;
+    
     public EventInstance placeTurf;
 
     public EventInstance dumbbellSlide;
@@ -196,11 +198,12 @@ public class AudioManager : MonoBehaviour
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
         lifeLost = RuntimeManager.CreateInstance("event:/Boxing/Life Lost");
 
-        gameOver_Win = RuntimeManager.CreateInstance("event:/Notifications/Game Over _ Win");
-        gameOver_Lost = RuntimeManager.CreateInstance("event:/Notifications/Game Over _ Lost");
+        miniGameProgression = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Progression");
+        miniGame_Win = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Win");
+        miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
 
         //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
-        turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
+
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
         dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
@@ -220,7 +223,7 @@ public class AudioManager : MonoBehaviour
         rockSink = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Sink");
 
         tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
-        bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
+        //bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
 
         carCrash = RuntimeManager.CreateInstance("event:/Traffic Warden/Car Crash");
         rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");

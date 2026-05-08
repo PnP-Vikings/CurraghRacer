@@ -19,32 +19,32 @@ public class MiniGameAudio : MonoBehaviour
         }
     }
 
-    public void PlayGameOverLost()
+    public void PlayMiniGameOverAudio()
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.gameOver_Lost.start();
+            AudioManager.instance.miniGame_Over.start();
             //Debug.Log("gameOver_Lost");
         }
     }
 
-    public void PlayGameOverWin()
+    public void PlayMiniGameOverWinAudio()
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.gameOver_Win.start();
+            AudioManager.instance.miniGame_Win.start();
             //Debug.Log("gameOver_Win");
         }
     }
 
-    public IEnumerator FootRaceGameOver()
+    public IEnumerator StartFootRaceMiniGameOverIEnum()
     {
         if (AudioManager.instance != null)
         {
             AudioManager.instance.running.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.crashIntoFence.start();
             yield return new WaitForSeconds(0.7f);
-            AudioManager.instance.gameOver_Lost.start();
+            AudioManager.instance.miniGame_Over.start();
             //Debug.Log("Foot Race ended");
         }
     }

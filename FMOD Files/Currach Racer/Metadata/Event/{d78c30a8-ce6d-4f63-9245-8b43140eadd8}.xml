@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{d78c30a8-ce6d-4f63-9245-8b43140eadd8}">
 		<property name="name">
-			<value>Turf Stack Complete</value>
+			<value>Minigame_Progression</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{e63e68f3-0c4a-4bf1-9232-8c7a1803b69c}</destination>
+			<destination>{b4b01d08-e875-42fa-a0b2-b93272cd4ac3}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{cd4ad06a-7568-42cc-abca-d7217664c983}</destination>

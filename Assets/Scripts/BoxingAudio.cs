@@ -29,7 +29,7 @@ public class BoxingAudio : MonoBehaviour
 
         if(AudioManager.instance != null)
         {
-            AudioManager.instance.gameOver_Lost.start();
+            AudioManager.instance.miniGame_Over.start();
         }
 
         yield return new WaitForSeconds(1.5f);
