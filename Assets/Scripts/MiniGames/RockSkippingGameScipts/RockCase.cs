@@ -19,7 +19,8 @@ public class RockCase : MonoBehaviour
 
     Sequence closeCaseSequence;
 
-    private bool rockSelectSoundsAreMuted = false;
+    public bool rockSelectSoundsAreMuted = false;
+    [SerializeField] RockSkippingAudio rockSkippingAudio;
     public void OpenCase()
     {
         openCaseSequence = DOTween.Sequence();
@@ -34,13 +35,9 @@ public class RockCase : MonoBehaviour
     {
         if (openCaseSequence != null && openCaseSequence.IsActive() && rockSelectSoundsAreMuted == false)
         {
-
-            StartCoroutine(MuteRockSelectSounds());
+            StartCoroutine(rockSkippingAudio.MuteRockSelectSounds());
 
             rockSelectSoundsAreMuted = true;
-
-            //Debug.Log("Mute rock Select Sounds Coroutine is active - AudioDebug");
-            //Debug.Log("rockSelectSoundsAreMuted is true - AudioDebug");
         }
     }
 
@@ -153,40 +150,4 @@ public class RockCase : MonoBehaviour
        }
    }
 
-    IEnumerator MuteRockSelectSounds()
-    {
-        if (AudioManager.instance != null)
-        {
-            //Debug.Log("Muting UIClick1 & rockSelect for 900ms because Rock Case is opening - AudioDebug");
-
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.15f);
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.15f);
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.15f);
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.15f);
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.15f);
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 0f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 0f);
-            yield return new WaitForSeconds(0.15f);   
-
-            AudioManager.instance.rockSelect.setParameterByName("Rock Select Volume", 1f);
-            AudioManager.instance.UIClick1.setParameterByName("UI Click 1 Volume", 1f);
-            //Debug.Log("Unmuting UIClick1 & rockSelect because Rock Case is open - AudioDebug");
-
-            yield return new WaitForSeconds(2.9f);
-
-            rockSelectSoundsAreMuted = false;
-
-            //Debug.Log("rockSelectSoundIsMuted is false - AudioDebug");
-        }
-    }
 }

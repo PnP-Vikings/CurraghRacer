@@ -124,6 +124,7 @@ public class GameFTController : MonoBehaviour
         }
         SetStackBtnVisible(false);
         SetSelectAStackTextVisible(true);
+
         if (AudioManager.instance != null)
         {
             AudioManager.instance.miniGameProgression.start();

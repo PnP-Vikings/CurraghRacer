@@ -10299,6 +10299,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 90eb2b3c82dff094e81da165fef840b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RockSkippingAudio
+  rockCase: {fileID: 1954444127}
 --- !u!4 &490022901
 Transform:
   m_ObjectHideFlags: 0
@@ -45537,6 +45538,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RockCase
       objectReference: {fileID: 0}
+    - target: {fileID: 6327453825786568674, guid: bd81ed140edfb0a41909089d3a41d0e2, type: 3}
+      propertyPath: rockSkippingAudio
+      value: 
+      objectReference: {fileID: 490022900}
     m_RemovedComponents:
     - {fileID: 5541865337778495906, guid: bd81ed140edfb0a41909089d3a41d0e2, type: 3}
     m_RemovedGameObjects: []
