@@ -536,12 +536,12 @@ public class WeightLiftingController : MonoBehaviour
                     .AppendCallback(() => { }) // Force evaluation
                     .Append(bar.transform.DOMove(new Vector3(0f, -0.10f, 0), 1f).SetRelative(true))
                     .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
-                    .AppendCallback(() => PlayBarGripSound()) // Force evaluation
+                    .AppendCallback(() => PlayBarPlacedOnStandSound()) // Force evaluation
                     .AppendInterval(1f)
                     .AppendCallback(() => TransitionToLiftPhase());
                 
                 Debug.Log("Grip successful!");
-                
+
 
                 if (AudioManager.instance != null)
                 {
@@ -935,7 +935,7 @@ public class WeightLiftingController : MonoBehaviour
             if (barTiltAngle > 11 | barTiltAngle < -11)
             {
                 StartCoroutine(BarSlideCoroutine());
-                Debug.Log("Weight is sliding");
+                //Debug.Log("Weight is sliding");
 
                 if (AudioManager.instance != null)
                 {
@@ -990,7 +990,10 @@ public class WeightLiftingController : MonoBehaviour
         
         Debug.Log("Successful lift! Weight: " + currentWeight + "kg, Strength gained: " + strengthGain);
 
-        StartCoroutine(weightLiftingAudio.PlayGameOver_Win_Audio());
+        if(AudioManager.instance != null)
+        {
+            AudioManager.instance.miniGameProgression.start();
+        }
 
         if(successfulReps >= maxSuccessfulReps)
         {
@@ -1089,8 +1092,10 @@ public class WeightLiftingController : MonoBehaviour
         else
             UpdatePhaseUI("Game Finished", "Oops\nYou Suck Man!");
 
-        StartCoroutine(weightLiftingAudio.PlayGameOver_Lost_Audio());
-        
+        //WeightLiftingAudio.instance.PlayWeightliftingMiniGameOver();
+        weightLiftingAudio.PlayWeightliftingMiniGameOver();
+
+
         Debug.Log("=== Training Complete ===");
         Debug.Log("Successful Reps: " + successfulReps);
         Debug.Log("Perfect Lifts: " + perfectLifts);
@@ -1285,11 +1290,11 @@ public class WeightLiftingController : MonoBehaviour
     #endregion
 
     #region Sound Effects
-    public void PlayBarGripSound()
+    public void PlayBarPlacedOnStandSound()
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.barGrip.start();
+            AudioManager.instance.barPlacedOnStand.start();
         }
     }
     
@@ -1316,7 +1321,7 @@ public class WeightLiftingController : MonoBehaviour
         barSlideAudioIsPlaying = false;
     }
     #endregion
-    
+
     public enum LiftState 
     {
         Idle,

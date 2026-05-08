@@ -82,6 +82,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance dumbbellSlide;
     public EventInstance grunt;
     public EventInstance barGrip;
+    public EventInstance barPlacedOnStand;
 
     public EventInstance running;
     public EventInstance jump;
@@ -209,6 +210,7 @@ public class AudioManager : MonoBehaviour
         dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
         barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
+        barPlacedOnStand = RuntimeManager.CreateInstance("event:/Weight Lifting/Metal Bar");
 
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
         jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{5a91d289-6e43-4c23-9ecd-056bbb8ed43e}">
 		<property name="name">
-			<value>Power Meter</value>
+			<value>Power Meter (Unused)</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>

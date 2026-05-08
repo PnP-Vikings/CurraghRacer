@@ -6,6 +6,8 @@ public class WeightLiftingAudio : MonoBehaviour
 {
     [SerializeField] StudioEventEmitter danceTrackEmitter;
 
+    [SerializeField] WeightLiftingController weightliftingController;
+
     public void StartPowerMeterAudio()
     {
         if (AudioManager.instance != null)
@@ -16,13 +18,6 @@ public class WeightLiftingAudio : MonoBehaviour
         }
     }
 
-    //public IEnumerator StartPowerMeterAudio()
-    //{
-    //    AudioManager.instance.PowerMeter.start();
-    //    yield return null;
-    //    AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 1f);
-    //}
-
     public void StopPowerMeterAudio()
     {
         if (AudioManager.instance != null)
@@ -31,7 +26,7 @@ public class WeightLiftingAudio : MonoBehaviour
         }
     }
 
-    public IEnumerator PlayGameOver_Win_Audio()
+    public IEnumerator StartMiniGameOverWinIEunm()
     {
         AudioManager.instance.miniGame_Win.start();
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
@@ -39,7 +34,7 @@ public class WeightLiftingAudio : MonoBehaviour
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
     }
 
-    public IEnumerator PlayGameOver_Lost_Audio()
+    public IEnumerator StartMiniGameOverIEnum()
     {
         AudioManager.instance.miniGame_Over.start();
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.7f, false);
@@ -66,6 +61,26 @@ public class WeightLiftingAudio : MonoBehaviour
                     AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 0f);
                 }
             }
+        }
+    }
+
+    public void PlayWeightliftingMiniGameOver()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+
+            if(weightliftingController != null)
+            {
+                if (weightliftingController.successfulReps >= weightliftingController.maxSuccessfulReps)
+                {
+                    StartCoroutine(StartMiniGameOverWinIEunm());
+                }
+                else
+                {
+                    StartCoroutine(StartMiniGameOverIEnum());
+                }
+            } 
         }
     }
 }

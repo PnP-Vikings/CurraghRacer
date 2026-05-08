@@ -2828,7 +2828,7 @@ GameObject:
   - component: {fileID: 809329823}
   - component: {fileID: 809329824}
   m_Layer: 0
-  m_Name: WeightLifting Ambience
+  m_Name: WeightLifting Audio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2930,6 +2930,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeightLiftingAudio
   danceTrackEmitter: {fileID: 809329823}
+  weightliftingController: {fileID: 345291560}
 --- !u!1 &813386867
 GameObject:
   m_ObjectHideFlags: 0
