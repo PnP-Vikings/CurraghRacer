@@ -354,6 +354,7 @@ public class DishwashingController : MonoBehaviour
             if (AudioManager.instance != null)
             {
                 AudioManager.instance.movePlate.start();
+                AudioManager.instance.miniGameProgression.start();
             }
             MovePlateToCleanPosition(); // Move the next plate to the clean position
         });

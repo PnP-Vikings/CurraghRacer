@@ -131,7 +131,7 @@ public class MinigameCanvasUI : MonoBehaviour
             {
                 if(lives < 3 && lives > 0)
                 {
-                    AudioManager.instance.lifeLost.start();
+                    AudioManager.instance.miniGame_lifeLost.start();
                 }
             }
         }

@@ -70,7 +70,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance punchBagAudio;
 
-    public EventInstance lifeLost;
+    public EventInstance miniGame_lifeLost;
     public EventInstance miniGameProgression;
     public EventInstance miniGame_Win;
     public EventInstance miniGame_Over;
@@ -179,12 +179,11 @@ public class AudioManager : MonoBehaviour
 
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
         dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
-        //rowingGameAmbience = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing Game Ambience");
+        
         rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
         rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
         rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
 
-        //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
         spawnPlates = RuntimeManager.CreateInstance("event:/Kitchen/Spawn Plates");
         movePlate = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
         sponge = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
@@ -197,13 +196,11 @@ public class AudioManager : MonoBehaviour
         setDownPint = RuntimeManager.CreateInstance("event:/Bar/Set Pint Down");
 
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
-        lifeLost = RuntimeManager.CreateInstance("event:/Boxing/Life Lost");
 
+        miniGame_lifeLost = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Life Lost");
         miniGameProgression = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Progression");
         miniGame_Win = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Win");
         miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
-
-        //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
 
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
@@ -225,7 +222,6 @@ public class AudioManager : MonoBehaviour
         rockSink = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Sink");
 
         tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
-        //bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
 
         carCrash = RuntimeManager.CreateInstance("event:/Traffic Warden/Car Crash");
         rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");
