@@ -60,7 +60,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance spawnPlates;
     public EventInstance movePlate;
     public EventInstance dunkPlate;
-    public EventInstance sponge;
+    public EventInstance spongeAudio;
 
     public EventInstance barAmbience;
     public EventInstance pouringPint;
@@ -186,7 +186,7 @@ public class AudioManager : MonoBehaviour
 
         spawnPlates = RuntimeManager.CreateInstance("event:/Kitchen/Spawn Plates");
         movePlate = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        sponge = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
+        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");            // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
         dunkPlate = RuntimeManager.CreateInstance("event:/Kitchen/Dunk Plate");
 
         barAmbience = RuntimeManager.CreateInstance("event:/Bar/Bar Ambience");
