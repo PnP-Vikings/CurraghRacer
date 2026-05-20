@@ -907,7 +907,9 @@ public class WeightLiftingController : MonoBehaviour
             .Append(bar.transform.DOMove(new Vector3(0f, 0.10f, 0), 1f).SetRelative(true))
             .Append(bar.transform.DOMove(new Vector3(0f, 0f, 0.10f), 1f).SetRelative(true))
             .AppendInterval(1f)
-            .AppendCallback(() => SuccessfulLift());
+            .AppendCallback(() => SuccessfulLift())
+            .AppendCallback(PlayBarPlacedOnStandSound);
+
     }
     
     public void OnPushLeftButton()
@@ -1014,6 +1016,15 @@ public class WeightLiftingController : MonoBehaviour
         failedAttempts++;
         Debug.Log("Lift failed! Reason: " + reason + " (Attempt " + failedAttempts + "/" + maxFailedAttempts + ")");
         liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
+
+        if (AudioManager.instance != null)
+        {
+            if (failedAttempts < maxFailedAttempts)
+            {
+                AudioManager.instance.miniGame_lifeLost.start();
+            }  
+        }
+
         if (failedAttempts >= maxFailedAttempts)
         {
             EndGame();
@@ -1092,7 +1103,6 @@ public class WeightLiftingController : MonoBehaviour
         else
             UpdatePhaseUI("Game Finished", "Oops\nYou Suck Man!");
 
-        //WeightLiftingAudio.instance.PlayWeightliftingMiniGameOver();
         weightLiftingAudio.PlayWeightliftingMiniGameOver();
 
 
