@@ -739,8 +739,8 @@ public class RaceManager : MonoBehaviour
                         {
                             AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
                             AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
-                            AudioManager.instance.raceWin.start();
-                            AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 1f);
+                            AudioManager.instance.raceWon.start();
+                            AudioManager.instance.raceWon.setParameterByName("Cheering Volume", 1f);
                         }
                     }
                     else
@@ -755,8 +755,8 @@ public class RaceManager : MonoBehaviour
                     {
                         AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
                         AudioManager.instance.raceAmbience.setParameterByName("Rowing Volume", 0f);
-                        AudioManager.instance.raceWin.start();
-                        AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
+                        AudioManager.instance.raceWon.start();
+                        AudioManager.instance.raceWon.setParameterByName("Cheering Volume", 0f);
                     }
                 }
             }
@@ -833,7 +833,7 @@ public class RaceManager : MonoBehaviour
 
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.raceWin.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceWon.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
     

@@ -16,8 +16,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance deleteSave;
         // Race
     public EventInstance raceAmbience;
-    public EventInstance raceWin;
-    public EventInstance raceLose;
+    public EventInstance raceWon;
+    public EventInstance raceLost;
     public EventInstance shout;
         // Garage
 
@@ -52,11 +52,13 @@ public class AudioManager : MonoBehaviour
         // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
-        //public EventInstance rowingGameAmbience;
+
+    public EventInstance rowing;
     public EventInstance rowingGameSuccess;
     public EventInstance rowingGameFail;
-        // Jobs
-        //public EventInstance kitchenAmbience;
+    public EventInstance rowingGameSuccessAfterFail;
+    // Jobs
+
     public EventInstance spawnPlates;
     public EventInstance movePlate;
     public EventInstance dunkPlate;
@@ -74,9 +76,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance miniGameProgression;
     public EventInstance miniGame_Win;
     public EventInstance miniGame_Over;
-
-        //public EventInstance footingTurfAmbience;
-    
+   
     public EventInstance placeTurf;
 
     public EventInstance dumbbellSlide;
@@ -89,8 +89,6 @@ public class AudioManager : MonoBehaviour
     public EventInstance slide;
     public EventInstance crashIntoFence;
 
-    public EventInstance rowing;
-
     public EventInstance rockSelect;
     public EventInstance closeRockCase;
     public EventInstance rockSkip;
@@ -99,9 +97,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance rockSink;
 
     public EventInstance tractor;
-    public EventInstance bailingAreaComplete;
 
-    //public EventInstance carEngine;
     public EventInstance carCrash;
     public EventInstance rain;
     public EventInstance roadworks;
@@ -144,8 +140,8 @@ public class AudioManager : MonoBehaviour
         deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
 
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
-        raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
-        raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
+        raceWon = RuntimeManager.CreateInstance("event:/Race/Race Won");
+        raceLost = RuntimeManager.CreateInstance("event:/Race/Race Lost");
         shout = RuntimeManager.CreateInstance("event:/Race/Shout");
 
         storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
@@ -179,10 +175,12 @@ public class AudioManager : MonoBehaviour
 
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
         dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
-        
+
+        rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
         rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
         rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
-        rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
+        rowingGameSuccessAfterFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success after Fail");
+
 
         spawnPlates = RuntimeManager.CreateInstance("event:/Kitchen/Spawn Plates");
         movePlate = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");

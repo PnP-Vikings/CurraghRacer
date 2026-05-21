@@ -5,7 +5,7 @@
 			<value>Power Washer</value>
 		</property>
 		<relationship name="folder">
-			<destination>{44de3512-29ca-485c-bef6-08ea3ca6d36e}</destination>
+			<destination>{1d9b2908-237e-4786-9cd4-da18082f6b50}</destination>
 		</relationship>
 	</object>
 </objects>
