@@ -70,19 +70,13 @@ public class BillUi : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.payBill.start();
-            Debug.Log("PayBill Audio Called");
 
             if (PlayerManager.Instance != null)
             {
                 float coins = PlayerManager.Instance.GetPlayerCoins();
                 if (coins < 50)
                 {
-                    Debug.Log("Broke - AudioDebug");
                     AudioManager.instance.payBillDialogue.start();
-                }
-                else
-                {
-                    Debug.Log("Not Broke - AudioDebug");
                 }
             }
         }

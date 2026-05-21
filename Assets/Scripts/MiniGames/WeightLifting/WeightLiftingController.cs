@@ -340,6 +340,7 @@ public class WeightLiftingController : MonoBehaviour
             weightSelected = true;
             onWeightSelectionChanged.Invoke(weight);
             UpdateUI();
+            weightLiftingAudio.WeightSelectionAudio();
            // StartNewLift();
         }
         else
