@@ -1023,6 +1023,7 @@ public class WeightLiftingController : MonoBehaviour
             if (failedAttempts < maxFailedAttempts)
             {
                 AudioManager.instance.miniGame_lifeLost.start();
+                AudioManager.instance.WeightliftingPhaseFailedDialogue.start();
             }  
         }
 

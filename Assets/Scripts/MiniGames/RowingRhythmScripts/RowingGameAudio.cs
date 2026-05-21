@@ -12,6 +12,7 @@ public class RowingGameAudio : MonoBehaviour
             if (hasJustMissed == false)
             {
                 AudioManager.instance.rowingGameSuccess.start();
+                AudioManager.instance.rowingGameSuccessDialogue.start();
             }
             else
             {
@@ -29,6 +30,7 @@ public class RowingGameAudio : MonoBehaviour
         if(AudioManager.instance != null)
         {
             AudioManager.instance.rowingGameFail.start();
+            AudioManager.instance.rowingGameFailDialogue.start();
         }
     }
 }

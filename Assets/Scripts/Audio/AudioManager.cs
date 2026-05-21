@@ -56,7 +56,9 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance rowing;
     public EventInstance rowingGameSuccess;
+    public EventInstance rowingGameSuccessDialogue;
     public EventInstance rowingGameFail;
+    public EventInstance rowingGameFailDialogue;
     public EventInstance rowingGameSuccessAfterFail;
     // Jobs
 
@@ -85,6 +87,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance grunt;
     public EventInstance barGrip;
     public EventInstance barPlacedOnStand;
+    public EventInstance WeightliftingPhaseFailedDialogue;
 
     public EventInstance running;
     public EventInstance jump;
@@ -181,7 +184,9 @@ public class AudioManager : MonoBehaviour
 
         rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
         rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
+        rowingGameSuccessDialogue = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success Dialogue");
         rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
+        rowingGameFailDialogue = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail Dialogue");
         rowingGameSuccessAfterFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success after Fail");
 
 
@@ -210,6 +215,7 @@ public class AudioManager : MonoBehaviour
         barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
         barPlacedOnStand = RuntimeManager.CreateInstance("event:/Weight Lifting/Metal Bar");
+        WeightliftingPhaseFailedDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/Weightlifting Phase Failed");
 
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
         jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");
