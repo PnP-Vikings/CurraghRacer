@@ -48,6 +48,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance sleepOutsideAudio;
     public EventInstance rooster;
     public EventInstance payBill;
+    public EventInstance payBillDialogue;
     public EventInstance card;
         // Training
     public EventInstance gymBagZipUp;
@@ -171,6 +172,7 @@ public class AudioManager : MonoBehaviour
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
         rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");
         payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
+        payBillDialogue = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill Audio");
         card = RuntimeManager.CreateInstance("event:/Bulletin Board/Card");
 
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
