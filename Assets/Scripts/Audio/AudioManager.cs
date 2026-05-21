@@ -80,6 +80,7 @@ public class AudioManager : MonoBehaviour
    
     public EventInstance placeTurf;
 
+    public EventInstance weightSelectionResponse;
     public EventInstance dumbbellSlide;
     public EventInstance grunt;
     public EventInstance barGrip;
@@ -204,6 +205,7 @@ public class AudioManager : MonoBehaviour
 
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
+        weightSelectionResponse = RuntimeManager.CreateInstance("event:/Weight Lifting/Weight Selection Response");
         dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
         barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");

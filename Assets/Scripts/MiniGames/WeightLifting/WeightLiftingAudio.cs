@@ -70,7 +70,7 @@ public class WeightLiftingAudio : MonoBehaviour
         {
             AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
 
-            if(weightliftingController != null)
+            if (weightliftingController != null)
             {
                 if (weightliftingController.successfulReps >= weightliftingController.maxSuccessfulReps)
                 {
@@ -80,7 +80,18 @@ public class WeightLiftingAudio : MonoBehaviour
                 {
                     StartCoroutine(StartMiniGameOverIEnum());
                 }
-            } 
+            }
+        }
+    }
+
+    public void WeightSelectionAudio()
+    {
+        if (weightliftingController.currentWeight < 80f)
+        {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.weightSelectionResponse.start();
+            }
         }
     }
 }
