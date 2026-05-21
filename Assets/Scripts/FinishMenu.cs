@@ -37,8 +37,8 @@ public class FinishMenu : MonoBehaviour
         {
             AudioManager.instance.UIClick2.start();
             AudioManager.instance.raceAmbience.stop(STOP_MODE.ALLOWFADEOUT);
-            AudioManager.instance.raceLose.stop(STOP_MODE.ALLOWFADEOUT);
-            AudioManager.instance.raceWin.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceLost.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.raceWon.stop(STOP_MODE.ALLOWFADEOUT);
         }
 
         RaceManager.Instance.EndRace();
@@ -64,7 +64,7 @@ public class FinishMenu : MonoBehaviour
             if (AudioManager.instance != null)
             {
                 AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
-                AudioManager.instance.raceLose.start();
+                AudioManager.instance.raceLost.start();
             }
             if (RaceManager.Instance.isRaceDay)
             {
