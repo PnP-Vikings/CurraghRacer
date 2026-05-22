@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{46ee0074-db3f-4c89-94a8-c88254be6830}">
+		<property name="name">
+			<value>Cement Bag Weight</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{e0efe1ee-4055-424c-bc6a-a24de6d3ddcc}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{e0efe1ee-4055-424c-bc6a-a24de6d3ddcc}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

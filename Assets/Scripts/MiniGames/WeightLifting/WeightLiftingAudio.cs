@@ -1,3 +1,4 @@
+using FMOD.Studio;
 using FMODUnity;
 using System.Collections;
 using UnityEngine;
@@ -9,6 +10,8 @@ public class WeightLiftingAudio : MonoBehaviour
     [SerializeField] WeightLiftingController weightliftingController;
 
     private bool inTheGreen = false;
+
+    private PLAYBACK_STATE weightSelectionResponsePlaybackState;
 
     public void StartPowerMeterAudio()
     {
@@ -109,12 +112,44 @@ public class WeightLiftingAudio : MonoBehaviour
 
     public void WeightSelectionAudio()
     {
-        if (weightliftingController.currentWeight < 80f)
+        if(AudioManager.instance != null)
         {
-            if (AudioManager.instance != null)
+            AudioManager.instance.cementBag.start();
+
+            if (weightliftingController.currentWeight == 20f)
             {
-                AudioManager.instance.weightSelectionResponse.start();
+                AudioManager.instance.cementBag.setParameterByName("Cement Bag Weight", 0f);
             }
-        }
+            else if (weightliftingController.currentWeight == 40f)
+            {
+                AudioManager.instance.cementBag.setParameterByName("Cement Bag Weight", 0.2f);
+            }
+            else if (weightliftingController.currentWeight == 60f)
+            {
+                AudioManager.instance.cementBag.setParameterByName("Cement Bag Weight", 0.4f);
+            }
+            else if (weightliftingController.currentWeight == 80f)
+            {
+                AudioManager.instance.cementBag.setParameterByName("Cement Bag Weight", 0.6f);
+            }
+            else if (weightliftingController.currentWeight == 100f)
+            {
+                AudioManager.instance.cementBag.setParameterByName("Cement Bag Weight", 0.8f);
+            }
+            else if (weightliftingController.currentWeight == 120f)
+            {
+                AudioManager.instance.cementBag.setParameterByName("Cement Bag Weight", 1f);
+            }
+
+            AudioManager.instance.weightSelectionResponse.getPlaybackState(out weightSelectionResponsePlaybackState);
+
+            if (weightliftingController.currentWeight <= 40f)
+            {
+                if (weightSelectionResponsePlaybackState == PLAYBACK_STATE.STOPPED | weightSelectionResponsePlaybackState == PLAYBACK_STATE.STOPPING)
+                {
+                    AudioManager.instance.weightSelectionResponse.start();
+                }
+            }
+        }   
     }
 }
