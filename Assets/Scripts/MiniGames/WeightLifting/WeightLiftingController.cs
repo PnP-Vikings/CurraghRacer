@@ -548,6 +548,8 @@ public class WeightLiftingController : MonoBehaviour
                 {
                     AudioManager.instance.barGrip.start();
                 }
+
+                StartCoroutine(weightLiftingAudio.ResetInTheGreenBool());
             }
             else
             {
@@ -1023,7 +1025,7 @@ public class WeightLiftingController : MonoBehaviour
             if (failedAttempts < maxFailedAttempts)
             {
                 AudioManager.instance.miniGame_lifeLost.start();
-                AudioManager.instance.WeightliftingPhaseFailedDialogue.start();
+                AudioManager.instance.weightliftingPhaseFailedDialogue.start();
             }  
         }
 
@@ -1299,6 +1301,11 @@ public class WeightLiftingController : MonoBehaviour
         UpdateLiftTargetZoneUI();
     }
 
+    public bool ReturnGripPhaseCompletedBool()
+    {
+        return gripPhaseCompleted;
+    }
+
     #endregion
 
     #region Sound Effects
@@ -1329,7 +1336,7 @@ public class WeightLiftingController : MonoBehaviour
     IEnumerator BarSlideCoroutine()
     {
         barSlideAudioIsPlaying = true;
-        yield return new WaitForSeconds(2.45f);
+        yield return new WaitForSeconds(1.4f);
         barSlideAudioIsPlaying = false;
     }
     #endregion

@@ -60,6 +60,9 @@
 		<property name="maxVoices">
 			<value>1</value>
 		</property>
+		<property name="voiceStealing">
+			<value>3</value>
+		</property>
 	</object>
 	<object class="MarkerTrack" id="{6a2d1541-ae77-487e-839d-2abe5263cc5e}" />
 	<object class="GroupTrack" id="{3c807845-f52f-4a5a-8521-2a09ed19bfdb}">
@@ -96,14 +99,11 @@
 		<property name="triggerProbabilityEnabled">
 			<value>true</value>
 		</property>
-		<property name="triggerProbability">
-			<value>15</value>
-		</property>
 		<property name="length">
 			<value>0.95589569160997734</value>
 		</property>
-		<property name="maxVoices">
-			<value>1</value>
+		<property name="volume">
+			<value>-9</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{a1359cb8-0651-499d-8f76-b882ce9ad73c}</destination>

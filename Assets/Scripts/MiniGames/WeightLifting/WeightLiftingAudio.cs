@@ -8,6 +8,8 @@ public class WeightLiftingAudio : MonoBehaviour
 
     [SerializeField] WeightLiftingController weightliftingController;
 
+    private bool inTheGreen = false;
+
     public void StartPowerMeterAudio()
     {
         if (AudioManager.instance != null)
@@ -42,27 +44,48 @@ public class WeightLiftingAudio : MonoBehaviour
         danceTrackEmitter.SetParameter("Dance Track Volume", 0.8f, false);
     }
 
-    //void Update()
-    //{
-    //    if(WeightLiftingController.Instance != null)
-    //    {
-    //        //Debug.Log("Power Meter Position is " + WeightLiftingController.Instance.powerMeterPosition);
-    //        if (WeightLiftingController.Instance.powerMeterPosition <= 0.01)
-    //        {
-    //            if(AudioManager.instance != null)
-    //            {
-    //                AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 1f);
-    //            }
-    //        }
-    //        else if (WeightLiftingController.Instance.powerMeterPosition == 1)
-    //        {
-    //            if (AudioManager.instance != null)
-    //            {
-    //                AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 0f);
-    //            }
-    //        }
-    //    }
-    //}
+    void Update()
+    {
+        if(WeightLiftingController.Instance != null)
+        {
+            if (WeightLiftingController.Instance.gripBarPosition >= WeightLiftingController.Instance.gripBarTargetMin && WeightLiftingController.Instance.gripBarPosition <= WeightLiftingController.Instance.gripBarTargetMax)
+            {
+                bool gripPhaseCompleted = weightliftingController.ReturnGripPhaseCompletedBool();
+                if (!inTheGreen & !gripPhaseCompleted)
+                {
+                    if (AudioManager.instance != null)
+                    {
+                        AudioManager.instance.inTheGreenDialogue.start();
+                    }
+                    inTheGreen = true;
+                }
+            }
+        }
+        //if (WeightLiftingController.Instance != null)
+        //{
+        //    //Debug.Log("Power Meter Position is " + WeightLiftingController.Instance.powerMeterPosition);
+        //    if (WeightLiftingController.Instance.powerMeterPosition <= 0.01)
+        //    {
+        //        if (AudioManager.instance != null)
+        //        {
+        //            AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 1f);
+        //        }
+        //    }
+        //    else if (WeightLiftingController.Instance.powerMeterPosition == 1)
+        //    {
+        //        if (AudioManager.instance != null)
+        //        {
+        //            AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 0f);
+        //        }
+        //    }
+        //}
+    }
+
+    public IEnumerator ResetInTheGreenBool()
+    {
+        yield return null;
+        inTheGreen = false;
+    }
 
     public void PlayWeightliftingMiniGameOver()
     {
