@@ -89,6 +89,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance barPlacedOnStand;
     public EventInstance weightliftingPhaseFailedDialogue;
     public EventInstance inTheGreenDialogue;
+    public EventInstance cementBag;
 
     public EventInstance running;
     public EventInstance jump;
@@ -218,6 +219,7 @@ public class AudioManager : MonoBehaviour
         barPlacedOnStand = RuntimeManager.CreateInstance("event:/Weight Lifting/Metal Bar");
         weightliftingPhaseFailedDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/Weightlifting Phase Failed");
         inTheGreenDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/In The Green Dialogue");
+        cementBag = RuntimeManager.CreateInstance("event:/Weight Lifting/Cement Bag");
 
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
         jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");
