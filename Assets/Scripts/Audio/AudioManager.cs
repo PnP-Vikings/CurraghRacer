@@ -115,6 +115,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance PowerMeter;
 
     public EventInstance boxingEncouragement;
+    public EventInstance boxingSuccessAfterFail;
 
     private Scene activeScene;
     void Awake()
@@ -261,6 +262,7 @@ public class AudioManager : MonoBehaviour
 
                             // Boxing //
         boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
+        boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

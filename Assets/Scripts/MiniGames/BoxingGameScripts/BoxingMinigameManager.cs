@@ -64,6 +64,8 @@ public class BoxingMinigameManager : MonoBehaviour
     [Header("Ui Settings")]
     public BoxingUiCanvas boxingUiCanvas;
 
+    bool hasBoxingSuccessAfterFailPlayed = false;
+
     private void Awake()
     {
         if (Instance == null)
@@ -354,6 +356,12 @@ public class BoxingMinigameManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.punchBagAudio.start();
+
+            if (playerLives == 1 & !hasBoxingSuccessAfterFailPlayed)
+            {
+                AudioManager.instance.boxingSuccessAfterFail.start();
+                hasBoxingSuccessAfterFailPlayed = true;
+            }
         }
 
         if (boxingUiCanvas != null)
