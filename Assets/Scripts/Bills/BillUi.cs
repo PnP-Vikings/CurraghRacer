@@ -76,7 +76,7 @@ public class BillUi : MonoBehaviour
                 float coins = PlayerManager.Instance.GetPlayerCoins();
                 if (coins < 50)
                 {
-                    AudioManager.instance.payBillDialogue.start();
+                    AudioManager.instance.payBillWhilePoorDialogue.start();
                 }
             }
         }

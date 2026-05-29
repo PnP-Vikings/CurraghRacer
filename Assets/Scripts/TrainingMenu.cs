@@ -69,10 +69,10 @@ public class TrainingMenu : MonoBehaviour
         
         if (CanTrain(30, 50))
         {
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.dumbbell.start();
-            } 
+            //if (AudioManager.instance != null)
+            //{
+            //    AudioManager.instance.dumbbell.start();
+            //} 
             
             ManageClickBasedOnStatType(selectedStatType);
 
