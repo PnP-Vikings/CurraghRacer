@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{0529dcd8-0169-4aac-8eb2-577e07667f8b}">
 		<property name="name">
-			<value>Pay Bill Audio</value>
+			<value>Pay Bill While Poor Dialogue</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -89,6 +89,9 @@
 	</object>
 	<object class="MixerBusPanner" id="{f8906ca5-9bcc-4ac5-9022-7848b79fd8af}" />
 	<object class="SingleSound" id="{f7e68a38-1de0-4fa5-9d18-5d2f60e46296}">
+		<property name="start">
+			<value>0.16</value>
+		</property>
 		<property name="length">
 			<value>1.6176643990929704</value>
 		</property>
