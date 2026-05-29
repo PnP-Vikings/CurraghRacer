@@ -26,8 +26,8 @@ public class MinigameCanvasUI : MonoBehaviour
     Coroutine bonusFlashCoroutine;
     Coroutine warningCoroutine;
 
-    //[SerializeField] BoxingAudio boxingAudio;
     [SerializeField] TrafficWardenAudio trafficWardenAudio;
+
     private Scene activeScene;
 
     public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
