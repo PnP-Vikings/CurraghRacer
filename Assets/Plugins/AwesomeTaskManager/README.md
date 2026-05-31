@@ -184,13 +184,32 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 📄 Changelog
 
+### v1.5.3
+
+- **Improved** 🔃 **Global Data Synchronization** — implemented a coordinated "Reload All Open Windows" system that ensures every open task board, card editor, and management window stays perfectly in sync, preventing stale data from overwriting fresh changes.
+
+- **Improved** 🛡 **Stability & Reliability** — fixed critical bugs where new cards, assignees, or categories could be lost during domain reloads (Play Mode) by implementing robust state serialization and disk-based fallback saving across all windows.
+
+- **Improved** 📱 **Responsive UI** — redesigned the toolbar to intelligently hide labels on smaller screens and added compact ▾/▸ icons for checklist toggles to maximize usable space on narrow layouts.
+
+- **Added** 💡 **On-Hover Tooltips** — added descriptive tooltips to all filter and selection dropdowns (Board, Category, Assignee, Priority, etc.) for improved guidance and discoverability.
+
+- **Improved** ⌨ **Shortcut Reliability** — improved the "New Note" shortcut to ensure proper data persistence even when the main Task Board window is closed.
+
 ### v1.5.2
-- **Added** 💾 **Preview & Save Workflow** — editing an existing card now works on a temporary clone; changes are only applied to the board when you click "Save Changes"
+
+**Added** 💾 **Preview & Save Workflow** — editing an existing card now works on a temporary clone; changes are only applied to the board when you click "Save Changes"
+
 - **Added** ⚠️ **Unsaved Changes Protection** — closing a card window (new or existing) via the default 'X' button now prompts to save or discard changes if there are unsaved edits
+
 - **Added** 🚫 **Title Validation** — preventing saving of new cards without a title, with clear error messaging in both the editor and the close prompt
+
 - **Improved** ⌨ **Checklist Enter & Focus** — support for pressing Enter to quickly add checklist items, with fixed deferred focus management to ensure the input field reliably regains focus for rapid entries without resetting window focus
+
 - **Improved** 🎯 **Automatic Field Selection** — new and existing cards now automatically focus the title field when opened for faster data entry
-- **Priority Filtering** — Added a new dropdown to the board toolbar to filter tasks by priority (None, Low, Medium, High, Urgent).
+
+- **Added** 🔥 **Priority Filtering** — Added a new dropdown to the board toolbar to filter tasks by priority (None, Low, Medium, High, Urgent).
+
 - **Improved Filter Persistence** — All filters (Search, Category, Assignee, Priority) now reset correctly when creating new cards via shortcuts or switching boards.
 
 ### v1.5.1

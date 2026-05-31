@@ -11,11 +11,11 @@ namespace AwesomeTaskManager.Editor
     /// </summary>
     public class NotePopupWindow : EditorWindow
     {
-        private QuickNote _note;
-        private SaveData _saveData;
+        [SerializeField] private QuickNote _note;
+        [SerializeField] private SaveData _saveData;
         private System.Action _onChanged;
-        private Vector2 _scroll;
-        private bool _isPreview;
+        [SerializeField] private Vector2 _scroll;
+        [SerializeField] private bool _isPreview;
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
 
@@ -45,6 +45,12 @@ namespace AwesomeTaskManager.Editor
             win._isPreview = true;
             return win;
             
+        }
+
+        public void LoadData()
+        {
+            _saveData = Persistence.Load();
+            Repaint();
         }
 
         private void OnGUI()
@@ -82,6 +88,7 @@ namespace AwesomeTaskManager.Editor
 
                 // Color
                 int newCol = EditorGUILayout.Popup(_note.colorIndex, TBStyles.LabelNames, EditorStyles.toolbarPopup, GUILayout.Width(65));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Note color label"));
                 if (newCol != _note.colorIndex) { _note.colorIndex = newCol; MarkModified(); }
 
                 // Folder
@@ -186,7 +193,16 @@ namespace AwesomeTaskManager.Editor
         private void MarkModified()
         {
             _note.modifiedDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
-            _onChanged?.Invoke();
+            
+            if (_saveData != null) Persistence.Save(_saveData);
+
+            TaskBoardWindow.ReloadAllOpenWindows();
+
+            if (_onChanged != null)
+            {
+                _onChanged.Invoke();
+            }
+            
             Repaint();
         }
     }

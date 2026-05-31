@@ -15,7 +15,8 @@ namespace AwesomeTaskManager.Editor
     //Main Board Script
     public class TaskBoardWindow : EditorWindow
     {
-        // ── State ──
+        public static TaskBoardWindow Instance { get; private set; }
+
         private SaveData _data;
         private int _tab;
         private int _boardIndex;
@@ -95,7 +96,7 @@ namespace AwesomeTaskManager.Editor
                 var board = data.boards[boardIdx];
                 if (board.columns.Count == 0) board.columns.Add(new TaskColumn("To Do"));
 
-                CardDetailWindow.ShowNew(data, (newCard) =>
+                CardDetailWindow.ShowNew(data, board.id, board.columns[0].id, (newCard) =>
                 {
                     if (board.columns.Count > 0)
                         board.columns[0].cards.Add(newCard);
@@ -118,7 +119,10 @@ namespace AwesomeTaskManager.Editor
                 var n = new QuickNote { title = "New Note" };
                 data.notes.Insert(0, n);
                 Persistence.Save(data);
-                NotePopupWindow.Open(n, data, () => Persistence.Save(data));
+                NotePopupWindow.Open(n, data, () => {
+                    Persistence.Save(data);
+                    if (Instance != null) Instance.LoadData();
+                });
             }
         }
 
@@ -135,7 +139,7 @@ namespace AwesomeTaskManager.Editor
             if (board.columns.Count == 0)
                 board.columns.Add(new TaskColumn("To Do"));
 
-            CardDetailWindow.ShowNew(_data, (newCard) =>
+            CardDetailWindow.ShowNew(_data, board.id, board.columns[0].id, (newCard) =>
             {
                 // Add to the first column by default if we use the shortcut
                 if (board.columns.Count > 0)
@@ -163,23 +167,122 @@ namespace AwesomeTaskManager.Editor
             Repaint();
             if (focus) Focus();
          
-            NotePopupWindow.Open(n, _data, () => { Save(); Repaint(); });
+            NotePopupWindow.Open(n, _data, () => { LoadData(); });
         }
 
         // ── Lifecycle ──
         private void OnEnable()
         {
+            Instance = this;
             _data = Persistence.Load();
             ClampBoard();
         }
 
-        private void OnDisable() { Save(); }
+        private void OnDisable() 
+        { 
+            if (Instance == this) Instance = null;
+            Save(); 
+        }
 
-        private void Save()
+        public void LoadData()
+        {
+            _data = Persistence.Load();
+            ClampBoard();
+            
+            // Also notify any open sub-windows to reload their data from disk
+            NotifySubWindowsToReload();
+
+            Repaint();
+        }
+
+        public static void ReloadAllOpenWindows()
+        {
+            var mainWindows = Resources.FindObjectsOfTypeAll<TaskBoardWindow>();
+            if (mainWindows != null && mainWindows.Length > 0)
+            {
+                foreach (var w in mainWindows) w.LoadData();
+            }
+            else
+            {
+                // Main window not open, but notify sub-windows directly
+                NotifySubWindowsToReload();
+            }
+        }
+
+        private static void NotifySubWindowsToReload()
+        {
+            var cardWindows = Resources.FindObjectsOfTypeAll<CardDetailWindow>();
+            foreach (var w in cardWindows) w.LoadData();
+
+            var catWindows = Resources.FindObjectsOfTypeAll<CategoryEditorWindow>();
+            foreach (var w in catWindows) w.LoadData();
+
+            var assWindows = Resources.FindObjectsOfTypeAll<AssigneeManagerWindow>();
+            foreach (var w in assWindows) w.LoadData();
+
+            var noteWindows = Resources.FindObjectsOfTypeAll<NotePopupWindow>();
+            foreach (var w in noteWindows) w.LoadData();
+        }
+
+        public void Save()
         {
             if (_data == null) return;
             _data.lastBoardIndex = _boardIndex;
             Persistence.Save(_data);
+        }
+
+        public void AddCardFromDetail(string boardId, string columnId, TaskCard card)
+        {
+            if (_data == null) return;
+            var board = _data.boards.FirstOrDefault(b => b.id == boardId);
+            if (board != null)
+            {
+                var col = board.columns.FirstOrDefault(c => c.id == columnId);
+                if (col != null)
+                {
+                    col.cards.Add(card);
+                    Save();
+                    ReloadAllOpenWindows();
+                }
+            }
+        }
+
+        public void UpdateCardFromDetail(TaskCard updatedCard)
+        {
+            if (_data == null) return;
+            foreach (var b in _data.boards)
+            {
+                foreach (var col in b.columns)
+                {
+                    var existing = col.cards.FirstOrDefault(c => c.id == updatedCard.id);
+                    if (existing != null)
+                    {
+                        string json = JsonUtility.ToJson(updatedCard);
+                        JsonUtility.FromJsonOverwrite(json, existing);
+                        Save();
+                        ReloadAllOpenWindows();
+                        return;
+                    }
+                }
+            }
+            // If not found in memory, it might be a new card that was saved to disk by the detail window directly
+            LoadData();
+        }
+
+        public void DeleteCardFromDetail(string boardId, string columnId, string cardId)
+        {
+            if (_data == null) return;
+            var board = _data.boards.FirstOrDefault(b => b.id == boardId);
+            if (board != null)
+            {
+                var col = board.columns.FirstOrDefault(c => c.id == columnId);
+                if (col != null)
+                {
+                    col.cards.RemoveAll(c => c.id == cardId);
+                    Save();
+                    ReloadAllOpenWindows();
+                }
+            }
         }
 
         private void ClampBoard()
@@ -271,10 +374,15 @@ namespace AwesomeTaskManager.Editor
             _cardDropRects.Clear();
             _columnFullRects.Clear();
 
+            float windowWidth = position.width;
+            bool showLabels = windowWidth > 1000;
+            bool mediumWidth = windowWidth > 850;
+
             using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Height(24)))
             {
                 string[] names = _data.boards.Select(b => b.name).ToArray();
-                int newIdx = EditorGUILayout.Popup(_boardIndex, names, EditorStyles.toolbarPopup, GUILayout.Width(150));
+                int newIdx = EditorGUILayout.Popup(_boardIndex, names, EditorStyles.toolbarPopup, GUILayout.Width(mediumWidth ? 150 : 120));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select current board"));
                 if (newIdx != _boardIndex)
                 {
                     _boardIndex = newIdx;
@@ -325,10 +433,16 @@ namespace AwesomeTaskManager.Editor
                         }
                     };
                 }
+            
+                GUILayout.Space(showLabels ? 2:0);
 
-                GUILayout.Space(2);
+                if (showLabels) EditorGUILayout.LabelField(new GUIContent("Category:","Filter tasks by category"), GUILayout.Width(58));
+                
+                if (!showLabels && GUILayout.Button(new GUIContent("🏷", "Category Editor"), EditorStyles.toolbarButton, GUILayout.Width(26)))
+                {
+                    CategoryEditorWindow.Open(_data, () => { LoadData(); });
+                }
 
-                EditorGUILayout.LabelField(new GUIContent("Category:","You can use the dropdown\nTo the right to filter tasks by category"), GUILayout.Width(58));
                 var catFilterOptions = new List<string> { "All" };
                 catFilterOptions.AddRange(_data.categories);
                 int catIdx = 0;
@@ -338,13 +452,23 @@ namespace AwesomeTaskManager.Editor
                     if (f >= 0) catIdx = f;
                 }
                 int newCatIdx = EditorGUILayout.Popup(catIdx, catFilterOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(90));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Filter tasks by category"));
                 _categoryFilter = newCatIdx == 0 ? "" : catFilterOptions[newCatIdx];
-                if (GUILayout.Button(new GUIContent("🏷", "Category Editor"), EditorStyles.toolbarButton, GUILayout.Width(26)))
+                
+                if (showLabels && GUILayout.Button(new GUIContent("🏷", "Category Editor"), EditorStyles.toolbarButton, GUILayout.Width(26)))
                 {
-                    CategoryEditorWindow.Open(_data, () => { Save(); Repaint(); });
+                    CategoryEditorWindow.Open(_data, () => { LoadData(); });
                 }
-                GUILayout.Space(8);
-                EditorGUILayout.LabelField(new GUIContent("Assignee:", "You can use the dropdown\nTo the right to filter tasks by assignee"), GUILayout.Width(56));
+
+                GUILayout.Space(showLabels ? 8 : 0);
+
+                if (showLabels) EditorGUILayout.LabelField(new GUIContent("Assignee:", "Filter tasks by assignee"), GUILayout.Width(56));
+                
+                if (!showLabels && GUILayout.Button(new GUIContent("👥", "Assignee Manager"), EditorStyles.toolbarButton, GUILayout.Width(26)))
+                {
+                    AssigneeManagerWindow.ShowWindow(_data, () => { LoadData(); });
+                }
+
                 var assigneeOptions = new List<string> { "All" };
                 assigneeOptions.AddRange(_data.assignees.Select(a => a.name));
                 int assIdx = 0;
@@ -356,6 +480,7 @@ namespace AwesomeTaskManager.Editor
                 }
               
                 int newAssIdx = EditorGUILayout.Popup(assIdx, assigneeOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(90));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Filter tasks by assignee"));
                 if (newAssIdx == 0) _assigneeFilter = "";
                 else
                 {
@@ -364,26 +489,29 @@ namespace AwesomeTaskManager.Editor
                     if (ass != null) _assigneeFilter = ass.id;
                 }
 
-               
-                
-                if (GUILayout.Button(new GUIContent("👥", "Assignee Manager"), EditorStyles.toolbarButton, GUILayout.Width(26)))
+                if (showLabels && GUILayout.Button(new GUIContent("👥", "Assignee Manager"), EditorStyles.toolbarButton, GUILayout.Width(26)))
                 {
-                    AssigneeManagerWindow.ShowWindow(_data, () => { Save(); Repaint(); });
+                    AssigneeManagerWindow.ShowWindow(_data, () => { LoadData(); });
                 }
 
-                GUILayout.Space(8);
-                EditorGUILayout.LabelField(new GUIContent("Priority:", "Filter tasks by priority"), GUILayout.Width(52));
+                GUILayout.Space(showLabels ? 8 : 4);
+
+                if (showLabels) EditorGUILayout.LabelField(new GUIContent("Priority:", "Filter tasks by priority"), GUILayout.Width(52));
+                else EditorGUILayout.LabelField(new GUIContent("🚩", "Filter tasks by priority"), GUILayout.Width(18));
+
                 var priorityOptions = new List<string> { "All" };
                 priorityOptions.AddRange(TBStyles.PriorityNames);
-                _priorityFilter = EditorGUILayout.Popup(_priorityFilter, priorityOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(80));
+                _priorityFilter = EditorGUILayout.Popup(_priorityFilter, priorityOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(showLabels ? 80 : 60));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Filter tasks by priority"));
 
-                GUILayout.Space(8);
+                GUILayout.Space(showLabels ? 8 : 4);
 
                 EditorGUILayout.LabelField(new GUIContent("🔍", "Search Tasks"), GUILayout.Width(18));
-                _searchFilter = EditorGUILayout.TextField(_searchFilter, EditorStyles.toolbarSearchField, GUILayout.Width(140));
+                _searchFilter = EditorGUILayout.TextField(_searchFilter, EditorStyles.toolbarSearchField, GUILayout.Width(mediumWidth ? 140 : 85));
 
-                GUILayout.Space(8);
-                if (GUILayout.Button(new GUIContent("▾ Show All", "Show All Checklists"), EditorStyles.toolbarButton, GUILayout.Width(70)))
+                GUILayout.Space(showLabels ? 8 : 4);
+                
+                if (GUILayout.Button(new GUIContent(showLabels ? "▾ Show All" : "▾", "Show All Checklists"), EditorStyles.toolbarButton, GUILayout.Width(showLabels ? 70 : 25)))
                 {
                     var board2 = _data.boards[_boardIndex];
                     foreach (var c in board2.columns)
@@ -391,7 +519,7 @@ namespace AwesomeTaskManager.Editor
                             card.showChecklist = true;
                     Save();
                 }
-                if (GUILayout.Button(new GUIContent("▸ Hide All", "Hide All Checklists"), EditorStyles.toolbarButton, GUILayout.Width(68)))
+                if (GUILayout.Button(new GUIContent(showLabels ? "▸ Hide All" : "▸", "Hide All Checklists"), EditorStyles.toolbarButton, GUILayout.Width(showLabels ? 68 : 25)))
                 {
                     var board2 = _data.boards[_boardIndex];
                     foreach (var c in board2.columns)
@@ -621,7 +749,9 @@ namespace AwesomeTaskManager.Editor
                     if (GUILayout.Button("+ Add Card", GUILayout.Height(26)))
                     {
                         int capturedColIdx = colIdx;
-                        CardDetailWindow.ShowNew(_data, (newCard) =>
+                        string boardId = board.id;
+                        string columnId = col.id;
+                        CardDetailWindow.ShowNew(_data, boardId, columnId, (newCard) =>
                         {
                             if (capturedColIdx < board.columns.Count)
                                 board.columns[capturedColIdx].cards.Add(newCard);
@@ -682,7 +812,9 @@ namespace AwesomeTaskManager.Editor
                     HandleCardDragHandle(card, col, dragHandleRect);
                     if (GUILayout.Button(new GUIContent("✏","Show card details"), TBStyles.IconButton))
                     {
-                        CardDetailWindow.Show(card, _data, () => { Save(); Repaint(); }, () =>
+                        string boardId = Board.id;
+                        string columnId = col.id;
+                        CardDetailWindow.Show(card, _data, boardId, columnId, () => { Save(); Repaint(); }, () =>
                         {
                             col.cards.Remove(card); Save(); Repaint();
                         });
@@ -1539,7 +1671,7 @@ namespace AwesomeTaskManager.Editor
                 GUILayout.FlexibleSpace();
                 if (GUILayout.Button(new GUIContent("↗", "Popout Note"), TBStyles.IconButton, GUILayout.Width(24), GUILayout.Height(22)))
                 {
-                    NotePopupWindow.Open(note, _data, () => { Save(); Repaint(); });
+                    NotePopupWindow.Open(note, _data, () => { LoadData(); });
                 }
             }
 
@@ -1732,6 +1864,7 @@ namespace AwesomeTaskManager.Editor
 
                 // Color
                 int newCol = EditorGUILayout.Popup(note.colorIndex, TBStyles.LabelNames, GUILayout.Width(70));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Note color label"));
                 if (newCol != note.colorIndex) { note.colorIndex = newCol; Save(); }
 
                 // Move to folder
@@ -1761,7 +1894,7 @@ namespace AwesomeTaskManager.Editor
 
                 if (GUILayout.Button(new GUIContent("↗", "Popout Note"), GUILayout.Width(28), GUILayout.Height(24)))
                 {
-                    NotePopupWindow.Open(note, _data, () => { Save(); Repaint(); });
+                    NotePopupWindow.Open(note, _data, () => { LoadData(); });
                 }
 
                 // Delete

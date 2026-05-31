@@ -8,11 +8,11 @@ namespace AwesomeTaskManager.Editor
 {
     public class CategoryEditorWindow : EditorWindow
     {
-        private SaveData _data;
+        [SerializeField] private SaveData _data;
         private System.Action _onChanged;
-        private Vector2 _scroll;
-        private string _newCategoryName = "";
-        private int _newCategoryColor;
+        [SerializeField] private Vector2 _scroll;
+        [SerializeField] private string _newCategoryName = "";
+        [SerializeField] private int _newCategoryColor;
         private Dictionary<string, string> _renameBuffers = new Dictionary<string, string>();
 
         public static void Open(SaveData data, System.Action onChanged)
@@ -22,6 +22,12 @@ namespace AwesomeTaskManager.Editor
             window._onChanged = onChanged;
             window.minSize = new Vector2(420, 360);
             window.ShowUtility();
+        }
+
+        public void LoadData()
+        {
+            _data = Persistence.Load();
+            Repaint();
         }
 
         private void OnGUI()
@@ -55,6 +61,7 @@ namespace AwesomeTaskManager.Editor
             {
                 _newCategoryName = EditorGUILayout.TextField(_newCategoryName);
                 _newCategoryColor = EditorGUILayout.Popup(_newCategoryColor, TBStyles.LabelNames, GUILayout.Width(90));
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select default color for this category"));
                 GUI.enabled = !string.IsNullOrWhiteSpace(_newCategoryName) && !_data.categories.Contains(_newCategoryName.Trim());
                 if (GUILayout.Button(new GUIContent("Add", "Add a new category"), GUILayout.Width(54)))
                 {
@@ -98,6 +105,7 @@ namespace AwesomeTaskManager.Editor
                         _renameBuffers[category] = EditorGUILayout.TextField(_renameBuffers[category]);
 
                         int newColor = EditorGUILayout.Popup(_data.GetCategoryColor(category), TBStyles.LabelNames, GUILayout.Width(90));
+                        GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select category color"));
                         if (newColor != _data.GetCategoryColor(category))
                         {
                             _data.SetCategoryColor(category, newColor);
@@ -148,7 +156,14 @@ namespace AwesomeTaskManager.Editor
         private void NotifyChanged()
         {
             _data.Normalize();
-            _onChanged?.Invoke();
+            if (_data != null) Persistence.Save(_data);
+
+            TaskBoardWindow.ReloadAllOpenWindows();
+
+            if (_onChanged != null)
+            {
+                _onChanged.Invoke();
+            }
             Repaint();
         }
 

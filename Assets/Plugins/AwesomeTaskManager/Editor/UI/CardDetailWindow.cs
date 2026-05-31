@@ -12,30 +12,34 @@ namespace AwesomeTaskManager.Editor
     //Card Detail Script
     public class CardDetailWindow : EditorWindow
     {
-        private TaskCard _card;
-        private TaskCard _originalCard;
+        [SerializeField] private TaskCard _card;
+        [SerializeField] private TaskCard _originalCard;
         private System.Action _onChanged;
         private System.Action _onDelete;
         private System.Action<TaskCard> _onCreated;
-        private Vector2 _scroll;
-        private string _newChecklistItem = "";
-        private bool _isNewCard;
-        private List<string> _categories;
-        private SaveData _saveData;
-        private string _newCategory = "";
-        private bool _dirty;
+        [SerializeField] private Vector2 _scroll;
+        [SerializeField] private string _newChecklistItem = "";
+        [SerializeField] private bool _isNewCard;
+        [SerializeField] private List<string> _categories;
+        [SerializeField] private SaveData _saveData;
+        [SerializeField] private string _newCategory = "";
+        [SerializeField] private bool _dirty;
+        [SerializeField] private string _boardId;
+        [SerializeField] private string _columnId;
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
         private bool _shouldFocusTitle;
         private bool _shouldFocusChecklist;
 
         // ── Open existing card ──
-        public static void Show(TaskCard card, SaveData saveData, System.Action onChanged, System.Action onDelete)
+        public static void Show(TaskCard card, SaveData saveData, string boardId, string columnId, System.Action onChanged, System.Action onDelete)
         {
             var win = GetWindow<CardDetailWindow>(true, "📝 Card Details", true);
             win._originalCard = card;
             win._card = card.Clone(false);
             win._saveData = saveData;
+            win._boardId = boardId;
+            win._columnId = columnId;
             win._categories = saveData.categories;
             win._onChanged = onChanged;
             win._onDelete = onDelete;
@@ -50,11 +54,13 @@ namespace AwesomeTaskManager.Editor
         }
 
         // ── Open to create a NEW card ──
-        public static void ShowNew(SaveData saveData, System.Action<TaskCard> onCreated)
+        public static void ShowNew(SaveData saveData, string boardId, string columnId, System.Action<TaskCard> onCreated)
         {
             var win = GetWindow<CardDetailWindow>(true, "✨ New Card", true);
             win._card = new TaskCard("") { description = "" };
             win._saveData = saveData;
+            win._boardId = boardId;
+            win._columnId = columnId;
             win._categories = saveData.categories;
             win._onCreated = onCreated;
             win._onChanged = null;
@@ -80,6 +86,12 @@ namespace AwesomeTaskManager.Editor
                     Application.OpenURL(url);
                 }
             };
+        }
+
+        public void LoadData()
+        {
+            _saveData = Persistence.Load();
+            Repaint();
         }
 
         private void OnGUI()
@@ -147,6 +159,7 @@ namespace AwesomeTaskManager.Editor
                     if (found >= 0) currentIdx = found;
                 }
                 int newIdx = EditorGUILayout.Popup(currentIdx, catOptions.ToArray());
+                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select task category"));
                 string picked = newIdx == 0 ? "" : catOptions[newIdx];
                 if (picked != (_card.category ?? ""))
                 {
@@ -210,6 +223,7 @@ namespace AwesomeTaskManager.Editor
                 {
                     EditorGUILayout.LabelField("Color Label", EditorStyles.boldLabel);
                     int newColor = EditorGUILayout.Popup(_card.colorLabel, TBStyles.LabelNames);
+                    GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select card color label"));
                     if (newColor != _card.colorLabel) { _card.colorLabel = newColor; MarkDirty(); }
                 }
                 GUILayout.Space(12);
@@ -217,6 +231,7 @@ namespace AwesomeTaskManager.Editor
                 {
                     EditorGUILayout.LabelField("Priority", EditorStyles.boldLabel);
                     int newPri = EditorGUILayout.Popup(_card.priority, TBStyles.PriorityNames);
+                    GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select task priority"));
                     if (newPri != _card.priority) { _card.priority = newPri; MarkDirty(); }
                 }
             }
@@ -742,7 +757,8 @@ namespace AwesomeTaskManager.Editor
                     }
                     else
                     {
-                        _onCreated?.Invoke(_card);
+                        SaveChanges();
+                        hasUnsavedChanges = false;
                         Close();
                         GUIUtility.ExitGUI();
                     }
@@ -794,7 +810,31 @@ namespace AwesomeTaskManager.Editor
                     {
                         if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{_card.title}\"?", "Delete", "Cancel"))
                         {
-                            _onDelete?.Invoke();
+                            if (_onDelete != null)
+                            {
+                                _onDelete.Invoke();
+                            }
+                            else if (TaskBoardWindow.Instance != null)
+                            {
+                                TaskBoardWindow.Instance.DeleteCardFromDetail(_boardId, _columnId, _card.id);
+                            }
+                            else
+                            {
+                                // Fallback: load and delete directly from disk
+                                var data = Persistence.Load();
+                                var board = data.boards.FirstOrDefault(b => b.id == _boardId);
+                                if (board != null)
+                                {
+                                    var col = board.columns.FirstOrDefault(c => c.id == _columnId);
+                                    if (col != null)
+                                    {
+                                        col.cards.RemoveAll(c => c.id == _card.id);
+                                        Persistence.Save(data);
+                                        TaskBoardWindow.ReloadAllOpenWindows();
+                                    }
+                                }
+                            }
+
                             hasUnsavedChanges = false;
                             Close();
                         }
@@ -832,7 +872,30 @@ namespace AwesomeTaskManager.Editor
             {
                 if (!string.IsNullOrWhiteSpace(_card.title))
                 {
-                    _onCreated?.Invoke(_card);
+                    if (_onCreated != null)
+                    {
+                        _onCreated.Invoke(_card);
+                    }
+                    else if (TaskBoardWindow.Instance != null)
+                    {
+                        TaskBoardWindow.Instance.AddCardFromDetail(_boardId, _columnId, _card);
+                    }
+                    else
+                    {
+                        // Fallback: load and save directly if everything else failed
+                        var data = Persistence.Load();
+                        var board = data.boards.FirstOrDefault(b => b.id == _boardId);
+                        if (board != null)
+                        {
+                            var col = board.columns.FirstOrDefault(c => c.id == _columnId);
+                            if (col != null)
+                            {
+                                col.cards.Add(_card);
+                                Persistence.Save(data);
+                                TaskBoardWindow.ReloadAllOpenWindows();
+                            }
+                        }
+                    }
                     base.SaveChanges();
                 }
                 else
@@ -846,7 +909,41 @@ namespace AwesomeTaskManager.Editor
                 {
                     string json = JsonUtility.ToJson(_card);
                     JsonUtility.FromJsonOverwrite(json, _originalCard);
-                    _onChanged?.Invoke();
+                    
+                    if (_onChanged != null)
+                    {
+                        _onChanged.Invoke();
+                    }
+                    else if (TaskBoardWindow.Instance != null)
+                    {
+                        TaskBoardWindow.Instance.UpdateCardFromDetail(_card);
+                    }
+                    else
+                    {
+                        // Fallback: load, find and update the card directly on disk
+                        var data = Persistence.Load();
+                        bool found = false;
+                        foreach (var b in data.boards)
+                        {
+                            foreach (var col in b.columns)
+                            {
+                                var existing = col.cards.FirstOrDefault(c => c.id == _card.id);
+                                if (existing != null)
+                                {
+                                    JsonUtility.FromJsonOverwrite(json, existing);
+                                    found = true;
+                                    break;
+                                }
+                            }
+                            if (found) break;
+                        }
+                        if (found) 
+                        {
+                            Persistence.Save(data);
+                            TaskBoardWindow.ReloadAllOpenWindows();
+                        }
+                    }
+                    
                     _dirty = false;
                 }
                 base.SaveChanges();
