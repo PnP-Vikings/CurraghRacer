@@ -715,6 +715,10 @@ public class DecisionCardManager : MonoBehaviour
     {
         OnCardPresented.RemoveAllListeners();
         OnDecisionMade.RemoveAllListeners();
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.onNewDay.RemoveListener(OnNewDay);
+        }
     }
 }
 
