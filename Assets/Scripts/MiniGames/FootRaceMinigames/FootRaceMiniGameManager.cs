@@ -585,7 +585,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
 
         if (MiniGameAudio.instance != null)
         {
-            StartCoroutine(MiniGameAudio.instance.FootRaceGameOver());
+            StartCoroutine(MiniGameAudio.instance.StartFootRaceMiniGameOverIEnum());
         }
     }
     

@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{0dba3b79-ea30-4bd9-8815-f7fab60979c8}">
 		<property name="name">
-			<value>Race Lose</value>
+			<value>Race Lost</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -96,10 +96,9 @@
 			<destination>{cac78c02-dea6-4d34-9fc8-3adf215b0cf5}</destination>
 			<destination>{eed5ea46-93af-4706-859d-f4e85be16f55}</destination>
 			<destination>{4bbf7d6d-e07d-42a1-977e-5e99bbbee727}</destination>
-			<destination>{015bdb04-15b6-4eac-941d-666d6efece53}</destination>
 		</relationship>
 		<relationship name="playPercentages">
-			<destination>{463a408a-fc16-4769-ae6b-b5f2ba3a997f}</destination>
+			<destination>{8fd73bd0-bd10-4c01-bf29-1e64da8530f3}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{1fb1d64f-f504-4e7c-8728-6a13d6a4e060}">
@@ -144,17 +143,12 @@
 			<destination>{0125a429-3a75-4c61-bc65-379113569b31}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{015bdb04-15b6-4eac-941d-666d6efece53}">
-		<relationship name="audioFile">
-			<destination>{783a7459-04a4-45c2-a1fd-8aaaf49ede61}</destination>
-		</relationship>
-	</object>
-	<object class="PlayPercentage" id="{463a408a-fc16-4769-ae6b-b5f2ba3a997f}">
+	<object class="PlayPercentage" id="{8fd73bd0-bd10-4c01-bf29-1e64da8530f3}">
 		<property name="percentage">
 			<value>0</value>
 		</property>
 		<relationship name="sound">
-			<destination>{015bdb04-15b6-4eac-941d-666d6efece53}</destination>
+			<destination>{4bbf7d6d-e07d-42a1-977e-5e99bbbee727}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{a37b5705-6edd-47a7-b2b4-c2d43b1fe8f5}">

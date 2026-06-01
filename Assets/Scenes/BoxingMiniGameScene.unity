@@ -506,10 +506,13 @@ MonoBehaviour:
   playerLivesText: {fileID: 1963541518}
   gameOverText: {fileID: 1838879465}
   additionalInfoText: {fileID: 0}
+  bonusFlashText: {fileID: 0}
+  warningText: {fileID: 0}
+  multiplierText: {fileID: 0}
   testDemoButtons: {fileID: 7592330430329010395}
   backToMainMenuButton: {fileID: 7592330430329010394}
   restartMinigameButton: {fileID: 7592330430329010393}
-  boxingAudio: {fileID: 1980710210}
+  trafficWardenAudio: {fileID: 0}
   healthIndicator: {fileID: 1331882503}
 --- !u!1 &1512312955
 GameObject:

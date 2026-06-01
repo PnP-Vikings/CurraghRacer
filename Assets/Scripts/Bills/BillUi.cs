@@ -1,3 +1,4 @@
+using System.Collections;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -60,13 +61,24 @@ public class BillUi : MonoBehaviour
         {
             Destroy(gameObject);
 
-            if (AudioManager.instance != null)
+            PayBillsAudio();
+        }      
+    }
+
+    private void PayBillsAudio()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.payBill.start();
+
+            if (PlayerManager.Instance != null)
             {
-                AudioManager.instance.payBill.start();
+                float coins = PlayerManager.Instance.GetPlayerCoins();
+                if (coins < 50)
+                {
+                    AudioManager.instance.payBillWhilePoorDialogue.start();
+                }
             }
         }
-      
-        
     }
-    
 }

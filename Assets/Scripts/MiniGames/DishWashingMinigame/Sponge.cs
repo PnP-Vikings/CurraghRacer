@@ -21,7 +21,7 @@ public class Sponge : MonoBehaviour
                 //{
                 //    AudioManager.instance.spongeAudio.start();
                 //}
-              }
+            }
         }
     }
 }

@@ -308,12 +308,12 @@ public class RockSkippingResultsUI : MonoBehaviour
         {
             if (winnerIndex == 0)
             {
-                AudioManager.instance.raceWin.start();
-                AudioManager.instance.raceWin.setParameterByName("Cheering Volume", 0f);
+                AudioManager.instance.raceWon.start();
+                AudioManager.instance.raceWon.setParameterByName("Cheering Volume", 0f);
             }
             else
             {
-                AudioManager.instance.raceLose.start();
+                AudioManager.instance.raceLost.start();
             }
         }
     }

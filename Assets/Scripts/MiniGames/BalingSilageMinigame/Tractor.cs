@@ -10,13 +10,14 @@ using static System.Runtime.CompilerServices.RuntimeHelpers;
 public class Tractor : MonoBehaviour
 {
     private Vector3 mousePosition;
-    public float moveSpeed = 1;
+    public float moveSpeed;
     public GameObject collectorPrefab;
 
 
     void Start()
     {
         transform.Rotate(0, 90, 0);
+        moveSpeed = 0.002f;
     }
 
     // Update is called once per frame
@@ -25,24 +26,22 @@ public class Tractor : MonoBehaviour
         /* mousePosition = Mouse.current.position.ReadValue();
             mousePosition.z = 4;
             transform.position = Vector3.MoveTowards (transform.position, new Vector3 (Camera.main.ScreenToWorldPoint (mousePosition).x, Camera.main.ScreenToWorldPoint(mousePosition).y, -0.5f), moveSpeed * Time.deltaTime);
-            if (FindFirstObjectByType<BalingSilageMinigame>().collecting == true)
-            {
-                collectorPrefab.SetActive(true);
-            } */
+        */
+        transform.position += transform.forward * moveSpeed;
 
-        if (Keyboard.current.wKey.wasPressedThisFrame)
+        if (FindFirstObjectByType<BalingSilageMinigame>().gameTimer <= 0)
         {
-            transform.position += transform.forward * moveSpeed;
+            moveSpeed = 0;
+        }
+        
+        if (Keyboard.current.aKey.isPressed)
+        {
+            transform.Rotate(transform.rotation.x - 1, 0, 0);
         }
 
-        if (Keyboard.current.aKey.wasPressedThisFrame)
+        if (Keyboard.current.dKey.isPressed)
         {
-            transform.Rotate(transform.rotation.x - 90, 0, 0);
-        }
-
-        if (Keyboard.current.dKey.wasPressedThisFrame)
-        {
-            transform.Rotate(transform.rotation.x + 90, 0, 0);
+            transform.Rotate(transform.rotation.x + 1, 0, 0);
         }
     }
 

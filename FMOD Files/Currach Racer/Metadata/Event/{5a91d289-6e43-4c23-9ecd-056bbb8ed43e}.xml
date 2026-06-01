@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{5a91d289-6e43-4c23-9ecd-056bbb8ed43e}">
 		<property name="name">
-			<value>Power Meter</value>
+			<value>Power Meter (Unused)</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{d8bde51e-ec6a-42a9-b600-bee806794f2f}</destination>
+			<destination>{1d9b2908-237e-4786-9cd4-da18082f6b50}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{f1b3c427-d0da-4c9e-8520-59f8ae186844}</destination>

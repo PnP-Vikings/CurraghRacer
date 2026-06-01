@@ -338,14 +338,14 @@ public class TrafficWardenMinigameController : MonoBehaviour
 
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.gameOver_Win.start();
+                AudioManager.instance.miniGame_Win.start();
             }
         }
         else
         {
             if (AudioManager.instance != null)
             {
-                AudioManager.instance.gameOver_Lost.start();
+                AudioManager.instance.miniGame_Over.start();
             }
 
             Debug.Log("Traffic Warden Game Over - Too many strikes");

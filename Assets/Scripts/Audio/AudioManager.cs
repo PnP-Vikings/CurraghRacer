@@ -16,8 +16,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance deleteSave;
         // Race
     public EventInstance raceAmbience;
-    public EventInstance raceWin;
-    public EventInstance raceLose;
+    public EventInstance raceWon;
+    public EventInstance raceLost;
     public EventInstance shout;
         // Garage
 
@@ -48,19 +48,24 @@ public class AudioManager : MonoBehaviour
     public EventInstance sleepOutsideAudio;
     public EventInstance rooster;
     public EventInstance payBill;
+    public EventInstance payBillWhilePoorDialogue;
     public EventInstance card;
         // Training
     public EventInstance gymBagZipUp;
     public EventInstance dumbbell;
-        //public EventInstance rowingGameAmbience;
+
+    public EventInstance rowing;
     public EventInstance rowingGameSuccess;
+    public EventInstance rowingGameSuccessDialogue;
     public EventInstance rowingGameFail;
-        // Jobs
-        //public EventInstance kitchenAmbience;
+    public EventInstance rowingGameFailDialogue;
+    public EventInstance rowingGameSuccessAfterFail;
+    // Jobs
+
     public EventInstance spawnPlates;
     public EventInstance movePlate;
     public EventInstance dunkPlate;
-    public EventInstance sponge;
+    public EventInstance spongeAudio;
 
     public EventInstance barAmbience;
     public EventInstance pouringPint;
@@ -69,24 +74,27 @@ public class AudioManager : MonoBehaviour
     public EventInstance setDownPint;
 
     public EventInstance punchBagAudio;
-    public EventInstance lifeLost;
-    public EventInstance gameOver_Win;
-    public EventInstance gameOver_Lost;
 
-        //public EventInstance footingTurfAmbience;
-    public EventInstance turfStackComplete;
+    public EventInstance miniGame_lifeLost;
+    public EventInstance miniGameProgression;
+    public EventInstance miniGame_Win;
+    public EventInstance miniGame_Over;
+   
     public EventInstance placeTurf;
 
+    public EventInstance weightSelectionResponse;
     public EventInstance dumbbellSlide;
     public EventInstance grunt;
     public EventInstance barGrip;
+    public EventInstance barPlacedOnStand;
+    public EventInstance weightliftingPhaseFailedDialogue;
+    public EventInstance inTheGreenDialogue;
+    public EventInstance cementBag;
 
     public EventInstance running;
     public EventInstance jump;
     public EventInstance slide;
     public EventInstance crashIntoFence;
-
-    public EventInstance rowing;
 
     public EventInstance rockSelect;
     public EventInstance closeRockCase;
@@ -96,9 +104,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance rockSink;
 
     public EventInstance tractor;
-    public EventInstance bailingAreaComplete;
 
-    //public EventInstance carEngine;
     public EventInstance carCrash;
     public EventInstance rain;
     public EventInstance roadworks;
@@ -107,6 +113,9 @@ public class AudioManager : MonoBehaviour
     public EventInstance scribble;
 
     public EventInstance PowerMeter;
+
+    public EventInstance boxingEncouragement;
+    public EventInstance boxingSuccessAfterFail;
 
     private Scene activeScene;
     void Awake()
@@ -134,17 +143,21 @@ public class AudioManager : MonoBehaviour
 
     private void Start()
     {
+                            // UI //
         UIClick1 = RuntimeManager.CreateInstance("event:/UI/Click 1");
         UIClick2 = RuntimeManager.CreateInstance("event:/UI/Click 2");
         UIClick3 = RuntimeManager.CreateInstance("event:/UI/Click 3");
 
+                            // MAIN MENU //
         deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
 
+                            // RACE //
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
-        raceWin = RuntimeManager.CreateInstance("event:/Race/Race Win");
-        raceLose = RuntimeManager.CreateInstance("event:/Race/Race Lose");
+        raceWon = RuntimeManager.CreateInstance("event:/Race/Race Won");
+        raceLost = RuntimeManager.CreateInstance("event:/Race/Race Lost");
         shout = RuntimeManager.CreateInstance("event:/Race/Shout");
 
+                            // RADIO //
         storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
         storyUpdate2 = RuntimeManager.CreateInstance("event:/Radio/Story Update 2");   // Player won a race
         storyUpdate3 = RuntimeManager.CreateInstance("event:/Radio/Story Update 3");   // Player lost a race
@@ -163,55 +176,75 @@ public class AudioManager : MonoBehaviour
 
         angelus = RuntimeManager.CreateInstance("event:/Radio/Angelus");
 
+                            // OST //
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
+
+                            // GARAGE //
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
 
+                           // BULLETIN BOARD //
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
         rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");
         payBill = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill");
+        payBillWhilePoorDialogue = RuntimeManager.CreateInstance("event:/Bulletin Board/Pay Bill While Poor Dialogue");
         card = RuntimeManager.CreateInstance("event:/Bulletin Board/Card");
-
         gymBagZipUp = RuntimeManager.CreateInstance("event:/Training/Gym Bag Zip Up");
-        dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
-        //rowingGameAmbience = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing Game Ambience");
-        rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
-        rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
-        rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
+        scribble = RuntimeManager.CreateInstance("event:/UI/Scribble On Bulletin Board");
 
-        //kitchenAmbience = RuntimeManager.CreateInstance("event:/Kitchen/Kitchen Ambience");
+                            // ROWING //
+        rowing = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Rowing");
+        rowingGameSuccess = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success");
+        rowingGameSuccessDialogue = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success Dialogue");
+        rowingGameFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail");
+        rowingGameFailDialogue = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Fail Dialogue");
+        rowingGameSuccessAfterFail = RuntimeManager.CreateInstance("event:/Rowing Rhythm Game/Success after Fail");
+
+                            // DISHWASHING //
         spawnPlates = RuntimeManager.CreateInstance("event:/Kitchen/Spawn Plates");
         movePlate = RuntimeManager.CreateInstance("event:/Kitchen/Move Plate");
-        sponge = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");                                // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
+        spongeAudio = RuntimeManager.CreateInstance("event:/Kitchen/Sponge");            // isn't being used because calling it via AudioManager.instance in the sponge script didn't work properly, idk why
         dunkPlate = RuntimeManager.CreateInstance("event:/Kitchen/Dunk Plate");
 
+                            // BAR //
         barAmbience = RuntimeManager.CreateInstance("event:/Bar/Bar Ambience");
         pouringPint = RuntimeManager.CreateInstance("event:/Bar/Pouring Pint");
         acceptablePour = RuntimeManager.CreateInstance("event:/Bar/Acceptable Pour");
         poorPour = RuntimeManager.CreateInstance("event:/Bar/Poor Pour");
         setDownPint = RuntimeManager.CreateInstance("event:/Bar/Set Pint Down");
 
+                            // BOXING //
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
-        lifeLost = RuntimeManager.CreateInstance("event:/Boxing/Life Lost");
 
-        gameOver_Win = RuntimeManager.CreateInstance("event:/Notifications/Game Over _ Win");
-        gameOver_Lost = RuntimeManager.CreateInstance("event:/Notifications/Game Over _ Lost");
+                            // MINIGAME NOTIFICATION //
+        miniGame_lifeLost = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Life Lost");
+        miniGameProgression = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Progression");
+        miniGame_Win = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Win");
+        miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
 
-        //footingTurfAmbience = RuntimeManager.CreateInstance("event:/Footing Turf/Footing Turf Ambience");
-        turfStackComplete = RuntimeManager.CreateInstance("event:/Footing Turf/Turf Stack Complete");
+                            // TURF //
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
+                            // WEIGHTLIFTING //
+        weightSelectionResponse = RuntimeManager.CreateInstance("event:/Weight Lifting/Weight Selection Response");
         dumbbellSlide = RuntimeManager.CreateInstance("event:/Weight Lifting/Dumbell Slide");
         barGrip = RuntimeManager.CreateInstance("event:/Weight Lifting/Bar Grip");
         grunt = RuntimeManager.CreateInstance("event:/Weight Lifting/Grunt");
+        barPlacedOnStand = RuntimeManager.CreateInstance("event:/Weight Lifting/Metal Bar");
+        weightliftingPhaseFailedDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/Weightlifting Phase Failed");
+        inTheGreenDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/In The Green Dialogue");
+        cementBag = RuntimeManager.CreateInstance("event:/Weight Lifting/Cement Bag");
+        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter Moving");
 
+                            // FOOT RACE //
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
         jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");
         slide = RuntimeManager.CreateInstance("event:/Foot Race/Slide");
         crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
 
+                            // ROCKSKIPPING //
         rockSelect = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Select");
         closeRockCase = RuntimeManager.CreateInstance("event:/Rock Skipping/Close Rock Case");
         rockSkip = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Skip");
@@ -219,17 +252,21 @@ public class AudioManager : MonoBehaviour
         rockBounceOnWood = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Bounce On Wood");
         rockSink = RuntimeManager.CreateInstance("event:/Rock Skipping/Rock Sink");
 
+                            // BAILING //
         tractor = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
-        bailingAreaComplete = RuntimeManager.CreateInstance("event:/Bailing/Tractor");
 
+                            // TRAFFIC WARDEN //
         carCrash = RuntimeManager.CreateInstance("event:/Traffic Warden/Car Crash");
         rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");
         roadworks = RuntimeManager.CreateInstance("event:/Ambiences/Roadworks");
 
-        scribble = RuntimeManager.CreateInstance("event:/UI/Scribble On Bulletin Board");
+                            // Boxing //
+        boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
+        boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
+                            // UNUSED //
+        //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
         //PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
-        PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter Moving");
     }
 
     private void Update()

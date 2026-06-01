@@ -124,9 +124,10 @@ public class GameFTController : MonoBehaviour
         }
         SetStackBtnVisible(false);
         SetSelectAStackTextVisible(true);
+
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.turfStackComplete.start();
+            AudioManager.instance.miniGameProgression.start();
         }       
        
       }
@@ -173,13 +174,13 @@ public class GameFTController : MonoBehaviour
       {
         minigameCanvasUI.ShowGameOver($"Time's Up!\n Congrats You flipped {_StacksDone}  stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
         Debug.Log("Game Over: Timer completed and minimum stacks flipped requirement met.");
-        MiniGameAudio.instance.PlayGameOverWin();
+        MiniGameAudio.instance.PlayMiniGameOverWinAudio();
       }
       else
       {
         minigameCanvasUI.ShowGameOver($"Time's Up!\n You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
         Debug.Log("Game Over: Timer completed but minimum stacks flipped requirement not met.");
-        MiniGameAudio.instance.PlayGameOverLost();
+        MiniGameAudio.instance.PlayMiniGameOverAudio();
       }
       
       if (MiniGameManager.Instance != null)

@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{d78c30a8-ce6d-4f63-9245-8b43140eadd8}">
 		<property name="name">
-			<value>Turf Stack Complete</value>
+			<value>Minigame_Progression</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{e63e68f3-0c4a-4bf1-9232-8c7a1803b69c}</destination>
+			<destination>{b4b01d08-e875-42fa-a0b2-b93272cd4ac3}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{cd4ad06a-7568-42cc-abca-d7217664c983}</destination>
@@ -56,7 +56,11 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{85d06bb4-c99f-4802-8828-09781bb6263c}" />
+	<object class="EventAutomatableProperties" id="{85d06bb4-c99f-4802-8828-09781bb6263c}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{ed1c1909-fea7-442e-a119-ed90866b8f04}" />
 	<object class="GroupTrack" id="{5925c866-866b-40be-b89b-2230564c2058}">
 		<relationship name="modules">
@@ -90,7 +94,7 @@
 	<object class="MixerBusPanner" id="{c606514b-37fc-430f-8663-af2d6ddf2b90}" />
 	<object class="SingleSound" id="{0ab45b03-eac0-48f1-9f10-fe5b28570d5c}">
 		<property name="start">
-			<value>0.20000000000000001</value>
+			<value>0.10000000000000001</value>
 		</property>
 		<property name="length">
 			<value>3.75</value>
@@ -103,6 +107,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{b8717915-7aa5-4878-82a0-b9ceda656cf0}">
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<property name="name">
 			<value>Audio 1</value>
 		</property>

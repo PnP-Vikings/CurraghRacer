@@ -47,6 +47,8 @@ public class RowingRhythmController : MonoBehaviour
   private bool hasStartedRowing = false;
   private bool rowingAudioHasStarted = false;
 
+  [SerializeField] RowingGameAudio RowingGameAudio;
+
   private void StartGame()
   {
     if (minigameCanvasUI != null)
@@ -330,9 +332,9 @@ public class RowingRhythmController : MonoBehaviour
       EndGame();
     }
 
-    if (AudioManager.instance != null)
-    {
-        AudioManager.instance.rowingGameFail.start();
+    if (RowingGameAudio != null)
+    {  
+        RowingGameAudio.PlayRowingGameFail();
     }
    }
   
@@ -373,7 +375,7 @@ public class RowingRhythmController : MonoBehaviour
 
     if(AudioManager.instance != null)
     {
-        AudioManager.instance.gameOver_Lost.start();
+        AudioManager.instance.miniGame_Over.start();
     }
   }
   
@@ -453,9 +455,9 @@ public class RowingRhythmController : MonoBehaviour
         AnimatePaddles();
         SpawnRandomPaddles();
 
-        if (AudioManager.instance != null)
+        if (RowingGameAudio != null)
         {
-           AudioManager.instance.rowingGameSuccess.start();
+           RowingGameAudio.PlayRowingGameSuccess();
         }
       }
       else
@@ -561,9 +563,9 @@ public class RowingRhythmController : MonoBehaviour
         AnimatePaddles();
         SpawnRandomPaddles();
 
-        if (AudioManager.instance != null)
+        if (RowingGameAudio != null)
         {
-           AudioManager.instance.rowingGameSuccess.start();
+           RowingGameAudio.PlayRowingGameSuccess();
         }
       }
       else

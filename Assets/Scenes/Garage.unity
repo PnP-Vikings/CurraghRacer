@@ -8282,7 +8282,7 @@ GameObject:
   - component: {fileID: 2093723885}
   - component: {fileID: 2093723886}
   m_Layer: 0
-  m_Name: GarageAmbience
+  m_Name: GarageAudio
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

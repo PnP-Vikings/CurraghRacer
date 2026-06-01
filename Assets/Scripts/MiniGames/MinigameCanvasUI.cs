@@ -26,8 +26,9 @@ public class MinigameCanvasUI : MonoBehaviour
     Coroutine bonusFlashCoroutine;
     Coroutine warningCoroutine;
 
-    //[SerializeField] BoxingAudio boxingAudio;
     [SerializeField] TrafficWardenAudio trafficWardenAudio;
+
+    private Scene activeScene;
 
     public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
     {
@@ -131,7 +132,14 @@ public class MinigameCanvasUI : MonoBehaviour
             {
                 if(lives < 3 && lives > 0)
                 {
-                    AudioManager.instance.lifeLost.start();
+                    AudioManager.instance.miniGame_lifeLost.start();
+                }
+
+                activeScene = SceneManager.GetActiveScene();
+
+                if (lives == 1 & activeScene.name == "BoxingMiniGameScene")
+                {
+                    AudioManager.instance.boxingEncouragement.start();
                 }
             }
         }
