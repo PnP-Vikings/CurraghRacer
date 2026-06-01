@@ -65,7 +65,10 @@ public class SaveMenuUI : MonoBehaviour
                     // New game started successfully
                     // Maybe show a success message or transition to game
                     Debug.Log("New game started!");
-                    GameManager.Instance.StartGame();
+                    if (GameManager.Instance != null)
+                    {
+                        GameManager.Instance.ResetForNewGame();
+                    }
                 }
                 else
                 {

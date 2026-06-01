@@ -26,11 +26,23 @@ public class InterstitialAds : MonoBehaviour,IUnityAdsLoadListener, IUnityAdsSho
 
     public void LoadInterstitialAd()
     {
+       if (AdsManager.Instance != null && AdsManager.Instance.disableAdsForTesting)
+       {
+           return;
+       }
+
        Advertisement.Load(adUnitId,this);
     }
     
     public void ShowInterstitialAd()
     {
+        if (AdsManager.Instance != null && AdsManager.Instance.disableAdsForTesting)
+        {
+            Debug.Log("Ads disabled: Simulating interstitial ad completion.");
+            OnUnityAdsShowComplete(adUnitId, UnityAdsShowCompletionState.COMPLETED);
+            return;
+        }
+
         Advertisement.Show(adUnitId,this);
         LoadInterstitialAd();
     }

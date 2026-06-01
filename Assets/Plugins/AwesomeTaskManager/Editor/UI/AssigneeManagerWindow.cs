@@ -10,13 +10,13 @@ namespace AwesomeTaskManager.Editor
 {
     public class AssigneeManagerWindow : EditorWindow
     {
-        private SaveData _data;
+        [SerializeField] private SaveData _data;
         private System.Action _onChanged;
-        private Vector2 _scroll;
-        private string _newName = "";
-        private int _newColorIndex = 1;
-        private int _newBorderColorIndex = 0;
-        private Texture2D _newProfileImage;
+        [SerializeField] private Vector2 _scroll;
+        [SerializeField] private string _newName = "";
+        [SerializeField] private int _newColorIndex = 1;
+        [SerializeField] private int _newBorderColorIndex = 0;
+        [SerializeField] private Texture2D _newProfileImage;
         private Dictionary<string, string> _nameBuffers = new Dictionary<string, string>();
         private Dictionary<string, Texture2D> _profileImageCache = new Dictionary<string, Texture2D>();
 
@@ -27,6 +27,12 @@ namespace AwesomeTaskManager.Editor
             window._onChanged = onChanged;
             window.minSize = new Vector2(400, 400);
             window.ShowUtility();
+        }
+
+        public void LoadData()
+        {
+            _data = Persistence.Load();
+            Repaint();
         }
 
         private void OnGUI()
@@ -219,6 +225,7 @@ namespace AwesomeTaskManager.Editor
                             {
                                 EditorGUILayout.LabelField(new GUIContent("Initials","Colour for background when Image is not available"), GUILayout.Width(50));
                                 int newColor = EditorGUILayout.Popup(assignee.colorIndex, TBStyles.LabelNames);
+                                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select initials background color"));
                                 if (newColor != assignee.colorIndex)
                                 {
                                     assignee.colorIndex = newColor;
@@ -227,6 +234,7 @@ namespace AwesomeTaskManager.Editor
 
                                 EditorGUILayout.LabelField(new GUIContent("Border", "Colour for border"), GUILayout.Width(50));
                                 int newBorderColor = EditorGUILayout.Popup(assignee.borderColorIndex, TBStyles.LabelNames);
+                                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select border color"));
                                 if (newBorderColor != assignee.borderColorIndex)
                                 {
                                     assignee.borderColorIndex = newBorderColor;
@@ -315,8 +323,14 @@ namespace AwesomeTaskManager.Editor
 
         private void NotifyChanged()
         {
-            _onChanged?.Invoke();
-            Repaint();
+            if (_data != null) Persistence.Save(_data);
+
+            TaskBoardWindow.ReloadAllOpenWindows();
+
+            if (_onChanged != null)
+            {
+                _onChanged.Invoke();
+            }
         }
 
         private void HandleImageDragDrop(Rect rect, Action<Texture2D, string> onImageDropped)

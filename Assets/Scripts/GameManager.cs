@@ -10,59 +10,62 @@ using UnityEngine.Serialization;
 
 public class GameManager : MonoBehaviour
 {
-   public static GameManager Instance { get; private set; }
-   public bool isRewarded = false;
-   public bool GameStarted = false;
-   public bool isGameOver = false;
-   public Transform cameraStartPosition;
-   public int racesTillNextAd = 3;
-   public string startSceneName = "Main Menu";
-   public string mainSceneName = "Garage";
-   public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
-   public bool playerIsBusy = false;
-   public UnityEvent OnGameStarted;
-   [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
-   [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
+    public static GameManager Instance { get; private set; }
+    public bool isRewarded = false;
+    public bool GameStarted = false;
+    public bool isGameOver = false;
+    public Transform cameraStartPosition;
+    public int racesTillNextAd = 3;
+    public string startSceneName = "Main Menu";
+    public string mainSceneName = "Garage";
+    public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
+    public bool playerIsBusy = false;
+    [SerializeField] private bool playerHasBeenShownIntro = false;
+    [SerializeField] private bool playerHasBeenShownWarningAboutDebt = false;
+    public UnityEvent OnGameStarted;
+    [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
+    [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
 
-   
-   private void Awake()
-   {
-       if (Instance == null)
-       {
-           Instance = this;
-           DontDestroyOnLoad(gameObject);
-       }
-       else
-       {
-           Destroy(gameObject);
-       }
-       
-       StartCoroutine(DisplayBannerWithDelay());
-       StartCoroutine(TrackPlayTime());
-       
-   }
+    
 
-   
-   
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+
+        StartCoroutine(DisplayBannerWithDelay());
+        StartCoroutine(TrackPlayTime());
+
+    }
+
+
+
     private IEnumerator TrackPlayTime()
-   {
-         while (true)
-         {
-             yield return new WaitForSeconds(60f); // Wait for 1 minute
-             totalPlayTime++;
-         }
+    {
+        while( true )
+        {
+            yield return new WaitForSeconds(60f); // Wait for 1 minute
+            totalPlayTime++;
+        }
     }
     private IEnumerator DisplayBannerWithDelay()
     {
-         yield return new WaitForSeconds(2f); // Adjust the delay as needed
-         AdsManager.Instance.bannerAds.ShowBannerAd();
+        yield return new WaitForSeconds(2f); // Adjust the delay as needed
+        AdsManager.Instance.bannerAds.ShowBannerAd();
     }
-    
+
     public void HideBannerAd()
     {
         AdsManager.Instance.bannerAds.HideBannerAd();
     }
-    
+
     public void StartGame()
     {
         AdsManager.Instance.bannerAds.HideBannerAd();
@@ -70,23 +73,23 @@ public class GameManager : MonoBehaviour
         OnGameStarted?.Invoke();
         SceneManager.LoadScene(mainSceneName);
     }
-    
+
     public bool GetGameStarted()
     {
         return GameStarted;
     }
-    
+
     public void SetPlayerBusy(bool busy)
     {
         playerIsBusy = busy;
     }
-    
+
     public void SetGameStarted(bool started)
     {
         GameStarted = started;
     }
-    
-    
+
+
     /// <summary>
     /// Trigger an auto-save at important game events
     /// </summary>
@@ -98,7 +101,7 @@ public class GameManager : MonoBehaviour
             Debug.Log("Auto-save triggered");
         }
     }
-    
+
     public bool CanShowAd()
     {
         racesTillNextAd--;
@@ -107,10 +110,10 @@ public class GameManager : MonoBehaviour
             racesTillNextAd = 5; // Reset to default value
             return true; // Allow ad to be shown
         }
-        
-        
+
+
         return false; // Do not allow ad to be shown
-        
+
     }
 
     public bool CanShowSleepAd()
@@ -121,19 +124,19 @@ public class GameManager : MonoBehaviour
             sleepsTillNextAd = 3; // Reset to default value
             return true; // Allow ad to be shown
         }
-        
+
         return false; // Do not allow ad to be shown
     }
 
     public void Sleep(int sleepCost)
     {
-        if(PlayerManager.Instance.PlayerHasEnoughEnergy(100))
+        if (PlayerManager.Instance.PlayerHasEnoughEnergy(100))
         {
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
             return; // Not enough energy to sleep
         }
-        
-        if(PlayerManager.Instance.PurchaseItem(sleepCost))
+
+        if (PlayerManager.Instance.PurchaseItem(sleepCost))
         {
             PlayerManager.Instance.ModifyPlayerEnergy(100);
             PlayerStatsView.Instance.DisplayInfo($"You Spent {sleepCost} on a place to sleep", 3);
@@ -151,7 +154,7 @@ public class GameManager : MonoBehaviour
         StartCoroutine(SleepAudioChanges());
     }
 
-    public void PlayerWorked(int rewardedCoins =50, int energyCost = -25)
+    public void PlayerWorked(int rewardedCoins = 50, int energyCost = -25)
     {
         PlayerManager.Instance.ModifyPlayerCoins(rewardedCoins);
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
@@ -163,7 +166,7 @@ public class GameManager : MonoBehaviour
     {
         // Apply stat changes immediately BEFORE scene transition to prevent cache overwrite
         Debug.Log($"Training {selectedTeamMember.memberName} in {selectedStatType} for {amountGained} points.");
-        
+
         switch (selectedStatType)
         {
             case TeamMember.StatType.Strength:
@@ -180,42 +183,42 @@ public class GameManager : MonoBehaviour
                 break;
             default:
                 Debug.LogError("Invalid stat type selected for training.");
-                if(PlayerStatsView.Instance != null)
+                if (PlayerStatsView.Instance != null)
                     PlayerStatsView.Instance.DisplayInfo("Invalid stat type selected for training.", 3);
                 break;
         }
-        
+
         // Update the cached save data to include the new stats
         if (SaveSystem.Instance != null)
         {
             SaveSystem.Instance.UpdateCachedSaveData();
         }
-        
+
         TimeManager.Instance.UpdateTime();
     }
-    
+
 
     public float GetTotalPlayTime()
     {
         return totalPlayTime;
     }
-    
+
     public void ResetTotalPlayTime()
     {
         totalPlayTime = 0;
     }
-    
+
     public void SetTotalPlayTime(float minutes)
     {
         totalPlayTime = minutes;
     }
-    
+
     public Transform GetCameraStartPosition()
     {
-        
+
         if (cameraStartPosition == null)
         {
-          cameraStartPosition =  FindFirstObjectByType<cameraStartPosition>().transform;
+            cameraStartPosition = FindFirstObjectByType<cameraStartPosition>().transform;
         }
         return cameraStartPosition;
     }
@@ -267,12 +270,12 @@ public class GameManager : MonoBehaviour
             SleepAudioChangesCoroutineIsActive = false;
         }
     }
-    
+
     public bool IsGameOver()
     {
         return isGameOver;
     }
-    
+
     public void TriggerGameOver()
     {
         isGameOver = true;
@@ -282,7 +285,7 @@ public class GameManager : MonoBehaviour
         ShowGameOverText();
 
     }
-    
+
     public void ShowGameOverText()
     {
         if (PlayerStatsView.Instance != null)
@@ -291,5 +294,29 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayEndGame("GAME OVER\nThe mob got tired of waiting for you to pay up\nand destroyed the boat \nYou were forced to flee the country", 5);
         }
     }
+
+    public void SetHasBeenShownIntro(bool shown)
+    {
+        playerHasBeenShownIntro = shown;
+    }
+    public bool GetHasBeenShownIntro()
+    {
+        return playerHasBeenShownIntro;
+    }
+
+    public void SetHasBeenShownWarningAboutDebt(bool shown)
+    {
+        playerHasBeenShownWarningAboutDebt = shown;
+    }
+    public bool GetHasBeenShownWarningAboutDebt()
+    {
+        return playerHasBeenShownWarningAboutDebt;
+    }
     
+    public void ResetForNewGame()
+    {
+       SetHasBeenShownIntro(false); // Reset intro flag for new game
+       StartGame();
+    }
+
 }

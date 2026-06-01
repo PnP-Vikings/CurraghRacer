@@ -367,6 +367,8 @@ public class GameProgressData
     public bool loadedRaceScene;
     public bool playerIsBusy;
     public Dictionary<string, bool> unlockedFeatures;
+    public bool playerHasBeenShownIntro = false;
+    public bool playerHasBeenShownWarningAboutDebt = false;
     
     public GameProgressData()
     {
@@ -870,6 +872,9 @@ public class SaveSystem : MonoBehaviour
         {
             saveData.gameProgress.gameStarted = GameManager.Instance.GetGameStarted();
             saveData.gameProgress.playerIsBusy = GameManager.Instance.playerIsBusy;
+            saveData.gameProgress.playerHasBeenShownIntro = GameManager.Instance.GetHasBeenShownIntro();
+            saveData.gameProgress.playerHasBeenShownWarningAboutDebt =
+                GameManager.Instance.GetHasBeenShownWarningAboutDebt();
         }
 
         if (RaceManager.Instance != null)
@@ -990,6 +995,8 @@ public class SaveSystem : MonoBehaviour
                 {
                     GameManager.Instance.SetGameStarted(saveData.gameProgress.gameStarted);
                 }
+                GameManager.Instance.SetHasBeenShownIntro(saveData.gameProgress.playerHasBeenShownIntro);
+                GameManager.Instance.SetHasBeenShownWarningAboutDebt(saveData.gameProgress.playerHasBeenShownWarningAboutDebt);
                 GameManager.Instance.SetPlayerBusy(saveData.gameProgress.playerIsBusy);
             }
 
@@ -1855,6 +1862,8 @@ public class SaveSystem : MonoBehaviour
         saveData.gameProgress.difficulty = 1f;
         saveData.gameProgress.loadedRaceScene = false;
         saveData.gameProgress.playerIsBusy = false;
+        saveData.gameProgress.playerHasBeenShownIntro = false;
+        saveData.gameProgress.playerHasBeenShownWarningAboutDebt = false;
         
         // Set fresh calendar data to game's starting date
         if (TimeManager.Instance != null)

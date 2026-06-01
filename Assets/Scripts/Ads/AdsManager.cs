@@ -6,6 +6,8 @@ public class AdsManager : MonoBehaviour
    public BannerAds bannerAds;
    public RewardedAds rewardedAds;
    public InitializeAds initializeAds;
+   [Tooltip("Toggling this will disable ads.")]
+   public bool disableAdsForTesting;
    
    public static AdsManager Instance { get; private set; }
    
@@ -20,6 +22,13 @@ public class AdsManager : MonoBehaviour
        {
            Destroy(gameObject);
        }
+
+       if (disableAdsForTesting)
+       {
+           Debug.Log("Ads are disabled for testing.");
+           return;
+       }
+
        if (bannerAds != null && bannerAds.IsAdUnitIDSet())
        {
            bannerAds.LoadBannerAd();

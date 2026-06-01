@@ -49,18 +49,21 @@ public class DecisionCardUiMaster : MonoBehaviour
        if (DecisionCardManager.Instance == null)
        {
            Debug.LogWarning("DecisionCardManager not found!");
+           this.gameObject.SetActive(false);
            return;
        }
        
        if (cardPrefab == null)
        {
            Debug.LogError("Card Prefab is not assigned!");
+           this.gameObject.SetActive(false);
            return;
        }
        
        if (cardSpawnParent == null)
        {
            Debug.LogError("Card Spawn Parent is not assigned!");
+           this.gameObject.SetActive(false);
            return;
        }
        
@@ -73,6 +76,7 @@ public class DecisionCardUiMaster : MonoBehaviour
        {
            Debug.Log("No cards to show today");
            DecisionCardManager.Instance.OnAllCardsProcessed?.Invoke();
+           this.gameObject.SetActive(false);
            return;
        }
        

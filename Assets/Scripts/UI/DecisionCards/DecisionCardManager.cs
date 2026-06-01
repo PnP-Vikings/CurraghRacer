@@ -33,11 +33,25 @@ public class DecisionCardManager : MonoBehaviour
     private DecisionCard currentCard;
     private TeamMember currentTargetMember;
     [SerializeField] DecisionCardUiMaster uiMaster;
+    private bool cardsPresentedToUi = false;
     
     
     public void SetUiMaster(DecisionCardUiMaster master)
     {
         uiMaster = master;
+        
+        // If we have cards waiting to be shown and we just got a UI master, show them now
+        if (uiMaster != null && todaysCards.Count > 0)
+        {
+            Debug.Log($"DecisionCardUiMaster assigned. We have {todaysCards.Count} pending cards. Showing them now.");
+            /*uiMaster.gameObject.SetActive(true);
+            uiMaster.GenerateTodaysCards();*/
+            
+            if(TimeManager.Instance != null)
+            {
+                TimeManager.Instance.SetTimePauseState(true);
+            }
+        }
     }
     
     private void Awake()
@@ -83,6 +97,7 @@ public class DecisionCardManager : MonoBehaviour
     private void OnNewDay()
     {
         Debug.Log("New day started - generating decision cards");
+        cardsPresentedToUi = false;
         
         if(GameManager.Instance != null && GameManager.Instance.IsGameOver())
         {
@@ -96,26 +111,34 @@ public class DecisionCardManager : MonoBehaviour
         // Process follow-up cards AFTER generating daily cards
         ProcessScheduledFollowUps();
         
-        if (todaysCards.Count > 0 && uiMaster != null)
+        if (todaysCards.Count > 0)
         {
-            uiMaster.gameObject.SetActive(true);
-            Debug.Log($"Generated {todaysCards.Count} decision cards for today (including follow-ups)");
-            
-            // Tell the UI Master to show the cards
-            uiMaster.GenerateTodaysCards();
-            
-            if(TimeManager.Instance != null)
+            if (uiMaster != null)
             {
-               TimeManager.Instance.SetTimePauseState(true);
+                uiMaster.gameObject.SetActive(true);
+                Debug.Log($"Generated {todaysCards.Count} decision cards for today (including follow-ups)");
+                
+                // Tell the UI Master to show the cards
+                cardsPresentedToUi = true;
+                uiMaster.GenerateTodaysCards();
+                
+                if(TimeManager.Instance != null)
+                {
+                   TimeManager.Instance.SetTimePauseState(true);
+                }
+            }
+            else
+            {
+                Debug.LogWarning("DecisionCardUiMaster not assigned yet! Cards are generated and pending assignment of UI master.");
             }
         }
-        else if (todaysCards.Count == 0)
+        else
         {
+            if (uiMaster != null)
+            {
+                uiMaster.gameObject.SetActive(false);
+            }
             Debug.Log("No decision cards to show today");
-        }
-        else if (uiMaster == null)
-        {
-            Debug.LogWarning("DecisionCardUiMaster not assigned! Cannot display cards.");
         }
     }
     
@@ -692,6 +715,10 @@ public class DecisionCardManager : MonoBehaviour
     {
         OnCardPresented.RemoveAllListeners();
         OnDecisionMade.RemoveAllListeners();
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.onNewDay.RemoveListener(OnNewDay);
+        }
     }
 }
 

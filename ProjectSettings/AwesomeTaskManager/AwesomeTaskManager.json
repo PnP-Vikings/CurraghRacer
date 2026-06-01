@@ -12,96 +12,7 @@
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
                     "title": "🔨 In Progress",
-                    "cards": [
-                        {
-                            "id": "bba55898-5c7d-40b5-a413-634175fe87a6",
-                            "title": "Fix FootTurfMinigame ",
-                            "description": "Finish foot turf mingame so we can add it to job list",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-04-28 22:17",
-                            "dueDate": "2026-05-05",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add Timer",
-                                "Hide Stack btn when no btn selected or stack compeleted",
-                                "Add Scoring system",
-                                "Remove streak if player does not click on stack btn",
-                                "Add Character that goes towards selected turf"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                true,
-                                false,
-                                true
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
-                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1732423707-0",
-                                        "name": "Canvas"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
-                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-629005217-0",
-                                        "name": "StackBtn"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
-                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1133713054-0",
-                                        "name": "GameManager"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "0c9af5a3d507ce847b7b292e877e3ab8",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                }
-                            ],
-                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260428_215615_20260428_221916.png",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [
-                                "8910e6f1-befc-4526-8924-25f6df0bd590"
-                            ],
-                            "isArchived": false
-                        }
-                    ]
+                    "cards": []
                 },
                 {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
@@ -240,6 +151,121 @@
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "bba55898-5c7d-40b5-a413-634175fe87a6",
+                            "title": "Fix FootTurfMinigame ",
+                            "description": "Finish foot turf mingame so we can add it to job list",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-04-28 22:17",
+                            "dueDate": "2026-05-05",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Timer",
+                                "Hide Stack btn when no btn selected or stack compeleted",
+                                "Add Scoring system",
+                                "Remove streak if player does not click on stack btn",
+                                "Add Character that goes towards selected turf"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1732423707-0",
+                                        "name": "Canvas"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-629005217-0",
+                                        "name": "StackBtn"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1133713054-0",
+                                        "name": "GameManager"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "0c9af5a3d507ce847b7b292e877e3ab8",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260428_215615_20260428_221916.png",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "dfda87dd-461e-45db-ab6a-11ac57d552b9",
+                            "title": "Fix Blank White screen on new day",
+                            "description": "White screen was actually coming from the ad Functions \nI have now adding a toggle on adsmanger to stop this screen from happening ",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-06-01 22:42",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "FIgure out what is causing it to appear",
+                                "fix and stop it from appearing"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
                             "isArchived": false
                         }
                     ]

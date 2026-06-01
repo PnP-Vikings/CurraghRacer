@@ -6138,6 +6138,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 5003416727933533111, guid: 647ec96809814364eb7cd0019ccdb84d, type: 3}
+      propertyPath: disableAdsForTesting
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 7377683753994611258, guid: 647ec96809814364eb7cd0019ccdb84d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -147.23541
