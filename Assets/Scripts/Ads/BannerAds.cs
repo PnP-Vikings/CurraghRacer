@@ -30,6 +30,11 @@ public class BannerAds : MonoBehaviour
     
     public void LoadBannerAd()
     {
+        if (AdsManager.Instance != null && AdsManager.Instance.disableAdsForTesting)
+        {
+            return;
+        }
+
         BannerLoadOptions options = new BannerLoadOptions
         {
             loadCallback = BannerLoaded,

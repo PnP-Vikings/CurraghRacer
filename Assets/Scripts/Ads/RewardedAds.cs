@@ -27,6 +27,11 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
     
     public void LoadRewardedAd()
     {
+        if (AdsManager.Instance != null && AdsManager.Instance.disableAdsForTesting)
+        {
+            return;
+        }
+
         if (adUnitId != null)
         {
 
@@ -36,6 +41,13 @@ public class RewardedAds : MonoBehaviour, IUnityAdsLoadListener, IUnityAdsShowLi
     
     public void ShowRewardedAd()
     {
+        if (AdsManager.Instance != null && AdsManager.Instance.disableAdsForTesting)
+        {
+            Debug.Log("Ads disabled: Simulating rewarded ad completion.");
+            OnUnityAdsShowComplete(adUnitId, UnityAdsShowCompletionState.COMPLETED);
+            return;
+        }
+
         Advertisement.Show(adUnitId,this);
         LoadRewardedAd();
     }

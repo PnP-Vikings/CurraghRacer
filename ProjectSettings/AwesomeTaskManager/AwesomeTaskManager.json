@@ -240,6 +240,33 @@
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ],
                             "isArchived": false
+                        },
+                        {
+                            "id": "dfda87dd-461e-45db-ab6a-11ac57d552b9",
+                            "title": "Fix Blank White screen on new day",
+                            "description": "White screen was actually coming from the ad Functions \nI have now adding a toggle on adsmanger to stop this screen from happening ",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-06-01 22:42",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "FIgure out what is causing it to appear",
+                                "fix and stop it from appearing"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
