@@ -34,14 +34,14 @@ public class Tractor : MonoBehaviour
             moveSpeed = 0;
         }
         
-        if (Keyboard.current.aKey.wasPressedThisFrame)
+        if (Keyboard.current.aKey.isPressed)
         {
-            transform.Rotate(transform.rotation.x - 90, 0, 0);
+            transform.Rotate(transform.rotation.x - 1, 0, 0);
         }
 
-        if (Keyboard.current.dKey.wasPressedThisFrame)
+        if (Keyboard.current.dKey.isPressed)
         {
-            transform.Rotate(transform.rotation.x + 90, 0, 0);
+            transform.Rotate(transform.rotation.x + 1, 0, 0);
         }
     }
 
