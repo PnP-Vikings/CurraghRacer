@@ -9,6 +9,7 @@ public class GarageSceneManager : MonoBehaviour
     public float inviteDelay = 30f;  
     
     public WelcomeCardUi welcomeCardUi;
+    public GameObject DebtWarningScreen;
     [Tooltip("Delay before showing the welcome card for new players. Adjust as needed.")]
     public float showIntroDelay = 1.2f;
     private void Awake()
@@ -42,7 +43,18 @@ public class GarageSceneManager : MonoBehaviour
                 }
                 
             }
+
+            if (!GameManager.Instance.GetHasBeenShownWarningAboutDebt())
+            {
+
+                if (PlayerManager.Instance != null)
+                {
+                    PlayerManager.Instance.onDebtWarning.AddListener(ShowDebtWarningScreen);
+                }   
+            }
         }
+        
+        
     }
     
     
@@ -66,6 +78,17 @@ public class GarageSceneManager : MonoBehaviour
             StartCoroutine(LeagueController.Instance.StartLeagueInviteMessageAfterDelay(inviteDelay));
         }
     }
+    
+    public void ShowDebtWarningScreen()
+    {
+        if(GameManager.Instance != null && !GameManager.Instance.GetHasBeenShownWarningAboutDebt())
+        {
+            DebtWarningScreen.SetActive(true);
+            GameManager.Instance.SetHasBeenShownWarningAboutDebt(true);
+        }
+       
+    }
+    
     
     
     

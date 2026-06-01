@@ -43,11 +43,22 @@ public class BillsController : MonoBehaviour
     public void HandleNewDay()
     {
         Debug.Log("A new day has started, updating bills.");
-        // Update all active bills
+        
+        // Update days for all bills exactly once at the start of the day
         foreach (var bill in bills)
         {
             bill.daysUntilDue -= 1;
             bill.daysTillNextBill -= 1;
+        }
+        foreach (var bill in recurringPaidBills)
+        {
+            bill.daysTillNextBill -= 1;
+        }
+
+        // Update all active bills
+        // We iterate over a copy of the list to allow removing items (like during auto-pay) without errors
+        foreach (var bill in new List<Bill>(bills))
+        {
             if (bill.isOverdue)
             {
                 if(PlayerStatsView.Instance != null)
@@ -81,7 +92,6 @@ public class BillsController : MonoBehaviour
         
         foreach (var paidBill in recurringPaidBills)
         {
-            paidBill.daysTillNextBill -= 1;
             if(paidBill.daysTillNextBill <= 0)
             {
                 billsToReactivate.Add(paidBill);

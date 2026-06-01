@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using League;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Serialization;
 
 public class PlayerManager : MonoBehaviour
@@ -12,6 +13,7 @@ public class PlayerManager : MonoBehaviour
     public float coins = 50f; // Default coins value
     public float maxAmountOfDebt = -400f; // Maximum debt allowed
     public PlayerStatsView playerStatsView;
+    public UnityEvent onDebtWarning;
     
     private void Awake()
     {
@@ -251,6 +253,7 @@ public class PlayerManager : MonoBehaviour
     {
         if (coins < 0)
         {
+            onDebtWarning.Invoke();
             if (PlayerStatsView.Instance != null)
             {
                 PlayerStatsView.Instance.DisplayInfo("Warning: You are in debt! Earn more coins to avoid penalties.", 5);

@@ -47,17 +47,26 @@ public class LeagueInviteCardsUi : MonoBehaviour
       return;
     }
 
-    leagueNameText.text = "You have been invited to participate in\nThe " + league.leagueName;
-    leagueDescriptionText.text = league.description;
+    Debug.Log($"Setting league data for invite: {league.leagueName}");
 
-    if (league.leagueIcon != null)
+    if (leagueNameText != null)
+      leagueNameText.text = "You have been invited to participate in\nThe " + league.leagueName;
+    
+    if (leagueDescriptionText != null)
+      leagueDescriptionText.text = league.description;
+
+    if (leagueLogoImage != null)
     {
-      leagueLogoImage.sprite = league.leagueIcon;
-    }
-    else
-    {
-      Debug.LogWarning("League logo is not set!");
-      leagueLogoImage.gameObject.SetActive(false);
+      if (league.leagueIcon != null)
+      {
+        leagueLogoImage.sprite = league.leagueIcon;
+        leagueLogoImage.gameObject.SetActive(true);
+      }
+      else
+      {
+        Debug.LogWarning($"League logo is not set for league: {league.leagueName}");
+        leagueLogoImage.gameObject.SetActive(false);
+      }
     }
   }
     

@@ -73,6 +73,7 @@ public class DecisionCardUiMaster : MonoBehaviour
        {
            Debug.Log("No cards to show today");
            DecisionCardManager.Instance.OnAllCardsProcessed?.Invoke();
+           this.gameObject.SetActive(false);
            return;
        }
        

@@ -20,11 +20,13 @@ public class GameManager : MonoBehaviour
     public string mainSceneName = "Garage";
     public int sleepsTillNextAd = 3; // Number of sleeps before the next ad can be shown
     public bool playerIsBusy = false;
-    private bool falsePlayerHasBeenShownIntro = false;
+    [SerializeField] private bool playerHasBeenShownIntro = false;
+    [SerializeField] private bool playerHasBeenShownWarningAboutDebt = false;
     public UnityEvent OnGameStarted;
     [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
     [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
 
+    
 
     private void Awake()
     {
@@ -295,11 +297,20 @@ public class GameManager : MonoBehaviour
 
     public void SetHasBeenShownIntro(bool shown)
     {
-        falsePlayerHasBeenShownIntro = shown;
+        playerHasBeenShownIntro = shown;
     }
     public bool GetHasBeenShownIntro()
     {
-        return falsePlayerHasBeenShownIntro;
+        return playerHasBeenShownIntro;
+    }
+
+    public void SetHasBeenShownWarningAboutDebt(bool shown)
+    {
+        playerHasBeenShownWarningAboutDebt = shown;
+    }
+    public bool GetHasBeenShownWarningAboutDebt()
+    {
+        return playerHasBeenShownWarningAboutDebt;
     }
     
     public void ResetForNewGame()
