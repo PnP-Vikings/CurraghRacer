@@ -9,7 +9,7 @@ public class BillsController : MonoBehaviour
     public float heatingBillAmount = 15f;
     public float rentBillAmount = 50f;
     public float totalBillsAmount;
-    
+    public int daysUntilNextRecurringBill =14;
 
     public List <Bill> bills = new List<Bill>();
     public List <Bill> recurringPaidBills = new List<Bill>();
@@ -71,7 +71,7 @@ public class BillsController : MonoBehaviour
             if(bill.daysTillNextBill <= 0)
             {
                 bill.amountDue += bill.amount;
-                bill.daysTillNextBill = 30; // Reset for next month
+                bill.daysTillNextBill = daysUntilNextRecurringBill; // Reset for next month
                 bill.daysUntilDue =    bill.daysTillNextBill-5; // Reset due day
                 if(PlayerStatsView.Instance != null)
                 {
@@ -102,7 +102,7 @@ public class BillsController : MonoBehaviour
         foreach (var paidBill in billsToReactivate)
         {
             paidBill.isPaid = false;
-            paidBill.daysTillNextBill = 30; // Reset for next month
+            paidBill.daysTillNextBill = daysUntilNextRecurringBill; // Reset for next month
             paidBill.daysUntilDue = paidBill.daysTillNextBill - 5; // Reset due day
             paidBill.amountDue += paidBill.amount; // Reset amount due
             

@@ -328,6 +328,27 @@
                             "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "bbe06ed3-24eb-4a23-b287-a4c55471e7e4",
+                            "title": "Fixed Bug with Tooltip always showing on sundays",
+                            "description": "Now only shows the tooltip for races after yu have joined the current league",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 00:33",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-06-03 003259.png",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
