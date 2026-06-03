@@ -21,4 +21,12 @@ public class BulletinBoardUi : MonoBehaviour
             menuOption.SetActive(true);
         }
     }
+
+    public void CheckIfBulletinBoardTaskIsCompleted()
+    {
+        if(GameManager.Instance != null )
+        {
+          GameManager.Instance.CompleteTutorialTask("BulletinBoardTask");
+        }
+    }
 }

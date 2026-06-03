@@ -25,7 +25,10 @@ public class GameManager : MonoBehaviour
     public UnityEvent OnGameStarted;
     [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
     [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
-
+    [Header("Tutorial")]
+    [SerializeField] private List<TutorialTask> uncompletedTutorialTasks = new List<TutorialTask>();
+    [SerializeField] private List<TutorialTask> completedTutorialTasks = new List<TutorialTask>();
+    [SerializeField] private bool allTutorialTasks = false;
     
 
     private void Awake()
@@ -311,6 +314,40 @@ public class GameManager : MonoBehaviour
     public bool GetHasBeenShownWarningAboutDebt()
     {
         return playerHasBeenShownWarningAboutDebt;
+    }
+    
+    public void CompleteTutorialTask(string taskName)
+    {
+        TutorialTask taskToRemove = null;
+        foreach (var task in uncompletedTutorialTasks)
+        {
+            if(task.taskName == taskName)
+            {
+                task.completed = true;
+                taskToRemove = task;
+                completedTutorialTasks.Add(task);
+                Debug.Log($"Completed tutorial task: {task.taskName}");
+                CheckIfAllTasksAreCompleted();
+            }
+            else
+            {
+                Debug.LogWarning($"Attempted to complete a tutorial task that is not in the active list: {task.taskName}");
+            }
+        }
+        
+        if(taskToRemove != null)
+        {
+            uncompletedTutorialTasks.Remove(taskToRemove);
+        }
+        
+    }
+
+    public void CheckIfAllTasksAreCompleted()
+    {
+        if(uncompletedTutorialTasks.Count == 0)
+        {
+            allTutorialTasks = true;
+        }
     }
     
     public void ResetForNewGame()

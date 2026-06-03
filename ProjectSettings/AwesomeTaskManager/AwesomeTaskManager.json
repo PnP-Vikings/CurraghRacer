@@ -7,7 +7,68 @@
                 {
                     "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
                     "title": "📋 To Do",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
+                            "title": "Add 90 day idea ",
+                            "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 22:56",
+                            "dueDate": "2026-07-03",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Calendar event",
+                                "Add Processing final day of player money",
+                                "For now just add place holder text or image"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
+                            "title": "Add Tutorial that player can play through on new game",
+                            "description": "",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 23:00",
+                            "dueDate": "2026-07-03",
+                            "archived": false,
+                            "checklistItems": [
+                                "Setup task tracking for tutorial",
+                                "Verify the player can complete a task",
+                                "Once player has completed all tasks in list set tutorial completed"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        }
+                    ]
                 },
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
@@ -440,6 +501,10 @@
         {
             "category": "Bug",
             "colorIndex": 16
+        },
+        {
+            "category": "Feature",
+            "colorIndex": 2
         }
     ],
     "assignees": [
