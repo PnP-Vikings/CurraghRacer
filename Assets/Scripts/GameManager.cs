@@ -26,9 +26,9 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
     [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
     [Header("Tutorial")]
-    [SerializeField] private List<TutorialTask> uncompletedTutorialTasks = new List<TutorialTask>();
-    [SerializeField] private List<TutorialTask> completedTutorialTasks = new List<TutorialTask>();
-    [SerializeField] private bool allTutorialTasks = false;
+    [SerializeField] private List<TutorialTask> tutorialTasks = new List<TutorialTask>();
+    [SerializeField] private bool tutorialModeActive = false;
+    [SerializeField] private bool tutorialModeCompleted = false;
     
 
     private void Awake()
@@ -316,38 +316,95 @@ public class GameManager : MonoBehaviour
         return playerHasBeenShownWarningAboutDebt;
     }
     
-    public void CompleteTutorialTask(string taskName)
+    public void CompleteTutorialTask(TutorialTaskType taskType)
     {
-        TutorialTask taskToRemove = null;
-        foreach (var task in uncompletedTutorialTasks)
+        foreach (var task in tutorialTasks)
         {
-            if(task.taskName == taskName)
+            if(task.taskType == taskType && task.isTaskActive)
             {
+                task.isTaskActive = false;
                 task.completed = true;
-                taskToRemove = task;
-                completedTutorialTasks.Add(task);
                 Debug.Log($"Completed tutorial task: {task.taskName}");
                 CheckIfAllTasksAreCompleted();
+                ActivateNextTutorialTask();
             }
             else
             {
                 Debug.LogWarning($"Attempted to complete a tutorial task that is not in the active list: {task.taskName}");
             }
         }
-        
-        if(taskToRemove != null)
+    }
+    
+    public void CompleteTutorialTask(string taskName)
+    {
+        foreach (var task in tutorialTasks)
         {
-            uncompletedTutorialTasks.Remove(taskToRemove);
+            if(task.taskName == taskName && task.isTaskActive)
+            {
+                task.isTaskActive = false;
+                task.completed = true;
+                Debug.Log($"Completed tutorial task: {task.taskName}");
+                CheckIfAllTasksAreCompleted();
+                ActivateNextTutorialTask();
+            }
+            else
+            {
+                Debug.LogWarning($"Attempted to complete a tutorial task that is not in the active list: {task.taskName}");
+            }
         }
-        
     }
 
+    public void ActivateNextTutorialTask()
+    {
+        if(tutorialTasks.Count > 0)
+        {
+            foreach (var task in tutorialTasks)
+            {
+                if (!task.completed && !task.isTaskActive)
+                {
+                    task.isTaskActive = true;
+                    Debug.Log($"Activated next tutorial task: {task.taskName}");
+                    return;
+                }
+            }
+            Debug.Log("No more tutorial tasks to activate.");
+        }
+        else
+        {
+            Debug.LogWarning("Tutorial task list is empty. Cannot activate next task.");
+        }
+    }
+
+    public void ActivateTutorialMode()
+    {
+        if (tutorialModeActive) return;
+        if (tutorialModeCompleted) return;
+
+        if (tutorialTasks.Count > 0)
+        {
+            tutorialModeActive = true;
+            tutorialTasks[0].isTaskActive = true;
+            Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+        }
+    }
     public void CheckIfAllTasksAreCompleted()
     {
-        if(uncompletedTutorialTasks.Count == 0)
+        foreach (var task in tutorialTasks)
         {
-            allTutorialTasks = true;
+            if (!task.completed)
+            {
+                return; // If any task is not completed, exit the method
+            }
         }
+        
+        tutorialModeCompleted = true;
+        tutorialModeActive = false;
+        Debug.Log("All tutorial tasks are completed.");
+    }
+
+    public bool IsTutorialModeActive()
+    {
+        return tutorialModeActive;
     }
     
     public void ResetForNewGame()

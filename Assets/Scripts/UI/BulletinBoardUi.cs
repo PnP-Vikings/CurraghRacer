@@ -24,9 +24,9 @@ public class BulletinBoardUi : MonoBehaviour
 
     public void CheckIfBulletinBoardTaskIsCompleted()
     {
-        if(GameManager.Instance != null )
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
         {
-          GameManager.Instance.CompleteTutorialTask("BulletinBoardTask");
+          GameManager.Instance.CompleteTutorialTask(TutorialTaskType.BulletinBoardTask);
         }
     }
 }

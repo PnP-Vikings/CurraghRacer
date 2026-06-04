@@ -213,6 +213,15 @@ namespace Calendar
         private void OnEnable()
         {
             CurrentMonth();
+            CheckIfCalendarTaskIsCompleted();
+        }
+        
+        public void CheckIfCalendarTaskIsCompleted()
+        {
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CalendarTask);
+            }
         }
     }
 }

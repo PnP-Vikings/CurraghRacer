@@ -32,42 +32,19 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": false,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ],
                             "isArchived": false
-                        },
-                        {
-                            "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
-                            "title": "Add Tutorial that player can play through on new game",
-                            "description": "",
-                            "category": "Feature",
-                            "colorLabel": 2,
-                            "priority": 0,
-                            "createdDate": "2026-06-03 23:00",
-                            "dueDate": "2026-07-03",
-                            "archived": false,
-                            "checklistItems": [
-                                "Setup task tracking for tutorial",
-                                "Verify the player can complete a task",
-                                "Once player has completed all tasks in list set tutorial completed"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
+                        }
+                    ]
+                },
+                {
+                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
+                    "title": "🔨 In Progress",
+                    "cards": [
                         {
                             "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
                             "title": "Task for setup",
@@ -88,10 +65,12 @@
                                 "Add Task to work job",
                                 "Add Task to pay a bill",
                                 "Add Task to sleep",
-                                "Prompt player to join league after sleep but remove close button"
+                                "Prompt player to join league after sleep but remove close button",
+                                "Add Task to do a Sunday Race"
                             ],
                             "checklistStates": [
-                                false,
+                                true,
+                                true,
                                 false,
                                 false,
                                 false,
@@ -110,13 +89,70 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "3bc4723e-533b-4361-bd07-e3b78861990a",
+                            "title": "Setup Tutorial Ui",
+                            "description": "\t\t\t",
+                            "category": "Design",
+                            "colorLabel": 10,
+                            "priority": 0,
+                            "createdDate": "2026-06-04 23:26",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Tutorial ui that shows when active",
+                                "Show create prefab that populates with data",
+                                "show 3 tasks at the time if possible with bottom task being active",
+                                "Tick of task as completed",
+                                "hide tasks 2 or more away from active task"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
+                            "title": "Add Tutorial that player can play through on new game",
+                            "description": "",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 23:00",
+                            "dueDate": "2026-07-03",
+                            "archived": false,
+                            "checklistItems": [
+                                "Setup task tracking for tutorial",
+                                "Verify the player can complete a task",
+                                "Once player has completed all tasks in list set tutorial completed"
+                            ],
+                            "checklistStates": [
+                                false,
+                                true,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
-                },
-                {
-                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
-                    "title": "🔨 In Progress",
-                    "cards": []
                 },
                 {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
@@ -569,6 +605,10 @@
         {
             "category": "Feature",
             "colorIndex": 2
+        },
+        {
+            "category": "Design",
+            "colorIndex": 10
         }
     ],
     "assignees": [

@@ -11696,6 +11696,34 @@ PrefabInstance:
       value: GameManager
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialModeActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[0].taskName
+      value: Open Calendar
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[0].taskType
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[1].taskName
+      value: Open Bulletin Task
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[0].isTaskActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[1].isTaskActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: uncompletedTutorialTasks.Array.data[0].taskName
       value: BulletinBoardTask
       objectReference: {fileID: 0}
