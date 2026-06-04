@@ -67,6 +67,49 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                            "title": "Task for setup",
+                            "description": "List of different tasks that should be on tutorial",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-04 22:36",
+                            "dueDate": "2026-06-11",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Task to open Calendar",
+                                "Add Task to open Bulletin Board",
+                                "Add Task to open Team manager ",
+                                "Add Task for player to practice race",
+                                "Add Task to Train a member of the squad",
+                                "Add Task to open bill (Make sure player does not have enough  to pay bill)",
+                                "Add Task to work job",
+                                "Add Task to pay a bill",
+                                "Add Task to sleep",
+                                "Prompt player to join league after sleep but remove close button"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -115,7 +158,7 @@
                             "priority": 0,
                             "createdDate": "2026-05-02 19:43",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Traffic is working",
                                 "Foot Turfing is working"
@@ -223,7 +266,7 @@
                             "priority": 0,
                             "createdDate": "2026-04-28 22:17",
                             "dueDate": "2026-05-05",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Add Timer",
                                 "Hide Stack btn when no btn selected or stack compeleted",
@@ -311,7 +354,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-01 22:42",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "FIgure out what is causing it to appear",
                                 "fix and stop it from appearing"
@@ -338,7 +381,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-03 00:33",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [],
                             "checklistStates": [],
                             "linkedAssetGuids": [],
