@@ -50,6 +50,14 @@ namespace Calendar
                 
                 // IMPORTANT: Pass CalendarEvents reference to each cell for tooltip functionality
                 cell.calendarEvents = calendarEvents;
+                var allEvents = calendarEvents.GetEventsOnDate(cellDate);
+                foreach (var eventOccasion in new List<DayEventType>(allEvents))
+                {
+                    if(eventOccasion.OccasionType == OccasionType.Race && LeagueController.Instance != null &&  !LeagueController.Instance.hasPlayerJoinedLeague)
+                    {
+                        cell.calendarEvents.calendarDayEvents.RemoveAll(e => e.OccasionType == OccasionType.Race);
+                    }
+                }
                 
                 // Set default styling FIRST
                 SetDefaultCellStyling(cell, i);
@@ -118,10 +126,14 @@ namespace Calendar
             // Check for tournament race events from the enhanced GetEventsOnDate method
             foreach (var eventType in allEvents)
             {
-                if (eventType.OccasionType == OccasionType.Race && eventType.playerHasTakenPart)
+                if (LeagueController.Instance != null)
                 {
-                    cell.SetEvent(eventType, currentDate, eventDate);
-                    return; // Race event found and displayed
+                    if (eventType.OccasionType == OccasionType.Race && eventType.playerHasTakenPart && LeagueController.Instance.hasPlayerJoinedLeague)
+                    {
+                        cell.SetEvent(eventType, currentDate, eventDate);
+                        Debug.Log($"Race event found on {currentDate.ToShortDateString()} for league {LeagueController.Instance.currentLeague.leagueName}");
+                        return; // Race event found and displayed
+                    }
                 }
             }
             
@@ -201,6 +213,15 @@ namespace Calendar
         private void OnEnable()
         {
             CurrentMonth();
+            CheckIfCalendarTaskIsCompleted();
+        }
+        
+        public void CheckIfCalendarTaskIsCompleted()
+        {
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CalendarTask);
+            }
         }
     }
 }

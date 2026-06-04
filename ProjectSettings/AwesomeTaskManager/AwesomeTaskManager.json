@@ -7,12 +7,152 @@
                 {
                     "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
                     "title": "📋 To Do",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
+                            "title": "Add 90 day idea ",
+                            "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 22:56",
+                            "dueDate": "2026-07-03",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Calendar event",
+                                "Add Processing final day of player money",
+                                "For now just add place holder text or image"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": false,
+                            "completed": false,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
+                            "isArchived": false
+                        }
+                    ]
                 },
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
                     "title": "🔨 In Progress",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                            "title": "Task for setup",
+                            "description": "List of different tasks that should be on tutorial",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-04 22:36",
+                            "dueDate": "2026-06-11",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Task to open Calendar",
+                                "Add Task to open Bulletin Board",
+                                "Add Task to open Team manager ",
+                                "Add Task for player to practice race",
+                                "Add Task to Train a member of the squad",
+                                "Add Task to open bill (Make sure player does not have enough  to pay bill)",
+                                "Add Task to work job",
+                                "Add Task to pay a bill",
+                                "Add Task to sleep",
+                                "Prompt player to join league after sleep but remove close button",
+                                "Add Task to do a Sunday Race"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "3bc4723e-533b-4361-bd07-e3b78861990a",
+                            "title": "Setup Tutorial Ui",
+                            "description": "\t\t\t",
+                            "category": "Design",
+                            "colorLabel": 10,
+                            "priority": 0,
+                            "createdDate": "2026-06-04 23:26",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Tutorial ui that shows when active",
+                                "Show create prefab that populates with data",
+                                "show 3 tasks at the time if possible with bottom task being active",
+                                "Tick of task as completed",
+                                "hide tasks 2 or more away from active task"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
+                            "title": "Add Tutorial that player can play through on new game",
+                            "description": "",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 23:00",
+                            "dueDate": "2026-07-03",
+                            "archived": false,
+                            "checklistItems": [
+                                "Setup task tracking for tutorial",
+                                "Verify the player can complete a task",
+                                "Once player has completed all tasks in list set tutorial completed"
+                            ],
+                            "checklistStates": [
+                                false,
+                                true,
+                                false
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        }
+                    ]
                 },
                 {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
@@ -54,7 +194,7 @@
                             "priority": 0,
                             "createdDate": "2026-05-02 19:43",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Traffic is working",
                                 "Foot Turfing is working"
@@ -162,7 +302,7 @@
                             "priority": 0,
                             "createdDate": "2026-04-28 22:17",
                             "dueDate": "2026-05-05",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Add Timer",
                                 "Hide Stack btn when no btn selected or stack compeleted",
@@ -250,7 +390,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-01 22:42",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "FIgure out what is causing it to appear",
                                 "fix and stop it from appearing"
@@ -263,6 +403,27 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "bbe06ed3-24eb-4a23-b287-a4c55471e7e4",
+                            "title": "Fixed Bug with Tooltip always showing on sundays",
+                            "description": "Now only shows the tooltip for races after yu have joined the current league",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 00:33",
+                            "dueDate": "",
+                            "archived": true,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-06-03 003259.png",
                             "showChecklist": true,
                             "completed": true,
                             "assigneeIds": [],
@@ -440,6 +601,14 @@
         {
             "category": "Bug",
             "colorIndex": 16
+        },
+        {
+            "category": "Feature",
+            "colorIndex": 2
+        },
+        {
+            "category": "Design",
+            "colorIndex": 10
         }
     ],
     "assignees": [

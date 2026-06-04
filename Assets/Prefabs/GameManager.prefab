@@ -53,17 +53,26 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isRewarded: 0
   GameStarted: 0
+  isGameOver: 0
   cameraStartPosition: {fileID: 0}
   racesTillNextAd: 3
   startSceneName: Main Menu
   mainSceneName: Garage
   sleepsTillNextAd: 3
   playerIsBusy: 0
+  playerHasBeenShownIntro: 0
+  playerHasBeenShownWarningAboutDebt: 0
   OnGameStarted:
     m_PersistentCalls:
       m_Calls: []
   totalPlayTime: 0
   SleepAudioChangesCoroutineIsActive: 0
+  uncompletedTutorialTasks:
+  - taskName: Open the Bulltin Board
+    taskDescription: Click on the board that is flashing
+    completed: 0
+  completedTutorialTasks: []
+  allTutorialTasks: 0
 --- !u!114 &1471334263890786786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -115,7 +124,11 @@ MonoBehaviour:
   team: []
   energy: 100
   coins: 50
+  maxAmountOfDebt: -400
   playerStatsView: {fileID: 0}
+  onDebtWarning:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!114 &2191016002663425716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -131,11 +144,14 @@ MonoBehaviour:
   workActivities:
   - {fileID: 11400000, guid: beb7e351b3c2fe748bbf7f531f212aec, type: 2}
   - {fileID: 11400000, guid: b7b9fcb0677f88742b3ded18b143506e, type: 2}
+  - {fileID: 11400000, guid: d808c0220f7366949a781e1bf202fc56, type: 2}
+  - {fileID: 11400000, guid: cb99f032137a27d40b80b3ad1ef51835, type: 2}
   trainingActivities:
   - {fileID: 11400000, guid: e9279e8e2fc9f444090dcfc3997eb5d7, type: 2}
   - {fileID: 11400000, guid: 0968ca18c5806804fbd76eb533e14fde, type: 2}
   - {fileID: 11400000, guid: 34efa9fa0b6a28b49b45f9a4f896c74a, type: 2}
   - {fileID: 11400000, guid: be526c7ab921c034683f47ad22960210, type: 2}
+  - {fileID: 11400000, guid: 8d9dc84a91c3cad4aba2b25dfef7e94f, type: 2}
   audioSource: {fileID: 0}
   gameTimer: 0
   gameActive: 0

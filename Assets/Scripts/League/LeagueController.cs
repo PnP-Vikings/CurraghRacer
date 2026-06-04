@@ -745,6 +745,18 @@ namespace League
 
             return $"Overall: {starRating}★ | Strength: {strengthPercentile:F0}% | Technique: {techniquePercentile:F0}% | Stamina: {staminaPercentile:F0}% | Teamwork: {teamWorkPercentile:F0}%";
         }
+        
+        
+        public bool hasPlayerJoinedLeague
+        {
+            get
+            {
+                return currentLeague != null && currentLeague.playerHasJoined;
+            }
+        }
+        
     }
+    
+   
 }
 
