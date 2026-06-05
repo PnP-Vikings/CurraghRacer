@@ -79,7 +79,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance miniGameProgression;
     public EventInstance miniGame_Win;
     public EventInstance miniGame_Over;
-   
+    public EventInstance miniGameOverDialogue;
+
     public EventInstance placeTurf;
 
     public EventInstance weightSelectionResponse;
@@ -116,6 +117,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance boxingEncouragement;
     public EventInstance boxingSuccessAfterFail;
+    
 
     private Scene activeScene;
     void Awake()
@@ -217,14 +219,17 @@ public class AudioManager : MonoBehaviour
 
                             // BOXING //
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
+        boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
+        boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
                             // MINIGAME NOTIFICATION //
         miniGame_lifeLost = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Life Lost");
         miniGameProgression = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Progression");
         miniGame_Win = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Win");
         miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
+        miniGameOverDialogue = RuntimeManager.CreateInstance("event:/Notifications/Mini Game Over Dialogue");
 
-                            // TURF //
+        // TURF //
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
                             // WEIGHTLIFTING //
@@ -260,9 +265,6 @@ public class AudioManager : MonoBehaviour
         rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");
         roadworks = RuntimeManager.CreateInstance("event:/Ambiences/Roadworks");
 
-                            // Boxing //
-        boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
-        boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

@@ -1,4 +1,5 @@
 using DG.Tweening;
+using FMOD.Studio;
 using FMODUnity;
 using System.Collections;
 using UnityEngine;
@@ -6,6 +7,7 @@ using UnityEngine;
 public class BoxingAudio : MonoBehaviour
 {
     [SerializeField] StudioEventEmitter boomBapEmitter;
+    [SerializeField] StudioEventEmitter AmbientEncouragementEmitter;
 
     public static BoxingAudio instance;
     void Awake()
@@ -25,7 +27,8 @@ public class BoxingAudio : MonoBehaviour
     public IEnumerator BoxingGameOverAudio()
     {
         boomBapEmitter.SetParameter("Boom Bap Volume", 0f, false);
-        Debug.Log("Boom Bap volume decreased - AudioDebug");
+        AmbientEncouragementEmitter.Stop();
+        //Debug.Log("Boom Bap volume decreased - AudioDebug");
 
         if(AudioManager.instance != null)
         {
@@ -34,7 +37,31 @@ public class BoxingAudio : MonoBehaviour
 
         yield return new WaitForSeconds(1.5f);
 
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.miniGameOverDialogue.start();
+        }
+
         boomBapEmitter.SetParameter("Boom Bap Volume", 1f, false);
-        Debug.Log("Boom Bap volume increased - AudioDebug");
+        //Debug.Log("Boom Bap volume increased - AudioDebug");
+    }
+
+    public IEnumerator BoxingSuccessAfterFailIEnum()
+    {
+        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
+        AudioManager.instance.boxingSuccessAfterFail.start();
+
+        yield return new WaitForSeconds(1.9f);
+
+        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
+    }
+    public IEnumerator BoxingEncouragementIEnum()
+    {
+        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
+        AudioManager.instance.boxingEncouragement.start();
+
+        yield return new WaitForSeconds(1.2f);
+
+        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
     }
 }
