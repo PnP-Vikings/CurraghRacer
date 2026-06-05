@@ -1,10 +1,12 @@
 using FMODUnity;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MiniGameAudio : MonoBehaviour
 {
     public static MiniGameAudio instance;
+
     void Awake()
     {
         // Singleton pattern to ensure only one instance of MiniGameAudio exists

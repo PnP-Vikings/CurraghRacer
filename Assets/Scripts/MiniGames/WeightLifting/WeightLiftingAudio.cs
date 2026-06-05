@@ -13,21 +13,39 @@ public class WeightLiftingAudio : MonoBehaviour
 
     private PLAYBACK_STATE weightSelectionResponsePlaybackState;
 
-    public void StartPowerMeterAudio()
+    public void StartLiftPhaseAudio()
     {
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PowerMeter.start();
+            AudioManager.instance.liftPhaseEncouragement.start();
             //AudioManager.instance.PowerMeter.setParameterByName("Power Meter Pitch", 1f);
             //Debug.Log("Power Meter sound");
         }
     }
 
-    public void StopPowerMeterAudio()
+    public void StopLiftPhaseAudio()
     {
         if (AudioManager.instance != null)
         {
             AudioManager.instance.PowerMeter.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.liftPhaseEncouragement.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
+    }
+
+    public void StartHoldPhaseAudio()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.holdPhaseEncouragement.start();
+        }
+    }
+
+    public void StopHoldPhaseAudio()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.holdPhaseEncouragement.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
 

@@ -91,6 +91,10 @@ public class AudioManager : MonoBehaviour
     public EventInstance weightliftingPhaseFailedDialogue;
     public EventInstance inTheGreenDialogue;
     public EventInstance cementBag;
+    public EventInstance weightliftingRoundEndDialogue;
+    public EventInstance aWarmUp;
+    public EventInstance liftPhaseEncouragement;
+    public EventInstance holdPhaseEncouragement;
 
     public EventInstance running;
     public EventInstance jump;
@@ -117,6 +121,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance boxingEncouragement;
     public EventInstance boxingSuccessAfterFail;
+
     
 
     private Scene activeScene;
@@ -229,7 +234,7 @@ public class AudioManager : MonoBehaviour
         miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
         miniGameOverDialogue = RuntimeManager.CreateInstance("event:/Notifications/Mini Game Over Dialogue");
 
-        // TURF //
+                            // TURF //
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
 
                             // WEIGHTLIFTING //
@@ -242,6 +247,11 @@ public class AudioManager : MonoBehaviour
         inTheGreenDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/In The Green Dialogue");
         cementBag = RuntimeManager.CreateInstance("event:/Weight Lifting/Cement Bag");
         PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter Moving");
+        aWarmUp = RuntimeManager.CreateInstance("event:/Weight Lifting/A warm-up");
+        weightliftingRoundEndDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/Weightlifting Round End");
+        liftPhaseEncouragement = RuntimeManager.CreateInstance("event:/Weight Lifting/Lifting phase encouragement");
+        holdPhaseEncouragement = RuntimeManager.CreateInstance("event:/Weight Lifting/Hold phase encouragement");
+
 
                             // FOOT RACE //
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
