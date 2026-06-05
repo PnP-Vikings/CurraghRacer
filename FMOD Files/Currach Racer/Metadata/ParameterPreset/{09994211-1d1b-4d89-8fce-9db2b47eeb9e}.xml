@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{09994211-1d1b-4d89-8fce-9db2b47eeb9e}">
+		<property name="name">
+			<value>Ambient Boxing Encouragement Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{173b797b-b819-4d92-8829-b0744208b8f7}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{173b797b-b819-4d92-8829-b0744208b8f7}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>2.7999999523162842</value>
+		</property>
+	</object>
+</objects>

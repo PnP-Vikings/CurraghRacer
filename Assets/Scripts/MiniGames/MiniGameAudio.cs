@@ -45,6 +45,8 @@ public class MiniGameAudio : MonoBehaviour
             AudioManager.instance.crashIntoFence.start();
             yield return new WaitForSeconds(0.7f);
             AudioManager.instance.miniGame_Over.start();
+            yield return new WaitForSeconds(1.5f);
+            AudioManager.instance.miniGameOverDialogue.start();
             //Debug.Log("Foot Race ended");
         }
     }

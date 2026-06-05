@@ -139,7 +139,7 @@ public class MinigameCanvasUI : MonoBehaviour
 
                 if (lives == 1 & activeScene.name == "BoxingMiniGameScene")
                 {
-                    AudioManager.instance.boxingEncouragement.start();
+                    StartCoroutine(BoxingAudio.instance.BoxingEncouragementIEnum());
                 }
             }
         }
