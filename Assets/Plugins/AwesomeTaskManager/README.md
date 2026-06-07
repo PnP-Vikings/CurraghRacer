@@ -28,7 +28,9 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
   - 🎨 **17 color labels** — expanded palette including Grey, Green, Blue, Yellow, Orange, Red, Purple, Teal, Pink, Lime, Indigo, Cyan, Amber, Deep Orange, Deep Purple, Blue Grey, and Brown
   - 🔥 **Priority levels** — None, Low, Medium, High, Urgent (with emoji indicators)
   - 📅 **Smart due dates** — quick-set buttons (Today, +1d, +3d, +1w, +2w, +1m), overdue/due-today/due-soon alerts with color-coded indicators right on the card
-  - ☑ **Checklists** with progress tracking — inline checklist visible on the board with per-card **▾/▸ toggle** to show/hide tasks, plus toolbar **Show All / Hide All** buttons
+  - ☑ **Checklists** with progress tracking — reorderable items (▲/▼) visible on the board with per-card **▾/▸ toggle** to show/hide tasks, plus toolbar **Show All / Hide All** buttons
+  - 🌳 **Subtask Hierarchy** — link cards directly to checklist items; completion status synchronizes automatically between parent and child tasks
+- 💡 **Interactive Highlighting** — click the 🌳 (Master) or 🌿 (Subtask) icons to instantly highlight all related cards across the board
   - 📦 Archive cards to declutter with visual markers and quick toggle
 - **Drag & drop** cards between columns with Trello-style ghost card visual
 - **Reorder** cards within columns (▲/▼)
@@ -178,11 +180,20 @@ Assets/Plugins/AwesomeTaskManager/
 - **URL Confirmation** — Clicking a linked URL now shows a confirmation dialog before opening your web browser, preventing accidental exits from Unity.
 - **Note Popup Preview** — You can now toggle between Edit and Preview modes even in standalone note windows. It also supports image pasting (Ctrl+V) and drag-and-drop just like the main window.
 - **Board Templates** — Use the "Board Options" dropdown to save your current board layout as a template. You can choose to include existing cards or just the column structure.
+- **Subtask Highlighting** — If a card is both a master and a subtask, it will show both 🌳 and 🌿 icons. Click 🌳 to see its children, or 🌿 to see its parents.
 - **Transfer Cards** — Use the ⋮ menu on a card to "Copy to Board >" and select any other board for an instant transfer.
 
 ---
 
 ## 📄 Changelog
+
+### v1.6.0
+
+- **Added** 🌳 **Subtask Hierarchy** — link task cards directly to checklist items to create multi-level parent-child relationships.
+- **Added** 🔄 **Automatic Completion Sync** — checking off a linked subtask card automatically updates the corresponding checklist item on the parent card, and vice-versa.
+- **Added** ↕ **Checklist Reordering** — added ▲/▼ buttons to checklist items in the card detail window for custom task sorting.
+- **Added** 💡 **Interactive Relationship Highlighting** — cards now feature 🌳 (Master) and 🌿 (Subtask) icons that, when clicked, highlight all related tasks across the board.
+- **Improved** 🛡 **Data Integrity** — implemented a robust "Load-Merge-Save" pattern and enhanced multi-window notification logic to ensure perfect data synchronization even during Play Mode transitions.
 
 ### v1.5.3
 

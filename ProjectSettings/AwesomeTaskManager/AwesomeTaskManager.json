@@ -28,6 +28,11 @@
                                 false,
                                 false
                             ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
@@ -47,7 +52,7 @@
                     "cards": [
                         {
                             "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
-                            "title": "Task for setup",
+                            "title": "Tasks for setup",
                             "description": "List of different tasks that should be on tutorial",
                             "category": "Feature",
                             "colorLabel": 2,
@@ -80,6 +85,19 @@
                                 false,
                                 false,
                                 false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
@@ -114,6 +132,13 @@
                                 false,
                                 false
                             ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
@@ -134,14 +159,22 @@
                             "dueDate": "2026-07-03",
                             "archived": false,
                             "checklistItems": [
-                                "Setup task tracking for tutorial",
                                 "Verify the player can complete a task",
-                                "Once player has completed all tasks in list set tutorial completed"
+                                "Once player has completed all tasks in list set tutorial completed",
+                                "Setup task tracking for tutorial",
+                                "Setup Ui Task Tracking"
                             ],
                             "checklistStates": [
-                                false,
                                 true,
+                                false,
+                                false,
                                 false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                                "3bc4723e-533b-4361-bd07-e3b78861990a"
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
@@ -176,6 +209,10 @@
                                 true,
                                 true
                             ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
@@ -202,6 +239,10 @@
                             "checklistStates": [
                                 true,
                                 true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
@@ -317,6 +358,13 @@
                                 true,
                                 true
                             ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [
@@ -399,6 +447,10 @@
                                 true,
                                 true
                             ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
@@ -420,6 +472,7 @@
                             "archived": true,
                             "checklistItems": [],
                             "checklistStates": [],
+                            "checklistLinkedCardIds": [],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
@@ -447,6 +500,7 @@
                             "archived": false,
                             "checklistItems": [],
                             "checklistStates": [],
+                            "checklistLinkedCardIds": [],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],

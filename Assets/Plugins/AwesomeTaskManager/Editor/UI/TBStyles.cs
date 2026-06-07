@@ -173,7 +173,7 @@ namespace AwesomeTaskManager.UI
 
         // ── Reusable styles (lazy init) ──
 
-        private static GUIStyle _boardHeader, _columnHeader, _cardBox, _cardTitle,
+        private static GUIStyle _boardHeader, _columnHeader, _cardBox, _cardBoxHighlighted, _cardTitle,
                                 _addButton, _tabActive, _tabInactive, _noteBox, _noteBoxSelected,
                                 _noteTitle, _sectionLabel, _searchField, _iconButton, _linkStyle, _assigneeCircle;
 
@@ -223,6 +223,23 @@ namespace AwesomeTaskManager.UI
                     };
                 }
                 return _cardBox;
+            }
+        }
+
+        public static GUIStyle CardBoxHighlighted
+        {
+            get
+            {
+                if (_cardBoxHighlighted == null)
+                {
+                    _cardBoxHighlighted = new GUIStyle(CardBox)
+                    {
+                        normal = { background = GetColorTex(EditorGUIUtility.isProSkin
+                            ? new Color(0.15f, 0.32f, 0.55f)
+                            : new Color(0.55f, 0.72f, 0.95f)) }
+                    };
+                }
+                return _cardBoxHighlighted;
             }
         }
 

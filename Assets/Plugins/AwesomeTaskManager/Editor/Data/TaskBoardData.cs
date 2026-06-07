@@ -62,6 +62,7 @@ namespace AwesomeTaskManager.Data
         public bool archived;
         public List<string> checklistItems  = new List<string>();
         public List<bool>   checklistStates = new List<bool>();
+        public List<string> checklistLinkedCardIds = new List<string>();
         public List<string> linkedAssetGuids = new List<string>();
         public List<SceneObjectReference> linkedSceneObjects = new List<SceneObjectReference>();
         public List<LinkedItem> linkedItems = new List<LinkedItem>();
@@ -302,6 +303,59 @@ namespace AwesomeTaskManager.Data
             }
         }
 
+        public void SyncLinkedChecklistItems(string subtaskCardId, bool isCompleted)
+        {
+            if (string.IsNullOrEmpty(subtaskCardId)) return;
+            
+            foreach (var card in AllCards())
+            {
+                if (card.checklistLinkedCardIds == null) continue;
+                for (int i = 0; i < card.checklistLinkedCardIds.Count; i++)
+                {
+                    if (card.checklistLinkedCardIds[i] == subtaskCardId)
+                    {
+                        if (i < card.checklistStates.Count)
+                        {
+                            card.checklistStates[i] = isCompleted;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CleanupReferencesToCard(string cardId)
+        {
+            if (string.IsNullOrEmpty(cardId)) return;
+            foreach (var card in AllCards())
+            {
+                if (card.checklistLinkedCardIds == null) continue;
+                for (int i = 0; i < card.checklistLinkedCardIds.Count; i++)
+                {
+                    if (card.checklistLinkedCardIds[i] == cardId)
+                    {
+                        card.checklistLinkedCardIds[i] = string.Empty;
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<TaskCard> AllCards()
+        {
+            if (boards == null) yield break;
+            foreach (var board in boards)
+            {
+                if (board.columns == null) continue;
+                foreach (var column in board.columns)
+                {
+                    if (column.cards == null) continue;
+                    foreach (var card in column.cards)
+                    {
+                        yield return card;
+                    }
+                }
+            }
+        }
+
         public void Normalize()
         {
             categories ??= new List<string>();
@@ -330,6 +384,16 @@ namespace AwesomeTaskManager.Data
                     column.cards.RemoveAll(IsStrayBlankCard);
                     foreach (var card in column.cards)
                     {
+                        card.checklistItems ??= new List<string>();
+                        card.checklistStates ??= new List<bool>();
+                        card.checklistLinkedCardIds ??= new List<string>();
+
+                        while (card.checklistStates.Count < card.checklistItems.Count) card.checklistStates.Add(false);
+                        while (card.checklistLinkedCardIds.Count < card.checklistItems.Count) card.checklistLinkedCardIds.Add(string.Empty);
+
+                        if (card.checklistStates.Count > card.checklistItems.Count) card.checklistStates.RemoveRange(card.checklistItems.Count, card.checklistStates.Count - card.checklistItems.Count);
+                        if (card.checklistLinkedCardIds.Count > card.checklistItems.Count) card.checklistLinkedCardIds.RemoveRange(card.checklistItems.Count, card.checklistLinkedCardIds.Count - card.checklistItems.Count);
+
                         card.linkedAssetGuids ??= new List<string>();
                         card.linkedSceneObjects ??= new List<SceneObjectReference>();
                         card.linkedItems ??= new List<LinkedItem>();

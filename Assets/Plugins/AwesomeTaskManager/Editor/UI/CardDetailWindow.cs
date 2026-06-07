@@ -91,6 +91,24 @@ namespace AwesomeTaskManager.Editor
         public void LoadData()
         {
             _saveData = Persistence.Load();
+            
+            // Update _originalCard reference in case it became stale after a global reload
+            if (_card != null)
+            {
+                foreach(var board in _saveData.boards)
+                {
+                    foreach(var col in board.columns)
+                    {
+                        var found = col.cards.FirstOrDefault(c => c.id == _card.id);
+                        if (found != null)
+                        {
+                            _originalCard = found;
+                            break;
+                        }
+                    }
+                }
+            }
+
             Repaint();
         }
 
@@ -292,6 +310,7 @@ namespace AwesomeTaskManager.Editor
                 if (GUILayout.Button(_card.completed ? "Mark Incomplete" : "Mark Complete", GUILayout.Height(22)))
                 {
                     _card.completed = !_card.completed;
+                    if (_saveData != null) _saveData.SyncLinkedChecklistItems(_card.id, _card.completed);
                     _dirty = true;
                 }
                 GUI.backgroundColor = Color.white;
@@ -410,17 +429,92 @@ namespace AwesomeTaskManager.Editor
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     bool done = EditorGUILayout.Toggle(_card.checklistStates[i], GUILayout.Width(20));
-                    if (done != _card.checklistStates[i]) { _card.checklistStates[i] = done; MarkDirty(); }
+                    if (done != _card.checklistStates[i]) 
+                    { 
+                        _card.checklistStates[i] = done; 
+                        MarkDirty(); 
+                        
+                        // Reverse sync: if this checklist item is linked to a card, update that card's completion status
+                        if (i < _card.checklistLinkedCardIds.Count && !string.IsNullOrEmpty(_card.checklistLinkedCardIds[i]))
+                        {
+                            var subId = _card.checklistLinkedCardIds[i];
+                            var subCard = _saveData.AllCards().FirstOrDefault(c => c.id == subId);
+                            if (subCard != null && subCard.completed != done)
+                            {
+                                subCard.completed = done;
+                                _saveData.SyncLinkedChecklistItems(subId, done);
+                            }
+                        }
+                    }
 
                     var style = new GUIStyle(EditorStyles.textField);
                     if (done) style.fontStyle = FontStyle.Italic;
                     string itemText = EditorGUILayout.TextField(_card.checklistItems[i], style);
                     if (itemText != _card.checklistItems[i]) { _card.checklistItems[i] = itemText; MarkDirty(); }
 
+                    // Linked card indicator/picker
+                    string linkedCardId = _card.checklistLinkedCardIds[i];
+                    string linkToolTip = "Link to another card as a subtask";
+                    string linkLabel = "🌿";
+                    
+                    if (!string.IsNullOrEmpty(linkedCardId))
+                    {
+                        var linkedCard = _saveData.AllCards().FirstOrDefault(c => c.id == linkedCardId);
+                        if (linkedCard != null)
+                        {
+                            linkLabel = "🌿 " + TBStyles.TruncateString(linkedCard.title, 15);
+                            linkToolTip = $"Linked to: {linkedCard.title}\nClick to change or remove link.";
+                        }
+                        else
+                        {
+                            _card.checklistLinkedCardIds[i] = string.Empty; // clean up broken link
+                        }
+                    }
+
+                    if (GUILayout.Button(new GUIContent(linkLabel, linkToolTip), EditorStyles.miniButton, GUILayout.Width(string.IsNullOrEmpty(linkedCardId) ? 26 : 100)))
+                    {
+                        ShowCardPickerMenu(i);
+                    }
+
+                    EditorGUI.BeginDisabledGroup(i == 0);
+                    if (GUILayout.Button(new GUIContent("▲", "Move Up"), TBStyles.IconButton))
+                    {
+                        var item = _card.checklistItems[i];
+                        var state = _card.checklistStates[i];
+                        var linkedId = _card.checklistLinkedCardIds[i];
+                        _card.checklistItems.RemoveAt(i);
+                        _card.checklistStates.RemoveAt(i);
+                        _card.checklistLinkedCardIds.RemoveAt(i);
+                        _card.checklistItems.Insert(i - 1, item);
+                        _card.checklistStates.Insert(i - 1, state);
+                        _card.checklistLinkedCardIds.Insert(i - 1, linkedId);
+                        MarkDirty();
+                        GUIUtility.ExitGUI();
+                    }
+                    EditorGUI.EndDisabledGroup();
+
+                    EditorGUI.BeginDisabledGroup(i == _card.checklistItems.Count - 1);
+                    if (GUILayout.Button(new GUIContent("▼", "Move Down"), TBStyles.IconButton))
+                    {
+                        var item = _card.checklistItems[i];
+                        var state = _card.checklistStates[i];
+                        var linkedId = _card.checklistLinkedCardIds[i];
+                        _card.checklistItems.RemoveAt(i);
+                        _card.checklistStates.RemoveAt(i);
+                        _card.checklistLinkedCardIds.RemoveAt(i);
+                        _card.checklistItems.Insert(i + 1, item);
+                        _card.checklistStates.Insert(i + 1, state);
+                        _card.checklistLinkedCardIds.Insert(i + 1, linkedId);
+                        MarkDirty();
+                        GUIUtility.ExitGUI();
+                    }
+                    EditorGUI.EndDisabledGroup();
+
                     if (GUILayout.Button(new GUIContent("✕","Remove Checklist Item"), TBStyles.IconButton))
                     {
                         _card.checklistItems.RemoveAt(i);
                         _card.checklistStates.RemoveAt(i);
+                        _card.checklistLinkedCardIds.RemoveAt(i);
                         MarkDirty();
                         GUIUtility.ExitGUI();
                     }
@@ -447,6 +541,7 @@ namespace AwesomeTaskManager.Editor
                 {
                     _card.checklistItems.Add(_newChecklistItem.Trim());
                     _card.checklistStates.Add(false);
+                    _card.checklistLinkedCardIds.Add(string.Empty);
                     _newChecklistItem = "";
                     MarkDirty();
                     if (enterPressed)
@@ -907,41 +1002,29 @@ namespace AwesomeTaskManager.Editor
             {
                 if (_dirty && _originalCard != null)
                 {
+                    // Ensure we are saving into the absolute latest version of the data from disk
+                    LoadData();
+                    if (_originalCard == null)
+                    {
+                        // Card was likely deleted by someone else
+                        EditorUtility.DisplayDialog("Error", "The card you are trying to save no longer exists on disk.", "OK");
+                        Close();
+                        return;
+                    }
+
                     string json = JsonUtility.ToJson(_card);
                     JsonUtility.FromJsonOverwrite(json, _originalCard);
                     
+                    // Always save before notifying others, so they reload the fresh state from disk
+                    Persistence.Save(_saveData);
+
                     if (_onChanged != null)
                     {
                         _onChanged.Invoke();
                     }
-                    else if (TaskBoardWindow.Instance != null)
-                    {
-                        TaskBoardWindow.Instance.UpdateCardFromDetail(_card);
-                    }
                     else
                     {
-                        // Fallback: load, find and update the card directly on disk
-                        var data = Persistence.Load();
-                        bool found = false;
-                        foreach (var b in data.boards)
-                        {
-                            foreach (var col in b.columns)
-                            {
-                                var existing = col.cards.FirstOrDefault(c => c.id == _card.id);
-                                if (existing != null)
-                                {
-                                    JsonUtility.FromJsonOverwrite(json, existing);
-                                    found = true;
-                                    break;
-                                }
-                            }
-                            if (found) break;
-                        }
-                        if (found) 
-                        {
-                            Persistence.Save(data);
-                            TaskBoardWindow.ReloadAllOpenWindows();
-                        }
+                        TaskBoardWindow.ReloadAllOpenWindows();
                     }
                     
                     _dirty = false;
@@ -1105,6 +1188,41 @@ namespace AwesomeTaskManager.Editor
                     Debug.LogWarning($"[Task Manager] Could not find scene object: {sceneRef.name}");
                 }
             }
+        }
+
+        private void ShowCardPickerMenu(int checklistIndex)
+        {
+            var menu = new GenericMenu();
+            
+            menu.AddItem(new GUIContent("None"), string.IsNullOrEmpty(_card.checklistLinkedCardIds[checklistIndex]), () => {
+                _card.checklistLinkedCardIds[checklistIndex] = string.Empty;
+                MarkDirty();
+            });
+            
+            menu.AddSeparator("");
+
+            foreach (var board in _saveData.boards)
+            {
+                foreach (var col in board.columns)
+                {
+                    foreach (var card in col.cards)
+                    {
+                        if (card.id == _card.id) continue; // Don't link to self
+
+                        string path = $"{board.name}/{col.title}/{card.title}";
+                        bool isCurrent = _card.checklistLinkedCardIds[checklistIndex] == card.id;
+                        
+                        menu.AddItem(new GUIContent(path), isCurrent, () => {
+                            _card.checklistLinkedCardIds[checklistIndex] = card.id;
+                            // Auto-sync state if the linked card is already completed
+                            _card.checklistStates[checklistIndex] = card.completed;
+                            MarkDirty();
+                        });
+                    }
+                }
+            }
+            
+            menu.ShowAsContext();
         }
     }
 }

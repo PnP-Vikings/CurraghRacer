@@ -50,6 +50,11 @@ namespace AwesomeTaskManager.Editor
         public void LoadData()
         {
             _saveData = Persistence.Load();
+            if (_note != null)
+            {
+                var found = _saveData.notes.Find(n => n.id == _note.id);
+                if (found != null) _note = found;
+            }
             Repaint();
         }
 
@@ -193,6 +198,16 @@ namespace AwesomeTaskManager.Editor
         private void MarkModified()
         {
             _note.modifiedDate = System.DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+            
+            // Reload to ensure we merge into the latest version of everything else
+            var freshData = Persistence.Load();
+            var existing = freshData.notes.Find(n => n.id == _note.id);
+            if (existing != null)
+            {
+                // Push our note into freshData
+                JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(_note), existing);
+                _saveData = freshData;
+            }
             
             if (_saveData != null) Persistence.Save(_saveData);
 

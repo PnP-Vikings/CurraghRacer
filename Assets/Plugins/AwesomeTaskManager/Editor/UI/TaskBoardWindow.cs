@@ -17,18 +17,18 @@ namespace AwesomeTaskManager.Editor
     {
         public static TaskBoardWindow Instance { get; private set; }
 
-        private SaveData _data;
-        private int _tab;
-        private int _boardIndex;
+        [SerializeField] private SaveData _data;
+        [SerializeField] private int _tab;
+        [SerializeField] private int _boardIndex;
 
         // GIF cache state
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
-        private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll;
-        private string _searchFilter = "";
-        private string _categoryFilter = "";
-        private string _assigneeFilter = ""; // New filter
-        private int _priorityFilter = 0; // 0 = All
+        [SerializeField] private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll;
+        [SerializeField] private string _searchFilter = "";
+        [SerializeField] private string _categoryFilter = "";
+        [SerializeField] private string _assigneeFilter = ""; // New filter
+        [SerializeField] private int _priorityFilter = 0; // 0 = All
         private string _newColumnTitle = "";
         private bool _showAddColumn;
         private string _renameBoardName = "";
@@ -71,6 +71,12 @@ namespace AwesomeTaskManager.Editor
         private string _errorNotificationMessage = "";
         private double _errorNotificationEndTime = 0;
         private bool _showArchived = false;
+        private string _linkHighlightCardId;
+        private enum LinkHighlightMode { None, Children, Parents }
+        private LinkHighlightMode _linkHighlightMode = LinkHighlightMode.None;
+        private Dictionary<string, List<string>> _parentToChildren = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> _childToParents = new Dictionary<string, List<string>>();
+        private Dictionary<string, string> _cardTitles = new Dictionary<string, string>();
 
         // ── Menu ──
         [MenuItem("Tools/Awesome Task Manager/Open Board %#t", false, 0)]
@@ -98,9 +104,15 @@ namespace AwesomeTaskManager.Editor
 
                 CardDetailWindow.ShowNew(data, board.id, board.columns[0].id, (newCard) =>
                 {
-                    if (board.columns.Count > 0)
-                        board.columns[0].cards.Add(newCard);
-                    Persistence.Save(data);
+                    // Fresh load to ensure we don't overwrite other recent changes
+                    var latest = Persistence.Load();
+                    var b = latest.boards.Find(x => x.id == board.id);
+                    if (b != null && b.columns.Count > 0)
+                    {
+                        b.columns[0].cards.Add(newCard);
+                        Persistence.Save(latest);
+                        ReloadAllOpenWindows();
+                    }
                 });
             }
         }
@@ -119,9 +131,9 @@ namespace AwesomeTaskManager.Editor
                 var n = new QuickNote { title = "New Note" };
                 data.notes.Insert(0, n);
                 Persistence.Save(data);
+                ReloadAllOpenWindows();
                 NotePopupWindow.Open(n, data, () => {
-                    Persistence.Save(data);
-                    if (Instance != null) Instance.LoadData();
+                    ReloadAllOpenWindows();
                 });
             }
         }
@@ -141,11 +153,7 @@ namespace AwesomeTaskManager.Editor
 
             CardDetailWindow.ShowNew(_data, board.id, board.columns[0].id, (newCard) =>
             {
-                // Add to the first column by default if we use the shortcut
-                if (board.columns.Count > 0)
-                    board.columns[0].cards.Add(newCard);
-                Save();
-                Repaint();
+                AddCardFromDetail(board.id, board.columns[0].id, newCard);
             });
             if (focus) Focus();
         }
@@ -174,8 +182,12 @@ namespace AwesomeTaskManager.Editor
         private void OnEnable()
         {
             Instance = this;
-            _data = Persistence.Load();
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+            }
             ClampBoard();
+            RefreshLinkCache();
         }
 
         private void OnDisable() 
@@ -188,6 +200,7 @@ namespace AwesomeTaskManager.Editor
         {
             _data = Persistence.Load();
             ClampBoard();
+            RefreshLinkCache();
             
             // Also notify any open sub-windows to reload their data from disk
             NotifySubWindowsToReload();
@@ -229,10 +242,12 @@ namespace AwesomeTaskManager.Editor
             if (_data == null) return;
             _data.lastBoardIndex = _boardIndex;
             Persistence.Save(_data);
+            ReloadAllOpenWindows();
         }
 
         public void AddCardFromDetail(string boardId, string columnId, TaskCard card)
         {
+            LoadData(); // Fresh load to ensure we don't overwrite other recent changes
             if (_data == null) return;
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
@@ -242,35 +257,18 @@ namespace AwesomeTaskManager.Editor
                 {
                     col.cards.Add(card);
                     Save();
-                    ReloadAllOpenWindows();
                 }
             }
         }
 
         public void UpdateCardFromDetail(TaskCard updatedCard)
         {
-            if (_data == null) return;
-            foreach (var b in _data.boards)
-            {
-                foreach (var col in b.columns)
-                {
-                    var existing = col.cards.FirstOrDefault(c => c.id == updatedCard.id);
-                    if (existing != null)
-                    {
-                        string json = JsonUtility.ToJson(updatedCard);
-                        JsonUtility.FromJsonOverwrite(json, existing);
-                        Save();
-                        ReloadAllOpenWindows();
-                        return;
-                    }
-                }
-            }
-            // If not found in memory, it might be a new card that was saved to disk by the detail window directly
-            LoadData();
+            ReloadAllOpenWindows(); // Reload everything from disk and notify all windows
         }
 
         public void DeleteCardFromDetail(string boardId, string columnId, string cardId)
         {
+            LoadData(); // Fresh load to ensure we don't overwrite other recent changes
             if (_data == null) return;
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
@@ -278,8 +276,15 @@ namespace AwesomeTaskManager.Editor
                 var col = board.columns.FirstOrDefault(c => c.id == columnId);
                 if (col != null)
                 {
+                    _data.CleanupReferencesToCard(cardId);
                     col.cards.RemoveAll(c => c.id == cardId);
+                    if (_linkHighlightCardId == cardId)
+                    {
+                        _linkHighlightCardId = null;
+                        _linkHighlightMode = LinkHighlightMode.None;
+                    }
                     Save();
+                    RefreshLinkCache();
                     ReloadAllOpenWindows();
                 }
             }
@@ -296,6 +301,39 @@ namespace AwesomeTaskManager.Editor
             if (_data.noteFolders == null)
                 _data.noteFolders = new List<NoteFolder>();
             _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, _data.boards.Count - 1);
+        }
+
+        private void RefreshLinkCache()
+        {
+            _parentToChildren.Clear();
+            _childToParents.Clear();
+            _cardTitles.Clear();
+            if (_data == null) return;
+
+            foreach (var card in _data.AllCards())
+            {
+                _cardTitles[card.id] = card.title;
+                if (card.checklistLinkedCardIds == null || card.checklistLinkedCardIds.Count == 0) continue;
+
+                foreach (var childId in card.checklistLinkedCardIds)
+                {
+                    if (string.IsNullOrEmpty(childId)) continue;
+
+                    if (!_parentToChildren.TryGetValue(card.id, out var children))
+                    {
+                        children = new List<string>();
+                        _parentToChildren[card.id] = children;
+                    }
+                    if (!children.Contains(childId)) children.Add(childId);
+
+                    if (!_childToParents.TryGetValue(childId, out var parents))
+                    {
+                        parents = new List<string>();
+                        _childToParents[childId] = parents;
+                    }
+                    if (!parents.Contains(card.id)) parents.Add(card.id);
+                }
+            }
         }
 
         private TaskBoard Board => _data.boards[_boardIndex];
@@ -421,14 +459,20 @@ namespace AwesomeTaskManager.Editor
                 }
                 if (_data.boards.Count > 1 && GUILayout.Button(new GUIContent("✕", "Delete Board"), EditorStyles.toolbarButton, GUILayout.Width(22)))
                 {
-                    string boardName = _data.boards[_boardIndex].name;
+                    var targetBoard = _data.boards[_boardIndex];
+                    string boardName = targetBoard.name;
                     EditorApplication.delayCall += () =>
                     {
                         if (EditorUtility.DisplayDialog("Delete Board", $"Delete \"{boardName}\"?", "Delete", "Cancel"))
                         {
-                            _data.boards.RemoveAt(_boardIndex);
+                            foreach (var col in targetBoard.columns)
+                                foreach (var card in col.cards)
+                                    _data.CleanupReferencesToCard(card.id);
+                            
+                            _data.boards.Remove(targetBoard);
                             _boardIndex = Mathf.Clamp(_boardIndex, 0, _data.boards.Count - 1);
                             Save();
+                            RefreshLinkCache();
                             Repaint();
                         }
                     };
@@ -708,13 +752,25 @@ namespace AwesomeTaskManager.Editor
                             menu.AddItem(new GUIContent("Clear All Cards"), false, () =>
                             {
                                 if (EditorUtility.DisplayDialog("Clear Column", $"Remove all cards from \"{col.title}\"?", "Clear", "Cancel"))
-                                { col.cards.Clear(); Save(); Repaint(); }
+                                {
+                                    foreach(var card in col.cards) _data.CleanupReferencesToCard(card.id);
+                                    col.cards.Clear(); 
+                                    Save(); 
+                                    RefreshLinkCache();
+                                    Repaint(); 
+                                }
                             });
                             menu.AddSeparator("");
                             menu.AddItem(new GUIContent("Delete Column"), false, () =>
                             {
                                 if (EditorUtility.DisplayDialog("Delete Column", $"Delete \"{col.title}\" and all its cards?", "Delete", "Cancel"))
-                                { board.columns.RemoveAt(ci); Save(); Repaint(); }
+                                {
+                                    foreach(var card in col.cards) _data.CleanupReferencesToCard(card.id);
+                                    board.columns.RemoveAt(ci); 
+                                    Save(); 
+                                    RefreshLinkCache();
+                                    Repaint(); 
+                                }
                             });
                             menu.ShowAsContext();
                         }
@@ -753,9 +809,7 @@ namespace AwesomeTaskManager.Editor
                         string columnId = col.id;
                         CardDetailWindow.ShowNew(_data, boardId, columnId, (newCard) =>
                         {
-                            if (capturedColIdx < board.columns.Count)
-                                board.columns[capturedColIdx].cards.Add(newCard);
-                            Save(); Repaint();
+                            AddCardFromDetail(boardId, columnId, newCard);
                         });
                     }
 
@@ -776,9 +830,15 @@ namespace AwesomeTaskManager.Editor
         private void DrawCard(TaskCard card, TaskColumn col, int idx)
         {
             var labelColor = TBStyles.LabelColors[Mathf.Clamp(card.colorLabel, 0, TBStyles.LabelColors.Length - 1)];
+            
+            bool isLinkHighlighted = _linkHighlightCardId == card.id;
+            bool isChildOfHighlighted = _linkHighlightMode == LinkHighlightMode.Children && !string.IsNullOrEmpty(_linkHighlightCardId) && _parentToChildren.TryGetValue(_linkHighlightCardId, out var children) && children.Contains(card.id);
+            bool isParentOfHighlighted = _linkHighlightMode == LinkHighlightMode.Parents && !string.IsNullOrEmpty(_linkHighlightCardId) && _childToParents.TryGetValue(_linkHighlightCardId, out var parents) && parents.Contains(card.id);
+
+            bool shouldHighlight = isLinkHighlighted || isChildOfHighlighted || isParentOfHighlighted;
 
             Rect cardRect;
-            using (var cardScope = new EditorGUILayout.VerticalScope(TBStyles.CardBox))
+            using (var cardScope = new EditorGUILayout.VerticalScope(shouldHighlight ? TBStyles.CardBoxHighlighted : TBStyles.CardBox))
             {
                 cardRect = cardScope.rect;
                 if (card.colorLabel > 0)
@@ -796,10 +856,12 @@ namespace AwesomeTaskManager.Editor
                     if (GUILayout.Button(new GUIContent(compIcon,compToolTip), TBStyles.IconButton, GUILayout.Width(24), GUILayout.Height(20)))
                     {
                         card.completed = !card.completed;
+                        _data.SyncLinkedChecklistItems(card.id, card.completed);
                         Save();
                     }
                     if (card.priority > 0)
                         EditorGUILayout.LabelField(TBStyles.PriorityIcons[card.priority], GUILayout.Width(18));
+
                     var titleStyle = new GUIStyle(TBStyles.CardTitle);
                     if (card.completed)
                     {
@@ -814,78 +876,92 @@ namespace AwesomeTaskManager.Editor
                     {
                         string boardId = Board.id;
                         string columnId = col.id;
-                        CardDetailWindow.Show(card, _data, boardId, columnId, () => { Save(); Repaint(); }, () =>
+                        CardDetailWindow.Show(card, _data, boardId, columnId, () => { LoadData(); }, () =>
                         {
-                            col.cards.Remove(card); Save(); Repaint();
+                            DeleteCardFromDetail(boardId, columnId, card.id);
                         });
                     }
-                    if (GUILayout.Button(new GUIContent("⋮", "Card Options"), TBStyles.IconButton))
+                    
+                     // Card Options (⋮)
+                if (GUILayout.Button(new GUIContent("⋮", "Card Options"), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                {
+                    var menu = new GenericMenu();
+                    menu.AddItem(new GUIContent(card.archived ? "Unarchive Card" : "Archive Card"), false, () =>
                     {
-                        var menu = new GenericMenu();
-                        menu.AddItem(new GUIContent(card.archived ? "Unarchive Card" : "Archive Card"), false, () =>
+                        card.archived = !card.archived;
+                        Save();
+                        RefreshLinkCache();
+                        TriggerSuccessNotification(card.archived ? "Card archived" : "Card unarchived");
+                        Repaint();
+                    });
+                    menu.AddSeparator("");
+
+                    menu.AddItem(new GUIContent("Duplicate Card"), false, () =>
+                    {
+                        var clone = card.Clone();
+                        col.cards.Insert(idx + 1, clone);
+                        Save();
+                        RefreshLinkCache();
+                        Repaint();
+                    });
+
+                    menu.AddItem(new GUIContent("Copy Card"), false, () =>
+                    {
+                        _copiedCard = card.Clone();
+                        TriggerSuccessNotification("Card copied to clipboard");
+                    });
+
+                    if (_copiedCard != null)
+                    {
+                        menu.AddItem(new GUIContent($"Paste Card After ({TBStyles.TruncateString(_copiedCard.title, 20)})"), false, () =>
                         {
-                            card.archived = !card.archived;
+                            col.cards.Insert(idx + 1, _copiedCard.Clone());
                             Save();
-                            TriggerSuccessNotification(card.archived ? "Card archived" : "Card unarchived");
+                            RefreshLinkCache();
                             Repaint();
                         });
-                        menu.AddSeparator("");
+                    }
 
-                        menu.AddItem(new GUIContent("Duplicate Card"), false, () =>
+                    foreach (var b in _data.boards)
+                    {
+                        if (b == Board) continue;
+                        menu.AddItem(new GUIContent($"Copy to Board/{b.name}"), false, () =>
                         {
                             var clone = card.Clone();
-                            col.cards.Insert(idx + 1, clone);
-                            Save();
-                            Repaint();
-                        });
-
-                        menu.AddItem(new GUIContent("Copy Card"), false, () =>
-                        {
-                            _copiedCard = card.Clone();
-                            TriggerSuccessNotification("Card copied to clipboard");
-                        });
-
-                        if (_copiedCard != null)
-                        {
-                            menu.AddItem(new GUIContent($"Paste Card After ({TBStyles.TruncateString(_copiedCard.title, 20)})"), false, () =>
+                            if (b.columns.Count > 0)
                             {
-                                col.cards.Insert(idx + 1, _copiedCard.Clone());
+                                b.columns[0].cards.Add(clone);
                                 Save();
-                                Repaint();
-                            });
-                        }
-
-                        foreach (var b in _data.boards)
-                        {
-                            if (b == Board) continue;
-                            menu.AddItem(new GUIContent($"Copy to Board/{b.name}"), false, () =>
+                                RefreshLinkCache();
+                                TriggerSuccessNotification($"Copied to board: {b.name}");
+                            }
+                            else
                             {
-                                var clone = card.Clone();
-                                if (b.columns.Count > 0)
-                                {
-                                    b.columns[0].cards.Add(clone);
-                                    Save();
-                                    TriggerSuccessNotification($"Copied to board: {b.name}");
-                                }
-                                else
-                                {
-                                    EditorUtility.DisplayDialog("Error", "Target board has no columns.", "OK");
-                                }
-                            });
-                        }
-
-                        menu.AddSeparator("");
-                        menu.AddItem(new GUIContent("Delete Card"), false, () =>
-                        {
-                            if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{card.title}\"?", "Delete", "Cancel"))
-                            {
-                                col.cards.Remove(card);
-                                Save();
-                                Repaint();
+                                EditorUtility.DisplayDialog("Error", "Target board has no columns.", "OK");
                             }
                         });
-                        menu.ShowAsContext();
                     }
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Delete Card"), false, () =>
+                    {
+                        if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{card.title}\"?", "Delete", "Cancel"))
+                        {
+                            if (_linkHighlightCardId == card.id)
+                            {
+                                _linkHighlightCardId = null;
+                                _linkHighlightMode = LinkHighlightMode.None;
+                            }
+                            _data.CleanupReferencesToCard(card.id);
+                            col.cards.Remove(card);
+                            Save();
+                            RefreshLinkCache();
+                            Repaint();
+                        }
+                    });
+                    menu.ShowAsContext();
+                }
+
                 }
 
             if (!string.IsNullOrEmpty(card.category) || card.archived)
@@ -935,12 +1011,16 @@ namespace AwesomeTaskManager.Editor
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField(allDone ? $"✅ {done}/{card.checklistItems.Count} complete" : $"☑ {done}/{card.checklistItems.Count}", summaryStyle);
-                    string toggleLabel = card.showChecklist ? "▾" : "▸";
-                    string toggleToolTip = card.showChecklist ? "Hide Checklist" : "Show Checklist";
-                    if (GUILayout.Button(new GUIContent(toggleLabel,toggleToolTip), TBStyles.IconButton, GUILayout.Width(20), GUILayout.Height(16)))
+                    // Hide Checklist button
+                    if (card.checklistItems.Count > 0)
                     {
-                        card.showChecklist = !card.showChecklist;
-                        Save();
+                        string toggleLabel = card.showChecklist ? "▾" : "▸";
+                        string toggleToolTip = card.showChecklist ? "Hide Checklist" : "Show Checklist";
+                        if (GUILayout.Button(new GUIContent(toggleLabel, toggleToolTip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                        {
+                            card.showChecklist = !card.showChecklist;
+                            Save();
+                        }
                     }
                 }
                 
@@ -957,6 +1037,19 @@ namespace AwesomeTaskManager.Editor
                             if (nowDone != wasDone)
                             {
                                 card.checklistStates[ci] = nowDone;
+                                
+                                // Reverse sync: if this checklist item is linked to a card, update that card's completion status
+                                if (card.checklistLinkedCardIds != null && ci < card.checklistLinkedCardIds.Count && !string.IsNullOrEmpty(card.checklistLinkedCardIds[ci]))
+                                {
+                                    var subId = card.checklistLinkedCardIds[ci];
+                                    var subCard = _data.AllCards().FirstOrDefault(c => c.id == subId);
+                                    if (subCard != null && subCard.completed != nowDone)
+                                    {
+                                        subCard.completed = nowDone;
+                                        _data.SyncLinkedChecklistItems(subId, nowDone);
+                                    }
+                                }
+
                                 Save();
                             }
                             var itemStyle = new GUIStyle(EditorStyles.miniLabel);
@@ -967,6 +1060,8 @@ namespace AwesomeTaskManager.Editor
                         }
                     }
                 }
+                
+               
             }
 
             // Image thumbnail
@@ -1009,7 +1104,7 @@ namespace AwesomeTaskManager.Editor
                             string noteTitle = note != null ? note.title : "Missing Note";
                             if (GUILayout.Button(new GUIContent(noteIcon, $"[Note] {noteTitle}"), GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                             {
-                                if (note != null) NotePopupWindow.OpenInPreviewMode(note, _data, () => { Save(); Repaint(); });
+                                if (note != null) NotePopupWindow.OpenInPreviewMode(note, _data, () => { LoadData(); });
                             }
                             shown++;
                         }
@@ -1169,6 +1264,64 @@ namespace AwesomeTaskManager.Editor
                     Save(); GUIUtility.ExitGUI();
                 }
                 GUILayout.FlexibleSpace();
+
+              
+
+                // Link indicators
+                bool isParent = _parentToChildren.ContainsKey(card.id);
+                bool isChild = _childToParents.ContainsKey(card.id);
+                if (isParent)
+                {
+                    bool isThisActive = _linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Children;
+                    string tooltip = isThisActive ? "Click to deselect" : "Parent Card: Click to highlight subtasks";
+                    if (!isThisActive && _parentToChildren.TryGetValue(card.id, out var cIds))
+                    {
+                        var names = cIds.Select(cid => _cardTitles.TryGetValue(cid, out var t) ? t : "Unknown").ToArray();
+                        tooltip = "Parent Card: Click to highlight subtasks:\n• " + string.Join("\n• ", names);
+                    }
+                    
+                    if (GUILayout.Button(new GUIContent("🌳", tooltip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                    {
+                        if (_linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Children)
+                        {
+                            _linkHighlightCardId = null;
+                            _linkHighlightMode = LinkHighlightMode.None;
+                        }
+                        else
+                        {
+                            _linkHighlightCardId = card.id;
+                            _linkHighlightMode = LinkHighlightMode.Children;
+                        }
+                    }
+                }
+                if (isChild)
+                {
+                    bool isThisActive = _linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Parents;
+                    string tooltip = isThisActive ? "Click to deselect" : "Subtask: Click to highlight parent card";
+                    if (!isThisActive && _childToParents.TryGetValue(card.id, out var pIds))
+                    {
+                        var names = pIds.Select(pid => _cardTitles.TryGetValue(pid, out var t) ? t : "Unknown").ToArray();
+                        tooltip = "Subtask: Click to highlight parent card: " + string.Join(", ", names);
+                    }
+
+                    if (GUILayout.Button(new GUIContent("🌿", tooltip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                    {
+                        if (_linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Parents)
+                        {
+                            _linkHighlightCardId = null;
+                            _linkHighlightMode = LinkHighlightMode.None;
+                        }
+                        else
+                        {
+                            _linkHighlightCardId = card.id;
+                            _linkHighlightMode = LinkHighlightMode.Parents;
+                        }
+                    }
+                }
+                
+
+
+               
             }
 
             if (_cardDragging && _dragCard == card)
