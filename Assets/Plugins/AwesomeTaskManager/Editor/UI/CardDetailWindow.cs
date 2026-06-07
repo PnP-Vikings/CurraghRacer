@@ -6,6 +6,7 @@ using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace AwesomeTaskManager.Editor
 {
@@ -30,6 +31,7 @@ namespace AwesomeTaskManager.Editor
         private double _lastGifRepaintTime;
         private bool _shouldFocusTitle;
         private bool _shouldFocusChecklist;
+        [SerializeField] private bool _showArchivedInPicker;
 
         // ── Open existing card ──
         public static void Show(TaskCard card, SaveData saveData, string boardId, string columnId, System.Action onChanged, System.Action onDelete)
@@ -1192,37 +1194,214 @@ namespace AwesomeTaskManager.Editor
 
         private void ShowCardPickerMenu(int checklistIndex)
         {
-            var menu = new GenericMenu();
-            
-            menu.AddItem(new GUIContent("None"), string.IsNullOrEmpty(_card.checklistLinkedCardIds[checklistIndex]), () => {
-                _card.checklistLinkedCardIds[checklistIndex] = string.Empty;
-                MarkDirty();
-            });
-            
-            menu.AddSeparator("");
+            Rect rect = GUILayoutUtility.GetLastRect();
+            PopupWindow.Show(rect, new CardPickerPopup(_saveData, _card, checklistIndex, this));
+        }
 
-            foreach (var board in _saveData.boards)
+        private class CardPickerPopup : PopupWindowContent
+        {
+            private SaveData _saveData;
+            private TaskCard _card;
+            private int _index;
+            private CardDetailWindow _parent;
+            private Vector2 _scroll;
+            private string _search = "";
+            private string _selectedBoardId;
+            private string _selectedColumnId;
+
+            private enum SortMode { Default, Alphabetical }
+            private SortMode _sortMode = SortMode.Default;
+
+            public CardPickerPopup(SaveData saveData, TaskCard card, int index, CardDetailWindow parent)
             {
-                foreach (var col in board.columns)
-                {
-                    foreach (var card in col.cards)
-                    {
-                        if (card.id == _card.id) continue; // Don't link to self
+                _saveData = saveData;
+                _card = card;
+                _index = index;
+                _parent = parent;
+                _selectedBoardId = _parent._boardId;
 
-                        string path = $"{board.name}/{col.title}/{card.title}";
-                        bool isCurrent = _card.checklistLinkedCardIds[checklistIndex] == card.id;
-                        
-                        menu.AddItem(new GUIContent(path), isCurrent, () => {
-                            _card.checklistLinkedCardIds[checklistIndex] = card.id;
-                            // Auto-sync state if the linked card is already completed
-                            _card.checklistStates[checklistIndex] = card.completed;
-                            MarkDirty();
-                        });
+                // Safety check: if board was deleted or doesn't exist
+                if (!_saveData.boards.Any(b => b.id == _selectedBoardId))
+                {
+                    _selectedBoardId = _saveData.boards.FirstOrDefault()?.id;
+                }
+            }
+
+            public override Vector2 GetWindowSize() => new Vector2(350, 450);
+
+            public override void OnGUI(Rect rect)
+            {
+                EditorGUILayout.BeginVertical();
+                GUILayout.Space(5);
+                string taskName = (_index >= 0 && _index < _card.checklistItems.Count) ? _card.checklistItems[_index] : "Unknown Task";
+                EditorGUILayout.LabelField($"Linking {taskName} to Card", EditorStyles.boldLabel);
+                
+                _search = EditorGUILayout.TextField("🔍 Search", _search);
+
+                // Breadcrumb Address Bar
+                EditorGUILayout.BeginHorizontal(EditorStyles.toolbar);
+                if (GUILayout.Button("🏠 Boards", EditorStyles.toolbarButton, GUILayout.Width(70)))
+                {
+                    _selectedBoardId = null;
+                    _selectedColumnId = null;
+                }
+                
+                if (!string.IsNullOrEmpty(_selectedBoardId))
+                {
+                    var board = _saveData.boards.FirstOrDefault(b => b.id == _selectedBoardId);
+                    string boardName = board != null ? board.name : "Unknown Board";
+                    if (GUILayout.Button($"> {boardName}", EditorStyles.toolbarButton))
+                    {
+                        _selectedColumnId = null;
+                    }
+                }
+
+                if (!string.IsNullOrEmpty(_selectedColumnId))
+                {
+                    var board = _saveData.boards.FirstOrDefault(b => b.id == _selectedBoardId);
+                    var col = board?.columns.FirstOrDefault(c => c.id == _selectedColumnId);
+                    string colName = col != null ? col.title : "Unknown Column";
+                    GUILayout.Label($"> {colName}", EditorStyles.toolbarButton);
+                }
+                GUILayout.FlexibleSpace();
+                EditorGUILayout.EndHorizontal();
+                
+                EditorGUI.BeginChangeCheck();
+                _parent._showArchivedInPicker = EditorGUILayout.ToggleLeft("Show Archived Cards", _parent._showArchivedInPicker);
+                if (EditorGUI.EndChangeCheck())
+                {
+                    _parent.Repaint();
+                }
+
+                _sortMode = (SortMode)EditorGUILayout.EnumPopup("Sort Tasks By", _sortMode);
+
+                if (GUILayout.Button("None (Clear Link)", EditorStyles.miniButton))
+                {
+                    _card.checklistLinkedCardIds[_index] = string.Empty;
+                    _parent.MarkDirty();
+                    _parent.Repaint();
+                    editorWindow.Close();
+                }
+
+                GUILayout.Space(5);
+                _scroll = EditorGUILayout.BeginScrollView(_scroll);
+
+                GUIStyle itemStyle = new GUIStyle(EditorStyles.miniButton);
+                itemStyle.alignment = TextAnchor.MiddleLeft;
+                itemStyle.margin = new RectOffset(4, 4, 2, 2);
+
+                if (!string.IsNullOrEmpty(_search))
+                {
+                    DrawSearchResults(itemStyle);
+                }
+                else if (string.IsNullOrEmpty(_selectedBoardId))
+                {
+                    DrawBoards(itemStyle);
+                }
+                else if (string.IsNullOrEmpty(_selectedColumnId))
+                {
+                    DrawColumns(itemStyle);
+                }
+                else
+                {
+                    DrawCards(itemStyle);
+                }
+
+                EditorGUILayout.EndScrollView();
+                EditorGUILayout.EndVertical();
+            }
+
+            private void DrawSearchResults(GUIStyle itemStyle)
+            {
+                var results = new List<(TaskCard card, string path)>();
+                foreach (var board in _saveData.boards)
+                {
+                    if (!string.IsNullOrEmpty(_selectedBoardId) && board.id != _selectedBoardId) continue;
+                    foreach (var col in board.columns)
+                    {
+                        if (!string.IsNullOrEmpty(_selectedColumnId) && col.id != _selectedColumnId) continue;
+                        foreach (var card in col.cards)
+                        {
+                            if (card.id == _card.id) continue;
+                            if (card.archived && !_parent._showArchivedInPicker) continue;
+
+                            string path = $"{board.name} / {col.title} / {card.title}";
+                            if (!path.ToLower().Contains(_search.ToLower())) continue;
+
+                            results.Add((card, path));
+                        }
+                    }
+                }
+
+                if (_sortMode == SortMode.Alphabetical)
+                {
+                    results = results.OrderBy(r => r.path).ToList();
+                }
+
+                foreach (var result in results)
+                {
+                    SelectableCardButton(result.card, result.path, itemStyle);
+                }
+            }
+
+            private void DrawBoards(GUIStyle itemStyle)
+            {
+                foreach (var board in _saveData.boards)
+                {
+                    if (GUILayout.Button($"📁 {board.name}", itemStyle))
+                    {
+                        _selectedBoardId = board.id;
                     }
                 }
             }
-            
-            menu.ShowAsContext();
+
+            private void DrawColumns(GUIStyle itemStyle)
+            {
+                var board = _saveData.boards.FirstOrDefault(b => b.id == _selectedBoardId);
+                if (board == null) return;
+                foreach (var col in board.columns)
+                {
+                    if (GUILayout.Button($"📑 {col.title}", itemStyle))
+                    {
+                        _selectedColumnId = col.id;
+                    }
+                }
+            }
+
+            private void DrawCards(GUIStyle itemStyle)
+            {
+                var board = _saveData.boards.FirstOrDefault(b => b.id == _selectedBoardId);
+                var col = board?.columns.FirstOrDefault(c => c.id == _selectedColumnId);
+                if (col == null) return;
+
+                var cards = col.cards.Where(card => card.id != _card.id && (card.archived == false || _parent._showArchivedInPicker)).ToList();
+                
+                if (_sortMode == SortMode.Alphabetical)
+                {
+                    cards = cards.OrderBy(c => c.title).ToList();
+                }
+
+                foreach (var card in cards)
+                {
+                    SelectableCardButton(card, card.title, itemStyle);
+                }
+            }
+
+            private void SelectableCardButton(TaskCard card, string label, GUIStyle itemStyle)
+            {
+                bool isCurrent = _card.checklistLinkedCardIds[_index] == card.id;
+                if (isCurrent) itemStyle.fontStyle = FontStyle.Bold;
+                else itemStyle.fontStyle = FontStyle.Normal;
+
+                if (GUILayout.Button($"{(isCurrent ? "✓ " : "  ")}{label}", itemStyle))
+                {
+                    _card.checklistLinkedCardIds[_index] = card.id;
+                    _card.checklistStates[_index] = card.completed;
+                    _parent.MarkDirty();
+                    _parent.Repaint();
+                    editorWindow.Close();
+                }
+            }
         }
     }
 }
