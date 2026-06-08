@@ -68,11 +68,6 @@
 	<object class="GroupTrack" id="{f5e4d5d5-eb61-4816-ae43-1905a2662832}">
 		<relationship name="automationTracks">
 			<destination>{01f1b77f-f0ca-4b93-8290-f7bb6cc40fc9}</destination>
-			<destination>{128b4164-d392-422f-9dff-818357aea7d0}</destination>
-			<destination>{82f67551-f50b-4487-a551-ad515ecf9863}</destination>
-			<destination>{abd75b5e-39ed-475c-bb05-6519910d17ee}</destination>
-			<destination>{750004ee-58d7-4f2c-956c-2739b28400b7}</destination>
-			<destination>{d5d62638-c9ff-4314-a263-675fd8da4615}</destination>
 			<destination>{097c5b60-0af3-46df-9e31-3c46925e9566}</destination>
 		</relationship>
 		<relationship name="modules">
@@ -125,31 +120,6 @@
 	<object class="AutomationTrack" id="{01f1b77f-f0ca-4b93-8290-f7bb6cc40fc9}">
 		<relationship name="automator">
 			<destination>{90578d63-e8dc-483d-aa30-9c54a830c735}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{128b4164-d392-422f-9dff-818357aea7d0}">
-		<relationship name="automator">
-			<destination>{1940385b-c07f-467f-9671-aab65f87ae71}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{82f67551-f50b-4487-a551-ad515ecf9863}">
-		<relationship name="automator">
-			<destination>{3deed97a-f029-48a0-9a7e-bf4d9a342370}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{abd75b5e-39ed-475c-bb05-6519910d17ee}">
-		<relationship name="automator">
-			<destination>{0cbfcb66-6023-48ef-b39d-d1087e7e55ee}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{750004ee-58d7-4f2c-956c-2739b28400b7}">
-		<relationship name="automator">
-			<destination>{57e9d8df-1b36-4729-bbfa-91e6fe56b735}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{d5d62638-c9ff-4314-a263-675fd8da4615}">
-		<relationship name="automator">
-			<destination>{8c02010c-0424-4831-a9e6-c17be2b3e538}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationTrack" id="{097c5b60-0af3-46df-9e31-3c46925e9566}">
