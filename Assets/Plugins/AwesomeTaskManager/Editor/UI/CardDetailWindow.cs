@@ -5,8 +5,8 @@ using System.Linq;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
+using UnityEditor.SceneManagement;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace AwesomeTaskManager.Editor
 {
@@ -15,14 +15,14 @@ namespace AwesomeTaskManager.Editor
     {
         [SerializeField] private TaskCard _card;
         [SerializeField] private TaskCard _originalCard;
-        private System.Action _onChanged;
-        private System.Action _onDelete;
-        private System.Action<TaskCard> _onCreated;
+        private Action _onChanged;
+        private Action _onDelete;
+        private Action<TaskCard> _onCreated;
         [SerializeField] private Vector2 _scroll;
         [SerializeField] private string _newChecklistItem = "";
         [SerializeField] private bool _isNewCard;
         [SerializeField] private List<string> _categories;
-        [SerializeField] private SaveData _saveData;
+        private SaveData _saveData;
         [SerializeField] private string _newCategory = "";
         [SerializeField] private bool _dirty;
         [SerializeField] private string _boardId;
@@ -34,7 +34,7 @@ namespace AwesomeTaskManager.Editor
         [SerializeField] private bool _showArchivedInPicker;
 
         // ── Open existing card ──
-        public static void Show(TaskCard card, SaveData saveData, string boardId, string columnId, System.Action onChanged, System.Action onDelete)
+        public static void Show(TaskCard card, SaveData saveData, string boardId, string columnId, Action onChanged, Action onDelete)
         {
             var win = GetWindow<CardDetailWindow>(true, "📝 Card Details", true);
             win._originalCard = card;
@@ -56,7 +56,7 @@ namespace AwesomeTaskManager.Editor
         }
 
         // ── Open to create a NEW card ──
-        public static void ShowNew(SaveData saveData, string boardId, string columnId, System.Action<TaskCard> onCreated)
+        public static void ShowNew(SaveData saveData, string boardId, string columnId, Action<TaskCard> onCreated)
         {
             var win = GetWindow<CardDetailWindow>(true, "✨ New Card", true);
             win._card = new TaskCard("") { description = "" };
@@ -92,7 +92,10 @@ namespace AwesomeTaskManager.Editor
 
         public void LoadData()
         {
-            _saveData = Persistence.Load();
+            var freshData = Persistence.Load();
+            if (freshData == null) return;
+            _saveData = freshData;
+            _categories = _saveData.categories;
             
             // Update _originalCard reference in case it became stale after a global reload
             if (_card != null)
@@ -111,7 +114,22 @@ namespace AwesomeTaskManager.Editor
                 }
             }
 
+            RefreshVisualState();
+        }
+
+        private void OnEnable()
+        {
+            LoadData();
+        }
+
+        private void RefreshVisualState()
+        {
+            TBStyles.InvalidateCache();
             Repaint();
+            EditorApplication.delayCall += () =>
+            {
+                if (this != null) Repaint();
+            };
         }
 
         private void OnGUI()
@@ -349,7 +367,7 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 // Year / Month / Day dropdowns
-                int year = 0, month = 1, day = 1;
+                int year, month, day;
                 if (hasDueDate)
                 {
                     var d = DateTime.Parse(_card.dueDate);
@@ -644,8 +662,8 @@ namespace AwesomeTaskManager.Editor
                             foreach (var note in notesInFolder)
                             {
                                 string noteId = note.id;
-                                string title = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
-                                string fullPath = $"{folder.name}/{title}";
+                                string noteTitle = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
+                                string fullPath = $"{folder.name}/{noteTitle}";
 
                                 menu.AddItem(new GUIContent(fullPath), false, () =>
                                 {
@@ -671,9 +689,9 @@ namespace AwesomeTaskManager.Editor
                             foreach (var note in unfiledNotes)
                             {
                                 string noteId = note.id;
-                                string title = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
+                                string noteTitle = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
 
-                                menu.AddItem(new GUIContent(title), false, () =>
+                                menu.AddItem(new GUIContent(noteTitle), false, () =>
                                 {
                                     if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
                                     {
@@ -981,15 +999,18 @@ namespace AwesomeTaskManager.Editor
                     {
                         // Fallback: load and save directly if everything else failed
                         var data = Persistence.Load();
-                        var board = data.boards.FirstOrDefault(b => b.id == _boardId);
-                        if (board != null)
+                        if (data != null)
                         {
-                            var col = board.columns.FirstOrDefault(c => c.id == _columnId);
-                            if (col != null)
+                            var board = data.boards.FirstOrDefault(b => b.id == _boardId);
+                            if (board != null)
                             {
-                                col.cards.Add(_card);
-                                Persistence.Save(data);
-                                TaskBoardWindow.ReloadAllOpenWindows();
+                                var col = board.columns.FirstOrDefault(c => c.id == _columnId);
+                                if (col != null)
+                                {
+                                    col.cards.Add(_card);
+                                    Persistence.Save(data);
+                                    TaskBoardWindow.ReloadAllOpenWindows();
+                                }
                             }
                         }
                     }
@@ -1062,10 +1083,10 @@ namespace AwesomeTaskManager.Editor
             TBStyles.DrawAssigneeIcon(rect, assignee, initials, circleStyle, maskColor);
         }
 
-        private string GetInitials(string name)
+        private string GetInitials(string fullName)
         {
-            if (string.IsNullOrWhiteSpace(name)) return "?";
-            var words = name.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+            if (string.IsNullOrWhiteSpace(fullName)) return "?";
+            var words = fullName.Trim().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
             if (words.Length == 1) return words[0].Substring(0, Mathf.Min(2, words[0].Length)).ToUpper();
             return (words[0][0].ToString() + words[words.Length - 1][0].ToString()).ToUpper();
         }
@@ -1143,20 +1164,17 @@ namespace AwesomeTaskManager.Editor
         {
             if (string.IsNullOrEmpty(sceneRef.scenePath)) return;
             
-            if (UnityEditor.SceneManagement.EditorSceneManager.GetActiveScene().path != sceneRef.scenePath)
+            if (EditorSceneManager.GetActiveScene().path != sceneRef.scenePath)
             {
                 string sceneName = Path.GetFileNameWithoutExtension(sceneRef.scenePath);
             
                 if(sceneName == "")
                     sceneName = "a different scene";
-                if(UnityEditor.EditorApplication.isPlaying)
+                if (EditorApplication.isPlaying)
                 {
-                    if (!EditorUtility.DisplayDialog("Cannot open scene in play mode",
+                    EditorUtility.DisplayDialog("Cannot open scene in play mode",
                         $"This is an asset that was linked from {sceneName}. Please stop playing scene and try again.",
-                        "OK"))
-                    {
-                        return;
-                    }
+                        "OK");
                     return;
                 }
                 
@@ -1167,9 +1185,9 @@ namespace AwesomeTaskManager.Editor
                     return;
                 }
 
-                if (UnityEditor.SceneManagement.EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
+                if (EditorSceneManager.SaveCurrentModifiedScenesIfUserWantsTo())
                 {
-                    UnityEditor.SceneManagement.EditorSceneManager.OpenScene(sceneRef.scenePath);
+                    EditorSceneManager.OpenScene(sceneRef.scenePath);
                 }
                 else
                 {

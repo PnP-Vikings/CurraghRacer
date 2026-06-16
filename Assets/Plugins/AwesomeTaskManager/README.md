@@ -32,6 +32,9 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
   - 🌳 **Subtask Hierarchy** — link cards directly to checklist items; completion status synchronizes automatically between parent and child tasks
 - 💡 **Interactive Highlighting** — click the 🌳 (Master) or 🌿 (Subtask) icons to instantly highlight all related cards across the board
   - 📦 Archive cards to declutter with visual markers and quick toggle
+- **📤 Beta (Export/Import) — CSV & Excel Support** — seamlessly move boards between projects, ClickUp, or Excel. Supports both industry-standard CSV and Excel (.xlsx/.xml) formats. ClickUp-compatible headers ensure your data maps perfectly.
+- **📦 Beta (Export/Import) — Advanced JSON Portability** — move boards and cards between projects or team members using standalone JSON files (.atb/.atc) for full structure preservation.
+- **📊 Detailed ClickUp & Excel Mapping** — supports Task Names, Content, Statuses, Priorities, Assignees, Tags, Due Dates, and Checklists during CSV and Excel operations.
 - **Drag & drop** cards between columns with Trello-style ghost card visual
 - **Reorder** cards within columns (▲/▼)
 - **Card Duplication & Copy-Paste** — instantly duplicate cards or copy them across different boards to maintain consistency between workflows
@@ -68,8 +71,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **Pop-out** any note into its own floating editor window 
 - **Search** notes by title or content
 - **Word & character count** — live stats in the editor
-- **Export** individual notes or entire folders as Markdown (.md) files
-- **📥 Import** text files (.md, .txt, .rtf, .log, .csv, .json, .xml, .yaml, etc.) as notes
+- **Export** individual notes or entire folders as Markdown (.md) files via the **Beta (Export/Import)** menu.
+- **📥 Import** text files (.md, .txt, .rtf, .log, .csv, .json, .xml, .yaml, etc.) as notes using the **Beta (Export/Import)** button or menu.
 
 ### 🎞 GIF Support
 - **Built-in GIF decoder** — no external dependencies, parses animated GIFs natively
@@ -186,6 +189,46 @@ Assets/Plugins/AwesomeTaskManager/
 ---
 
 ## 📄 Changelog
+
+### v1.7 (Beta Export/Import + Import Mapping Profiles)
+
+#### Export & Import
+- **Added** 📤 **CSV & Excel Board/Column/Card Export & Import** — comprehensive ClickUp-compatible export and import for boards, columns, and individual cards in CSV and Excel (.xlsx/.xml) formats.
+- **Added** 📦 **Advanced JSON Export/Import** — native JSON formats (.atb, .atcl, .atc) moved to an 'Advanced' submenu for full data preservation.
+- **Added** 🌐 **Trello CSV Import** — full Trello export mapping (Card Name → Status, Members → Assignees, Labels → Tags, etc.) with optional custom-field priority parsing.
+- **Improved** 📂 **Organized Menu Structure** — all export and import actions grouped under a dedicated **Beta (Export or Import)** submenu.
+- **Improved** 🔄 **Unified Data Mapping** — centralized mapping system ensures consistent handling of Status, Priority, Assignees, Tags, and Checklists across all formats.
+- **Fixed** 📦 **Empty Column Round-Trip** — boards now preserve their full column structure in export placeholders, and import correctly restores empty columns even if they contained no cards.
+- **Fixed** 🔄 **Data Synchronization & Refresh** — automatic filter resets, data normalization, and forced GUI redraws after every import operation.
+- **Fixed** 📊 **Import Column Ordering** — case-insensitive column mapping and automatic sorting (To Do → In Progress → Review → Done → Archived) for ClickUp-preset imports.
+- **Fixed** 🛡 **ExitGUIException** — `ExitGUIException` is now silently swallowed inside import callbacks and no longer logged as a false CSV/Excel import error.
+
+#### Import Field Mapping UI
+- **Added** 🗺 **Interactive Import Mapping Window** — every CSV/Excel board, column, and card import now opens a field-mapping dialog before committing, letting you match any incoming column to any Task Manager field.
+- **Added** 🎛 **Preset Selector** — one-click presets (Generic, ClickUp, Trello) auto-populate the mapping for known services.
+- **Added** 💾 **Saved Import Profiles** — name and save any mapping configuration as a reusable profile, persisted in the project's task manager save file so nothing is lost between sessions.
+- **Added** ♻️ **Remember Mapping by File Pattern** — enable "Remember last mapping for matching files" and provide a wildcard pattern (e.g. `trello-export*.csv`) to automatically pre-fill the mapping next time a matching file is opened.
+- **Added** 🔬 **Header-Signature Matching** — profiles automatically detect the best match by comparing the exact set of column headers from the incoming file, even when the filename changes.
+- **Added** 📁 **Scoped Profiles** — profiles are separated by import type (Board / Column / Card) so board profiles never appear in a column import dialog and vice versa.
+- **Added** 🗂 **Built-in Default Profiles** — pre-configured, non-deletable profiles for the most common services:
+  - **AwesomeTaskManager CSV** (round-trip your own exports)
+  - **ClickUp Export**
+  - **Trello Export**
+  - **Jira Export**
+  - **Asana Export**
+  - **Monday.com Export**
+  - **Generic Spreadsheet**
+- **Added** 🖊 **Profile Rename & Update** — edit the profile name in the dialog and hit Import to update an existing profile in place.
+- **Added** 🗑 **Profile Delete** — delete any user-saved profile directly from the mapping dialog (built-in profiles are protected and cannot be deleted).
+
+#### Data Persistence & Stability
+- **Fixed** 🛡 **Critical: Boards no longer reset on project open** — `Persistence.Load()` now returns `null` for existing-but-unreadable save files instead of silently returning fresh defaults, preventing destructive overwrites.
+- **Fixed** 🔄 **Stale EditorWindow State** — all editor windows (`TaskBoardWindow`, `CardDetailWindow`, `CategoryEditorWindow`, `AssigneeManagerWindow`, `NotePopupWindow`) now store `SaveData` as a non-serialized field and always reload fresh from disk on `OnEnable`, eliminating stale in-memory state after domain reloads or Play Mode transitions.
+- **Fixed** 🎨 **Styling Loads Immediately** — colors, column order, and styling now display correctly the very first time a board opens or is imported, without needing to switch away and back. Achieved via `TBStyles.InvalidateCache()` and a deterministic post-load visual pipeline applied on every `OnEnable` and after every import.
+- **Fixed** 📋 **Column Order Preserved** — `SaveData.Normalize()` now removes null columns and cards while preserving existing list order, ensuring columns stay in the order you arranged them after save/load cycles.
+
+### v1.6.1
+- **Fixed** 🛡 **Added More Robust Checks when loading and saving** — Added more robust checks when loading and saving data to prevent potential data loss or corruption.
 
 ### v1.6.0
 

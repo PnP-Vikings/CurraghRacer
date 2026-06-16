@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AwesomeTaskManager.Editor;
 using UnityEngine;
 
 namespace AwesomeTaskManager.Data
@@ -226,6 +227,31 @@ namespace AwesomeTaskManager.Data
     }
 
     [Serializable]
+    public class ExportBoardData
+    {
+        public TaskBoard board;
+        public List<Assignee> assignees = new List<Assignee>();
+        public List<CategoryColorEntry> categoryColors = new List<CategoryColorEntry>();
+        public string version = "1.0";
+    }
+
+    [Serializable]
+    public class ExportColumnData
+    {
+        public TaskColumn column;
+        public List<Assignee> assignees = new List<Assignee>();
+        public string version = "1.0";
+    }
+
+    [Serializable]
+    public class ExportCardData
+    {
+        public TaskCard card;
+        public List<Assignee> assignees = new List<Assignee>();
+        public string version = "1.0";
+    }
+
+    [Serializable]
     public class SaveData
     {
         public List<TaskBoard> boards = new List<TaskBoard>();
@@ -235,6 +261,7 @@ namespace AwesomeTaskManager.Data
         public List<string> categories = new List<string> { "Audio", "Art", "Code", "Design", "UI", "Bug", "Feature" };
         public List<CategoryColorEntry> categoryColors = new List<CategoryColorEntry>();
         public List<Assignee> assignees = new List<Assignee>();
+        public List<ImportFieldMappingProfile> importMappingProfiles = new List<ImportFieldMappingProfile>();
         public int lastBoardIndex;
 
         public int GetCategoryColor(string category)
@@ -365,6 +392,7 @@ namespace AwesomeTaskManager.Data
             notes ??= new List<QuickNote>();
             noteFolders ??= new List<NoteFolder>();
             assignees ??= new List<Assignee>();
+            importMappingProfiles ??= new List<ImportFieldMappingProfile>();
 
             if (templates.Count == 0) AddDefaultTemplates();
 
@@ -377,10 +405,12 @@ namespace AwesomeTaskManager.Data
             foreach (var board in boards)
             {
                 board.columns ??= new List<TaskColumn>();
+                board.columns = board.columns.Where(c => c != null).ToList();
 
                 foreach (var column in board.columns)
                 {
                     column.cards ??= new List<TaskCard>();
+                    column.cards = column.cards.Where(c => c != null).ToList();
                     column.cards.RemoveAll(IsStrayBlankCard);
                     foreach (var card in column.cards)
                     {
@@ -398,6 +428,10 @@ namespace AwesomeTaskManager.Data
                         card.linkedSceneObjects ??= new List<SceneObjectReference>();
                         card.linkedItems ??= new List<LinkedItem>();
                         card.assigneeIds ??= new List<string>();
+
+                        // Sync archived and isArchived to ensure UI consistency
+                        if (card.isArchived) card.archived = true;
+                        if (card.archived) card.isArchived = true;
 
                         // Migrate old separate lists to unified linkedItems
                         if (card.linkedAssetGuids.Count > 0)
@@ -446,6 +480,15 @@ namespace AwesomeTaskManager.Data
                     note.imagePath = null;
                 }
             }
+
+            importMappingProfiles = importMappingProfiles
+                .Where(x => x != null)
+                .Select(x =>
+                {
+                    x.Normalize();
+                    return x;
+                })
+                .ToList();
 
             categoryColors = categoryColors
                 .Where(x => x != null && !string.IsNullOrWhiteSpace(x.category) && categories.Contains(x.category))

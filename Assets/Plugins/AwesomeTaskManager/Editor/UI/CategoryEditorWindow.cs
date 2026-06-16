@@ -8,7 +8,7 @@ namespace AwesomeTaskManager.Editor
 {
     public class CategoryEditorWindow : EditorWindow
     {
-        [SerializeField] private SaveData _data;
+        private SaveData _data;
         private System.Action _onChanged;
         [SerializeField] private Vector2 _scroll;
         [SerializeField] private string _newCategoryName = "";
@@ -26,8 +26,25 @@ namespace AwesomeTaskManager.Editor
 
         public void LoadData()
         {
-            _data = Persistence.Load();
+            var freshData = Persistence.Load();
+            if (freshData == null) return;
+            _data = freshData;
+            RefreshVisualState();
+        }
+
+        private void OnEnable()
+        {
+            LoadData();
+        }
+
+        private void RefreshVisualState()
+        {
+            TBStyles.InvalidateCache();
             Repaint();
+            EditorApplication.delayCall += () =>
+            {
+                if (this != null) Repaint();
+            };
         }
 
         private void OnGUI()

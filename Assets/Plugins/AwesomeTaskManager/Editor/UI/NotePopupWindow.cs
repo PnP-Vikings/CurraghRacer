@@ -1,3 +1,4 @@
+using System;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
@@ -12,14 +13,14 @@ namespace AwesomeTaskManager.Editor
     public class NotePopupWindow : EditorWindow
     {
         [SerializeField] private QuickNote _note;
-        [SerializeField] private SaveData _saveData;
-        private System.Action _onChanged;
+        private SaveData _saveData;
+        private Action _onChanged;
         [SerializeField] private Vector2 _scroll;
         [SerializeField] private bool _isPreview;
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
 
-        public static NotePopupWindow Open(QuickNote note, SaveData saveData, System.Action onChanged)
+        public static NotePopupWindow Open(QuickNote note, SaveData saveData, Action onChanged)
         {
             // Allow multiple instances (one per note)
             var win = CreateInstance<NotePopupWindow>();
@@ -32,7 +33,7 @@ namespace AwesomeTaskManager.Editor
             return win;
         }
 
-        public static NotePopupWindow OpenInPreviewMode(QuickNote note, SaveData saveData, System.Action onChanged)
+        public static NotePopupWindow OpenInPreviewMode(QuickNote note, SaveData saveData, Action onChanged)
         {
             // Allow multiple instances (one per note)
             var win = CreateInstance<NotePopupWindow>();
@@ -49,13 +50,30 @@ namespace AwesomeTaskManager.Editor
 
         public void LoadData()
         {
-            _saveData = Persistence.Load();
+            var freshData = Persistence.Load();
+            if (freshData == null) return;
+            _saveData = freshData;
             if (_note != null)
             {
                 var found = _saveData.notes.Find(n => n.id == _note.id);
                 if (found != null) _note = found;
             }
+            RefreshVisualState();
+        }
+
+        private void OnEnable()
+        {
+            LoadData();
+        }
+
+        private void RefreshVisualState()
+        {
+            TBStyles.InvalidateCache();
             Repaint();
+            EditorApplication.delayCall += () =>
+            {
+                if (this != null) Repaint();
+            };
         }
 
         private void OnGUI()
@@ -146,7 +164,7 @@ namespace AwesomeTaskManager.Editor
                     // ── Ctrl+V / Cmd+V to paste images from clipboard ──
                     if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && (Event.current.control || Event.current.command))
                     {
-                        if (MarkdownRenderer.TryPasteImageFromClipboard(_note, n => MarkModified(), Repaint))
+                        if (MarkdownRenderer.TryPasteImageFromClipboard(_note, _ => MarkModified(), Repaint))
                         {
                             GUI.FocusControl(null);
                             Event.current.Use();
@@ -154,7 +172,7 @@ namespace AwesomeTaskManager.Editor
                     }
 
                     // ── Drag and Drop images ──
-                    MarkdownRenderer.HandleNoteDragDropImages(_note, n => MarkModified(), Repaint);
+                    MarkdownRenderer.HandleNoteDragDropImages(_note, _ => MarkModified(), Repaint);
 
                     string newContent = EditorGUILayout.TextArea(_note.content, new GUIStyle(EditorStyles.textArea)
                     {
@@ -171,7 +189,7 @@ namespace AwesomeTaskManager.Editor
                 }
                 else
                 {
-                    if (MarkdownRenderer.DrawMarkdownPreview(_note, (n) => MarkModified()))
+                    if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified()))
                     {
                         _hasAnimatedGif = true;
                     }
@@ -201,6 +219,10 @@ namespace AwesomeTaskManager.Editor
             
             // Reload to ensure we merge into the latest version of everything else
             var freshData = Persistence.Load();
+            if (freshData == null)
+            {
+                return;
+            }
             var existing = freshData.notes.Find(n => n.id == _note.id);
             if (existing != null)
             {
