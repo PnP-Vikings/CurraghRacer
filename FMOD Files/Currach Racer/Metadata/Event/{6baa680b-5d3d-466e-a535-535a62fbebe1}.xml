@@ -121,7 +121,7 @@
 			<value>-11</value>
 		</property>
 		<property name="name">
-			<value>Audio 1</value>
+			<value>Lost race</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{adcd11d6-15ea-4950-8e2c-219411ff5465}</destination>
