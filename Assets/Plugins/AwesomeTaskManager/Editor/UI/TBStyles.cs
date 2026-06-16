@@ -173,9 +173,9 @@ namespace AwesomeTaskManager.UI
 
         // ── Reusable styles (lazy init) ──
 
-        private static GUIStyle _boardHeader, _columnHeader, _cardBox, _cardTitle,
+        private static GUIStyle _boardHeader, _columnHeader, _cardBox, _cardBoxHighlighted, _cardTitle,
                                 _addButton, _tabActive, _tabInactive, _noteBox, _noteBoxSelected,
-                                _noteTitle, _sectionLabel, _searchField, _iconButton, _linkStyle, _assigneeCircle;
+                                _noteTitle, _sectionLabel, _iconButton, _linkStyle, _assigneeCircle;
 
         public static GUIStyle AssigneeCircle => _assigneeCircle ??= new GUIStyle(EditorStyles.label)
         {
@@ -223,6 +223,23 @@ namespace AwesomeTaskManager.UI
                     };
                 }
                 return _cardBox;
+            }
+        }
+
+        public static GUIStyle CardBoxHighlighted
+        {
+            get
+            {
+                if (_cardBoxHighlighted == null)
+                {
+                    _cardBoxHighlighted = new GUIStyle(CardBox)
+                    {
+                        normal = { background = GetColorTex(EditorGUIUtility.isProSkin
+                            ? new Color(0.15f, 0.32f, 0.55f)
+                            : new Color(0.55f, 0.72f, 0.95f)) }
+                    };
+                }
+                return _cardBoxHighlighted;
             }
         }
 
@@ -322,6 +339,31 @@ namespace AwesomeTaskManager.UI
             if (string.IsNullOrEmpty(text) || text.Length <= maxLength)
                 return text;
             return text.Substring(0, maxLength - 3) + "...";
+        }
+
+        public static void InvalidateCache()
+        {
+            _boardHeader = null;
+            _columnHeader = null;
+            _cardBox = null;
+            _cardBoxHighlighted = null;
+            _cardTitle = null;
+            _addButton = null;
+            _tabActive = null;
+            _tabInactive = null;
+            _noteBox = null;
+            _noteBoxSelected = null;
+            _noteTitle = null;
+            _sectionLabel = null;
+            _iconButton = null;
+            _linkStyle = null;
+            _assigneeCircle = null;
+
+            _texCache.Clear();
+            _profileTexCache.Clear();
+            _circleTex = null;
+            _circleBorderTex = null;
+            _cornersMaskTex = null;
         }
 
         public static GUIStyle NoteTitle => _noteTitle ??= new GUIStyle(EditorStyles.boldLabel)

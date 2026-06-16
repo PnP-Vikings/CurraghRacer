@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
-using System.Data.SqlTypes;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Xml;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
@@ -18,17 +20,17 @@ namespace AwesomeTaskManager.Editor
         public static TaskBoardWindow Instance { get; private set; }
 
         private SaveData _data;
-        private int _tab;
-        private int _boardIndex;
+        [SerializeField] private int _tab;
+        [SerializeField] private int _boardIndex;
 
         // GIF cache state
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
-        private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll;
-        private string _searchFilter = "";
-        private string _categoryFilter = "";
-        private string _assigneeFilter = ""; // New filter
-        private int _priorityFilter = 0; // 0 = All
+        [SerializeField] private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll;
+        [SerializeField] private string _searchFilter = "";
+        [SerializeField] private string _categoryFilter = "";
+        [SerializeField] private string _assigneeFilter = ""; // New filter
+        [SerializeField] private int _priorityFilter = 0; // 0 = All
         private string _newColumnTitle = "";
         private bool _showAddColumn;
         private string _renameBoardName = "";
@@ -71,6 +73,12 @@ namespace AwesomeTaskManager.Editor
         private string _errorNotificationMessage = "";
         private double _errorNotificationEndTime = 0;
         private bool _showArchived = false;
+        private string _linkHighlightCardId;
+        private enum LinkHighlightMode { None, Children, Parents }
+        private LinkHighlightMode _linkHighlightMode = LinkHighlightMode.None;
+        private Dictionary<string, List<string>> _parentToChildren = new Dictionary<string, List<string>>();
+        private Dictionary<string, List<string>> _childToParents = new Dictionary<string, List<string>>();
+        private Dictionary<string, string> _cardTitles = new Dictionary<string, string>();
 
         // ── Menu ──
         [MenuItem("Tools/Awesome Task Manager/Open Board %#t", false, 0)]
@@ -91,6 +99,8 @@ namespace AwesomeTaskManager.Editor
             else
             {
                 var data = Persistence.Load();
+                if (data == null) return;
+
                 if (data.boards.Count == 0) data.boards.Add(new TaskBoard("My First Board"));
                 int boardIdx = Mathf.Clamp(data.lastBoardIndex, 0, data.boards.Count - 1);
                 var board = data.boards[boardIdx];
@@ -98,9 +108,17 @@ namespace AwesomeTaskManager.Editor
 
                 CardDetailWindow.ShowNew(data, board.id, board.columns[0].id, (newCard) =>
                 {
-                    if (board.columns.Count > 0)
-                        board.columns[0].cards.Add(newCard);
-                    Persistence.Save(data);
+                    // Fresh load to ensure we don't overwrite other recent changes
+                    var latest = Persistence.Load();
+                    if (latest == null) return;
+
+                    var b = latest.boards.Find(x => x.id == board.id);
+                    if (b != null && b.columns.Count > 0)
+                    {
+                        b.columns[0].cards.Add(newCard);
+                        Persistence.Save(latest);
+                        ReloadAllOpenWindows();
+                    }
                 });
             }
         }
@@ -116,19 +134,27 @@ namespace AwesomeTaskManager.Editor
             else
             {
                 var data = Persistence.Load();
+                if (data == null) return;
+
                 var n = new QuickNote { title = "New Note" };
                 data.notes.Insert(0, n);
                 Persistence.Save(data);
+                ReloadAllOpenWindows();
                 NotePopupWindow.Open(n, data, () => {
-                    Persistence.Save(data);
-                    if (Instance != null) Instance.LoadData();
+                    ReloadAllOpenWindows();
                 });
             }
         }
 
         public void CreateNewCardFromShortcut(bool focus = true)
         {
-            if (_data == null) { _data = Persistence.Load(); ClampBoard(); }
+            if (_data == null) 
+            { 
+                _data = Persistence.Load(); 
+                if (_data != null) ClampBoard(); 
+            }
+            if (_data == null) return;
+
             _tab = 0; // Switch to Board tab
             _searchFilter = ""; // Clear filters to ensure the new card is visible
             _categoryFilter = "";
@@ -141,18 +167,20 @@ namespace AwesomeTaskManager.Editor
 
             CardDetailWindow.ShowNew(_data, board.id, board.columns[0].id, (newCard) =>
             {
-                // Add to the first column by default if we use the shortcut
-                if (board.columns.Count > 0)
-                    board.columns[0].cards.Add(newCard);
-                Save();
-                Repaint();
+                AddCardFromDetail(board.id, board.columns[0].id, newCard);
             });
             if (focus) Focus();
         }
 
         public void CreateNewNoteFromShortcut(bool focus = true)
         {
-            if (_data == null) { _data = Persistence.Load(); ClampBoard(); }
+            if (_data == null) 
+            { 
+                _data = Persistence.Load(); 
+                if (_data != null) ClampBoard(); 
+            }
+            if (_data == null) return;
+
             _tab = 1; // Switch to Notes tab
             _noteSearchFilter = ""; // Clear search to ensure the new note is visible
             
@@ -174,8 +202,12 @@ namespace AwesomeTaskManager.Editor
         private void OnEnable()
         {
             Instance = this;
+            // Always refresh from disk on enable; EditorWindow serialized state can be stale.
             _data = Persistence.Load();
-            ClampBoard();
+            if (_data != null)
+            {
+                ApplyPostLoadVisualState();
+            }
         }
 
         private void OnDisable() 
@@ -186,8 +218,15 @@ namespace AwesomeTaskManager.Editor
 
         public void LoadData()
         {
-            _data = Persistence.Load();
-            ClampBoard();
+            var freshData = Persistence.Load();
+            if (freshData == null) 
+            {
+                EditorUtility.DisplayDialog("Awesome Task Manager", "Failed to load data. The save file might be corrupted.", "OK");
+                return;
+            }
+
+            _data = freshData;
+            ApplyPostLoadVisualState();
             
             // Also notify any open sub-windows to reload their data from disk
             NotifySubWindowsToReload();
@@ -195,18 +234,252 @@ namespace AwesomeTaskManager.Editor
             Repaint();
         }
 
+        private void ApplyPostLoadVisualState()
+        {
+            ClampBoard();
+            RefreshLinkCache();
+            ValidateFiltersAgainstData();
+
+            // Clear transient drag/hover state so first paint after load/import is consistent.
+            _cardDragging = false;
+            _dragCard = null;
+            _dragSourceCol = null;
+            _hoveredColumnDropId = string.Empty;
+            _hoveredFolderDropId = string.Empty;
+            _cardDropRects.Clear();
+            _columnFullRects.Clear();
+            _folderDropRects.Clear();
+
+            // Force style recreation to avoid stale GUIStyle/texture caches after reload/import.
+            TBStyles.InvalidateCache();
+
+            Repaint();
+            EditorApplication.delayCall += () =>
+            {
+                if (this != null) Repaint();
+            };
+        }
+
+        private void ValidateFiltersAgainstData()
+        {
+            if (_data == null) return;
+
+            if (!string.IsNullOrEmpty(_categoryFilter) && !_data.categories.Contains(_categoryFilter))
+                _categoryFilter = string.Empty;
+
+            if (!string.IsNullOrEmpty(_assigneeFilter) && !_data.assignees.Any(a => a.id == _assigneeFilter))
+                _assigneeFilter = string.Empty;
+
+            if (_priorityFilter < 0 || _priorityFilter > TBStyles.PriorityNames.Length)
+                _priorityFilter = 0;
+
+            if (_tab < 0 || _tab > 1)
+                _tab = 0;
+        }
+
+        private void RefreshAfterImport()
+        {
+            if (_data == null) return;
+
+            ApplyPostLoadVisualState();
+        }
+
+        private IEnumerable<ImportFieldMappingProfile> GetImportProfilesForScope(ImportMappingScope scope)
+        {
+            if (_data?.importMappingProfiles == null) yield break;
+
+            foreach (var profile in _data.importMappingProfiles)
+            {
+                if (profile != null && profile.MatchesScope(scope))
+                    yield return profile;
+            }
+        }
+
+        private IEnumerable<ImportFieldMappingProfile> GetAllImportProfilesForScope(ImportMappingScope scope)
+        {
+            foreach (var profile in ImportFieldMappingPresets.GetBuiltInProfiles(scope))
+                yield return profile;
+
+            foreach (var profile in GetImportProfilesForScope(scope))
+                yield return profile;
+        }
+
+        private static string BuildHeaderSignature(string[] headers)
+        {
+            return ImportFieldMappingPresets.BuildHeaderSignature(headers);
+        }
+
+        private ImportFieldMapping GetSuggestedImportMapping(string path, string[] headers, ImportMappingScope scope, out string suggestedProfileId)
+        {
+            suggestedProfileId = null;
+            string headerSignature = BuildHeaderSignature(headers);
+            var profiles = GetAllImportProfilesForScope(scope).ToList();
+
+            var signatureMatch = profiles
+                .Where(p => p.MatchesHeaderSignature(headerSignature))
+                .OrderByDescending(p => p.lastUsedUtcTicks)
+                .FirstOrDefault();
+
+            if (signatureMatch != null)
+            {
+                suggestedProfileId = signatureMatch.id;
+                var matchedMapping = signatureMatch.mapping.Clone();
+                matchedMapping.Normalize();
+                return matchedMapping;
+            }
+
+            var rememberedProfile = profiles
+                .Where(p => p != null && p.mapping != null && p.MatchesSourcePath(path))
+                .OrderByDescending(p => string.IsNullOrWhiteSpace(p.sourceFilePattern) ? 0 : p.sourceFilePattern.Length)
+                .ThenByDescending(p => p.lastUsedUtcTicks)
+                .FirstOrDefault();
+
+            if (rememberedProfile != null)
+            {
+                suggestedProfileId = rememberedProfile.id;
+                var rememberedMapping = rememberedProfile.mapping.Clone();
+                rememberedMapping.Normalize();
+                return rememberedMapping;
+            }
+
+            var detectedMapping = ImportFieldMappingPresets.AutoDetect(headers);
+            detectedMapping.Normalize();
+            return detectedMapping;
+        }
+
+        private bool DeleteImportProfile(string profileId)
+        {
+            if (_data == null || string.IsNullOrWhiteSpace(profileId)) return false;
+
+            if (_data.importMappingProfiles == null || _data.importMappingProfiles.Count == 0) return false;
+
+            int removed = _data.importMappingProfiles.RemoveAll(p => p != null && p.id == profileId);
+            if (removed <= 0) return false;
+
+            Save();
+            return true;
+        }
+
+        private void ApplyImportMappingPreferences(ImportFieldMappingWindowResult result, ImportMappingScope scope, string path, string[] headers)
+        {
+            if (_data == null || result?.mapping == null) return;
+
+            _data.importMappingProfiles ??= new List<ImportFieldMappingProfile>();
+            result.mapping.Normalize();
+
+            string headerSignature = BuildHeaderSignature(headers);
+            string normalizedPattern = result.rememberLastMappingForPattern
+                ? ImportFieldMappingPresets.NormalizePattern(result.sourceFilePattern)
+                : string.Empty;
+
+            ImportFieldMappingProfile selectedProfile = null;
+            if (!string.IsNullOrWhiteSpace(result.selectedProfileId))
+                selectedProfile = _data.importMappingProfiles.FirstOrDefault(p => p != null && p.id == result.selectedProfileId && p.MatchesScope(scope));
+
+            if (result.saveProfile)
+            {
+                string profileName = string.IsNullOrWhiteSpace(result.profileName)
+                    ? BuildImportProfileName(scope, path, result.mapping)
+                    : result.profileName.Trim();
+
+                var profile = selectedProfile;
+                if (profile == null)
+                {
+                    profile = _data.importMappingProfiles.FirstOrDefault(p =>
+                        p != null &&
+                        p.MatchesScope(scope) &&
+                        string.Equals(p.profileName, profileName, StringComparison.OrdinalIgnoreCase));
+                }
+
+                if (profile == null)
+                {
+                    profile = new ImportFieldMappingProfile();
+                    _data.importMappingProfiles.Add(profile);
+                }
+
+                profile.scope = scope;
+                profile.profileName = profileName;
+                profile.mapping = result.mapping.Clone();
+                profile.rememberLastMappingForPattern = result.rememberLastMappingForPattern;
+                profile.sourceFilePattern = result.rememberLastMappingForPattern ? normalizedPattern : string.Empty;
+                profile.headerSignature = headerSignature;
+                profile.lastUsedUtcTicks = DateTime.UtcNow.Ticks;
+                profile.Normalize();
+                return;
+            }
+
+            if (result.rememberLastMappingForPattern && !string.IsNullOrWhiteSpace(normalizedPattern))
+            {
+                var profile = _data.importMappingProfiles.FirstOrDefault(p =>
+                    p != null &&
+                    p.MatchesScope(scope) &&
+                    p.rememberLastMappingForPattern &&
+                    string.Equals(p.sourceFilePattern, normalizedPattern, StringComparison.OrdinalIgnoreCase));
+
+                if (profile == null)
+                {
+                    profile = new ImportFieldMappingProfile
+                    {
+                        scope = scope,
+                        profileName = BuildImportProfileName(scope, path, result.mapping)
+                    };
+                    _data.importMappingProfiles.Add(profile);
+                }
+
+                profile.scope = scope;
+                profile.mapping = result.mapping.Clone();
+                profile.rememberLastMappingForPattern = true;
+                profile.sourceFilePattern = normalizedPattern;
+                profile.headerSignature = headerSignature;
+                profile.lastUsedUtcTicks = DateTime.UtcNow.Ticks;
+                profile.Normalize();
+                return;
+            }
+
+            if (selectedProfile != null)
+            {
+                selectedProfile.lastUsedUtcTicks = DateTime.UtcNow.Ticks;
+                selectedProfile.scope = scope;
+                selectedProfile.headerSignature = headerSignature;
+                selectedProfile.Normalize();
+            }
+        }
+
+        private static string BuildImportProfileName(ImportMappingScope scope, string sourcePath, ImportFieldMapping mapping)
+        {
+            string scopeName = scope == ImportMappingScope.Board ? "Board" : scope == ImportMappingScope.Column ? "Column" : scope == ImportMappingScope.Card ? "Card" : "Import";
+
+            string fileName = Path.GetFileNameWithoutExtension(sourcePath);
+            if (!string.IsNullOrWhiteSpace(fileName))
+                return fileName.Trim() + " " + scopeName + " Mapping";
+
+            string presetName = mapping != null ? mapping.preset.ToString() : ImportMappingPreset.Generic.ToString();
+            return scopeName + " " + presetName + " Mapping";
+        }
+
         public static void ReloadAllOpenWindows()
         {
             var mainWindows = Resources.FindObjectsOfTypeAll<TaskBoardWindow>();
             if (mainWindows != null && mainWindows.Length > 0)
             {
-                foreach (var w in mainWindows) w.LoadData();
+                foreach (var w in mainWindows)
+                {
+                    if (w != null) w.LoadData();
+                }
             }
             else
             {
-                // Main window not open, but notify sub-windows directly
                 NotifySubWindowsToReload();
             }
+        }
+
+        private void ResetFilters()
+        {
+            _searchFilter = "";
+            _categoryFilter = "";
+            _assigneeFilter = "";
+            _priorityFilter = 0;
+            _noteSearchFilter = "";
         }
 
         private static void NotifySubWindowsToReload()
@@ -229,10 +502,12 @@ namespace AwesomeTaskManager.Editor
             if (_data == null) return;
             _data.lastBoardIndex = _boardIndex;
             Persistence.Save(_data);
+            ReloadAllOpenWindows();
         }
 
         public void AddCardFromDetail(string boardId, string columnId, TaskCard card)
         {
+            LoadData(); // Fresh load to ensure we don't overwrite other recent changes
             if (_data == null) return;
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
@@ -242,35 +517,18 @@ namespace AwesomeTaskManager.Editor
                 {
                     col.cards.Add(card);
                     Save();
-                    ReloadAllOpenWindows();
                 }
             }
         }
 
         public void UpdateCardFromDetail(TaskCard updatedCard)
         {
-            if (_data == null) return;
-            foreach (var b in _data.boards)
-            {
-                foreach (var col in b.columns)
-                {
-                    var existing = col.cards.FirstOrDefault(c => c.id == updatedCard.id);
-                    if (existing != null)
-                    {
-                        string json = JsonUtility.ToJson(updatedCard);
-                        JsonUtility.FromJsonOverwrite(json, existing);
-                        Save();
-                        ReloadAllOpenWindows();
-                        return;
-                    }
-                }
-            }
-            // If not found in memory, it might be a new card that was saved to disk by the detail window directly
-            LoadData();
+            ReloadAllOpenWindows(); // Reload everything from disk and notify all windows
         }
 
         public void DeleteCardFromDetail(string boardId, string columnId, string cardId)
         {
+            LoadData(); // Fresh load to ensure we don't overwrite other recent changes
             if (_data == null) return;
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
@@ -278,8 +536,15 @@ namespace AwesomeTaskManager.Editor
                 var col = board.columns.FirstOrDefault(c => c.id == columnId);
                 if (col != null)
                 {
+                    _data.CleanupReferencesToCard(cardId);
                     col.cards.RemoveAll(c => c.id == cardId);
+                    if (_linkHighlightCardId == cardId)
+                    {
+                        _linkHighlightCardId = null;
+                        _linkHighlightMode = LinkHighlightMode.None;
+                    }
                     Save();
+                    RefreshLinkCache();
                     ReloadAllOpenWindows();
                 }
             }
@@ -296,6 +561,39 @@ namespace AwesomeTaskManager.Editor
             if (_data.noteFolders == null)
                 _data.noteFolders = new List<NoteFolder>();
             _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, _data.boards.Count - 1);
+        }
+
+        private void RefreshLinkCache()
+        {
+            _parentToChildren.Clear();
+            _childToParents.Clear();
+            _cardTitles.Clear();
+            if (_data == null) return;
+
+            foreach (var card in _data.AllCards())
+            {
+                _cardTitles[card.id] = card.title;
+                if (card.checklistLinkedCardIds == null || card.checklistLinkedCardIds.Count == 0) continue;
+
+                foreach (var childId in card.checklistLinkedCardIds)
+                {
+                    if (string.IsNullOrEmpty(childId)) continue;
+
+                    if (!_parentToChildren.TryGetValue(card.id, out var children))
+                    {
+                        children = new List<string>();
+                        _parentToChildren[card.id] = children;
+                    }
+                    if (!children.Contains(childId)) children.Add(childId);
+
+                    if (!_childToParents.TryGetValue(childId, out var parents))
+                    {
+                        parents = new List<string>();
+                        _childToParents[childId] = parents;
+                    }
+                    if (!parents.Contains(card.id)) parents.Add(card.id);
+                }
+            }
         }
 
         private TaskBoard Board => _data.boards[_boardIndex];
@@ -316,7 +614,21 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
-            if (_data == null) { _data = Persistence.Load(); ClampBoard(); }
+            if (_data == null) 
+            {
+                _data = Persistence.Load(); 
+                if (_data != null) ApplyPostLoadVisualState();
+            }
+
+            if (_data == null)
+            {
+                EditorGUILayout.HelpBox("Task Board data could not be loaded. This might happen if the save file is corrupted or locked by another process (like a Git sync).\n\nPlease check the Console for detailed error messages.", MessageType.Error);
+                if (GUILayout.Button("Retry Loading Data", GUILayout.Height(30)))
+                {
+                    LoadData();
+                }
+                return;
+            }
 
             _hasAnimatedGif = false;
 
@@ -386,7 +698,7 @@ namespace AwesomeTaskManager.Editor
                 if (newIdx != _boardIndex)
                 {
                     _boardIndex = newIdx;
-                    _searchFilter = ""; _categoryFilter = ""; _assigneeFilter = ""; _priorityFilter = 0;
+                    ResetFilters();
                     GUIUtility.ExitGUI();
                 }
 
@@ -400,6 +712,17 @@ namespace AwesomeTaskManager.Editor
                         var t = template;
                         menu.AddItem(new GUIContent("Create New Board/Template: " + t.name), false, () => CreateBoard(t));
                     }
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board (JSON - Native)..."), false, () => ExportBoard(board));
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board (JSON - Native)..."), false, ImportBoard);
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
+                    menu.AddSeparator("Beta (Export or Import)/");
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (CSV - External)"), false, () => ExportBoardToCSV(board));
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (Excel - External)"), false, () => ExportBoardToExcel(board));
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (CSV - External)"), false, ImportBoardFromCSV);
+                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (Excel - External)"), false, ImportBoardFromExcel);
                     menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Save Current as Template..."), false, SaveCurrentAsTemplate);
                     if (_data.templates.Count > 0)
@@ -421,14 +744,20 @@ namespace AwesomeTaskManager.Editor
                 }
                 if (_data.boards.Count > 1 && GUILayout.Button(new GUIContent("✕", "Delete Board"), EditorStyles.toolbarButton, GUILayout.Width(22)))
                 {
-                    string boardName = _data.boards[_boardIndex].name;
+                    var targetBoard = _data.boards[_boardIndex];
+                    string boardName = targetBoard.name;
                     EditorApplication.delayCall += () =>
                     {
                         if (EditorUtility.DisplayDialog("Delete Board", $"Delete \"{boardName}\"?", "Delete", "Cancel"))
                         {
-                            _data.boards.RemoveAt(_boardIndex);
+                            foreach (var col in targetBoard.columns)
+                                foreach (var card in col.cards)
+                                    _data.CleanupReferencesToCard(card.id);
+                            
+                            _data.boards.Remove(targetBoard);
                             _boardIndex = Mathf.Clamp(_boardIndex, 0, _data.boards.Count - 1);
                             Save();
+                            RefreshLinkCache();
                             Repaint();
                         }
                     };
@@ -708,13 +1037,35 @@ namespace AwesomeTaskManager.Editor
                             menu.AddItem(new GUIContent("Clear All Cards"), false, () =>
                             {
                                 if (EditorUtility.DisplayDialog("Clear Column", $"Remove all cards from \"{col.title}\"?", "Clear", "Cancel"))
-                                { col.cards.Clear(); Save(); Repaint(); }
+                                {
+                                    foreach(var card in col.cards) _data.CleanupReferencesToCard(card.id);
+                                    col.cards.Clear(); 
+                                    Save(); 
+                                    RefreshLinkCache();
+                                    Repaint(); 
+                                }
                             });
+                            menu.AddSeparator("");
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Export Column to CSV..."), false, () => ExportColumnToCSV(col));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Export Column to Excel..."), false, () => ExportColumnToExcel(col));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Card/Import Card from CSV..."), false, () => ImportCardFromCSV(col));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Card/Import Card from Excel..."), false, () => ImportCardFromExcel(col));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Card/Import Card... (JSON)"), false, () => ImportCardIntoColumn(col));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Export Column (.atcl)..."), false, () => ExportColumn(col));
+                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
                             menu.AddSeparator("");
                             menu.AddItem(new GUIContent("Delete Column"), false, () =>
                             {
                                 if (EditorUtility.DisplayDialog("Delete Column", $"Delete \"{col.title}\" and all its cards?", "Delete", "Cancel"))
-                                { board.columns.RemoveAt(ci); Save(); Repaint(); }
+                                {
+                                    foreach(var card in col.cards) _data.CleanupReferencesToCard(card.id);
+                                    board.columns.RemoveAt(ci); 
+                                    Save(); 
+                                    RefreshLinkCache();
+                                    Repaint(); 
+                                }
                             });
                             menu.ShowAsContext();
                         }
@@ -748,14 +1099,11 @@ namespace AwesomeTaskManager.Editor
 
                     if (GUILayout.Button("+ Add Card", GUILayout.Height(26)))
                     {
-                        int capturedColIdx = colIdx;
                         string boardId = board.id;
                         string columnId = col.id;
                         CardDetailWindow.ShowNew(_data, boardId, columnId, (newCard) =>
                         {
-                            if (capturedColIdx < board.columns.Count)
-                                board.columns[capturedColIdx].cards.Add(newCard);
-                            Save(); Repaint();
+                            AddCardFromDetail(boardId, columnId, newCard);
                         });
                     }
 
@@ -776,9 +1124,15 @@ namespace AwesomeTaskManager.Editor
         private void DrawCard(TaskCard card, TaskColumn col, int idx)
         {
             var labelColor = TBStyles.LabelColors[Mathf.Clamp(card.colorLabel, 0, TBStyles.LabelColors.Length - 1)];
+            
+            bool isLinkHighlighted = _linkHighlightCardId == card.id;
+            bool isChildOfHighlighted = _linkHighlightMode == LinkHighlightMode.Children && !string.IsNullOrEmpty(_linkHighlightCardId) && _parentToChildren.TryGetValue(_linkHighlightCardId, out var children) && children.Contains(card.id);
+            bool isParentOfHighlighted = _linkHighlightMode == LinkHighlightMode.Parents && !string.IsNullOrEmpty(_linkHighlightCardId) && _childToParents.TryGetValue(_linkHighlightCardId, out var parents) && parents.Contains(card.id);
+
+            bool shouldHighlight = isLinkHighlighted || isChildOfHighlighted || isParentOfHighlighted;
 
             Rect cardRect;
-            using (var cardScope = new EditorGUILayout.VerticalScope(TBStyles.CardBox))
+            using (var cardScope = new EditorGUILayout.VerticalScope(shouldHighlight ? TBStyles.CardBoxHighlighted : TBStyles.CardBox))
             {
                 cardRect = cardScope.rect;
                 if (card.colorLabel > 0)
@@ -796,10 +1150,12 @@ namespace AwesomeTaskManager.Editor
                     if (GUILayout.Button(new GUIContent(compIcon,compToolTip), TBStyles.IconButton, GUILayout.Width(24), GUILayout.Height(20)))
                     {
                         card.completed = !card.completed;
+                        _data.SyncLinkedChecklistItems(card.id, card.completed);
                         Save();
                     }
                     if (card.priority > 0)
                         EditorGUILayout.LabelField(TBStyles.PriorityIcons[card.priority], GUILayout.Width(18));
+
                     var titleStyle = new GUIStyle(TBStyles.CardTitle);
                     if (card.completed)
                     {
@@ -814,78 +1170,97 @@ namespace AwesomeTaskManager.Editor
                     {
                         string boardId = Board.id;
                         string columnId = col.id;
-                        CardDetailWindow.Show(card, _data, boardId, columnId, () => { Save(); Repaint(); }, () =>
+                        CardDetailWindow.Show(card, _data, boardId, columnId, () => { LoadData(); }, () =>
                         {
-                            col.cards.Remove(card); Save(); Repaint();
+                            DeleteCardFromDetail(boardId, columnId, card.id);
                         });
                     }
-                    if (GUILayout.Button(new GUIContent("⋮", "Card Options"), TBStyles.IconButton))
+                    
+                     // Card Options (⋮)
+                if (GUILayout.Button(new GUIContent("⋮", "Card Options"), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                {
+                    var menu = new GenericMenu();
+                    menu.AddItem(new GUIContent(card.archived ? "Unarchive Card" : "Archive Card"), false, () =>
                     {
-                        var menu = new GenericMenu();
-                        menu.AddItem(new GUIContent(card.archived ? "Unarchive Card" : "Archive Card"), false, () =>
+                        card.archived = !card.archived;
+                        Save();
+                        RefreshLinkCache();
+                        TriggerSuccessNotification(card.archived ? "Card archived" : "Card unarchived");
+                        Repaint();
+                    });
+                    menu.AddSeparator("");
+
+                    menu.AddItem(new GUIContent("Duplicate Card"), false, () =>
+                    {
+                        var clone = card.Clone();
+                        col.cards.Insert(idx + 1, clone);
+                        Save();
+                        RefreshLinkCache();
+                        Repaint();
+                    });
+
+                    menu.AddItem(new GUIContent("Beta (Export Card)/as CSV..."), false, () => ExportCardToCSV(card, col));
+                    menu.AddItem(new GUIContent("Beta (Export Card)/as Excel..."), false, () => ExportCardToExcel(card, col));
+                    menu.AddSeparator("Beta (Export Card)/");
+                    menu.AddItem(new GUIContent("Beta (Export Card)/as JSON (.atc)..."), false, () => ExportCard(card));
+
+                    menu.AddItem(new GUIContent("Copy Card"), false, () =>
+                    {
+                        _copiedCard = card.Clone();
+                        TriggerSuccessNotification("Card copied to clipboard");
+                    });
+
+                    if (_copiedCard != null)
+                    {
+                        menu.AddItem(new GUIContent($"Paste Card After ({TBStyles.TruncateString(_copiedCard.title, 20)})"), false, () =>
                         {
-                            card.archived = !card.archived;
+                            col.cards.Insert(idx + 1, _copiedCard.Clone());
                             Save();
-                            TriggerSuccessNotification(card.archived ? "Card archived" : "Card unarchived");
+                            RefreshLinkCache();
                             Repaint();
                         });
-                        menu.AddSeparator("");
+                    }
 
-                        menu.AddItem(new GUIContent("Duplicate Card"), false, () =>
+                    foreach (var b in _data.boards)
+                    {
+                        if (b == Board) continue;
+                        menu.AddItem(new GUIContent($"Copy to Board/{b.name}"), false, () =>
                         {
                             var clone = card.Clone();
-                            col.cards.Insert(idx + 1, clone);
-                            Save();
-                            Repaint();
-                        });
-
-                        menu.AddItem(new GUIContent("Copy Card"), false, () =>
-                        {
-                            _copiedCard = card.Clone();
-                            TriggerSuccessNotification("Card copied to clipboard");
-                        });
-
-                        if (_copiedCard != null)
-                        {
-                            menu.AddItem(new GUIContent($"Paste Card After ({TBStyles.TruncateString(_copiedCard.title, 20)})"), false, () =>
+                            if (b.columns.Count > 0)
                             {
-                                col.cards.Insert(idx + 1, _copiedCard.Clone());
+                                b.columns[0].cards.Add(clone);
                                 Save();
-                                Repaint();
-                            });
-                        }
-
-                        foreach (var b in _data.boards)
-                        {
-                            if (b == Board) continue;
-                            menu.AddItem(new GUIContent($"Copy to Board/{b.name}"), false, () =>
+                                RefreshLinkCache();
+                                TriggerSuccessNotification($"Copied to board: {b.name}");
+                            }
+                            else
                             {
-                                var clone = card.Clone();
-                                if (b.columns.Count > 0)
-                                {
-                                    b.columns[0].cards.Add(clone);
-                                    Save();
-                                    TriggerSuccessNotification($"Copied to board: {b.name}");
-                                }
-                                else
-                                {
-                                    EditorUtility.DisplayDialog("Error", "Target board has no columns.", "OK");
-                                }
-                            });
-                        }
-
-                        menu.AddSeparator("");
-                        menu.AddItem(new GUIContent("Delete Card"), false, () =>
-                        {
-                            if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{card.title}\"?", "Delete", "Cancel"))
-                            {
-                                col.cards.Remove(card);
-                                Save();
-                                Repaint();
+                                EditorUtility.DisplayDialog("Error", "Target board has no columns.", "OK");
                             }
                         });
-                        menu.ShowAsContext();
                     }
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Delete Card"), false, () =>
+                    {
+                        if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{card.title}\"?", "Delete", "Cancel"))
+                        {
+                            if (_linkHighlightCardId == card.id)
+                            {
+                                _linkHighlightCardId = null;
+                                _linkHighlightMode = LinkHighlightMode.None;
+                            }
+                            _data.CleanupReferencesToCard(card.id);
+                            col.cards.Remove(card);
+                            Save();
+                            RefreshLinkCache();
+                            Repaint();
+                        }
+                    });
+                    menu.ShowAsContext();
+                }
+
                 }
 
             if (!string.IsNullOrEmpty(card.category) || card.archived)
@@ -935,12 +1310,16 @@ namespace AwesomeTaskManager.Editor
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     EditorGUILayout.LabelField(allDone ? $"✅ {done}/{card.checklistItems.Count} complete" : $"☑ {done}/{card.checklistItems.Count}", summaryStyle);
-                    string toggleLabel = card.showChecklist ? "▾" : "▸";
-                    string toggleToolTip = card.showChecklist ? "Hide Checklist" : "Show Checklist";
-                    if (GUILayout.Button(new GUIContent(toggleLabel,toggleToolTip), TBStyles.IconButton, GUILayout.Width(20), GUILayout.Height(16)))
+                    // Hide Checklist button
+                    if (card.checklistItems.Count > 0)
                     {
-                        card.showChecklist = !card.showChecklist;
-                        Save();
+                        string toggleLabel = card.showChecklist ? "▾" : "▸";
+                        string toggleToolTip = card.showChecklist ? "Hide Checklist" : "Show Checklist";
+                        if (GUILayout.Button(new GUIContent(toggleLabel, toggleToolTip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                        {
+                            card.showChecklist = !card.showChecklist;
+                            Save();
+                        }
                     }
                 }
                 
@@ -957,6 +1336,19 @@ namespace AwesomeTaskManager.Editor
                             if (nowDone != wasDone)
                             {
                                 card.checklistStates[ci] = nowDone;
+                                
+                                // Reverse sync: if this checklist item is linked to a card, update that card's completion status
+                                if (card.checklistLinkedCardIds != null && ci < card.checklistLinkedCardIds.Count && !string.IsNullOrEmpty(card.checklistLinkedCardIds[ci]))
+                                {
+                                    var subId = card.checklistLinkedCardIds[ci];
+                                    var subCard = _data.AllCards().FirstOrDefault(c => c.id == subId);
+                                    if (subCard != null && subCard.completed != nowDone)
+                                    {
+                                        subCard.completed = nowDone;
+                                        _data.SyncLinkedChecklistItems(subId, nowDone);
+                                    }
+                                }
+
                                 Save();
                             }
                             var itemStyle = new GUIStyle(EditorStyles.miniLabel);
@@ -967,6 +1359,8 @@ namespace AwesomeTaskManager.Editor
                         }
                     }
                 }
+                
+               
             }
 
             // Image thumbnail
@@ -1009,7 +1403,7 @@ namespace AwesomeTaskManager.Editor
                             string noteTitle = note != null ? note.title : "Missing Note";
                             if (GUILayout.Button(new GUIContent(noteIcon, $"[Note] {noteTitle}"), GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                             {
-                                if (note != null) NotePopupWindow.OpenInPreviewMode(note, _data, () => { Save(); Repaint(); });
+                                if (note != null) NotePopupWindow.OpenInPreviewMode(note, _data, () => { LoadData(); });
                             }
                             shown++;
                         }
@@ -1169,6 +1563,64 @@ namespace AwesomeTaskManager.Editor
                     Save(); GUIUtility.ExitGUI();
                 }
                 GUILayout.FlexibleSpace();
+
+              
+
+                // Link indicators
+                bool isParent = _parentToChildren.ContainsKey(card.id);
+                bool isChild = _childToParents.ContainsKey(card.id);
+                if (isParent)
+                {
+                    bool isThisActive = _linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Children;
+                    string tooltip = isThisActive ? "Click to deselect" : "Parent Card: Click to highlight subtasks";
+                    if (!isThisActive && _parentToChildren.TryGetValue(card.id, out var cIds))
+                    {
+                        var names = cIds.Select(cid => _cardTitles.TryGetValue(cid, out var t) ? t : "Unknown").ToArray();
+                        tooltip = "Parent Card: Click to highlight subtasks:\n• " + string.Join("\n• ", names);
+                    }
+                    
+                    if (GUILayout.Button(new GUIContent("🌳", tooltip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                    {
+                        if (_linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Children)
+                        {
+                            _linkHighlightCardId = null;
+                            _linkHighlightMode = LinkHighlightMode.None;
+                        }
+                        else
+                        {
+                            _linkHighlightCardId = card.id;
+                            _linkHighlightMode = LinkHighlightMode.Children;
+                        }
+                    }
+                }
+                if (isChild)
+                {
+                    bool isThisActive = _linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Parents;
+                    string tooltip = isThisActive ? "Click to deselect" : "Subtask: Click to highlight parent card";
+                    if (!isThisActive && _childToParents.TryGetValue(card.id, out var pIds))
+                    {
+                        var names = pIds.Select(pid => _cardTitles.TryGetValue(pid, out var t) ? t : "Unknown").ToArray();
+                        tooltip = "Subtask: Click to highlight parent card: " + string.Join(", ", names);
+                    }
+
+                    if (GUILayout.Button(new GUIContent("🌿", tooltip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                    {
+                        if (_linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Parents)
+                        {
+                            _linkHighlightCardId = null;
+                            _linkHighlightMode = LinkHighlightMode.None;
+                        }
+                        else
+                        {
+                            _linkHighlightCardId = card.id;
+                            _linkHighlightMode = LinkHighlightMode.Parents;
+                        }
+                    }
+                }
+                
+
+
+               
             }
 
             if (_cardDragging && _dragCard == card)
@@ -1584,7 +2036,7 @@ namespace AwesomeTaskManager.Editor
                             string nn = EditorInputDialog.Show("Rename Folder", "Folder name:", folder.name);
                             if (!string.IsNullOrWhiteSpace(nn)) { folder.name = nn; Save(); Repaint(); }
                         });
-                        menu.AddItem(new GUIContent("Export Folder (.md)"), false, () => ExportFolder(folder));
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Folder (.md)"), false, () => ExportFolder(folder));
                         menu.AddSeparator("");
                         menu.AddItem(new GUIContent("Delete Folder"), false, () =>
                         {
@@ -2062,6 +2514,987 @@ namespace AwesomeTaskManager.Editor
             EditorUtility.DisplayDialog("Exported", $"Note exported to:\n{path}", "OK");
         }
 
+        private void ExportBoard(TaskBoard board)
+        {
+            if (board == null) return;
+            string defaultName = SanitizeFileName(board.name);
+            string path = EditorUtility.SaveFilePanel("Export Board", "", defaultName, "atb");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var exportData = new ExportBoardData { board = board };
+
+            // Gather assignees used in this board
+            var assigneeIds = new HashSet<string>();
+            foreach (var col in board.columns)
+                foreach (var card in col.cards)
+                    foreach (var aid in card.assigneeIds)
+                        if (!string.IsNullOrEmpty(aid)) assigneeIds.Add(aid);
+
+            exportData.assignees = _data.assignees.Where(a => assigneeIds.Contains(a.id)).ToList();
+
+            // Gather category colors used in this board
+            var categories = new HashSet<string>();
+            foreach (var col in board.columns)
+                foreach (var card in col.cards)
+                    if (!string.IsNullOrEmpty(card.category))
+                        categories.Add(card.category);
+
+            exportData.categoryColors = _data.categoryColors.Where(cc => categories.Contains(cc.category)).ToList();
+
+            string json = JsonUtility.ToJson(exportData, true);
+            File.WriteAllText(path, json, Encoding.UTF8);
+            TriggerSuccessNotification("Board exported successfully");
+        }
+
+        private void ExportBoardToExcel(TaskBoard board)
+        {
+            if (board == null) return;
+            string defaultName = SanitizeFileName(board.name);
+            string path = EditorUtility.SaveFilePanel("Export Board to Excel", "", defaultName, "xml");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("<?xml version=\"1.0\"?>");
+            sb.AppendLine("<?mso-application progid=\"Excel.Sheet\"?>");
+            sb.AppendLine("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"");
+            sb.AppendLine(" xmlns:o=\"urn:schemas-microsoft-com:office:office\"");
+            sb.AppendLine(" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"");
+            sb.AppendLine(" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"");
+            sb.AppendLine(" xmlns:html=\"http://www.w3.org/TR/REC-html40\">");
+            
+            sb.AppendLine(" <Styles>");
+            sb.AppendLine("  <Style ss:ID=\"sHeader\">");
+            sb.AppendLine("   <Font ss:Bold=\"1\"/>");
+            sb.AppendLine("   <Interior ss:Color=\"#C0C0C0\" ss:Pattern=\"Solid\"/>");
+            sb.AppendLine("  </Style>");
+            sb.AppendLine(" </Styles>");
+
+            sb.AppendLine($" <Worksheet ss:Name=\"{SecurityElement.Escape(board.name)}\">");
+            sb.AppendLine("  <Table>");
+
+            // Header
+            string[] headers = {
+                "Task ID", "Task Link", "Task Type", "Task Custom ID", "Task Name", "Task Content",
+                "Status", "Date created", "Date created Text", "Due date", "Due date Text",
+                "Start date", "Start date Text", "Parent ID", "Subtask IDs", "Attachments",
+                "Assignees", "Tags", "Priority", "List Name", "Space Name", "Time Estimated",
+                "Time Estimated Text", "Checklists", "Comments", "Assigned Comments",
+                "Time Spent", "Time Spent Text", "Rolled Up Time", "Rolled Up Time Text"
+            };
+
+            sb.AppendLine("   <Row ss:StyleID=\"sHeader\">");
+            foreach (var h in headers)
+            {
+                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(h)}</Data></Cell>");
+            }
+            sb.AppendLine("   </Row>");
+
+            foreach (var col in board.columns)
+            {
+                if (col.cards.Count == 0)
+                {
+                    // Export empty column
+                    string[] rowValues = new string[30];
+                    for (int j = 0; j < 30; j++) rowValues[j] = "";
+                    rowValues[2] = "status_placeholder";
+                    rowValues[6] = col.title; // Status
+                    rowValues[19] = board.name; // List Name
+                    rowValues[20] = "AwesomeTaskManager"; // Space Name
+                    rowValues[15] = "[]"; // Attachments
+                    rowValues[16] = "[]"; // Assignees
+                    rowValues[17] = "[]"; // Tags
+                    rowValues[25] = "0"; // Assigned Comments
+
+                    sb.AppendLine("   <Row>");
+                    foreach (var val in rowValues)
+                    {
+                        sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
+                    }
+                    sb.AppendLine("   </Row>");
+                }
+                else
+                {
+                    foreach (var card in col.cards)
+                    {
+                        string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
+                        string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
+                        string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
+                        
+                        List<string> checklistStrings = new List<string>();
+                        for (int i = 0; i < card.checklistItems.Count; i++)
+                        {
+                            string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
+                            checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
+                        }
+                        string checklists = string.Join("; ", checklistStrings);
+
+                        string[] rowValues = new string[30];
+                        rowValues[0] = card.id;
+                        rowValues[1] = ""; // Task Link
+                        rowValues[2] = "task"; // Task Type
+                        rowValues[3] = ""; // Custom ID
+                        rowValues[4] = card.title;
+                        rowValues[5] = card.description;
+                        rowValues[6] = col.title;
+                        rowValues[7] = card.createdDate;
+                        rowValues[8] = card.createdDate;
+                        rowValues[9] = card.dueDate;
+                        rowValues[10] = card.dueDate;
+                        rowValues[11] = ""; // Start date
+                        rowValues[12] = ""; // Start date Text
+                        rowValues[13] = ""; // Parent ID
+                        rowValues[14] = ""; // Subtask IDs
+                        rowValues[15] = "[]"; // Attachments
+                        rowValues[16] = assignees;
+                        rowValues[17] = tags;
+                        rowValues[18] = priority;
+                        rowValues[19] = board.name;
+                        rowValues[20] = "AwesomeTaskManager";
+                        rowValues[21] = ""; // Time Est
+                        rowValues[22] = ""; 
+                        rowValues[23] = checklists;
+                        rowValues[24] = ""; // Comments
+                        rowValues[25] = "0";
+                        rowValues[26] = "";
+                        rowValues[27] = "";
+                        rowValues[28] = "";
+                        rowValues[29] = "";
+
+                        sb.AppendLine("   <Row>");
+                        foreach (var val in rowValues)
+                        {
+                            sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
+                        }
+                        sb.AppendLine("   </Row>");
+                    }
+                }
+            }
+
+            sb.AppendLine("  </Table>");
+            sb.AppendLine(" </Worksheet>");
+            sb.AppendLine("</Workbook>");
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            TriggerSuccessNotification("Board exported to Excel (XML Spreadsheet) successfully");
+        }
+
+        private void ImportBoardFromExcel()
+        {
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import Board from Excel", "", "xlsx,xml");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                List<string[]> rows = new List<string[]>();
+                if (path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    rows = ParseXlsx(path);
+                }
+                else if (path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                {
+                    rows = ParseXmlSpreadsheet(path);
+                }
+
+                if (rows.Count < 2)
+                {
+                    TriggerErrorNotification("Excel file is empty or missing header");
+                    return;
+                }
+
+                string[] headers = rows[0];
+                string suggestedProfileId;
+                var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Board, out suggestedProfileId);
+                ImportFieldMappingWindow.Open("Import Board Mapping (Excel)", ImportMappingScope.Board, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(result?.deleteProfileId))
+                        {
+                            if (DeleteImportProfile(result.deleteProfileId))
+                                TriggerSuccessNotification("Import profile deleted successfully");
+                            return;
+                        }
+
+                        ApplyImportMappingPreferences(result, ImportMappingScope.Board, path, headers);
+                        ImportBoardRowsWithMapping(rows, path, result.mapping, "Board imported from Excel successfully");
+                    }
+                    catch (ExitGUIException)
+                    {
+                        // Handled by the mapping window closing itself.
+                    }
+                    catch (Exception ex)
+                    {
+                        Debug.LogException(ex);
+                        TriggerErrorNotification("Failed to import Excel: " + ex.Message);
+                    }
+                });
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception ex)
+            {
+                Debug.LogException(ex);
+                TriggerErrorNotification("Failed to import Excel: " + ex.Message);
+            }
+        }
+
+        private List<string[]> ParseXlsx(string path)
+        {
+            List<string[]> rows = new List<string[]>();
+            using (ZipArchive archive = ZipFile.OpenRead(path))
+            {
+                // Load shared strings
+                List<string> sharedStrings = new List<string>();
+                var sharedStringsEntry = archive.GetEntry("xl/sharedStrings.xml");
+                if (sharedStringsEntry != null)
+                {
+                    using (Stream s = sharedStringsEntry.Open())
+                    {
+                        XmlDocument xml = new XmlDocument();
+                        xml.Load(s);
+                        XmlNodeList tNodes = xml.GetElementsByTagName("t");
+                        foreach (XmlNode t in tNodes)
+                        {
+                            sharedStrings.Add(t.InnerText);
+                        }
+                    }
+                }
+
+                // Load sheet1
+                var sheetEntry = archive.GetEntry("xl/worksheets/sheet1.xml");
+                if (sheetEntry != null)
+                {
+                    using (Stream s = sheetEntry.Open())
+                    {
+                        XmlDocument xml = new XmlDocument();
+                        xml.Load(s);
+                        XmlNodeList rowNodes = xml.GetElementsByTagName("row");
+                        foreach (XmlNode rowNode in rowNodes)
+                        {
+                            // Cells can be missing or in different order, but let's assume sequential for basic ClickUp exports
+                            // Real xlsx parsing needs to handle cell references (A1, B1 etc)
+                            List<string> rowValues = new List<string>();
+                            int lastCol = -1;
+                            foreach (XmlNode cNode in rowNode.ChildNodes)
+                            {
+                                if (cNode.Name != "c") continue;
+                                
+                                // Handle missing cells by looking at 'r' attribute (e.g. A1, C1 means B1 is missing)
+                                string r = cNode.Attributes["r"]?.Value;
+                                if (!string.IsNullOrEmpty(r))
+                                {
+                                    int colIdx = GetColumnIndex(r);
+                                    while (lastCol < colIdx - 1)
+                                    {
+                                        rowValues.Add("");
+                                        lastCol++;
+                                    }
+                                    lastCol = colIdx;
+                                }
+
+                                string t = cNode.Attributes["t"]?.Value;
+                                XmlNode vNode = cNode.SelectSingleNode("*[local-name()='v']");
+                                string val = vNode != null ? vNode.InnerText : "";
+
+                                if (t == "s")
+                                {
+                                    int sIdx = int.Parse(val);
+                                    rowValues.Add(sIdx < sharedStrings.Count ? sharedStrings[sIdx] : "");
+                                }
+                                else
+                                {
+                                    rowValues.Add(val);
+                                }
+                            }
+                            rows.Add(rowValues.ToArray());
+                        }
+                    }
+                }
+            }
+            return rows;
+        }
+
+        private int GetColumnIndex(string cellRef)
+        {
+            string colPart = Regex.Replace(cellRef, @"[\d]", "");
+            int column = 0;
+            for (int i = 0; i < colPart.Length; i++)
+            {
+                column *= 26;
+                column += (colPart[i] - 'A' + 1);
+            }
+            return column - 1;
+        }
+
+        private List<string[]> ParseXmlSpreadsheet(string path)
+        {
+            List<string[]> rows = new List<string[]>();
+            XmlDocument xml = new XmlDocument();
+            xml.Load(path);
+            
+            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
+            nsmgr.AddNamespace("ss", "urn:schemas-microsoft-com:office:spreadsheet");
+
+            XmlNodeList rowNodes = xml.SelectNodes("//ss:Table/ss:Row", nsmgr);
+            foreach (XmlNode rowNode in rowNodes)
+            {
+                List<string> rowValues = new List<string>();
+                foreach (XmlNode cellNode in rowNode.SelectNodes("ss:Cell", nsmgr))
+                {
+                    // Handle ss:Index attribute if some cells are skipped
+                    var indexAttr = cellNode.Attributes["ss:Index"];
+                    if (indexAttr != null)
+                    {
+                        int index = int.Parse(indexAttr.Value) - 1;
+                        while (rowValues.Count < index) rowValues.Add("");
+                    }
+
+                    XmlNode dataNode = cellNode.SelectSingleNode("ss:Data", nsmgr);
+                    rowValues.Add(dataNode != null ? dataNode.InnerText : "");
+                }
+                rows.Add(rowValues.ToArray());
+            }
+            return rows;
+        }
+
+        private void ExportBoardToCSV(TaskBoard board)
+        {
+            if (board == null) return;
+            string defaultName = SanitizeFileName(board.name);
+            string path = EditorUtility.SaveFilePanel("Export Board to CSV", "", defaultName, "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var sb = new StringBuilder();
+            // ClickUp compatible header
+            sb.AppendLine("Task ID,Task Link,Task Type,Task Custom ID,Task Name,Task Content,Status,Date created,Date created Text,Due date,Due date Text,Start date,Start date Text,Parent ID,Subtask IDs,Attachments,Assignees,Tags,Priority,List Name,Space Name,Time Estimated,Time Estimated Text,Checklists,Comments,Assigned Comments,Time Spent,Time Spent Text,Rolled Up Time,Rolled Up Time Text");
+
+            foreach (var col in board.columns)
+            {
+                if (col.cards.Count == 0)
+                {
+                    // Export empty column
+                    string taskId = "";
+                    string taskLink = "";
+                    string taskType = "status_placeholder";
+                    string customId = "";
+                    string taskName = ""; // Empty name indicates it's just a column placeholder
+                    string taskContent = "";
+                    string status = col.title;
+                    string dateCreated = "";
+                    string dateCreatedText = "";
+                    string dueDate = "";
+                    string dueDateText = "";
+                    string startDate = "";
+                    string startDateText = "";
+                    string parentId = "";
+                    string subtaskIds = "";
+                    string attachments = "[]";
+                    string listName = board.name;
+                    string spaceName = "AwesomeTaskManager";
+                    string timeEst = "";
+                    string timeEstText = "";
+                    string checklists = "";
+                    string comments = "";
+                    string assignedComments = "0";
+                    string timeSpent = "";
+                    string timeSpentText = "";
+                    string rolledUpTime = "";
+                    string rolledUpTimeText = "";
+                    string assignees = "[]";
+                    string tags = "[]";
+                    string priority = "";
+
+                    sb.Append($"\"{EscapeCSV(taskId)}\",");
+                    sb.Append($"\"{EscapeCSV(taskLink)}\",");
+                    sb.Append($"\"{EscapeCSV(taskType)}\",");
+                    sb.Append($"\"{EscapeCSV(customId)}\",");
+                    sb.Append($"\"{EscapeCSV(taskName)}\",");
+                    sb.Append($"\"{EscapeCSV(taskContent)}\",");
+                    sb.Append($"\"{EscapeCSV(status)}\",");
+                    sb.Append($"\"{EscapeCSV(dateCreated)}\",");
+                    sb.Append($"\"{EscapeCSV(dateCreatedText)}\",");
+                    sb.Append($"\"{EscapeCSV(dueDate)}\",");
+                    sb.Append($"\"{EscapeCSV(dueDateText)}\",");
+                    sb.Append($"\"{EscapeCSV(startDate)}\",");
+                    sb.Append($"\"{EscapeCSV(startDateText)}\",");
+                    sb.Append($"\"{EscapeCSV(parentId)}\",");
+                    sb.Append($"\"{EscapeCSV(subtaskIds)}\",");
+                    sb.Append($"\"{EscapeCSV(attachments)}\",");
+                    sb.Append($"\"{EscapeCSV(assignees)}\",");
+                    sb.Append($"\"{EscapeCSV(tags)}\",");
+                    sb.Append($"\"{EscapeCSV(priority)}\",");
+                    sb.Append($"\"{EscapeCSV(listName)}\",");
+                    sb.Append($"\"{EscapeCSV(spaceName)}\",");
+                    sb.Append($"\"{EscapeCSV(timeEst)}\",");
+                    sb.Append($"\"{EscapeCSV(timeEstText)}\",");
+                    sb.Append($"\"{EscapeCSV(checklists)}\",");
+                    sb.Append($"\"{EscapeCSV(comments)}\",");
+                    sb.Append($"\"{EscapeCSV(assignedComments)}\",");
+                    sb.Append($"\"{EscapeCSV(timeSpent)}\",");
+                    sb.Append($"\"{EscapeCSV(timeSpentText)}\",");
+                    sb.Append($"\"{EscapeCSV(rolledUpTime)}\",");
+                    sb.AppendLine($"\"{EscapeCSV(rolledUpTimeText)}\"");
+                }
+                else
+                {
+                    foreach (var card in col.cards)
+                    {
+                        string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
+                        string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
+                        string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
+                        
+                        // Format checklist: "Name (done); Name (todo)"
+                        List<string> checklistStrings = new List<string>();
+                        for (int i = 0; i < card.checklistItems.Count; i++)
+                        {
+                            string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
+                            checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
+                        }
+                        string checklists = string.Join("; ", checklistStrings);
+
+                        // Fields mapping
+                        string taskId = card.id;
+                        string taskLink = ""; // We don't have links
+                        string taskType = "task";
+                        string customId = "";
+                        string taskName = card.title;
+                        string taskContent = card.description;
+                        string status = col.title;
+                        string dateCreated = card.createdDate;
+                        string dateCreatedText = card.createdDate;
+                        string dueDate = card.dueDate;
+                        string dueDateText = card.dueDate;
+                        string startDate = "";
+                        string startDateText = "";
+                        string parentId = ""; // No parent/child in CSV yet
+                        string subtaskIds = "";
+                        string attachments = "[]"; 
+                        string listName = board.name;
+                        string spaceName = "AwesomeTaskManager";
+                        string timeEst = "";
+                        string timeEstText = "";
+                        string comments = "";
+                        string assignedComments = "0";
+                        string timeSpent = "";
+                        string timeSpentText = "";
+                        string rolledUpTime = "";
+                        string rolledUpTimeText = "";
+
+                        sb.Append($"\"{EscapeCSV(taskId)}\",");
+                        sb.Append($"\"{EscapeCSV(taskLink)}\",");
+                        sb.Append($"\"{EscapeCSV(taskType)}\",");
+                        sb.Append($"\"{EscapeCSV(customId)}\",");
+                        sb.Append($"\"{EscapeCSV(taskName)}\",");
+                        sb.Append($"\"{EscapeCSV(taskContent)}\",");
+                        sb.Append($"\"{EscapeCSV(status)}\",");
+                        sb.Append($"\"{EscapeCSV(dateCreated)}\",");
+                        sb.Append($"\"{EscapeCSV(dateCreatedText)}\",");
+                        sb.Append($"\"{EscapeCSV(dueDate)}\",");
+                        sb.Append($"\"{EscapeCSV(dueDateText)}\",");
+                        sb.Append($"\"{EscapeCSV(startDate)}\",");
+                        sb.Append($"\"{EscapeCSV(startDateText)}\",");
+                        sb.Append($"\"{EscapeCSV(parentId)}\",");
+                        sb.Append($"\"{EscapeCSV(subtaskIds)}\",");
+                        sb.Append($"\"{EscapeCSV(attachments)}\",");
+                        sb.Append($"\"{EscapeCSV(assignees)}\",");
+                        sb.Append($"\"{EscapeCSV(tags)}\",");
+                        sb.Append($"\"{EscapeCSV(priority)}\",");
+                        sb.Append($"\"{EscapeCSV(listName)}\",");
+                        sb.Append($"\"{EscapeCSV(spaceName)}\",");
+                        sb.Append($"\"{EscapeCSV(timeEst)}\",");
+                        sb.Append($"\"{EscapeCSV(timeEstText)}\",");
+                        sb.Append($"\"{EscapeCSV(checklists)}\",");
+                        sb.Append($"\"{EscapeCSV(comments)}\",");
+                        sb.Append($"\"{EscapeCSV(assignedComments)}\",");
+                        sb.Append($"\"{EscapeCSV(timeSpent)}\",");
+                        sb.Append($"\"{EscapeCSV(timeSpentText)}\",");
+                        sb.Append($"\"{EscapeCSV(rolledUpTime)}\",");
+                        sb.AppendLine($"\"{EscapeCSV(rolledUpTimeText)}\"");
+                    }
+                }
+            }
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            TriggerSuccessNotification("Board exported to CSV (ClickUp compatible) successfully");
+        }
+
+        private static string EscapeCSV(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return "";
+            return text.Replace("\"", "\"\"");
+        }
+
+        private void ExportColumnToCSV(TaskColumn col)
+        {
+            if (col == null) return;
+            string defaultName = SanitizeFileName(col.title);
+            string path = EditorUtility.SaveFilePanel("Export Column to CSV", "", defaultName, "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var sb = new StringBuilder();
+            // ClickUp compatible header
+            sb.AppendLine("Task ID,Task Link,Task Type,Task Custom ID,Task Name,Task Content,Status,Date created,Date created Text,Due date,Due date Text,Start date,Start date Text,Parent ID,Subtask IDs,Attachments,Assignees,Tags,Priority,List Name,Space Name,Time Estimated,Time Estimated Text,Checklists,Comments,Assigned Comments,Time Spent,Time Spent Text,Rolled Up Time,Rolled Up Time Text");
+
+            string boardName = Board != null ? Board.name : "Board";
+
+            if (col.cards.Count == 0)
+            {
+                // Export empty column placeholder
+                sb.Append($"\"\","); // Task ID
+                sb.Append($"\"\","); // Task Link
+                sb.Append($"\"status_placeholder\","); // Task Type
+                sb.Append($"\"\","); // Custom ID
+                sb.Append($"\"\","); // Task Name
+                sb.Append($"\"\","); // Task Content
+                sb.Append($"\"{EscapeCSV(col.title)}\",");
+                sb.Append($"\"\","); // Date created
+                sb.Append($"\"\","); // Date created Text
+                sb.Append($"\"\","); // Due date
+                sb.Append($"\"\","); // Due date Text
+                sb.Append($"\"\","); // Start date
+                sb.Append($"\"\","); // Start date Text
+                sb.Append($"\"\","); // Parent ID
+                sb.Append($"\"\","); // Subtask IDs
+                sb.Append($"\"[]\","); // Attachments
+                sb.Append($"\"[]\","); // Assignees
+                sb.Append($"\"[]\","); // Tags
+                sb.Append($"\"\","); // Priority
+                sb.Append($"\"{EscapeCSV(boardName)}\",");
+                sb.Append($"\"AwesomeTaskManager\",");
+                sb.Append($"\"\","); // Time Est
+                sb.Append($"\"\","); 
+                sb.Append($"\"\","); // Checklists
+                sb.Append($"\"\","); // Comments
+                sb.Append($"\"0\",");
+                sb.Append($"\"\",");
+                sb.Append($"\"\",");
+                sb.Append($"\"\",");
+                sb.AppendLine($"\"\"");
+            }
+            else
+            {
+                foreach (var card in col.cards)
+                {
+                    string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
+                    string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
+                    string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
+                    
+                    List<string> checklistStrings = new List<string>();
+                    for (int i = 0; i < card.checklistItems.Count; i++)
+                    {
+                        string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
+                        checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
+                    }
+                    string checklists = string.Join("; ", checklistStrings);
+
+                    sb.Append($"\"{EscapeCSV(card.id)}\",");
+                    sb.Append($"\"\","); // Task Link
+                    sb.Append($"\"task\","); // Task Type
+                    sb.Append($"\"\","); // Custom ID
+                    sb.Append($"\"{EscapeCSV(card.title)}\",");
+                    sb.Append($"\"{EscapeCSV(card.description)}\",");
+                    sb.Append($"\"{EscapeCSV(col.title)}\",");
+                    sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
+                    sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
+                    sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
+                    sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
+                    sb.Append($"\"\","); // Start date
+                    sb.Append($"\"\","); // Start date Text
+                    sb.Append($"\"\","); // Parent ID
+                    sb.Append($"\"\","); // Subtask IDs
+                    sb.Append($"\"[]\","); // Attachments
+                    sb.Append($"\"{EscapeCSV(assignees)}\",");
+                    sb.Append($"\"{EscapeCSV(tags)}\",");
+                    sb.Append($"\"{EscapeCSV(priority)}\",");
+                    sb.Append($"\"{EscapeCSV(boardName)}\",");
+                    sb.Append($"\"AwesomeTaskManager\",");
+                    sb.Append($"\"\","); // Time Est
+                    sb.Append($"\"\","); 
+                    sb.Append($"\"{EscapeCSV(checklists)}\",");
+                    sb.Append($"\"\","); // Comments
+                    sb.Append($"\"0\",");
+                    sb.Append($"\"\",");
+                    sb.Append($"\"\",");
+                    sb.Append($"\"\",");
+                    sb.AppendLine($"\"\"");
+                }
+            }
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            TriggerSuccessNotification("Column exported to CSV successfully");
+        }
+
+        private void ExportColumnToExcel(TaskColumn col)
+        {
+            if (col == null) return;
+            string defaultName = SanitizeFileName(col.title);
+            string path = EditorUtility.SaveFilePanel("Export Column to Excel", "", defaultName, "xml");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("<?xml version=\"1.0\"?>");
+            sb.AppendLine("<?mso-application progid=\"Excel.Sheet\"?>");
+            sb.AppendLine("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"");
+            sb.AppendLine(" xmlns:o=\"urn:schemas-microsoft-com:office:office\"");
+            sb.AppendLine(" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"");
+            sb.AppendLine(" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"");
+            sb.AppendLine(" xmlns:html=\"http://www.w3.org/TR/REC-html40\">");
+            
+            sb.AppendLine(" <Styles>");
+            sb.AppendLine("  <Style ss:ID=\"sHeader\">");
+            sb.AppendLine("   <Font ss:Bold=\"1\"/>");
+            sb.AppendLine("   <Interior ss:Color=\"#C0C0C0\" ss:Pattern=\"Solid\"/>");
+            sb.AppendLine("  </Style>");
+            sb.AppendLine(" </Styles>");
+
+            sb.AppendLine($" <Worksheet ss:Name=\"{SecurityElement.Escape(col.title)}\">");
+            sb.AppendLine("  <Table>");
+
+            string[] headers = {
+                "Task ID", "Task Link", "Task Type", "Task Custom ID", "Task Name", "Task Content",
+                "Status", "Date created", "Date created Text", "Due date", "Due date Text",
+                "Start date", "Start date Text", "Parent ID", "Subtask IDs", "Attachments",
+                "Assignees", "Tags", "Priority", "List Name", "Space Name", "Time Estimated",
+                "Time Estimated Text", "Checklists", "Comments", "Assigned Comments",
+                "Time Spent", "Time Spent Text", "Rolled Up Time", "Rolled Up Time Text"
+            };
+
+            sb.AppendLine("   <Row ss:StyleID=\"sHeader\">");
+            foreach (var h in headers)
+            {
+                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(h)}</Data></Cell>");
+            }
+            sb.AppendLine("   </Row>");
+
+            string boardName = Board != null ? Board.name : "Board";
+
+            if (col.cards.Count == 0)
+            {
+                // Export empty column placeholder
+                string[] rowValues = new string[30];
+                for (int j = 0; j < 30; j++) rowValues[j] = "";
+                rowValues[2] = "status_placeholder";
+                rowValues[6] = col.title;
+                rowValues[19] = boardName;
+                rowValues[20] = "AwesomeTaskManager";
+                rowValues[25] = "0";
+
+                sb.AppendLine("   <Row>");
+                foreach (var val in rowValues)
+                {
+                    sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
+                }
+                sb.AppendLine("   </Row>");
+            }
+            else
+            {
+                foreach (var card in col.cards)
+                {
+                    string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
+                    string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
+                    string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
+                    
+                    List<string> checklistStrings = new List<string>();
+                    for (int i = 0; i < card.checklistItems.Count; i++)
+                    {
+                        string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
+                        checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
+                    }
+                    string checklists = string.Join("; ", checklistStrings);
+
+                    string[] rowValues = new string[30];
+                    rowValues[0] = card.id;
+                    rowValues[4] = card.title;
+                    rowValues[5] = card.description;
+                    rowValues[6] = col.title;
+                    rowValues[7] = card.createdDate;
+                    rowValues[8] = card.createdDate;
+                    rowValues[9] = card.dueDate;
+                    rowValues[10] = card.dueDate;
+                    rowValues[16] = assignees;
+                    rowValues[17] = tags;
+                    rowValues[18] = priority;
+                    rowValues[19] = boardName;
+                    rowValues[20] = "AwesomeTaskManager";
+                    rowValues[23] = checklists;
+                    rowValues[25] = "0";
+
+                    sb.AppendLine("   <Row>");
+                    foreach (var val in rowValues)
+                    {
+                        sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
+                    }
+                    sb.AppendLine("   </Row>");
+                }
+            }
+
+            sb.AppendLine("  </Table>");
+            sb.AppendLine(" </Worksheet>");
+            sb.AppendLine("</Workbook>");
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            TriggerSuccessNotification("Column exported to Excel successfully");
+        }
+
+        private void ExportColumn(TaskColumn col)
+        {
+            if (col == null) return;
+            string defaultName = SanitizeFileName(col.title);
+            string path = EditorUtility.SaveFilePanel("Export Column", "", defaultName, "atcl");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var exportData = new ExportColumnData { column = col };
+            HashSet<string> assigneeIds = new HashSet<string>();
+            foreach (var card in col.cards)
+                foreach (var id in card.assigneeIds)
+                    assigneeIds.Add(id);
+
+            exportData.assignees = _data.assignees.Where(a => assigneeIds.Contains(a.id)).ToList();
+
+            string json = JsonUtility.ToJson(exportData, true);
+            File.WriteAllText(path, json, Encoding.UTF8);
+            TriggerSuccessNotification("Column exported successfully");
+        }
+
+        private void ImportColumnIntoBoard(TaskBoard board)
+        {
+            if (board == null) return;
+            string path = EditorUtility.OpenFilePanel("Import Column", "", "atcl");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string json = File.ReadAllText(path, Encoding.UTF8);
+                var importData = JsonUtility.FromJson<ExportColumnData>(json);
+                if (importData == null || importData.column == null)
+                {
+                    TriggerErrorNotification("Invalid column file");
+                    return;
+                }
+
+                var col = importData.column;
+                
+                // Ensure unique IDs for all cards in the column
+                foreach (var card in col.cards)
+                {
+                    card.id = Guid.NewGuid().ToString();
+                }
+
+                // Handle assignees
+                foreach (var a in importData.assignees)
+                {
+                    if (!_data.assignees.Any(existing => existing.id == a.id))
+                    {
+                        if (!_data.assignees.Any(existing => existing.name == a.name))
+                        {
+                            _data.assignees.Add(a);
+                        }
+                    }
+                }
+
+                board.columns.Add(col);
+                ResetFilters();
+                _data.Normalize();
+                Save();
+                RefreshAfterImport();
+                TriggerSuccessNotification("Column imported successfully");
+                GUIUtility.ExitGUI();
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Column Import failed: " + e.Message);
+                TriggerErrorNotification("Column Import failed");
+            }
+        }
+
+        private void ExportCardToCSV(TaskCard card, TaskColumn col)
+        {
+            if (card == null || col == null) return;
+            string defaultName = SanitizeFileName(card.title);
+            string path = EditorUtility.SaveFilePanel("Export Card to CSV", "", defaultName, "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var sb = new StringBuilder();
+            // ClickUp compatible header
+            sb.AppendLine("Task ID,Task Link,Task Type,Task Custom ID,Task Name,Task Content,Status,Date created,Date created Text,Due date,Due date Text,Start date,Start date Text,Parent ID,Subtask IDs,Attachments,Assignees,Tags,Priority,List Name,Space Name,Time Estimated,Time Estimated Text,Checklists,Comments,Assigned Comments,Time Spent,Time Spent Text,Rolled Up Time,Rolled Up Time Text");
+
+            string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
+            string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
+            string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
+            
+            List<string> checklistStrings = new List<string>();
+            for (int i = 0; i < card.checklistItems.Count; i++)
+            {
+                string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
+                checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
+            }
+            string checklists = string.Join("; ", checklistStrings);
+
+            sb.Append($"\"{EscapeCSV(card.id)}\",");
+            sb.Append($"\"\","); // Task Link
+            sb.Append($"\"task\",");
+            sb.Append($"\"\","); // Custom ID
+            sb.Append($"\"{EscapeCSV(card.title)}\",");
+            sb.Append($"\"{EscapeCSV(card.description)}\",");
+            sb.Append($"\"{EscapeCSV(col.title)}\",");
+            sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
+            sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
+            sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
+            sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
+            sb.Append($"\"\","); // Start date
+            sb.Append($"\"\",");
+            sb.Append($"\"\","); // Parent ID
+            sb.Append($"\"\",");
+            sb.Append($"\"[]\","); // Attachments
+            sb.Append($"\"{EscapeCSV(assignees)}\",");
+            sb.Append($"\"{EscapeCSV(tags)}\",");
+            sb.Append($"\"{EscapeCSV(priority)}\",");
+            sb.Append($"\"{EscapeCSV(Board.name)}\",");
+            sb.Append($"\"AwesomeTaskManager\",");
+            sb.Append($"\"\",");
+            sb.Append($"\"\",");
+            sb.Append($"\"{EscapeCSV(checklists)}\",");
+            sb.Append($"\"\",");
+            sb.Append($"\"0\",");
+            sb.Append($"\"\",");
+            sb.Append($"\"\",");
+            sb.Append($"\"\",");
+            sb.AppendLine($"\"\"");
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            TriggerSuccessNotification("Card exported to CSV successfully");
+        }
+
+        private void ExportCardToExcel(TaskCard card, TaskColumn col)
+        {
+            if (card == null || col == null) return;
+            string defaultName = SanitizeFileName(card.title);
+            string path = EditorUtility.SaveFilePanel("Export Card to Excel", "", defaultName, "xml");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var sb = new StringBuilder();
+            sb.AppendLine("<?xml version=\"1.0\"?>");
+            sb.AppendLine("<?mso-application progid=\"Excel.Sheet\"?>");
+            sb.AppendLine("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"");
+            sb.AppendLine(" xmlns:o=\"urn:schemas-microsoft-com:office:office\"");
+            sb.AppendLine(" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"");
+            sb.AppendLine(" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"");
+            sb.AppendLine(" xmlns:html=\"http://www.w3.org/TR/REC-html40\">");
+            
+            sb.AppendLine(" <Styles>");
+            sb.AppendLine("  <Style ss:ID=\"sHeader\">");
+            sb.AppendLine("   <Font ss:Bold=\"1\"/>");
+            sb.AppendLine("   <Interior ss:Color=\"#C0C0C0\" ss:Pattern=\"Solid\"/>");
+            sb.AppendLine("  </Style>");
+            sb.AppendLine(" </Styles>");
+
+            sb.AppendLine($" <Worksheet ss:Name=\"{SecurityElement.Escape(card.title)}\">");
+            sb.AppendLine("  <Table>");
+
+            string[] headers = {
+                "Task ID", "Task Link", "Task Type", "Task Custom ID", "Task Name", "Task Content",
+                "Status", "Date created", "Date created Text", "Due date", "Due date Text",
+                "Start date", "Start date Text", "Parent ID", "Subtask IDs", "Attachments",
+                "Assignees", "Tags", "Priority", "List Name", "Space Name", "Time Estimated",
+                "Time Estimated Text", "Checklists", "Comments", "Assigned Comments",
+                "Time Spent", "Time Spent Text", "Rolled Up Time", "Rolled Up Time Text"
+            };
+
+            sb.AppendLine("   <Row ss:StyleID=\"sHeader\">");
+            foreach (var h in headers)
+            {
+                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(h)}</Data></Cell>");
+            }
+            sb.AppendLine("   </Row>");
+
+            string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
+            string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
+            string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
+            
+            List<string> checklistStrings = new List<string>();
+            for (int i = 0; i < card.checklistItems.Count; i++)
+            {
+                string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
+                checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
+            }
+            string checklists = string.Join("; ", checklistStrings);
+
+            string[] rowValues = new string[30];
+            rowValues[0] = card.id;
+            rowValues[1] = "";
+            rowValues[2] = "task";
+            rowValues[3] = "";
+            rowValues[4] = card.title;
+            rowValues[5] = card.description;
+            rowValues[6] = col.title;
+            rowValues[7] = card.createdDate;
+            rowValues[8] = card.createdDate;
+            rowValues[9] = card.dueDate;
+            rowValues[10] = card.dueDate;
+            rowValues[11] = "";
+            rowValues[12] = "";
+            rowValues[13] = "";
+            rowValues[14] = "";
+            rowValues[15] = "[]";
+            rowValues[16] = assignees;
+            rowValues[17] = tags;
+            rowValues[18] = priority;
+            rowValues[19] = Board.name;
+            rowValues[20] = "AwesomeTaskManager";
+            rowValues[21] = "";
+            rowValues[22] = "";
+            rowValues[23] = checklists;
+            rowValues[24] = "";
+            rowValues[25] = "0";
+            rowValues[26] = "";
+            rowValues[27] = "";
+            rowValues[28] = "";
+            rowValues[29] = "";
+
+            sb.AppendLine("   <Row>");
+            foreach (var val in rowValues)
+            {
+                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
+            }
+            sb.AppendLine("   </Row>");
+
+            sb.AppendLine("  </Table>");
+            sb.AppendLine(" </Worksheet>");
+            sb.AppendLine("</Workbook>");
+
+            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+            TriggerSuccessNotification("Card exported to Excel successfully");
+        }
+
+        private void ExportCard(TaskCard card)
+        {
+            if (card == null) return;
+            string defaultName = SanitizeFileName(card.title);
+            string path = EditorUtility.SaveFilePanel("Export Card", "", defaultName, "atc");
+            if (string.IsNullOrEmpty(path)) return;
+
+            var exportData = new ExportCardData { card = card };
+            exportData.assignees = _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).ToList();
+
+            string json = JsonUtility.ToJson(exportData, true);
+            File.WriteAllText(path, json, Encoding.UTF8);
+            TriggerSuccessNotification("Card exported successfully");
+        }
+
         private void ExportFolder(NoteFolder folder)
         {
             string path = EditorUtility.SaveFolderPanel("Export Folder", "", folder.name);
@@ -2124,44 +3557,912 @@ namespace AwesomeTaskManager.Editor
             ImportSingleFile(path);
         }
 
-        private void ImportSingleFile(string path)
+        private void ImportColumnFromCSV(TaskBoard board)
         {
-            string fileName = Path.GetFileNameWithoutExtension(path);
-            string content = File.ReadAllText(path, Encoding.UTF8);
-
-            // Strip markdown header if it's the first line
-            string title = fileName;
-            if (content.StartsWith("# "))
+            if (board == null) return;
+            if (_data == null)
             {
-                int lineEnd = content.IndexOf('\n');
-                if (lineEnd > 0)
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import Column from CSV", "", "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string[] lines = File.ReadAllLines(path, Encoding.UTF8);
+                if (lines.Length < 2)
                 {
-                    title = content.Substring(2, lineEnd - 2).Trim();
-                    content = content.Substring(lineEnd + 1).TrimStart('\r', '\n');
+                    TriggerErrorNotification("CSV file is empty or missing header");
+                    return;
+                }
+
+                string[] headers = ParseCSVLine(lines[0]);
+                string suggestedProfileId;
+                var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Column, out suggestedProfileId);
+                ImportFieldMappingWindow.Open("Import Column Mapping (CSV)", ImportMappingScope.Column, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(result?.deleteProfileId))
+                        {
+                            if (DeleteImportProfile(result.deleteProfileId))
+                                TriggerSuccessNotification("Import profile deleted successfully");
+                            return;
+                        }
+
+                        var rows = new List<string[]>(lines.Length);
+                        foreach (var line in lines)
+                            rows.Add(ParseCSVLine(line));
+
+                        ApplyImportMappingPreferences(result, ImportMappingScope.Column, path, headers);
+                        ImportColumnRowsWithMapping(board, rows, path, result.mapping, "Column(s) imported from CSV successfully");
+                    }
+                    catch (ExitGUIException)
+                    {
+                        // Handled by the mapping window closing itself.
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] CSV Column Import failed: " + e.Message);
+                        TriggerErrorNotification("CSV Column Import failed. See console for details.");
+                    }
+                });
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] CSV Column Import failed: " + e.Message);
+                TriggerErrorNotification("CSV Column Import failed. See console for details.");
+            }
+        }
+
+        private void ImportColumnFromExcel(TaskBoard board)
+        {
+            if (board == null) return;
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import Column from Excel", "", "xlsx,xml");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                List<string[]> rows = new List<string[]>();
+                if (path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    rows = ParseXlsx(path);
+                }
+                else if (path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                {
+                    rows = ParseXmlSpreadsheet(path);
+                }
+
+                if (rows.Count < 2)
+                {
+                    TriggerErrorNotification("Excel file is empty or missing header");
+                    return;
+                }
+
+                string[] headers = rows[0];
+                string suggestedProfileId;
+                var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Column, out suggestedProfileId);
+                ImportFieldMappingWindow.Open("Import Column Mapping (Excel)", ImportMappingScope.Column, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(result?.deleteProfileId))
+                        {
+                            if (DeleteImportProfile(result.deleteProfileId))
+                                TriggerSuccessNotification("Import profile deleted successfully");
+                            return;
+                        }
+
+                        ApplyImportMappingPreferences(result, ImportMappingScope.Column, path, headers);
+                        ImportColumnRowsWithMapping(board, rows, path, result.mapping, "Column(s) imported from Excel successfully");
+                    }
+                    catch (ExitGUIException)
+                    {
+                        // Handled by the mapping window closing itself.
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] Excel Column Import failed: " + e.Message);
+                        TriggerErrorNotification("Excel Column Import failed. See console for details.");
+                    }
+                });
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Excel Column Import failed: " + e.Message);
+                TriggerErrorNotification("Excel Column Import failed. See console for details.");
+            }
+        }
+
+        private void ImportBoardFromCSV()
+        {
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import Board from CSV", "", "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string[] lines = File.ReadAllLines(path, Encoding.UTF8);
+                if (lines.Length < 2)
+                {
+                    TriggerErrorNotification("CSV file is empty or missing header");
+                    return;
+                }
+
+                string[] headers = ParseCSVLine(lines[0]);
+                string suggestedProfileId;
+                var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Board, out suggestedProfileId);
+                ImportFieldMappingWindow.Open("Import Board Mapping (CSV)", ImportMappingScope.Board, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(result?.deleteProfileId))
+                        {
+                            if (DeleteImportProfile(result.deleteProfileId))
+                                TriggerSuccessNotification("Import profile deleted successfully");
+                            return;
+                        }
+
+                        var rows = new List<string[]>(lines.Length);
+                        foreach (var line in lines)
+                            rows.Add(ParseCSVLine(line));
+
+                        ApplyImportMappingPreferences(result, ImportMappingScope.Board, path, headers);
+                        ImportBoardRowsWithMapping(rows, path, result.mapping, "Board imported from CSV successfully");
+                    }
+                    catch (ExitGUIException)
+                    {
+                        // Handled by the mapping window closing itself.
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] CSV Import failed: " + e.Message);
+                        TriggerErrorNotification("CSV Import failed. See console for details.");
+                    }
+                });
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] CSV Import failed: " + e.Message);
+                TriggerErrorNotification("CSV Import failed. See console for details.");
+            }
+        }
+
+        private void ImportBoardRowsWithMapping(List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage)
+        {
+            if (rows == null || rows.Count < 2)
+            {
+                TriggerErrorNotification("Import data is empty.");
+                return;
+            }
+
+            if (mapping == null || mapping.nameIndex < 0)
+            {
+                TriggerErrorNotification("Task name mapping is required.");
+                return;
+            }
+
+            TaskBoard board = null;
+            var columnMap = new Dictionary<string, TaskColumn>(StringComparer.OrdinalIgnoreCase);
+
+            for (int i = 1; i < rows.Count; i++)
+            {
+                string[] values = rows[i] ?? Array.Empty<string>();
+                string taskName = GetMappedValue(values, mapping.nameIndex);
+
+                if (string.IsNullOrWhiteSpace(taskName))
+                {
+                    // Preserve empty-column placeholder rows (status_placeholder).
+                    // Create the column so round-tripping keeps all columns, even empty ones.
+                    if (mapping.statusIndex >= 0)
+                    {
+                        string placeholderStatus = GetMappedValue(values, mapping.statusIndex);
+                        if (!string.IsNullOrWhiteSpace(placeholderStatus))
+                        {
+                            if (board == null)
+                            {
+                                string boardName = GetMappedValue(values, mapping.listNameIndex);
+                                if (string.IsNullOrWhiteSpace(boardName))
+                                    boardName = Path.GetFileNameWithoutExtension(path);
+                                board = new TaskBoard(boardName);
+                                board.columns.Clear();
+                            }
+
+                            if (!columnMap.ContainsKey(placeholderStatus))
+                            {
+                                var emptyCol = new TaskColumn(placeholderStatus);
+                                board.columns.Add(emptyCol);
+                                columnMap[placeholderStatus] = emptyCol;
+                            }
+                        }
+                    }
+                    continue;
+                }
+
+                if (board == null)
+                {
+                    string boardName = GetMappedValue(values, mapping.listNameIndex);
+                    if (string.IsNullOrWhiteSpace(boardName))
+                        boardName = Path.GetFileNameWithoutExtension(path);
+
+                    board = new TaskBoard(boardName);
+                    board.columns.Clear();
+                }
+
+                string status = GetMappedValue(values, mapping.statusIndex);
+                if (string.IsNullOrWhiteSpace(status)) status = "To Do";
+
+                if (!columnMap.TryGetValue(status, out TaskColumn col))
+                {
+                    col = new TaskColumn(status);
+                    board.columns.Add(col);
+                    columnMap[status] = col;
+                }
+
+                TaskCard card = new TaskCard(taskName);
+                MapValuesToCard(
+                    card,
+                    values,
+                    status,
+                    mapping.descriptionIndex,
+                    mapping.priorityIndex,
+                    mapping.assigneeIndex,
+                    mapping.tagsIndex,
+                    mapping.dueDateIndex,
+                    mapping.checklistIndex,
+                    mapping.customFieldsIndex,
+                    mapping.preset == ImportMappingPreset.Trello);
+                col.cards.Add(card);
+            }
+
+            if (board == null)
+            {
+                TriggerErrorNotification("No columns or tasks found to import.");
+                return;
+            }
+
+            if (mapping.preset == ImportMappingPreset.ClickUp)
+                SortColumnsLikeClickUp(board.columns);
+
+            _data.boards.Add(board);
+            _boardIndex = _data.boards.Count - 1;
+            ResetFilters();
+            _data.Normalize();
+            Save();
+            RefreshAfterImport();
+            TriggerSuccessNotification(successMessage);
+            GUIUtility.ExitGUI();
+        }
+
+        private void ImportColumnRowsWithMapping(TaskBoard board, List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage)
+        {
+            if (board == null || rows == null || rows.Count < 2)
+            {
+                TriggerErrorNotification("Import data is empty.");
+                return;
+            }
+
+            if (mapping == null || mapping.nameIndex < 0)
+            {
+                TriggerErrorNotification("Task name mapping is required.");
+                return;
+            }
+
+            var columnMap = new Dictionary<string, TaskColumn>(StringComparer.OrdinalIgnoreCase);
+
+            for (int i = 1; i < rows.Count; i++)
+            {
+                string[] values = rows[i] ?? Array.Empty<string>();
+                string taskName = GetMappedValue(values, mapping.nameIndex);
+
+                if (string.IsNullOrWhiteSpace(taskName))
+                {
+                    // Preserve empty-column placeholder rows so round-tripping keeps all columns.
+                    if (mapping.statusIndex >= 0)
+                    {
+                        string placeholderStatus = GetMappedValue(values, mapping.statusIndex);
+                        if (!string.IsNullOrWhiteSpace(placeholderStatus) && !columnMap.ContainsKey(placeholderStatus))
+                        {
+                            var existingCol = board.columns.FirstOrDefault(c => string.Equals(c.title, placeholderStatus, StringComparison.OrdinalIgnoreCase));
+                            if (existingCol == null)
+                            {
+                                existingCol = new TaskColumn(placeholderStatus);
+                                board.columns.Add(existingCol);
+                            }
+                            columnMap[placeholderStatus] = existingCol;
+                        }
+                    }
+                    continue;
+                }
+
+                string status = GetMappedValue(values, mapping.statusIndex);
+                if (string.IsNullOrWhiteSpace(status)) status = Path.GetFileNameWithoutExtension(path);
+                if (string.IsNullOrWhiteSpace(status)) status = "Imported";
+
+                if (!columnMap.TryGetValue(status, out TaskColumn col))
+                {
+                    col = board.columns.FirstOrDefault(c => string.Equals(c.title, status, StringComparison.OrdinalIgnoreCase));
+                    if (col == null)
+                    {
+                        col = new TaskColumn(status);
+                        board.columns.Add(col);
+                    }
+                    columnMap[status] = col;
+                }
+
+                TaskCard card = new TaskCard(taskName);
+                MapValuesToCard(
+                    card,
+                    values,
+                    status,
+                    mapping.descriptionIndex,
+                    mapping.priorityIndex,
+                    mapping.assigneeIndex,
+                    mapping.tagsIndex,
+                    mapping.dueDateIndex,
+                    mapping.checklistIndex,
+                    mapping.customFieldsIndex,
+                    mapping.preset == ImportMappingPreset.Trello);
+                col.cards.Add(card);
+            }
+
+            ResetFilters();
+            if (mapping.preset == ImportMappingPreset.ClickUp)
+                SortColumnsLikeClickUp(board.columns);
+
+            _data.Normalize();
+            Save();
+            RefreshAfterImport();
+            TriggerSuccessNotification(successMessage);
+            GUIUtility.ExitGUI();
+        }
+
+        private static string GetMappedValue(string[] values, int idx)
+        {
+            if (values == null || idx < 0 || idx >= values.Length) return string.Empty;
+            return values[idx]?.Trim() ?? string.Empty;
+        }
+
+        private static void SortColumnsLikeClickUp(List<TaskColumn> columns)
+        {
+            if (columns == null) return;
+
+            string[] order = { "To Do", "In Progress", "Review", "Done", "Complete", "Closed", "Archived" };
+            columns.Sort((a, b) =>
+            {
+                int indexA = -1;
+                for (int j = 0; j < order.Length; j++)
+                    if (string.Equals(a.title, order[j], StringComparison.OrdinalIgnoreCase)) { indexA = j; break; }
+
+                int indexB = -1;
+                for (int j = 0; j < order.Length; j++)
+                    if (string.Equals(b.title, order[j], StringComparison.OrdinalIgnoreCase)) { indexB = j; break; }
+
+                if (indexA == -1) indexA = 999;
+                if (indexB == -1) indexB = 999;
+                if (indexA != indexB) return indexA.CompareTo(indexB);
+                return string.Compare(a.title, b.title, StringComparison.OrdinalIgnoreCase);
+            });
+        }
+
+        private string[] ParseCSVLine(string line)
+        {
+            List<string> result = new List<string>();
+            bool inQuotes = false;
+            StringBuilder sb = new StringBuilder();
+
+            for (int i = 0; i < line.Length; i++)
+            {
+                char c = line[i];
+                if (c == '\"')
+                {
+                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '\"')
+                    {
+                        sb.Append('\"');
+                        i++;
+                    }
+                    else
+                    {
+                        inQuotes = !inQuotes;
+                    }
+                }
+                else if (c == ',' && !inQuotes)
+                {
+                    result.Add(sb.ToString());
+                    sb.Clear();
                 }
                 else
                 {
-                    title = content.Substring(2).Trim();
-                    content = "";
+                    sb.Append(c);
+                }
+            }
+            result.Add(sb.ToString());
+            return result.ToArray();
+        }
+
+        private void MapValuesToCard(TaskCard card, string[] values, string status, int descIdx, int priorityIdx, int assigneeIdx, int tagIdx, int dueIdx, int checklistIdx, int customFieldsIdx = -1, bool parseAsTrello = false)
+        {
+            if (status != null)
+            {
+                if (status.Equals("Archived", StringComparison.OrdinalIgnoreCase))
+                {
+                    card.archived = true;
+                    card.isArchived = true;
+                }
+                if (status.Equals("Done", StringComparison.OrdinalIgnoreCase) || status.Equals("Closed", StringComparison.OrdinalIgnoreCase) || status.Equals("Complete", StringComparison.OrdinalIgnoreCase) || status.Equals("Completed", StringComparison.OrdinalIgnoreCase))
+                {
+                    card.completed = true;
                 }
             }
 
-            string fid = _selectedFolderId;
-            if (fid == "__unfiled__") fid = "";
-
-            var note = new QuickNote
+            if (descIdx != -1 && descIdx < values.Length) card.description = values[descIdx];
+            if (dueIdx != -1 && dueIdx < values.Length) card.dueDate = values[dueIdx];
+            
+            if (priorityIdx != -1 && priorityIdx < values.Length)
             {
-                title = string.IsNullOrWhiteSpace(title) ? fileName : title,
-                content = content,
-                folderId = fid
-            };
-            _data.notes.Insert(0, note);
-            _selectedNote = 0;
-            Save();
-            Repaint();
+                string p = values[priorityIdx].ToLower();
+                if (p.Contains("urgent")) card.priority = 4;
+                else if (p.Contains("high")) card.priority = 3;
+                else if (p.Contains("medium") || p.Contains("normal")) card.priority = 2;
+                else if (p.Contains("low")) card.priority = 1;
+                else card.priority = 0;
+            }
 
-            EditorUtility.DisplayDialog("Imported",
-                $"Imported \"{note.title}\" ({note.WordCount} words) from:\n{path}", "OK");
+            if (tagIdx != -1 && tagIdx < values.Length)
+            {
+                string tags = values[tagIdx].Trim('[', ']');
+                if (!string.IsNullOrEmpty(tags))
+                {
+                    string[] splitTags = tags.Split(new[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    card.category = splitTags.Length > 0 ? splitTags[0].Trim() : string.Empty;
+                    if (!string.IsNullOrEmpty(card.category) && !_data.categories.Contains(card.category))
+                    {
+                        _data.categories.Add(card.category);
+                    }
+                }
+            }
+
+            if (assigneeIdx != -1 && assigneeIdx < values.Length)
+            {
+                string assigneesStr = values[assigneeIdx].Trim('[', ']');
+                if (!string.IsNullOrEmpty(assigneesStr))
+                {
+                    string[] names = assigneesStr.Split(new[] { ',', ';', '|' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var n in names)
+                    {
+                        string trimmedName = n.Trim();
+                        if (string.IsNullOrEmpty(trimmedName)) continue;
+                        var assignee = _data.assignees.FirstOrDefault(a => a.name == trimmedName);
+                        if (assignee == null)
+                        {
+                            assignee = new Assignee { name = trimmedName };
+                            _data.assignees.Add(assignee);
+                        }
+                        if (!card.assigneeIds.Contains(assignee.id))
+                        {
+                            card.assigneeIds.Add(assignee.id);
+                        }
+                    }
+                }
+            }
+
+            if (checklistIdx != -1 && checklistIdx < values.Length)
+            {
+                string checklistsStr = values[checklistIdx];
+                if (!string.IsNullOrEmpty(checklistsStr))
+                {
+                    string[] items = checklistsStr.Split(new[] { ";", "\n" }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var item in items)
+                    {
+                        string itemName = item;
+                        bool resolved = false;
+                        if (item.EndsWith("(RESOLVED)"))
+                        {
+                            itemName = item.Substring(0, item.Length - 10).Trim();
+                            resolved = true;
+                        }
+                        else if (item.EndsWith("(UNRESOLVED)"))
+                        {
+                            itemName = item.Substring(0, item.Length - 12).Trim();
+                            resolved = false;
+                        }
+                        card.checklistItems.Add(itemName);
+                        card.checklistStates.Add(resolved);
+                    }
+                }
+            }
+
+            if (customFieldsIdx != -1 && customFieldsIdx < values.Length)
+            {
+                string customFields = values[customFieldsIdx];
+                if (!string.IsNullOrWhiteSpace(customFields))
+                {
+                    if (parseAsTrello && card.priority == 0)
+                    {
+                        string p = customFields.ToLowerInvariant();
+                        if (p.Contains("urgent")) card.priority = 4;
+                        else if (p.Contains("high")) card.priority = 3;
+                        else if (p.Contains("medium") || p.Contains("normal")) card.priority = 2;
+                        else if (p.Contains("low")) card.priority = 1;
+                    }
+
+                    string customText = customFields.Trim();
+                    if (!string.IsNullOrWhiteSpace(customText))
+                    {
+                        string separator = string.IsNullOrWhiteSpace(card.description) ? "" : "\n\n";
+                        card.description = (card.description ?? string.Empty) + separator + "Custom Fields: " + customText;
+                    }
+                }
+            }
+        }
+
+        private void ImportBoard()
+        {
+            string path = EditorUtility.OpenFilePanel("Import Board", "", "atb");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string json = File.ReadAllText(path, Encoding.UTF8);
+                var importData = JsonUtility.FromJson<ExportBoardData>(json);
+                if (importData == null || importData.board == null)
+                {
+                    TriggerErrorNotification("Invalid board file");
+                    return;
+                }
+
+                var board = importData.board;
+
+                // Handle assignees
+                foreach (var a in importData.assignees)
+                {
+                    if (!_data.assignees.Any(existing => existing.id == a.id))
+                    {
+                        if (!_data.assignees.Any(existing => existing.name == a.name))
+                        {
+                            _data.assignees.Add(a);
+                        }
+                    }
+                }
+
+                // Handle categories
+                foreach (var cc in importData.categoryColors)
+                {
+                    if (!_data.categories.Contains(cc.category))
+                    {
+                        _data.categories.Add(cc.category);
+                        _data.SetCategoryColor(cc.category, cc.colorIndex);
+                    }
+                }
+
+                // Add board
+                board.name += " (Imported)";
+                _data.boards.Add(board);
+                _boardIndex = _data.boards.Count - 1;
+                ResetFilters();
+                _data.Normalize();
+                Save();
+                RefreshAfterImport();
+                TriggerSuccessNotification("Board imported successfully");
+                GUIUtility.ExitGUI();
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Import failed: " + e.Message);
+                TriggerErrorNotification("Import failed");
+            }
+        }
+
+        private void ImportCardIntoColumn(TaskColumn col)
+        {
+            if (col == null) return;
+            string path = EditorUtility.OpenFilePanel("Import Card", "", "atc");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string json = File.ReadAllText(path, Encoding.UTF8);
+                var importData = JsonUtility.FromJson<ExportCardData>(json);
+                if (importData == null || importData.card == null)
+                {
+                    TriggerErrorNotification("Invalid card file");
+                    return;
+                }
+
+                var card = importData.card;
+                card.id = Guid.NewGuid().ToString(); // Ensure unique ID for imported card
+                card.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+                // Handle assignees
+                foreach (var a in importData.assignees)
+                {
+                    if (!_data.assignees.Any(existing => existing.id == a.id))
+                    {
+                        if (!_data.assignees.Any(existing => existing.name == a.name))
+                        {
+                            _data.assignees.Add(a);
+                        }
+                    }
+                }
+
+                col.cards.Add(card);
+                ResetFilters();
+                _data.Normalize();
+                Save();
+                TriggerSuccessNotification("Card imported successfully");
+                GUIUtility.ExitGUI();
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Import failed: " + e.Message);
+                TriggerErrorNotification("Import failed");
+            }
+        }
+
+        private void ImportCardRowsWithMapping(TaskColumn targetCol, List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage)
+        {
+            if (targetCol == null || rows == null || rows.Count < 2)
+            {
+                TriggerErrorNotification("Import data is empty.");
+                return;
+            }
+
+            if (mapping == null || mapping.nameIndex < 0)
+            {
+                TriggerErrorNotification("Task name mapping is required.");
+                return;
+            }
+
+            for (int i = 1; i < rows.Count; i++)
+            {
+                string[] values = rows[i] ?? Array.Empty<string>();
+                string taskName = GetMappedValue(values, mapping.nameIndex);
+                if (string.IsNullOrWhiteSpace(taskName)) continue;
+
+                TaskCard card = new TaskCard(taskName);
+                MapValuesToCard(
+                    card,
+                    values,
+                    targetCol.title,
+                    mapping.descriptionIndex,
+                    mapping.priorityIndex,
+                    mapping.assigneeIndex,
+                    mapping.tagsIndex,
+                    mapping.dueDateIndex,
+                    mapping.checklistIndex,
+                    mapping.customFieldsIndex,
+                    mapping.preset == ImportMappingPreset.Trello);
+
+                targetCol.cards.Add(card);
+            }
+
+            ResetFilters();
+            _data.Normalize();
+            Save();
+            TriggerSuccessNotification(successMessage);
+            GUIUtility.ExitGUI();
+        }
+
+        private void ImportCardFromCSV(TaskColumn targetCol)
+        {
+            if (targetCol == null) return;
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import Card from CSV", "", "csv");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string[] lines = File.ReadAllLines(path, Encoding.UTF8);
+                if (lines.Length < 2)
+                {
+                    TriggerErrorNotification("CSV file is empty or missing header");
+                    return;
+                }
+
+                string[] headers = ParseCSVLine(lines[0]);
+                string suggestedProfileId;
+                var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Card, out suggestedProfileId);
+                ImportFieldMappingWindow.Open("Import Card Mapping (CSV)", ImportMappingScope.Card, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(result?.deleteProfileId))
+                        {
+                            if (DeleteImportProfile(result.deleteProfileId))
+                                TriggerSuccessNotification("Import profile deleted successfully");
+                            return;
+                        }
+
+                        var rows = new List<string[]>(lines.Length);
+                        foreach (var line in lines)
+                            rows.Add(ParseCSVLine(line));
+
+                        ApplyImportMappingPreferences(result, ImportMappingScope.Card, path, headers);
+                        ImportCardRowsWithMapping(targetCol, rows, path, result.mapping, "Card(s) imported from CSV successfully");
+                    }
+                    catch (ExitGUIException)
+                    {
+                        // Handled by the mapping window closing itself.
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] CSV Card Import failed: " + e.Message);
+                        TriggerErrorNotification("CSV Card Import failed.");
+                    }
+                });
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] CSV Card Import failed: " + e.Message);
+                TriggerErrorNotification("CSV Card Import failed.");
+            }
+        }
+
+        private void ImportCardFromExcel(TaskColumn targetCol)
+        {
+            if (targetCol == null) return;
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import Card from Excel", "", "xlsx,xml");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                List<string[]> rows = new List<string[]>();
+                if (path.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+                {
+                    rows = ParseXlsx(path);
+                }
+                else if (path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                {
+                    rows = ParseXmlSpreadsheet(path);
+                }
+
+                if (rows.Count < 2)
+                {
+                    TriggerErrorNotification("Excel file is empty or missing header");
+                    return;
+                }
+
+                string[] headers = rows[0];
+                string suggestedProfileId;
+                var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Card, out suggestedProfileId);
+                ImportFieldMappingWindow.Open("Import Card Mapping (Excel)", ImportMappingScope.Card, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
+                {
+                    try
+                    {
+                        if (!string.IsNullOrWhiteSpace(result?.deleteProfileId))
+                        {
+                            if (DeleteImportProfile(result.deleteProfileId))
+                                TriggerSuccessNotification("Import profile deleted successfully");
+                            return;
+                        }
+
+                        ApplyImportMappingPreferences(result, ImportMappingScope.Card, path, headers);
+                        ImportCardRowsWithMapping(targetCol, rows, path, result.mapping, "Card(s) imported from Excel successfully");
+                    }
+                    catch (ExitGUIException)
+                    {
+                        // Handled by the mapping window closing itself.
+                    }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] Excel Card Import failed: " + e.Message);
+                        TriggerErrorNotification("Excel Card Import failed.");
+                    }
+                });
+            }
+            catch (ExitGUIException)
+            {
+                // Silent catch: when calling ExitGUI from a menu callback, 
+                // Unity might log the exception as an error if we rethrow.
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Excel Card Import failed: " + e.Message);
+                TriggerErrorNotification("Excel Card Import failed.");
+            }
+        }
+
+        private void ImportSingleFile(string path)
+        {
+            try
+            {
+                string fileName = Path.GetFileNameWithoutExtension(path);
+                string content = File.ReadAllText(path, Encoding.UTF8);
+
+                // Strip markdown header if it's the first line
+                string title = fileName;
+                if (content.StartsWith("# "))
+                {
+                    int lineEnd = content.IndexOf('\n');
+                    if (lineEnd > 0)
+                    {
+                        title = content.Substring(2, lineEnd - 2).Trim();
+                        content = content.Substring(lineEnd + 1).TrimStart('\r', '\n');
+                    }
+                    else
+                    {
+                        title = content.Substring(2).Trim();
+                        content = "";
+                    }
+                }
+
+                string fid = _selectedFolderId;
+                if (fid == "__unfiled__") fid = "";
+
+                var note = new QuickNote
+                {
+                    title = string.IsNullOrWhiteSpace(title) ? fileName : title,
+                    content = content,
+                    folderId = fid
+                };
+                _data.notes.Insert(0, note);
+                _selectedNote = 0;
+                ResetFilters();
+                Save();
+                EditorUtility.DisplayDialog("Imported",
+                    $"Imported \"{note.title}\" ({note.WordCount} words) from:\n{path}", "OK");
+                GUIUtility.ExitGUI();
+            }
+            catch (ExitGUIException) { }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Note Import failed: " + e.Message);
+                TriggerErrorNotification("Note Import failed");
+            }
         }
 
         // ── Image display ──
@@ -2321,20 +4622,26 @@ namespace AwesomeTaskManager.Editor
 
         private void CreateBoard(TaskBoard template)
         {
-            string baseName = template != null ? template.name : "New Board";
-            string newName = baseName;
-            int suffix = 2;
-            while (_data.boards.Any(b => b.name == newName))
+            try
             {
-                newName = $"{baseName} {suffix}";
-                suffix++;
-            }
+                string baseName = template != null ? template.name : "New Board";
+                string newName = baseName;
+                int suffix = 2;
+                while (_data.boards.Any(b => b.name == newName))
+                {
+                    newName = $"{baseName} {suffix}";
+                    suffix++;
+                }
 
-            TaskBoard newBoard = template != null ? template.Clone(true) : new TaskBoard(newName);
-            newBoard.name = newName;
-            _data.boards.Add(newBoard);
-            _boardIndex = _data.boards.Count - 1;
-            Save();
+                TaskBoard newBoard = template != null ? template.Clone(true) : new TaskBoard(newName);
+                newBoard.name = newName;
+                _data.boards.Add(newBoard);
+                _boardIndex = _data.boards.Count - 1;
+                ResetFilters();
+                Save();
+                GUIUtility.ExitGUI();
+            }
+            catch (ExitGUIException) { }
         }
 
         private void SaveCurrentAsTemplate()

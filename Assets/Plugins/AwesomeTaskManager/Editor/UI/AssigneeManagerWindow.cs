@@ -10,8 +10,8 @@ namespace AwesomeTaskManager.Editor
 {
     public class AssigneeManagerWindow : EditorWindow
     {
-        [SerializeField] private SaveData _data;
-        private System.Action _onChanged;
+        private SaveData _data;
+        private Action _onChanged;
         [SerializeField] private Vector2 _scroll;
         [SerializeField] private string _newName = "";
         [SerializeField] private int _newColorIndex = 1;
@@ -20,7 +20,7 @@ namespace AwesomeTaskManager.Editor
         private Dictionary<string, string> _nameBuffers = new Dictionary<string, string>();
         private Dictionary<string, Texture2D> _profileImageCache = new Dictionary<string, Texture2D>();
 
-        public static void ShowWindow(SaveData data, System.Action onChanged)
+        public static void ShowWindow(SaveData data, Action onChanged)
         {
             var window = GetWindow<AssigneeManagerWindow>(true, "👥 Assignee Manager", true);
             window._data = data;
@@ -31,8 +31,25 @@ namespace AwesomeTaskManager.Editor
 
         public void LoadData()
         {
-            _data = Persistence.Load();
+            var freshData = Persistence.Load();
+            if (freshData == null) return;
+            _data = freshData;
+            RefreshVisualState();
+        }
+
+        private void OnEnable()
+        {
+            LoadData();
+        }
+
+        private void RefreshVisualState()
+        {
+            TBStyles.InvalidateCache();
             Repaint();
+            EditorApplication.delayCall += () =>
+            {
+                if (this != null) Repaint();
+            };
         }
 
         private void OnGUI()
@@ -71,11 +88,7 @@ namespace AwesomeTaskManager.Editor
                     {
                         EditorGUILayout.LabelField("Icon", EditorStyles.miniLabel);
                         Rect iconRect = GUILayoutUtility.GetRect(64, 64);
-                        var newFieldTex = (Texture2D)EditorGUI.ObjectField(iconRect, _newProfileImage, typeof(Texture2D), false);
-                        if (newFieldTex != _newProfileImage)
-                        {
-                            _newProfileImage = newFieldTex;
-                        }
+                        _newProfileImage = (Texture2D)EditorGUI.ObjectField(iconRect, _newProfileImage, typeof(Texture2D), false);
                         
                         // Icon-specific handlers
                         HandleImageDragDrop(iconRect, (tex, path) => { 

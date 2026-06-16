@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using AwesomeTaskManager.Editor;
 using UnityEngine;
 
 namespace AwesomeTaskManager.Data
@@ -62,6 +63,7 @@ namespace AwesomeTaskManager.Data
         public bool archived;
         public List<string> checklistItems  = new List<string>();
         public List<bool>   checklistStates = new List<bool>();
+        public List<string> checklistLinkedCardIds = new List<string>();
         public List<string> linkedAssetGuids = new List<string>();
         public List<SceneObjectReference> linkedSceneObjects = new List<SceneObjectReference>();
         public List<LinkedItem> linkedItems = new List<LinkedItem>();
@@ -225,6 +227,31 @@ namespace AwesomeTaskManager.Data
     }
 
     [Serializable]
+    public class ExportBoardData
+    {
+        public TaskBoard board;
+        public List<Assignee> assignees = new List<Assignee>();
+        public List<CategoryColorEntry> categoryColors = new List<CategoryColorEntry>();
+        public string version = "1.0";
+    }
+
+    [Serializable]
+    public class ExportColumnData
+    {
+        public TaskColumn column;
+        public List<Assignee> assignees = new List<Assignee>();
+        public string version = "1.0";
+    }
+
+    [Serializable]
+    public class ExportCardData
+    {
+        public TaskCard card;
+        public List<Assignee> assignees = new List<Assignee>();
+        public string version = "1.0";
+    }
+
+    [Serializable]
     public class SaveData
     {
         public List<TaskBoard> boards = new List<TaskBoard>();
@@ -234,6 +261,7 @@ namespace AwesomeTaskManager.Data
         public List<string> categories = new List<string> { "Audio", "Art", "Code", "Design", "UI", "Bug", "Feature" };
         public List<CategoryColorEntry> categoryColors = new List<CategoryColorEntry>();
         public List<Assignee> assignees = new List<Assignee>();
+        public List<ImportFieldMappingProfile> importMappingProfiles = new List<ImportFieldMappingProfile>();
         public int lastBoardIndex;
 
         public int GetCategoryColor(string category)
@@ -302,6 +330,59 @@ namespace AwesomeTaskManager.Data
             }
         }
 
+        public void SyncLinkedChecklistItems(string subtaskCardId, bool isCompleted)
+        {
+            if (string.IsNullOrEmpty(subtaskCardId)) return;
+            
+            foreach (var card in AllCards())
+            {
+                if (card.checklistLinkedCardIds == null) continue;
+                for (int i = 0; i < card.checklistLinkedCardIds.Count; i++)
+                {
+                    if (card.checklistLinkedCardIds[i] == subtaskCardId)
+                    {
+                        if (i < card.checklistStates.Count)
+                        {
+                            card.checklistStates[i] = isCompleted;
+                        }
+                    }
+                }
+            }
+        }
+
+        public void CleanupReferencesToCard(string cardId)
+        {
+            if (string.IsNullOrEmpty(cardId)) return;
+            foreach (var card in AllCards())
+            {
+                if (card.checklistLinkedCardIds == null) continue;
+                for (int i = 0; i < card.checklistLinkedCardIds.Count; i++)
+                {
+                    if (card.checklistLinkedCardIds[i] == cardId)
+                    {
+                        card.checklistLinkedCardIds[i] = string.Empty;
+                    }
+                }
+            }
+        }
+
+        public IEnumerable<TaskCard> AllCards()
+        {
+            if (boards == null) yield break;
+            foreach (var board in boards)
+            {
+                if (board.columns == null) continue;
+                foreach (var column in board.columns)
+                {
+                    if (column.cards == null) continue;
+                    foreach (var card in column.cards)
+                    {
+                        yield return card;
+                    }
+                }
+            }
+        }
+
         public void Normalize()
         {
             categories ??= new List<string>();
@@ -311,6 +392,7 @@ namespace AwesomeTaskManager.Data
             notes ??= new List<QuickNote>();
             noteFolders ??= new List<NoteFolder>();
             assignees ??= new List<Assignee>();
+            importMappingProfiles ??= new List<ImportFieldMappingProfile>();
 
             if (templates.Count == 0) AddDefaultTemplates();
 
@@ -323,17 +405,33 @@ namespace AwesomeTaskManager.Data
             foreach (var board in boards)
             {
                 board.columns ??= new List<TaskColumn>();
+                board.columns = board.columns.Where(c => c != null).ToList();
 
                 foreach (var column in board.columns)
                 {
                     column.cards ??= new List<TaskCard>();
+                    column.cards = column.cards.Where(c => c != null).ToList();
                     column.cards.RemoveAll(IsStrayBlankCard);
                     foreach (var card in column.cards)
                     {
+                        card.checklistItems ??= new List<string>();
+                        card.checklistStates ??= new List<bool>();
+                        card.checklistLinkedCardIds ??= new List<string>();
+
+                        while (card.checklistStates.Count < card.checklistItems.Count) card.checklistStates.Add(false);
+                        while (card.checklistLinkedCardIds.Count < card.checklistItems.Count) card.checklistLinkedCardIds.Add(string.Empty);
+
+                        if (card.checklistStates.Count > card.checklistItems.Count) card.checklistStates.RemoveRange(card.checklistItems.Count, card.checklistStates.Count - card.checklistItems.Count);
+                        if (card.checklistLinkedCardIds.Count > card.checklistItems.Count) card.checklistLinkedCardIds.RemoveRange(card.checklistItems.Count, card.checklistLinkedCardIds.Count - card.checklistItems.Count);
+
                         card.linkedAssetGuids ??= new List<string>();
                         card.linkedSceneObjects ??= new List<SceneObjectReference>();
                         card.linkedItems ??= new List<LinkedItem>();
                         card.assigneeIds ??= new List<string>();
+
+                        // Sync archived and isArchived to ensure UI consistency
+                        if (card.isArchived) card.archived = true;
+                        if (card.archived) card.isArchived = true;
 
                         // Migrate old separate lists to unified linkedItems
                         if (card.linkedAssetGuids.Count > 0)
@@ -382,6 +480,15 @@ namespace AwesomeTaskManager.Data
                     note.imagePath = null;
                 }
             }
+
+            importMappingProfiles = importMappingProfiles
+                .Where(x => x != null)
+                .Select(x =>
+                {
+                    x.Normalize();
+                    return x;
+                })
+                .ToList();
 
             categoryColors = categoryColors
                 .Where(x => x != null && !string.IsNullOrWhiteSpace(x.category) && categories.Contains(x.category))
