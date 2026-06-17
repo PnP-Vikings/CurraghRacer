@@ -38,6 +38,10 @@ public class TeamManagerUi : MonoBehaviour
      {
          Debug.LogError("TeamManagerUi: TeamManager instance is null on OnEnable.");
      }
+     if (GameManager.Instance != null)
+     {
+         CheckIfTeamManagerTaskIsCompleted();
+     }
    }
    
    
@@ -105,6 +109,14 @@ public class TeamManagerUi : MonoBehaviour
    void OnDisable()
    {
        ClearTeamMemberUis();
+   }
+   
+   public void CheckIfTeamManagerTaskIsCompleted()
+   {
+       if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+       {
+           GameManager.Instance.CompleteTutorialTask(TutorialTaskType.TeamManagerTask);
+       }
    }
    
    
