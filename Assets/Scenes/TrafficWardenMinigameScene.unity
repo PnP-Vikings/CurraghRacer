@@ -256,6 +256,14 @@ PrefabInstance:
       propertyPath: despawnDistance
       value: 160
       objectReference: {fileID: 0}
+    - target: {fileID: 8599982127338071230, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -6.73
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599982127338071230, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.15
+      objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane (3)
@@ -1528,6 +1536,10 @@ PrefabInstance:
       propertyPath: despawnDistance
       value: 160
       objectReference: {fileID: 0}
+    - target: {fileID: 8599982127338071230, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.15
+      objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane (2)
@@ -2636,6 +2648,68 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1348374835}
   m_CullTransparentMesh: 1
+--- !u!1001 &1404467395
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -5.44
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.42
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 154.59
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_Name
+      value: M_038.crossroads
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects:
+    - {fileID: 65702495048144492, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: a896364cea4ba6f48b27ee9be42f2cfb, type: 3}
 --- !u!1 &1406782238
 GameObject:
   m_ObjectHideFlags: 0
@@ -2878,7 +2952,6 @@ MonoBehaviour:
   testDemoButtons: {fileID: 1450603467}
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}
-  boxingAudio: {fileID: 0}
   trafficWardenAudio: {fileID: 1853407906}
 --- !u!1 &1450603467
 GameObject:
@@ -3631,7 +3704,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1678371689}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -4026,6 +4099,10 @@ PrefabInstance:
     - target: {fileID: 7677646177195910435, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: despawnDistance
       value: 160
+      objectReference: {fileID: 0}
+    - target: {fileID: 8599982127338071230, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.15
       objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
@@ -5085,6 +5162,10 @@ PrefabInstance:
       propertyPath: despawnDistance
       value: 160
       objectReference: {fileID: 0}
+    - target: {fileID: 8599982127338071230, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 4.15
+      objectReference: {fileID: 0}
     - target: {fileID: 8728479954665350639, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_Name
       value: Lane
@@ -5173,6 +5254,7 @@ SceneRoots:
   - {fileID: 2059391189}
   - {fileID: 746810453}
   - {fileID: 673240818}
+  - {fileID: 1404467395}
   - {fileID: 6153481868460621980}
   - {fileID: 572794059}
   - {fileID: 1728330789}
