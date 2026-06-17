@@ -8725,7 +8725,7 @@ PrefabInstance:
       objectReference: {fileID: 1572256176}
     - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: inviteDelay
-      value: 30
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: welcomeCardUi

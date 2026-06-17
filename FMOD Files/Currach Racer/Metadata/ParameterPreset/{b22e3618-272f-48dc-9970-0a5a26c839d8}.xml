@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{b22e3618-272f-48dc-9970-0a5a26c839d8}">
 		<property name="name">
-			<value>Story Report Volume 3</value>
+			<value>Story Report - First Race Lost - Volume</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
