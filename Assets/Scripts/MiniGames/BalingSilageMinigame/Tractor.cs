@@ -12,12 +12,13 @@ public class Tractor : MonoBehaviour
     private Vector3 mousePosition;
     public float moveSpeed;
     public GameObject collectorPrefab;
-
+    public bool movement;
 
     void Start()
     {
         transform.Rotate(0, 90, 0);
         moveSpeed = 0.002f;
+        movement = true;
     }
 
     // Update is called once per frame
@@ -27,19 +28,30 @@ public class Tractor : MonoBehaviour
             mousePosition.z = 4;
             transform.position = Vector3.MoveTowards (transform.position, new Vector3 (Camera.main.ScreenToWorldPoint (mousePosition).x, Camera.main.ScreenToWorldPoint(mousePosition).y, -0.5f), moveSpeed * Time.deltaTime);
         */
-        transform.position += transform.forward * moveSpeed;
+        
+        //transform.position += transform.forward * moveSpeed;
+        
+        if (movement == true)
+        {
+            transform.position += transform.forward * moveSpeed;
+        }
 
-        if (FindFirstObjectByType<BalingSilageMinigame>().gameTimer <= 0)
+        if (movement == false)
         {
             moveSpeed = 0;
         }
+
+        if (FindFirstObjectByType<BalingSilageMinigame>().gameTimer <= 0)
+        {
+            movement = false;
+        }
         
-        if (Keyboard.current.aKey.isPressed)
+        if (Keyboard.current.aKey.isPressed && movement == true)
         {
             transform.Rotate(transform.rotation.x - 1, 0, 0);
         }
 
-        if (Keyboard.current.dKey.isPressed)
+        if (Keyboard.current.dKey.isPressed && movement == true)
         {
             transform.Rotate(transform.rotation.x + 1, 0, 0);
         }
@@ -58,6 +70,12 @@ public class Tractor : MonoBehaviour
             FindFirstObjectByType<BalingSilageMinigame>().collecting = true;
             FindFirstObjectByType<BalingSilageMinigame>().cutting = false;
             collectorPrefab.SetActive(true);
+        }
+
+        if (other.name.Contains("Fence"))
+        {
+            movement = false;
+            FindFirstObjectByType<BalingSilageMinigame>().grassText.text = "Tractor crashed into fence. Game Over";
         }
     }
 }

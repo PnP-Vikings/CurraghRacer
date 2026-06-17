@@ -12,7 +12,7 @@ using Sequence = DG.Tweening.Sequence;
 public class WeightLiftingController : MonoBehaviour
 {
     public static WeightLiftingController Instance;
-    
+
     [Header("Game State")]
     public LiftState currentLiftState = LiftState.Idle;
     public bool gameActive;
@@ -385,6 +385,11 @@ public class WeightLiftingController : MonoBehaviour
                 .AppendCallback(() => StartNewLift());
             
         
+            if(AudioManager.instance != null)
+            {
+                AudioManager.instance.aWarmUp.start();
+            }
+
             return true;
         }
         else
@@ -641,7 +646,7 @@ public class WeightLiftingController : MonoBehaviour
                 phaseTimer = 0f; // Reset timer for lift duration
 
 
-                weightLiftingAudio.StartPowerMeterAudio();
+                weightLiftingAudio.StartLiftPhaseAudio();
                 //StartCoroutine(weightLiftingAudio.StartPowerMeterAudio());
             }
             else
@@ -741,7 +746,7 @@ public class WeightLiftingController : MonoBehaviour
         {
             Debug.Log("Poor lift timing!");
             FailLift("Missed the timing window!");
-            weightLiftingAudio.StopPowerMeterAudio();
+            weightLiftingAudio.StopLiftPhaseAudio();
         }
     }
     
@@ -757,7 +762,7 @@ public class WeightLiftingController : MonoBehaviour
             .AppendInterval(1f)
             .AppendCallback(() => TransitionToHoldPhase());
 
-        weightLiftingAudio.StopPowerMeterAudio();
+        weightLiftingAudio.StopLiftPhaseAudio();
     }
     
     #endregion
@@ -810,6 +815,8 @@ public class WeightLiftingController : MonoBehaviour
                 goMessageTimer = 0f; // Start GO message timer
                 UpdatePhaseUI("PHASE 3: HOLD", "GO!\nUse buttons to keep the bar balanced!");
                 phaseTimer = 0f; // Reset timer for hold duration
+
+                weightLiftingAudio.StartHoldPhaseAudio();
             }
             else
             {
@@ -885,7 +892,9 @@ public class WeightLiftingController : MonoBehaviour
         {
             if (isProcessingPhaseTransition) return;
             isProcessingPhaseTransition = true;
-            
+
+            weightLiftingAudio.StopHoldPhaseAudio();
+
             currentLiftState = LiftState.Idle;
             SuccessfulAnimationComplete();
         }
@@ -998,6 +1007,7 @@ public class WeightLiftingController : MonoBehaviour
         if(AudioManager.instance != null)
         {
             AudioManager.instance.miniGameProgression.start();
+            AudioManager.instance.weightliftingRoundEndDialogue.start();
         }
 
         if(successfulReps >= maxSuccessfulReps)
@@ -1053,9 +1063,6 @@ public class WeightLiftingController : MonoBehaviour
             .AppendInterval(1f)
             // Retry same weight
             .AppendCallback(() =>   StartNewLift());
-        
-        
-      
     }
     
     private void ShowFailureAndRetry(string reason)

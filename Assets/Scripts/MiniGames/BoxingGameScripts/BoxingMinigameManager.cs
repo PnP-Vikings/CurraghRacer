@@ -359,7 +359,7 @@ public class BoxingMinigameManager : MonoBehaviour
 
             if (playerLives == 1 & !hasBoxingSuccessAfterFailPlayed)
             {
-                AudioManager.instance.boxingSuccessAfterFail.start();
+                StartCoroutine(BoxingAudio.instance.BoxingSuccessAfterFailIEnum());
                 hasBoxingSuccessAfterFailPlayed = true;
             }
         }

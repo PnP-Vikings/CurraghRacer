@@ -79,7 +79,8 @@ public class AudioManager : MonoBehaviour
     public EventInstance miniGameProgression;
     public EventInstance miniGame_Win;
     public EventInstance miniGame_Over;
-   
+    public EventInstance miniGameOverDialogue;
+
     public EventInstance placeTurf;
 
     public EventInstance weightSelectionResponse;
@@ -90,6 +91,10 @@ public class AudioManager : MonoBehaviour
     public EventInstance weightliftingPhaseFailedDialogue;
     public EventInstance inTheGreenDialogue;
     public EventInstance cementBag;
+    public EventInstance weightliftingRoundEndDialogue;
+    public EventInstance aWarmUp;
+    public EventInstance liftPhaseEncouragement;
+    public EventInstance holdPhaseEncouragement;
 
     public EventInstance running;
     public EventInstance jump;
@@ -116,6 +121,8 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance boxingEncouragement;
     public EventInstance boxingSuccessAfterFail;
+
+    
 
     private Scene activeScene;
     void Awake()
@@ -217,12 +224,15 @@ public class AudioManager : MonoBehaviour
 
                             // BOXING //
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
+        boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
+        boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
                             // MINIGAME NOTIFICATION //
         miniGame_lifeLost = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Life Lost");
         miniGameProgression = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Progression");
         miniGame_Win = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Win");
         miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
+        miniGameOverDialogue = RuntimeManager.CreateInstance("event:/Notifications/Mini Game Over Dialogue");
 
                             // TURF //
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");
@@ -237,6 +247,11 @@ public class AudioManager : MonoBehaviour
         inTheGreenDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/In The Green Dialogue");
         cementBag = RuntimeManager.CreateInstance("event:/Weight Lifting/Cement Bag");
         PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter Moving");
+        aWarmUp = RuntimeManager.CreateInstance("event:/Weight Lifting/A warm-up");
+        weightliftingRoundEndDialogue = RuntimeManager.CreateInstance("event:/Weight Lifting/Weightlifting Round End");
+        liftPhaseEncouragement = RuntimeManager.CreateInstance("event:/Weight Lifting/Lifting phase encouragement");
+        holdPhaseEncouragement = RuntimeManager.CreateInstance("event:/Weight Lifting/Hold phase encouragement");
+
 
                             // FOOT RACE //
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
@@ -260,9 +275,6 @@ public class AudioManager : MonoBehaviour
         rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");
         roadworks = RuntimeManager.CreateInstance("event:/Ambiences/Roadworks");
 
-                            // Boxing //
-        boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
-        boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

@@ -80,3 +80,5 @@ Assets/Plugins/FMOD/Cache/**
 /Assets/Plugins/FMOD/Cache
 Assets/Plugins/FMOD/Cache/Editor/FMODStudioCache.asset
 AGENTS.md
+Assets/.DS_Store
+.DS_Store

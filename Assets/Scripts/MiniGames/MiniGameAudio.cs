@@ -1,10 +1,12 @@
 using FMODUnity;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MiniGameAudio : MonoBehaviour
 {
     public static MiniGameAudio instance;
+
     void Awake()
     {
         // Singleton pattern to ensure only one instance of MiniGameAudio exists
@@ -45,6 +47,8 @@ public class MiniGameAudio : MonoBehaviour
             AudioManager.instance.crashIntoFence.start();
             yield return new WaitForSeconds(0.7f);
             AudioManager.instance.miniGame_Over.start();
+            yield return new WaitForSeconds(1.5f);
+            AudioManager.instance.miniGameOverDialogue.start();
             //Debug.Log("Foot Race ended");
         }
     }
