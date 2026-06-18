@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<TutorialTask> tutorialTasks = new List<TutorialTask>();
     [SerializeField] private bool tutorialModeActive = false;
     [SerializeField] private bool tutorialModeCompleted = false;
-    
+    public UnityEvent onTaskModified;
 
     private void Awake()
     {
@@ -327,6 +327,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"Completed tutorial task: {task.taskName}");
                 CheckIfAllTasksAreCompleted();
                 ActivateNextTutorialTask();
+                onTaskModified?.Invoke();
             }
             else
             {
@@ -346,6 +347,7 @@ public class GameManager : MonoBehaviour
                 Debug.Log($"Completed tutorial task: {task.taskName}");
                 CheckIfAllTasksAreCompleted();
                 ActivateNextTutorialTask();
+                onTaskModified?.Invoke();
             }
             else
             {
@@ -364,6 +366,7 @@ public class GameManager : MonoBehaviour
                 {
                     task.isTaskActive = true;
                     Debug.Log($"Activated next tutorial task: {task.taskName}");
+                    onTaskModified?.Invoke();
                     return;
                 }
             }
@@ -373,6 +376,12 @@ public class GameManager : MonoBehaviour
         {
             Debug.LogWarning("Tutorial task list is empty. Cannot activate next task.");
         }
+        onTaskModified?.Invoke();
+    }
+
+    public List<TutorialTask> GetTutorialTaskList()
+    {
+        return tutorialTasks;
     }
 
     public void ActivateTutorialMode()
@@ -405,6 +414,32 @@ public class GameManager : MonoBehaviour
     public bool IsTutorialModeActive()
     {
         return tutorialModeActive;
+    }
+    
+    public bool IsTutorialTaskCompleted(TutorialTaskType taskType)
+    {
+        foreach (var task in tutorialTasks)
+        {
+            if (task.taskType == taskType)
+            {
+                return task.completed;
+            }
+        }
+        Debug.LogWarning($"Tutorial task of type {taskType} not found.");
+        return false; // Task not found
+    }
+
+    public bool IsTutorialTaskActive(TutorialTaskType taskType)
+    {
+        foreach (var task in tutorialTasks)
+        {
+            if (task.taskType == taskType)
+            {
+                return task.isTaskActive;
+            }
+        }
+        Debug.LogWarning($"Tutorial task of type {taskType} not found.");
+        return false; // Task not found
     }
     
     public void ResetForNewGame()

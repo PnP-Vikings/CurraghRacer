@@ -12,6 +12,7 @@ public class GarageSceneManager : MonoBehaviour
     public GameObject DebtWarningScreen;
     [Tooltip("Delay before showing the welcome card for new players. Adjust as needed.")]
     public float showIntroDelay = 1.2f;
+    public TutorialTaskUiManager tutorialTaskUiManager;
     private void Awake()
     {
         if (Instance == null)
@@ -53,6 +54,13 @@ public class GarageSceneManager : MonoBehaviour
                 }   
             }
         }
+
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            tutorialTaskUiManager.gameObject.SetActive(true);
+            tutorialTaskUiManager.UpdateTaskUis();
+            GameManager.Instance.onTaskModified.AddListener(UpdateTutorialTask);
+        }
         
         
     }
@@ -89,7 +97,13 @@ public class GarageSceneManager : MonoBehaviour
        
     }
     
-    
+    public void UpdateTutorialTask()
+    {
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && tutorialTaskUiManager != null)
+        {
+            tutorialTaskUiManager.UpdateTaskUis();
+        }
+    }
     
     
 }

@@ -1678,8 +1678,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.1, y: 0.8}
-  m_SizeDelta: {x: 614.72, y: 344.62}
+  m_AnchoredPosition: {x: 0, y: -25.8}
+  m_SizeDelta: {x: 523.47, y: 168.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &449241839
 MonoBehaviour:
@@ -1694,16 +1694,16 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Padding:
-    m_Left: 0
+    m_Left: 4
     m_Right: 0
-    m_Top: 0
+    m_Top: 5
     m_Bottom: 0
-  m_ChildAlignment: 4
+  m_ChildAlignment: 0
   m_StartCorner: 0
-  m_StartAxis: 1
-  m_CellSize: {x: 180, y: 299.7}
-  m_Spacing: {x: 23.9, y: 0}
-  m_Constraint: 2
+  m_StartAxis: 0
+  m_CellSize: {x: 510.4, y: 46.4}
+  m_Spacing: {x: 14.7, y: 6.7}
+  m_Constraint: 1
   m_ConstraintCount: 1
 --- !u!114 &449241840
 MonoBehaviour:
@@ -3648,15 +3648,15 @@ RectTransform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 839959920}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 26.60002}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1428652253}
+  m_Father: {fileID: 1638458446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -198.29999, y: 142.8}
+  m_AnchoredPosition: {x: -340, y: 190.23}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &839959922
@@ -6207,13 +6207,12 @@ RectTransform:
   m_Children:
   - {fileID: 1659553352}
   - {fileID: 449241838}
-  - {fileID: 839959921}
   m_Father: {fileID: 1638458446}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -182.9, y: 77.6}
-  m_SizeDelta: {x: 625.3, y: 356}
+  m_AnchoredPosition: {x: -190.05, y: 113}
+  m_SizeDelta: {x: 532.3, y: 207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1428652254
 MonoBehaviour:
@@ -6228,7 +6227,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
+  m_Color: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 0.5882353}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -7666,11 +7665,12 @@ Transform:
   m_GameObject: {fileID: 1638458445}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -467.42, y: -441.6, z: 0}
+  m_LocalPosition: {x: -500, y: -535.2, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1428652253}
+  - {fileID: 839959921}
   m_Father: {fileID: 1280619296}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1638458447
@@ -7682,15 +7682,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 1638458445}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 3c4df7fc7be4ff04ea35361ccc7dce89, type: 3}
+  m_Script: {fileID: 11500000, guid: 8229021e0c50d0d4cbd44493b2856f87, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: 
-  teamManagerUiParent: {fileID: 449241838}
-  teamBenchUiParent: {fileID: 0}
-  racersforHireUiParent: {fileID: 0}
-  teamManagerUiPrefab: {fileID: 725732874659256826, guid: 875dbb6d6656dc44c8c0a49a1e10a286, type: 3}
-  benchTeamMemberUiHandler: {fileID: 2571327593248780582, guid: 8f209d455a848d64d907c99575da4171, type: 3}
-  hireableSailorsUiHandler: {fileID: 4364504125556338930, guid: 140c30a0670da6443b30075878b586a6, type: 3}
+  m_EditorClassIdentifier: Assembly-CSharp::TutorialTaskUiManager
+  taskUiParent: {fileID: 449241838}
+  taskPrefab: {fileID: 63151353768982808, guid: 32d6a3f6c8c1cdf42a7f1eebde835923, type: 3}
 --- !u!1 &1659553351
 GameObject:
   m_ObjectHideFlags: 0
@@ -8841,7 +8837,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2016975917
 Transform:
   m_ObjectHideFlags: 0
@@ -9310,6 +9306,10 @@ PrefabInstance:
       propertyPath: DebtWarningScreen
       value: 
       objectReference: {fileID: 378385752}
+    - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: tutorialTaskUiManager
+      value: 
+      objectReference: {fileID: 1638458447}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects:

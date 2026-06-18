@@ -126,10 +126,10 @@
                                 "hide tasks 2 or more away from active task"
                             ],
                             "checklistStates": [
+                                true,
+                                true,
                                 false,
-                                false,
-                                false,
-                                false,
+                                true,
                                 false
                             ],
                             "checklistLinkedCardIds": [
