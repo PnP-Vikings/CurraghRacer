@@ -98,6 +98,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance running;
     public EventInstance jump;
+    public EventInstance footRaceEncouragement;
     public EventInstance slide;
     public EventInstance crashIntoFence;
 
@@ -122,7 +123,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance boxingEncouragement;
     public EventInstance boxingSuccessAfterFail;
 
-    
+    public EventInstance bodhran;
 
     private Scene activeScene;
     void Awake()
@@ -185,6 +186,7 @@ public class AudioManager : MonoBehaviour
 
                             // OST //
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
+        bodhran = RuntimeManager.CreateInstance("event:/Soundtrack/Bodhrán");
 
                             // GARAGE //
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
@@ -256,6 +258,7 @@ public class AudioManager : MonoBehaviour
                             // FOOT RACE //
         running = RuntimeManager.CreateInstance("event:/Foot Race/Running");
         jump = RuntimeManager.CreateInstance("event:/Foot Race/Jump");
+        footRaceEncouragement = RuntimeManager.CreateInstance("event:/Foot Race/Foot Race Encouragement");
         slide = RuntimeManager.CreateInstance("event:/Foot Race/Slide");
         crashIntoFence = RuntimeManager.CreateInstance("event:/Foot Race/Crash Into Fence");
 

@@ -62,6 +62,8 @@ public class FootRaceMiniGameManager : MonoBehaviour
     private float slideStartTime;
     private float currentSlideEndTime; // Tracks when the current slide should end
     private Coroutine slideCoroutineHandle;
+
+    [SerializeField] FootRaceAudio footRaceAudio;
     
     [Header("Ui Elements")]
     public MinigameCanvasUI minigameCanvasUI;
@@ -252,6 +254,7 @@ public class FootRaceMiniGameManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.running.start();
+            AudioManager.instance.bodhran.start();
         }
     }
     
@@ -448,12 +451,9 @@ public class FootRaceMiniGameManager : MonoBehaviour
             isGrounded = false;
 
             // Play Jump Audio
-            if (AudioManager.instance != null)
-            {
-                AudioManager.instance.jump.start();
-            }
 
-            
+            footRaceAudio.PlayJumpAudio();
+
             // Ensure we stand up right after the impulse is applied
             StartCoroutine(StandUpAfterJump());
         }

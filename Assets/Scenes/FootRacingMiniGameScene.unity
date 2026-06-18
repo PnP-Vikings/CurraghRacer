@@ -2262,8 +2262,9 @@ GameObject:
   m_Component:
   - component: {fileID: 746810453}
   - component: {fileID: 746810452}
+  - component: {fileID: 746810454}
   m_Layer: 0
-  m_Name: FootRaceAmbience
+  m_Name: FootRace Audio Manager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2296,7 +2297,9 @@ MonoBehaviour:
   TriggerOnce: 0
   Preload: 0
   NonRigidbodyVelocity: 0
-  Params: []
+  Params:
+  - Name: Countryside Volume
+    Value: 0.897
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
@@ -2315,6 +2318,18 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &746810454
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 746810451}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 53f742d9bac3c804daf4e691f1c10054, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FootRaceAudio
 --- !u!1001 &756177253
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3307,6 +3322,7 @@ MonoBehaviour:
   slideDuration: 1.5
   maxSlideDuration: 3
   slideTransitionSpeed: 5
+  footRaceAudio: {fileID: 746810454}
   minigameCanvasUI: {fileID: 1419458617}
 --- !u!114 &1132238283
 MonoBehaviour:
@@ -4490,7 +4506,6 @@ MonoBehaviour:
   testDemoButtons: {fileID: 1450603467}
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}
-  boxingAudio: {fileID: 0}
   trafficWardenAudio: {fileID: 0}
 --- !u!1 &1450603467
 GameObject:

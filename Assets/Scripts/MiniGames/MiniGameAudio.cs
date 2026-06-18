@@ -44,10 +44,12 @@ public class MiniGameAudio : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.running.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.bodhran.setParameterByName("Bodhran pitch", 0f);
             AudioManager.instance.crashIntoFence.start();
             yield return new WaitForSeconds(0.7f);
+            AudioManager.instance.bodhran.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.miniGame_Over.start();
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.7f);
             AudioManager.instance.miniGameOverDialogue.start();
             //Debug.Log("Foot Race ended");
         }
