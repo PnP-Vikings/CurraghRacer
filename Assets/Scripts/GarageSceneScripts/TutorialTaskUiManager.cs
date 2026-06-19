@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Net.Mail;
 using UnityEngine;
 
 public class TutorialTaskUiManager : MonoBehaviour
@@ -19,10 +20,28 @@ public class TutorialTaskUiManager : MonoBehaviour
         { 
             List<TutorialTask> tutorialTasks = GameManager.Instance.GetTutorialTaskList();
             ClearTaskUis();
+            int count = 0;
             foreach (TutorialTask tutorialTask in tutorialTasks)
             {
-                TutorialTaskPrefab taskUi = Instantiate(taskPrefab, taskUiParent);
-                taskUi.SetTutorialTask(tutorialTask);
+                TutorialTaskPrefab taskUi = null;
+                if (count == 0 && tutorialTask.isTaskActive)
+                {
+                    taskUi = Instantiate(taskPrefab, taskUiParent);
+                    taskUi.SetTutorialTask(tutorialTask);
+                    break;
+                }
+                else if (tutorialTask.isTaskActive && count == 1)
+                {
+                    taskUi = Instantiate(taskPrefab, taskUiParent);
+                    taskUi.SetTutorialTask(tutorialTask);
+                    break;
+                }
+                else
+                {
+                    taskUi = Instantiate(taskPrefab, taskUiParent);
+                    taskUi.SetTutorialTask(tutorialTask);
+                }
+                count++;
             }
             Debug.Log("Task UIs updated.");
         }
