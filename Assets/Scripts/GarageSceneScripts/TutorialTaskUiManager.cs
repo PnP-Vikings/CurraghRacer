@@ -18,33 +18,85 @@ public class TutorialTaskUiManager : MonoBehaviour
 
         if (GameManager.Instance.IsTutorialModeActive())
         { 
-            List<TutorialTask> tutorialTasks = GameManager.Instance.GetTutorialTaskList();
+            List<TutorialTask> tutorialTasks = ProcessedTutorialTasks(GameManager.Instance.GetTutorialTaskList());
+            
             ClearTaskUis();
-            int count = 0;
+           
             foreach (TutorialTask tutorialTask in tutorialTasks)
             {
                 TutorialTaskPrefab taskUi = null;
-                if (count == 0 && tutorialTask.isTaskActive)
-                {
-                    taskUi = Instantiate(taskPrefab, taskUiParent);
-                    taskUi.SetTutorialTask(tutorialTask);
-                    break;
-                }
-                else if (tutorialTask.isTaskActive && count == 1)
-                {
-                    taskUi = Instantiate(taskPrefab, taskUiParent);
-                    taskUi.SetTutorialTask(tutorialTask);
-                    break;
-                }
-                else
-                {
-                    taskUi = Instantiate(taskPrefab, taskUiParent);
-                    taskUi.SetTutorialTask(tutorialTask);
-                }
-                count++;
+                
+                taskUi = Instantiate(taskPrefab, taskUiParent);
+                Debug.Log($"Instantiated task UI for task: {tutorialTask.taskName}");
+                taskUi.SetTutorialTask(tutorialTask);
             }
             Debug.Log("Task UIs updated.");
         }
+    }
+
+    public List<TutorialTask> ProcessedTutorialTasks(List<TutorialTask> tutorialTasks)
+    {
+        List<TutorialTask> processedTasks = new List<TutorialTask>();
+        int count = 0;
+        bool hasBeenProcessed = false;
+        foreach (TutorialTask tutorialTask in tutorialTasks)
+        {
+            TutorialTaskPrefab taskUi = null;
+            if (count == 0 && tutorialTask.isTaskActive)
+            {
+                processedTasks.Add(tutorialTask);
+                hasBeenProcessed = true;
+                break;
+            }
+            else if (tutorialTask.isTaskActive && count == 1)
+            {
+                processedTasks.Add(tutorialTasks[0]);
+                processedTasks.Add(tutorialTask);
+                hasBeenProcessed = true;
+                break;
+            }
+            count++;
+        }
+        
+        if (!hasBeenProcessed)
+        {
+            processedTasks.Clear();
+            TutorialTask activeTask = null;
+            foreach (TutorialTask tutorialTask in tutorialTasks)
+            {
+                if (tutorialTask.isTaskActive)
+                {
+                    activeTask = tutorialTask;
+                    break;
+                }
+            }
+
+            if (activeTask != null)
+            {
+                if(tutorialTasks.IndexOf(activeTask)+1 < tutorialTasks.Count)
+                {
+                    processedTasks.Add(tutorialTasks[tutorialTasks.IndexOf(activeTask) - 1]);
+                    processedTasks.Add(activeTask);
+                    processedTasks.Add(tutorialTasks[tutorialTasks.IndexOf(activeTask) + 1]);
+                }
+                else
+                {
+                    processedTasks.Add(tutorialTasks[tutorialTasks.IndexOf(activeTask) - 2]);
+                    processedTasks.Add(tutorialTasks[tutorialTasks.IndexOf(activeTask) - 1]);
+                    processedTasks.Add(activeTask);
+                }
+                hasBeenProcessed = true;
+
+            }
+        }
+        
+        
+        foreach (TutorialTask tutorialTask in processedTasks)
+        {
+            Debug.Log($"Processed task: {tutorialTask.taskName}, Active: {tutorialTask.isTaskActive}, Completed: {tutorialTask.completed}");
+        }
+        
+        return processedTasks;
     }
     
     public void ClearTaskUis()
