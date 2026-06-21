@@ -58,7 +58,7 @@
                             "colorLabel": 2,
                             "priority": 0,
                             "createdDate": "2026-06-04 22:36",
-                            "dueDate": "2026-06-11",
+                            "dueDate": "2026-06-25",
                             "archived": false,
                             "checklistItems": [
                                 "Add Task to open Calendar",
@@ -126,10 +126,10 @@
                                 "hide tasks 2 or more away from active task"
                             ],
                             "checklistStates": [
+                                true,
+                                true,
                                 false,
-                                false,
-                                false,
-                                false,
+                                true,
                                 false
                             ],
                             "checklistLinkedCardIds": [
@@ -481,6 +481,36 @@
                             "completed": true,
                             "assigneeIds": [],
                             "isArchived": true
+                        },
+                        {
+                            "id": "d8193522-289b-43b8-a63a-7e980345594c",
+                            "title": "Replace Assets in Traffic Warden ",
+                            "description": "",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-18 00:22",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Place stuff from fbs"
+                            ],
+                            "checklistStates": [
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -1711,5 +1741,5 @@
             }
         }
     ],
-    "lastBoardIndex": 1
+    "lastBoardIndex": 0
 }
