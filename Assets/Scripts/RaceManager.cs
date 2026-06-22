@@ -781,6 +781,12 @@ public class RaceManager : MonoBehaviour
         // so we must save to disk first!
         if (GameManager.Instance != null && SaveSystem.Instance != null)
         {
+
+            if (GameManager.Instance.IsTutorialModeActive() && !isRaceDay)
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.PracticeRaceTask);
+            }
+            
             Debug.Log("[EndRace] Saving game before scene transition to preserve team stats");
             
             // Log team stats BEFORE saving
