@@ -117,14 +117,14 @@ public class RadioManager : MonoBehaviour
         {
             if (activeScene.name != "Garage" & GameManager.Instance.SleepAudioChangesCoroutineIsActive)
             {
-                Debug.Log("Sleep Audio is muted - AudioDebug");
+                //Debug.Log("Sleep Audio is muted - AudioDebug");
                 MuteSleepAudio();
             }
         }
 
         if (activeScene.name == "Main Menu")
         {
-            Debug.Log("Radio muted as main menu is active");
+            //Debug.Log("Radio muted as main menu is active");
             StopAllAdOrNews();
             MuteRadio();
             
@@ -226,13 +226,13 @@ public class RadioManager : MonoBehaviour
     private void PlayRadioAdOrNews()
     {
         int newRandomNumberAd = Random.Range(1, 7);
-        Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
+        //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
 
         while (newRandomNumberAd == previousRandomNumberAd)
         {
-            Debug.Log("a newRandomNumberAd was chosen as it was equal to previousRandomNumberAd");
+            //Debug.Log("a newRandomNumberAd was chosen as it was equal to previousRandomNumberAd");
             newRandomNumberAd = Random.Range(1, 3);
-            Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
+            //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
         }
 
         if (AudioManager.instance != null)
