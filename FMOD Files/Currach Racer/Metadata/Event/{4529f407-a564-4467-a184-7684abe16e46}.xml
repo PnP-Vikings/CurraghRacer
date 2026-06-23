@@ -167,7 +167,7 @@
 	</object>
 	<object class="DistortionEffect" id="{466a80bb-2c98-4cc7-9c36-f0f85d9eeb63}">
 		<property name="level">
-			<value>0.394999981</value>
+			<value>0.314999998</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{1be2ea8a-e81b-4f84-9e4c-d64ae6e5578a}">
