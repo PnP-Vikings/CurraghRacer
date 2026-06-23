@@ -310,7 +310,7 @@
 	</object>
 	<object class="DistortionEffect" id="{33e005d1-23d7-44a1-91b2-7414e8658971}">
 		<property name="level">
-			<value>0.394999981</value>
+			<value>0.314999998</value>
 		</property>
 	</object>
 	<object class="LimiterEffect" id="{96d22a26-9bd6-49be-9624-5493b3321d1c}">

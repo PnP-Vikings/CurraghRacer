@@ -21,7 +21,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance shout;
         // Garage
 
-    public EventInstance storyUpdate1;
+    public EventInstance storyUpdateIntro; // storyUpdate
     public EventInstance storyUpdateFirstRaceWon;   // FKA storyUpdate2
     public EventInstance storyUpdateFirstRaceLost;  // FKA storyUpdate3
 
@@ -166,7 +166,7 @@ public class AudioManager : MonoBehaviour
         shout = RuntimeManager.CreateInstance("event:/Race/Shout");
 
                             // RADIO //
-        storyUpdate1 = RuntimeManager.CreateInstance("event:/Radio/Story Update 1");   // Declan Kelly has returned
+        storyUpdateIntro = RuntimeManager.CreateInstance("event:/Radio/Story Update - Intro");   // Declan Kelly has returned
         storyUpdateFirstRaceWon = RuntimeManager.CreateInstance("event:/Radio/Story Update - First Race Won");      // Player won a race
         storyUpdateFirstRaceLost = RuntimeManager.CreateInstance("event:/Radio/Story Update  - First Race Lost");   // Player lost a race
 

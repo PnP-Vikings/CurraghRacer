@@ -173,13 +173,13 @@
 			<value>1</value>
 		</property>
 		<property name="frequencyA">
-			<value>20</value>
+			<value>54</value>
 		</property>
 		<property name="frequencyD">
 			<value>2100</value>
 		</property>
 		<property name="frequencyE">
-			<value>2600</value>
+			<value>8000</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
@@ -196,7 +196,7 @@
 	</object>
 	<object class="DistortionEffect" id="{34811dc6-f6d0-4793-9e56-2d835ad48bee}">
 		<property name="level">
-			<value>0.394999981</value>
+			<value>0.319999993</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{685edf16-4593-4e09-8403-4a898612dc8c}">

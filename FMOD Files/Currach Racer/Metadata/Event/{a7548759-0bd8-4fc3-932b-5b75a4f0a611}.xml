@@ -65,11 +65,6 @@
 	<object class="GroupTrack" id="{e596cb76-1eb6-4817-baae-3c2bd4c06b0b}">
 		<relationship name="automationTracks">
 			<destination>{42825e23-90dd-4809-bc04-3cfdf8e2c203}</destination>
-			<destination>{5eb7b855-a9be-4ed7-865c-6eb69a9816bb}</destination>
-			<destination>{abe67d20-27c4-4b03-8776-fc0918eaf7d3}</destination>
-			<destination>{255608ac-945f-4258-91b4-34c38df1c3a9}</destination>
-			<destination>{1a6a4ace-5ef8-4413-b05d-31807479cd06}</destination>
-			<destination>{4909887c-919f-4b15-be74-4d466dc12717}</destination>
 			<destination>{f4d774a1-4b94-482a-b5af-b1433d1a4786}</destination>
 			<destination>{5ac30bf9-5b95-4673-80bc-614b303a24c3}</destination>
 		</relationship>
@@ -118,31 +113,6 @@
 	<object class="AutomationTrack" id="{42825e23-90dd-4809-bc04-3cfdf8e2c203}">
 		<relationship name="automator">
 			<destination>{1a409f22-e7a4-42d8-8d22-4a54fef8019b}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{5eb7b855-a9be-4ed7-865c-6eb69a9816bb}">
-		<relationship name="automator">
-			<destination>{9cd5d7e8-0227-4dd6-b6d2-462f591e328f}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{abe67d20-27c4-4b03-8776-fc0918eaf7d3}">
-		<relationship name="automator">
-			<destination>{5248367f-e379-4e50-a179-6464d33403e2}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{255608ac-945f-4258-91b4-34c38df1c3a9}">
-		<relationship name="automator">
-			<destination>{6533348d-aee5-4e9e-bb3f-6bfed912bcb4}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{1a6a4ace-5ef8-4413-b05d-31807479cd06}">
-		<relationship name="automator">
-			<destination>{928fdc95-d5ab-470f-b612-1bddeb051a9b}</destination>
-		</relationship>
-	</object>
-	<object class="AutomationTrack" id="{4909887c-919f-4b15-be74-4d466dc12717}">
-		<relationship name="automator">
-			<destination>{d362963a-e02c-4abc-88d5-265b34fc3ddb}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationTrack" id="{f4d774a1-4b94-482a-b5af-b1433d1a4786}">

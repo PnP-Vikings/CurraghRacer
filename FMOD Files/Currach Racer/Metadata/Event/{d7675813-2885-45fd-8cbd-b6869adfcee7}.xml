@@ -202,7 +202,7 @@
 			<value>2100</value>
 		</property>
 		<property name="frequencyE">
-			<value>3000</value>
+			<value>8000</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
@@ -219,7 +219,7 @@
 	</object>
 	<object class="DistortionEffect" id="{f9cd3b25-6c34-4713-938a-944a6920d22b}">
 		<property name="level">
-			<value>0.394999981</value>
+			<value>0.319999993</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{86108629-8eb4-4368-875e-a85d5fcb761e}" />

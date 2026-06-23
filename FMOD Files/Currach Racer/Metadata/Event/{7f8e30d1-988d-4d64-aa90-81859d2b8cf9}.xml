@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{7f8e30d1-988d-4d64-aa90-81859d2b8cf9}">
 		<property name="name">
-			<value>Story Update 4</value>
+			<value>Story Update - Second Race Won</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
@@ -92,6 +92,9 @@
 		<property name="length">
 			<value>19.152267573696147</value>
 		</property>
+		<property name="volume">
+			<value>-10</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{aa624a31-db2f-46bf-b47a-76166faff15f}</destination>
 		</relationship>
@@ -115,14 +118,36 @@
 			<destination>{001fe4ad-2ce1-44b8-8fc0-a5a331db4add}</destination>
 		</relationship>
 	</object>
-	<object class="MixerBusPanner" id="{ef559794-08f7-479a-b6ea-a91b9b274f17}" />
+	<object class="MixerBusPanner" id="{ef559794-08f7-479a-b6ea-a91b9b274f17}">
+		<property name="stereoPan">
+			<value>24</value>
+		</property>
+	</object>
 	<object class="MixerBusFader" id="{b30fc6d6-6927-4fa7-b02a-bb7f40e33a3f}" />
 	<object class="MixerBusEffectChain" id="{add21dc9-4b09-4723-8458-95bf29f30a54}">
 		<relationship name="effects">
+			<destination>{5a5b02b6-2268-4dd9-b956-b3e71eed0a9c}</destination>
+			<destination>{d3604c12-7bfe-4975-85b9-021ef5624424}</destination>
 			<destination>{44ce482a-962a-4691-a19c-63c9856bd94c}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{d101db28-b14d-4fa1-ae2c-e110aa5e06b9}" />
 	<object class="MixerBusFader" id="{001fe4ad-2ce1-44b8-8fc0-a5a331db4add}" />
+	<object class="ProxyEffect" id="{5a5b02b6-2268-4dd9-b956-b3e71eed0a9c}">
+		<property name="inputFormat">
+			<value>1</value>
+		</property>
+		<relationship name="preset">
+			<destination>{1e03e20b-5d83-4231-8f25-dc8f4b7632f8}</destination>
+		</relationship>
+	</object>
+	<object class="ProxyEffect" id="{d3604c12-7bfe-4975-85b9-021ef5624424}">
+		<property name="inputFormat">
+			<value>1</value>
+		</property>
+		<relationship name="preset">
+			<destination>{d824ff68-df55-44b5-8ea1-1018c22d34c1}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusFader" id="{44ce482a-962a-4691-a19c-63c9856bd94c}" />
 </objects>
