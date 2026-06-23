@@ -24,6 +24,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance storyUpdateIntro; // storyUpdate
     public EventInstance storyUpdateFirstRaceWon;   // FKA storyUpdate2
     public EventInstance storyUpdateFirstRaceLost;  // FKA storyUpdate3
+    public EventInstance storyUpdateSecondRaceWon;
 
     public EventInstance radioSong1;
     public EventInstance radioSong2;
@@ -60,7 +61,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance rowingGameFail;
     public EventInstance rowingGameFailDialogue;
     public EventInstance rowingGameSuccessAfterFail;
-    // Jobs
+        // Jobs
 
     public EventInstance spawnPlates;
     public EventInstance movePlate;
@@ -167,8 +168,9 @@ public class AudioManager : MonoBehaviour
 
                             // RADIO //
         storyUpdateIntro = RuntimeManager.CreateInstance("event:/Radio/Story Update - Intro");   // Declan Kelly has returned
-        storyUpdateFirstRaceWon = RuntimeManager.CreateInstance("event:/Radio/Story Update - First Race Won");      // Player won a race
-        storyUpdateFirstRaceLost = RuntimeManager.CreateInstance("event:/Radio/Story Update  - First Race Lost");   // Player lost a race
+        storyUpdateFirstRaceWon = RuntimeManager.CreateInstance("event:/Radio/Story Update - First Race Won");      // Player won first race
+        storyUpdateFirstRaceLost = RuntimeManager.CreateInstance("event:/Radio/Story Update - First Race Lost");   // Player lost first race
+        storyUpdateSecondRaceWon = RuntimeManager.CreateInstance("event:/Radio/Story Update - Second Race Won");   // Player won second race
 
         radioSong1 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 1");
         radioSong2 = RuntimeManager.CreateInstance("event:/Radio/Radio Song 2");
