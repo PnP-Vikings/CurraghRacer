@@ -20,7 +20,7 @@ public class RadioManager : MonoBehaviour
     private PLAYBACK_STATE storyUpdateFirstRaceLostPlaybackState;
     private Scene activeScene;
     private bool radioAdOrNewsHasJustPlayed = false;
-    private bool storyUpdate1HasPlayed = false;
+    private bool storyUpdateIntroHasPlayed = false;
     public bool hasJustLostRace = false;
     private int previousRandomNumberAd = 0;
     //private int previousRandomNumberSong = 0;
@@ -134,7 +134,7 @@ public class RadioManager : MonoBehaviour
     {
         if (RaceManager.Instance != null)
         {
-            if (storyUpdate1HasPlayed == false | RaceManager.Instance.hasJustWonRace == true | hasJustLostRace) // checks if story update 1 has played or if the player has just won a race and calls the override method if true
+            if (storyUpdateIntroHasPlayed == false | RaceManager.Instance.hasJustWonRace == true | hasJustLostRace) // checks if story update 1 has played or if the player has just won a race and calls the override method if true
             {
                 OverriedRadioWithStoryUpdates();
             }
@@ -154,10 +154,10 @@ public class RadioManager : MonoBehaviour
             if (activeScene.name == "Garage")                            // Checks if the active scene is the Garage scene
             {
                 // Story update 1 (Declan Kelly Returns)
-                if (!storyUpdate1HasPlayed)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
+                if (!storyUpdateIntroHasPlayed)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
                 {
                     AudioManager.instance.storyUpdateIntro.start();
-                    storyUpdate1HasPlayed = true;
+                    storyUpdateIntroHasPlayed = true;
                 }
 
                 // Story update 2 (Player wins race)
@@ -299,7 +299,7 @@ public class RadioManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.angelus.setParameterByName("Angelus Volume", 0f);
-            AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update Intro Volume", 0f);
+            AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update - Intro - Volume", 0f);
             AudioManager.instance.storyUpdateFirstRaceWon.setParameterByName("Story Update - First Race Won - Volume", 0f);
             AudioManager.instance.storyUpdateFirstRaceLost.setParameterByName("Story Update - First Race Lost - Volume", 0f);
             AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 0f);
@@ -320,7 +320,7 @@ public class RadioManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.angelus.setParameterByName("Angelus Volume", 1f);
-            AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update Intro Volume", 1f);
+            AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update - Intro - Volume", 1f);
             AudioManager.instance.storyUpdateFirstRaceWon.setParameterByName("Story Update - First Race Won - Volume", 1f);
             AudioManager.instance.storyUpdateFirstRaceLost.setParameterByName("Story Update - First Race Lost - Volume", 1f);
             AudioManager.instance.radioSong1.setParameterByName("Radio Song 1 Volume", 1f);
