@@ -1,22 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="ParameterPreset" id="{76bb1a62-3b91-42c9-9a6a-554ae24e8232}">
+	<object class="ParameterPreset" id="{3488b296-5f13-48c8-8a72-db8d3eed00df}">
 		<property name="name">
-			<value>Radio Ad Or News 2 Volume</value>
+			<value>Story Update - Second Race Won - Volume</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
 		</relationship>
 		<relationship name="parameter">
-			<destination>{f4c70d0a-98c0-4e83-8890-fc04fa143db6}</destination>
+			<destination>{8e48c1a7-5b9e-435f-ae5b-c03c1f45d3b5}</destination>
 		</relationship>
 	</object>
-	<object class="GameParameter" id="{f4c70d0a-98c0-4e83-8890-fc04fa143db6}">
+	<object class="GameParameter" id="{8e48c1a7-5b9e-435f-ae5b-c03c1f45d3b5}">
 		<property name="initialValue">
 			<value>1</value>
-		</property>
-		<property name="seekSpeed">
-			<value>3</value>
 		</property>
 	</object>
 </objects>

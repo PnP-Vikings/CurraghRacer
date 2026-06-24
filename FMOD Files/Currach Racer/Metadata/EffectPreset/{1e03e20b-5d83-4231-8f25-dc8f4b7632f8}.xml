@@ -42,5 +42,25 @@
 		<property name="gainD">
 			<value>12.5</value>
 		</property>
+		<relationship name="automators">
+			<destination>{79aeefde-b819-4338-8e78-079d3c418429}</destination>
+			<destination>{1bcb863b-7bb8-4fd8-812e-d354419e6920}</destination>
+			<destination>{ce05d959-9d17-4ccf-b703-e7d257b2c648}</destination>
+		</relationship>
+	</object>
+	<object class="Automator" id="{79aeefde-b819-4338-8e78-079d3c418429}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>gainD</value>
+		</property>
+	</object>
+	<object class="Automator" id="{1bcb863b-7bb8-4fd8-812e-d354419e6920}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>frequencyE</value>
+		</property>
+	</object>
+	<object class="Automator" id="{ce05d959-9d17-4ccf-b703-e7d257b2c648}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>qualityE</value>
+		</property>
 	</object>
 </objects>

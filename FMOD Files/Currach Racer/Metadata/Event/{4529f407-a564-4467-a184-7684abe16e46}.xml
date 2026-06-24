@@ -149,7 +149,7 @@
 	<object class="MixerBusFader" id="{02186690-1ff0-4c2c-9588-2f268172f08a}" />
 	<object class="MixerBusEffectChain" id="{3e40da81-733c-4d53-8099-67a01c85dc9b}">
 		<relationship name="effects">
-			<destination>{2779ed34-fd08-4b34-8e08-e918c00b42b0}</destination>
+			<destination>{3e3988ac-4087-4d31-96d6-5f46c5674d1e}</destination>
 			<destination>{466a80bb-2c98-4cc7-9c36-f0f85d9eeb63}</destination>
 			<destination>{1be2ea8a-e81b-4f84-9e4c-d64ae6e5578a}</destination>
 			<destination>{a2068433-9f57-4331-8b32-b0ce659741b6}</destination>
@@ -157,12 +157,41 @@
 	</object>
 	<object class="MixerBusPanner" id="{375837b6-8bb8-4c76-b68a-d11d81ec877d}" />
 	<object class="MixerBusFader" id="{a052af14-23f3-490b-947b-d5c4b212f642}" />
-	<object class="ProxyEffect" id="{2779ed34-fd08-4b34-8e08-e918c00b42b0}">
-		<property name="inputFormat">
+	<object class="MultibandEqEffect" id="{3e3988ac-4087-4d31-96d6-5f46c5674d1e}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="filterTypeD">
+			<value>9</value>
+		</property>
+		<property name="filterTypeE">
 			<value>1</value>
 		</property>
-		<relationship name="preset">
-			<destination>{1e03e20b-5d83-4231-8f25-dc8f4b7632f8}</destination>
+		<property name="frequencyA">
+			<value>54</value>
+		</property>
+		<property name="frequencyD">
+			<value>2100</value>
+		</property>
+		<property name="frequencyE">
+			<value>8000</value>
+		</property>
+		<property name="qualityA">
+			<value>0.100000001</value>
+		</property>
+		<property name="qualityD">
+			<value>0.560000002</value>
+		</property>
+		<property name="qualityE">
+			<value>0.234999999</value>
+		</property>
+		<property name="gainD">
+			<value>12.5</value>
+		</property>
+		<relationship name="automators">
+			<destination>{142b8be0-3917-47c3-a1dc-65735dc92d3e}</destination>
+			<destination>{9d31e8ef-9c3d-42a6-b11a-19ab7a885335}</destination>
+			<destination>{8ef5dbe2-4fd2-444b-a031-a33b90dc691a}</destination>
 		</relationship>
 	</object>
 	<object class="DistortionEffect" id="{466a80bb-2c98-4cc7-9c36-f0f85d9eeb63}">
@@ -176,6 +205,21 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{a2068433-9f57-4331-8b32-b0ce659741b6}" />
+	<object class="Automator" id="{142b8be0-3917-47c3-a1dc-65735dc92d3e}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>gainD</value>
+		</property>
+	</object>
+	<object class="Automator" id="{9d31e8ef-9c3d-42a6-b11a-19ab7a885335}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>frequencyE</value>
+		</property>
+	</object>
+	<object class="Automator" id="{8ef5dbe2-4fd2-444b-a031-a33b90dc691a}">
+		<property name="nameOfPropertyBeingAutomated">
+			<value>qualityE</value>
+		</property>
+	</object>
 	<object class="Automator" id="{4b9c6fad-62f5-44a2-af79-745d40431184}">
 		<property name="nameOfPropertyBeingAutomated">
 			<value>gain</value>
