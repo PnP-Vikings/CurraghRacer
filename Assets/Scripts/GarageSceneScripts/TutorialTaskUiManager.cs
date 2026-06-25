@@ -32,6 +32,11 @@ public class TutorialTaskUiManager : MonoBehaviour
             }
             Debug.Log("Task UIs updated.");
         }
+        else
+        {
+            ClearTaskUis();
+            this.gameObject.SetActive(false);
+        }
     }
 
     public List<TutorialTask> ProcessedTutorialTasks(List<TutorialTask> tutorialTasks)

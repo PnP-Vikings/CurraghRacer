@@ -99,9 +99,14 @@ public class GarageSceneManager : MonoBehaviour
     
     public void UpdateTutorialTask()
     {
-        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && tutorialTaskUiManager != null)
+        if(tutorialTaskUiManager == null) return;
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
         {
             tutorialTaskUiManager.UpdateTaskUis();
+        }
+        else
+        {
+            tutorialTaskUiManager.gameObject.SetActive(false);
         }
     }
     

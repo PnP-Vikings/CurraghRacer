@@ -77,7 +77,7 @@
                                 true,
                                 true,
                                 true,
-                                false,
+                                true,
                                 false,
                                 false,
                                 false,
@@ -103,7 +103,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
