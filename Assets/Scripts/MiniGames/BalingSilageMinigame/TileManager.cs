@@ -11,6 +11,8 @@ public class TileManager : MonoBehaviour
 
     private Dictionary<Vector2, Tile> tiles;
 
+    private float tileSize = 4;
+
     void Start()
     {
         GenerateTileMap();
@@ -29,7 +31,7 @@ public class TileManager : MonoBehaviour
         {
             for (int z = 0; z < height; z++)
             {
-                var spawnedTile = Instantiate(tilePrefab, new Vector3(x, z), Quaternion.identity);
+                var spawnedTile = Instantiate(tilePrefab, new Vector3((float)x/tileSize, (float)z/tileSize), Quaternion.identity);
                 spawnedTile.name = $"Tile {x} {z}";
 
                 var isOffset = (x % 2 == 0 && z % 2 != 0) || (x % 2 != 0 && z % 2 == 0);
@@ -40,7 +42,7 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        cam.transform.position = new Vector3((float)width / 2 - 0.5f, (float)height / 2 - 0.5f, -10);
+        cam.transform.position = new Vector3((float)width / (2 * tileSize) - 0.5f, (float)height / (2 * tileSize) - 0.5f, -10);
     }
 
     public Tile GetTileAtPosition(Vector2 pos)

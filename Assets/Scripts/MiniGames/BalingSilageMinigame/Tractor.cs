@@ -17,7 +17,7 @@ public class Tractor : MonoBehaviour
     void Start()
     {
         transform.Rotate(0, 90, 0);
-        moveSpeed = 0.002f;
+        moveSpeed = 0.005f;
         movement = true;
     }
 
