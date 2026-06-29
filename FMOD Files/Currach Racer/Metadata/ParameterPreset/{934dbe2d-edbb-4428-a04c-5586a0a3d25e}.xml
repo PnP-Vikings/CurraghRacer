@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{934dbe2d-edbb-4428-a04c-5586a0a3d25e}">
+		<property name="name">
+			<value>miniGameProgression Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{070ff3bb-b184-498f-a04b-cadf5b74d55c}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{070ff3bb-b184-498f-a04b-cadf5b74d55c}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

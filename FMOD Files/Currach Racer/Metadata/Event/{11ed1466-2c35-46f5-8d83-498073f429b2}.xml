@@ -153,6 +153,9 @@
 		<property name="length">
 			<value>3.4000000000000004</value>
 		</property>
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="sounds">
 			<destination>{0632bb3b-b22a-49c9-913c-d87bf5ebf66e}</destination>
 			<destination>{22fb6eed-5758-4da1-a8eb-d9015ba77ce4}</destination>
@@ -192,8 +195,6 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{204c47a5-0262-4f18-81ad-c313877c2612}">
 		<relationship name="effects">
-			<destination>{a9691478-6aef-4441-87a1-684cae419011}</destination>
-			<destination>{e80e7187-79cb-4e76-92f7-f82bbc06df78}</destination>
 			<destination>{0c09b6e4-c5e4-49a1-b824-45a9199fc5e6}</destination>
 		</relationship>
 	</object>
@@ -225,7 +226,7 @@
 			<value>1</value>
 		</property>
 		<property name="frequencyA">
-			<value>20</value>
+			<value>54</value>
 		</property>
 		<property name="frequencyD">
 			<value>2100</value>
@@ -275,22 +276,6 @@
 		<property name="value">
 			<value>0</value>
 		</property>
-	</object>
-	<object class="ProxyEffect" id="{a9691478-6aef-4441-87a1-684cae419011}">
-		<property name="inputFormat">
-			<value>1</value>
-		</property>
-		<relationship name="preset">
-			<destination>{1e03e20b-5d83-4231-8f25-dc8f4b7632f8}</destination>
-		</relationship>
-	</object>
-	<object class="ProxyEffect" id="{e80e7187-79cb-4e76-92f7-f82bbc06df78}">
-		<property name="inputFormat">
-			<value>1</value>
-		</property>
-		<relationship name="preset">
-			<destination>{d824ff68-df55-44b5-8ea1-1018c22d34c1}</destination>
-		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{0c09b6e4-c5e4-49a1-b824-45a9199fc5e6}" />
 	<object class="MixerBusFader" id="{5771ad9a-3edd-4e40-98b7-00568ed10c1e}" />

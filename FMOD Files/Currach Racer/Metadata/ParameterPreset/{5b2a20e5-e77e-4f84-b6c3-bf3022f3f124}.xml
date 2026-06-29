@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{5b2a20e5-e77e-4f84-b6c3-bf3022f3f124}">
+		<property name="name">
+			<value>Countryside Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{f4c992aa-2fff-4b7e-8eeb-9db0e15d3ae3}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{f4c992aa-2fff-4b7e-8eeb-9db0e15d3ae3}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

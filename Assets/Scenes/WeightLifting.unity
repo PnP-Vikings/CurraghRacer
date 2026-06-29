@@ -2913,7 +2913,7 @@ MonoBehaviour:
   - Name: Dance Track Volume
     Value: 0.8
   - Name: Radioify Dance Track
-    Value: 0
+    Value: 1
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20

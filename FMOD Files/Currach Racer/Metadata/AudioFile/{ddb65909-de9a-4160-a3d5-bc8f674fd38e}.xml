@@ -1,20 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{14c9f826-504e-482d-980e-41e80319301a}">
+	<object class="AudioFile" id="{ddb65909-de9a-4160-a3d5-bc8f674fd38e}">
 		<property name="assetPath">
-			<value>Ben Dunne Ad.mp3</value>
+			<value>Bodhrán V6.wav</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>
 		</property>
 		<property name="frequencyInKHz">
-			<value>48</value>
+			<value>44.0999985</value>
 		</property>
 		<property name="channelCount">
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>28.175999999999998</value>
+			<value>53.174058956916099</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>

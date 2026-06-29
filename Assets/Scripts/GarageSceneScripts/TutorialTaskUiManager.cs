@@ -1,6 +1,8 @@
+using System.Collections;
 using System.Collections.Generic;
 using System.Net.Mail;
 using UnityEngine;
+//using UnityEngine.SceneManagement;
 
 public class TutorialTaskUiManager : MonoBehaviour
 {
@@ -8,6 +10,8 @@ public class TutorialTaskUiManager : MonoBehaviour
     public TutorialTaskPrefab taskPrefab;
     public TutorialTaskUiDialogue taskUiDialogueUi;
     TutorialTask activeTask = null;
+
+    //private Scene activeScene;
 
     public void UpdateTaskUis()
     {
@@ -115,6 +119,23 @@ public class TutorialTaskUiManager : MonoBehaviour
         foreach (TutorialTask tutorialTask in processedTasks)
         {
             Debug.Log($"Processed task: {tutorialTask.taskName}, Active: {tutorialTask.isTaskActive}, Completed: {tutorialTask.completed}");
+
+            // Play miniGameProgression sound whenever a tutorial task is completed & the active scene is the Garage
+
+            //activeScene = SceneManager.GetActiveScene();
+
+            if (AudioManager.instance != null)
+            {
+                if(tutorialTask.completed == true)// && activeScene.name == "Garage")
+                {
+                    //Debug.Log("Task is complete & active scene is Garage - AudioDebug");
+                    AudioManager.instance.miniGameProgression.start();
+                }
+            }
+
+            // Mute Tutorial Sound after 0.1s if the active scene is not the Garage
+
+            //StartCoroutine(MuteTutorialCompletedSound());
         }
         
         return processedTasks;
@@ -127,5 +148,18 @@ public class TutorialTaskUiManager : MonoBehaviour
             Destroy(child.gameObject);
         }
     }
-    
+
+    //public IEnumerator MuteTutorialCompletedSound()
+    //{
+    //    yield return new WaitForSeconds(0.1f);
+
+    //    activeScene = SceneManager.GetActiveScene();
+
+    //    Debug.Log("active scene is " + activeScene.name + " - AudioDebug");
+
+    //    if (activeScene.name != "Garage")
+    //    {
+    //        AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+    //    }
+    //}
 }

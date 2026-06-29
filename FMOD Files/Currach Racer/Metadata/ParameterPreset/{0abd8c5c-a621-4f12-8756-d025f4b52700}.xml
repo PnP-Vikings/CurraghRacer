@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{0abd8c5c-a621-4f12-8756-d025f4b52700}">
+		<property name="name">
+			<value>Bodhran pitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{3cb10bb9-beb9-4b97-a836-c91707f3c3af}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{3cb10bb9-beb9-4b97-a836-c91707f3c3af}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.66999995708465576</value>
+		</property>
+	</object>
+</objects>

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{3488b296-5f13-48c8-8a72-db8d3eed00df}">
+		<property name="name">
+			<value>Story Update - Second Race Won - Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{8e48c1a7-5b9e-435f-ae5b-c03c1f45d3b5}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{8e48c1a7-5b9e-435f-ae5b-c03c1f45d3b5}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+	</object>
+</objects>

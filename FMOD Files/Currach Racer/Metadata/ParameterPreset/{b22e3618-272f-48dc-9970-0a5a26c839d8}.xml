@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{b22e3618-272f-48dc-9970-0a5a26c839d8}">
 		<property name="name">
-			<value>Story Report - First Race Lost - Volume</value>
+			<value>Story Update - First Race Lost - Volume</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
@@ -14,6 +14,9 @@
 	<object class="GameParameter" id="{a35a08a4-974a-4eb4-9334-651f3c813776}">
 		<property name="initialValue">
 			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>3</value>
 		</property>
 	</object>
 </objects>
