@@ -171,8 +171,9 @@ MonoBehaviour:
   taskName: {fileID: 4538066866881780967}
   taskCheckBoxImage: {fileID: 7375801943538084911}
   taskCompletedImage: {fileID: 702718623189050657}
-  taskActiveColor: {r: 0.078097194, g: 0.20244814, b: 0.6132076, a: 0}
+  taskActiveColor: {r: 0.16862746, g: 0.3019608, b: 0.7372549, a: 0.69411767}
   taskInactiveColor: {r: 0.6313726, g: 0.6313726, b: 0.6313726, a: 1}
+  taskCompletedColor: {r: 0.3207547, g: 0.3207547, b: 0.3207547, a: 0.5686275}
 --- !u!1 &5893528834199846258
 GameObject:
   m_ObjectHideFlags: 0

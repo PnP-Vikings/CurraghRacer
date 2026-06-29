@@ -11,6 +11,7 @@ public class TutorialTaskPrefab : MonoBehaviour
     public Image taskCompletedImage;
     public Color taskActiveColor;
     public Color taskInactiveColor;
+    public Color taskCompletedColor;
     
     
     public void SetTutorialTask(TutorialTaskType tutorialTaskType)
@@ -36,6 +37,10 @@ public class TutorialTaskPrefab : MonoBehaviour
         if (GameManager.Instance != null && GameManager.Instance.IsTutorialTaskActive(tutorialTaskType))
         {
            taskBackgroundImage.color = taskActiveColor;
+        }
+        else if (GameManager.Instance != null && GameManager.Instance.IsTutorialTaskCompleted(tutorialTaskType))
+        {
+            taskBackgroundImage.color = taskCompletedColor;
         }
         else
         {
@@ -63,9 +68,13 @@ public class TutorialTaskPrefab : MonoBehaviour
             taskCompletedImage.gameObject.SetActive(false);
         }
         
-        if (tutorialTask.isTaskActive)
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialTaskActive(tutorialTaskType))
         {
             taskBackgroundImage.color = taskActiveColor;
+        }
+        else if (GameManager.Instance != null && GameManager.Instance.IsTutorialTaskCompleted(tutorialTaskType))
+        {
+            taskBackgroundImage.color = taskCompletedColor;
         }
         else
         {

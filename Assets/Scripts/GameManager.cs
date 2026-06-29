@@ -30,6 +30,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool tutorialModeActive = false;
     [SerializeField] private bool tutorialModeCompleted = false;
     public UnityEvent onTaskModified;
+    public UnityEvent onTutorialModeCompleted;
 
     private void Awake()
     {
@@ -170,6 +171,13 @@ public class GameManager : MonoBehaviour
         // Apply stat changes immediately BEFORE scene transition to prevent cache overwrite
         Debug.Log($"Training {selectedTeamMember.memberName} in {selectedStatType} for {amountGained} points.");
 
+
+        if (tutorialModeActive && !tutorialModeCompleted)
+        {
+            CompleteTutorialTask(TutorialTaskType.TrainTeamMemberTask);
+        }
+            
+            
         switch (selectedStatType)
         {
             case TeamMember.StatType.Strength:
@@ -358,7 +366,7 @@ public class GameManager : MonoBehaviour
 
     public void ActivateNextTutorialTask()
     {
-        if(tutorialTasks.Count > 0)
+        if(tutorialTasks.Count > 0 && !tutorialModeCompleted)
         {
             foreach (var task in tutorialTasks)
             {
@@ -409,6 +417,7 @@ public class GameManager : MonoBehaviour
         tutorialModeCompleted = true;
         tutorialModeActive = false;
         Debug.Log("All tutorial tasks are completed.");
+        onTutorialModeCompleted?.Invoke();
     }
 
     public bool IsTutorialModeActive()
@@ -440,6 +449,20 @@ public class GameManager : MonoBehaviour
         }
         Debug.LogWarning($"Tutorial task of type {taskType} not found.");
         return false; // Task not found
+    }
+    
+    public void MarkTutorialTaskDialogsAsShown(TutorialTask taskToMark)
+    {
+        foreach (var task in tutorialTasks)
+        {
+            if (task.taskType == taskToMark.taskType)
+            {
+                task.hasTutorialDialogsBeenShown = true;
+                Debug.Log($"Marked tutorial task dialogs as shown for: {task.taskName}");
+                return;
+            }
+        }
+        Debug.LogWarning($"Tutorial task of type {taskToMark.taskType} not found.");
     }
     
     public void ResetForNewGame()

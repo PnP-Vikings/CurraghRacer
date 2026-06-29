@@ -13,6 +13,7 @@ public class GarageSceneManager : MonoBehaviour
     [Tooltip("Delay before showing the welcome card for new players. Adjust as needed.")]
     public float showIntroDelay = 1.2f;
     public TutorialTaskUiManager tutorialTaskUiManager;
+    public GameObject tutorialUi;
     private void Awake()
     {
         if (Instance == null)
@@ -55,21 +56,27 @@ public class GarageSceneManager : MonoBehaviour
             }
         }
 
-        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
-        {
-            tutorialTaskUiManager.gameObject.SetActive(true);
-            tutorialTaskUiManager.UpdateTaskUis();
-            GameManager.Instance.onTaskModified.AddListener(UpdateTutorialTask);
-        }
-        
-        
+        ProcessTutorialUi();
     }
+    
+    
     
     
     
     void OnEnable()
     {
         CheckAndShowLeagueInvite();
+        
+        ProcessTutorialUi();
+
+    }
+    
+    void OnDisable()
+    {
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.onTaskModified.RemoveListener(UpdateTutorialTask);
+        }
     }
 
     public void CheckAndShowLeagueInvite()
@@ -99,11 +106,40 @@ public class GarageSceneManager : MonoBehaviour
     
     public void UpdateTutorialTask()
     {
-        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && tutorialTaskUiManager != null)
+        if(tutorialTaskUiManager == null) return;
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
         {
             tutorialTaskUiManager.UpdateTaskUis();
         }
+        else
+        {
+            tutorialTaskUiManager.gameObject.SetActive(false);
+        }
     }
     
+    
+    public void ProcessTutorialUi()
+    {
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            tutorialTaskUiManager.gameObject.SetActive(true);
+            tutorialTaskUiManager.UpdateTaskUis();
+            GameManager.Instance.onTaskModified.AddListener(UpdateTutorialTask);
+        }
+        else
+        {
+            tutorialTaskUiManager.gameObject.SetActive(false);
+            GameManager.Instance.onTaskModified.RemoveListener(UpdateTutorialTask);
+        }
+
+        if (GameManager.Instance != null && !GameManager.Instance.IsTutorialModeActive() && tutorialUi != null)
+        {
+            tutorialUi.SetActive(false);
+        }
+        else if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && tutorialUi != null)
+        {
+            tutorialUi.SetActive(true);
+        }
+    }
     
 }
