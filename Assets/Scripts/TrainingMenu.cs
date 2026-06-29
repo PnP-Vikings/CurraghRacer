@@ -37,6 +37,8 @@ public class TrainingMenu : MonoBehaviour
         if(_trainSelectedMemberButton != null)
             _trainSelectedMemberButton.onClick.AddListener(TrainSelectedTeamMember);
          _trainSelectedMemberButton.interactable = false;
+         
+         CheckIfOpenTrainingMenuTaskIsCompleted();
     }
     
     public void SetSelectedTeamMember(TeamMember member, TrainingSelectionUi uiHandler)
@@ -272,5 +274,11 @@ public class TrainingMenu : MonoBehaviour
         ClearTeamMemberUis();
     }
     
-    
+    public void CheckIfOpenTrainingMenuTaskIsCompleted()
+    {
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.OpenTrainingMenuTask);
+        }
+    }
 }

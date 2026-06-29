@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -7,11 +8,13 @@ public class TutorialTaskUiDialogue : MonoBehaviour
 {
    public TMP_Text dialogueText;
    public TMP_Text taskTitleText;
-   public List<Sprite> dialogueSprite;
+   public List<Sprite> dialogueSprites;
    public Image dialogueCharacterImage;
    public List<string> dialogueLines;
    public int currentDialogueIndex = 0;
    public TutorialTask activeTask;
+   [SerializeField] private float dialogueSpriteSpeed = .25f;
+
    public void Setup(TutorialTask injectedActiveTask)
    {
       activeTask = injectedActiveTask;
@@ -38,13 +41,25 @@ public class TutorialTaskUiDialogue : MonoBehaviour
       }
    }
   
-   
-   void Update()
+
+   private void OnEnable()
    {
-      if (Input.GetKeyDown(KeyCode.Space))
+      StartCoroutine(CycleSprites());
+   }
+
+   private IEnumerator CycleSprites()
+   {
+      int index = 0;
+      while (true)
       {
-         NextDialogue();
+         if (dialogueSprites != null && dialogueSprites.Count > 0 && dialogueCharacterImage != null)
+         {
+            dialogueCharacterImage.sprite = dialogueSprites[index];
+            index = (index + 1) % dialogueSprites.Count;
+         }
+         yield return new WaitForSeconds(dialogueSpriteSpeed);
       }
    }
+   
    
 }
