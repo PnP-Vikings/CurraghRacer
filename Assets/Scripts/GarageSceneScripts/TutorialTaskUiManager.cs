@@ -6,7 +6,8 @@ public class TutorialTaskUiManager : MonoBehaviour
 {
     public Transform taskUiParent;
     public TutorialTaskPrefab taskPrefab;
-
+    public TutorialTaskUiDialogue taskUiDialogueUi;
+    TutorialTask activeTask = null;
 
     public void UpdateTaskUis()
     {
@@ -31,6 +32,7 @@ public class TutorialTaskUiManager : MonoBehaviour
                 taskUi.SetTutorialTask(tutorialTask);
             }
             Debug.Log("Task UIs updated.");
+            ProcessActiveTaskDialogue();
         }
         else
         {
@@ -38,7 +40,19 @@ public class TutorialTaskUiManager : MonoBehaviour
             this.gameObject.SetActive(false);
         }
     }
-
+    public void ProcessActiveTaskDialogue()
+    {
+        if (activeTask != null && taskUiDialogueUi != null && activeTask.taskDialogs.Count > 0 && !activeTask.hasTutorialDialogsBeenShown)
+        {
+            taskUiDialogueUi.gameObject.SetActive(true);
+            taskUiDialogueUi.Setup(activeTask);
+        }
+        else
+        {
+            taskUiDialogueUi.gameObject.SetActive(false);
+        }
+    }
+   
     public List<TutorialTask> ProcessedTutorialTasks(List<TutorialTask> tutorialTasks)
     {
         List<TutorialTask> processedTasks = new List<TutorialTask>();
@@ -50,6 +64,7 @@ public class TutorialTaskUiManager : MonoBehaviour
             if (count == 0 && tutorialTask.isTaskActive)
             {
                 processedTasks.Add(tutorialTask);
+                activeTask = tutorialTask;
                 hasBeenProcessed = true;
                 break;
             }
@@ -57,6 +72,7 @@ public class TutorialTaskUiManager : MonoBehaviour
             {
                 processedTasks.Add(tutorialTasks[0]);
                 processedTasks.Add(tutorialTask);
+                activeTask = tutorialTask;
                 hasBeenProcessed = true;
                 break;
             }
@@ -66,7 +82,7 @@ public class TutorialTaskUiManager : MonoBehaviour
         if (!hasBeenProcessed)
         {
             processedTasks.Clear();
-            TutorialTask activeTask = null;
+           
             foreach (TutorialTask tutorialTask in tutorialTasks)
             {
                 if (tutorialTask.isTaskActive)

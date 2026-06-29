@@ -451,6 +451,20 @@ public class GameManager : MonoBehaviour
         return false; // Task not found
     }
     
+    public void MarkTutorialTaskDialogsAsShown(TutorialTask taskToMark)
+    {
+        foreach (var task in tutorialTasks)
+        {
+            if (task.taskType == taskToMark.taskType)
+            {
+                task.hasTutorialDialogsBeenShown = true;
+                Debug.Log($"Marked tutorial task dialogs as shown for: {task.taskName}");
+                return;
+            }
+        }
+        Debug.LogWarning($"Tutorial task of type {taskToMark.taskType} not found.");
+    }
+    
     public void ResetForNewGame()
     {
        SetHasBeenShownIntro(false); // Reset intro flag for new game
