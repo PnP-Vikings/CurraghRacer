@@ -157,6 +157,7 @@ public class DecisionCardUiMaster : MonoBehaviour
            // No more cards
            Debug.Log("All cards processed for today");
            DecisionCardManager.Instance.OnAllCardsProcessed?.Invoke();
+           ResumeTimeAfterCards();
            ResetBackgroundColor();
            this.gameObject.SetActive(false); // Hide themaster UI 
        }

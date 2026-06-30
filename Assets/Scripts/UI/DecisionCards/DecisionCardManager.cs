@@ -46,11 +46,6 @@ public class DecisionCardManager : MonoBehaviour
             Debug.Log($"DecisionCardUiMaster assigned. We have {todaysCards.Count} pending cards. Showing them now.");
             /*uiMaster.gameObject.SetActive(true);
             uiMaster.GenerateTodaysCards();*/
-            
-            if(TimeManager.Instance != null)
-            {
-                TimeManager.Instance.SetTimePauseState(true);
-            }
         }
     }
     
@@ -706,7 +701,7 @@ public class DecisionCardManager : MonoBehaviour
     
     private void RestartTimeAfterCards()
     {
-        if (TimeManager.Instance != null)
+        if (TimeManager.Instance != null )
         {
             TimeManager.Instance.SetTimePauseState(false);
         }
