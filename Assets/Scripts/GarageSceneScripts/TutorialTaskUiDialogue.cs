@@ -45,6 +45,7 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          this.currentDialogueLine = dialogueLines[currentDialogueIndex];
          if (!isDialogueActive)
          {
+            isDialogueActive = true;  
             this.currentDialogueCoroutine = this.StartCoroutine(TypeText(currentDialogueLine));
          }
       }
