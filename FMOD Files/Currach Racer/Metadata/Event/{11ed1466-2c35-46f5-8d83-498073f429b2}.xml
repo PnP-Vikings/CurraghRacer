@@ -147,11 +147,20 @@
 		</relationship>
 	</object>
 	<object class="MultiSound" id="{decc7f29-04a9-4e5a-937b-5f9ba8e47da8}">
+		<property name="triggerProbabilityEnabled">
+			<value>true</value>
+		</property>
+		<property name="triggerProbability">
+			<value>49.5</value>
+		</property>
 		<property name="start">
 			<value>8.5999999999999996</value>
 		</property>
 		<property name="length">
 			<value>3.4000000000000004</value>
+		</property>
+		<property name="maxVoices">
+			<value>1</value>
 		</property>
 		<property name="volume">
 			<value>-2</value>
@@ -244,12 +253,12 @@
 			<value>0.234999999</value>
 		</property>
 		<property name="gainD">
-			<value>12.5</value>
+			<value>11</value>
 		</property>
 	</object>
 	<object class="DistortionEffect" id="{ed283246-447b-45ea-bfc5-d4c69cf2f989}">
 		<property name="level">
-			<value>0.314999998</value>
+			<value>0.299999982</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{3cc3eac2-6c44-42c7-8715-3cefc7c9db91}">

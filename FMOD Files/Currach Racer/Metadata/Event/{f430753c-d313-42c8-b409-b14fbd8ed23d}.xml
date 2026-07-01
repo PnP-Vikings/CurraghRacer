@@ -93,9 +93,6 @@
 			<destination>{52c020fe-e83a-42cc-bb5a-707515d1e2ab}</destination>
 			<destination>{07718ca0-7c83-4d9a-b1e0-115c4a3bacb8}</destination>
 		</relationship>
-		<relationship name="markers">
-			<destination>{7b5c8df4-7744-408f-817a-4208bcc30fa6}</destination>
-		</relationship>
 	</object>
 	<object class="ParameterProxy" id="{98ee7b7b-10f8-4968-9041-f5bbb8546ebc}">
 		<relationship name="preset">
@@ -191,20 +188,6 @@
 			<destination>{fbf08d70-c248-4adc-b686-ba360f6bedaf}</destination>
 		</relationship>
 	</object>
-	<object class="LoopRegion" id="{7b5c8df4-7744-408f-817a-4208bcc30fa6}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="length">
-			<value>86.363650793650791</value>
-		</property>
-		<relationship name="timeline">
-			<destination>{2fe14f19-a10e-4664-8057-c5838a1af5f3}</destination>
-		</relationship>
-		<relationship name="markerTrack">
-			<destination>{607ea7f7-a195-495e-ae99-65e6dd18c5c9}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusEffectChain" id="{e4b7415e-a495-4568-ac71-d275e78d74fb}">
 		<relationship name="effects">
 			<destination>{2c3d34bf-bf04-4813-a653-45705c14d2de}</destination>
@@ -271,7 +254,7 @@
 			<value>0.234999999</value>
 		</property>
 		<property name="gainD">
-			<value>12.5</value>
+			<value>11</value>
 		</property>
 		<relationship name="automators">
 			<destination>{cb554d14-b615-4a02-9f89-97ffb55010f0}</destination>
@@ -281,7 +264,7 @@
 	</object>
 	<object class="DistortionEffect" id="{927612ab-402a-42b5-8830-37a9cff775ce}">
 		<property name="level">
-			<value>0.319999993</value>
+			<value>0.299999982</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{b74b8665-7809-4b99-92f9-7f8531d70378}">

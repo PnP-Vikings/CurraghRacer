@@ -4181,22 +4181,6 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1036396937}
   m_SourcePrefab: {fileID: 100100000, guid: 4fa293890e963cf4b828ddc3528de03f, type: 3}
---- !u!114 &1036396934 stripped
-MonoBehaviour:
-  m_CorrespondingSourceObject: {fileID: 3196573976575130870, guid: 4fa293890e963cf4b828ddc3528de03f, type: 3}
-  m_PrefabInstance: {fileID: 1036396933}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e533000031af9de48b860aca21068eb3, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::WelcomeCardUi
---- !u!224 &1036396935 stripped
-RectTransform:
-  m_CorrespondingSourceObject: {fileID: 2091124022436608327, guid: 4fa293890e963cf4b828ddc3528de03f, type: 3}
-  m_PrefabInstance: {fileID: 1036396933}
-  m_PrefabAsset: {fileID: 0}
 --- !u!1 &1036396936 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 3150409439674393525, guid: 4fa293890e963cf4b828ddc3528de03f, type: 3}
@@ -8737,6 +8721,14 @@ PrefabInstance:
       propertyPath: De
       value: 
       objectReference: {fileID: 1572256176}
+    - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: inviteDelay
+      value: 30
+      objectReference: {fileID: 0}
+    - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: showIntroDelay
+      value: 1.2
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -9385,3 +9377,4 @@ SceneRoots:
   - {fileID: 2093723885}
   - {fileID: 996599402}
   - {fileID: 144998111}
+  - {fileID: 1036396933}

@@ -18,6 +18,7 @@ public class StartRaceMenuUi : MonoBehaviour
                 if (AudioManager.instance != null)
                 {
                     RadioManager.instance.StopAllRadioSongs();
+                    AudioManager.instance.miniGameProgression.stop(STOP_MODE.ALLOWFADEOUT);
                     AudioManager.instance.loadingScreenSong.start();
                 }
             }
