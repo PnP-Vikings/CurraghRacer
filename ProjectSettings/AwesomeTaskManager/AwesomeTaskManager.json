@@ -43,6 +43,28 @@
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ],
                             "isArchived": false
+                        },
+                        {
+                            "id": "dd77139c-c06b-4042-97e8-20b28c995737",
+                            "title": "Add More Bouys to race scene",
+                            "description": "Place a boy ever 100 meters ",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-01 23:26",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "checklistLinkedCardIds": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
