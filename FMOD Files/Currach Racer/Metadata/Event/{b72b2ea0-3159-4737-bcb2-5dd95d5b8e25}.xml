@@ -188,7 +188,7 @@
 			<value>0.234999999</value>
 		</property>
 		<property name="gainD">
-			<value>12.5</value>
+			<value>11</value>
 		</property>
 		<relationship name="automators">
 			<destination>{7ff6651a-ce26-4850-b8a6-10f44181ca35}</destination>
@@ -198,7 +198,7 @@
 	</object>
 	<object class="DistortionEffect" id="{e6495aac-6323-4086-a2f6-8d945c07a25c}">
 		<property name="level">
-			<value>0.319999993</value>
+			<value>0.299999982</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{2b12d61c-5630-478f-a88a-fc3f33328839}" />

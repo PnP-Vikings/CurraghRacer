@@ -219,12 +219,12 @@
 			<value>0.234999999</value>
 		</property>
 		<property name="gainD">
-			<value>12.5</value>
+			<value>11</value>
 		</property>
 	</object>
 	<object class="DistortionEffect" id="{f1268f8b-642a-4d6e-9ee6-24a6334400ea}">
 		<property name="level">
-			<value>0.314999998</value>
+			<value>0.299999982</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{f46af4a4-7a30-42a5-a22d-94aa9093c0e1}">

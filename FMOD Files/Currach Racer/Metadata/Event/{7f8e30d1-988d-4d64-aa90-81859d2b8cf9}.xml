@@ -179,7 +179,7 @@
 			<value>0.234999999</value>
 		</property>
 		<property name="gainD">
-			<value>12.5</value>
+			<value>11</value>
 		</property>
 		<relationship name="automators">
 			<destination>{71598c83-fc83-453e-9148-aae4069a5e72}</destination>
@@ -189,7 +189,7 @@
 	</object>
 	<object class="DistortionEffect" id="{58edf1da-166d-48fb-b804-979fbdbfc7b7}">
 		<property name="level">
-			<value>0.319999993</value>
+			<value>0.299999982</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{46b8ecee-1714-4979-8a5f-8be2c35e68fd}">
