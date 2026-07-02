@@ -80,7 +80,7 @@
                             "colorLabel": 2,
                             "priority": 0,
                             "createdDate": "2026-06-04 22:36",
-                            "dueDate": "2026-06-25",
+                            "dueDate": "2026-07-16",
                             "archived": false,
                             "checklistItems": [
                                 "Add Task to open Calendar",
@@ -126,7 +126,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -150,9 +150,9 @@
                             "checklistStates": [
                                 true,
                                 true,
-                                false,
                                 true,
-                                false
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -166,7 +166,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -190,9 +190,9 @@
                             "checklistStates": [
                                 true,
                                 false,
-                                false,
-                                false,
-                                false
+                                true,
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -225,7 +225,7 @@
                                 "Figure out easiest way to keep track of text in game for easy transaction"
                             ],
                             "checklistStates": [
-                                false,
+                                true,
                                 false
                             ],
                             "checklistLinkedCardIds": [
@@ -237,7 +237,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         }

@@ -11701,7 +11701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.size
-      value: 6
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[0].taskName
@@ -11748,6 +11748,22 @@ PrefabInstance:
       value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[6].taskName
+      value: Open Bill Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[6].taskType
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[7].taskName
+      value: Work a Job
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[7].taskType
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[0].isTaskActive
       value: 1
       objectReference: {fileID: 0}
@@ -11782,6 +11798,14 @@ PrefabInstance:
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[5].taskDialogs.Array.size
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[6].taskDialogs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[7].taskDialogs.Array.size
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[0].taskDialogs.Array.data[0]'
@@ -11841,6 +11865,22 @@ PrefabInstance:
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[5].taskDialogs.Array.data[1]'
       value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[6].taskDialogs.Array.data[0]'
+      value: Oh I forgot to mention all the bills are now in your name
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[6].taskDialogs.Array.data[1]'
+      value: Lets check out the bill menu on the bulletin board
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[7].taskDialogs.Array.data[0]'
+      value: You will require money to pay for the teams expensives and bills
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[7].taskDialogs.Array.data[1]'
+      value: 'go back to the main bulletin board and press on job '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: uncompletedTutorialTasks.Array.data[0].taskDescription

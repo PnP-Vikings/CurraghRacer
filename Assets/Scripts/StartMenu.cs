@@ -187,6 +187,8 @@ public class StartMenu : MonoBehaviour
     
     public void OnWorkButtonClicked()
     {
+      
+        
         if (TimeManager.Instance != null)
         {
             isTooLateForActivities = TimeManager.Instance.IsTooLateForActivities();
@@ -203,6 +205,10 @@ public class StartMenu : MonoBehaviour
             // Use MiniGameManager instead of loading separate scenes
             if (MiniGames.MiniGameManager.Instance != null)
             {
+                if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+                {
+                    GameManager.Instance.CompleteTutorialTask(TutorialTaskType.WorkJobTask);
+                }
                 // Start a random work minigame through the manager
                 MiniGames.MiniGameManager.Instance.StartRandomWorkActivity();
                 
