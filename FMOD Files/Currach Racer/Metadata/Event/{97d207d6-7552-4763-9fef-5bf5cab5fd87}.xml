@@ -145,10 +145,10 @@
 	</object>
 	<object class="SoundScatterer" id="{9c50ec66-5a39-48cc-adbb-35c51eb6d128}">
 		<property name="start">
-			<value>3</value>
+			<value>6.5</value>
 		</property>
 		<property name="length">
-			<value>27.883875</value>
+			<value>24.383875</value>
 		</property>
 		<property name="polyphony">
 			<value>1</value>
