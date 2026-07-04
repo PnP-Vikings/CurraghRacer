@@ -20,7 +20,8 @@ public class TutorialTask
 public enum TutorialTaskType
 {
     BulletinBoardTask,
-    CalendarTask,
+    CalendarTask,    
+    CloseCalendarTask,
     TeamManagerTask,
     PracticeRaceTask,
     TrainTeamMemberTask,

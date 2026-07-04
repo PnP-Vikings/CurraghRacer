@@ -8659,6 +8659,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 3914419356705930644, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_SortingOrder
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4376624811565136900, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_text
       value: 'Task Title

@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -22,12 +23,17 @@ public class TutorialTaskUiDialogue : MonoBehaviour
    {
       activeTask = injectedActiveTask;
       this.taskTitleText.text = activeTask.taskName;
-      this.dialogueLines = activeTask.taskDialogs;
-      this.currentDialogueIndex = 0;
-      this.currentDialogueLine = dialogueLines[currentDialogueIndex];
+     
       if (!isDialogueActive)
       {
          isDialogueActive = true;   
+         foreach (string tl in activeTask.taskDialogs)
+         {
+            dialogueLines.Add(tl);
+         }
+      
+         this.currentDialogueIndex = 0;
+         this.currentDialogueLine = dialogueLines[currentDialogueIndex];
          this.currentDialogueCoroutine = this.StartCoroutine(TypeText(currentDialogueLine));
       }
    }
@@ -53,6 +59,12 @@ public class TutorialTaskUiDialogue : MonoBehaviour
       {
          if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && activeTask != null)
          {
+            dialogueLines.Clear();
+            
+            foreach (string tl in activeTask.CompletedtaskDialogs)
+            {
+               dialogueLines.Add(tl);
+            }
             GameManager.Instance.MarkTutorialTaskDialogsAsShown(activeTask);
          }
         this.gameObject.SetActive(false);
@@ -78,7 +90,8 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          yield return new WaitForSeconds(dialogueSpriteSpeed);
       }
    }
-
+   
+   //This function is called when the player clicks the "Next" button to skip to the end of the current dialogue line
    private void SkipToEndOfDialogue()
    {
       if(isDialogueActive == true)
@@ -88,6 +101,8 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          isDialogueActive = false;
       }
    }
+   
+   //This is the function that types the text
    private IEnumerator TypeText(string text)
    {
       Debug.Log("TypeText: " + text);

@@ -215,12 +215,24 @@ namespace Calendar
             CurrentMonth();
             CheckIfCalendarTaskIsCompleted();
         }
+        private void OnDisable()
+        {
+            CheckIfCloseCalendarTaskIsCompleted();
+        }
         
         public void CheckIfCalendarTaskIsCompleted()
         {
             if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
             {
                 GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CalendarTask);
+            }
+        }
+        
+        public void CheckIfCloseCalendarTaskIsCompleted()
+        {
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseCalendarTask);
             }
         }
     }
