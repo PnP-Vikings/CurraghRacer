@@ -49,6 +49,10 @@ public class BillUiHandler : MonoBehaviour
     void OnDisable()
     {
         ClearBillUis();
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() )
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseBillMenu);
+        }
     }
     
     public void ClearBillUis()

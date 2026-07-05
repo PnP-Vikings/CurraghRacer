@@ -90,10 +90,13 @@
                                 "Add Task to Train a member of the squad",
                                 "Add Task to open bill (Make sure player does not have enough  to pay bill)",
                                 "Add Task to work job",
+                                "Add close team manger task",
+                                "Add task to click on hire racer",
                                 "Add Task to pay a bill",
                                 "Add Task to sleep",
                                 "Prompt player to join league after sleep but remove close button",
-                                "Add Task to do a Sunday Race"
+                                "Add Task to do a Sunday Race",
+                                "Remove the stamina requirement for working a job when tutorial is active"
                             ],
                             "checklistStates": [
                                 true,
@@ -106,9 +109,15 @@
                                 false,
                                 false,
                                 false,
+                                false,
+                                false,
+                                false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
                                 "",
                                 "",
                                 "",
@@ -189,7 +198,7 @@
                             ],
                             "checklistStates": [
                                 true,
-                                false,
+                                true,
                                 true,
                                 true,
                                 true
@@ -206,7 +215,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },

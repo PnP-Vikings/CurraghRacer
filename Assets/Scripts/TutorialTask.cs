@@ -32,5 +32,9 @@ public enum TutorialTaskType
     JoinLeagueTask,
     RaceTask,
     OpenTrainingMenuTask,
-    Other
+    Other,
+    ClickOnTheTv,
+    ExitTv,
+    CompleteAllTasks,
+    CloseBillMenu,
 } 

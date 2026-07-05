@@ -66,6 +66,11 @@ public class TutorialTaskUiDialogue : MonoBehaviour
                dialogueLines.Add(tl);
             }
             GameManager.Instance.MarkTutorialTaskDialogsAsShown(activeTask);
+            
+            if(activeTask.taskType == TutorialTaskType.CompleteAllTasks)
+            {
+               GameManager.Instance.CompleteTutorialTask(activeTask.taskType);
+            }
          }
         this.gameObject.SetActive(false);
       }
