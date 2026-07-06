@@ -65,6 +65,37 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "7195bd10-3a74-41b3-b46a-ad026c30563c",
+                            "title": "Add Confirmation to tv menu when user presses on back to main menu",
+                            "description": "",
+                            "category": "UI",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-07 00:42",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Extra pop to ask player if theri sure",
+                                "test make sure it works"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -135,7 +166,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": true,
+                            "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -199,7 +230,7 @@
                             "checklistStates": [
                                 true,
                                 true,
-                                true,
+                                false,
                                 true,
                                 true
                             ],
@@ -212,7 +243,34 @@
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
-                            "linkedItems": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "80428de81aaf5474ea7d4c4ab7cbf45c",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": true,

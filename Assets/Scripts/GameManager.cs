@@ -156,6 +156,11 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo($"Use the energy you regained to go to work", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
         }
+        
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.SleepTask))
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.SleepTask);
+        }
         StartCoroutine(SleepAudioChanges());
     }
 

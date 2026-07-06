@@ -11705,7 +11705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.size
-      value: 15
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[0].taskName
@@ -11821,10 +11821,34 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[14].taskName
-      value: Completed all Tasks
+      value: 'Pay a bill '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[14].taskType
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[15].taskName
+      value: Close Bill Manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[15].taskType
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[16].taskName
+      value: Sleep
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[16].taskType
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[17].taskName
+      value: Completed all Tasks
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[17].taskType
       value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
@@ -11897,6 +11921,18 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[14].taskDialogs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[15].taskDialogs.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[16].taskDialogs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[17].taskDialogs.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
@@ -12029,10 +12065,41 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[14].taskDialogs.Array.data[0]'
-      value: Good Job Completing all tasks
+      value: Alright now that you have some money lets pay a bill
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[14].taskDialogs.Array.data[1]'
+      value: Click back on the bulletin board and go into the bill manager and pay
+        a bill
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[15].taskDialogs.Array.data[0]'
+      value: 'Close the bill manager when your ready '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[15].taskDialogs.Array.data[1]'
+      value: 'You are now on your own be sure to take care of your teammates and
+        good luck '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[16].taskDialogs.Array.data[0]'
+      value: 'Its been a long day you should get some sleep '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[16].taskDialogs.Array.data[1]'
+      value: 'You can click on sleep to get some rest '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[16].taskDialogs.Array.data[2]'
+      value: keep in mind sleeping isn't free and if you can't afford a nice place
+        to rest you won't be as well rested the next day
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[17].taskDialogs.Array.data[0]'
+      value: Good Job Completing all tasks
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[17].taskDialogs.Array.data[1]'
       value: 'You are now on your own be sure to take care of your teammates and
         good luck '
       objectReference: {fileID: 0}
@@ -12091,6 +12158,10 @@ PrefabInstance:
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[11].CompletedtaskDialogs.Array.size
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[14].CompletedtaskDialogs.Array.size
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[0].CompletedtaskDialogs.Array.data[0]'
@@ -12227,6 +12298,19 @@ PrefabInstance:
       propertyPath: 'tutorialTasks.Array.data[11].CompletedtaskDialogs.Array.data[0]'
       value: 'Good work completed a job be sure to always leave some time in your
         day for the jobs '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[14].CompletedtaskDialogs.Array.data[0]'
+      value: 'Good job paying your first bill '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[14].CompletedtaskDialogs.Array.data[1]'
+      value: Keep in mind that you don't have to pay the bill on time but it will
+        cost you interest and eventually it will get auto debited
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[14].CompletedtaskDialogs.Array.data[2]'
+      value: 'meaning you may go into debt and trust me you don''t want to do that '
       objectReference: {fileID: 0}
     - target: {fileID: 4155108299724904071, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: m_LocalPosition.x

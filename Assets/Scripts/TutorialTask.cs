@@ -39,4 +39,5 @@ public enum TutorialTaskType
     CloseBillMenu,
     OpenHireSailorBillMenu,
     CloseTeamManager,
+    CloseBillMenuTask2,
 } 

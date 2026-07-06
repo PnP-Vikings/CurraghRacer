@@ -151,6 +151,11 @@ public class BillsController : MonoBehaviour
         if (PlayerManager.Instance.PurchaseItem(bill.amountDue, PurchaseType.Bill))
         {
             ProcessBillAfterPayment(bill, false, cost);
+
+            if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.PayBillTask))
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.PayBillTask);
+            }
             
             Debug.Log($"Paid {bill.billName} bill of amount {bill.amount}");
             return true;
