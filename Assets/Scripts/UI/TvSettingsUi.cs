@@ -38,4 +38,30 @@ public class TvSettingsUi : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo("Quick Save failed!" , messageDisplayTime);
         }
     }
+    
+    
+    private void OnEnable()
+    {
+        CheckIfTvTaskIsCompleted();
+    }
+    private void OnDisable()
+    {
+        CheckIfCloseTvTaskIsCompleted();
+    }
+        
+    public void CheckIfTvTaskIsCompleted()
+    {
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.ClickOnTheTv);
+        }
+    }
+        
+    public void CheckIfCloseTvTaskIsCompleted()
+    {
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.ExitTv);
+        }
+    }
 }

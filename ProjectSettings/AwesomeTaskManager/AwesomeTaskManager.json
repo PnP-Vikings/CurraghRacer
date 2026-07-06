@@ -43,6 +43,28 @@
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ],
                             "isArchived": false
+                        },
+                        {
+                            "id": "dd77139c-c06b-4042-97e8-20b28c995737",
+                            "title": "Add More Bouys to race scene",
+                            "description": "Place a boy ever 100 meters ",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-01 23:26",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "checklistLinkedCardIds": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -58,7 +80,7 @@
                             "colorLabel": 2,
                             "priority": 0,
                             "createdDate": "2026-06-04 22:36",
-                            "dueDate": "2026-06-25",
+                            "dueDate": "2026-07-16",
                             "archived": false,
                             "checklistItems": [
                                 "Add Task to open Calendar",
@@ -68,10 +90,13 @@
                                 "Add Task to Train a member of the squad",
                                 "Add Task to open bill (Make sure player does not have enough  to pay bill)",
                                 "Add Task to work job",
+                                "Add close team manger task",
+                                "Add task to click on hire racer",
                                 "Add Task to pay a bill",
                                 "Add Task to sleep",
                                 "Prompt player to join league after sleep but remove close button",
-                                "Add Task to do a Sunday Race"
+                                "Add Task to do a Sunday Race",
+                                "Remove the stamina requirement for working a job when tutorial is active"
                             ],
                             "checklistStates": [
                                 true,
@@ -79,14 +104,20 @@
                                 true,
                                 true,
                                 true,
+                                true,
+                                true,
+                                true,
+                                true,
                                 false,
                                 false,
                                 false,
                                 false,
-                                false,
-                                false
+                                true
                             ],
                             "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
                                 "",
                                 "",
                                 "",
@@ -104,7 +135,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -128,9 +159,9 @@
                             "checklistStates": [
                                 true,
                                 true,
-                                false,
                                 true,
-                                false
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -144,7 +175,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -162,26 +193,60 @@
                                 "Verify the player can complete a task",
                                 "Once player has completed all tasks in list set tutorial completed",
                                 "Setup task tracking for tutorial",
-                                "Setup Ui Task Tracking"
+                                "Setup Ui Task Tracking",
+                                "Complete Dialogue text ui"
                             ],
                             "checklistStates": [
                                 true,
-                                false,
-                                false,
-                                false
+                                true,
+                                true,
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
                                 "",
                                 "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
-                                "3bc4723e-533b-4361-bd07-e3b78861990a"
+                                "3bc4723e-533b-4361-bd07-e3b78861990a",
+                                "100e6d20-b68e-49d6-b522-e339af988a06"
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "100e6d20-b68e-49d6-b522-e339af988a06",
+                            "title": "Tutorial Dialogue",
+                            "description": "Tutorial Dialogue Little guy at the bottom of the screen \nwhen task starts ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-06-30 22:12",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Make text show on a delay ",
+                                "Figure out easiest way to keep track of text in game for easy transaction"
+                            ],
+                            "checklistStates": [
+                                true,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         }

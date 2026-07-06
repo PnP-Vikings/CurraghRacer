@@ -135,7 +135,7 @@ public class GameManager : MonoBehaviour
 
     public void Sleep(int sleepCost)
     {
-        if (PlayerManager.Instance.PlayerHasEnoughEnergy(100))
+        if (PlayerManager.Instance.PlayerHasEnoughEnergy(100) && !tutorialModeActive)
         {
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
             return; // Not enough energy to sleep

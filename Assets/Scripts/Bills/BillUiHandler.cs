@@ -6,6 +6,11 @@ public class BillUiHandler : MonoBehaviour
     public Transform billsUiParent;
     void OnEnable()
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() )
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.OpenBillMenuTask);
+        }
+        
         if(billUiPrefab == null && BillsController.Instance != null)
         {
             billUiPrefab = BillsController.Instance.billPrefab;
@@ -44,6 +49,10 @@ public class BillUiHandler : MonoBehaviour
     void OnDisable()
     {
         ClearBillUis();
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() )
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseBillMenu);
+        }
     }
     
     public void ClearBillUis()

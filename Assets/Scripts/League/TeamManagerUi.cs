@@ -109,15 +109,30 @@ public class TeamManagerUi : MonoBehaviour
    void OnDisable()
    {
        ClearTeamMemberUis();
+       CheckIfCloseTeamManagerTaskIsCompleted();
    }
    
    public void CheckIfTeamManagerTaskIsCompleted()
    {
-       if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+       if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.TeamManagerTask))
        {
            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.TeamManagerTask);
        }
    }
+   public void CheckIfCloseTeamManagerTaskIsCompleted()
+   {
+       if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.CloseTeamManager))
+       {
+           GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseTeamManager);
+       }
+   }
    
+   public void CheckIfOpenHireableTaskIsCompleted()
+   {
+       if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.OpenHireSailorBillMenu))
+       {
+           GameManager.Instance.CompleteTutorialTask(TutorialTaskType.OpenHireSailorBillMenu);
+       }
+   }
    
 }
