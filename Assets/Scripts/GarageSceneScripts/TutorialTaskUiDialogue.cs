@@ -74,6 +74,11 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          }
         this.gameObject.SetActive(false);
       }
+
+      if (AudioManager.instance != null)
+      {
+          AudioManager.instance.UIClick1.start();
+      }
    }
   
 

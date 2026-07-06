@@ -31,6 +31,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool tutorialModeCompleted = false;
     public UnityEvent onTaskModified;
     public UnityEvent onTutorialModeCompleted;
+    [SerializeField] TutorialAudio TutorialAudio;
 
     private void Awake()
     {
@@ -418,6 +419,11 @@ public class GameManager : MonoBehaviour
         tutorialModeActive = false;
         Debug.Log("All tutorial tasks are completed.");
         onTutorialModeCompleted?.Invoke();
+
+        if (TutorialAudio != null)
+        {
+            StartCoroutine(TutorialAudio.PlayTutorialCompleteAudio());
+        }
     }
 
     public bool IsTutorialModeActive()
