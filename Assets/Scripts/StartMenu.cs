@@ -199,8 +199,30 @@ public class StartMenu : MonoBehaviour
                 return;
             }
         }
+        
+        if(GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.WorkJobTask))
+        {
+            if (MiniGames.MiniGameManager.Instance != null)
+            {
+                if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+                {
+                    GameManager.Instance.CompleteTutorialTask(TutorialTaskType.WorkJobTask);
+                }
+                // Start a random work minigame through the manager
+                MiniGames.MiniGameManager.Instance.StartRandomWorkActivity();
+                
+                // Hide the start menu UI
+                if(uiDoc != null)
+                    uiDoc.gameObject.SetActive(false);
+                
+                return;
+                // Deduct energy cost
+               // PlayerManager.Instance.ModifyPlayerEnergy(-25);
+            }
+        }
+        
 
-        if (PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !isTooLateForActivities)
+        if (PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !isTooLateForActivities )
         {
             // Use MiniGameManager instead of loading separate scenes
             if (MiniGames.MiniGameManager.Instance != null)

@@ -37,4 +37,6 @@ public enum TutorialTaskType
     ExitTv,
     CompleteAllTasks,
     CloseBillMenu,
+    OpenHireSailorBillMenu,
+    CloseTeamManager,
 } 

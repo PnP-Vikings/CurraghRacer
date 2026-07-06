@@ -11701,7 +11701,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.size
-      value: 13
+      value: 15
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[0].taskName
@@ -11761,50 +11761,66 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[7].taskName
-      value: Open Training Menu
+      value: Open Hireable Sailor Menu
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[7].taskType
-      value: 12
+      value: 18
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[8].taskName
-      value: Train a member of the squad
+      value: Close Team Manager
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[8].taskType
-      value: 5
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[9].taskName
-      value: Open Bill Menu
+      value: Open Training Menu
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[9].taskType
-      value: 6
+      value: 12
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[10].taskName
-      value: Close Bill Menu
+      value: Train a member of the squad
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[10].taskType
-      value: 17
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[11].taskName
-      value: Work a Job
+      value: Open Bill Menu
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[11].taskType
-      value: 7
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[12].taskName
-      value: Completed all Tasks
+      value: Close Bill Menu
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[12].taskType
+      value: 17
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[13].taskName
+      value: Work a Job
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[13].taskType
+      value: 7
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[14].taskName
+      value: Completed all Tasks
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[14].taskType
       value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
@@ -11849,7 +11865,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[7].taskDialogs.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[8].taskDialogs.Array.size
@@ -11861,7 +11877,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[10].taskDialogs.Array.size
-      value: 2
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[11].taskDialogs.Array.size
@@ -11869,6 +11885,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[12].taskDialogs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[13].taskDialogs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[14].taskDialogs.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
@@ -11942,58 +11966,79 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[7].taskDialogs.Array.data[0]'
+      value: Open Hireable Sailor Menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[7].taskDialogs.Array.data[1]'
+      value: 'You are now on your own be sure to take care of your teammates and
+        good luck '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[8].taskDialogs.Array.data[0]'
+      value: When ready leave the team manager
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[8].taskDialogs.Array.data[1]'
+      value: 'Go back to main bulletin board menu and click on training '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[9].taskDialogs.Array.data[0]'
       value: In order to keep up with the opponents we must constantly train our
         team
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[7].taskDialogs.Array.data[1]'
-      value: 'Go back to main bulletin board menu and click on training '
+      propertyPath: 'tutorialTasks.Array.data[9].taskDialogs.Array.data[1]'
+      value: 'click on training '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[8].taskDialogs.Array.data[0]'
+      propertyPath: 'tutorialTasks.Array.data[10].taskDialogs.Array.data[0]'
       value: 'Click on a attribute you want to train and select a member then press
         train  '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[8].taskDialogs.Array.data[1]'
-      value: Lets check out the bill menu on the bulletin board
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[9].taskDialogs.Array.data[0]'
-      value: Oh I forgot to mention all the bills are now in your name
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[9].taskDialogs.Array.data[1]'
-      value: Lets check out the bill menu on the bulletin board
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[10].taskDialogs.Array.data[0]'
-      value: 'Ohh no looks like we are out of money '
-      objectReference: {fileID: 0}
-    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[10].taskDialogs.Array.data[1]'
-      value: When your ready Exit the bill menu
+      value: Lets check out the bill menu on the bulletin board
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[11].taskDialogs.Array.data[0]'
-      value: You will require money to pay for the teams expensives and bills
+      value: Oh I forgot to mention all the bills are now in your name
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[11].taskDialogs.Array.data[1]'
-      value: 'Click on job to start a shift '
+      value: Lets check out the bill menu on the bulletin board
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[12].taskDialogs.Array.data[0]'
-      value: Good Job Completing all tasks
+      value: 'Ohh no looks like we are out of money '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[12].taskDialogs.Array.data[1]'
+      value: When your ready Exit the bill menu
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[13].taskDialogs.Array.data[0]'
+      value: You will require money to pay for the teams expensives and bills
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[13].taskDialogs.Array.data[1]'
+      value: 'Click on job to start a shift '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[14].taskDialogs.Array.data[0]'
+      value: Good Job Completing all tasks
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[14].taskDialogs.Array.data[1]'
       value: 'You are now on your own be sure to take care of your teammates and
         good luck '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: uncompletedTutorialTasks.Array.data[0].taskDescription
       value: Click on the Bulltin Board
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[13].hasTutorialDialogsBeenShown
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[0].CompletedtaskDialogs.Array.size
@@ -12021,7 +12066,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[6].CompletedtaskDialogs.Array.size
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[7].CompletedtaskDialogs.Array.size
@@ -12033,7 +12078,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[9].CompletedtaskDialogs.Array.size
-      value: 0
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[10].CompletedtaskDialogs.Array.size
@@ -12066,7 +12111,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[2].CompletedtaskDialogs.Array.data[1]'
-      value: 'start race, find jobs, train your team members ,pay bills and sleep  '
+      value: 'Start race, find jobs, train your team members ,pay bills and sleep  '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[3].CompletedtaskDialogs.Array.data[0]'
@@ -12133,8 +12178,8 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[6].CompletedtaskDialogs.Array.data[3]'
-      value: You may also hire racers if you have a bit extra coins and are in need
-        of some help for a race
+      value: You may also swap around team members if you desire by clicking on active
+        team members and one that is benched
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[6].CompletedtaskDialogs.Array.data[4]'
@@ -12143,22 +12188,31 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[7].CompletedtaskDialogs.Array.data[0]'
+      value: You may also hire racers if you have a bit extra coins and are in need
+        of some help for a race
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[7].CompletedtaskDialogs.Array.data[1]'
+      value: Hired racers can not be trained and are limited to a certain amount
+        of racers so keep that in mind
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[8].CompletedtaskDialogs.Array.data[0]'
       value: Here you can see a button for each attribute it will cost you 50 euros
         per training game
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[7].CompletedtaskDialogs.Array.data[1]'
+      propertyPath: 'tutorialTasks.Array.data[8].CompletedtaskDialogs.Array.data[1]'
       value: 'be sure to spread around the training and to have a nice balanced squad '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[8].CompletedtaskDialogs.Array.data[0]'
-      value: 'Good work completed a job be sure to always leave some time in your
-        day for the jobs '
+      propertyPath: 'tutorialTasks.Array.data[9].CompletedtaskDialogs.Array.data[0]'
+      value: Here you can see a button for each attribute it will cost you 50 euros
+        per training game
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
-      propertyPath: 'tutorialTasks.Array.data[9].CompletedtaskDialogs.Array.data[0]'
-      value: 'Good work completed a job be sure to always leave some time in your
-        day for the jobs '
+      propertyPath: 'tutorialTasks.Array.data[9].CompletedtaskDialogs.Array.data[1]'
+      value: 'be sure to spread around the training and to have a nice balanced squad '
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[10].CompletedtaskDialogs.Array.data[0]'
