@@ -36,6 +36,8 @@ namespace MiniGames
         
         private Tween currentDelayTween;
         
+        private bool showRestartButtonsInMiniGames= false;
+        
         
         
         void Awake()
@@ -508,5 +510,11 @@ namespace MiniGames
             return false;
         }
         
+        public bool ShouldShowRestartButtons()
+        {
+            return showRestartButtonsInMiniGames;
+        }
+        
     }
+    
 }

@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent onTaskModified;
     public UnityEvent onTutorialModeCompleted;
     [SerializeField] TutorialAudio TutorialAudio;
+    
 
     private void Awake()
     {
