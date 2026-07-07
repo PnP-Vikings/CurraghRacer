@@ -166,6 +166,12 @@ public class GameManager : MonoBehaviour
 
     public void PlayerWorked(int rewardedCoins = 50, int energyCost = -25)
     {
+        
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.WorkJobTask);
+        }
+        
         PlayerManager.Instance.ModifyPlayerCoins(rewardedCoins);
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
         PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
