@@ -16,7 +16,7 @@
                             "colorLabel": 1,
                             "priority": 0,
                             "createdDate": "2026-06-03 22:56",
-                            "dueDate": "2026-07-03",
+                            "dueDate": "2026-07-22",
                             "archived": false,
                             "checklistItems": [
                                 "Add Calendar event",
@@ -141,113 +141,6 @@
                     "title": "🔨 In Progress",
                     "cards": [
                         {
-                            "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
-                            "title": "Tasks for setup",
-                            "description": "List of different tasks that should be on tutorial",
-                            "category": "Feature",
-                            "colorLabel": 2,
-                            "priority": 0,
-                            "createdDate": "2026-06-04 22:36",
-                            "dueDate": "2026-07-16",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add Task to open Calendar",
-                                "Add Task to open Bulletin Board",
-                                "Add Task to open Team manager ",
-                                "Add Task for player to practice race",
-                                "Add Task to Train a member of the squad",
-                                "Add Task to open bill (Make sure player does not have enough  to pay bill)",
-                                "Add Task to work job",
-                                "Add close team manger task",
-                                "Add task to click on hire racer",
-                                "Add Task to pay a bill",
-                                "Add Task to sleep",
-                                "Prompt player to join league after sleep but remove close button",
-                                "Add Task to do a Sunday Race",
-                                "Remove the stamina requirement for working a job when tutorial is active"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": false,
-                            "completed": true,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
-                        {
-                            "id": "3bc4723e-533b-4361-bd07-e3b78861990a",
-                            "title": "Setup Tutorial Ui",
-                            "description": "\t\t\t",
-                            "category": "Design",
-                            "colorLabel": 10,
-                            "priority": 0,
-                            "createdDate": "2026-06-04 23:26",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add Tutorial ui that shows when active",
-                                "Show create prefab that populates with data",
-                                "show 3 tasks at the time if possible with bottom task being active",
-                                "Tick of task as completed",
-                                "hide tasks 2 or more away from active task"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                true,
-                                true,
-                                true
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": false,
-                            "completed": true,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
-                        {
                             "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
                             "title": "Add Tutorial that player can play through on new game",
                             "description": "",
@@ -262,6 +155,7 @@
                                 "Once player has completed all tasks in list set tutorial completed",
                                 "Setup task tracking for tutorial",
                                 "Setup Ui Task Tracking",
+                                "Setup Tutorial League",
                                 "Complete Dialogue text ui"
                             ],
                             "checklistStates": [
@@ -269,13 +163,15 @@
                                 true,
                                 true,
                                 true,
-                                true
+                                false,
+                                false
                             ],
                             "checklistLinkedCardIds": [
                                 "",
                                 "",
                                 "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
                                 "3bc4723e-533b-4361-bd07-e3b78861990a",
+                                "280b78cb-0607-423e-aadf-65a35d376d2d",
                                 "100e6d20-b68e-49d6-b522-e339af988a06"
                             ],
                             "linkedAssetGuids": [],
@@ -309,7 +205,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
@@ -341,7 +237,107 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "280b78cb-0607-423e-aadf-65a35d376d2d",
+                            "title": "Setup Tutorial League ",
+                            "description": "Setup a league that the player can join and complete during \ntutorial only have one race",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-07-08 23:33",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Create league",
+                                "Add 3 Teams",
+                                "Setup system that makes it so this league gets added to the list and set as the current league if tutorial is active"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "1f58684bef80a134bb2007666f61ca01",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "e7af4e1578bb16f42881e823255c1a23",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "b7da84d8b61ab9f40a06307c18a5c343",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "94a4f225c85cc4b46b71785fd5333abb",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "13249adb7be8417498cc228092a6b7d7",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
                         }
@@ -670,6 +666,113 @@
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "3bc4723e-533b-4361-bd07-e3b78861990a",
+                            "title": "Setup Tutorial Ui",
+                            "description": "\t\t\t",
+                            "category": "Design",
+                            "colorLabel": 10,
+                            "priority": 0,
+                            "createdDate": "2026-06-04 23:26",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Tutorial ui that shows when active",
+                                "Show create prefab that populates with data",
+                                "show 3 tasks at the time if possible with bottom task being active",
+                                "Tick of task as completed",
+                                "hide tasks 2 or more away from active task"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                            "title": "Tasks for setup",
+                            "description": "List of different tasks that should be on tutorial",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-06-04 22:36",
+                            "dueDate": "2026-07-16",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Task to open Calendar",
+                                "Add Task to open Bulletin Board",
+                                "Add Task to open Team manager ",
+                                "Add Task for player to practice race",
+                                "Add Task to Train a member of the squad",
+                                "Add Task to open bill (Make sure player does not have enough  to pay bill)",
+                                "Add Task to work job",
+                                "Add close team manger task",
+                                "Add task to click on hire racer",
+                                "Add Task to pay a bill",
+                                "Add Task to sleep",
+                                "Prompt player to join league after sleep but remove close button",
+                                "Add Task to do a Sunday Race",
+                                "Remove the stamina requirement for working a job when tutorial is active"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": [],
                             "isArchived": false
                         }
                     ]
