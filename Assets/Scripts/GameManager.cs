@@ -136,6 +136,12 @@ public class GameManager : MonoBehaviour
 
     public void Sleep(int sleepCost)
     {
+        if (RaceManager.Instance != null && (RaceManager.Instance.isRaceDay && !RaceManager.Instance.hasPlayerCompletedRace))
+        {
+            PlayerStatsView.Instance.DisplayInfo("You cannot sleep before completing your race", 3);
+            return; // Player cannot sleep before completing the race
+        }
+
         if (PlayerManager.Instance.PlayerHasEnoughEnergy(100) && !tutorialModeActive)
         {
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);

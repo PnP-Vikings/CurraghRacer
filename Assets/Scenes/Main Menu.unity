@@ -11705,7 +11705,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.size
-      value: 18
+      value: 20
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[0].taskName
@@ -11845,10 +11845,26 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[17].taskName
-      value: Completed all Tasks
+      value: Join Tutorial League
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[17].taskType
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[18].taskName
+      value: Race in the tournment
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[18].taskType
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[19].taskName
+      value: Completed all Tasks
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[19].taskType
       value: 16
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
@@ -11933,6 +11949,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: tutorialTasks.Array.data[17].taskDialogs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[18].taskDialogs.Array.size
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: tutorialTasks.Array.data[19].taskDialogs.Array.size
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
@@ -12096,10 +12120,35 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[17].taskDialogs.Array.data[0]'
-      value: Good Job Completing all tasks
+      value: There will always be a race on sunday
       objectReference: {fileID: 0}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: 'tutorialTasks.Array.data[17].taskDialogs.Array.data[1]'
+      value: This is the big race and winning it can lead to some big prizes
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[17].taskDialogs.Array.data[2]'
+      value: Your about to get an invite accept it and LET'S RACE!!!
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[18].taskDialogs.Array.data[0]'
+      value: Alright now that you've joined the league you can click on league to
+        see the table
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[18].taskDialogs.Array.data[1]'
+      value: 'This is a 1 race league so winner takes it all '
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[18].taskDialogs.Array.data[2]'
+      value: Your about to get an invite accept it and LET'S RACE!!!
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[19].taskDialogs.Array.data[0]'
+      value: Good Job Completing all tasks
+      objectReference: {fileID: 0}
+    - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'tutorialTasks.Array.data[19].taskDialogs.Array.data[1]'
       value: 'You are now on your own be sure to take care of your teammates and
         good luck '
       objectReference: {fileID: 0}

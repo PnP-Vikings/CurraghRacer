@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using League;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -66,6 +67,14 @@ public class TutorialTaskUiDialogue : MonoBehaviour
                dialogueLines.Add(tl);
             }
             GameManager.Instance.MarkTutorialTaskDialogsAsShown(activeTask);
+
+            if (activeTask.taskType == TutorialTaskType.JoinLeagueTask)
+            {
+               if(LeagueController.Instance != null)
+               {
+                  LeagueController.Instance.ShowLeagueInvite();
+               }
+            }
             
             if(activeTask.taskType == TutorialTaskType.CompleteAllTasks)
             {

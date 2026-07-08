@@ -29,6 +29,7 @@ public class RaceManager : MonoBehaviour
     public List<Transform> raceStartPositions;
     public UnityEvent startRace;
     public bool isRaceDay;
+    public bool hasPlayerCompletedRace = false;
     [FormerlySerializedAs("LoadedRaceScene")]
     public bool loadedRaceScene = false; // Flag to check
     public int raceStartDelaySeconds = 5; // Delay
@@ -64,21 +65,16 @@ public class RaceManager : MonoBehaviour
         }
     }
 
-    public void OnEnable()
-    {
-      
-    }
-
     // Listener receives today's events list
     public void CheckForRaceDay(List<DayEventType> todaysEvents)
     {
 
         if (todaysEvents != null && todaysEvents.Count > 0)
         {
-          
+            hasPlayerCompletedRace = false; // Reset for new day
             todaysEvents.ForEach(eventType =>
             {
-                if (eventType.OccasionType == Calendar.OccasionType.Race)
+                if (eventType.OccasionType == Calendar.OccasionType.Race && LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && LeagueController.Instance.hasPlayerJoinedLeague)
                 {
                     isRaceDay = true;
                 }
@@ -781,10 +777,20 @@ public class RaceManager : MonoBehaviour
         // so we must save to disk first!
         if (GameManager.Instance != null && SaveSystem.Instance != null)
         {
-
-            if (GameManager.Instance.IsTutorialModeActive() && !isRaceDay)
+            if (isRaceDay)
             {
-                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.PracticeRaceTask);
+                hasPlayerCompletedRace = true; // Mark that player has completed the race for today
+            }
+            if (GameManager.Instance.IsTutorialModeActive() )
+            {
+                if (!isRaceDay)
+                {
+                    GameManager.Instance.CompleteTutorialTask(TutorialTaskType.PracticeRaceTask);
+                }
+                else
+                {
+                    GameManager.Instance.CompleteTutorialTask(TutorialTaskType.RaceTask);
+                }
             }
             
             Debug.Log("[EndRace] Saving game before scene transition to preserve team stats");

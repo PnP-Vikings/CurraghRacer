@@ -96,6 +96,43 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
+                            "title": "Add Max amount of currency a player can get for a minigame ",
+                            "description": "Currently you can get like m 3k from one session of the beer game",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-07-08 23:25",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Create new variable",
+                                "Set this variable for each game",
+                                "Do check before paying out currency",
+                                "Test"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -141,8 +178,8 @@
                                 true,
                                 true,
                                 true,
-                                false,
-                                false,
+                                true,
+                                true,
                                 true
                             ],
                             "checklistLinkedCardIds": [
@@ -165,8 +202,8 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
+                            "showChecklist": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -205,7 +242,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
@@ -230,7 +267,7 @@
                             "checklistStates": [
                                 true,
                                 true,
-                                false,
+                                true,
                                 true,
                                 true
                             ],
@@ -272,7 +309,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
