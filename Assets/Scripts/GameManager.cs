@@ -442,6 +442,10 @@ public class GameManager : MonoBehaviour
     {
         return tutorialModeActive;
     }
+    public bool IsTutorialModeCompleted()
+    {
+        return tutorialModeCompleted;
+    }
     
     public bool IsTutorialTaskCompleted(TutorialTaskType taskType)
     {

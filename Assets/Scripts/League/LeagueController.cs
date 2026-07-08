@@ -14,6 +14,8 @@ namespace League
         public LeagueCompleteCard leagueCompleteCardPrefab;
         public UnityEvent onPlayerJoinedLeague;
         public  League nextLeague = null;
+        private Coroutine showInviteCoroutine;
+        [SerializeField] private float delayBetweenInvites = 25f;
 
         private void Awake()
         {
@@ -131,7 +133,12 @@ namespace League
         }
         public void ShowLeagueInviteAfterDelay()
         {
-                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+            if(showInviteCoroutine!= null)
+            {
+                StopCoroutine(showInviteCoroutine);
+            }
+            
+            showInviteCoroutine=   StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
         }
 
 
@@ -139,7 +146,7 @@ namespace League
         {
             if (currentLeague != null && TimeManager.Instance != null)
             {
-
+                
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
                 {
                     LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
@@ -186,7 +193,9 @@ namespace League
                     Debug.Log("Player is busy, delaying league invite message.");
                 // Retry after some time
                 yield return new WaitForSeconds(10f);
-                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+                StopCoroutine(showInviteCoroutine);
+                showInviteCoroutine =  StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
+                
             }
         }
 
@@ -209,6 +218,8 @@ namespace League
             {
                 TimeManager.Instance.RecheckIfRaceDay();
             }
+            
+            CheckIfPlayerHasJoinedLeagueTaskIsCompleted();
         }
 
         public void GenerateRaceSchedule()
@@ -752,6 +763,14 @@ namespace League
             get
             {
                 return currentLeague != null && currentLeague.playerHasJoined;
+            }
+        }
+        
+        public void CheckIfPlayerHasJoinedLeagueTaskIsCompleted()
+        {
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.JoinLeagueTask);
             }
         }
         
