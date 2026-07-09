@@ -9,7 +9,7 @@ public class TutorialTaskUiManager : MonoBehaviour
     public TutorialTaskPrefab taskPrefab;
     public TutorialTaskUiDialogue taskUiDialogueUi;
     TutorialTask activeTask = null;
-
+    [SerializeField] bool showActiveTaskInMiddle = false;
     public void UpdateTaskUis()
     {
         if(GameManager.Instance == null)
@@ -95,7 +95,7 @@ public class TutorialTaskUiManager : MonoBehaviour
 
             if (activeTask != null)
             {
-                if(tutorialTasks.IndexOf(activeTask)+1 < tutorialTasks.Count)
+                if(tutorialTasks.IndexOf(activeTask)+1 < tutorialTasks.Count && showActiveTaskInMiddle)
                 {
                     processedTasks.Add(tutorialTasks[tutorialTasks.IndexOf(activeTask) - 1]);
                     processedTasks.Add(activeTask);
