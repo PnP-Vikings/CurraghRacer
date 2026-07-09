@@ -67,37 +67,6 @@
                             "isArchived": false
                         },
                         {
-                            "id": "7195bd10-3a74-41b3-b46a-ad026c30563c",
-                            "title": "Add Confirmation to tv menu when user presses on back to main menu",
-                            "description": "",
-                            "category": "UI",
-                            "colorLabel": 2,
-                            "priority": 0,
-                            "createdDate": "2026-07-07 00:42",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add Extra pop to ask player if theri sure",
-                                "test make sure it works"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
-                        {
                             "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
                             "title": "Add Max amount of currency a player can get for a minigame ",
                             "description": "Currently you can get like m 3k from one session of the beer game",
@@ -366,8 +335,8 @@
                                 "Confirm which is better"
                             ],
                             "checklistStates": [
-                                false,
-                                false,
+                                true,
+                                true,
                                 false
                             ],
                             "checklistLinkedCardIds": [
@@ -806,6 +775,37 @@
                                 "",
                                 "",
                                 "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "7195bd10-3a74-41b3-b46a-ad026c30563c",
+                            "title": "Add Confirmation to tv menu when user presses on back to main menu",
+                            "description": "",
+                            "category": "UI",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-07 00:42",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Extra pop to ask player if theri sure",
+                                "test make sure it works"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
                                 "",
                                 ""
                             ],
