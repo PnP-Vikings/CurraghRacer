@@ -155,6 +155,7 @@
                                 "Once player has completed all tasks in list set tutorial completed",
                                 "Setup task tracking for tutorial",
                                 "Setup Ui Task Tracking",
+                                "Test different layor for tasklist",
                                 "Setup Tutorial League",
                                 "Complete Dialogue text ui"
                             ],
@@ -164,6 +165,7 @@
                                 true,
                                 true,
                                 false,
+                                false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
@@ -171,6 +173,7 @@
                                 "",
                                 "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
                                 "3bc4723e-533b-4361-bd07-e3b78861990a",
+                                "47a20766-1f19-423d-a291-3c7a970aa0c0",
                                 "280b78cb-0607-423e-aadf-65a35d376d2d",
                                 "100e6d20-b68e-49d6-b522-e339af988a06"
                             ],
@@ -335,6 +338,40 @@
                                     "displayName": ""
                                 }
                             ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "47a20766-1f19-423d-a291-3c7a970aa0c0",
+                            "title": "Test Diifferent format for tutorial task list",
+                            "description": "I think maybe showing the next store may confuse some users so maybe lets try just always having the \nactive task at the bottom ",
+                            "category": "",
+                            "colorLabel": 0,
+                            "priority": 0,
+                            "createdDate": "2026-07-09 19:49",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Change format",
+                                "Test",
+                                "Confirm which is better"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,

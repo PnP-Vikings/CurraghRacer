@@ -8630,6 +8630,22 @@ PrefabInstance:
       propertyPath: 'dialogueSprites.Array.data[1]'
       value: 
       objectReference: {fileID: 21300000, guid: 57041d22d3794334d8c37294fd44cd88, type: 3}
+    - target: {fileID: 1444465938582296184, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -648.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1688774463522002366, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 157.61
+      objectReference: {fileID: 0}
+    - target: {fileID: 1688774463522002366, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -22.6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2053663920908914485, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_SizeDelta.y
+      value: 213.8
+      objectReference: {fileID: 0}
     - target: {fileID: 3695997404174212714, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_LocalPosition.x
       value: -72.84793
@@ -8720,6 +8736,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
+    - target: {fileID: 5231192660875984173, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 6063565475925300774, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_SizeDelta.x
       value: 863.8
@@ -8727,6 +8747,10 @@ PrefabInstance:
     - target: {fileID: 6285014238374347521, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_IsActive
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6733149482395430427, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_Spacing.y
+      value: 4.5
       objectReference: {fileID: 0}
     - target: {fileID: 6976904737313664325, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_Name
@@ -8747,6 +8771,10 @@ PrefabInstance:
     - target: {fileID: 8771678975788409338, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: showIntroDelay
       value: 1.2
+      objectReference: {fileID: 0}
+    - target: {fileID: 9038710439734594934, guid: 9dae800cba405234e82006525a010efd, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: -648.55
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
