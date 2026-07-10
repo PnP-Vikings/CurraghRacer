@@ -232,14 +232,17 @@
                             "checklistItems": [
                                 "Create league",
                                 "Add 3 Teams",
+                                "Add Check to make sure that team is not already in league before promoting for tutorial league",
                                 "Setup system that makes it so this league gets added to the list and set as the current league if tutorial is active"
                             ],
                             "checklistStates": [
-                                false,
+                                true,
+                                true,
                                 false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
+                                "",
                                 "",
                                 "",
                                 ""
