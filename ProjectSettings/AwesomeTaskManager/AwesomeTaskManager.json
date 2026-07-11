@@ -128,13 +128,15 @@
                                 "Setup Tutorial League",
                                 "Complete Dialogue text ui",
                                 "Add tutorial to save system",
-                                "also add the race completed today in race manager to save system"
+                                "also add the race completed today in race manager to save system",
+                                "Toggle not working then its been reset by the save system"
                             ],
                             "checklistStates": [
                                 true,
                                 true,
                                 true,
                                 true,
+                                false,
                                 false,
                                 false,
                                 false,
@@ -149,6 +151,7 @@
                                 "47a20766-1f19-423d-a291-3c7a970aa0c0",
                                 "280b78cb-0607-423e-aadf-65a35d376d2d",
                                 "100e6d20-b68e-49d6-b522-e339af988a06",
+                                "",
                                 "",
                                 ""
                             ],
