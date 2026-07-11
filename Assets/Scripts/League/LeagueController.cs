@@ -8,6 +8,8 @@ namespace League
     public class LeagueController : MonoBehaviour
     {
         public static LeagueController Instance { get; private set; }
+        [Tooltip("Reference to league used for tutorials.")]
+        public League tutorialLeague;
         public League currentLeague;
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
@@ -773,7 +775,36 @@ namespace League
                 GameManager.Instance.CompleteTutorialTask(TutorialTaskType.JoinLeagueTask);
             }
         }
-        
+
+
+        public void AddTutorialLeagueToList()
+        {
+            if (tutorialLeague != null && leagues != null)
+            {
+                List<League> tempLeagueList = new List<League>(leagues);
+                // List<League> leagueList = new List<League>(leagues);
+                if (!leagues.Contains(tutorialLeague))
+                {
+                    tempLeagueList.Add(tutorialLeague);
+                    foreach (League league in leagues)
+                    {
+                        tempLeagueList.Add(league);
+                    }
+                    leagues = tempLeagueList.ToArray();
+                    currentLeague = leagues[0];
+                    nextLeague = leagues.Length > 1 ? leagues[1] : null;
+                    Debug.Log("Tutorial league added to leagues list.");
+                }
+                else
+                {
+                    Debug.Log("Tutorial league already exists in leagues list.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Tutorial league or leagues array is null. Cannot add tutorial league.");
+            }
+        }
     }
     
    

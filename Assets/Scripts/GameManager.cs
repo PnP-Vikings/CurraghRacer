@@ -411,16 +411,30 @@ public class GameManager : MonoBehaviour
         return tutorialTasks;
     }
 
-    public void ActivateTutorialMode()
+    public void ActivateTutorialMode(bool activate =false)
     {
-        if (tutorialModeActive) return;
-        if (tutorialModeCompleted) return;
-
-        if (tutorialTasks.Count > 0)
+        if (activate)
         {
-            tutorialModeActive = true;
-            tutorialTasks[0].isTaskActive = true;
-            Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+            /*
+            if (tutorialModeActive) return;
+            if (tutorialModeCompleted) return;
+            */
+            Debug.Log("Activating tutorial mode...");
+            if (tutorialTasks.Count > 0)
+            {
+                tutorialModeActive = true;
+                tutorialTasks[0].isTaskActive = true;
+                Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+            }
+
+            if (LeagueController.Instance != null)
+            {
+                LeagueController.Instance.AddTutorialLeagueToList();
+            }
+        }
+        else
+        {
+            tutorialModeActive = false;
         }
     }
     public void CheckIfAllTasksAreCompleted()

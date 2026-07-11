@@ -11,7 +11,9 @@ public class SaveMenuUI : MonoBehaviour
     public Button quickSaveButton;
     public Button quickLoadButton;
     public Button autoSaveButton;
-    public Button newGameButton;
+  //  public Button newGameButton;
+    public Button newGamePlayTutorialButton;
+    public Button newGameDontPlayTutorialButton;
     public Button closeButton;
     public TMP_Text messageText;
     public GameObject messagePanel;
@@ -47,9 +49,9 @@ public class SaveMenuUI : MonoBehaviour
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseMenu);
 
-        if (newGameButton != null)
+        /*if (newGameButton != null)
         {
-            /*// Check if player has saves to show/hide New Game button
+            /#1#/ Check if player has saves to show/hide New Game button
             if (!SaveSystem.Instance.HasAnySaves())
             {
                 newGameButton.gameObject.SetActive(true);
@@ -57,7 +59,7 @@ public class SaveMenuUI : MonoBehaviour
             else
             {
                 newGameButton.gameObject.SetActive(false);
-            }*/
+            }#1#
             
             newGameButton.onClick.AddListener(() => {
                 if (SaveSystem.Instance.NewGame("My First Game"))
@@ -77,8 +79,17 @@ public class SaveMenuUI : MonoBehaviour
                 }
             });
 
+        }*/
+        if(newGamePlayTutorialButton != null)
+        {
+            newGamePlayTutorialButton.onClick.AddListener(() => NewGameStart(true));        
         }
 
+        if (newGameDontPlayTutorialButton != null)
+        {
+            newGamePlayTutorialButton.onClick.AddListener(() => NewGameStart(false));
+        }
+        
         // Setup confirmation dialog
         if (confirmYesButton != null)
             confirmYesButton.onClick.AddListener(ConfirmAction);
@@ -353,6 +364,34 @@ public class SaveMenuUI : MonoBehaviour
     public void CloseMenu()
     {
         gameObject.SetActive(false);
+    }
+
+    public void NewGameStart(bool playTutorial = false)
+    {
+        if(playTutorial)
+        {
+            GameManager.Instance.ActivateTutorialMode(true);
+        }
+        else
+        {
+            GameManager.Instance.ActivateTutorialMode(false);
+        }
+        
+        if (SaveSystem.Instance.NewGame("My First Game"))
+        {
+            // New game started successfully
+            // Maybe show a success message or transition to game
+            Debug.Log("New game started!");
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.ResetForNewGame();
+            }
+        }
+        else
+        {
+            // Handle error
+            Debug.LogError("Failed to start new game");
+        }
     }
     
     private IEnumerator CloseMenuAfterDelay(float delay)
