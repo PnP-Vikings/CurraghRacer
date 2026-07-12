@@ -805,6 +805,30 @@ namespace League
                 Debug.LogWarning("Tutorial league or leagues array is null. Cannot add tutorial league.");
             }
         }
+
+        public void RemoveTutorialLeagueFromList()
+        {
+            if (tutorialLeague != null && leagues != null)
+            {
+                List<League> tempLeagueList = new List<League>(leagues);
+                if (tempLeagueList.Contains(tutorialLeague))
+                {
+                    tempLeagueList.Remove(tutorialLeague);
+                    leagues = tempLeagueList.ToArray();
+                    currentLeague = leagues.Length > 0 ? leagues[0] : null;
+                    nextLeague = leagues.Length > 1 ? leagues[1] : null;
+                    Debug.Log("Tutorial league removed from leagues list.");
+                }
+                else
+                {
+                    Debug.Log("Tutorial league does not exist in leagues list.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Tutorial league or leagues array is null. Cannot remove tutorial league.");
+            }
+        }
     }
     
    

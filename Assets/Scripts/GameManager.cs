@@ -411,7 +411,7 @@ public class GameManager : MonoBehaviour
         return tutorialTasks;
     }
 
-    public void ActivateTutorialMode(bool activate =false)
+    public void ActivateTutorialMode(bool activate =false,bool ResetTutorial = false)
     {
         if (activate)
         {
@@ -419,14 +419,17 @@ public class GameManager : MonoBehaviour
             if (tutorialModeActive) return;
             if (tutorialModeCompleted) return;
             */
-            Debug.Log("Activating tutorial mode...");
-            if (tutorialTasks.Count > 0)
+            if (ResetTutorial)
             {
-                tutorialModeActive = true;
-                tutorialTasks[0].isTaskActive = true;
-                Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+                Debug.Log("Activating tutorial mode...");
+                if (tutorialTasks.Count > 0)
+                {
+                    ResetTutorialMode();
+                    tutorialModeActive = true;
+                    tutorialTasks[0].isTaskActive = true;
+                    Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+                }
             }
-
             if (LeagueController.Instance != null)
             {
                 LeagueController.Instance.AddTutorialLeagueToList();
@@ -434,8 +437,25 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            Debug.Log("Deactivating tutorial mode...");
             tutorialModeActive = false;
+            if (LeagueController.Instance != null)
+            {
+                LeagueController.Instance.RemoveTutorialLeagueFromList();
+            }
         }
+    }
+
+    private void ResetTutorialMode()
+    {
+        foreach (var task in tutorialTasks)
+        {
+            task.completed = false;
+            task.isTaskActive = false;
+            task.hasTutorialDialogsBeenShown = false;
+        }
+        tutorialModeActive = false;
+        tutorialModeCompleted = false;
     }
     public void CheckIfAllTasksAreCompleted()
     {

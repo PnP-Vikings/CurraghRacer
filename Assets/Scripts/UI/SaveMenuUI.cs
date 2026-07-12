@@ -87,7 +87,7 @@ public class SaveMenuUI : MonoBehaviour
 
         if (newGameDontPlayTutorialButton != null)
         {
-            newGamePlayTutorialButton.onClick.AddListener(() => NewGameStart(false));
+            newGameDontPlayTutorialButton.onClick.AddListener(() => NewGameStart(false));
         }
         
         // Setup confirmation dialog
@@ -368,23 +368,19 @@ public class SaveMenuUI : MonoBehaviour
 
     public void NewGameStart(bool playTutorial = false)
     {
-        if(playTutorial)
+        if (GameManager.Instance != null)
         {
-            GameManager.Instance.ActivateTutorialMode(true);
-        }
-        else
-        {
-            GameManager.Instance.ActivateTutorialMode(false);
+            GameManager.Instance.ActivateTutorialMode(playTutorial);
         }
         if (SaveSystem.Instance.NewGame("My First Game"))
         {
             // New game started successfully
             // Maybe show a success message or transition to game
             Debug.Log("New game started!");
-            if (GameManager.Instance != null)
-            {
-                GameManager.Instance.ResetForNewGame();
-            }
+            if (GameManager.Instance == null)
+                return;
+            GameManager.Instance.ResetForNewGame();
+            
         }
         else
         {

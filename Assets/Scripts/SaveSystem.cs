@@ -369,6 +369,7 @@ public class GameProgressData
     public Dictionary<string, bool> unlockedFeatures;
     public bool playerHasBeenShownIntro = false;
     public bool playerHasBeenShownWarningAboutDebt = false;
+    public bool showTutorial = false;
     
     public GameProgressData()
     {
@@ -875,6 +876,8 @@ public class SaveSystem : MonoBehaviour
             saveData.gameProgress.playerHasBeenShownIntro = GameManager.Instance.GetHasBeenShownIntro();
             saveData.gameProgress.playerHasBeenShownWarningAboutDebt =
                 GameManager.Instance.GetHasBeenShownWarningAboutDebt();
+            saveData.gameProgress.showTutorial = GameManager.Instance.IsTutorialModeActive();
+            Debug.Log($"Show Tutorial was saved as in create save data {saveData.gameProgress.showTutorial}");
         }
 
         if (RaceManager.Instance != null)
@@ -998,6 +1001,9 @@ public class SaveSystem : MonoBehaviour
                 GameManager.Instance.SetHasBeenShownIntro(saveData.gameProgress.playerHasBeenShownIntro);
                 GameManager.Instance.SetHasBeenShownWarningAboutDebt(saveData.gameProgress.playerHasBeenShownWarningAboutDebt);
                 GameManager.Instance.SetPlayerBusy(saveData.gameProgress.playerIsBusy);
+                GameManager.Instance.ActivateTutorialMode(saveData.gameProgress.showTutorial);
+                
+                Debug.Log($"Show Tutorial was Loaded as in apply save data {saveData.gameProgress.showTutorial}");
             }
 
             if (RaceManager.Instance != null)
@@ -1864,6 +1870,20 @@ public class SaveSystem : MonoBehaviour
         saveData.gameProgress.playerIsBusy = false;
         saveData.gameProgress.playerHasBeenShownIntro = false;
         saveData.gameProgress.playerHasBeenShownWarningAboutDebt = false;
+        if(GameManager.Instance != null)
+        {
+            saveData.gameProgress.showTutorial = GameManager.Instance.IsTutorialModeActive();
+            Debug.Log($"Show Tutorial was saved as in Create fresh save data {saveData.gameProgress.showTutorial}");
+        }
+        else
+        {
+            // Fallback to true if GameManager is not available
+            saveData.gameProgress.showTutorial = false;
+            Debug.Log($"Show Tutorial was saved as in Create fresh save data {saveData.gameProgress.showTutorial}");
+        }
+
+     
+     
         
         // Set fresh calendar data to game's starting date
         if (TimeManager.Instance != null)
@@ -2035,6 +2055,7 @@ public class SaveSystem : MonoBehaviour
             saveData.decisionCardData.cardHistory = new List<CardHistoryEntry>();
         }
         
+      
         return saveData;
     }
 
