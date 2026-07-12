@@ -370,7 +370,7 @@ public class SaveMenuUI : MonoBehaviour
     {
         if (GameManager.Instance != null)
         {
-            GameManager.Instance.ActivateTutorialMode(playTutorial);
+            GameManager.Instance.ActivateTutorialMode(playTutorial,true);
         }
         if (SaveSystem.Instance.NewGame("My First Game"))
         {
