@@ -67,12 +67,459 @@ MonoBehaviour:
       m_Calls: []
   totalPlayTime: 0
   SleepAudioChangesCoroutineIsActive: 0
-  uncompletedTutorialTasks:
-  - taskName: Open the Bulltin Board
-    taskDescription: Click on the board that is flashing
+  defaultTutorialTasks:
+  - taskName: Open Calendar
+    taskDescription: 
+    taskDialogs:
+    - Hey Mate your Grandad left this shed behind when he fled the Country
+    - 'This is your main base of operation where everything important happens  '
+    - I have marked your calendar up with all the important upcoming events click
+      on the calendar to have a look
+    CompletedtaskDialogs:
+    - 'There are buttons at the bottom that allow you to navigate the months  '
+    taskType: 1
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 1
     completed: 0
-  completedTutorialTasks: []
-  allTutorialTasks: 0
+  - taskName: Close Calendar
+    taskDescription: 
+    taskDialogs:
+    - 'Do a bit of exploring then press Hide calendar to close the calendar '
+    CompletedtaskDialogs: []
+    taskType: 2
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Bulletin Task
+    taskDescription: 
+    taskDialogs:
+    - 'The bulletin board is where you can manage everthing '
+    - 'Click on the Bulletin Board to have a look '
+    CompletedtaskDialogs:
+    - 'Here you can manage everything  '
+    - 'Start race, find jobs, train your team members ,pay bills and sleep  '
+    taskType: 0
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Complete A Practice Race
+    taskDescription: 
+    taskDialogs:
+    - 'Lets get right into the racing  '
+    - 'Click on pratice race to get familar with your current team ability '
+    CompletedtaskDialogs: []
+    taskType: 4
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: 'Click on the tv '
+    taskDescription: 
+    taskDialogs:
+    - 'Good Job on completing the race '
+    - 'You should click on the tv to see whats on '
+    CompletedtaskDialogs:
+    - Here you can save and manage other settings
+    taskType: 14
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Exit Tv
+    taskDescription: 
+    taskDialogs:
+    - When your ready exit the tv
+    CompletedtaskDialogs: []
+    taskType: 15
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Team Manager Task
+    taskDescription: 
+    taskDialogs:
+    - 'Lets get familiar with the team '
+    - 'Click on team manager '
+    CompletedtaskDialogs:
+    - 'Here you can see all your teams stats '
+    - 'All the attributes are combined together to teams quality '
+    - 'Keep an eye on the stars this will let your know how they compare vs everyone
+      else in the league '
+    - You may also swap around team members if you desire by clicking on active team
+      members and one that is benched
+    taskType: 3
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Hireable Sailor Menu
+    taskDescription: 
+    taskDialogs:
+    - Open Hireable Sailor Menu
+    CompletedtaskDialogs:
+    - You may also hire racers if you have a bit extra coins and are in need of some
+      help for a race
+    - Hired racers can not be trained and are limited to a certain amount of racers
+      so keep that in mind
+    taskType: 18
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Close Team Manager
+    taskDescription: 
+    taskDialogs:
+    - When ready leave the team manager
+    CompletedtaskDialogs: []
+    taskType: 19
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Training Menu
+    taskDescription: 
+    taskDialogs:
+    - In order to keep up with the opponents we must constantly train our team
+    - 'click on training '
+    CompletedtaskDialogs:
+    - Here you can see a button for each attribute it will cost you 50 euros per
+      training game
+    - 'be sure to spread around the training and to have a nice balanced squad '
+    taskType: 12
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Train a member of the squad
+    taskDescription: 
+    taskDialogs:
+    - 'Click on a attribute you want to train and select a member then press train  '
+    CompletedtaskDialogs: []
+    taskType: 5
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Bill Menu
+    taskDescription: 
+    taskDialogs:
+    - Oh I forgot to mention all the bills are now in your name
+    - Lets check out the bill menu on the bulletin board
+    CompletedtaskDialogs: []
+    taskType: 6
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Close Bill Menu
+    taskDescription: 
+    taskDialogs:
+    - 'Ohh no looks like we are out of money '
+    - When your ready Exit the bill menu
+    CompletedtaskDialogs: []
+    taskType: 17
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Work a Job
+    taskDescription: 
+    taskDialogs:
+    - You will require money to pay for the teams expensives and bills
+    - 'Click on job to start a shift '
+    CompletedtaskDialogs: []
+    taskType: 7
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: 'Pay a bill '
+    taskDescription: 
+    taskDialogs:
+    - Alright now that you have some money lets pay a bill
+    - Click back on the bulletin board and go into the bill manager and pay a bill
+    CompletedtaskDialogs:
+    - 'Good job paying your first bill '
+    - Keep in mind that you don't have to pay the bill on time but it will cost you
+      interest and eventually it will get auto debited
+    - 'meaning you may go into debt and trust me you don''t want to do that '
+    taskType: 8
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Close Bill Manager
+    taskDescription: 
+    taskDialogs:
+    - 'Close the bill manager when your ready '
+    CompletedtaskDialogs: []
+    taskType: 20
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Sleep
+    taskDescription: 
+    taskDialogs:
+    - 'Its been a long day you should get some sleep '
+    - 'You can click on sleep to get some rest '
+    - keep in mind sleeping isn't free and if you can't afford a nice place to rest
+      you won't be as well rested the next day
+    CompletedtaskDialogs: []
+    taskType: 9
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Join Tutorial League
+    taskDescription: 
+    taskDialogs:
+    - There will always be a race on sunday
+    - This is the big race and winning it can lead to some big prizes
+    - Your about to get an invite accept it and LET'S RACE!!!
+    CompletedtaskDialogs: []
+    taskType: 10
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Race in the tournment
+    taskDescription: 
+    taskDialogs:
+    - Alright now that you've joined the league you can click on league to see the
+      table
+    - 'This is a 1 race league so winner takes it all '
+    CompletedtaskDialogs: []
+    taskType: 11
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Completed all Tasks
+    taskDescription: 
+    taskDialogs:
+    - Good Job Completing all tasks
+    - 'You are now on your own be sure to take care of your teammates and good luck '
+    CompletedtaskDialogs: []
+    taskType: 16
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  tutorialTasks:
+  - taskName: Open Calendar
+    taskDescription: 
+    taskDialogs:
+    - Hey Mate your Grandad left this shed behind when he fled the Country
+    - 'This is your main base of operation where everything important happens  '
+    - I have marked your calendar up with all the important upcoming events click
+      on the calendar to have a look
+    CompletedtaskDialogs:
+    - 'There are buttons at the bottom that allow you to navigate the months  '
+    taskType: 1
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 1
+    completed: 0
+  - taskName: Close Calendar
+    taskDescription: 
+    taskDialogs:
+    - 'Do a bit of exploring then press Hide calendar to close the calendar '
+    CompletedtaskDialogs: []
+    taskType: 2
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Bulletin Task
+    taskDescription: 
+    taskDialogs:
+    - 'The bulletin board is where you can manage everthing '
+    - 'Click on the Bulletin Board to have a look '
+    CompletedtaskDialogs:
+    - 'Here you can manage everything  '
+    - 'Start race, find jobs, train your team members ,pay bills and sleep  '
+    taskType: 0
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Complete A Practice Race
+    taskDescription: 
+    taskDialogs:
+    - 'Lets get right into the racing  '
+    - 'Click on pratice race to get familar with your current team ability '
+    CompletedtaskDialogs: []
+    taskType: 4
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: 'Click on the tv '
+    taskDescription: 
+    taskDialogs:
+    - 'Good Job on completing the race '
+    - 'You should click on the tv to see whats on '
+    CompletedtaskDialogs:
+    - Here you can save and manage other settings
+    taskType: 14
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Exit Tv
+    taskDescription: 
+    taskDialogs:
+    - When your ready exit the tv
+    CompletedtaskDialogs: []
+    taskType: 15
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Team Manager Task
+    taskDescription: 
+    taskDialogs:
+    - 'Lets get familiar with the team '
+    - 'Click on team manager '
+    CompletedtaskDialogs:
+    - 'Here you can see all your teams stats '
+    - 'All the attributes are combined together to teams quality '
+    - 'Keep an eye on the stars this will let your know how they compare vs everyone
+      else in the league '
+    - You may also swap around team members if you desire by clicking on active team
+      members and one that is benched
+    taskType: 3
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Hireable Sailor Menu
+    taskDescription: 
+    taskDialogs:
+    - Open Hireable Sailor Menu
+    CompletedtaskDialogs:
+    - You may also hire racers if you have a bit extra coins and are in need of some
+      help for a race
+    - Hired racers can not be trained and are limited to a certain amount of racers
+      so keep that in mind
+    taskType: 18
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Close Team Manager
+    taskDescription: 
+    taskDialogs:
+    - When ready leave the team manager
+    CompletedtaskDialogs: []
+    taskType: 19
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Training Menu
+    taskDescription: 
+    taskDialogs:
+    - In order to keep up with the opponents we must constantly train our team
+    - 'click on training '
+    CompletedtaskDialogs:
+    - Here you can see a button for each attribute it will cost you 50 euros per
+      training game
+    - 'be sure to spread around the training and to have a nice balanced squad '
+    taskType: 12
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Train a member of the squad
+    taskDescription: 
+    taskDialogs:
+    - 'Click on a attribute you want to train and select a member then press train  '
+    CompletedtaskDialogs: []
+    taskType: 5
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Open Bill Menu
+    taskDescription: 
+    taskDialogs:
+    - Oh I forgot to mention all the bills are now in your name
+    - Lets check out the bill menu on the bulletin board
+    CompletedtaskDialogs: []
+    taskType: 6
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Close Bill Menu
+    taskDescription: 
+    taskDialogs:
+    - 'Ohh no looks like we are out of money '
+    - When your ready Exit the bill menu
+    CompletedtaskDialogs: []
+    taskType: 17
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Work a Job
+    taskDescription: 
+    taskDialogs:
+    - You will require money to pay for the teams expensives and bills
+    - 'Click on job to start a shift '
+    CompletedtaskDialogs: []
+    taskType: 7
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: 'Pay a bill '
+    taskDescription: 
+    taskDialogs:
+    - Alright now that you have some money lets pay a bill
+    - Click back on the bulletin board and go into the bill manager and pay a bill
+    CompletedtaskDialogs:
+    - 'Good job paying your first bill '
+    - Keep in mind that you don't have to pay the bill on time but it will cost you
+      interest and eventually it will get auto debited
+    - 'meaning you may go into debt and trust me you don''t want to do that '
+    taskType: 8
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Close Bill Manager
+    taskDescription: 
+    taskDialogs:
+    - 'Close the bill manager when your ready '
+    CompletedtaskDialogs: []
+    taskType: 20
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Sleep
+    taskDescription: 
+    taskDialogs:
+    - 'Its been a long day you should get some sleep '
+    - 'You can click on sleep to get some rest '
+    - keep in mind sleeping isn't free and if you can't afford a nice place to rest
+      you won't be as well rested the next day
+    CompletedtaskDialogs: []
+    taskType: 9
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Join Tutorial League
+    taskDescription: 
+    taskDialogs:
+    - There will always be a race on sunday
+    - This is the big race and winning it can lead to some big prizes
+    - Your about to get an invite accept it and LET'S RACE!!!
+    CompletedtaskDialogs: []
+    taskType: 10
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Race in the tournment
+    taskDescription: 
+    taskDialogs:
+    - Alright now that you've joined the league you can click on league to see the
+      table
+    - 'This is a 1 race league so winner takes it all '
+    CompletedtaskDialogs: []
+    taskType: 11
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  - taskName: Completed all Tasks
+    taskDescription: 
+    taskDialogs:
+    - Good Job Completing all tasks
+    - 'You are now on your own be sure to take care of your teammates and good luck '
+    CompletedtaskDialogs: []
+    taskType: 16
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  tutorialModeActive: 1
+  tutorialModeCompleted: 0
+  onTaskModified:
+    m_PersistentCalls:
+      m_Calls: []
+  onTutorialModeCompleted:
+    m_PersistentCalls:
+      m_Calls: []
+  TutorialAudio: {fileID: 0}
 --- !u!114 &1471334263890786786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -97,6 +544,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   isRaceDay: 0
+  hasPlayerCompletedRace: 0
   loadedRaceScene: 0
   raceStartDelaySeconds: 5
   shipPrefab: {fileID: 3038203907543405209, guid: 3a26f2076aea6a94391d03a56626cf75, type: 3}
@@ -185,6 +633,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7da84d8b61ab9f40a06307c18a5c343, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tutorialLeague: {fileID: 11400000, guid: 205834f6965991846aad899d3689c617, type: 2}
   currentLeague: {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
   leagues:
   - {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
@@ -194,6 +643,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   nextLeague: {fileID: 0}
+  delayBetweenInvites: 25
 --- !u!114 &3942734090947527062
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -226,6 +676,7 @@ MonoBehaviour:
   heatingBillAmount: 15
   rentBillAmount: 50
   totalBillsAmount: 0
+  daysUntilNextRecurringBill: 14
   bills: []
   recurringPaidBills: []
   billPrefab: {fileID: 2254747351404544138, guid: 173888b92f992d3439d11505aa75e6a4, type: 3}

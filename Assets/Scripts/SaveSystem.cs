@@ -370,6 +370,8 @@ public class GameProgressData
     public bool playerHasBeenShownIntro = false;
     public bool playerHasBeenShownWarningAboutDebt = false;
     public bool showTutorial = false;
+    public bool isTutorialCompleted = false;
+    public List<TutorialTask> tutorialTasks = new List<TutorialTask>();
     
     public GameProgressData()
     {
@@ -877,6 +879,8 @@ public class SaveSystem : MonoBehaviour
             saveData.gameProgress.playerHasBeenShownWarningAboutDebt =
                 GameManager.Instance.GetHasBeenShownWarningAboutDebt();
             saveData.gameProgress.showTutorial = GameManager.Instance.IsTutorialModeActive();
+            saveData.gameProgress.isTutorialCompleted = GameManager.Instance.IsTutorialModeCompleted();
+            saveData.gameProgress.tutorialTasks = GameManager.Instance.GetTutorialTasks();
             Debug.Log($"Show Tutorial was saved as in create save data {saveData.gameProgress.showTutorial}");
         }
 
@@ -1002,6 +1006,8 @@ public class SaveSystem : MonoBehaviour
                 GameManager.Instance.SetHasBeenShownWarningAboutDebt(saveData.gameProgress.playerHasBeenShownWarningAboutDebt);
                 GameManager.Instance.SetPlayerBusy(saveData.gameProgress.playerIsBusy);
                 GameManager.Instance.ActivateTutorialMode(saveData.gameProgress.showTutorial);
+                GameManager.Instance.SetTutorialModeCompleted(saveData.gameProgress.isTutorialCompleted);
+                GameManager.Instance.SetTutorialTasks(saveData.gameProgress.tutorialTasks);
                 
                 Debug.Log($"Show Tutorial was Loaded as in apply save data {saveData.gameProgress.showTutorial}");
             }
@@ -1873,6 +1879,12 @@ public class SaveSystem : MonoBehaviour
         if(GameManager.Instance != null)
         {
             saveData.gameProgress.showTutorial = GameManager.Instance.IsTutorialModeActive();
+            
+            if(GameManager.Instance.IsTutorialModeActive())
+            {
+                saveData.gameProgress.isTutorialCompleted = false;
+                saveData.gameProgress.tutorialTasks = GameManager.Instance.GetTutorialTasks();
+            }
             Debug.Log($"Show Tutorial was saved as in Create fresh save data {saveData.gameProgress.showTutorial}");
         }
         else
@@ -1881,9 +1893,9 @@ public class SaveSystem : MonoBehaviour
             saveData.gameProgress.showTutorial = false;
             Debug.Log($"Show Tutorial was saved as in Create fresh save data {saveData.gameProgress.showTutorial}");
         }
+       
+      
 
-     
-     
         
         // Set fresh calendar data to game's starting date
         if (TimeManager.Instance != null)

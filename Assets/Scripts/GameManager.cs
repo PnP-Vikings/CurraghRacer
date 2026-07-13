@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
     [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
     [Header("Tutorial")]
+    [SerializeField] private List<TutorialTask> defaultTutorialTasks = new List<TutorialTask>();
     [SerializeField] private List<TutorialTask> tutorialTasks = new List<TutorialTask>();
     [SerializeField] private bool tutorialModeActive = false;
     [SerializeField] private bool tutorialModeCompleted = false;
@@ -448,12 +449,14 @@ public class GameManager : MonoBehaviour
 
     private void ResetTutorialMode()
     {
-        foreach (var task in tutorialTasks)
+        foreach (var task in defaultTutorialTasks)
         {
             task.completed = false;
             task.isTaskActive = false;
             task.hasTutorialDialogsBeenShown = false;
         }
+        tutorialTasks = defaultTutorialTasks;
+        
         tutorialModeActive = false;
         tutorialModeCompleted = false;
     }
@@ -485,6 +488,22 @@ public class GameManager : MonoBehaviour
     public bool IsTutorialModeCompleted()
     {
         return tutorialModeCompleted;
+    }
+    public List<TutorialTask> GetTutorialTasks()
+    {
+        return tutorialTasks;
+    }
+    public void RevertToDefaultTutorialTasks()
+    {
+        ResetTutorialMode();
+    }
+    public void SetTutorialTasks(List<TutorialTask> tasks)
+    {
+        tutorialTasks = tasks;
+    }
+    public void SetTutorialModeCompleted(bool completed)
+    {
+        tutorialModeCompleted = completed;
     }
     
     public bool IsTutorialTaskCompleted(TutorialTaskType taskType)
