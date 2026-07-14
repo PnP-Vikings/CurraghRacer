@@ -11,7 +11,7 @@ public class TileManager : MonoBehaviour
 
     private Dictionary<Vector2, Tile> tiles;
 
-    private float tileSize = 4;
+    private float tileSize = 5;
 
     void Start()
     {
