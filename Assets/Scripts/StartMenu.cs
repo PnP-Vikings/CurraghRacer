@@ -204,10 +204,7 @@ public class StartMenu : MonoBehaviour
         {
             if (MiniGames.MiniGameManager.Instance != null)
             {
-                if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
-                {
-                    GameManager.Instance.CompleteTutorialTask(TutorialTaskType.WorkJobTask);
-                }
+               
                 // Start a random work minigame through the manager
                 MiniGames.MiniGameManager.Instance.StartRandomWorkActivity();
                 

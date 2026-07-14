@@ -51,7 +51,13 @@ public class BillUiHandler : MonoBehaviour
         ClearBillUis();
         if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() )
         {
-            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseBillMenu);
+            if(GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.CloseBillMenu))
+                 GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseBillMenu);
+            
+            if(GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.CloseBillMenuTask2))
+                 GameManager.Instance.CompleteTutorialTask(TutorialTaskType.CloseBillMenuTask2);
+            
+            
         }
     }
     

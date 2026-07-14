@@ -8,12 +8,17 @@ namespace League
     public class LeagueController : MonoBehaviour
     {
         public static LeagueController Instance { get; private set; }
+        [Tooltip("Reference to league used for tutorials.")]
+        public League tutorialLeague;
         public League currentLeague;
+        public League[] defaultLeagues;
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
         public LeagueCompleteCard leagueCompleteCardPrefab;
         public UnityEvent onPlayerJoinedLeague;
         public  League nextLeague = null;
+        private Coroutine showInviteCoroutine;
+        [SerializeField] private float delayBetweenInvites = 25f;
 
         private void Awake()
         {
@@ -131,7 +136,12 @@ namespace League
         }
         public void ShowLeagueInviteAfterDelay()
         {
-                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+            if(showInviteCoroutine!= null)
+            {
+                StopCoroutine(showInviteCoroutine);
+            }
+            
+            showInviteCoroutine=   StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
         }
 
 
@@ -139,7 +149,7 @@ namespace League
         {
             if (currentLeague != null && TimeManager.Instance != null)
             {
-
+                
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
                 {
                     LeagueInviteCardsUi leaguecard  = Instantiate(leagueInviteCardsUi);
@@ -186,7 +196,9 @@ namespace League
                     Debug.Log("Player is busy, delaying league invite message.");
                 // Retry after some time
                 yield return new WaitForSeconds(10f);
-                StartCoroutine(StartLeagueInviteMessageAfterDelay(25f));
+                StopCoroutine(showInviteCoroutine);
+                showInviteCoroutine =  StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
+                
             }
         }
 
@@ -209,6 +221,8 @@ namespace League
             {
                 TimeManager.Instance.RecheckIfRaceDay();
             }
+            
+            CheckIfPlayerHasJoinedLeagueTaskIsCompleted();
         }
 
         public void GenerateRaceSchedule()
@@ -755,6 +769,73 @@ namespace League
             }
         }
         
+        public void CheckIfPlayerHasJoinedLeagueTaskIsCompleted()
+        {
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+            {
+                GameManager.Instance.CompleteTutorialTask(TutorialTaskType.JoinLeagueTask);
+            }
+        }
+
+
+        public void AddTutorialLeagueToList()
+        {
+            if (tutorialLeague != null && leagues != null)
+            {
+                List<League> tempLeagueList = new List<League>();
+                // List<League> leagueList = new List<League>(leagues);
+                if (!leagues.Contains(tutorialLeague))
+                {
+                    if(!tempLeagueList.Contains(tutorialLeague))
+                    {
+                        tempLeagueList.Add(tutorialLeague);
+                    }
+                    foreach (League league in leagues)
+                    {
+                        if(!tempLeagueList.Contains(league))
+                        {
+                            tempLeagueList.Add(league);
+                        }
+                    }
+                    leagues = tempLeagueList.ToArray();
+                    currentLeague = leagues[0];
+                    nextLeague = leagues.Length > 1 ? leagues[1] : null;
+                    Debug.Log("Tutorial league added to leagues list.");
+                }
+                else
+                {
+                    Debug.Log("Tutorial league already exists in leagues list.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Tutorial league or leagues array is null. Cannot add tutorial league.");
+            }
+        }
+
+        public void RemoveTutorialLeagueFromList()
+        {
+            if (tutorialLeague != null && leagues != null)
+            {
+                List<League> tempLeagueList = new List<League>(leagues);
+                if (tempLeagueList.Contains(tutorialLeague))
+                {
+                    tempLeagueList.Remove(tutorialLeague);
+                    leagues = tempLeagueList.ToArray();
+                    currentLeague = leagues.Length > 0 ? leagues[0] : null;
+                    nextLeague = leagues.Length > 1 ? leagues[1] : null;
+                    Debug.Log("Tutorial league removed from leagues list.");
+                }
+                else
+                {
+                    Debug.Log("Tutorial league does not exist in leagues list.");
+                }
+            }
+            else
+            {
+                Debug.LogWarning("Tutorial league or leagues array is null. Cannot remove tutorial league.");
+            }
+        }
     }
     
    

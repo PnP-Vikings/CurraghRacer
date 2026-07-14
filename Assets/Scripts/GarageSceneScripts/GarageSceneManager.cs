@@ -6,8 +6,6 @@ public class GarageSceneManager : MonoBehaviour
 {
     public static GarageSceneManager Instance { get; private set; }
     public DecisionCardUiMaster De;
-    public float inviteDelay = 30f;  
-    
     public WelcomeCardUi welcomeCardUi;
     public GameObject DebtWarningScreen;
     [Tooltip("Delay before showing the welcome card for new players. Adjust as needed.")]
@@ -59,10 +57,6 @@ public class GarageSceneManager : MonoBehaviour
         ProcessTutorialUi();
     }
     
-    
-    
-    
-    
     void OnEnable()
     {
         CheckAndShowLeagueInvite();
@@ -87,10 +81,10 @@ public class GarageSceneManager : MonoBehaviour
             return;
         }
         
-        if(LeagueController.Instance.currentLeague == null || !LeagueController.Instance.currentLeague.playerHasJoined)
+        if(LeagueController.Instance.currentLeague == null || !LeagueController.Instance.currentLeague.playerHasJoined && !GameManager.Instance.playerIsBusy && !GameManager.Instance.IsTutorialModeActive())
         {
             Debug.Log("Player not in league, showing join message after delay.");
-            StartCoroutine(LeagueController.Instance.StartLeagueInviteMessageAfterDelay(inviteDelay));
+            LeagueController.Instance.ShowLeagueInviteAfterDelay();
         }
     }
     

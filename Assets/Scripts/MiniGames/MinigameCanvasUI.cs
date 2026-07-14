@@ -18,8 +18,8 @@ public class MinigameCanvasUI : MonoBehaviour
     
     [Header("Multiplier Display (optional)")]
     public TMPro.TMP_Text multiplierText;
-    
-    bool showRestartButtons = false;
+    [Tooltip("This setting is overwritten by the setting in the minigame manager if that is avaiable")]
+    [SerializeField] bool showRestartButtons = false;
     public GameObject testDemoButtons;
     public Button backToMainMenuButton, restartMinigameButton;
     
@@ -50,6 +50,11 @@ public class MinigameCanvasUI : MonoBehaviour
             additionalInfoText.gameObject.SetActive(showAdditionalInfo);
         }
         showRestartButtons = showTestRestartsButtons;
+        
+        if(MiniGameManager.Instance != null)
+        {
+           showRestartButtons = MiniGameManager.Instance.ShouldShowRestartButtons();
+        }
         if (showRestartButtons != false)
         {
             if (testDemoButtons != null)
@@ -176,13 +181,7 @@ public class MinigameCanvasUI : MonoBehaviour
             }
         }
 
-        if (showRestartButtons)
-        {
-            if (testDemoButtons != null)
-            {
-                testDemoButtons.SetActive(true);
-            }
-        }
+        ShowRestartButtons();
     }
     
     public virtual void ShowGameOver(string message)
@@ -207,14 +206,9 @@ public class MinigameCanvasUI : MonoBehaviour
                 }
             }
         }
-
-        if (showRestartButtons)
-        {
-            if (testDemoButtons != null)
-            {
-                testDemoButtons.SetActive(true);
-            }
-        }
+        
+        ShowRestartButtons();
+        
     }
     
     public virtual void UpdateAdditionalInfo(string info)
@@ -414,6 +408,17 @@ public class MinigameCanvasUI : MonoBehaviour
     {
         if (multiplierText != null)
             multiplierText.gameObject.SetActive(false);
+    }
+
+    public void ShowRestartButtons()
+    {
+        if (showRestartButtons)
+        {
+            if (testDemoButtons != null)
+            {
+                testDemoButtons.SetActive(true);
+            }
+        }
     }
     
 }

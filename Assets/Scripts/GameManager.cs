@@ -26,12 +26,14 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
     [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
     [Header("Tutorial")]
+    [SerializeField] private List<TutorialTask> defaultTutorialTasks = new List<TutorialTask>();
     [SerializeField] private List<TutorialTask> tutorialTasks = new List<TutorialTask>();
     [SerializeField] private bool tutorialModeActive = false;
     [SerializeField] private bool tutorialModeCompleted = false;
     public UnityEvent onTaskModified;
     public UnityEvent onTutorialModeCompleted;
     [SerializeField] TutorialAudio TutorialAudio;
+
 
     private void Awake()
     {
@@ -135,6 +137,12 @@ public class GameManager : MonoBehaviour
 
     public void Sleep(int sleepCost)
     {
+        if (RaceManager.Instance != null && (RaceManager.Instance.isRaceDay && !RaceManager.Instance.hasPlayerCompletedRace))
+        {
+            PlayerStatsView.Instance.DisplayInfo("You cannot sleep before completing your race", 3);
+            return; // Player cannot sleep before completing the race
+        }
+
         if (PlayerManager.Instance.PlayerHasEnoughEnergy(100) && !tutorialModeActive)
         {
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
@@ -156,11 +164,22 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo($"Use the energy you regained to go to work", 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
         }
+        
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.SleepTask))
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.SleepTask);
+        }
         StartCoroutine(SleepAudioChanges());
     }
 
     public void PlayerWorked(int rewardedCoins = 50, int energyCost = -25)
     {
+        
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            GameManager.Instance.CompleteTutorialTask(TutorialTaskType.WorkJobTask);
+        }
+        
         PlayerManager.Instance.ModifyPlayerCoins(rewardedCoins);
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
         PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
@@ -393,17 +412,54 @@ public class GameManager : MonoBehaviour
         return tutorialTasks;
     }
 
-    public void ActivateTutorialMode()
+    public void ActivateTutorialMode(bool activate =false,bool ResetTutorial = false)
     {
-        if (tutorialModeActive) return;
-        if (tutorialModeCompleted) return;
-
-        if (tutorialTasks.Count > 0)
+        if (activate)
         {
-            tutorialModeActive = true;
-            tutorialTasks[0].isTaskActive = true;
-            Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+            /*
+            if (tutorialModeActive) return;
+            if (tutorialModeCompleted) return;
+            */
+            if (ResetTutorial)
+            {
+                Debug.Log("Activating tutorial mode...");
+                if (tutorialTasks.Count > 0)
+                {
+                    ResetTutorialMode();
+                    tutorialModeActive = true;
+                    tutorialTasks[0].isTaskActive = true;
+                    Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
+                }
+                /*if (LeagueController.Instance != null && !tutorialModeCompleted)
+                {
+                    LeagueController.Instance.AddTutorialLeagueToList();
+                }*/
+            }
+          
         }
+        else
+        {
+            Debug.Log("Deactivating tutorial mode...");
+            tutorialModeActive = false;
+            if (LeagueController.Instance != null)
+            {
+                LeagueController.Instance.RemoveTutorialLeagueFromList();
+            }
+        }
+    }
+
+    private void ResetTutorialMode()
+    {
+        foreach (var task in defaultTutorialTasks)
+        {
+            task.completed = false;
+            task.isTaskActive = false;
+            task.hasTutorialDialogsBeenShown = false;
+        }
+        tutorialTasks = defaultTutorialTasks;
+        
+        tutorialModeActive = false;
+        tutorialModeCompleted = false;
     }
     public void CheckIfAllTasksAreCompleted()
     {
@@ -429,6 +485,26 @@ public class GameManager : MonoBehaviour
     public bool IsTutorialModeActive()
     {
         return tutorialModeActive;
+    }
+    public bool IsTutorialModeCompleted()
+    {
+        return tutorialModeCompleted;
+    }
+    public List<TutorialTask> GetTutorialTasks()
+    {
+        return tutorialTasks;
+    }
+    public void RevertToDefaultTutorialTasks()
+    {
+        ResetTutorialMode();
+    }
+    public void SetTutorialTasks(List<TutorialTask> tasks)
+    {
+        tutorialTasks = tasks;
+    }
+    public void SetTutorialModeCompleted(bool completed)
+    {
+        tutorialModeCompleted = completed;
     }
     
     public bool IsTutorialTaskCompleted(TutorialTaskType taskType)
