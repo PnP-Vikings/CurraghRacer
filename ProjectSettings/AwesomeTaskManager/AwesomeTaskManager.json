@@ -137,13 +137,13 @@
                                 true,
                                 true,
                                 true,
-                                false,
-                                false,
-                                false,
-                                false,
+                                true,
+                                true,
                                 false,
                                 true,
-                                false
+                                true,
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -244,8 +244,8 @@
                             "checklistStates": [
                                 true,
                                 true,
-                                false,
-                                false
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -324,7 +324,7 @@
                             ],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         },
@@ -346,7 +346,7 @@
                             "checklistStates": [
                                 true,
                                 true,
-                                false
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -358,7 +358,7 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": false,
+                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         }

@@ -11878,6 +11878,14 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 8150581909809056547, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: defaultLeagues.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 8150581909809056547, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'defaultLeagues.Array.data[0]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

@@ -430,11 +430,12 @@ public class GameManager : MonoBehaviour
                     tutorialTasks[0].isTaskActive = true;
                     Debug.Log($"Activated tutorial mode. First task: {tutorialTasks[0].taskName}");
                 }
+                /*if (LeagueController.Instance != null && !tutorialModeCompleted)
+                {
+                    LeagueController.Instance.AddTutorialLeagueToList();
+                }*/
             }
-            if (LeagueController.Instance != null)
-            {
-                LeagueController.Instance.AddTutorialLeagueToList();
-            }
+          
         }
         else
         {

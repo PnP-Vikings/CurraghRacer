@@ -11,6 +11,7 @@ namespace League
         [Tooltip("Reference to league used for tutorials.")]
         public League tutorialLeague;
         public League currentLeague;
+        public League[] defaultLeagues;
         public League[] leagues;
         public LeagueInviteCardsUi leagueInviteCardsUi;
         public LeagueCompleteCard leagueCompleteCardPrefab;
@@ -781,14 +782,20 @@ namespace League
         {
             if (tutorialLeague != null && leagues != null)
             {
-                List<League> tempLeagueList = new List<League>(leagues);
+                List<League> tempLeagueList = new List<League>();
                 // List<League> leagueList = new List<League>(leagues);
                 if (!leagues.Contains(tutorialLeague))
                 {
-                    tempLeagueList.Add(tutorialLeague);
+                    if(!tempLeagueList.Contains(tutorialLeague))
+                    {
+                        tempLeagueList.Add(tutorialLeague);
+                    }
                     foreach (League league in leagues)
                     {
-                        tempLeagueList.Add(league);
+                        if(!tempLeagueList.Contains(league))
+                        {
+                            tempLeagueList.Add(league);
+                        }
                     }
                     leagues = tempLeagueList.ToArray();
                     currentLeague = leagues[0];

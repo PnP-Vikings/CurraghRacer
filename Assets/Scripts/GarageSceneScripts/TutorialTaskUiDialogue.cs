@@ -72,7 +72,12 @@ public class TutorialTaskUiDialogue : MonoBehaviour
             {
                if(LeagueController.Instance != null)
                {
-                  LeagueController.Instance.ShowLeagueInvite();
+                  if (!GameManager.Instance.IsTutorialModeCompleted())
+                  {
+                     LeagueController.Instance.AddTutorialLeagueToList();
+                     LeagueController.Instance.ShowLeagueInvite();
+                  }
+                  
                }
             }
             

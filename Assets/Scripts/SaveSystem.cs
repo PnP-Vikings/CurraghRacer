@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using Calendar;
 using UnityEngine;
 using League;
@@ -239,6 +240,7 @@ public class LeagueSaveData
 {
     public string currentLeagueName;
     public bool playerHasJoined;
+    public League.League[] leagues;
     public LeagueInfoSaveData[] allLeagues;
     public TeamSaveData[] allTeams;
     public int currentRaceIndex;
@@ -369,6 +371,10 @@ public class GameProgressData
     public Dictionary<string, bool> unlockedFeatures;
     public bool playerHasBeenShownIntro = false;
     public bool playerHasBeenShownWarningAboutDebt = false;
+    
+    public bool hasPlayerCompletedRace = false;
+    
+    //TUTORIAL STUFF
     public bool showTutorial = false;
     public bool isTutorialCompleted = false;
     public List<TutorialTask> tutorialTasks = new List<TutorialTask>();
@@ -864,7 +870,7 @@ public class SaveSystem : MonoBehaviour
                         }
                     }
                 }
-
+                saveData.leagueData.leagues = LeagueController.Instance.leagues;
                 saveData.leagueData.allLeagues = allLeagues.ToArray();
                 saveData.leagueData.allTeams = allTeams.ToArray();
             }
@@ -888,6 +894,7 @@ public class SaveSystem : MonoBehaviour
         {
             saveData.gameProgress.difficulty = RaceManager.Instance.difficulty;
             saveData.gameProgress.loadedRaceScene = RaceManager.Instance.loadedRaceScene;
+            saveData.gameProgress.hasPlayerCompletedRace = RaceManager.Instance.hasPlayerCompletedRace;
         }
 
         // Save calendar data
@@ -966,6 +973,8 @@ public class SaveSystem : MonoBehaviour
         // Apply league data
         if (LeagueController.Instance != null && saveData.leagueData != null)
         {
+           
+             LeagueController.Instance.leagues=saveData.leagueData.leagues; // Ensure leagues are set before restoring data
             // IMPORTANT: Restore teams FIRST so their stats are available when restoring league standings
             if (saveData.leagueData.allTeams != null)
             {
@@ -974,7 +983,7 @@ public class SaveSystem : MonoBehaviour
             
             // Now restore leagues with their complete data (including standings)
             if (saveData.leagueData.allLeagues != null)
-            {
+            {   
                 RestoreLeaguesData(saveData.leagueData.allLeagues);
             }
 
@@ -1016,6 +1025,7 @@ public class SaveSystem : MonoBehaviour
             {
                 RaceManager.Instance.difficulty = saveData.gameProgress.difficulty;
                 RaceManager.Instance.loadedRaceScene = saveData.gameProgress.loadedRaceScene;
+                RaceManager.Instance.hasPlayerCompletedRace = saveData.gameProgress.hasPlayerCompletedRace;
             }
         }
 
@@ -1268,6 +1278,9 @@ public class SaveSystem : MonoBehaviour
 
     private void RestoreLeaguesData(LeagueInfoSaveData[] leaguesData)
     {
+     
+        
+
         foreach (var leagueSave in leaguesData)
         {
             // Find the corresponding league
@@ -1873,6 +1886,7 @@ public class SaveSystem : MonoBehaviour
         saveData.gameProgress.gameStarted = true;
         saveData.gameProgress.difficulty = 1f;
         saveData.gameProgress.loadedRaceScene = false;
+        saveData.gameProgress.hasPlayerCompletedRace = false;
         saveData.gameProgress.playerIsBusy = false;
         saveData.gameProgress.playerHasBeenShownIntro = false;
         saveData.gameProgress.playerHasBeenShownWarningAboutDebt = false;
@@ -1960,6 +1974,7 @@ public class SaveSystem : MonoBehaviour
         // League initialization happens in InitializeNewGameState() instead.
         if (LeagueController.Instance != null)
         {
+            
             if (LeagueController.Instance.currentLeague != null)
             {
                 saveData.leagueData.currentLeagueName = LeagueController.Instance.currentLeague.leagueName;
@@ -2046,7 +2061,7 @@ public class SaveSystem : MonoBehaviour
                         }
                     }
                 }
-
+                saveData.leagueData.leagues =LeagueController.Instance.defaultLeagues;
                 saveData.leagueData.allLeagues = allLeagues.ToArray();
                 saveData.leagueData.allTeams = allTeams.ToArray();
             }
