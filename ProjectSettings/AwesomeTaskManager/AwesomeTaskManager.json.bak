@@ -76,6 +76,43 @@
                             "isArchived": false
                         },
                         {
+                            "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
+                            "title": "Add Max amount of currency a player can get for a minigame ",
+                            "description": "Currently you can get like m 3k from one session of the beer game",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-07-08 23:25",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Create new variable",
+                                "Set this variable for each game",
+                                "Do check before paying out currency",
+                                "Test"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
                             "id": "ff84cc38-e6d4-4448-a94d-83096847c88e",
                             "title": "Add Loading screen",
                             "description": "",
@@ -111,43 +148,6 @@
                                     "displayName": ""
                                 }
                             ],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
-                        {
-                            "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
-                            "title": "Add Max amount of currency a player can get for a minigame ",
-                            "description": "Currently you can get like m 3k from one session of the beer game",
-                            "category": "Bug",
-                            "colorLabel": 16,
-                            "priority": 0,
-                            "createdDate": "2026-07-08 23:25",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Create new variable",
-                                "Set this variable for each game",
-                                "Do check before paying out currency",
-                                "Test"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,
