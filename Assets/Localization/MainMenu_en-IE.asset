@@ -30,6 +30,42 @@ MonoBehaviour:
     m_Localized: Quit
     m_Metadata:
       m_Items: []
+  - m_Id: 245790550253568
+    m_Localized: New Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245943403274240
+    m_Localized: Quick Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246075658067968
+    m_Localized: Quick Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246158663344128
+    m_Localized: More Saves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246252536061952
+    m_Localized: Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247328563781632
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247501666902016
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247794819391488
+    m_Localized: Would you like to play the Tutorial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247908761853952
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -33,6 +33,45 @@ MonoBehaviour:
 '
     m_Metadata:
       m_Items: []
+  - m_Id: 245790550253568
+    m_Key: 'mainMenu.NewGame
+
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245943403274240
+    m_Key: mainMenu.QuickSave
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246075658067968
+    m_Key: mainMenu.QuickLoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246158663344128
+    m_Key: mainMenu.MoreSaves
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246252536061952
+    m_Key: mainMenu.Close
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247328563781632
+    m_Key: mainMenu.TutorialPromptScreen.Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247501666902016
+    m_Key: mainMenu.TutorialPromptScreen.No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247794819391488
+    m_Key: mainMenu.TutorialPromptScreen.Question
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247908761853952
+    m_Key: mainMenu.TutorialPromptScreen.Back
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

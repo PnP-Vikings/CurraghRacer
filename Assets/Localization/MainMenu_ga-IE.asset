@@ -30,6 +30,42 @@ MonoBehaviour:
     m_Localized: Scoir
     m_Metadata:
       m_Items: []
+  - m_Id: 245790550253568
+    m_Localized: Cluiche Nua
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245943403274240
+    m_Localized: "S\xE1bh\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246075658067968
+    m_Localized: "L\xF3d\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246158663344128
+    m_Localized: "Tuilleadh S\xE1bh\xE1lacha"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246252536061952
+    m_Localized: "D\xFAn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247328563781632
+    m_Localized: Sea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247501666902016
+    m_Localized: "N\xED hea"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247794819391488
+    m_Localized: Ar mhaith leat an rang teagaisc a imirt?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247908761853952
+    m_Localized: Ar ais
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
