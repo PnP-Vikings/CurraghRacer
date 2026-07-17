@@ -80,7 +80,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance miniGameProgression;
     public EventInstance miniGame_Win;
     public EventInstance miniGame_Over;
-    public EventInstance miniGameOverDialogue;
+    public EventInstance miniGameCompleteDialogue;
 
     public EventInstance placeTurf;
 
@@ -236,7 +236,7 @@ public class AudioManager : MonoBehaviour
         miniGameProgression = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Progression");
         miniGame_Win = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Win");
         miniGame_Over = RuntimeManager.CreateInstance("event:/Notifications/Minigame_Over");
-        miniGameOverDialogue = RuntimeManager.CreateInstance("event:/Notifications/Mini Game Over Dialogue");
+        miniGameCompleteDialogue = RuntimeManager.CreateInstance("event:/Notifications/Mini Game Complete Dialogue");
 
                             // TURF //
         placeTurf = RuntimeManager.CreateInstance("event:/Footing Turf/Place Turf");

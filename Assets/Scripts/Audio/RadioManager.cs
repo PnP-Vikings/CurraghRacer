@@ -1,4 +1,5 @@
 using FMOD.Studio;
+using League;
 using MiniGames;
 using System.Collections;
 //using Unity.VisualScripting;
@@ -159,10 +160,15 @@ public class RadioManager : MonoBehaviour
             if (activeScene.name == "Garage")                            // Checks if the active scene is the Garage scene
             {
                 // Story update 1 (Declan Kelly Returns)
-                if (!storyUpdateIntroHasPlayed)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
+                if (!storyUpdateIntroHasPlayed && LeagueController.Instance.currentLeague.playerHasJoined == true)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
                 {
+                    Debug.Log("Player has accepted the league invite - AudioDebug");
                     AudioManager.instance.storyUpdateIntro.start();
                     storyUpdateIntroHasPlayed = true;
+                }
+                else
+                {
+                    PlayRadioAdOrNews();
                 }
 
                 // Story update 2 (Player wins race)
