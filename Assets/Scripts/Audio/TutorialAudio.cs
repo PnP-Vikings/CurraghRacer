@@ -7,7 +7,7 @@ public class TutorialAudio : MonoBehaviour
     {
         if(AudioManager.instance != null)
         {
-            yield return new WaitForSeconds(1.5f);
+            yield return new WaitForSeconds(1.2f);
             AudioManager.instance.miniGame_Win.start();
         }
     }
