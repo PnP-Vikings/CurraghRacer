@@ -72,6 +72,34 @@ MonoBehaviour:
     m_Key: mainMenu.TutorialPromptScreen.Back
     m_Metadata:
       m_Items: []
+  - m_Id: 602162131361792
+    m_Key: 'mainMenu.TitleTextP1
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 602354389868544
+    m_Key: 'mainMenu.TitleTextP2
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 602976530980864
+    m_Key: mainMenu.Settings.TestLevel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 603100829179904
+    m_Key: mainMenu.Settings.AudioTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 603178939703296
+    m_Key: mainMenu.Settings.Language
+    m_Metadata:
+      m_Items: []
+  - m_Id: 603461870673920
+    m_Key: mainMenu.Settings.Back
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
