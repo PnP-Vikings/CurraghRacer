@@ -100,6 +100,14 @@ MonoBehaviour:
     m_Key: mainMenu.Settings.Back
     m_Metadata:
       m_Items: []
+  - m_Id: 679791115100160
+    m_Key: mainMenu.Settings.LanguagesMenu.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 679994568204288
+    m_Key: mainMenu.Settings.LanguagesMenu.Back
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

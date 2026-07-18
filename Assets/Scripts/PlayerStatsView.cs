@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class PlayerStatsView : MonoBehaviour
@@ -41,6 +42,24 @@ public class PlayerStatsView : MonoBehaviour
         
         PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
         UpdatePlayerStats();
+        SceneManager.sceneLoaded += OnSceneLoaded;
+    }
+    
+    
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name == "Main Menu")
+        {
+            uiDoc.rootVisualElement.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            uiDoc.rootVisualElement.style.display = DisplayStyle.Flex;
+        }
     }
     
     public void UpdatePlayerStats()
