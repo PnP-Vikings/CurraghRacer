@@ -128,13 +128,12 @@ public class RadioManager : MonoBehaviour
             }
         }
 
-        if (activeScene.name == "Main Menu")
+        if (activeScene.name != "Garage")
         {
-            //Debug.Log("Radio muted as main menu is active");
-            StopAllAdOrNews();
+            //Debug.Log("Radio is muted because Garage scene is not loaded - AudioDebug");
             MuteRadio();
-            
         }
+
     }
     private void PlayAdOrNewsOrOverrideWithStoryUpdate()
     {
