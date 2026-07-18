@@ -50,7 +50,7 @@ public class MiniGameAudio : MonoBehaviour
             AudioManager.instance.bodhran.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.miniGame_Over.start();
             yield return new WaitForSeconds(1.7f);
-            AudioManager.instance.miniGameOverDialogue.start();
+            AudioManager.instance.miniGameCompleteDialogue.start();
             //Debug.Log("Foot Race ended");
         }
     }
