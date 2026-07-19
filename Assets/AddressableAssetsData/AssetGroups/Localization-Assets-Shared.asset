@@ -20,6 +20,11 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a07bb808be2c6a044a89c4fcb95f0acd
+    m_Address: Assets/Localization/Locales/GarageScene Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 35a8a1f60e0679743a65d48dd1db6fec, type: 2}
   m_SchemaSet:

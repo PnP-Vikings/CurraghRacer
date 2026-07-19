@@ -15,6 +15,13 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-Irish (Ireland) (ga-IE)
   m_GUID: c983b2f30128a4c4cb1f5ba1c3e03b4d
   m_SerializeEntries:
+  - m_GUID: 00eb388624f9d124b971b76aa4301852
+    m_Address: GarageScene_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 383fcc8c598acbd468049e8e0f607f5e
     m_Address: MainMenu_ga-IE
     m_ReadOnly: 1

@@ -22,6 +22,13 @@ MonoBehaviour:
     - Locale-en-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: e946e14e927826d4bba2d579f3cd730c
+    m_Address: GarageScene_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 35a8a1f60e0679743a65d48dd1db6fec, type: 2}
   m_SchemaSet:
