@@ -1,6 +1,7 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
 public class ClockUI : MonoBehaviour
@@ -11,11 +12,14 @@ public class ClockUI : MonoBehaviour
     private VisualElement _minuteHand,
         _hourHand;
 
-
+    
+    
     private void OnEnable()
     {
+        
         uiDoc = GetComponent<UIDocument>();
         
+       
         var root = uiDoc.rootVisualElement;
         _minuteHand = root.Q<VisualElement>("MinuteHand");
         _hourHand = root.Q<VisualElement>("HourHand");
@@ -24,9 +28,27 @@ public class ClockUI : MonoBehaviour
         if (TimeManager.Instance == null) {Debug.Log("TimeManger Instance is null");return;}
         TimeManager.Instance.onNewDay.AddListener(UpdateClock);
         TimeManager.Instance.timeChangedEvent.AddListener(UpdateClock);
-       
+        
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        
+      
     }
-
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+    }
+    public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+    {
+        if (SceneManager.GetActiveScene().name == "Main Menu")
+        {
+            uiDoc.rootVisualElement.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            uiDoc.rootVisualElement.style.display = DisplayStyle.Flex;
+        }
+    }
+    
     private void OnDestroy()
     {
      TimeManager.Instance.onNewDay.RemoveListener(UpdateClock);

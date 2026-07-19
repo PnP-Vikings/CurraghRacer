@@ -217,6 +217,16 @@ public class TrainingMenu : MonoBehaviour
     
     public bool CanTrain(int energyCost, int currencyCost)
     {
+        if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.TrainTeamMemberTask))
+        {
+            if(PlayerManager.Instance != null && PlayerManager.Instance.GetPlayerCoins() >=50)
+            {
+                PlayerManager.Instance.PurchaseItem(currencyCost);
+            }
+            return true;
+        }
+        
+        
         if (TimeManager.Instance != null)
         {
             isTooLateForActivities = TimeManager.Instance.IsTooLateForActivities();

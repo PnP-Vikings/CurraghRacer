@@ -1,0 +1,103 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MainMenu_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 8bde466f21db9854694374d161ec0da5, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 73827082240
+    m_Localized: Tosaigh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 214583730176
+    m_Localized: Socruithe
+    m_Metadata:
+      m_Items: []
+  - m_Id: 269059350528
+    m_Localized: Scoir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245790550253568
+    m_Localized: Cluiche Nua
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245943403274240
+    m_Localized: "S\xE1bh\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246075658067968
+    m_Localized: "L\xF3d\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246158663344128
+    m_Localized: "Tuilleadh S\xE1bh\xE1lacha"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 246252536061952
+    m_Localized: "D\xFAn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247328563781632
+    m_Localized: Sea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247501666902016
+    m_Localized: "N\xED hea"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247794819391488
+    m_Localized: Ar mhaith leat an rang teagaisc a imirt?
+    m_Metadata:
+      m_Items: []
+  - m_Id: 247908761853952
+    m_Localized: Ar ais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 602162131361792
+    m_Localized: Curragh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 602354389868544
+    m_Localized: Racing
+    m_Metadata:
+      m_Items: []
+  - m_Id: 602976530980864
+    m_Localized: "Leibh\xE9al na T\xE1st\xE1la"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 603100829179904
+    m_Localized: Fuaim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 603178939703296
+    m_Localized: Teanga
+    m_Metadata:
+      m_Items: []
+  - m_Id: 603461870673920
+    m_Localized: Ar ais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 679791115100160
+    m_Localized: Teangacha
+    m_Metadata:
+      m_Items: []
+  - m_Id: 679994568204288
+    m_Localized: Ar ais
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
