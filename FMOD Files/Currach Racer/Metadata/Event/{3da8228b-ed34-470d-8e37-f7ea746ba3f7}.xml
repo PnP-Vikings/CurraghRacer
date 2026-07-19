@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{3da8228b-ed34-470d-8e37-f7ea746ba3f7}">
 		<property name="name">
-			<value>Mini Game Over Dialogue</value>
+			<value>Mini Game Complete Dialogue</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>

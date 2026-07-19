@@ -39,7 +39,7 @@ public class BoxingAudio : MonoBehaviour
 
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.miniGameOverDialogue.start();
+            AudioManager.instance.miniGameCompleteDialogue.start();
         }
 
         boomBapEmitter.SetParameter("Boom Bap Volume", 1f, false);

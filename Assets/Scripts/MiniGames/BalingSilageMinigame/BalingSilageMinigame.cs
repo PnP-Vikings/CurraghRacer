@@ -36,7 +36,7 @@ namespace MiniGames.BalingSilageMinigame
             Instantiate(tractorPrefab, new Vector3(-2, 4.5f, -0.5f), Quaternion.identity);
             cutting = true;
             grassText.text = "Cut the grass";
-            gameTimer = 60;
+            gameTimer = 180;
         }
 
         public void Update()
@@ -46,7 +46,7 @@ namespace MiniGames.BalingSilageMinigame
 
         public void UpdateGame()
         {
-            if (collecting == true && gameTimer > 30)
+            if (collecting == true && gameTimer > 90)
             {
                 grassText.text = "Collect the grass";
             }
@@ -60,7 +60,7 @@ namespace MiniGames.BalingSilageMinigame
 
             gameTimer-= Time.deltaTime;
 
-            if (gameTimer <= 30)
+            if (gameTimer <= 90)
             {
                 grassText.text = "Hurry and collect the grass";
             }

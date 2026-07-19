@@ -122,7 +122,7 @@ public class TutorialTaskUiManager : MonoBehaviour
             if (AudioManager.instance != null)
             {
                 if(tutorialTask.completed == true)
-                {;
+                {
                     AudioManager.instance.miniGameProgression.start();
                 }
             }

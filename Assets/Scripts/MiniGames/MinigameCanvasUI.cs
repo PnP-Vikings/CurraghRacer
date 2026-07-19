@@ -167,13 +167,6 @@ public class MinigameCanvasUI : MonoBehaviour
 
             if (AudioManager.instance != null)
             {
-                //AudioManager.instance.gameOver_Lost.start();
-
-                //if (boxingAudio != null)
-                //{
-                //    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
-                //}
-
                 if (trafficWardenAudio != null)
                 {
                     trafficWardenAudio.StopRainAndRoadworks();
@@ -193,13 +186,6 @@ public class MinigameCanvasUI : MonoBehaviour
 
             if (AudioManager.instance != null)
             {
-                //AudioManager.instance.gameOver_Lost.start();
-
-                //if (boxingAudio != null)
-                //{
-                //    StartCoroutine(boxingAudio.TemporarilyDecreaseBoomBapVolume());
-                //}
-
                 if (trafficWardenAudio != null)
                 {
                     trafficWardenAudio.StopRainAndRoadworks();
