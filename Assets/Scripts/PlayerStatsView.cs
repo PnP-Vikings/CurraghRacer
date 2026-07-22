@@ -1,12 +1,14 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
-
+using UnityEngine.Localization;
 public class PlayerStatsView : MonoBehaviour
 {
     [SerializeField] private UIDocument uiDoc;
     private Label _playerEnergyLabel,_playerCurrencyLabel,_displayInfo;
     private VisualElement _displayInfoBackground;
+    [SerializeField] private LocalizedString _localizedPlayerEnergyText;
+    [SerializeField] private LocalizedString _localizedPlayerCurrencyText;
     
     public static PlayerStatsView Instance { get; private set; }
     
@@ -37,11 +39,22 @@ public class PlayerStatsView : MonoBehaviour
         _playerCurrencyLabel = root.Q<Label>("PlayerCurrency");
         _displayInfo  = root.Q<Label>("DisplayInfo");
         _displayInfoBackground = root.Q<VisualElement>("DisplayInfoBackground");
-       _playerEnergyLabel.text = "Player Energy: " + PlayerManager.Instance.GetPlayerEnergy();
-        _playerCurrencyLabel.text = "Player Currency: " + PlayerManager.Instance.GetPlayerCurrency();
+        
+        _localizedPlayerEnergyText.Arguments = new object[] { PlayerManager.Instance.GetPlayerEnergy() };
+        _localizedPlayerCurrencyText.Arguments = new object[] { PlayerManager.Instance.GetPlayerCurrency() };
+        _localizedPlayerEnergyText.RefreshString();
+        _playerEnergyLabel.text =_localizedPlayerEnergyText.GetLocalizedString();
+        _localizedPlayerCurrencyText.RefreshString();
+        _playerCurrencyLabel.text = _localizedPlayerCurrencyText.GetLocalizedString();
         
         PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
         UpdatePlayerStats();
+        
+        if(LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged.AddListener(UpdatePlayerStats);
+        }
+        
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
     
@@ -49,6 +62,10 @@ public class PlayerStatsView : MonoBehaviour
     private void OnDisable()
     {
         SceneManager.sceneLoaded -= OnSceneLoaded;
+        if(LocalizationManager.Instance != null)
+        {
+            LocalizationManager.Instance.OnLanguageChanged.RemoveListener(UpdatePlayerStats);
+        }
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
@@ -64,8 +81,12 @@ public class PlayerStatsView : MonoBehaviour
     
     public void UpdatePlayerStats()
     {
-        _playerEnergyLabel.text = "Player Energy: " + PlayerManager.Instance.GetPlayerEnergy();
-        _playerCurrencyLabel.text = "Player Currency: " + PlayerManager.Instance.GetPlayerCurrency();
+        _localizedPlayerEnergyText.Arguments[0] = PlayerManager.Instance.GetPlayerEnergy();
+        _localizedPlayerCurrencyText.Arguments[0] = PlayerManager.Instance.GetPlayerCurrency();
+        _localizedPlayerEnergyText.RefreshString();
+        _localizedPlayerCurrencyText.RefreshString();
+        _playerEnergyLabel.text = _localizedPlayerEnergyText.GetLocalizedString();
+        _playerCurrencyLabel.text = _localizedPlayerCurrencyText.GetLocalizedString();
     }
         
     

@@ -1546,6 +1546,22 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 9143610521142718996, guid: b4097587fe2b40740b5248e03d2d8f8a, type: 3}
+      propertyPath: _localizedPlayerEnergyText.m_TableEntryReference.m_KeyId
+      value: 14951636992
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143610521142718996, guid: b4097587fe2b40740b5248e03d2d8f8a, type: 3}
+      propertyPath: _localizedPlayerCurrencyText.m_TableEntryReference.m_KeyId
+      value: 169046171648
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143610521142718996, guid: b4097587fe2b40740b5248e03d2d8f8a, type: 3}
+      propertyPath: _localizedPlayerEnergyText.m_TableReference.m_TableCollectionName
+      value: GUID:a154439e615740f458fde3d67207e83a
+      objectReference: {fileID: 0}
+    - target: {fileID: 9143610521142718996, guid: b4097587fe2b40740b5248e03d2d8f8a, type: 3}
+      propertyPath: _localizedPlayerCurrencyText.m_TableReference.m_TableCollectionName
+      value: GUID:a154439e615740f458fde3d67207e83a
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

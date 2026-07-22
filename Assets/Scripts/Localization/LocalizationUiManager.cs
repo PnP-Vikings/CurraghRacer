@@ -6,7 +6,8 @@ public class LocalizationUiManager : MonoBehaviour
 {
    public Transform languageUiParent;
    public languageUiElement languageUiPrefab;
-
+  
+  
    private void OnEnable()
    {
       for (int i = 0; i < LocalizationSettings.AvailableLocales.Locales.Count; i++)

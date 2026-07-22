@@ -1,11 +1,13 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Localization.Settings;
 
 public class LocalizationManager : MonoBehaviour
 {
     public static LocalizationManager Instance { get; private set; }
     public bool isActive = false;
+    public UnityEvent OnLanguageChanged;
     private void Awake()
     {
         if (Instance == null)
@@ -43,5 +45,6 @@ public class LocalizationManager : MonoBehaviour
            Debug.LogWarning("No locale is currently selected.");
        }
        isActive = false;
+       OnLanguageChanged?.Invoke();
     }
 }
