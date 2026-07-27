@@ -121,7 +121,7 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance PowerMeter;
 
-    public EventInstance boxingEncouragement;
+    public EventInstance boxingEncouragementOnLastLife;
     public EventInstance boxingSuccessAfterFail;
 
     public EventInstance bodhran;
@@ -228,7 +228,7 @@ public class AudioManager : MonoBehaviour
 
                             // BOXING //
         punchBagAudio = RuntimeManager.CreateInstance("event:/Training/Punch Bag");
-        boxingEncouragement = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement");
+        boxingEncouragementOnLastLife = RuntimeManager.CreateInstance("event:/Boxing/Boxing Encouragement On Last Life");
         boxingSuccessAfterFail = RuntimeManager.CreateInstance("event:/Boxing/Boxing Success After Fail");
 
                             // MINIGAME NOTIFICATION //

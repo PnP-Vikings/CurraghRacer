@@ -39,6 +39,7 @@ public class BoxingAudio : MonoBehaviour
 
         if (AudioManager.instance != null)
         {
+            AudioManager.instance.boxingSuccessAfterFail.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.miniGameCompleteDialogue.start();
         }
 
@@ -49,16 +50,25 @@ public class BoxingAudio : MonoBehaviour
     public IEnumerator BoxingSuccessAfterFailIEnum()
     {
         AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
-        AudioManager.instance.boxingSuccessAfterFail.start();
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.boxingEncouragementOnLastLife.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.boxingSuccessAfterFail.start();
+        }
 
         yield return new WaitForSeconds(1.9f);
 
         AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
     }
-    public IEnumerator BoxingEncouragementIEnum()
+    public IEnumerator BoxingEncouragementOnLastLifeIEnum()
     {
         AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
-        AudioManager.instance.boxingEncouragement.start();
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.boxingEncouragementOnLastLife.start();
+        }
 
         yield return new WaitForSeconds(1.2f);
 
