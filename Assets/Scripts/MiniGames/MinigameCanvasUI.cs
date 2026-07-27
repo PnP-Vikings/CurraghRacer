@@ -144,7 +144,8 @@ public class MinigameCanvasUI : MonoBehaviour
 
                 if (lives == 1 & activeScene.name == "BoxingMiniGameScene")
                 {
-                    StartCoroutine(BoxingAudio.instance.BoxingEncouragementIEnum());
+                    Debug.Log("Boxing encouragement on last life called, Ambient encouragement is muted for 1.2s - AudioDebug");
+                    StartCoroutine(BoxingAudio.instance.BoxingEncouragementOnLastLifeIEnum());
                 }
             }
         }
