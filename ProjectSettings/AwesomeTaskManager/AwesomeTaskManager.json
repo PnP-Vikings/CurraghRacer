@@ -16,7 +16,7 @@
                             "colorLabel": 1,
                             "priority": 0,
                             "createdDate": "2026-06-03 22:56",
-                            "dueDate": "2026-07-22",
+                            "dueDate": "2026-08-10",
                             "archived": false,
                             "checklistItems": [
                                 "Add Calendar event",
@@ -153,6 +153,37 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
+                        },
+                        {
+                            "id": "c9f7cea9-355d-4289-a35b-f3533baaf03d",
+                            "title": "Import profile Pics",
+                            "description": "Add pictures for each main character ",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-27 21:03",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Update on scritable object",
+                                "Verify it works"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [],
+                            "isArchived": false
                         }
                     ]
                 },
@@ -165,7 +196,7 @@
                             "title": "Add Tutorial that player can play through on new game",
                             "description": "",
                             "category": "Feature",
-                            "colorLabel": 2,
+                            "colorLabel": 6,
                             "priority": 0,
                             "createdDate": "2026-06-03 23:00",
                             "dueDate": "2026-07-03",
@@ -788,7 +819,7 @@
                             "title": "Tasks for setup",
                             "description": "List of different tasks that should be on tutorial",
                             "category": "Feature",
-                            "colorLabel": 2,
+                            "colorLabel": 6,
                             "priority": 0,
                             "createdDate": "2026-06-04 22:36",
                             "dueDate": "2026-07-16",

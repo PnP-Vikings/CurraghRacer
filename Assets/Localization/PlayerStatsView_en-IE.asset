@@ -25,7 +25,7 @@ MonoBehaviour:
       m_Items:
       - rid: 1884926288220127368
   - m_Id: 169046171648
-    m_Localized: 'Player Currency: {0}'
+    m_Localized: "\u20AC{0}"
     m_Metadata:
       m_Items: []
   references:
