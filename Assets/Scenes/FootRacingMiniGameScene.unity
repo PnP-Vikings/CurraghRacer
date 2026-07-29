@@ -4503,6 +4503,7 @@ MonoBehaviour:
   bonusFlashText: {fileID: 0}
   warningText: {fileID: 0}
   multiplierText: {fileID: 0}
+  showRestartButtons: 0
   testDemoButtons: {fileID: 1450603467}
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}
@@ -4823,9 +4824,9 @@ GameObject:
   m_Component:
   - component: {fileID: 1512312958}
   - component: {fileID: 1512312957}
-  - component: {fileID: 1512312956}
   - component: {fileID: 1512312959}
   - component: {fileID: 1512312960}
+  - component: {fileID: 1512312961}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -4833,14 +4834,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1512312956
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1512312955}
-  m_Enabled: 1
 --- !u!20 &1512312957
 Camera:
   m_ObjectHideFlags: 0
@@ -4971,6 +4964,20 @@ MonoBehaviour:
   followZ: 1
   lookAtTarget: 1
   rotationSmoothSpeed: 0.267
+--- !u!114 &1512312961
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1512312955}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 1512312955}
 --- !u!1 &1560001510
 GameObject:
   m_ObjectHideFlags: 0

@@ -353,6 +353,7 @@ public class GameManager : MonoBehaviour
                 task.isTaskActive = false;
                 task.completed = true;
                 Debug.Log($"Completed tutorial task: {task.taskName}");
+                TutorialAudio.PlayTutorialTaskCompleteAudio();
                 CheckIfAllTasksAreCompleted();
                 ActivateNextTutorialTask();
                 onTaskModified?.Invoke();

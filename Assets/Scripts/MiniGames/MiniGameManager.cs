@@ -38,8 +38,9 @@ namespace MiniGames
         
         private bool showRestartButtonsInMiniGames= false;
         
-        
-        
+        public bool playerHasFailedMinigame = false;
+
+
         void Awake()
         {
             if (Instance == null)
@@ -436,6 +437,7 @@ namespace MiniGames
         public void PlayerFailedMiniGame()
         {
             Debug.Log("Player failed the mini game.");
+            playerHasFailedMinigame = true;
             
             // If we loaded a scene for this minigame, return to the main scene
             if (currentGame.CanLoadScene && !string.IsNullOrEmpty(currentGame.returnSceneName))
@@ -468,15 +470,9 @@ namespace MiniGames
                     else
                     {
                         PlayerStatsView.Instance.DisplayInfo($"No Stats have changed", 3);
-
                     }
-                  
-                  
                 }
-            }
-            
-           
-            
+            }  
         }
         
         private IEnumerator ReturnToMainSceneAfterDelay(float delay)
