@@ -116,16 +116,6 @@ public class TutorialTaskUiManager : MonoBehaviour
         foreach (TutorialTask tutorialTask in processedTasks)
         {
             Debug.Log($"Processed task: {tutorialTask.taskName}, Active: {tutorialTask.isTaskActive}, Completed: {tutorialTask.completed}");
-
-            // Play miniGameProgression sound whenever a tutorial task is completed & the active scene is the Garage
-
-            if (AudioManager.instance != null)
-            {
-                if(tutorialTask.completed == true)
-                {
-                    AudioManager.instance.miniGameProgression.start();
-                }
-            }
         }
         
         return processedTasks;
