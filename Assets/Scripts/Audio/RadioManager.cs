@@ -53,7 +53,7 @@ public class RadioManager : MonoBehaviour
 
         float randomNumber = Random.Range(5f, 6f);                          // A random number between the given numbers is assigned to the float 'randomNumber' (For Testing)
         //float randomNumber = Random.Range(85f, 190f);                     // A random number between the given numbers is assigned to the float 'randomNumber' (For actual Build)
-        Debug.Log("Song playing for " +  randomNumber + " Seconds - RadioDebug");
+        //Debug.Log("Song playing for " +  randomNumber + " Seconds - RadioDebug");
 
         yield return new WaitForSeconds(randomNumber);                      // Waits randomNumber seconds
 
