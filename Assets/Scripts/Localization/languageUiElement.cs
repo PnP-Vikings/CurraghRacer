@@ -15,6 +15,6 @@ public class languageUiElement : MonoBehaviour
     {
         if(LocalizationManager.Instance == null|| LocalizationSettings.AvailableLocales.Locales.Count == 0|| localeID >= LocalizationSettings.AvailableLocales.Locales.Count)  return;
         
-        LocalizationManager.Instance.ChangeLocale(localeID);
+            LocalizationManager.Instance.ChangeLocale(localeID);
     }
 }
