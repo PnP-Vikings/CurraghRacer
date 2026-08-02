@@ -151,7 +151,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{0365aab7-fffd-4776-b4ea-3b3c3d91befa}">
 		<property name="volume">
-			<value>-1</value>
+			<value>-2</value>
 		</property>
 		<property name="name">
 			<value>Cheering And Clapping</value>
@@ -177,9 +177,9 @@
 			<value>-3</value>
 		</property>
 		<relationship name="sounds">
-			<destination>{da732214-b62c-40a2-b89d-24bd398bac0a}</destination>
 			<destination>{ddb0602b-88c0-452a-87c3-a2cdc8bc6360}</destination>
 			<destination>{eed836c2-2fe5-4c9c-b498-c58858766119}</destination>
+			<destination>{6f2b9396-8891-4a6d-a51b-cefe51fe7b2d}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{0ec4d27f-d7c0-48bd-a9ee-8cb7b0e4693e}">
@@ -260,14 +260,6 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{f037f65b-0410-4854-a045-90f56ad936ea}" />
-	<object class="SingleSound" id="{da732214-b62c-40a2-b89d-24bd398bac0a}">
-		<property name="volume">
-			<value>1</value>
-		</property>
-		<relationship name="audioFile">
-			<destination>{5d4a5379-74e6-490a-9896-f098937e4d1b}</destination>
-		</relationship>
-	</object>
 	<object class="SingleSound" id="{ddb0602b-88c0-452a-87c3-a2cdc8bc6360}">
 		<property name="volume">
 			<value>1</value>
@@ -282,6 +274,11 @@
 		</property>
 		<relationship name="audioFile">
 			<destination>{b129df43-f22d-46d8-9a2f-6feb0a2f8f6d}</destination>
+		</relationship>
+	</object>
+	<object class="SingleSound" id="{6f2b9396-8891-4a6d-a51b-cefe51fe7b2d}">
+		<relationship name="audioFile">
+			<destination>{61f95673-32e0-4601-a25d-c8cf280d1561}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusEffectChain" id="{ee9ca8c3-a856-4b09-9cb8-41bf175673d7}">

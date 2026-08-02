@@ -53,7 +53,7 @@ public class RadioManager : MonoBehaviour
 
         float randomNumber = Random.Range(5f, 6f);                          // A random number between the given numbers is assigned to the float 'randomNumber' (For Testing)
         //float randomNumber = Random.Range(85f, 190f);                     // A random number between the given numbers is assigned to the float 'randomNumber' (For actual Build)
-        Debug.Log("Song playing for " +  randomNumber + " Seconds - RadioDebug");
+        //Debug.Log("Song playing for " +  randomNumber + " Seconds - RadioDebug");
 
         yield return new WaitForSeconds(randomNumber);                      // Waits randomNumber seconds
 
@@ -161,7 +161,7 @@ public class RadioManager : MonoBehaviour
                 // Story update 1 (Declan Kelly Returns)
                 if (!storyUpdateIntroHasPlayed && LeagueController.Instance.currentLeague.playerHasJoined == true)                              // checks if story update 1 has played and if it hasn't it plays it sets the boolean to true 
                 {
-                    Debug.Log("Player has accepted the league invite - AudioDebug");
+                    //Debug.Log("Player has accepted the league invite - AudioDebug");
                     AudioManager.instance.storyUpdateIntro.start();
                     storyUpdateIntroHasPlayed = true;
                 }
@@ -175,6 +175,9 @@ public class RadioManager : MonoBehaviour
                 {
                     if (RaceManager.Instance.hasJustWonRace == true)     // checks if the player has just won a race and if they have it plays story update 2 and sets the boolean to false
                     {
+                        Debug.Log("Place has won a race, overriding ads with story update - AudioDebug");
+                        StopAllAdOrNewsExceptStoryUpdates();
+
                         if (racesWon == 0)
                         {
                             AudioManager.instance.storyUpdateFirstRaceWon.start();
@@ -297,6 +300,18 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.storyUpdateFirstRaceLost.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.storyUpdateSecondRaceWon.stop(STOP_MODE.ALLOWFADEOUT);
 
+            AudioManager.instance.radioAdOrNews1.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.radioAdOrNews2.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.radioAdOrNews3.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.radioAdOrNews4.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.radioAdOrNews5.stop(STOP_MODE.ALLOWFADEOUT);
+        }
+    }
+    public void StopAllAdOrNewsExceptStoryUpdates()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.angelus.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews1.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews2.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews3.stop(STOP_MODE.ALLOWFADEOUT);
