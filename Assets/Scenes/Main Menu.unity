@@ -22112,6 +22112,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
   isActive: 0
+  OnLanguageChanged:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1028380334
 GameObject:
   m_ObjectHideFlags: 0
@@ -46607,8 +46610,24 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 2249783950224679588, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249783950224679588, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249783950224679588, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 393.19995
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249783950224679588, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_SizeDelta.y
       value: 137.8
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249783950224679588, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -375.90002
       objectReference: {fileID: 0}
     - target: {fileID: 2458522219529094221, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_SizeDelta.x
@@ -46791,6 +46810,14 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 4745016369526465014, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745016369526465014, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745016369526465014, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_SizeDelta.y
       value: 456.6
       objectReference: {fileID: 0}
@@ -46805,6 +46832,10 @@ PrefabInstance:
     - target: {fileID: 4745016369526465014, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4745016369526465014, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -375.90002
       objectReference: {fileID: 0}
     - target: {fileID: 4745016369526465014, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -46982,6 +47013,18 @@ PrefabInstance:
       propertyPath: m_fontSize
       value: 132.95
       objectReference: {fileID: 0}
+    - target: {fileID: 6471595564948695614, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6471595564948695614, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6471595564948695614, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -375.90002
+      objectReference: {fileID: 0}
     - target: {fileID: 7058761396590824417, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_IsActive
       value: 1
@@ -47103,8 +47146,24 @@ PrefabInstance:
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 8350100140892870239, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMax.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350100140892870239, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchorMin.x
+      value: 0.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350100140892870239, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_SizeDelta.x
+      value: 409.69995
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350100140892870239, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_SizeDelta.y
       value: 156.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 8350100140892870239, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -375.90002
       objectReference: {fileID: 0}
     - target: {fileID: 8389462758561188637, guid: b7834be28b3479248b924ede8ff43b31, type: 3}
       propertyPath: m_Name
