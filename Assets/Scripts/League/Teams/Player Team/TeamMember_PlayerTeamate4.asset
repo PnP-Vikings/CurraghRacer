@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: TeamMember_PlayerTeamate4
   m_EditorClassIdentifier: 
   memberName: Large Bottle Dunne
-  memberIcon: {fileID: 0}
+  memberIcon: {fileID: 21300000, guid: 57e14ff9aa6a50146a28a8480d421f5b, type: 3}
   memberPrefab: {fileID: 0}
   memberDescription: 
   age: 32

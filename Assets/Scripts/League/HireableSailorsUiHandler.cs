@@ -61,6 +61,7 @@ public string memberName,memberDescription,attitude;
         }
         else
         {
+            memberIconImage.sprite = null;
             Debug.LogWarning("Member icon is not set!");
         }
         hireableTeamMember = member;
@@ -85,7 +86,6 @@ public string memberName,memberDescription,attitude;
         if (memberIconImage.sprite != null)
         {
             memberIconImage.gameObject.SetActive(true);
-            memberIconImage.sprite = memberIconImage.sprite;
         }
         else
         {

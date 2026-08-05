@@ -13,16 +13,16 @@ MonoBehaviour:
   m_Name: TeamMember_PlayerTeamate3
   m_EditorClassIdentifier: 
   memberName: Tubs Delvin
-  memberIcon: {fileID: 0}
+  memberIcon: {fileID: 21300000, guid: 695c09059af45c2418c5e60842002d91, type: 3}
   memberPrefab: {fileID: 0}
   memberDescription: 
   age: 24
   attitude: 7
   characterStats:
-    strength: 5
-    stamina: 5
-    technique: 6
-    teamWork: 8
+    strength: 6
+    stamina: 7
+    technique: 5
+    teamWork: 5
   level: 1
   experience: 0
   xpToNextLevel: 100

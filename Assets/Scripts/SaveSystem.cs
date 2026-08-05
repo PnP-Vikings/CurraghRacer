@@ -160,6 +160,8 @@ public class TeamManagerSaveData
 public class TeamMemberSaveData
 {
     public string memberName;
+    public string memberDescription;
+    public string memberIconName;
     public int age;
     public string attitude;
     public CharacterStatsSaveData stats;
@@ -174,6 +176,8 @@ public class TeamMemberSaveData
     public TeamMemberSaveData(TeamMember member)
     {
         memberName = member.memberName;
+        memberDescription = member.memberDescription;
+        memberIconName = member.memberIcon != null ? member.memberIcon.name : string.Empty;
         age = member.age;
         attitude = member.attitude.ToString();
         stats = new CharacterStatsSaveData(member.characterStats);
@@ -313,8 +317,9 @@ public class TeamSaveData
 [System.Serializable]
 public class TeamMemberManagerSaveData : TeamMemberSaveData
 {
-  
- 
+    public TeamMemberManagerSaveData() { }
+
+    public TeamMemberManagerSaveData(TeamMember member) : base(member) { }
 }
   
 
@@ -1160,32 +1165,7 @@ public class SaveSystem : MonoBehaviour
             teamQuality = team.teamQuality,
             teamExperience = team.teamExperience,
             currentForm = team.currentForm,
-            teamManager =  team.teamManager != null ? new TeamMemberManagerSaveData() 
-            { 
-                memberName = team.teamManager.memberName,
-                age = team.teamManager.age,
-                attitude = team.teamManager.attitude.ToString(),
-                stats = new CharacterStatsSaveData(team.teamManager.characterStats),
-                level = team.teamManager.level,
-                experience = team.teamManager.experience,
-                racesAvailableFor = team.teamManager.racesAvailableFor,
-                fitnessStatus = team.teamManager.fitness != null ? new TeamMemberFitness
-                {
-                    currentFitness = team.teamManager.fitness.currentFitness,
-                    maxFitness = team.teamManager.fitness.maxFitness,
-                    recoveryRate = team.teamManager.fitness.recoveryRate,
-                    HungerLevel = team.teamManager.fitness.HungerLevel,
-                    maxHungerLevel = team.teamManager.fitness.maxHungerLevel,
-                    injuryStatus = team.teamManager.fitness.injuryStatus,
-                    currentPhysicalState = team.teamManager.fitness.currentPhysicalState
-                } : null,
-                happiness = team.teamManager.Happiness != null ? new Happiness
-                {
-                    currentHappiness = team.teamManager.Happiness.currentHappiness,
-                    maxHappiness = team.teamManager.Happiness.maxHappiness,
-                    currentMood = team.teamManager.Happiness.currentMood
-                } : null
-            } : null,
+            teamManager =  team.teamManager != null ? new TeamMemberManagerSaveData(team.teamManager) : null,
             bench =  team.bench != null ? new TeamMemberSaveData[team.bench.Count] : null,
             recentResults = new List<int>(team.recentResults),
             teamColor = new ColorSaveData(team.teamColor)
@@ -1233,6 +1213,8 @@ public class SaveSystem : MonoBehaviour
         }
 
         member.memberName = saveData.memberName;
+        member.memberDescription = saveData.memberDescription ?? string.Empty;
+        RestoreTeamMemberAssetReferences(member, saveData);
         member.age = saveData.age;
 
         if (!string.IsNullOrEmpty(saveData.attitude) && System.Enum.TryParse<Attitude>(saveData.attitude, out Attitude attitude))
@@ -1274,6 +1256,180 @@ public class SaveSystem : MonoBehaviour
                 currentMood = saveData.happiness.currentMood
             };
         }
+    }
+
+    private void RestoreTeamMemberAssetReferences(TeamMember member, TeamMemberSaveData saveData)
+    {
+        TeamMember templateMember = FindTeamMemberTemplate(saveData.memberName, saveData.memberIconName);
+        if (templateMember == null)
+        {
+            return;
+        }
+
+        member.memberIcon = templateMember.memberIcon;
+
+        if (member.memberPrefab == null)
+        {
+            member.memberPrefab = templateMember.memberPrefab;
+        }
+
+        if (string.IsNullOrEmpty(member.memberDescription))
+        {
+            member.memberDescription = templateMember.memberDescription;
+        }
+    }
+
+    private TeamMember FindTeamMemberTemplate(string memberName, string memberIconName)
+    {
+        if (string.IsNullOrEmpty(memberName))
+        {
+            return null;
+        }
+
+        TeamMember templateMember = FindTeamMemberTemplateInManagers(memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        if (LeagueController.Instance != null && LeagueController.Instance.leagues != null)
+        {
+            foreach (var league in LeagueController.Instance.leagues)
+            {
+                if (league == null || league.teams == null)
+                {
+                    continue;
+                }
+
+                foreach (var team in league.teams)
+                {
+                    templateMember = FindTeamMemberTemplateInTeam(team, memberName, memberIconName);
+                    if (templateMember != null)
+                    {
+                        return templateMember;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private TeamMember FindTeamMemberTemplateInManagers(string memberName, string memberIconName)
+    {
+        TeamMember templateMember;
+
+        if (PlayerManager.Instance != null)
+        {
+            templateMember = FindMatchingTeamMember(PlayerManager.Instance.team, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindTeamMemberTemplateInTeam(PlayerManager.Instance.playerTeam, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+        }
+
+        if (TeamManager.Instance != null)
+        {
+            templateMember = FindMatchingTeamMember(TeamManager.Instance.startingHireableRacers, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindMatchingTeamMember(TeamManager.Instance.activeCrewMembers, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindMatchingTeamMember(TeamManager.Instance.benchTeamMembers, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindTeamMemberTemplateInTeam(TeamManager.Instance.playerTeam, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindMatchingTeamMember(new[] { TeamManager.Instance.teamManager }, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+        }
+
+        return null;
+    }
+
+    private TeamMember FindTeamMemberTemplateInTeam(Team team, string memberName, string memberIconName)
+    {
+        if (team == null)
+        {
+            return null;
+        }
+
+        TeamMember templateMember = FindMatchingTeamMember(new[] { team.teamManager }, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        templateMember = FindMatchingTeamMember(team.teamMembers, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        templateMember = FindMatchingTeamMember(team.bench, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        templateMember = FindMatchingTeamMember(team.defaultTeamMembers, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        return FindMatchingTeamMember(team.defaultBench, memberName, memberIconName);
+    }
+
+    private TeamMember FindMatchingTeamMember(IEnumerable<TeamMember> members, string memberName, string memberIconName)
+    {
+        if (members == null)
+        {
+            return null;
+        }
+
+        TeamMember fallbackMatch = null;
+
+        foreach (var candidate in members)
+        {
+            if (candidate == null || !string.Equals(candidate.memberName, memberName, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (!string.IsNullOrEmpty(memberIconName) && candidate.memberIcon != null &&
+                string.Equals(candidate.memberIcon.name, memberIconName, StringComparison.Ordinal))
+            {
+                return candidate;
+            }
+
+            fallbackMatch ??= candidate;
+        }
+
+        return fallbackMatch;
     }
 
     private void RestoreLeaguesData(LeagueInfoSaveData[] leaguesData)

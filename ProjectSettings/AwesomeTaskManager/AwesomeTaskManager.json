@@ -153,37 +153,6 @@
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
-                        },
-                        {
-                            "id": "c9f7cea9-355d-4289-a35b-f3533baaf03d",
-                            "title": "Import profile Pics",
-                            "description": "Add pictures for each main character ",
-                            "category": "Art",
-                            "colorLabel": 2,
-                            "priority": 0,
-                            "createdDate": "2026-07-27 21:03",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Update on scritable object",
-                                "Verify it works"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [],
-                            "isArchived": false
                         }
                     ]
                 },
@@ -894,6 +863,37 @@
                             "checklistItems": [
                                 "Add Extra pop to ask player if theri sure",
                                 "test make sure it works"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "c9f7cea9-355d-4289-a35b-f3533baaf03d",
+                            "title": "Import profile Pics",
+                            "description": "Add pictures for each main character ",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-27 21:03",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Update on scritable object",
+                                "Verify it works"
                             ],
                             "checklistStates": [
                                 true,
