@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Calendar;
 using League;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
 
@@ -17,6 +18,11 @@ public class StartMenu : MonoBehaviour
     public bool isTooLateForActivities = false;
     public static StartMenu Instance { get; private set; }
 
+    [SerializeField] private string startRaceText="Start Race";
+    [SerializeField] private string practiceRaceText="Practice";
+    [SerializeField] private LocalizedString _localizedRaceText;
+    [SerializeField] private LocalizedString _localizedPracticeText;
+    
     public void Awake()
     {
         if (Instance == null)
@@ -47,10 +53,15 @@ public class StartMenu : MonoBehaviour
             _workButton.clicked += OnWorkButtonClicked;
             _sleepButton.clicked += OnSleepButtonClicked;
         }
+
+        TryGetLocalizedStrings();
+        
         UpdateRaceDayStatus();
         
         TimeManager.Instance.onNewDay.AddListener(UpdateRaceDayStatus); 
         LeagueController.Instance.onPlayerJoinedLeague.AddListener(UpdateRaceDayStatus);
+
+     
     }
     
     public enum RaceDayStatus
@@ -60,6 +71,27 @@ public class StartMenu : MonoBehaviour
         NotRaceDay
     }
 
+    public void TryGetLocalizedStrings()
+    {
+        if (!_localizedRaceText.IsEmpty)
+        {
+            startRaceText = _localizedRaceText.GetLocalizedString();
+        }
+        else
+        {
+            startRaceText = "Start Race";
+        }
+
+
+        if (!_localizedPracticeText.IsEmpty)
+        {
+            practiceRaceText = _localizedPracticeText.GetLocalizedString();
+        }
+        else
+        {
+            practiceRaceText = "Practice";
+        }
+    }
     public void UpdateRaceDayStatus()
     {
         if(LeagueController.Instance == null || RaceManager.Instance == null)
@@ -67,17 +99,18 @@ public class StartMenu : MonoBehaviour
 
         
         RaceDayStatus status = GetRaceDayStatus();
+        TryGetLocalizedStrings();
         switch (status)
         {
             case RaceDayStatus.CanRace:
                 if (startRaceButtonGarage != null && _startRaceButtonText != null)
                 {
                      startRaceButtonGarage.interactable = true;
-                    _startRaceButtonText.text = RaceManager.Instance.isRaceDay ? "Start Race" : "Practice";
+                    _startRaceButtonText.text = RaceManager.Instance.isRaceDay ? startRaceText : practiceRaceText;
                     break;
                 }
                 _startRaceButton.SetEnabled(true);
-                _startRaceButton.text = RaceManager.Instance.isRaceDay ? "Start Race" : "Practice";
+                _startRaceButton.text = RaceManager.Instance.isRaceDay ? startRaceText : practiceRaceText;
                 break;
             case RaceDayStatus.NotInLeague:
                 if (startRaceButtonGarage != null && _startRaceButtonText != null)
@@ -94,11 +127,11 @@ public class StartMenu : MonoBehaviour
                 if (startRaceButtonGarage != null && _startRaceButtonText != null)
                 {
                     startRaceButtonGarage.interactable = true;
-                    _startRaceButtonText.text = "Practice";
+                    _startRaceButtonText.text = practiceRaceText;
                     break;
                 }
                 _startRaceButton.SetEnabled(true);
-                _startRaceButton.text = "Practice";
+                _startRaceButton.text = practiceRaceText;
                 break;
         }
     }

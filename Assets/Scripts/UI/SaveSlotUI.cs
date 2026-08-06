@@ -2,6 +2,8 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System;
+using UnityEngine.Localization;
+using UnityEngine.Localization.Settings;
 
 public class SaveSlotUI : MonoBehaviour
 {
@@ -25,6 +27,10 @@ public class SaveSlotUI : MonoBehaviour
     private SaveSlotInfo slotInfo;
     private SaveMenuUI parentMenu;
 
+    [Header("Localization")]
+    [SerializeField] private LocalizedString _localizedEmptySlotText;
+
+    
     public void Initialize(int index, SaveSlotInfo info, SaveMenuUI menu)
     {
         slotIndex = index;
@@ -44,7 +50,11 @@ public class SaveSlotUI : MonoBehaviour
             startNewGameSaveButton.onClick.AddListener(OnStartNewGameSaveClicked);
             
     }
-    
+
+    private void OnEnable()
+    {
+        RefreshDisplay();
+    }
     public void RefreshDisplay()
     {
         // Update slot index display
@@ -93,9 +103,18 @@ public class SaveSlotUI : MonoBehaviour
         // Display save date
         if (saveDateText != null)
         {
-            if (DateTime.TryParse(saveData.saveDate, out DateTime saveDate))
+            /*if (DateTime.TryParse(saveData.saveDate, out DateTime saveDate))
             {
                 saveDateText.text = saveDate.ToString("MMM dd, yyyy HH:mm");
+            }
+            else
+            {
+                saveDateText.text = "Unknown Date";
+            }*/
+            if (DateTime.TryParse(saveData.saveDate, out DateTime saveDate))
+            {
+                var culture = LocalizationSettings.SelectedLocale?.Identifier.CultureInfo;
+                saveDateText.text = saveDate.ToString("g", culture); // localized short date+time
             }
             else
             {
@@ -126,10 +145,20 @@ public class SaveSlotUI : MonoBehaviour
         }
     }
     
+    
+    
+    
     private void ClearDisplay()
     {
         if (saveNameText != null)
-            saveNameText.text = "Empty Slot";
+            if (!_localizedEmptySlotText.IsEmpty)
+            {
+                saveNameText.text = _localizedEmptySlotText.GetLocalizedString();
+            }
+            else
+            {
+                saveNameText.text = "Empty Slot";
+            }
         if (saveDateText != null)
             saveDateText.text = "";
         if (playTimeText != null)

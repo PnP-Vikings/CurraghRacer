@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
@@ -34,6 +35,48 @@ public class SaveMenuUI : MonoBehaviour
         Initialize();
     }
     
+    
+    private void OnEnable()
+    {
+        Initialize();
+    }
+    private void OnDisable()
+    {
+        if (quickSaveButton != null)
+        {
+            quickSaveButton.onClick.RemoveListener(QuickSave);
+            quickSaveButton.interactable = SaveSystem.Instance != null && SaveSystem.Instance.WasLoadedFromSave || SaveSystem.Instance.IsNewGame;
+        }
+        if (quickLoadButton != null)
+            quickLoadButton.onClick.RemoveListener(QuickLoad);
+        if (autoSaveButton != null)
+            autoSaveButton.onClick.RemoveListener(AutoSave);
+        if (closeButton != null)
+            closeButton.onClick.RemoveListener(CloseMenu);
+        
+        if(newGamePlayTutorialButton != null)
+        {
+            newGamePlayTutorialButton.onClick.RemoveListener(() => NewGameStart(true));        
+        }
+
+        if (newGameDontPlayTutorialButton != null)
+        {
+            newGameDontPlayTutorialButton.onClick.RemoveListener(() => NewGameStart(false));
+        }
+        
+        // Setup confirmation dialog
+        if (confirmYesButton != null)
+            confirmYesButton.onClick.RemoveListener(ConfirmAction);
+        if (confirmNoButton != null)
+            confirmNoButton.onClick.RemoveListener(CancelConfirmation);
+        
+        // Hide UI elements
+        if (messagePanel != null)
+            messagePanel.SetActive(false);
+        if (confirmationDialog != null)
+            confirmationDialog.SetActive(false);
+    }
+    
     private void Initialize()
     {
         // Setup button events
@@ -48,38 +91,7 @@ public class SaveMenuUI : MonoBehaviour
             autoSaveButton.onClick.AddListener(AutoSave);
         if (closeButton != null)
             closeButton.onClick.AddListener(CloseMenu);
-
-        /*if (newGameButton != null)
-        {
-            /#1#/ Check if player has saves to show/hide New Game button
-            if (!SaveSystem.Instance.HasAnySaves())
-            {
-                newGameButton.gameObject.SetActive(true);
-            }
-            else
-            {
-                newGameButton.gameObject.SetActive(false);
-            }#1#
-            
-            newGameButton.onClick.AddListener(() => {
-                if (SaveSystem.Instance.NewGame("My First Game"))
-                {
-                    // New game started successfully
-                    // Maybe show a success message or transition to game
-                    Debug.Log("New game started!");
-                    if (GameManager.Instance != null)
-                    {
-                        GameManager.Instance.ResetForNewGame();
-                    }
-                }
-                else
-                {
-                    // Handle error
-                    Debug.LogError("Failed to start new game");
-                }
-            });
-
-        }*/
+        
         if(newGamePlayTutorialButton != null)
         {
             newGamePlayTutorialButton.onClick.AddListener(() => NewGameStart(true));        
@@ -196,9 +208,7 @@ public class SaveMenuUI : MonoBehaviour
             quickLoadButton.interactable = hasQuickSave || hasAutoSave;
         }
     }
-    
-    
-    
+
     public void QuickSave()
     {
         if (SaveSystem.Instance.SaveGame(quickSaveSlot, "Quick Save"))
