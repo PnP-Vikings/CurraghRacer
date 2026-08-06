@@ -24,6 +24,7 @@ public class SaveMenuUI : MonoBehaviour
     public Button confirmYesButton;
     public Button confirmNoButton;
     
+    public MoreSavesTutorialPrompt moreSavesTutorialPrompt;
     
     [Header("Settings")]
     public int quickSaveSlot = 0; // Slot 0 reserved for quick save

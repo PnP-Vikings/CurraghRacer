@@ -22,6 +22,8 @@ public class SaveSlotUI : MonoBehaviour
     public GameObject emptySlotIndicator;
     public GameObject filledSlotContainer;
     public TMP_InputField saveNameInputField;
+    public MoreSavesTutorialPrompt moreSavesTutorialPrompt;
+    
     
     [Header("Slot Data")]
     public int slotIndex;
@@ -55,6 +57,8 @@ public class SaveSlotUI : MonoBehaviour
         slotIndex = index;
         slotInfo = info;
         parentMenu = menu;
+        if(menu != null&& menu.moreSavesTutorialPrompt != null)
+            moreSavesTutorialPrompt = menu.moreSavesTutorialPrompt;
         
         RefreshDisplay();
         
@@ -70,6 +74,8 @@ public class SaveSlotUI : MonoBehaviour
             
     }
 
+    
+    
     private void OnEnable()
     {
         RefreshDisplay();
@@ -364,7 +370,15 @@ public class SaveSlotUI : MonoBehaviour
     
     private void OnStartNewGameSaveClicked()
     {
-        if(saveNameInputField !=null && !string.IsNullOrEmpty(saveNameInputField.text))
+        
+        if(moreSavesTutorialPrompt != null)
+        {
+            moreSavesTutorialPrompt.gameObject.SetActive(true);
+            moreSavesTutorialPrompt.SetPreferredSaveSlot(slotIndex+1);
+            moreSavesTutorialPrompt.SetSaveName(saveNameInputField != null ? saveNameInputField.text : "");
+        }
+        
+        /*if(saveNameInputField !=null && !string.IsNullOrEmpty(saveNameInputField.text))
         {
             if (SaveSystem.Instance.NewGame(saveNameInputField.text, slotIndex + 1))
             {
@@ -395,7 +409,7 @@ public class SaveSlotUI : MonoBehaviour
             {
                 Debug.LogError("Failed to start a new game in the selected slot.");
             }
-        }
+        }*/
        
     }
     

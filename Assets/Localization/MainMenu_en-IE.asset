@@ -248,6 +248,18 @@ MonoBehaviour:
     m_Localized: My First Game
     m_Metadata:
       m_Items: []
+  - m_Id: 7801043076243456
+    m_Localized: Quick Save failed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801012331995136
+    m_Localized: Quick Save completed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7800900667039744
+    m_Localized: Quick Save
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

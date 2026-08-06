@@ -250,6 +250,18 @@ MonoBehaviour:
     m_Localized: "Mo Ch\xE9ad Chluiche"
     m_Metadata:
       m_Items: []
+  - m_Id: 7800900667039744
+    m_Localized: "S\xE1bh\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801012331995136
+    m_Localized: "S\xE1bh\xE1il Thapa curtha i gcr\xEDch!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801043076243456
+    m_Localized: "Theip ar an S\xE1bh\xE1il Thapa!"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

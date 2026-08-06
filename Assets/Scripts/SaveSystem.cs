@@ -1675,7 +1675,7 @@ public class SaveSystem : MonoBehaviour
     /// <summary>
     /// Start a new game with fresh data
     /// </summary>
-    public bool NewGame(string saveName = "New Game")
+    public bool NewGame(string saveName = "New Game",int preferredSlot = 0)
     {
         try
         {
@@ -1716,8 +1716,23 @@ public class SaveSystem : MonoBehaviour
                 SaveData newGameData = CreateFreshSaveData(saveName);
                 ApplySaveData(newGameData);
                 
+                if(preferredSlot < 0 || preferredSlot >= maxSaveSlots)
+                {
+                    Debug.LogWarning($"Preferred slot {preferredSlot} is invalid. Using first available slot instead.");
+                    preferredSlot = -1; // Mark as invalid to find first available
+                }
+                
                 // Save to the first available slot
-                int availableSlot = FindFirstAvailableSlot();
+                int availableSlot = 0;
+                
+                if(preferredSlot >= 0 && preferredSlot < maxSaveSlots)
+                {
+                    availableSlot = preferredSlot;
+                }
+                else
+                {
+                    availableSlot = FindFirstAvailableSlot();
+                }
                 if (availableSlot == -1)
                 {
                     // If no slots are available, use slot 0
@@ -1736,105 +1751,6 @@ public class SaveSystem : MonoBehaviour
                 {
                     Debug.LogError("Failed to save new game data");
                     return false;
-                }
-            }
-            else
-            {
-                // We're in main menu, defer initialization and save until after scene loads
-                Debug.Log("NewGame called from main menu - deferring save until game scene loads");
-                return true;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to start new game: {e.Message}");
-            return false;
-        }
-    }
-    
-    public bool NewGame(string saveName = "New Game", int preferredSlot = 0)
-    {
-        if (preferredSlot < 0)
-            throw new ArgumentOutOfRangeException(nameof(preferredSlot));
-        try
-        {
-            // Set flag to false for fresh game
-            _wasLoadedFromSave = false;
-            _isNewGame = true;
-            
-            // Store the save name for when we do the initial save after scene loads
-            _pendingNewGameSaveName = saveName;
-            
-            // Initialize fresh game state only if managers exist (we're already in game scene)
-            // Otherwise, initialization will happen after scene loads via OnSceneLoaded
-            bool managersExist = LeagueController.Instance != null && 
-                                 PlayerManager.Instance != null && 
-                                 GameManager.Instance != null;
-            
-            if (managersExist)
-            {
-                InitializeNewGameState();
-                
-                // Save to the first available slot
-                if (preferredSlot == 0)
-                {
-                    int availableSlot = FindFirstAvailableSlot();
-                    if (availableSlot == -1)
-                    {
-                        // If no slots are available, use slot 0
-                        availableSlot = 0;
-                    }
-
-
-                    // Create and save new game data
-                    SaveData newGameData = CreateFreshSaveData(saveName);
-                    ApplySaveData(newGameData);
-
-                    // Save the new game
-                    bool saveSuccess = SaveGame(availableSlot, saveName);
-
-                    if (saveSuccess)
-                    {
-                        Debug.Log($"New game started successfully in slot {availableSlot}");
-                        _pendingNewGameSaveName = null;
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to save new game data");
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (preferredSlot >= maxSaveSlots)
-                    {
-                        Debug.LogError($"Invalid preferred slot index: {preferredSlot}. Must be between 0 and {maxSaveSlots - 1}");
-                        return false;
-                    }
-                    
-                    // NOTE: Do NOT call ClearLeague() or RegenerateRaceSchedule() here!
-                    // These are already handled in InitializeNewGameState() at the start of this method.
-                    // Calling them here would wipe team stats after they've been initialized!
-
-                    // Create and save new game data
-                    SaveData newGameData = CreateFreshSaveData(saveName);
-                    ApplySaveData(newGameData);
-
-                    // Save the new game
-                    bool saveSuccess = SaveGame(preferredSlot, saveName);
-
-                    if (saveSuccess)
-                    {
-                        Debug.Log($"New game started successfully in preferred slot {preferredSlot}");
-                        _pendingNewGameSaveName = null;
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to save new game data");
-                        return false;
-                    }
                 }
             }
             else

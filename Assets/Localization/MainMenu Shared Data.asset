@@ -244,6 +244,18 @@ MonoBehaviour:
     m_Key: mainMenu.Settings.NewGameStartName
     m_Metadata:
       m_Items: []
+  - m_Id: 7800900667039744
+    m_Key: mainMenu.Settings.QuickSave.SaveName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801012331995136
+    m_Key: mainMenu.Settings.QuickSave.SaveCompleted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801043076243456
+    m_Key: mainMenu.Settings.QuickSave.SaveFailed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
