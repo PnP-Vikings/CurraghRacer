@@ -13,10 +13,29 @@ MonoBehaviour:
   m_Name: CardBuyPint
   m_EditorClassIdentifier: 
   cardTitle: Buy your team a round
+  _localizedCardTitleText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 4011775221760
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   cardDescription: Buy your team a round - This will affect your entire team
+  _localizedCardDescriptionText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 4151797866496
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   cardImage: {fileID: 0}
   category: 1
-  minDayToAppear: 1
+  isFollowUpOnly: 0
+  minDayToAppear: 5
   canRepeat: 1
   cooldownDays: 3
   targetsSpecificMember: 0
@@ -24,7 +43,25 @@ MonoBehaviour:
   requiredAttitudes: 
   optionA:
     optionText: Spend 20 On Buying The lads a round may improve team morale
+    _localizedOptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 4335537741824
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     optionDescription: 
+    _localizedOptionDescriptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 4379938643968
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     coinsChange: -20
     energyChange: 0
     moraleChange: 20
@@ -40,6 +77,15 @@ MonoBehaviour:
     successChance: 50
     successOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -59,6 +105,15 @@ MonoBehaviour:
       followUpChance: 100
     failureOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -84,7 +139,25 @@ MonoBehaviour:
     followUpChance: 100
   optionB:
     optionText: Save the Coins but moral may lower
+    _localizedOptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 4464630030336
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     optionDescription: 
+    _localizedOptionDescriptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 4538378477568
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     coinsChange: 0
     energyChange: 0
     moraleChange: -15
@@ -100,6 +173,15 @@ MonoBehaviour:
     successChance: 50
     successOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -119,6 +201,15 @@ MonoBehaviour:
       followUpChance: 100
     failureOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -142,4 +233,7 @@ MonoBehaviour:
     followUpCard: {fileID: 0}
     daysUntilFollowUp: 1
     followUpChance: 100
-  appearanceWeight: 50
+  appearanceWeight: 34
+  references:
+    version: 2
+    RefIds: []

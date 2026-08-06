@@ -13,10 +13,29 @@ MonoBehaviour:
   m_Name: CardThirstyRacer
   m_EditorClassIdentifier: 
   cardTitle: 'Thirsty Racer '
+  _localizedCardTitleText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 7225027321856
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   cardDescription: Hey Boss I feel I bit thirsty can I borrow a few coins to go buy
     something
+  _localizedCardDescriptionText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 7346154627072
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   cardImage: {fileID: 0}
   category: 1
+  isFollowUpOnly: 0
   minDayToAppear: 1
   canRepeat: 1
   cooldownDays: 7
@@ -25,11 +44,30 @@ MonoBehaviour:
   requiredAttitudes: 
   optionA:
     optionText: Spend 20 On Buying a drink may improve team mates morale
+    _localizedOptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 7412827283456
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     optionDescription: 
+    _localizedOptionDescriptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 7460994670592
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     coinsChange: -20
     energyChange: 0
     moraleChange: 0
     happinessChange: 12
+    timeLost: 0
     affectsStats: 0
     statChanges:
       strength: 0
@@ -40,11 +78,21 @@ MonoBehaviour:
     successChance: 50
     successOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -52,13 +100,27 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     failureOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -66,17 +128,42 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     affectsAvailability: 0
     daysUnavailable: 0
+    hasFollowUp: 0
     followUpCard: {fileID: 0}
     daysUntilFollowUp: 1
+    followUpChance: 100
   optionB:
     optionText: Save the Coins but may lower Happiness
+    _localizedOptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 7515906498560
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     optionDescription: 
+    _localizedOptionDescriptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 7542154452992
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     coinsChange: 0
     energyChange: 0
     moraleChange: 0
     happinessChange: -10
+    timeLost: 0
     affectsStats: 0
     statChanges:
       strength: 0
@@ -87,11 +174,21 @@ MonoBehaviour:
     successChance: 50
     successOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -99,13 +196,27 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     failureOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
       happinessChange: 0
       experienceChange: 0
+      timeLost: 0
       injuryChance: 0
       injuryDays: 0
       statChanges:
@@ -113,8 +224,17 @@ MonoBehaviour:
         stamina: 0
         technique: 0
         teamWork: 0
+      hasFollowUp: 0
+      followUpCard: {fileID: 0}
+      daysUntilFollowUp: 1
+      followUpChance: 100
     affectsAvailability: 0
     daysUnavailable: 0
+    hasFollowUp: 0
     followUpCard: {fileID: 0}
     daysUntilFollowUp: 1
-  appearanceWeight: 50
+    followUpChance: 100
+  appearanceWeight: 36
+  references:
+    version: 2
+    RefIds: []

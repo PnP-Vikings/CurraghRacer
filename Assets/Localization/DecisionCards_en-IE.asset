@@ -1,0 +1,91 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: DecisionCards_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: b2ee0c25f3b58ff41a135fa739ae672c, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162748853529608283
+  m_TableData:
+  - m_Id: 49693057024
+    m_Localized: 'Affected: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608283
+  - m_Id: 4379938643968
+    m_Localized: 
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4335537741824
+    m_Localized: Spend 20 On Buying The lads a round may improve team morale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4011775221760
+    m_Localized: Buy your team a round
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4151797866496
+    m_Localized: Buy your team a round - This will affect your entire team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4464630030336
+    m_Localized: Save the Coins but moral may lower
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7225027321856
+    m_Localized: 'Thirsty Racer '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7346154627072
+    m_Localized: Hey Boss I feel I bit thirsty can I borrow a few coins to go buy
+      something
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7412827283456
+    m_Localized: "Spend \u20AC20 On Buying a drink may improve team mates morale"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7515906498560
+    m_Localized: Save the Coins but may lower Happiness
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8654681006080
+    m_Localized: Crazy Night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8735752708096
+    m_Localized: 'You and the team had a crazy night
+
+      and accidentally slept
+      in Lost 2 hours of the day  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8793608937472
+    m_Localized: 'Late Start to the day '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8896407134208
+    m_Localized: Late Start to the day
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748853529608283
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 49693057024

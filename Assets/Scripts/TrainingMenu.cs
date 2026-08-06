@@ -265,7 +265,7 @@ public class TrainingMenu : MonoBehaviour
         // Check if the player has enough currency WITHOUT deducting yet
         if (PlayerManager.Instance.GetPlayerCoins() < currencyCost)
         {
-            PlayerStatsView.Instance.DisplayInfo($"You must have at least {currencyCost} Currency to train", 3);
+            PlayerStatsView.Instance.DisplayInfo($"You must have at least €{currencyCost} Currency to train", 3);
             return false;
         }
 

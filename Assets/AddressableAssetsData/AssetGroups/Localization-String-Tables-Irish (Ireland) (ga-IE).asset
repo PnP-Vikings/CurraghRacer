@@ -36,6 +36,12 @@ MonoBehaviour:
     - Locale-ga-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c31d37139191dac49a369ae8c81f736f
+    m_Address: DecisionCards_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 35a8a1f60e0679743a65d48dd1db6fec, type: 2}
   m_SchemaSet:

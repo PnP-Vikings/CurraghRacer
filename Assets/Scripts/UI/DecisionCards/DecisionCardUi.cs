@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
@@ -23,6 +24,8 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
     public TMPro.TMP_Text cardTitleText, cardDescriptionText, affectedMemberText;
     public TMPro.TMP_Text acceptText, rejectText;
     public Image  cardImage;  
+    
+    [SerializeField] private LocalizedString _localizedAffectedText;
     
     private void Awake()
     {
@@ -71,12 +74,37 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         // Set card visuals
         if (card.cardImage != null && cardImage != null)
             cardImage.sprite = card.cardImage;
-        
+
         if (cardTitleText != null)
-            cardTitleText.text = card.cardTitle;
-        
+        {
+            if(card._localizedCardTitleText != null && !card._localizedCardTitleText.IsEmpty)
+            {
+                cardTitleText.text = card._localizedCardTitleText.GetLocalizedString();
+            }
+            else
+            {
+                if(card.cardTitle == null || card.cardTitle == "")
+                {
+                    cardTitleText.text = "No Title";
+                }
+                else
+                    cardTitleText.text = card.cardTitle;
+            }
+        }
+
         // Format description with target member name if applicable
-        string description = card.cardDescription;
+        string description ="";
+        if(card._localizedCardDescriptionText != null && !card._localizedCardDescriptionText.IsEmpty)
+        {
+            description = card._localizedCardDescriptionText.GetLocalizedString();
+        }
+        else
+        {
+            if(card.cardDescription == null || card.cardDescription == "")
+                description = "No Description";
+            else
+                description = card.cardDescription;
+        }
         if (targetMember != null && description.Contains("{member}"))
         {
             description = description.Replace("{member}", targetMember.memberName);
@@ -87,17 +115,45 @@ public class DecisionCardUi : MonoBehaviour, IBeginDragHandler, IDragHandler, IE
         
         // Set option text
         if (acceptText != null)
-            acceptText.text = card.optionA.optionText;
-        
+        {
+            if(card.optionA._localizedOptionText != null && !card.optionA._localizedOptionText.IsEmpty)
+            {
+                acceptText.text = card.optionA._localizedOptionText.GetLocalizedString();
+            }
+            else
+            {
+                acceptText.text = card.optionA.optionText;
+            }
+        }
         if (rejectText != null)
-            rejectText.text = card.optionB.optionText;
+        {
+            if(card.optionB._localizedOptionText != null && !card.optionB._localizedOptionText.IsEmpty)
+            {
+                rejectText.text = card.optionB._localizedOptionText.GetLocalizedString();
+            }
+            else
+            {
+                rejectText.text = card.optionB.optionText;
+            }
+        }
         
         // Show affected member name if applicable
         if (affectedMemberText != null)
         {
             if (targetMember != null)
             {
-                affectedMemberText.text = $"Affected: {targetMember.memberName}";
+                if (_localizedAffectedText != null && !_localizedAffectedText.IsEmpty)
+                {
+                    _localizedAffectedText.Arguments = new object[] { targetMember.memberName };
+                    _localizedAffectedText.Arguments[0] = targetMember.memberName;
+                    _localizedAffectedText.RefreshString();
+                    affectedMemberText.text = _localizedAffectedText.GetLocalizedString();
+                 //   affectedMemberText.text = string.Format(_localizedAffectedText.GetLocalizedString(), targetMember.memberName);
+                }
+                else
+                {
+                    affectedMemberText.text = $"Affected: {targetMember.memberName}";
+                }
                 affectedMemberText.gameObject.SetActive(true);
             }
             else
