@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en-IE
   m_SharedData: {fileID: 11400000, guid: 8bde466f21db9854694374d161ec0da5, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 7162748853529608337
   m_TableData:
   - m_Id: 73827082240
     m_Localized: Start
@@ -98,6 +99,185 @@ MonoBehaviour:
     m_Localized: Back
     m_Metadata:
       m_Items: []
+  - m_Id: 7714296816459776
+    m_Localized: Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7714399853731840
+    m_Localized: Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7714425342517248
+    m_Localized: Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7716435366240256
+    m_Localized: Start New Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7717869742710784
+    m_Localized: Empty Slot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761110517145600
+    m_Localized: 'Energy: {0} | Coins: {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7766868004691968
+    m_Localized: 'Play Time: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7768319942713344
+    m_Localized: No League
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768491712045056
+    m_Localized: Joined
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768549937373184
+    m_Localized: Not Joined
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7771482737336320
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7772362203193344
+    m_Localized: Slot {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7774098930262016
+    m_Localized: Save {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7774794698186752
+    m_Localized: Game saved to Slot {0}!
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7774864407519232
+    m_Localized: Failed to save game to Slot {0}!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7781732924252160
+    m_Localized: Save system not available.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7781831536533504
+    m_Localized: No save file exists in Slot {0}.
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7781915141595136
+    m_Localized: Game loaded from Slot {0}!
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7782025854443520
+    m_Localized: Failed to load game from Slot {0}!
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7783017719259136
+    m_Localized: Are you sure you want to delete Save Slot {0}?
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7783306685833216
+    m_Localized: Save Slot {0} deleted!
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7783423652388864
+    m_Localized: Failed to delete Save Slot {0}!
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7789636599406592
+    m_Localized: Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7789710641455104
+    m_Localized: No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7792535282900992
+    m_Localized: No valid save previews available to quick load.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7793325091315712
+    m_Localized: Quick Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7794003419324416
+    m_Localized: Auto Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7795423262531584
+    m_Localized: '{0} loaded successfully!'
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7795510986399744
+    m_Localized: Failed to load {0}!
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608337
+  - m_Id: 7795640833662976
+    m_Localized: No save files found to load!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796225347674112
+    m_Localized: Auto Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796324119339008
+    m_Localized: Auto Save completed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796388971667456
+    m_Localized: Auto Save failed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796848780632064
+    m_Localized: My First Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801043076243456
+    m_Localized: Quick Save failed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801012331995136
+    m_Localized: Quick Save completed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7800900667039744
+    m_Localized: Quick Save
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162748853529608337
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 7766868004691968
+        - id: 7761110517145600
+        - id: 7772362203193344
+        - id: 7781831536533504
+        - id: 7781915141595136
+        - id: 7774794698186752
+        - id: 7774098930262016
+        - id: 7782025854443520
+        - id: 7783017719259136
+        - id: 7783306685833216
+        - id: 7783423652388864
+        - id: 7795510986399744
+        - id: 7795423262531584

@@ -103,6 +103,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -235,12 +236,25 @@ MonoBehaviour:
   rotationStrength: 0.3
   swipeSpeed: 5
   decisionCardUiMaster: {fileID: 0}
+  maxRotation: 30
   cardTitleText: {fileID: 2579489671305015102}
   cardDescriptionText: {fileID: 2651939789455283631}
   affectedMemberText: {fileID: 698370800132439736}
   acceptText: {fileID: 7615262528476029115}
   rejectText: {fileID: 5698267633027294925}
   cardImage: {fileID: 1357159382931374618}
+  _localizedAffectedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 49693057024
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &380163020378545069
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -448,6 +462,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -596,6 +611,7 @@ MonoBehaviour:
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -732,6 +748,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0
@@ -868,6 +885,7 @@ MonoBehaviour:
   m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
+  m_characterHorizontalScale: 1
   m_wordSpacing: 0
   m_lineSpacing: 0
   m_lineSpacingMax: 0

@@ -23,10 +23,11 @@ public class BenchTeamMemberUiHandler : MonoBehaviour
     }
     public void SetMemberData(TeamMember member)
     {
+        memberIconImage.sprite = member != null ? member.memberIcon : null;
+
         if (memberIconImage.sprite != null)
         {
             memberIconImage.gameObject.SetActive(true);
-            memberIconImage.sprite = memberIconImage.sprite;
         }
         else
         {

@@ -1,0 +1,112 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: DecisionCards Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: DecisionCards
+  m_TableCollectionNameGuidString: b2ee0c25f3b58ff41a135fa739ae672c
+  m_Entries:
+  - m_Id: 49693057024
+    m_Key: CardPrefab.AffectedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4011775221760
+    m_Key: DecisionCard.Buyyourteamaround.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4151797866496
+    m_Key: DecisionCard.Buyyourteamaround.Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4335537741824
+    m_Key: 'DecisionCard.Buyyourteamaround.OptionA.Title
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4379938643968
+    m_Key: 'DecisionCard.Buyyourteamaround.OptionA.Description
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4464630030336
+    m_Key: 'DecisionCard.Buyyourteamaround.OptionB.Title
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4538378477568
+    m_Key: 'DecisionCard.Buyyourteamaround.OptionB.Description
+
+'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7225027321856
+    m_Key: DecisionCard.ThirstyRacer.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7346154627072
+    m_Key: DecisionCard.ThirstyRacer.Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7412827283456
+    m_Key: DecisionCard.ThirstyRacer.OptionA.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7460994670592
+    m_Key: DecisionCard.ThirstyRacer.OptionA.Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7515906498560
+    m_Key: DecisionCard.ThirstyRacer.OptionB.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7542154452992
+    m_Key: DecisionCard.ThirstyRacer.OptionB.Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8654681006080
+    m_Key: DecisionCard.CrazyNight.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8735752708096
+    m_Key: DecisionCard.CrazyNight.Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8793608937472
+    m_Key: DecisionCard.CrazyNight.OptionA.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8831424782336
+    m_Key: DecisionCard.CrazyNight.OptionA.Description
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8896407134208
+    m_Key: DecisionCard.CrazyNight.OptionB.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8920545353728
+    m_Key: DecisionCard.CrazyNight.OptionB.Description
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7162748853529608277
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748853529608277
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1786013026545

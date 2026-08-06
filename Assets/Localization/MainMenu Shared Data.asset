@@ -108,6 +108,154 @@ MonoBehaviour:
     m_Key: mainMenu.Settings.LanguagesMenu.Back
     m_Metadata:
       m_Items: []
+  - m_Id: 7714296816459776
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7714399853731840
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.Load
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7714425342517248
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.Delete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7716435366240256
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.StartNewGame
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7717869742710784
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.EmptySlot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761110517145600
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.PlayerEnergy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7766868004691968
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.PlayTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768319942713344
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.NoLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768491712045056
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.JoinedLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768549937373184
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.NotJoinedLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7771482737336320
+    m_Key: mainMenu.Settings.SaveSlotUi.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7772362203193344
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.SlotIndex
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7774098930262016
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnSaveClicked.DefaultSaveName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7774794698186752
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnSaveClicked.OnGameSaved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7774864407519232
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnSaveClicked.OnGameSavedFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7781732924252160
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnLoadClicked.SaveSystemNotAvailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7781831536533504
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnLoadClicked.NoSaveExists
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7781915141595136
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnLoadClicked.GameLoaded
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7782025854443520
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnLoadClicked.GameFailedLoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7783017719259136
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnDeleteClicked.AreYouSureDeleteMsg
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7783306685833216
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnDeleteClicked.SaveDeleted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7783423652388864
+    m_Key: mainMenu.Settings.SaveSlotUiPrefab.OnDeleteClicked.SaveDeleteFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7789636599406592
+    m_Key: mainMenu.Settings.SaveSlotUi.DeleteConfirmation.Yes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7789710641455104
+    m_Key: mainMenu.Settings.SaveSlotUi.DeleteConfirmation.No
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7792535282900992
+    m_Key: mainMenu.Settings.QuickLoad.NoValidSaveToQuickLoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7793325091315712
+    m_Key: mainMenu.Settings.QuickLoad.QuickSaveTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7794003419324416
+    m_Key: mainMenu.Settings.QuickLoad.AutoSaveTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7795423262531584
+    m_Key: mainMenu.Settings.QuickLoad.LoadedSuccessfully
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7795510986399744
+    m_Key: mainMenu.Settings.QuickLoad.FailedToLoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7795640833662976
+    m_Key: mainMenu.Settings.QuickLoad.NoSaveFilesToLoad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796225347674112
+    m_Key: mainMenu.Settings.AutoSave.SaveName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796324119339008
+    m_Key: mainMenu.Settings.AutoSave.AutoSaveCompleted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796388971667456
+    m_Key: mainMenu.Settings.AutoSave.AutoSaveFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796848780632064
+    m_Key: mainMenu.Settings.NewGameStartName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7800900667039744
+    m_Key: mainMenu.Settings.QuickSave.SaveName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801012331995136
+    m_Key: mainMenu.Settings.QuickSave.SaveCompleted
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7801043076243456
+    m_Key: mainMenu.Settings.QuickSave.SaveFailed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -155,18 +155,18 @@
                             "isArchived": false
                         },
                         {
-                            "id": "c9f7cea9-355d-4289-a35b-f3533baaf03d",
-                            "title": "Import profile Pics",
-                            "description": "Add pictures for each main character ",
-                            "category": "Art",
-                            "colorLabel": 2,
+                            "id": "14ec67f2-9dde-438b-a5b5-2a5ae84e301a",
+                            "title": "Check Logic on new save button ",
+                            "description": "Doesn't prompt the player if they want tutorial and also doesn't seem to reset the bills ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
                             "priority": 0,
-                            "createdDate": "2026-07-27 21:03",
+                            "createdDate": "2026-08-06 14:37",
                             "dueDate": "",
                             "archived": false,
                             "checklistItems": [
-                                "Update on scritable object",
-                                "Verify it works"
+                                "Match up the logic with the start new game button",
+                                "Verify its working"
                             ],
                             "checklistStates": [
                                 false,
@@ -178,7 +178,47 @@
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
-                            "linkedItems": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Prefabs/SaveSlotUiPrefab.prefab",
+                                        "globalObjectId": "GlobalObjectId_V1-2-af9bbcbdeaf1b2f4ca0f14413a14d754-8598144522272698404-0",
+                                        "name": "SaveSlotUiPrefab"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/Main Menu.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-86933480616807991-4362316326491213309",
+                                        "name": "SaveMenus"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/Main Menu.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1554382852392505832-4362316326491213309",
+                                        "name": "StartBtn"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,
@@ -894,6 +934,37 @@
                             "checklistItems": [
                                 "Add Extra pop to ask player if theri sure",
                                 "test make sure it works"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "c9f7cea9-355d-4289-a35b-f3533baaf03d",
+                            "title": "Import profile Pics",
+                            "description": "Add pictures for each main character ",
+                            "category": "Art",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-07-27 21:03",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Update on scritable object",
+                                "Verify it works"
                             ],
                             "checklistStates": [
                                 true,

@@ -160,6 +160,8 @@ public class TeamManagerSaveData
 public class TeamMemberSaveData
 {
     public string memberName;
+    public string memberDescription;
+    public string memberIconName;
     public int age;
     public string attitude;
     public CharacterStatsSaveData stats;
@@ -174,6 +176,8 @@ public class TeamMemberSaveData
     public TeamMemberSaveData(TeamMember member)
     {
         memberName = member.memberName;
+        memberDescription = member.memberDescription;
+        memberIconName = member.memberIcon != null ? member.memberIcon.name : string.Empty;
         age = member.age;
         attitude = member.attitude.ToString();
         stats = new CharacterStatsSaveData(member.characterStats);
@@ -313,8 +317,9 @@ public class TeamSaveData
 [System.Serializable]
 public class TeamMemberManagerSaveData : TeamMemberSaveData
 {
-  
- 
+    public TeamMemberManagerSaveData() { }
+
+    public TeamMemberManagerSaveData(TeamMember member) : base(member) { }
 }
   
 
@@ -1160,32 +1165,7 @@ public class SaveSystem : MonoBehaviour
             teamQuality = team.teamQuality,
             teamExperience = team.teamExperience,
             currentForm = team.currentForm,
-            teamManager =  team.teamManager != null ? new TeamMemberManagerSaveData() 
-            { 
-                memberName = team.teamManager.memberName,
-                age = team.teamManager.age,
-                attitude = team.teamManager.attitude.ToString(),
-                stats = new CharacterStatsSaveData(team.teamManager.characterStats),
-                level = team.teamManager.level,
-                experience = team.teamManager.experience,
-                racesAvailableFor = team.teamManager.racesAvailableFor,
-                fitnessStatus = team.teamManager.fitness != null ? new TeamMemberFitness
-                {
-                    currentFitness = team.teamManager.fitness.currentFitness,
-                    maxFitness = team.teamManager.fitness.maxFitness,
-                    recoveryRate = team.teamManager.fitness.recoveryRate,
-                    HungerLevel = team.teamManager.fitness.HungerLevel,
-                    maxHungerLevel = team.teamManager.fitness.maxHungerLevel,
-                    injuryStatus = team.teamManager.fitness.injuryStatus,
-                    currentPhysicalState = team.teamManager.fitness.currentPhysicalState
-                } : null,
-                happiness = team.teamManager.Happiness != null ? new Happiness
-                {
-                    currentHappiness = team.teamManager.Happiness.currentHappiness,
-                    maxHappiness = team.teamManager.Happiness.maxHappiness,
-                    currentMood = team.teamManager.Happiness.currentMood
-                } : null
-            } : null,
+            teamManager =  team.teamManager != null ? new TeamMemberManagerSaveData(team.teamManager) : null,
             bench =  team.bench != null ? new TeamMemberSaveData[team.bench.Count] : null,
             recentResults = new List<int>(team.recentResults),
             teamColor = new ColorSaveData(team.teamColor)
@@ -1233,6 +1213,8 @@ public class SaveSystem : MonoBehaviour
         }
 
         member.memberName = saveData.memberName;
+        member.memberDescription = saveData.memberDescription ?? string.Empty;
+        RestoreTeamMemberAssetReferences(member, saveData);
         member.age = saveData.age;
 
         if (!string.IsNullOrEmpty(saveData.attitude) && System.Enum.TryParse<Attitude>(saveData.attitude, out Attitude attitude))
@@ -1274,6 +1256,180 @@ public class SaveSystem : MonoBehaviour
                 currentMood = saveData.happiness.currentMood
             };
         }
+    }
+
+    private void RestoreTeamMemberAssetReferences(TeamMember member, TeamMemberSaveData saveData)
+    {
+        TeamMember templateMember = FindTeamMemberTemplate(saveData.memberName, saveData.memberIconName);
+        if (templateMember == null)
+        {
+            return;
+        }
+
+        member.memberIcon = templateMember.memberIcon;
+
+        if (member.memberPrefab == null)
+        {
+            member.memberPrefab = templateMember.memberPrefab;
+        }
+
+        if (string.IsNullOrEmpty(member.memberDescription))
+        {
+            member.memberDescription = templateMember.memberDescription;
+        }
+    }
+
+    private TeamMember FindTeamMemberTemplate(string memberName, string memberIconName)
+    {
+        if (string.IsNullOrEmpty(memberName))
+        {
+            return null;
+        }
+
+        TeamMember templateMember = FindTeamMemberTemplateInManagers(memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        if (LeagueController.Instance != null && LeagueController.Instance.leagues != null)
+        {
+            foreach (var league in LeagueController.Instance.leagues)
+            {
+                if (league == null || league.teams == null)
+                {
+                    continue;
+                }
+
+                foreach (var team in league.teams)
+                {
+                    templateMember = FindTeamMemberTemplateInTeam(team, memberName, memberIconName);
+                    if (templateMember != null)
+                    {
+                        return templateMember;
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private TeamMember FindTeamMemberTemplateInManagers(string memberName, string memberIconName)
+    {
+        TeamMember templateMember;
+
+        if (PlayerManager.Instance != null)
+        {
+            templateMember = FindMatchingTeamMember(PlayerManager.Instance.team, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindTeamMemberTemplateInTeam(PlayerManager.Instance.playerTeam, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+        }
+
+        if (TeamManager.Instance != null)
+        {
+            templateMember = FindMatchingTeamMember(TeamManager.Instance.startingHireableRacers, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindMatchingTeamMember(TeamManager.Instance.activeCrewMembers, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindMatchingTeamMember(TeamManager.Instance.benchTeamMembers, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindTeamMemberTemplateInTeam(TeamManager.Instance.playerTeam, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+
+            templateMember = FindMatchingTeamMember(new[] { TeamManager.Instance.teamManager }, memberName, memberIconName);
+            if (templateMember != null)
+            {
+                return templateMember;
+            }
+        }
+
+        return null;
+    }
+
+    private TeamMember FindTeamMemberTemplateInTeam(Team team, string memberName, string memberIconName)
+    {
+        if (team == null)
+        {
+            return null;
+        }
+
+        TeamMember templateMember = FindMatchingTeamMember(new[] { team.teamManager }, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        templateMember = FindMatchingTeamMember(team.teamMembers, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        templateMember = FindMatchingTeamMember(team.bench, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        templateMember = FindMatchingTeamMember(team.defaultTeamMembers, memberName, memberIconName);
+        if (templateMember != null)
+        {
+            return templateMember;
+        }
+
+        return FindMatchingTeamMember(team.defaultBench, memberName, memberIconName);
+    }
+
+    private TeamMember FindMatchingTeamMember(IEnumerable<TeamMember> members, string memberName, string memberIconName)
+    {
+        if (members == null)
+        {
+            return null;
+        }
+
+        TeamMember fallbackMatch = null;
+
+        foreach (var candidate in members)
+        {
+            if (candidate == null || !string.Equals(candidate.memberName, memberName, StringComparison.Ordinal))
+            {
+                continue;
+            }
+
+            if (!string.IsNullOrEmpty(memberIconName) && candidate.memberIcon != null &&
+                string.Equals(candidate.memberIcon.name, memberIconName, StringComparison.Ordinal))
+            {
+                return candidate;
+            }
+
+            fallbackMatch ??= candidate;
+        }
+
+        return fallbackMatch;
     }
 
     private void RestoreLeaguesData(LeagueInfoSaveData[] leaguesData)
@@ -1519,7 +1675,7 @@ public class SaveSystem : MonoBehaviour
     /// <summary>
     /// Start a new game with fresh data
     /// </summary>
-    public bool NewGame(string saveName = "New Game")
+    public bool NewGame(string saveName = "New Game",int preferredSlot = 0)
     {
         try
         {
@@ -1560,8 +1716,23 @@ public class SaveSystem : MonoBehaviour
                 SaveData newGameData = CreateFreshSaveData(saveName);
                 ApplySaveData(newGameData);
                 
+                if(preferredSlot < 0 || preferredSlot >= maxSaveSlots)
+                {
+                    Debug.LogWarning($"Preferred slot {preferredSlot} is invalid. Using first available slot instead.");
+                    preferredSlot = -1; // Mark as invalid to find first available
+                }
+                
                 // Save to the first available slot
-                int availableSlot = FindFirstAvailableSlot();
+                int availableSlot = 0;
+                
+                if(preferredSlot >= 0 && preferredSlot < maxSaveSlots)
+                {
+                    availableSlot = preferredSlot;
+                }
+                else
+                {
+                    availableSlot = FindFirstAvailableSlot();
+                }
                 if (availableSlot == -1)
                 {
                     // If no slots are available, use slot 0
@@ -1580,105 +1751,6 @@ public class SaveSystem : MonoBehaviour
                 {
                     Debug.LogError("Failed to save new game data");
                     return false;
-                }
-            }
-            else
-            {
-                // We're in main menu, defer initialization and save until after scene loads
-                Debug.Log("NewGame called from main menu - deferring save until game scene loads");
-                return true;
-            }
-        }
-        catch (Exception e)
-        {
-            Debug.LogError($"Failed to start new game: {e.Message}");
-            return false;
-        }
-    }
-    
-    public bool NewGame(string saveName = "New Game", int preferredSlot = 0)
-    {
-        if (preferredSlot < 0)
-            throw new ArgumentOutOfRangeException(nameof(preferredSlot));
-        try
-        {
-            // Set flag to false for fresh game
-            _wasLoadedFromSave = false;
-            _isNewGame = true;
-            
-            // Store the save name for when we do the initial save after scene loads
-            _pendingNewGameSaveName = saveName;
-            
-            // Initialize fresh game state only if managers exist (we're already in game scene)
-            // Otherwise, initialization will happen after scene loads via OnSceneLoaded
-            bool managersExist = LeagueController.Instance != null && 
-                                 PlayerManager.Instance != null && 
-                                 GameManager.Instance != null;
-            
-            if (managersExist)
-            {
-                InitializeNewGameState();
-                
-                // Save to the first available slot
-                if (preferredSlot == 0)
-                {
-                    int availableSlot = FindFirstAvailableSlot();
-                    if (availableSlot == -1)
-                    {
-                        // If no slots are available, use slot 0
-                        availableSlot = 0;
-                    }
-
-
-                    // Create and save new game data
-                    SaveData newGameData = CreateFreshSaveData(saveName);
-                    ApplySaveData(newGameData);
-
-                    // Save the new game
-                    bool saveSuccess = SaveGame(availableSlot, saveName);
-
-                    if (saveSuccess)
-                    {
-                        Debug.Log($"New game started successfully in slot {availableSlot}");
-                        _pendingNewGameSaveName = null;
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to save new game data");
-                        return false;
-                    }
-                }
-                else
-                {
-                    if (preferredSlot >= maxSaveSlots)
-                    {
-                        Debug.LogError($"Invalid preferred slot index: {preferredSlot}. Must be between 0 and {maxSaveSlots - 1}");
-                        return false;
-                    }
-                    
-                    // NOTE: Do NOT call ClearLeague() or RegenerateRaceSchedule() here!
-                    // These are already handled in InitializeNewGameState() at the start of this method.
-                    // Calling them here would wipe team stats after they've been initialized!
-
-                    // Create and save new game data
-                    SaveData newGameData = CreateFreshSaveData(saveName);
-                    ApplySaveData(newGameData);
-
-                    // Save the new game
-                    bool saveSuccess = SaveGame(preferredSlot, saveName);
-
-                    if (saveSuccess)
-                    {
-                        Debug.Log($"New game started successfully in preferred slot {preferredSlot}");
-                        _pendingNewGameSaveName = null;
-                        return true;
-                    }
-                    else
-                    {
-                        Debug.LogError("Failed to save new game data");
-                        return false;
-                    }
                 }
             }
             else

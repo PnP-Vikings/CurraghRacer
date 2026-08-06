@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UIElements;
@@ -41,7 +42,7 @@ public class PlayerStatsView : MonoBehaviour
         _displayInfoBackground = root.Q<VisualElement>("DisplayInfoBackground");
         
         _localizedPlayerEnergyText.Arguments = new object[] { PlayerManager.Instance.GetPlayerEnergy() };
-        _localizedPlayerCurrencyText.Arguments = new object[] { PlayerManager.Instance.GetPlayerCurrency() };
+        _localizedPlayerCurrencyText.Arguments = new object[] { Math.Round(PlayerManager.Instance.GetPlayerCurrency(), 2) };
         _localizedPlayerEnergyText.RefreshString();
         _playerEnergyLabel.text =_localizedPlayerEnergyText.GetLocalizedString();
         _localizedPlayerCurrencyText.RefreshString();
@@ -82,7 +83,7 @@ public class PlayerStatsView : MonoBehaviour
     public void UpdatePlayerStats()
     {
         _localizedPlayerEnergyText.Arguments[0] = PlayerManager.Instance.GetPlayerEnergy();
-        _localizedPlayerCurrencyText.Arguments[0] = PlayerManager.Instance.GetPlayerCurrency();
+                _localizedPlayerCurrencyText.Arguments[0] = Math.Round(PlayerManager.Instance.GetPlayerCurrency(), 2);
         _localizedPlayerEnergyText.RefreshString();
         _localizedPlayerCurrencyText.RefreshString();
         _playerEnergyLabel.text = _localizedPlayerEnergyText.GetLocalizedString();

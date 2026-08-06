@@ -37,7 +37,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 41.19998, y: 191.90002}
+  m_AnchoredPosition: {x: 232, y: 79.9}
   m_SizeDelta: {x: 60.8, y: 45.7}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4668403705412268549
@@ -118,7 +118,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 321095900286758268}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -541,7 +541,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -340, y: 190.23}
+  m_AnchoredPosition: {x: -159.47, y: 77.8}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &877697265750621175
@@ -764,16 +764,15 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &7007157651886940666
-Transform:
+--- !u!224 &7007157651886940666
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4444284128591628975}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -500, y: -535.2, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -782,6 +781,11 @@ Transform:
   - {fileID: 6971199573964351527}
   m_Father: {fileID: 1924619710484872530}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 276, y: 107}
+  m_SizeDelta: {x: 543.61, y: 211.5}
+  m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1314371785426956278
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -796,6 +800,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialTaskUiManager
   taskUiParent: {fileID: 7086996416085762620}
   taskPrefab: {fileID: 63151353768982808, guid: 32d6a3f6c8c1cdf42a7f1eebde835923, type: 3}
+  taskUiDialogueUi: {fileID: 0}
+  showActiveTaskInMiddle: 0
 --- !u!1 &5293304698798968895
 GameObject:
   m_ObjectHideFlags: 0
@@ -932,7 +938,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -190.05, y: 113}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 532.3, y: 207}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &3050321844961680328
@@ -1228,7 +1234,7 @@ MonoBehaviour:
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
   m_Interactable: 1
-  m_TargetGraphic: {fileID: 0}
+  m_TargetGraphic: {fileID: 1963244095056397548}
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
@@ -1304,7 +1310,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -240.9, y: 30.3}
+  m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 425.8, y: 64.1}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4353926016258588020
@@ -1393,19 +1399,23 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 0
---- !u!4 &601892031207717620
-Transform:
+--- !u!224 &601892031207717620
+RectTransform:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8804571422231229596}
-  serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -500, y: -535.2, z: 0}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5999825355885160537}
   m_Father: {fileID: 1924619710484872530}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_AnchorMin: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 0}
+  m_AnchoredPosition: {x: 228, y: 30.6}
+  m_SizeDelta: {x: 442.5, y: 72.1}
+  m_Pivot: {x: 0.5, y: 0.5}

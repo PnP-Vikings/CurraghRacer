@@ -1,13 +1,16 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 
 [CreateAssetMenu(fileName = "NewDecisionCard", menuName = "DecisionCard/NewCard")]
 public class DecisionCard : ScriptableObject
 {
     [Header("Card Display")]
     public string cardTitle;
+    [SerializeField] public LocalizedString _localizedCardTitleText;
     [TextArea(3, 6)]
     public string cardDescription;
+    [SerializeField] public LocalizedString _localizedCardDescriptionText;
     public Sprite cardImage;
     
     [Header("Card Type & Conditions")]
@@ -64,10 +67,14 @@ public class DecisionOption
     [Header("Option Display")]
     [Tooltip("Text shown on the button/swipe direction")]
     public string optionText;
+    [SerializeField] public LocalizedString _localizedOptionText;
+
     
     [TextArea(2, 4)]
     [Tooltip("Detailed description of this choice")]
     public string optionDescription;
+    [SerializeField] public LocalizedString _localizedOptionDescriptionText;
+
     
     [Header("Immediate Effects")]
     [Tooltip("Coins gained/lost (negative for cost)")]
@@ -132,6 +139,7 @@ public class ConsequenceOutcome
 {
     [TextArea(2, 3)]
     public string outcomeMessage;
+    [SerializeField] public LocalizedString _localizedOutcomeMessageText;
     
     public int coinsChange = 0;
     public int energyChange = 0;

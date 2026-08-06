@@ -1,0 +1,90 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: DecisionCards_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: b2ee0c25f3b58ff41a135fa739ae672c, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162748853529608284
+  m_TableData:
+  - m_Id: 49693057024
+    m_Localized: 'Buailte: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608284
+  - m_Id: 4011775221760
+    m_Localized: Ceannaigh babhta deochanna do d'fhoireann
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4151797866496
+    m_Localized: "Ceannaigh babhta deochanna do d'fhoireann \u2013 Beidh tionchar
+      aige seo ar d'fhoireann ar fad.\r\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4335537741824
+    m_Localized: "D\u2019fh\xE9adfadh s\xE9 go gcuirfeadh s\xE9 feabhas ar mheon
+      na foirne \u20AC20 a chaitheamh ar bhabhta deochanna do na leaids."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4464630030336
+    m_Localized: "S\xE1bh\xE1il na boinn, ach d\u2019fh\xE9adfadh an meanma titim."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7225027321856
+    m_Localized: "R\xE1s\xE1la\xED Tartmhar"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7346154627072
+    m_Localized: "A Bhoss, t\xE1 beag\xE1n tart orm; an bhf\xE9adfainn c\xFApla bonn
+      a fh\xE1il ar iasacht chun rud \xE9igin a cheannach?"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7412827283456
+    m_Localized: "D\u2019fh\xE9adfadh s\xE9 go gcuirfeadh s\xE9 feabhas ar mheon
+      do chomhghleacaithe foirne \u20AC20 a chaitheamh ar dheoch a cheannach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7515906498560
+    m_Localized: "S\xE1bh\xE1il na boinn, ach d\u2019fh\xE9adfadh s\xE9 an sonas
+      a laghd\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8735752708096
+    m_Localized: "Bh\xED o\xEDche fhi\xE1in agaibh f\xE9in agus ag an bhfoireann,\r\nagus
+      chodail sibh thar bhur gcuid ama tr\xED thimpiste \u2014 chaill sibh dh\xE1
+      uair an chloig den l\xE1.\r\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8654681006080
+    m_Localized: "O\xEDche Fhi\xE1in"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8793608937472
+    m_Localized: "T\xFAs d\xE9anach leis an l\xE1"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8896407134208
+    m_Localized: "T\xFAs d\xE9anach leis an l\xE1"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748853529608284
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 49693057024

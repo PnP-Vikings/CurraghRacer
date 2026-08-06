@@ -13,10 +13,28 @@ MonoBehaviour:
   m_Name: CardSleptIn2Hours
   m_EditorClassIdentifier: 
   cardTitle: Crazy Night
+  _localizedCardTitleText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 8654681006080
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   cardDescription: 'You and the team had a crazy night
 
     and accidentally slept
     in Lost 2 hours of the day  '
+  _localizedCardDescriptionText:
+    m_TableReference:
+      m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+    m_TableEntryReference:
+      m_KeyId: 8735752708096
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   cardImage: {fileID: 0}
   category: 6
   isFollowUpOnly: 1
@@ -28,7 +46,25 @@ MonoBehaviour:
   requiredAttitudes: 
   optionA:
     optionText: 'Late Start to the day '
+    _localizedOptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 8793608937472
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     optionDescription: 
+    _localizedOptionDescriptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 8831424782336
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     coinsChange: 0
     energyChange: 0
     moraleChange: 0
@@ -44,6 +80,15 @@ MonoBehaviour:
     successChance: 50
     successOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -63,6 +108,15 @@ MonoBehaviour:
       followUpChance: 100
     failureOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -88,7 +142,25 @@ MonoBehaviour:
     followUpChance: 100
   optionB:
     optionText: Late Start to the day
+    _localizedOptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 8896407134208
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     optionDescription: 
+    _localizedOptionDescriptionText:
+      m_TableReference:
+        m_TableCollectionName: GUID:b2ee0c25f3b58ff41a135fa739ae672c
+      m_TableEntryReference:
+        m_KeyId: 8920545353728
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     coinsChange: 0
     energyChange: 0
     moraleChange: 0
@@ -104,6 +176,15 @@ MonoBehaviour:
     successChance: 50
     successOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -123,6 +204,15 @@ MonoBehaviour:
       followUpChance: 100
     failureOutcome:
       outcomeMessage: 
+      _localizedOutcomeMessageText:
+        m_TableReference:
+          m_TableCollectionName: 
+        m_TableEntryReference:
+          m_KeyId: 0
+          m_Key: 
+        m_FallbackState: 0
+        m_WaitForCompletion: 0
+        m_LocalVariables: []
       coinsChange: 0
       energyChange: 0
       moraleChange: 0
@@ -147,3 +237,6 @@ MonoBehaviour:
     daysUntilFollowUp: 1
     followUpChance: 100
   appearanceWeight: 50
+  references:
+    version: 2
+    RefIds: []
