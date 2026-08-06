@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: ga-IE
   m_SharedData: {fileID: 11400000, guid: 8bde466f21db9854694374d161ec0da5, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 7162748853529608338
   m_TableData:
   - m_Id: 73827082240
     m_Localized: Tosaigh
@@ -98,6 +99,175 @@ MonoBehaviour:
     m_Localized: Ar ais
     m_Metadata:
       m_Items: []
+  - m_Id: 7714296816459776
+    m_Localized: "S\xE1bh\xE1il"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7714399853731840
+    m_Localized: "L\xF3d\xE1il"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7714425342517248
+    m_Localized: Scrios
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7716435366240256
+    m_Localized: "Cuir t\xFAs le cluiche nua"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7717869742710784
+    m_Localized: "Sliot\xE1n Folamh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761110517145600
+    m_Localized: 'Fuinneamh: {0} | Boinn: {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7766868004691968
+    m_Localized: "Am S\xFAgartha: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7768319942713344
+    m_Localized: Gan Sraith
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768491712045056
+    m_Localized: "Tar \xE9is dul isteach"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7768549937373184
+    m_Localized: "Gan a bheith p\xE1irteach"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7771482737336320
+    m_Localized: Ar ais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7772362203193344
+    m_Localized: "Sliot\xE1n {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7774098930262016
+    m_Localized: "S\xE1bh\xE1il {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7774864407519232
+    m_Localized: "Teip ar an gcluiche a sh\xE1bh\xE1il sa sliot\xE1n {0}!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7774794698186752
+    m_Localized: "Cluiche s\xE1bh\xE1ilte sa sliot\xE1n {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7781732924252160
+    m_Localized: "N\xEDl an c\xF3ras s\xE1bh\xE1la ar f\xE1il."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7781831536533504
+    m_Localized: "N\xEDl aon chomhad s\xE1bh\xE1la sa sliot\xE1n {0}."
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7781915141595136
+    m_Localized: "Cluiche luchtaithe \xF3n sliot\xE1n {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7782025854443520
+    m_Localized: "Theip ar lucht\xFA an chluiche \xF3 Sliot\xE1n {0}!"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7783017719259136
+    m_Localized: "An bhfuil t\xFA cinnte gur mhaith leat Sliot\xE1n S\xE1bh\xE1la
+      {0} a scriosadh?"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7783306685833216
+    m_Localized: "Scriosadh Sliot\xE1n S\xE1bh\xE1la {0}!"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7783423652388864
+    m_Localized: "Theip ar scriosadh na sliot\xE1n s\xE1bh\xE1la {0}!"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7789636599406592
+    m_Localized: Sea
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7789710641455104
+    m_Localized: "N\xED hea"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7792535282900992
+    m_Localized: "N\xEDl aon r\xE9amhamhairc bhail\xED ar sh\xE1bh\xE1il ar f\xE1il
+      le haghaidh lucht\xFA tapa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7793325091315712
+    m_Localized: "S\xE1bh\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7794003419324416
+    m_Localized: "S\xE1bh\xE1il Uathoibr\xEDoch"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7795423262531584
+    m_Localized: "Luchta\xEDodh {0} go rath\xFAil!"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7795510986399744
+    m_Localized: "Theip ar lucht\xFA {0}!"
+    m_Metadata:
+      m_Items:
+      - rid: 7162748853529608338
+  - m_Id: 7795640833662976
+    m_Localized: "N\xEDor aims\xEDodh aon chomhaid s\xE1bh\xE1la le lucht\xFA!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796225347674112
+    m_Localized: "S\xE1bh\xE1il Thapa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796324119339008
+    m_Localized: "Cr\xEDochna\xEDodh an t-uathsh\xE1bh\xE1il!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796388971667456
+    m_Localized: "Theip ar an uathsh\xE1bh\xE1il!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7796848780632064
+    m_Localized: "Mo Ch\xE9ad Chluiche"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162748853529608338
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 7761110517145600
+        - id: 7766868004691968
+        - id: 7772362203193344
+        - id: 7781831536533504
+        - id: 7781915141595136
+        - id: 7774794698186752
+        - id: 7774098930262016
+        - id: 7782025854443520
+        - id: 7783017719259136
+        - id: 7783306685833216
+        - id: 7783423652388864
+        - id: 7795510986399744
+        - id: 7795423262531584

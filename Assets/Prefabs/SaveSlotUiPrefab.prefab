@@ -2893,6 +2893,150 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
+  _localizedEnergySlotText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7761110517145600
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedPlayTimeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7766868004691968
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedNoLeagueText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7768319942713344
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedJoinedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7768491712045056
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedNotJoinedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7768549937373184
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedSlotIndexText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7772362203193344
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedDefaultSaveNameText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7774098930262016
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedOnGameSavedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7774794698186752
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedFailedToSaveText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7774864407519232
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedFailedToLoadSaveNotAvailableText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7781831536533504
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedGameLoadedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7781915141595136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedFailedToLoadSystemUnavailableText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7781732924252160
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedFailedToLoadText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7782025854443520
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedDeleteAreYouSureText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7783017719259136
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedDeleteSuccessText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7783306685833216
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedDeleteFailedText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8bde466f21db9854694374d161ec0da5
+    m_TableEntryReference:
+      m_KeyId: 7783423652388864
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   references:
     version: 2
     RefIds: []

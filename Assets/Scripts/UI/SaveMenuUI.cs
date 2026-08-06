@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections;
+using UnityEngine.Localization;
 
 public class SaveMenuUI : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class SaveMenuUI : MonoBehaviour
     public Button confirmYesButton;
     public Button confirmNoButton;
     
+    
     [Header("Settings")]
     public int quickSaveSlot = 0; // Slot 0 reserved for quick save
     public float messageDisplayTime = 3f;
@@ -30,6 +32,24 @@ public class SaveMenuUI : MonoBehaviour
     private SaveSlotUI[] slotUIs;
     private System.Action pendingConfirmationAction;
     
+    [Header("Localization")]
+    [SerializeField] private LocalizedString _localizedNoValidSaveToQuickLoadText;
+    [SerializeField] private LocalizedString _localizedQuickSaveText;
+    [SerializeField] private LocalizedString _localizedAutoSaveText;
+    [SerializeField] private LocalizedString _localizedQuickLoadSuccessText;
+    [SerializeField] private LocalizedString _localizedQuickLoadFailureText;
+    [SerializeField] private LocalizedString _localizedNoSaveFilesToLoadText;
+    [SerializeField] private LocalizedString _localizedAutoSaveNameText;
+    [SerializeField] private LocalizedString _localizedAutoSaveCompletedText;
+    [SerializeField] private LocalizedString _localizedAutoSaveFailedText;
+    [SerializeField] private LocalizedString _localizedNewGameStartNameText;
+    
+    [SerializeField] private LocalizedString _localizedQuickSaveNameText;
+    [SerializeField] private LocalizedString _localizedQuickSaveSuccessText;
+    [SerializeField] private LocalizedString _localizedQuickSaveFailureText;
+    
+    
+
     private void Start()
     {
         Initialize();
@@ -211,14 +231,35 @@ public class SaveMenuUI : MonoBehaviour
 
     public void QuickSave()
     {
-        if (SaveSystem.Instance.SaveGame(quickSaveSlot, "Quick Save"))
+        string quickSaveName = "Quick Save";
+        if (!_localizedQuickSaveNameText.IsEmpty)
+        {
+            quickSaveName = _localizedQuickSaveNameText.GetLocalizedString();
+        }
+        
+        
+        if (SaveSystem.Instance.SaveGame(quickSaveSlot, quickSaveName))
         {
             RefreshAllSlots();
-            ShowMessage("Quick Save completed!", false);
+            if (!_localizedQuickSaveSuccessText.IsEmpty)
+            {
+                ShowMessage(_localizedQuickSaveSuccessText.GetLocalizedString(), false);
+            }
+            else
+            {
+                ShowMessage("Quick Save completed!", false);
+            }
         }
         else
         {
-            ShowMessage("Quick Save failed!", true);
+            if (!_localizedQuickSaveFailureText.IsEmpty)
+            {
+                ShowMessage(_localizedQuickSaveFailureText.GetLocalizedString(), true);
+            }
+            else
+            {
+                ShowMessage("Quick Save failed!", true);
+            }
         }
     }
     
@@ -240,18 +281,38 @@ public class SaveMenuUI : MonoBehaviour
             // Guard against invalid/corrupt previews
             if (quickSaveData == null && autoSaveData == null)
             {
-                ShowMessage("No valid save previews available to quick load.", true);
+                string message = "No valid save previews available to quick load.";
+                if(!_localizedNoValidSaveToQuickLoadText.IsEmpty)
+                {
+                    message = _localizedNoValidSaveToQuickLoadText.GetLocalizedString();
+                }
+             
+                ShowMessage(message, true);
                 return;
             }
             else if (quickSaveData != null && autoSaveData == null)
             {
                 slotToLoad = quickSaveSlot;
-                loadType = "Quick Save";
+                if(!_localizedQuickSaveText.IsEmpty)
+                {
+                    loadType = _localizedQuickSaveText.GetLocalizedString();
+                }
+                else
+                {
+                    loadType = "Quick Save";
+                }
             }
             else if (quickSaveData == null && autoSaveData != null)
             {
                 slotToLoad = autoSaveSlot;
-                loadType = "Auto Save";
+                if(!_localizedAutoSaveText.IsEmpty)
+                {
+                    loadType = _localizedAutoSaveText.GetLocalizedString();
+                }
+                else
+                {
+                    loadType = "Auto Save";
+                }
             }
             else
             {
@@ -263,49 +324,111 @@ public class SaveMenuUI : MonoBehaviour
                     if (autoSaveDate > quickSaveDate)
                     {
                         slotToLoad = autoSaveSlot;
-                        loadType = "Auto Save";
+                        if(!_localizedAutoSaveText.IsEmpty)
+                        {
+                            loadType = _localizedAutoSaveText.GetLocalizedString();
+                        }
+                        else
+                        {
+                            loadType = "Auto Save";
+                        }
                     }
                     else
                     {
                         slotToLoad = quickSaveSlot;
-                        loadType = "Quick Save";
+                        if(!_localizedQuickSaveText.IsEmpty)
+                        {
+                            loadType = _localizedQuickSaveText.GetLocalizedString();
+                        }
+                        else
+                        {
+                            loadType = "Quick Save";
+                        }
                     }
                 }
                 catch (System.Exception e)
                 {
                     Debug.LogWarning($"Failed to parse save dates, defaulting to quick save: {e.Message}");
                     slotToLoad = quickSaveSlot;
-                    loadType = "Quick Save";
+                    if(!_localizedQuickSaveText.IsEmpty)
+                    {
+                        loadType = _localizedQuickSaveText.GetLocalizedString();
+                    }
+                    else
+                    {
+                        loadType = "Quick Save";
+                    }
                 }
             }
         }
         else if (hasQuickSave)
         {
             slotToLoad = quickSaveSlot;
-            loadType = "Quick Save";
+            if(!_localizedQuickSaveText.IsEmpty)
+            {
+                loadType = _localizedQuickSaveText.GetLocalizedString();
+            }
+            else
+            {
+                loadType = "Quick Save";
+            }
         }
         else if (hasAutoSave)
         {
             slotToLoad = autoSaveSlot;
-            loadType = "Auto Save";
+            if(!_localizedAutoSaveText.IsEmpty)
+            {
+                loadType = _localizedAutoSaveText.GetLocalizedString();
+            }
+            else
+            {
+                loadType = "Auto Save";
+            }
         }
         
         if (slotToLoad >= 0)
         {
             if (SaveSystem.Instance.LoadGame(slotToLoad))
             {
-                ShowMessage($"{loadType} loaded successfully!", false);
+                if(!_localizedQuickLoadSuccessText.IsEmpty)
+                {
+                    _localizedQuickLoadSuccessText.Arguments = new object[] { loadType };
+                    _localizedQuickLoadSuccessText.Arguments[0] = loadType;
+                    _localizedQuickLoadSuccessText.RefreshString();
+                    ShowMessage(_localizedQuickLoadSuccessText.GetLocalizedString(), false);
+                }
+                else
+                {
+                    ShowMessage($"{loadType} loaded successfully!", false);
+                }
                 GameManager.Instance.StartGame();
                 StartCoroutine(CloseMenuAfterDelay(1f));
             }
             else
             {
-                ShowMessage($"Failed to load {loadType}!", true);
+                if(!_localizedQuickLoadFailureText.IsEmpty)
+                {
+                    _localizedQuickLoadFailureText.Arguments = new object[] { loadType };
+                    _localizedQuickLoadFailureText.Arguments[0] = loadType;
+                    _localizedQuickLoadFailureText.RefreshString();
+                    ShowMessage(_localizedQuickLoadFailureText.GetLocalizedString(), true);
+                }
+                else
+                {
+                    ShowMessage($"Failed to load {loadType}!", true);
+                }
             }
         }
         else
         {
-            ShowMessage("No save files found to load!", true);
+            if(!_localizedNoSaveFilesToLoadText.IsEmpty)
+            {
+                ShowMessage(_localizedNoSaveFilesToLoadText.GetLocalizedString(), true);
+            }
+            else
+            {
+                ShowMessage("No save files found to load!", true);
+            }
         }
     }
     
@@ -314,14 +437,34 @@ public class SaveMenuUI : MonoBehaviour
         // Use the last slot for auto save
         int autoSaveSlot = SaveSystem.Instance.maxSaveSlots - 1;
         
-        if (SaveSystem.Instance.SaveGame(autoSaveSlot, "Auto Save"))
+        string autoSaveName = "Auto Save";
+        if (!_localizedAutoSaveNameText.IsEmpty)
+        {
+            autoSaveName = _localizedAutoSaveNameText.GetLocalizedString();
+        }
+
+        if (SaveSystem.Instance.SaveGame(autoSaveSlot, autoSaveName))
         {
             RefreshAllSlots();
-            ShowMessage("Auto Save completed!", false);
+            if (!_localizedAutoSaveCompletedText.IsEmpty)
+            {
+                ShowMessage(_localizedAutoSaveCompletedText.GetLocalizedString(), false);
+            }
+            else
+            {
+                ShowMessage("Auto Save completed!", false);
+            }
         }
         else
         {
-            ShowMessage("Auto Save failed!", true);
+            if (!_localizedAutoSaveFailedText.IsEmpty)
+            {
+                ShowMessage(_localizedAutoSaveFailedText.GetLocalizedString(), true);
+            }
+            else
+            {
+                ShowMessage("Auto Save failed!", true);
+            }
         }
     }
     
@@ -382,7 +525,13 @@ public class SaveMenuUI : MonoBehaviour
         {
             GameManager.Instance.ActivateTutorialMode(playTutorial,true);
         }
-        if (SaveSystem.Instance.NewGame("My First Game"))
+        string saveName = "My First Game";
+        if (!_localizedNewGameStartNameText.IsEmpty)
+        {
+            saveName = _localizedNewGameStartNameText.GetLocalizedString();
+        }
+        
+        if (SaveSystem.Instance.NewGame(saveName))
         {
             // New game started successfully
             // Maybe show a success message or transition to game
