@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 using Random = UnityEngine.Random;
 
 public enum Attitude
@@ -16,7 +17,7 @@ public enum Attitude
 }
 
 
-
+ 
 
 
 
@@ -66,6 +67,7 @@ public class TeamMember : ScriptableObject
     [Tooltip("Happiness level of the team member (0-100).")]
     public Happiness Happiness = new Happiness(); // Default happiness level
     
+    [SerializeField] private LocalizedString _localizedAttitudePositive;
     
     public CharacterStats GetStats()
     {
@@ -96,6 +98,7 @@ public class TeamMember : ScriptableObject
     
     public virtual CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
     {
+      
         switch (attitude)
         {
             case Attitude.Positive:
@@ -120,6 +123,32 @@ public class TeamMember : ScriptableObject
         }
     }
     
+    
+    public string GetLocalizedAttitudeDescription()
+    {
+        switch (attitude)
+        {
+            case Attitude.Positive:
+                return "Positive: Optimistic and upbeat, boosts team morale.";
+            case Attitude.Competitive:
+                return "Competitive: Thrives on challenges, excels in performance.";
+            case Attitude.Cooperative:
+                return "Cooperative: Works well with others, enhances teamwork.";
+            case Attitude.Aggressive:
+                return "Aggressive: Assertive and driven, focuses on strength.";
+            case Attitude.Energetic:
+                return "Energetic: High energy and enthusiasm, great stamina.";
+            case Attitude.Cautious:
+                return "Cautious: Careful and risk-averse, values technique.";
+            case Attitude.Lazy:
+                return "Lazy: Low motivation, needs encouragement to perform.";
+            case Attitude.Negative:
+                return "Negative: Pessimistic, may hinder team morale.";
+            case Attitude.Neutral:
+            default:
+                return "Neutral: Balanced approach, no strong tendencies.";
+        }
+    }
     
     public int ExperienceNeededForNextLevel()
     {

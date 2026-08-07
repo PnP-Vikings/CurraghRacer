@@ -1709,6 +1709,81 @@ MonoBehaviour:
   starRatingText: {fileID: 5606224616884309744}
   memberIconImage: {fileID: 732047835690770809}
   hireableTeamMember: {fileID: 0}
+  _localizedAgeText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 3962013999104
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedStrengthText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4050346041344
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedStaminaText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4100954513408
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedTechniqueText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4133426814976
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedTeamWorkText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4185520070656
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedStarRatingText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4221989543936
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedCostText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4775880941568
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  _localizedAvailabilityText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 4940696117248
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &7725625939705050984
 MonoBehaviour:
   m_ObjectHideFlags: 0

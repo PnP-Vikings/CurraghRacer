@@ -1,6 +1,7 @@
 using League;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class HireableSailorsUiHandler : MonoBehaviour
@@ -22,7 +23,15 @@ public string memberName,memberDescription,attitude;
     
     public HireableTeamMembers hireableTeamMember;
     
-    
+    [Header("Localization")]
+    [SerializeField] private LocalizedString _localizedAgeText;
+    [SerializeField] private LocalizedString _localizedStrengthText;
+    [SerializeField] private LocalizedString _localizedStaminaText;
+    [SerializeField] private LocalizedString _localizedTechniqueText;
+    [SerializeField] private LocalizedString _localizedTeamWorkText;
+    [SerializeField] private LocalizedString _localizedStarRatingText;
+    [SerializeField] private LocalizedString _localizedCostText;
+    [SerializeField] private LocalizedString _localizedAvailabilityText;
     
     public void SetMemberData(HireableTeamMembers member)
     {
@@ -46,14 +55,34 @@ public string memberName,memberDescription,attitude;
         if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && starRatingText != null)
         {
             starRating = LeagueController.Instance.CalculateTeamMemberStarRating(member);
-            starRatingText.text = "Star Rating: " + starRating.ToString();
+            if (!_localizedStarRatingText.IsEmpty)
+            {
+                _localizedStarRatingText.Arguments = new object[] { starRating };
+                _localizedStarRatingText.RefreshString();
+                starRatingText.text = _localizedStarRatingText.GetLocalizedString();
+            }
+            else
+            {
+                starRatingText.text = "Star Rating: " + starRating.ToString();
+            }
         }
         else if (starRatingText != null)
         {
-            starRatingText.text = "Star Rating: N/A";
+            if (!_localizedStarRatingText.IsEmpty)
+            {
+                _localizedStarRatingText.Arguments = new object[] {  "N/A" };
+                _localizedStarRatingText.RefreshString();
+                starRatingText.text = _localizedStarRatingText.GetLocalizedString();
+            }
+            else
+            {
+             
+                starRatingText.text = "Star Rating: N/A";
+            }
             starRatingText.gameObject.SetActive(false);
             Debug.LogWarning("LeagueController or currentLeague is null!");
         }
+
         
         if (member.memberIcon != null)
         {
@@ -74,15 +103,84 @@ public string memberName,memberDescription,attitude;
         memberNameText.text = memberName;
         memberDescriptionText.text = memberDescription;
         attitudeText.text = attitude;
-        strengthText.text = "Strength: "+  strength.ToString();
-        staminaText.text = "Stamina: "+ stamina.ToString();
-        techniqueText.text = "Technique: "+ technique.ToString();
-        teamWorkText.text = "Team Work: "+ teamWork.ToString();
-        ageText.text = "Age: "+age.ToString();
-        costText.text = "Cost: "+cost.ToString();
-        availabilityText.text = "Available for: "+availability.ToString()+" races";
-
         
+        if (!_localizedStrengthText.IsEmpty)
+        {
+            _localizedStrengthText.Arguments = new object[] { strength };
+            _localizedStrengthText.RefreshString();
+            strengthText.text = _localizedStrengthText.GetLocalizedString();
+        }
+        else
+        {
+            strengthText.text = "Strength: " + strength.ToString();
+        }
+
+        if (!_localizedStaminaText.IsEmpty)
+        {
+            _localizedStaminaText.Arguments = new object[] { stamina };
+            _localizedStaminaText.RefreshString();
+            staminaText.text = _localizedStaminaText.GetLocalizedString();
+        }
+        else
+        {
+            staminaText.text = "Stamina: " + stamina.ToString();
+        }
+
+        if (!_localizedTechniqueText.IsEmpty)
+        {
+            _localizedTechniqueText.Arguments = new object[] { technique };
+            _localizedTechniqueText.RefreshString();
+            techniqueText.text = _localizedTechniqueText.GetLocalizedString();
+        }
+        else
+        {
+            techniqueText.text = "Technique: " + technique.ToString();
+        }
+
+        if (!_localizedTeamWorkText.IsEmpty)
+        {
+            _localizedTeamWorkText.Arguments = new object[] { teamWork };
+            _localizedTeamWorkText.RefreshString();
+            teamWorkText.text = _localizedTeamWorkText.GetLocalizedString();
+        }
+        else
+        {
+            teamWorkText.text = "Team Work: " + teamWork.ToString();
+        }
+
+        if (!_localizedAgeText.IsEmpty)
+        {
+            _localizedAgeText.Arguments = new object[] { age };
+            _localizedAgeText.RefreshString();
+            ageText.text = _localizedAgeText.GetLocalizedString();
+        }
+        else
+        {
+            ageText.text = "Age: " + age.ToString();
+        }
+
+        if (!_localizedCostText.IsEmpty)
+        {
+            _localizedCostText.Arguments = new object[] { cost };
+            _localizedCostText.RefreshString();
+            costText.text = _localizedCostText.GetLocalizedString();
+        }
+        else
+        {
+            costText.text = "Cost: " + cost.ToString();
+        }
+
+        if (!_localizedAvailabilityText.IsEmpty)
+        {
+            _localizedAvailabilityText.Arguments = new object[] { availability };
+            _localizedAvailabilityText.RefreshString();
+            availabilityText.text = _localizedAvailabilityText.GetLocalizedString();
+        }
+        else
+        {
+            availabilityText.text = "Available for: " + availability.ToString() + " races";
+        }
+
         if (memberIconImage.sprite != null)
         {
             memberIconImage.gameObject.SetActive(true);

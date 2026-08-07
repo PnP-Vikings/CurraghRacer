@@ -251,6 +251,10 @@ MonoBehaviour:
     m_Key: Garage.LeagueTableUi.HideLeagueTable
     m_Metadata:
       m_Items: []
+  - m_Id: 6726302210973696
+    m_Key: Garage.IntroLetter.AcceptTxt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -221,7 +221,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6720211339173888
-    m_Localized: Who am I
+    m_Localized: Who am I?
     m_Metadata:
       m_Items: []
   - m_Id: 6720839771742208
@@ -261,6 +261,10 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 6721851169431552
     m_Localized: Hide League Table
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6726302210973696
+    m_Localized: Accept
     m_Metadata:
       m_Items: []
   references:

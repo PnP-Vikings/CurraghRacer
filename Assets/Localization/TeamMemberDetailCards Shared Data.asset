@@ -1,0 +1,92 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: TeamMemberDetailCards Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: TeamMemberDetailCards
+  m_TableCollectionNameGuidString: 8c3af7048c981494cb7b9eff636a2d2a
+  m_Entries:
+  - m_Id: 29296156672
+    m_Key: TeamManger.Bench.TeamMember.StarRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1756904808448
+    m_Key: TeamManager.TeamMember.Age
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1974043926528
+    m_Key: TeamManager.TeamMember.Strength
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2136065695744
+    m_Key: TeamManager.TeamMember.Stamina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2173323698176
+    m_Key: TeamManager.TeamMember.Technique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2224825556992
+    m_Key: TeamManager.TeamMember.Teamwork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2312473927680
+    m_Key: TeamManager.TeamMember.StarRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3962013999104
+    m_Key: TeamManager.HireableSailorsUiHandler.Age
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4050346041344
+    m_Key: TeamManager.HireableSailorsUiHandler.Strength
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4100954513408
+    m_Key: TeamManager.HireableSailorsUiHandler.Stamina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4133426814976
+    m_Key: TeamManager.HireableSailorsUiHandler.Technique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4185520070656
+    m_Key: TeamManager.HireableSailorsUiHandler.Teamwork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4221989543936
+    m_Key: TeamManager.HireableSailorsUiHandler.StarRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4775880941568
+    m_Key: TeamManager.HireableSailorsUiHandler.Cost
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4940696117248
+    m_Key: TeamManager.HireableSailorsUiHandler.Availability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8374841237504
+    m_Key: TeamMemberAttitude
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7162748877955661916
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748877955661916
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1786106797104

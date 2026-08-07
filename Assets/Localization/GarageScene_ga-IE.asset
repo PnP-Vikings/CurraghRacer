@@ -261,6 +261,14 @@ MonoBehaviour:
     m_Localized: "Folaigh an T\xE1bla Sraithe"
     m_Metadata:
       m_Items: []
+  - m_Id: 6726302210973696
+    m_Localized: Glac
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720211339173888
+    m_Localized: "C\xE9 mise?"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

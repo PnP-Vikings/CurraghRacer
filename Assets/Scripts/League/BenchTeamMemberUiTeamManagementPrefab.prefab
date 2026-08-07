@@ -932,6 +932,18 @@ MonoBehaviour:
   memberStarRatingText: {fileID: 8667961722475576548}
   memberIconImage: {fileID: 732047835690770809}
   teamMember: {fileID: 0}
+  _localizedStarRatingText:
+    m_TableReference:
+      m_TableCollectionName: GUID:8c3af7048c981494cb7b9eff636a2d2a
+    m_TableEntryReference:
+      m_KeyId: 29296156672
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &-5777089289244064251
 MonoBehaviour:
   m_ObjectHideFlags: 0
