@@ -211,6 +211,46 @@ MonoBehaviour:
     m_Key: Garage.BulletinBoard.UI.TrainMenu.SelectTeamMember.Back
     m_Metadata:
       m_Items: []
+  - m_Id: 6720067495518208
+    m_Key: Garage.Tutorial.TaskListtxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720211339173888
+    m_Key: Garage.IntroLetter.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720839771742208
+    m_Key: Garage.IntroLetter.Descripiton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721385467469824
+    m_Key: Garage.LeagueTableUi.LeagueWins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721502949924864
+    m_Key: Garage.LeagueTableUi.LeagueStarRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721570193006592
+    m_Key: Garage.LeagueTableUi.Playerhasnotjoined
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721655026999296
+    m_Key: Garage.LeagueTableUi.LeaguePoints
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721711654297600
+    m_Key: Garage.LeagueTableUi.LeagueTeamName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721817375924224
+    m_Key: Garage.LeagueTableUi.LeagueTeamPosition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721851169431552
+    m_Key: Garage.LeagueTableUi.HideLeagueTable
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

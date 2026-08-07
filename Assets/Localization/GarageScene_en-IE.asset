@@ -216,6 +216,53 @@ MonoBehaviour:
     m_Localized: Train
     m_Metadata:
       m_Items: []
+  - m_Id: 6720067495518208
+    m_Localized: Task List
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720211339173888
+    m_Localized: Who am I
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720839771742208
+    m_Localized: "You are Declan Kelly, a twenty-something living in rural Ireland
+      in 2008, right after the Celtic Tiger collapsed and took every decent job with
+      it.\n\nThere\u2019s no solid work around you, Dublin is too expensive, and
+      your only real chance is getting to Australia to earn proper money on the mines
+      or building sites.\n\nBut you need at least \u20AC5,000 before your working
+      visa window closes, so you have put together a rough crew of local currach
+      racers to win Sunday races. \n\nYou plan to take a cut from the betting money
+      and scrape together enough cash to escape."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721385467469824
+    m_Localized: Wins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721502949924864
+    m_Localized: Star Rating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721570193006592
+    m_Localized: Player Has Not Joined Any League
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721655026999296
+    m_Localized: Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721711654297600
+    m_Localized: Team Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721817375924224
+    m_Localized: Pos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721851169431552
+    m_Localized: Hide League Table
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []
