@@ -145,7 +145,15 @@ namespace Calendar
         {
             currentDate = date; // Store the date so CalendarTooltip can access it
             dateText.text = date.Day.ToString();
-            dayoftheweekText.text = date.DayOfWeek.ToString();
+            if (TimeManager.Instance != null)
+            {
+                dayoftheweekText.text = TimeManager.Instance.GetDayOfWeekString((int)date.DayOfWeek);
+            }
+            else
+            {
+                dayoftheweekText.text = date.DayOfWeek.ToString();
+            }
+        
             
             // Clear any previous event
             ClearEvent();

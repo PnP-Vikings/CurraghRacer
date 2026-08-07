@@ -43,7 +43,7 @@ public string memberName,memberDescription,attitude;
         
         memberName = member.memberName;
         memberDescription = member.memberDescription;
-        attitude = member.attitude.ToString();
+        attitude = member.GetLocalizedAttitudeString();
         cost = member.hireCost;
         availability = member.racesAvailableFor;
         strength = Mathf.RoundToInt(member.characterStats.strength);

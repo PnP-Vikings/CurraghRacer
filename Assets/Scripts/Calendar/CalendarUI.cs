@@ -37,7 +37,7 @@ namespace Calendar
         {
             // Clear old cells
             foreach (Transform child in gridParent) Destroy(child.gameObject);
-            monthYearText.text = $"{TimeManager.Instance.monthNames[displayedMonth]} {displayedYear}";
+            monthYearText.text = $"{TimeManager.Instance.GetMonthName(displayedMonth)} {displayedYear}";
             int days = TimeManager.Instance.GetDaysInMonth(displayedMonth, displayedYear);
             
             for (int i = 1; i <= days; i++)

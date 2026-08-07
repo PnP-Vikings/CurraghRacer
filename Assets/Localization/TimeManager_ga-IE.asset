@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TimeManager_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: fd29b99dc0715cd4590975ec5a7a4aa9, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 9608093696
+    m_Localized: "D\xE9 Domhnaigh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 580264124416
+    m_Localized: "D\xE9 Luain"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 613453651968
+    m_Localized: "D\xE9 M\xE1irt"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648073437184
+    m_Localized: "D\xE9 C\xE9adaoin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 682177323008
+    m_Localized: "D\xE9ardaoin"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 726527893504
+    m_Localized: "D\xE9 hAoine"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 796786679808
+    m_Localized: "D\xE9 Sathairn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4254621229056
+    m_Localized: "Ean\xE1ir"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4423504879616
+    m_Localized: Feabhra
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4454685335552
+    m_Localized: "M\xE1rta"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4486738206720
+    m_Localized: "Aibre\xE1n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4517650227200
+    m_Localized: Bealtaine
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4544367943680
+    m_Localized: Meitheamh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4567075905536
+    m_Localized: "I\xFAil"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4590748557312
+    m_Localized: "L\xFAnasa"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4612076593152
+    m_Localized: "Me\xE1n F\xF3mhair"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4661435162624
+    m_Localized: "Deireadh F\xF3mhair"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4741252767744
+    m_Localized: "M\xED na Samhna"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4759854505984
+    m_Localized: "M\xED na Nollag"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

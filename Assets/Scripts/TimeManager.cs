@@ -4,6 +4,7 @@ using UnityEngine.Serialization;
 using System;
 using System.Collections.Generic;
 using Calendar;
+using UnityEngine.Localization;
 
 public class TimeManager : MonoBehaviour
 {
@@ -25,10 +26,12 @@ public class TimeManager : MonoBehaviour
     
     public DateTime StartDate = new DateTime(2008, 1, 5);
     public static TimeManager Instance { get { return _instance; } }
-    internal string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
+    string[] daysOfWeek = { "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday" };
     internal string[] monthNames = { "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" };
     internal int[] daysInMonth = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
     public CalendarEvents calendarEvents;
+    
+    
     
     //Real-time duration of an in-game day
     [SerializeField] private bool useRealTimeDayDuration = true;
@@ -74,7 +77,29 @@ public class TimeManager : MonoBehaviour
     public float TimeMultiplier { get => timeMultiplier; set => timeMultiplier = Mathf.Max(value, 0f); }
     public int DaysPassed { get => daysPassed; }
     
-
+    
+    
+    [Header("Localization")]
+    internal LocalizedString[] _localizedDays = {new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Sunday" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Monday" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Tuesday" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Wednesday" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Thursday" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Friday" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Saturday" }};
+    
+    internal LocalizedString[] _localizedMonth = {new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.January" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.February" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.March" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.April" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.May" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.June" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.July" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.August" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.September" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.October" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.November" },
+        new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Month.December" }};
     // Initialize singleton instance
     private void Awake()
     {
@@ -240,7 +265,82 @@ public class TimeManager : MonoBehaviour
         // Ours:   Sun=0, Mon=1, Tue=2, Wed=3, Thu=4, Fri=5, Sat=6
         int dayOfWeekIndex = (h + 6) % 7;
         
-        return daysOfWeek[dayOfWeekIndex];
+        bool isLocalizationAvailable = _localizedDays != null && _localizedDays.Length == 7;
+        foreach (var localizedDay in _localizedDays)
+        {
+          if (localizedDay == null || localizedDay.IsEmpty)
+          {
+              isLocalizationAvailable = false;
+              break;
+          }
+        }
+        
+        
+        if (isLocalizationAvailable)
+        {
+            return _localizedDays[dayOfWeekIndex].GetLocalizedString();
+        }
+        else
+        {
+            return daysOfWeek[dayOfWeekIndex];
+        }
+    }
+    
+    public string GetDayOfWeekString(int dayOfWeekIndex)
+    {
+        if (dayOfWeekIndex < 0 || dayOfWeekIndex > 6)
+        {
+            Debug.LogWarning($"Invalid day of week index: {dayOfWeekIndex}. Returning empty string.");
+            return string.Empty;
+        }
+        
+        bool isLocalizationAvailable = _localizedDays != null && _localizedDays.Length == 7;
+        foreach (var localizedDay in _localizedDays)
+        {
+            if (localizedDay == null || localizedDay.IsEmpty)
+            {
+                isLocalizationAvailable = false;
+                break;
+            }
+        }
+        
+        if (isLocalizationAvailable)
+        {
+            return _localizedDays[dayOfWeekIndex].GetLocalizedString();
+        }
+        else
+        {
+            return daysOfWeek[dayOfWeekIndex];
+        }
+    }
+    
+    public string GetMonthName(int month)
+    {
+        if (month < 0 || month > 11)
+        {
+            Debug.LogWarning($"Invalid month index: {month}. Returning empty string.");
+            return string.Empty;
+        }
+        
+        bool isLocalizationAvailable = _localizedMonth != null && _localizedMonth.Length == 12;
+        foreach (var localizedMonth in _localizedMonth)
+        {
+            if (localizedMonth == null || localizedMonth.IsEmpty)
+            {
+                isLocalizationAvailable = false;
+                break;
+            }
+        }
+        
+        if (isLocalizationAvailable)
+        {
+            return _localizedMonth[month].GetLocalizedString();
+        }
+        else
+        {
+            Debug.LogWarning("Month names are not properly initialized. Returning empty string.");
+            return string.Empty;
+        }
     }
     
     public int GetDayOfWeekIndex(int day, int month, int year)
@@ -554,3 +654,4 @@ public class TimeManager : MonoBehaviour
         return ReturnAllSundaysDuringTournament(GetCurrentDate(), numOfWeeks);
     }
 }
+

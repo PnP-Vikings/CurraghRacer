@@ -94,6 +94,42 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7162748877955661917
+  - m_Id: 8374841237504
+    m_Localized: Positive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12236209774592
+    m_Localized: Negative
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12371228614656
+    m_Localized: Neutral
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12438786269184
+    m_Localized: Competitive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12471086604288
+    m_Localized: Cooperative
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12505555394560
+    m_Localized: Cautious
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12589139484672
+    m_Localized: Aggressive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12609305698304
+    m_Localized: Energetic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12665010249728
+    m_Localized: Lazy
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

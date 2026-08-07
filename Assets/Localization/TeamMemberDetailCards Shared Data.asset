@@ -76,7 +76,39 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8374841237504
-    m_Key: TeamMemberAttitude
+    m_Key: TeamMemberAttitude.Positive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12236209774592
+    m_Key: TeamMemberAttitude.Negative
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12371228614656
+    m_Key: TeamMemberAttitude.Neutral
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12438786269184
+    m_Key: TeamMemberAttitude.Competitive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12471086604288
+    m_Key: TeamMemberAttitude.Cooperative
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12505555394560
+    m_Key: TeamMemberAttitude.Cautious
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12589139484672
+    m_Key: TeamMemberAttitude.Aggressive
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12609305698304
+    m_Key: TeamMemberAttitude.Energetic
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12665010249728
+    m_Key: TeamMemberAttitude.Lazy
     m_Metadata:
       m_Items: []
   m_Metadata:

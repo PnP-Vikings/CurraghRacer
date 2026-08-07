@@ -42,7 +42,7 @@ public class TeamMemberUiHandler : MonoBehaviour
 
         memberName = member.memberName;
         memberDescription = member.memberDescription;
-        attitude = member.attitude.ToString();
+        attitude = member.GetLocalizedAttitudeString();
         strength = Mathf.RoundToInt(member.characterStats.strength);
         stamina = Mathf.RoundToInt(member.characterStats.stamina);
         technique = Mathf.RoundToInt(member.characterStats.technique);

@@ -267,6 +267,38 @@ MonoBehaviour:
     m_Localized: Accept
     m_Metadata:
       m_Items: []
+  - m_Id: 6753046620004352
+    m_Localized: 'Points: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753210558570496
+    m_Localized: 'Wins: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753240728199168
+    m_Localized: 'Position: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753277134757888
+    m_Localized: 'Star Rating: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6752875970551808
+    m_Localized: Back To League Table
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6760822691848192
+    m_Localized: "Amount: \u20AC{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6760545930698752
+    m_Localized: 'Days Till Due: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6761975680851968
+    m_Localized: Pay
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

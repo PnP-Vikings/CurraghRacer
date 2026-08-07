@@ -1,0 +1,99 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TimeManager_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: fd29b99dc0715cd4590975ec5a7a4aa9, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 580264124416
+    m_Localized: Monday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 9608093696
+    m_Localized: Sunday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 613453651968
+    m_Localized: Tuesday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648073437184
+    m_Localized: Wednesday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 682177323008
+    m_Localized: Thursday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 726527893504
+    m_Localized: Friday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 796786679808
+    m_Localized: Saturday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4254621229056
+    m_Localized: January
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4423504879616
+    m_Localized: February
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4454685335552
+    m_Localized: March
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4486738206720
+    m_Localized: April
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4517650227200
+    m_Localized: May
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4544367943680
+    m_Localized: June
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4567075905536
+    m_Localized: July
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4590748557312
+    m_Localized: August
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4612076593152
+    m_Localized: September
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4661435162624
+    m_Localized: October
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4741252767744
+    m_Localized: November
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4759854505984
+    m_Localized: December
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
