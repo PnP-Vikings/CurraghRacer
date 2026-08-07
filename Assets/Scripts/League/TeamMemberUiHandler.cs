@@ -1,14 +1,16 @@
 using League;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class TeamMemberUiHandler : MonoBehaviour
 {
+    [Header("Member Data")]
     public string memberName,memberDescription,attitude;
     public int strength,stamina,technique,teamWork;
     public int age,starRating;
-    
+    [Header("UI Elements")]
     public TMP_Text memberNameText,
         memberDescriptionText,
         attitudeText,
@@ -22,7 +24,13 @@ public class TeamMemberUiHandler : MonoBehaviour
     public TeamMember teamMember;
     
     
-   
+    [Header("Localization")]
+    [SerializeField] private LocalizedString _localizedAgeText;
+    [SerializeField] private LocalizedString _localizedStrengthText;
+    [SerializeField] private LocalizedString _localizedStaminaText;
+    [SerializeField] private LocalizedString _localizedTechniqueText;
+    [SerializeField] private LocalizedString _localizedTeamWorkText;
+    [SerializeField] private LocalizedString _localizedStarRatingText;
     
     public void SetMemberData(TeamMember member)
     {
@@ -34,7 +42,7 @@ public class TeamMemberUiHandler : MonoBehaviour
 
         memberName = member.memberName;
         memberDescription = member.memberDescription;
-        attitude = member.attitude.ToString();
+        attitude = member.GetLocalizedAttitudeString();
         strength = Mathf.RoundToInt(member.characterStats.strength);
         stamina = Mathf.RoundToInt(member.characterStats.stamina);
         technique = Mathf.RoundToInt(member.characterStats.technique);
@@ -44,11 +52,30 @@ public class TeamMemberUiHandler : MonoBehaviour
         if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && starRatingText != null)
         {
             starRating = LeagueController.Instance.CalculateTeamMemberStarRating(member);
-            starRatingText.text = "Star Rating: " + starRating.ToString();
+            if (!_localizedStarRatingText.IsEmpty)
+            {
+                _localizedStarRatingText.Arguments = new object[] { starRating };
+                _localizedStarRatingText.RefreshString();
+                starRatingText.text = _localizedStarRatingText.GetLocalizedString();
+            }
+            else
+            {
+                starRatingText.text = "Star Rating: " + starRating.ToString();
+            }
         }
         else if (starRatingText != null)
         {
-            starRatingText.text = "Star Rating: N/A";
+            if (!_localizedStarRatingText.IsEmpty)
+            {
+                _localizedStarRatingText.Arguments = new object[] {  "N/A" };
+                _localizedStarRatingText.RefreshString();
+                starRatingText.text = _localizedStarRatingText.GetLocalizedString();
+            }
+            else
+            {
+             
+                starRatingText.text = "Star Rating: N/A";
+            }
             starRatingText.gameObject.SetActive(false);
             Debug.LogWarning("LeagueController or currentLeague is null!");
         }
@@ -73,12 +100,56 @@ public class TeamMemberUiHandler : MonoBehaviour
         memberNameText.text = memberName;
         memberDescriptionText.text = memberDescription;
         attitudeText.text = attitude;
-        strengthText.text = "Strength: "+  strength.ToString();
-        staminaText.text = "Stamina: "+ stamina.ToString();
-        techniqueText.text = "Technique: "+ technique.ToString();
-        teamWorkText.text = "Team Work: "+ teamWork.ToString();
-        ageText.text = "Age: "+age.ToString();
-
+        if(!_localizedStrengthText.IsEmpty)
+        {
+            _localizedStrengthText.Arguments = new object[] { strength };
+            _localizedStrengthText.RefreshString();
+            strengthText.text = _localizedStrengthText.GetLocalizedString();
+        }
+        else
+        {
+            strengthText.text = "Strength: "+ strength.ToString();
+        }
+        if(!_localizedStaminaText.IsEmpty)
+        {
+            _localizedStaminaText.Arguments = new object[] { stamina };
+            _localizedStaminaText.RefreshString();
+            staminaText.text = _localizedStaminaText.GetLocalizedString();
+        }
+        else
+        {
+            staminaText.text = "Stamina: "+ stamina.ToString();
+        }
+        if(!_localizedTechniqueText.IsEmpty)
+        {
+            _localizedTechniqueText.Arguments = new object[] { technique };
+            _localizedTechniqueText.RefreshString();
+            techniqueText.text = _localizedTechniqueText.GetLocalizedString();
+        }
+        else
+        {
+            techniqueText.text = "Technique: "+ technique.ToString();
+        }
+        if(!_localizedTeamWorkText.IsEmpty)
+        {
+            _localizedTeamWorkText.Arguments = new object[] { teamWork };
+            _localizedTeamWorkText.RefreshString();
+            teamWorkText.text = _localizedTeamWorkText.GetLocalizedString();
+        }
+        else
+        {
+            teamWorkText.text = "Team Work: "+ teamWork.ToString();
+        }
+        if(!_localizedAgeText.IsEmpty)
+        {
+            _localizedAgeText.Arguments = new object[] { age };
+            _localizedAgeText.RefreshString();
+            ageText.text = _localizedAgeText.GetLocalizedString();
+        }
+        else
+        {
+            ageText.text = "Age: "+age.ToString();
+        }
         
         if (memberIconImage.sprite != null)
         {
@@ -104,16 +175,70 @@ public class TeamMemberUiHandler : MonoBehaviour
         age = 0;
         memberIconImage.sprite = null;
         teamMember = null;
-
         memberNameText.text = "N/A";
         memberDescriptionText.text = "N/A";
         attitudeText.text = "N/A";
-        strengthText.text = "Strength: N/A";
-        staminaText.text = "Stamina: N/A";
-        techniqueText.text = "Technique: N/A";
-        teamWorkText.text = "Team Work: N/A";
-        ageText.text = "Age: N/A";
-        starRatingText.text = "Star Rating: N/A";
+        
+        if(!_localizedStrengthText.IsEmpty)
+        {
+            _localizedStrengthText.Arguments = new object[] { "N/A" };
+            _localizedStrengthText.RefreshString();
+            strengthText.text = _localizedStrengthText.GetLocalizedString();
+        }
+        else
+        {
+            strengthText.text = "Strength: N/A";
+        }
+        if(!_localizedStaminaText.IsEmpty)
+        {
+            _localizedStaminaText.Arguments = new object[] { "N/A" };
+            _localizedStaminaText.RefreshString();
+            staminaText.text = _localizedStaminaText.GetLocalizedString();
+        }
+        else
+        {
+            staminaText.text = "Stamina: N/A";
+        }
+        if(!_localizedTechniqueText.IsEmpty)
+        {
+            _localizedTechniqueText.Arguments = new object[] { "N/A" };
+            _localizedTechniqueText.RefreshString();
+            techniqueText.text = _localizedTechniqueText.GetLocalizedString();
+        }
+        else
+        {
+            techniqueText.text = "Technique: N/A";
+        }
+        if(!_localizedTeamWorkText.IsEmpty)
+        {
+            _localizedTeamWorkText.Arguments = new object[] { "N/A" };
+            _localizedTeamWorkText.RefreshString();
+            teamWorkText.text = _localizedTeamWorkText.GetLocalizedString();
+        }
+        else
+        {
+            teamWorkText.text = "Team Work: N/A";
+        }
+        if(!_localizedAgeText.IsEmpty)
+        {
+            _localizedAgeText.Arguments = new object[] { "N/A" };
+            _localizedAgeText.RefreshString();
+            ageText.text = _localizedAgeText.GetLocalizedString();
+        }
+        else
+        {
+            ageText.text = "Age: N/A";
+        }
+        if(!_localizedStarRatingText.IsEmpty)
+        {
+            _localizedStarRatingText.Arguments = new object[] { "N/A" };
+            _localizedStarRatingText.RefreshString();
+            starRatingText.text = _localizedStarRatingText.GetLocalizedString();
+        }
+        else
+        {
+            starRatingText.text = "Star Rating: N/A";
+        }
 
         if (memberIconImage != null)
         {

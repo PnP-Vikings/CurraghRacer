@@ -29,12 +29,24 @@ MonoBehaviour:
     - Locale-ga-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3a81c31e66c038647a5beb1a323d2510
+    m_Address: TeamMemberDetailCards_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 4e72c25cb6abdd84a80d2c58ef297a2a
     m_Address: PlayerStatsView_ga-IE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ga-IE
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a325d038992b83143a404ecef598b697
+    m_Address: TimeManager_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c31d37139191dac49a369ae8c81f736f
     m_Address: DecisionCards_ga-IE

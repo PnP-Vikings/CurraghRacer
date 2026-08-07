@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.Localization;
 using Random = UnityEngine.Random;
 
 public enum Attitude
@@ -16,7 +17,7 @@ public enum Attitude
 }
 
 
-
+ 
 
 
 
@@ -66,7 +67,15 @@ public class TeamMember : ScriptableObject
     [Tooltip("Happiness level of the team member (0-100).")]
     public Happiness Happiness = new Happiness(); // Default happiness level
     
-    
+    [SerializeField] private LocalizedString _localizedAttitudePositive = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Positive" };
+    [SerializeField] private LocalizedString _localizedAttitudeNegative = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Negative" };
+    [SerializeField] private LocalizedString _localizedAttitudeNeutral = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Neutral" };
+    [SerializeField] private LocalizedString _localizedAttitudeCompetitive = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Competitive" };
+    [SerializeField] private LocalizedString _localizedAttitudeCooperative = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Cooperative" };
+    [SerializeField] private LocalizedString _localizedAttitudeCautious = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Cautious" };
+    [SerializeField] private LocalizedString _localizedAttitudeAggressive = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Aggressive" };
+    [SerializeField] private LocalizedString _localizedAttitudeEnergetic = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Energetic" };
+    [SerializeField] private LocalizedString _localizedAttitudeLazy = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Lazy" };
     public CharacterStats GetStats()
     {
         return characterStats;
@@ -96,6 +105,7 @@ public class TeamMember : ScriptableObject
     
     public virtual CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
     {
+      
         switch (attitude)
         {
             case Attitude.Positive:
@@ -120,6 +130,69 @@ public class TeamMember : ScriptableObject
         }
     }
     
+    
+    public string GetLocalizedAttitudeString()
+    {
+        switch (attitude)
+        {
+            case Attitude.Positive:
+               if (!_localizedAttitudePositive.IsEmpty)
+                {
+                    return _localizedAttitudePositive.GetLocalizedString();
+                }
+                return "Positive";
+            case Attitude.Negative:
+                if (!_localizedAttitudeNegative.IsEmpty)
+                {
+                    return _localizedAttitudeNegative.GetLocalizedString();
+                }
+                return "Negative";
+            case Attitude.Neutral:
+                if (!_localizedAttitudeNeutral.IsEmpty)
+                {
+                    return _localizedAttitudeNeutral.GetLocalizedString();
+                }
+                return "Neutral";
+            case Attitude.Competitive:
+                if (!_localizedAttitudeCompetitive.IsEmpty)
+                {
+                    return _localizedAttitudeCompetitive.GetLocalizedString();
+                }
+                return "Competitive";
+            case Attitude.Cooperative:
+                if (!_localizedAttitudeCooperative.IsEmpty)
+                {
+                    return _localizedAttitudeCooperative.GetLocalizedString();
+                }
+                return "Cooperative";
+            case Attitude.Aggressive:
+                if (!_localizedAttitudeAggressive.IsEmpty)
+                {
+                    return _localizedAttitudeAggressive.GetLocalizedString();
+                }
+                return "Aggressive";
+            case Attitude.Energetic:
+                if (!_localizedAttitudeEnergetic.IsEmpty)
+                {
+                    return _localizedAttitudeEnergetic.GetLocalizedString();
+                }
+                return "Energetic";
+            case Attitude.Cautious:
+                if (!_localizedAttitudeCautious.IsEmpty)
+                {
+                    return _localizedAttitudeCautious.GetLocalizedString();
+                }
+                return "Cautious";
+            case Attitude.Lazy:
+                if (!_localizedAttitudeLazy.IsEmpty)
+                {
+                    return _localizedAttitudeLazy.GetLocalizedString();
+                }
+                return "Lazy";
+            default:
+                return "Unknown";
+        }
+    }
     
     public int ExperienceNeededForNextLevel()
     {

@@ -1,0 +1,104 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: TimeManager Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: TimeManager
+  m_TableCollectionNameGuidString: fd29b99dc0715cd4590975ec5a7a4aa9
+  m_Entries:
+  - m_Id: 9608093696
+    m_Key: TimeManager.Sunday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 580264124416
+    m_Key: TimeManager.Monday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 613453651968
+    m_Key: TimeManager.Tuesday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648073437184
+    m_Key: TimeManager.Wednesday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 682177323008
+    m_Key: TimeManager.Thursday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 726527893504
+    m_Key: TimeManager.Friday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 796786679808
+    m_Key: TimeManager.Saturday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4254621229056
+    m_Key: TimeManager.Month.January
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4423504879616
+    m_Key: TimeManager.Month.February
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4454685335552
+    m_Key: TimeManager.Month.March
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4486738206720
+    m_Key: TimeManager.Month.April
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4517650227200
+    m_Key: TimeManager.Month.May
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4544367943680
+    m_Key: TimeManager.Month.June
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4567075905536
+    m_Key: TimeManager.Month.July
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4590748557312
+    m_Key: TimeManager.Month.August
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4612076593152
+    m_Key: TimeManager.Month.September
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4661435162624
+    m_Key: TimeManager.Month.October
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4741252767744
+    m_Key: TimeManager.Month.November
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4759854505984
+    m_Key: TimeManager.Month.December
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7162748877955661947
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748877955661947
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1786114371941

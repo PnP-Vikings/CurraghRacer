@@ -16,7 +16,7 @@
                             "colorLabel": 1,
                             "priority": 0,
                             "createdDate": "2026-06-03 22:56",
-                            "dueDate": "2026-08-10",
+                            "dueDate": "2026-09-07",
                             "archived": false,
                             "checklistItems": [
                                 "Add Calendar event",
@@ -70,7 +70,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
@@ -107,7 +107,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": false,
                             "assigneeIds": [],
                             "isArchived": false
@@ -155,70 +155,33 @@
                             "isArchived": false
                         },
                         {
-                            "id": "14ec67f2-9dde-438b-a5b5-2a5ae84e301a",
-                            "title": "Check Logic on new save button ",
-                            "description": "Doesn't prompt the player if they want tutorial and also doesn't seem to reset the bills ",
+                            "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
+                            "title": "What needs to Localized",
+                            "description": "What still needs to be Localized",
                             "category": "Gameplay",
                             "colorLabel": 1,
                             "priority": 0,
-                            "createdDate": "2026-08-06 14:37",
-                            "dueDate": "",
+                            "createdDate": "2026-08-07 16:25",
+                            "dueDate": "2026-08-14",
                             "archived": false,
                             "checklistItems": [
-                                "Match up the logic with the start new game button",
-                                "Verify its working"
+                                "League Invitaition card",
+                                "All the tutorial tasks",
+                                "Minigames need to be Localized"
                             ],
                             "checklistStates": [
+                                false,
                                 false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
                                 "",
+                                "",
                                 ""
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
-                            "linkedItems": [
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Prefabs/SaveSlotUiPrefab.prefab",
-                                        "globalObjectId": "GlobalObjectId_V1-2-af9bbcbdeaf1b2f4ca0f14413a14d754-8598144522272698404-0",
-                                        "name": "SaveSlotUiPrefab"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Scenes/Main Menu.unity",
-                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-86933480616807991-4362316326491213309",
-                                        "name": "SaveMenus"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": true,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "",
-                                    "sceneObject": {
-                                        "scenePath": "Assets/Scenes/Main Menu.unity",
-                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1554382852392505832-4362316326491213309",
-                                        "name": "StartBtn"
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                }
-                            ],
+                            "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,
@@ -347,143 +310,6 @@
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
-                        {
-                            "id": "280b78cb-0607-423e-aadf-65a35d376d2d",
-                            "title": "Setup Tutorial League ",
-                            "description": "Setup a league that the player can join and complete during \ntutorial only have one race",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-07-08 23:33",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Create league",
-                                "Add 3 Teams",
-                                "Add Check to make sure that team is not already in league before promoting for tutorial league",
-                                "Setup system that makes it so this league gets added to the list and set as the current league if tutorial is active"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                true,
-                                true
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "1f58684bef80a134bb2007666f61ca01",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "e7af4e1578bb16f42881e823255c1a23",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "b7da84d8b61ab9f40a06307c18a5c343",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "94a4f225c85cc4b46b71785fd5333abb",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "13249adb7be8417498cc228092a6b7d7",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                }
-                            ],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": true,
-                            "assigneeIds": [],
-                            "isArchived": false
-                        },
-                        {
-                            "id": "47a20766-1f19-423d-a291-3c7a970aa0c0",
-                            "title": "Test Diifferent format for tutorial task list",
-                            "description": "I think maybe showing the next store may confuse some users so maybe lets try just always having the \nactive task at the bottom ",
-                            "category": "",
-                            "colorLabel": 0,
-                            "priority": 0,
-                            "createdDate": "2026-07-09 19:49",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Change format",
-                                "Test",
-                                "Confirm which is better"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                true
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
                         }
@@ -977,6 +803,214 @@
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],
                             "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "14ec67f2-9dde-438b-a5b5-2a5ae84e301a",
+                            "title": "Check Logic on new save button ",
+                            "description": "Doesn't prompt the player if they want tutorial and also doesn't seem to reset the bills ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-08-06 14:37",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Match up the logic with the start new game button",
+                                "Verify its working"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Prefabs/SaveSlotUiPrefab.prefab",
+                                        "globalObjectId": "GlobalObjectId_V1-2-af9bbcbdeaf1b2f4ca0f14413a14d754-8598144522272698404-0",
+                                        "name": "SaveSlotUiPrefab"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/Main Menu.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-86933480616807991-4362316326491213309",
+                                        "name": "SaveMenus"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": true,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "",
+                                    "sceneObject": {
+                                        "scenePath": "Assets/Scenes/Main Menu.unity",
+                                        "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1554382852392505832-4362316326491213309",
+                                        "name": "StartBtn"
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "47a20766-1f19-423d-a291-3c7a970aa0c0",
+                            "title": "Test Diifferent format for tutorial task list",
+                            "description": "I think maybe showing the next store may confuse some users so maybe lets try just always having the \nactive task at the bottom ",
+                            "category": "",
+                            "colorLabel": 0,
+                            "priority": 0,
+                            "createdDate": "2026-07-09 19:49",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Change format",
+                                "Test",
+                                "Confirm which is better"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": [],
+                            "isArchived": false
+                        },
+                        {
+                            "id": "280b78cb-0607-423e-aadf-65a35d376d2d",
+                            "title": "Setup Tutorial League ",
+                            "description": "Setup a league that the player can join and complete during \ntutorial only have one race",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-07-08 23:33",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Create league",
+                                "Add 3 Teams",
+                                "Add Check to make sure that team is not already in league before promoting for tutorial league",
+                                "Setup system that makes it so this league gets added to the list and set as the current league if tutorial is active"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "1f58684bef80a134bb2007666f61ca01",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "e7af4e1578bb16f42881e823255c1a23",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "b7da84d8b61ab9f40a06307c18a5c343",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "94a4f225c85cc4b46b71785fd5333abb",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "13249adb7be8417498cc228092a6b7d7",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": true,

@@ -139,6 +139,154 @@ MonoBehaviour:
     m_Key: Garage.BulletinBoard.Preview.RaceText.Pratice
     m_Metadata:
       m_Items: []
+  - m_Id: 6681263640403968
+    m_Key: Garage.BulletinBoard.UI.Bills.BillName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681369622077440
+    m_Key: Garage.BulletinBoard.UI.Bills.DaysDue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681449259327488
+    m_Key: Garage.BulletinBoard.UI.Bills.BillAmount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681495111458816
+    m_Key: Garage.BulletinBoard.UI.Bills.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681943855849472
+    m_Key: Garage.BulletinBoard.UI.Bills.BillsPlaceholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683556813201408
+    m_Key: Garage.BulletinBoard.UI.TeamManager.ActiveTeamTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683640758001664
+    m_Key: Garage.BulletinBoard.UI.TeamManager.BenchTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683699172073472
+    m_Key: Garage.BulletinBoard.UI.TeamManager.HireableSailors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683769816735744
+    m_Key: Garage.BulletinBoard.UI.TeamManager.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6684386639470592
+    m_Key: Garage.BulletinBoard.UI.TeamManager.HireableSailorsMenu.HireableSailorsTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6684447314272256
+    m_Key: Garage.BulletinBoard.UI.TeamManager.HireableSailorsMenu.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685820445515776
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainStrengthTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685940247420928
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainStaminaTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685974137397248
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainTechniqueTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686057016844288
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainTeamworkTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686801589690368
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686896502595584
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.SelectTeamMember.Train
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6687004380094464
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.SelectTeamMember.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720067495518208
+    m_Key: Garage.Tutorial.TaskListtxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720211339173888
+    m_Key: Garage.IntroLetter.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6720839771742208
+    m_Key: Garage.IntroLetter.Descripiton
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721385467469824
+    m_Key: Garage.LeagueTableUi.LeagueWins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721502949924864
+    m_Key: Garage.LeagueTableUi.LeagueStarRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721570193006592
+    m_Key: Garage.LeagueTableUi.Playerhasnotjoined
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721655026999296
+    m_Key: Garage.LeagueTableUi.LeaguePoints
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721711654297600
+    m_Key: Garage.LeagueTableUi.LeagueTeamName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721817375924224
+    m_Key: Garage.LeagueTableUi.LeagueTeamPosition
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6721851169431552
+    m_Key: Garage.LeagueTableUi.HideLeagueTable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6726302210973696
+    m_Key: Garage.IntroLetter.AcceptTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6752875970551808
+    m_Key: Garage.LeagueTable.LeagueTeamUi.BackToLeagueTableTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753046620004352
+    m_Key: Garage.LeagueTable.LeagueTeamUi.Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753210558570496
+    m_Key: Garage.LeagueTable.LeagueTeamUi.Wins
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753240728199168
+    m_Key: Garage.LeagueTable.LeagueTeamUi.Position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6753277134757888
+    m_Key: Garage.LeagueTable.LeagueTeamUi.StarRating
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6760545930698752
+    m_Key: Garage.Bills.DaysTillDue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6760822691848192
+    m_Key: Garage.Bills.BillAmount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6761975680851968
+    m_Key: Garage.Bills.Pay
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

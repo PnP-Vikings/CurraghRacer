@@ -1,5 +1,6 @@
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class BillUi : MonoBehaviour
@@ -7,7 +8,11 @@ public class BillUi : MonoBehaviour
     Bill billData;
     public TMPro.TMP_Text billName,billAmountText, daysTillDueText;
     public Button payBillButton;
-
+    public LocalizedString _localizedDayTillDueText =new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.Bills.DaysTillDue" };
+    public LocalizedString _localizedBillAmountText =new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.Bills.BillAmount" };
+    
+    
+    
     public void SetBillUi(Bill bill)
     {
         if (bill == null)
@@ -21,8 +26,29 @@ public class BillUi : MonoBehaviour
         
         
         billName.text = bill.billName;
-        billAmountText.text = "Amount: €" + amountDue.ToString("F2");
-        daysTillDueText.text = "Days Till Due: " + daysTillDue.ToString();
+        
+        if(!_localizedBillAmountText.IsEmpty)
+        {
+            _localizedBillAmountText.Arguments = new object[] { amountDue.ToString("F2") };
+            _localizedBillAmountText.RefreshString();
+            
+            
+            billAmountText.text = _localizedBillAmountText.GetLocalizedString();
+        }
+        else
+        {
+            billAmountText.text = "Amount: €" + amountDue.ToString("F2");
+        }
+        if(!_localizedDayTillDueText.IsEmpty)
+        {
+            _localizedDayTillDueText.Arguments = new object[] { daysTillDue.ToString() };
+            _localizedDayTillDueText.RefreshString();
+            daysTillDueText.text = _localizedDayTillDueText.GetLocalizedString();
+        }
+        else
+        {
+            daysTillDueText.text = "Days Till Due: " + daysTillDue.ToString();
+        }
         
         if (daysTillDue <= 0)
         {
