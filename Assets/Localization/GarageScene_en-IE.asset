@@ -142,6 +142,80 @@ MonoBehaviour:
     m_Localized: Practice Race
     m_Metadata:
       m_Items: []
+  - m_Id: 6681263640403968
+    m_Localized: Bill Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681369622077440
+    m_Localized: Days Due
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681495111458816
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681449259327488
+    m_Localized: Bill Amount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681943855849472
+    m_Localized: Bills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683556813201408
+    m_Localized: Active Team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683769816735744
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683640758001664
+    m_Localized: Bench
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683699172073472
+    m_Localized: Hireable Sailors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6684447314272256
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6684386639470592
+    m_Localized: Hireable Sailors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685820445515776
+    m_Localized: Train Strength
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685940247420928
+    m_Localized: Train Stamina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685974137397248
+    m_Localized: Train Technique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686057016844288
+    m_Localized: 'Train
+
+      TeamWork'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686801589690368
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6687004380094464
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686896502595584
+    m_Localized: Train
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

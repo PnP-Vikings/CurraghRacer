@@ -139,6 +139,78 @@ MonoBehaviour:
     m_Key: Garage.BulletinBoard.Preview.RaceText.Pratice
     m_Metadata:
       m_Items: []
+  - m_Id: 6681263640403968
+    m_Key: Garage.BulletinBoard.UI.Bills.BillName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681369622077440
+    m_Key: Garage.BulletinBoard.UI.Bills.DaysDue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681449259327488
+    m_Key: Garage.BulletinBoard.UI.Bills.BillAmount
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681495111458816
+    m_Key: Garage.BulletinBoard.UI.Bills.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6681943855849472
+    m_Key: Garage.BulletinBoard.UI.Bills.BillsPlaceholder
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683556813201408
+    m_Key: Garage.BulletinBoard.UI.TeamManager.ActiveTeamTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683640758001664
+    m_Key: Garage.BulletinBoard.UI.TeamManager.BenchTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683699172073472
+    m_Key: Garage.BulletinBoard.UI.TeamManager.HireableSailors
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6683769816735744
+    m_Key: Garage.BulletinBoard.UI.TeamManager.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6684386639470592
+    m_Key: Garage.BulletinBoard.UI.TeamManager.HireableSailorsMenu.HireableSailorsTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6684447314272256
+    m_Key: Garage.BulletinBoard.UI.TeamManager.HireableSailorsMenu.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685820445515776
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainStrengthTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685940247420928
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainStaminaTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6685974137397248
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainTechniqueTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686057016844288
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.TrainTeamworkTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686801589690368
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6686896502595584
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.SelectTeamMember.Train
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6687004380094464
+    m_Key: Garage.BulletinBoard.UI.TrainMenu.SelectTeamMember.Back
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
