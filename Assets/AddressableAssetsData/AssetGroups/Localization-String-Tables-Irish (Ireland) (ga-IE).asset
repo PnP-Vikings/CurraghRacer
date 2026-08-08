@@ -48,6 +48,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ga-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: bcdf9054ec7cb9f49bdf8efaabd550c2
+    m_Address: RaceScene_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c31d37139191dac49a369ae8c81f736f
     m_Address: DecisionCards_ga-IE
     m_ReadOnly: 1
