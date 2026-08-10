@@ -15,6 +15,12 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-English (Ireland) (en-IE)
   m_GUID: a16f07182ea746b4e86353dceb4a22e7
   m_SerializeEntries:
+  - m_GUID: 0493d4147cd9ac948ab344989b38d24f
+    m_Address: TutorialTasks_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3d0b039453b065e43a59f7775e4bc08c
     m_Address: RaceScene_en-IE
     m_ReadOnly: 1

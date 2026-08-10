@@ -1,0 +1,88 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: TutorialTasks Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: TutorialTasks
+  m_TableCollectionNameGuidString: 081291486c03ce942ad43e4f8e01b1e7
+  m_Entries:
+  - m_Id: 18235777024
+    m_Key: ' TutorialTask.OpenCalendar.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 204844556288
+    m_Key: ' TutorialTask.OpenCalendar.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245848072192
+    m_Key: ' TutorialTask.OpenCalendar.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 331147632640
+    m_Key: ' TutorialTask.OpenCalendar.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340958109696
+    m_Key: ' TutorialTask.OpenCalendar.TaskDialog3'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 357454307328
+    m_Key: ' TutorialTask.OpenCalendar.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 899157057536
+    m_Key: ' TutorialTask.CloseCalendar.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 949262213120
+    m_Key: ' TutorialTask.CloseCalendar.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 989963739136
+    m_Key: ' TutorialTask.CloseCalendar.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712902365184
+    m_Key: ' TutorialTask.OpenBulletinTask.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1786852139008
+    m_Key: ' TutorialTask.OpenBulletinTask.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1825733337088
+    m_Key: ' TutorialTask.OpenBulletinTask.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860575420416
+    m_Key: ' TutorialTask.OpenBulletinTask.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907589373952
+    m_Key: ' TutorialTask.OpenBulletinTask.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1990221357056
+    m_Key: ' TutorialTask.OpenBulletinTask.CompletedTaskDialog2'
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7162748947361169488
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748947361169488
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1786369409665

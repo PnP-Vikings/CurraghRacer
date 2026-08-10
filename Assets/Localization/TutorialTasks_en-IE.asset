@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TutorialTasks_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 081291486c03ce942ad43e4f8e01b1e7, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 18235777024
+    m_Localized: Open Calendar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245848072192
+    m_Localized: Hey Mate your Grandad left this shed behind when he fled the Country
+    m_Metadata:
+      m_Items: []
+  - m_Id: 331147632640
+    m_Localized: 'This is your main base of operation where everything important
+      happens  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340958109696
+    m_Localized: I have marked your calendar up with all the important upcoming events
+      click on the calendar to have a look
+    m_Metadata:
+      m_Items: []
+  - m_Id: 357454307328
+    m_Localized: 'There are buttons at the bottom that allow you to navigate the
+      months  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 899157057536
+    m_Localized: Close Calendar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 989963739136
+    m_Localized: 'Do a bit of exploring then press Hide calendar to close the calendar '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712902365184
+    m_Localized: Open Bulletin Task
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1825733337088
+    m_Localized: 'The bulletin board is where you can manage everthing '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860575420416
+    m_Localized: 'Click on the Bulletin Board to have a look '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907589373952
+    m_Localized: 'Here you can manage everything  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1990221357056
+    m_Localized: 'Start race, find jobs, train your team members ,pay bills and sleep  '
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

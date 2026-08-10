@@ -1,0 +1,79 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TutorialTasks_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 081291486c03ce942ad43e4f8e01b1e7, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 18235777024
+    m_Localized: "Oscail an F\xE9ilire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245848072192
+    m_Localized: "A dhuine uasail, d\u2019fh\xE1g do sheanathair an seid seo ina
+      dhiaidh nuair a theith s\xE9 as an t\xEDr."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 331147632640
+    m_Localized: "Seo do phr\xEDomhionad oibr\xEDochta, \xE1it a dtarla\xEDonn gach
+      rud t\xE1bhachtach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340958109696
+    m_Localized: "T\xE1 na himeachta\xED t\xE1bhachtacha ar fad at\xE1 le teacht
+      marc\xE1ilte agam ar do fh\xE9ilire; clice\xE1il ar an bhf\xE9ilire chun breathn\xFA
+      orthu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 357454307328
+    m_Localized: "T\xE1 cnaip\xED ag an mbun a ligeann duit nasclean\xFAint a dh\xE9anamh
+      tr\xED na m\xEDonna."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 989963739136
+    m_Localized: "D\xE9an beag\xE1n taisc\xE9ala\xEDochta agus ansin br\xFAigh 'Folaigh
+      an f\xE9ilire' chun an f\xE9ilire a dh\xFAnadh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 899157057536
+    m_Localized: "D\xFAn an F\xE9ilire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712902365184
+    m_Localized: "Oscail Tasc an Bhulait\xEDn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1825733337088
+    m_Localized: "Is ar an gcl\xE1r f\xF3gra\xED is f\xE9idir leat gach rud a bhainisti\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860575420416
+    m_Localized: "Clice\xE1il ar an gCl\xE1r F\xF3gra\xED chun breathn\xFA air."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1990221357056
+    m_Localized: "Anseo is f\xE9idir leat gach rud a bhainisti\xFA: r\xE1s a thos\xFA,
+      poist a aimsi\xFA, baill d\u2019fhoireann a oili\xFAint, bill\xED a \xEDoc
+      agus codladh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907589373952
+    m_Localized: "Is f\xE9idir leat gach rud a bhainisti\xFA anseo."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []
