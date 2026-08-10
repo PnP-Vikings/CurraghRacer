@@ -75,6 +75,314 @@ MonoBehaviour:
     m_Key: ' TutorialTask.OpenBulletinTask.CompletedTaskDialog2'
     m_Metadata:
       m_Items: []
+  - m_Id: 5861182267392
+    m_Key: ' TutorialTask.CompleteAPracticeRace.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5983974711296
+    m_Key: ' TutorialTask.CompleteAPracticeRace.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6026400096256
+    m_Key: ' TutorialTask.CompleteAPracticeRace.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6064975110144
+    m_Key: ' TutorialTask.CompleteAPracticeRace.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6400930471936
+    m_Key: ' TutorialTask.ClickontheTv.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6448288358400
+    m_Key: ' TutorialTask.ClickontheTv.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6513555922944
+    m_Key: ' TutorialTask.ClickontheTv.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6566941024256
+    m_Key: ' TutorialTask.ClickontheTv.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6606333927424
+    m_Key: ' TutorialTask.ClickontheTv.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6928729104384
+    m_Key: ' TutorialTask.ExitTv.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6974145028096
+    m_Key: ' TutorialTask.ExitTv.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7008689315840
+    m_Key: ' TutorialTask.ExitTv.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7367218421760
+    m_Key: ' TutorialTask.OpenTeamManagerTask.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7422117666816
+    m_Key: ' TutorialTask.OpenTeamManagerTask.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7453130350592
+    m_Key: ' TutorialTask.OpenTeamManagerTask.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7502409228288
+    m_Key: ' TutorialTask.OpenTeamManagerTask.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7522063736832
+    m_Key: ' TutorialTask.OpenTeamManagerTask.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7575671136256
+    m_Key: ' TutorialTask.OpenTeamManagerTask.CompletedTaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7586299502592
+    m_Key: ' TutorialTask.OpenTeamManagerTask.CompletedTaskDialog3'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7597456351232
+    m_Key: ' TutorialTask.OpenTeamManagerTask.CompletedTaskDialog4'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8027963908096
+    m_Key: ' TutorialTask.OpenHireableSailorMenu.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8092925288448
+    m_Key: ' TutorialTask.OpenHireableSailorMenu.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8148831166464
+    m_Key: ' TutorialTask.OpenHireableSailorMenu.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8272705740800
+    m_Key: ' TutorialTask.OpenHireableSailorMenu.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8319497396224
+    m_Key: ' TutorialTask.OpenHireableSailorMenu.CompletedTaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28058928013312
+    m_Key: ' TutorialTask.CloseTeamManager.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28117694406656
+    m_Key: ' TutorialTask.CloseTeamManager.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28166373498880
+    m_Key: ' TutorialTask.CloseTeamManager.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28441389817856
+    m_Key: ' TutorialTask.OpenTrainingMenu.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28572734447616
+    m_Key: ' TutorialTask.OpenTrainingMenu.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28617059852288
+    m_Key: ' TutorialTask.OpenTrainingMenu.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28656771522560
+    m_Key: ' TutorialTask.OpenTrainingMenu.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28673494212608
+    m_Key: ' TutorialTask.OpenTrainingMenu.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28727877558272
+    m_Key: ' TutorialTask.OpenTrainingMenu.CompletedTaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36514456133632
+    m_Key: ' TutorialTask.TrainASquadMember.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36635377917952
+    m_Key: ' TutorialTask.TrainASquadMember.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36664897429504
+    m_Key: ' TutorialTask.TrainASquadMember.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36944187744256
+    m_Key: ' TutorialTask.OpenBillMenu.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37051662589952
+    m_Key: ' TutorialTask.OpenBillMenu.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37122294669312
+    m_Key: ' TutorialTask.OpenBillMenu.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37166594908160
+    m_Key: ' TutorialTask.OpenBillMenu.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37362900918272
+    m_Key: ' TutorialTask.CloseBillMenu.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37413505196032
+    m_Key: ' TutorialTask.CloseBillMenu.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37441443454976
+    m_Key: ' TutorialTask.CloseBillMenu.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37487731793920
+    m_Key: ' TutorialTask.CloseBillMenu.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37668078477312
+    m_Key: ' TutorialTask.WorkAJob.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37709069410304
+    m_Key: ' TutorialTask.WorkAJob.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37732465238016
+    m_Key: ' TutorialTask.WorkAJob.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37763146571776
+    m_Key: ' TutorialTask.WorkAJob.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38273652088832
+    m_Key: ' TutorialTask.PayABill.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38341507538944
+    m_Key: ' TutorialTask.PayABill.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38401192484864
+    m_Key: ' TutorialTask.PayABill.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38442229555200
+    m_Key: ' TutorialTask.PayABill.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38632927780864
+    m_Key: ' TutorialTask.PayABill.CompletedTaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38734207639552
+    m_Key: ' TutorialTask.PayABill.CompletedTaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38787655655424
+    m_Key: ' TutorialTask.PayABill.CompletedTaskDialog3'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39012852031488
+    m_Key: ' TutorialTask.CloseBillManager.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39100194217984
+    m_Key: ' TutorialTask.CloseBillManager.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39130024108032
+    m_Key: ' TutorialTask.CloseBillManager.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39614881456128
+    m_Key: ' TutorialTask.Sleep.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39677615661056
+    m_Key: ' TutorialTask.Sleep.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39718426238976
+    m_Key: ' TutorialTask.Sleep.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39766371328000
+    m_Key: ' TutorialTask.Sleep.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39778950045696
+    m_Key: ' TutorialTask.Sleep.TaskDialog3'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39936861396992
+    m_Key: ' TutorialTask.JoinTutorialLeague.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39989944508416
+    m_Key: ' TutorialTask.JoinTutorialLeague.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40036237041664
+    m_Key: ' TutorialTask.JoinTutorialLeague.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40074870775808
+    m_Key: ' TutorialTask.JoinTutorialLeague.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40090226122752
+    m_Key: ' TutorialTask.JoinTutorialLeague.TaskDialog3'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40500269670400
+    m_Key: ' TutorialTask.RaceInTheTournment.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40589855809536
+    m_Key: ' TutorialTask.RaceInTheTournment.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40696508571648
+    m_Key: ' TutorialTask.RaceInTheTournment.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40727919714304
+    m_Key: ' TutorialTask.RaceInTheTournment.TaskDialog2'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40865815846912
+    m_Key: ' TutorialTask.CompletedAllTasks.Name'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40944215777280
+    m_Key: ' TutorialTask.CompletedAllTasks.Description'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41063656972288
+    m_Key: ' TutorialTask.CompletedAllTasks.TaskDialog1'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41102273929216
+    m_Key: ' TutorialTask.CompletedAllTasks.TaskDialog2'
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
