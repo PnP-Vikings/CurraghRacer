@@ -22,6 +22,26 @@ MonoBehaviour:
     m_Localized: Glaoigh amach
     m_Metadata:
       m_Items: []
+  - m_Id: 640757093359616
+    m_Localized: Ar ais
+    m_Metadata:
+      m_Items: []
+  - m_Id: 640468290363392
+    m_Localized: Post
+    m_Metadata:
+      m_Items: []
+  - m_Id: 643107472269312
+    m_Localized: "\xC1dh m\xF3r an ch\xE9ad uair eile!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 642969668411392
+    m_Localized: Comhghairdeas!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 643765726339072
+    m_Localized: "Tortha\xED Deiridh"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

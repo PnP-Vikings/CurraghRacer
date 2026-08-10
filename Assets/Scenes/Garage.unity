@@ -11549,6 +11549,10 @@ PrefabInstance:
       propertyPath: m_sharedMaterial
       value: 
       objectReference: {fileID: 7704723192327905380, guid: b3a36dbc8b7dfd24bad5a518e760ca5c, type: 2}
+    - target: {fileID: 6754466150633396775, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
+      propertyPath: m_SortingOrder
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 9081314167890717904, guid: 3b7432eb917009d44a236d390cf36b0b, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[2].m_Target
       value: 
@@ -12663,7 +12667,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3914419356705930644, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_SortingOrder
-      value: 5
+      value: 11
       objectReference: {fileID: 0}
     - target: {fileID: 4376624811565136900, guid: 9dae800cba405234e82006525a010efd, type: 3}
       propertyPath: m_text

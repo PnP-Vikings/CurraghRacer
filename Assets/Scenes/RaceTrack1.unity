@@ -1693,6 +1693,54 @@ PrefabInstance:
       propertyPath: startingMenuPrefab
       value: 
       objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedPositionText.m_TableEntryReference.m_Key
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedBetterLuckText.m_TableEntryReference.m_Key
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedPositionText.m_TableEntryReference.m_KeyId
+      value: 640468290363392
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedBetterLuckText.m_TableEntryReference.m_KeyId
+      value: 643107472269312
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedCongratulationsText.m_TableEntryReference.m_Key
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedCongratulationsText.m_TableEntryReference.m_KeyId
+      value: 642969668411392
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedFinishResultsHeaderText.m_TableEntryReference.m_Key
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedPositionText.m_TableReference.m_TableCollectionName
+      value: GUID:9e5abee2a7139084d9ea7bcd1b0be13c
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedBetterLuckText.m_TableReference.m_TableCollectionName
+      value: GUID:9e5abee2a7139084d9ea7bcd1b0be13c
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedFinishResultsHeaderText.m_TableEntryReference.m_KeyId
+      value: 643765726339072
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedCongratulationsText.m_TableReference.m_TableCollectionName
+      value: GUID:9e5abee2a7139084d9ea7bcd1b0be13c
+      objectReference: {fileID: 0}
+    - target: {fileID: 3568019435202831623, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
+      propertyPath: _localizedFinishResultsHeaderText.m_TableReference.m_TableCollectionName
+      value: GUID:9e5abee2a7139084d9ea7bcd1b0be13c
+      objectReference: {fileID: 0}
     - target: {fileID: 6154375454930823520, guid: a85b129df5ad97e48ba8ab0fee8ae609, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

@@ -39,6 +39,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c15b3e03edc408c42bc6243b1f0ff785
+    m_Address: League_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c2ce9c72e4be0be498851d7077b7b591
     m_Address: PlayerStatsView_en-IE
     m_ReadOnly: 1

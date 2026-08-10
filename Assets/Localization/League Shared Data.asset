@@ -1,0 +1,100 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: League Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: League
+  m_TableCollectionNameGuidString: 026f0686b2b93d7449c3a38bf24d7bb2
+  m_Entries:
+  - m_Id: 7531913216
+    m_Key: ' LeagueInviteLocalizedText'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2135222640640
+    m_Key: LeagueDetails.Name.TutorialLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2311697981440
+    m_Key: LeagueDetails.Description.TutorialLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2416299728896
+    m_Key: LeagueDetails.Name.LocalRacingLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2965053104128
+    m_Key: LeagueDetails.Description.LocalRacingLeague
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3479362854912
+    m_Key: LeagueInviteAcceptBtnText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4628233052160
+    m_Key: LeagueCompleteAccept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7283927932928
+    m_Key: LeagueComplete.leagueNameTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8916015505408
+    m_Key: LeagueCompleted.PlayerWasRelegatedTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11867756945408
+    m_Key: LeagueCompleted.PlayerWasPromoted.PlacedFirst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12039886987264
+    m_Key: LeagueCompleted.PlayerWasPromoted.PlacedSecond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12212566482944
+    m_Key: LeagueCompleted.PlayerWasPromoted.PlacedThird
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12412232130560
+    m_Key: LeagueCompleted.PlayerWasPromoted.PlacedHigherThanThird
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12655556288512
+    m_Key: LeagueCompleted.PlayerNotPromoted.PlacedFirst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12947316269056
+    m_Key: LeagueCompleted.PlayerNotPromoted.PlacedSecond
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12983290814464
+    m_Key: LeagueCompleted.PlayerNotPromoted.PlacedThird
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13186785861632
+    m_Key: LeagueCompleted.PlayerPromoted.OutsideTopThree
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13468517261312
+    m_Key: LeagueCompleted.PlayerNotPromoted.DefaultDescription
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7162748944185032790
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162748944185032790
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1786358872659

@@ -22,6 +22,26 @@ MonoBehaviour:
     m_Localized: Shout
     m_Metadata:
       m_Items: []
+  - m_Id: 640468290363392
+    m_Localized: Position
+    m_Metadata:
+      m_Items: []
+  - m_Id: 640757093359616
+    m_Localized: Back
+    m_Metadata:
+      m_Items: []
+  - m_Id: 642969668411392
+    m_Localized: 'Congratulations! '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 643107472269312
+    m_Localized: 'Better luck next time! '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 643765726339072
+    m_Localized: Finish Results
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

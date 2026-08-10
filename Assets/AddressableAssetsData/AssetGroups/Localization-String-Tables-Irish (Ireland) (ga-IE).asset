@@ -42,6 +42,12 @@ MonoBehaviour:
     - Locale-ga-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 8229724f13c24fd4ca3d31f475f7d9a2
+    m_Address: League_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: a325d038992b83143a404ecef598b697
     m_Address: TimeManager_ga-IE
     m_ReadOnly: 1

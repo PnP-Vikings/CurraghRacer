@@ -19,6 +19,26 @@ MonoBehaviour:
     m_Key: ShoutTxt
     m_Metadata:
       m_Items: []
+  - m_Id: 640468290363392
+    m_Key: PositionTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 640757093359616
+    m_Key: BackButtonTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 642969668411392
+    m_Key: CongratulationsTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 643107472269312
+    m_Key: BetterLuckTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 643765726339072
+    m_Key: FinishResults.HeaderTxt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

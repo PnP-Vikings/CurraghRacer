@@ -2,6 +2,7 @@ using System;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 
 namespace League
 {
@@ -14,7 +15,9 @@ namespace League
 
         [Header("League Settings")]
         public string leagueName;
+        public LocalizedString localizedLeagueName;
         public string description;
+        public LocalizedString localizedDescription;
         public Sprite leagueIcon;
         public Color leagueColor;
         public Team[] teams;
