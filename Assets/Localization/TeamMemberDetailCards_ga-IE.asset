@@ -130,6 +130,10 @@ MonoBehaviour:
     m_Localized: "Leisci\xFAil"
     m_Metadata:
       m_Items: []
+  - m_Id: 1155974155984896
+    m_Localized: Roghnaithe
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
