@@ -8,6 +8,7 @@ public class LocalizationManager : MonoBehaviour
     public static LocalizationManager Instance { get; private set; }
     public bool isActive = false;
     public UnityEvent OnLanguageChanged;
+
     private void Awake()
     {
         if (Instance == null)
@@ -18,33 +19,51 @@ public class LocalizationManager : MonoBehaviour
         else
         {
             Destroy(gameObject);
+            return;
+        }
+
+        // Restore saved language preference on startup
+        int savedIndex = SettingsSaveSystem.LoadLanguage();
+        if (savedIndex >= 0)
+        {
+            StartCoroutine(RestoreSavedLocale(savedIndex));
         }
     }
-    
-    
+
+    private IEnumerator RestoreSavedLocale(int localeIndex)
+    {
+        yield return LocalizationSettings.InitializationOperation;
+        var locales = LocalizationSettings.AvailableLocales.Locales;
+        if (localeIndex < locales.Count)
+        {
+            LocalizationSettings.SelectedLocale = locales[localeIndex];
+            Debug.Log($"Restored locale: {locales[localeIndex].Identifier.Code}");
+        }
+    }
+
     public void ChangeLocale(int _localeID)
     {
         if (isActive)
             return;
         StartCoroutine(SetLocale(_localeID));
     }
-    
-    
+
     IEnumerator SetLocale(int _localeID)
     {
-       isActive= true;
-       yield return LocalizationSettings.InitializationOperation;
-       var selectedLocale = LocalizationSettings.AvailableLocales.Locales[_localeID];
-       if (selectedLocale != null)
-       {
-           LocalizationSettings.SelectedLocale = selectedLocale;
-           Debug.Log($"Current Locale: {selectedLocale.Identifier.Code}");
-       }
-       else
-       {
-           Debug.LogWarning("No locale is currently selected.");
-       }
-       isActive = false;
-       OnLanguageChanged?.Invoke();
+        isActive = true;
+        yield return LocalizationSettings.InitializationOperation;
+        var locales = LocalizationSettings.AvailableLocales.Locales;
+        if (_localeID >= 0 && _localeID < locales.Count)
+        {
+            LocalizationSettings.SelectedLocale = locales[_localeID];
+            SettingsSaveSystem.SaveLanguage(_localeID);
+            Debug.Log($"Current Locale: {locales[_localeID].Identifier.Code}");
+        }
+        else
+        {
+            Debug.LogWarning("No locale is currently selected.");
+        }
+        isActive = false;
+        OnLanguageChanged?.Invoke();
     }
 }
