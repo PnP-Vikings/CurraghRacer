@@ -28,11 +28,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 269059350528
-    m_Localized: Scoir
+    m_Localized: "F\xE1g"
     m_Metadata:
       m_Items: []
   - m_Id: 245790550253568
-    m_Localized: Cluiche Nua
+    m_Localized: "Cluiche \xDAr"
     m_Metadata:
       m_Items: []
   - m_Id: 245943403274240
@@ -44,7 +44,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 246158663344128
-    m_Localized: "Tuilleadh S\xE1bh\xE1lacha"
+    m_Localized: "S\xE1bh\xE1lacha eile"
     m_Metadata:
       m_Items: []
   - m_Id: 246252536061952
@@ -68,11 +68,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 602162131361792
-    m_Localized: Curragh
+    m_Localized: Na
     m_Metadata:
       m_Items: []
   - m_Id: 602354389868544
-    m_Localized: Racing
+    m_Localized: "Curracha\xED"
     m_Metadata:
       m_Items: []
   - m_Id: 602976530980864
@@ -120,7 +120,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7761110517145600
-    m_Localized: 'Fuinneamh: {0} | Boinn: {1}'
+    m_Localized: 'Fuinneamh: {0} | Airgead: {1}'
     m_Metadata:
       m_Items:
       - rid: 7162748853529608338
@@ -251,11 +251,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7800900667039744
-    m_Localized: "S\xE1bh\xE1il Thapa"
+    m_Localized: "Uaths\xE1bh\xE1il"
     m_Metadata:
       m_Items: []
   - m_Id: 7801012331995136
-    m_Localized: "S\xE1bh\xE1il Thapa curtha i gcr\xEDch!"
+    m_Localized: "Uaths\xE1bh\xE1il curtha i gcr\xEDch!"
     m_Metadata:
       m_Items: []
   - m_Id: 7801043076243456

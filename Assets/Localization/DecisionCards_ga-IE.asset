@@ -20,35 +20,35 @@ MonoBehaviour:
     - rid: 7162748853529608284
   m_TableData:
   - m_Id: 49693057024
-    m_Localized: 'Buailte: {0}'
+    m_Localized: "mbaineann s\xE9 leo: {0}"
     m_Metadata:
       m_Items:
       - rid: 7162748853529608284
   - m_Id: 4011775221760
-    m_Localized: Ceannaigh babhta deochanna do d'fhoireann
+    m_Localized: "Ceannaigh pionta\xED do d'fhoireann"
     m_Metadata:
       m_Items: []
   - m_Id: 4151797866496
-    m_Localized: "Ceannaigh babhta deochanna do d'fhoireann \u2013 Beidh tionchar
-      aige seo ar d'fhoireann ar fad.\r\n"
+    m_Localized: "Ceannaigh pionta\xED do d'fhoireann \u2013 Chuirfidh seo isteach
+      ar d'fhoireann ar fad.\n"
     m_Metadata:
       m_Items: []
   - m_Id: 4335537741824
     m_Localized: "D\u2019fh\xE9adfadh s\xE9 go gcuirfeadh s\xE9 feabhas ar mheon
-      na foirne \u20AC20 a chaitheamh ar bhabhta deochanna do na leaids."
+      na foirne \u20AC20 a chaitheamh ar pionta\xED do na leaids."
     m_Metadata:
       m_Items: []
   - m_Id: 4464630030336
-    m_Localized: "S\xE1bh\xE1il na boinn, ach d\u2019fh\xE9adfadh an meanma titim."
+    m_Localized: "S\xE1bh\xE1il na t-airgead, ach d\u2019fh\xE9adfadh an meanma titim."
     m_Metadata:
       m_Items: []
   - m_Id: 7225027321856
-    m_Localized: "R\xE1s\xE1la\xED Tartmhar"
+    m_Localized: Iomramhach Tartmhar
     m_Metadata:
       m_Items: []
   - m_Id: 7346154627072
-    m_Localized: "A Bhoss, t\xE1 beag\xE1n tart orm; an bhf\xE9adfainn c\xFApla bonn
-      a fh\xE1il ar iasacht chun rud \xE9igin a cheannach?"
+    m_Localized: "A Bhainisteoir, t\xE1 beag\xE1n tart orm; an bhf\xE9adfainn c\xFApla
+      t-airgead a fh\xE1il ar iasacht chun rud \xE9igin a cheannach?"
     m_Metadata:
       m_Items: []
   - m_Id: 7412827283456
@@ -57,14 +57,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7515906498560
-    m_Localized: "S\xE1bh\xE1il na boinn, ach d\u2019fh\xE9adfadh s\xE9 an sonas
-      a laghd\xFA."
+    m_Localized: "S\xE1bh\xE1il airgead, ach d\u2019fh\xE9adfadh s\xE9 an sonas a
+      laghd\xFA."
     m_Metadata:
       m_Items: []
   - m_Id: 8735752708096
-    m_Localized: "Bh\xED o\xEDche fhi\xE1in agaibh f\xE9in agus ag an bhfoireann,\r\nagus
+    m_Localized: "Bh\xED o\xEDche fhi\xE1in agaibh f\xE9in agus ag an bhfoireann,\nagus
       chodail sibh thar bhur gcuid ama tr\xED thimpiste \u2014 chaill sibh dh\xE1
-      uair an chloig den l\xE1.\r\n"
+      uair an chloig den l\xE1.\n"
     m_Metadata:
       m_Items: []
   - m_Id: 8654681006080
