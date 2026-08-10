@@ -9,6 +9,7 @@ public static class SettingsSaveSystem
     // Keys for PlayerPrefs
     private const string MASTER_VOLUME_KEY = "Settings_MasterVolume";
     private const string SETTINGS_INITIALIZED_KEY = "Settings_Initialized";
+    private const string LANGUAGE_KEY = "Settings_LanguageIndex";
 
     /// <summary>
     /// Saves the master volume setting
@@ -25,6 +26,23 @@ public static class SettingsSaveSystem
     public static float LoadMasterVolume()
     {
         return PlayerPrefs.GetFloat(MASTER_VOLUME_KEY, 1.0f);
+    }
+
+    /// <summary>
+    /// Saves the selected language index
+    /// </summary>
+    public static void SaveLanguage(int localeIndex)
+    {
+        PlayerPrefs.SetInt(LANGUAGE_KEY, localeIndex);
+        PlayerPrefs.Save();
+    }
+
+    /// <summary>
+    /// Loads the selected language index. Returns -1 if not set.
+    /// </summary>
+    public static int LoadLanguage()
+    {
+        return PlayerPrefs.GetInt(LANGUAGE_KEY, -1);
     }
 
     /// <summary>
@@ -50,6 +68,8 @@ public static class SettingsSaveSystem
     public static void ResetToDefaults()
     {
         SaveMasterVolume(1.0f);
+        PlayerPrefs.DeleteKey(LANGUAGE_KEY);
+        PlayerPrefs.Save();
         Debug.Log("Settings reset to defaults");
     }
 
@@ -60,6 +80,7 @@ public static class SettingsSaveSystem
     {
         PlayerPrefs.DeleteKey(MASTER_VOLUME_KEY);
         PlayerPrefs.DeleteKey(SETTINGS_INITIALIZED_KEY);
+        PlayerPrefs.DeleteKey(LANGUAGE_KEY);
         PlayerPrefs.Save();
         Debug.Log("All settings deleted");
     }

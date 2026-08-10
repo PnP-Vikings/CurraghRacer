@@ -1,0 +1,130 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: League_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 026f0686b2b93d7449c3a38bf24d7bb2, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 7531913216
+    m_Localized: "T\xE1 cuireadh tugtha duit p\xE1irt a ghlacadh i\\nan"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2135222640640
+    m_Localized: Sraith Teagaisc
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2311697981440
+    m_Localized: "Is sraith \xED an Tutorial League chun na bunphrionsabail a fhoghlaim."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2965053104128
+    m_Localized: "Is com\xF3rtas ag leibh\xE9al an iontr\xE1la \xED an Local Racing
+      League, \xE1it a l\xE9ir\xEDonn captaein agus foirne nua a gcuid scileanna
+      ar an uisce. \\n  Agus ocht bhfoireann dh\xEDograiseacha p\xE1irteach inti,
+      re\xE1cht\xE1iltear r\xE1sa\xED thar ocht l\xE1 Domhnaigh, le huasmh\xE9id
+      de cheithre bh\xE1d i ngach babhta. \\n  \xC9il\xEDonn gach r\xE1s strait\xE9is,
+      luas agus inoiri\xFAnaitheacht agus na foirne san ioma\xEDocht le haghaidh
+      point\xED, airgeadra agus taith\xED. \\n \\n   Is deis \xED an tsraith seo
+      duit ard\xFA c\xE9ime a bhaint amach. \\n\xC9ir\xEDonn an d\xE1 fhoireann is
+      fearr ag deireadh an ts\xE9as\xFAir chuig sraitheanna n\xEDos airde, agus fanann
+      na foirne eile ina ndiaidh. \\nCuireann an tsraith luach saothair seasmhach
+      ar f\xE1il \u2014 125 bonn in aghaidh an r\xE1is do na buaiteoir\xED agus 500
+      bonn in aghaidh an ts\xE9as\xFAir don Seaimp\xEDn \u2014 \\nrud a fh\xE1gann
+      gur ionad oili\xFAna foirfe \xED do r\xE1s\xE1laithe uaillmhianacha sula n-aistr\xEDonn
+      siad chuig com\xF3rtais n\xEDos m\xF3 cl\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2416299728896
+    m_Localized: "Sraith R\xE1sa\xEDochta \xC1iti\xFAil"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3479362854912
+    m_Localized: 'Glac le
+
+      Cuireadh'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4628233052160
+    m_Localized: Glac
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7283927932928
+    m_Localized: "T\xE1 na r\xE1sa\xED go l\xE9ir cr\xEDochnaithe agat i \\nAn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8916015505408
+    m_Localized: "Ar an drochuair, chr\xEDochnaigh do fhoireann sa {0}\xFA h\xE1it
+      as {1} iomaitheoir, agus \xEDsl\xEDodh \xED go sraith n\xEDos \xEDsle. Ghn\xF3thaigh
+      t\xFA {2} phointe le {3} bua. N\xE1 b\xEDodh d\xEDspreagadh ort; bain \xFAs\xE1id
+      as seo mar spreagadh chun teacht ar ais n\xEDos l\xE1idre!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11867756945408
+    m_Localized: "Ar fheabhas! Chr\xEDochnaigh bhur bhfoireann sa ch\xE9ad \xE1it
+      as {0} iomaitheoir, agus cuireadh chun sraithe n\xEDos airde iad. Ghn\xF3thaigh
+      sibh {1} pointe le {2} bua. Lean oraibh leis an obair den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12039886987264
+    m_Localized: "Ar fheabhas! Chr\xEDochnaigh do fhoireann sa dara h\xE1it as {0}
+      iomaitheoir, agus cuireadh chun cinn iad chuig sraith n\xEDos airde. Ghn\xF3thaigh
+      t\xFA {1} pointe le {2} bua. Lean ort leis an obair den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12212566482944
+    m_Localized: "Obair den scoth! Chr\xEDochnaigh bhur bhfoireann sa tr\xED\xFA
+      h\xE1it as {0} iomaitheoir, agus cuireadh chun cinn iad chuig sraith n\xEDos
+      airde. Ghn\xF3thaigh sibh {1} pointe le {2} bua. Lean oraibh leis an obair
+      den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12412232130560
+    m_Localized: "Maith sibh! Chr\xEDochnaigh bhur bhfoireann sa {0}\xFA h\xE1it
+      as {1} iomaitheoir, agus cuireadh chun sraithe n\xEDos airde sibh. Ghn\xF3thaigh
+      sibh {2} pointe le {3} bua. Leanig\xED leis an obair den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12655556288512
+    m_Localized: "Ar fheabhas! Is curaidh iad bhur bhfoireann, agus iad sa ch\xE9ad
+      \xE1it as {0} iomaitheoir. Ghn\xF3thaigh sibh {1} pointe le {2} bua. Leanig\xED
+      oraibh leis an obair den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12947316269056
+    m_Localized: "Ar fheabhas! Chr\xEDochnaigh bhur bhfoireann sa dara h\xE1it as
+      {0} iomaitheoir. Ghn\xF3thaigh sibh {1} pointe le {2} bua. Lean oraibh leis
+      an obair den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12983290814464
+    m_Localized: "S\xE1r-obair! Chr\xEDochnaigh bhur bhfoireann sa tr\xED\xFA h\xE1it
+      as {0} iomaitheoir. Ghn\xF3thaigh sibh {1} pointe le {2} bua."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13186785861632
+    m_Localized: "Comhghairdeas! Chr\xEDochnaigh do fhoireann sa {0}\xFA h\xE1it
+      as {1} iomaitheoir, agus cuireadh chun sraithe n\xEDos airde iad. Ghn\xF3thaigh
+      t\xFA {2} phointe le {3} bhua. Lean ort leis an obair den scoth!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13468517261312
+    m_Localized: "S\xE1r-obair! Chr\xEDochnaigh bhur bhfoireann sa {0}\xFA h\xE1it
+      as {1} iomaitheoir. Ghn\xF3thaigh sibh {2} phointe le {3} bua."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

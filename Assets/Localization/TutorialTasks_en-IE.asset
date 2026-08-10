@@ -1,0 +1,328 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TutorialTasks_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 081291486c03ce942ad43e4f8e01b1e7, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 18235777024
+    m_Localized: Open Calendar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245848072192
+    m_Localized: Hey Mate your Grandad left this shed behind when he fled the Country
+    m_Metadata:
+      m_Items: []
+  - m_Id: 331147632640
+    m_Localized: 'This is your main base of operation where everything important
+      happens  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340958109696
+    m_Localized: I have marked your calendar up with all the important upcoming events
+      click on the calendar to have a look
+    m_Metadata:
+      m_Items: []
+  - m_Id: 357454307328
+    m_Localized: 'There are buttons at the bottom that allow you to navigate the
+      months  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 899157057536
+    m_Localized: Close Calendar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 989963739136
+    m_Localized: 'Do a bit of exploring then press Hide calendar to close the calendar '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712902365184
+    m_Localized: Open Bulletin Task
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1825733337088
+    m_Localized: 'The bulletin board is where you can manage everthing '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860575420416
+    m_Localized: 'Click on the Bulletin Board to have a look '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907589373952
+    m_Localized: 'Here you can manage everything  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1990221357056
+    m_Localized: 'Start race, find jobs, train your team members ,pay bills and sleep  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5861182267392
+    m_Localized: Complete A Practice Race
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6026400096256
+    m_Localized: 'Lets get right into the racing  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6064975110144
+    m_Localized: Click on practice race to get familar with your current team ability
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6400930471936
+    m_Localized: 'Click on the tv '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6513555922944
+    m_Localized: 'Good Job on completing the race '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6566941024256
+    m_Localized: 'You should click on the tv to see whats on '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6606333927424
+    m_Localized: Here you can save and manage other settings
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6928729104384
+    m_Localized: Exit Tv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7008689315840
+    m_Localized: When your ready exit the tv
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7367218421760
+    m_Localized: Open Team Manager Task
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7453130350592
+    m_Localized: 'Lets get familiar with the team '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7502409228288
+    m_Localized: 'Click on team manager '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7522063736832
+    m_Localized: 'Here you can see all your teams stats '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7575671136256
+    m_Localized: 'All the attributes are combined together to teams quality '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7586299502592
+    m_Localized: 'Keep an eye on the stars this will let your know how they compare
+      vs everyone else in the league '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7597456351232
+    m_Localized: You may also swap around team members if you desire by clicking
+      on active team members and one that is benched
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8027963908096
+    m_Localized: Open Hireable Sailor Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8148831166464
+    m_Localized: Open Hireable Sailor Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8272705740800
+    m_Localized: You may also hire racers if you have a bit extra coins and are in
+      need of some help for a race
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8319497396224
+    m_Localized: Hired racers can not be trained and are limited to a certain amount
+      of racers so keep that in mind
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28058928013312
+    m_Localized: Close Team Manager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28166373498880
+    m_Localized: When ready leave the team manager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28441389817856
+    m_Localized: Open Training Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28617059852288
+    m_Localized: In order to keep up with the opponents we must constantly train
+      our team
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28656771522560
+    m_Localized: 'click on training '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28673494212608
+    m_Localized: Here you can see a button for each attribute it will cost you 50
+      euros per training game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28727877558272
+    m_Localized: 'be sure to spread around the training and to have a nice balanced
+      squad '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36514456133632
+    m_Localized: Train a member of the squad
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36664897429504
+    m_Localized: 'Click on a attribute you want to train and select a member then
+      press train  '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36944187744256
+    m_Localized: Open Bill Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37122294669312
+    m_Localized: Oh I forgot to mention all the bills are now in your name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37166594908160
+    m_Localized: Lets check out the bill menu on the bulletin board
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37362900918272
+    m_Localized: Close Bill Menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37441443454976
+    m_Localized: 'Ohh no looks like we are out of money '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37487731793920
+    m_Localized: When your ready Exit the bill menu
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37668078477312
+    m_Localized: Work a Job
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37732465238016
+    m_Localized: You will require money to pay for the teams expensives and bills
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37763146571776
+    m_Localized: 'Click on job to start a shift '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38273652088832
+    m_Localized: Pay a bill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38401192484864
+    m_Localized: Alright now that you have some money lets pay a bill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38442229555200
+    m_Localized: Click back on the bulletin board and go into the bill manager and
+      pay a bill
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38632927780864
+    m_Localized: 'Good job paying your first bill '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38734207639552
+    m_Localized: Keep in mind that you don't have to pay the bill on time but it
+      will cost you interest and eventually it will get auto debited
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38787655655424
+    m_Localized: 'meaning you may go into debt and trust me you don''t want to do
+      that '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39012852031488
+    m_Localized: Close Bill Manager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39130024108032
+    m_Localized: 'Close the bill manager when your ready '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39614881456128
+    m_Localized: Sleep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39936861396992
+    m_Localized: Join Tutorial League
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40036237041664
+    m_Localized: There will always be a race on sunday
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40074870775808
+    m_Localized: This is the big race and winning it can lead to some big prizes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40090226122752
+    m_Localized: Your about to get an invite accept it and LET'S RACE!!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39718426238976
+    m_Localized: 'Its been a long day you should get some sleep '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39766371328000
+    m_Localized: 'You can click on sleep to get some rest '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39778950045696
+    m_Localized: keep in mind sleeping isn't free and if you can't afford a nice
+      place to rest you won't be as well rested the next day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40500269670400
+    m_Localized: Race in the tournment
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40696508571648
+    m_Localized: Alright now that you've joined the league you can click on league
+      to see the table
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40727919714304
+    m_Localized: 'This is a 1 race league so winner takes it all '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40865815846912
+    m_Localized: Completed all Tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41063656972288
+    m_Localized: Good Job Completing all tasks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41102273929216
+    m_Localized: 'You are now on your own be sure to take care of your teammates
+      and good luck '
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

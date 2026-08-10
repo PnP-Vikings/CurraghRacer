@@ -10,6 +10,7 @@ using System.Threading;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 using UnityEngine.SceneManagement;
@@ -53,6 +54,15 @@ public class RaceManager : MonoBehaviour
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
+    
+    [Header("Localization")]
+    LocalizedString championText = new LocalizedString("RaceScene", "RaceMessage.ChampionMessageTxt");
+    
+    LocalizedString wonTheRaceText = new LocalizedString("RaceScene", "RaceMessage.WonTheRaceTxt");
+
+    LocalizedString betterLuckNextTimeText = new LocalizedString("RaceScene", "RaceMessage.BetterLuckNextTimeTxt");
+
+    
     private void Awake()
     {
         if (Instance == null)
@@ -717,11 +727,22 @@ public class RaceManager : MonoBehaviour
                 //Debug.Log(hasWonRace);
                 if (LeagueController.Instance != null && LeagueController.Instance.currentLeague != null && LeagueController.Instance.currentLeague.isFinished)
                 {
-                    finishMenu.UpdatePlayerMessage(true, "You are the champion!");
+
+                    string mes = "You are the champion!";
+                    if(championText != null && !championText.IsEmpty)
+                    {
+                        mes = championText.GetLocalizedString();
+                    }
+                    finishMenu.UpdatePlayerMessage(true, mes);
                 }
                 else
                 {
-                    finishMenu.UpdatePlayerMessage(true, "You have won the race!");
+                    string mes = "You have won the race!";
+                    if(wonTheRaceText != null && !wonTheRaceText.IsEmpty)
+                    {
+                        mes = wonTheRaceText.GetLocalizedString();
+                    }
+                    finishMenu.UpdatePlayerMessage(true, mes);
                 }
                
                 if (isRaceDay)
@@ -760,7 +781,12 @@ public class RaceManager : MonoBehaviour
             else
             {
                 Debug.Log("Player did not finish first.");
-                finishMenu.UpdatePlayerMessage(false, "Better luck next time!");
+                string mes = "Better luck next time!";
+                if(betterLuckNextTimeText != null && !betterLuckNextTimeText.IsEmpty)
+                {
+                    mes = betterLuckNextTimeText.GetLocalizedString();
+                }
+                finishMenu.UpdatePlayerMessage(false, mes);
                 if(!isRaceDay) return; // No coins deducted
             }
         }

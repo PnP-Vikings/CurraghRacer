@@ -1,0 +1,120 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: League_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 026f0686b2b93d7449c3a38bf24d7bb2, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 7531913216
+    m_Localized: 'You have been invited to participate in\nThe '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2135222640640
+    m_Localized: Tutorial League
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2311697981440
+    m_Localized: The Tutorial League a league for learning the ropes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2416299728896
+    m_Localized: Local Racing League
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2965053104128
+    m_Localized: "The Local Racing League is the entry-level competition where new
+      captains and teams prove their skills on the water.\\n  Featuring 8 determined
+      crews, races are held over 8 Sunday race days with a maximum of 4 boats per
+      heat.\\n  Each race demands strategy, speed, and adaptability as teams compete
+      for points, currency, and experience.\\n \\n   The league is your chance to
+      gain promotion. \\nThe top 2 teams at the end of the season rise to higher
+      leagues, while the rest will be stuck behind.\\nThe league provides steady
+      rewards \u2014 125 coins per race to the winners and 500 coins per season for
+      the Champion \u2014\\nmaking it the perfect training ground for ambitious racers
+      before moving on to more prestigious competitions."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3479362854912
+    m_Localized: "Accept \nInvitation"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4628233052160
+    m_Localized: Accept
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7283927932928
+    m_Localized: 'You have completed all of the races in \nThe '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8916015505408
+    m_Localized: Unfortunately, your team finished in position {0} out of {1} competitors,
+      and has been relegated to a lower league. You earned {2} points with {3} wins.
+      Don't be disheartened, use this as motivation to come back stronger!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11867756945408
+    m_Localized: Outstanding! Your team finished in 1st position out of {0} competitors,
+      and has been promoted to a higher league. You earned {1} points with {2} wins.
+      Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12039886987264
+    m_Localized: Excellent! Your team finished in 2nd position out of {0} competitors,
+      and has been promoted to a higher league. You earned {1} points with {2} wins.
+      Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12212566482944
+    m_Localized: Great work! Your team finished in 3rd position out of {0} competitors,
+      and has been promoted to a higher league. You earned {1} points with {2} wins.
+      Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12412232130560
+    m_Localized: Well done! Your team finished in position {0} out of {1} competitors,
+      and has been promoted to a higher league. You earned {2} points with {3} wins.
+      Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12655556288512
+    m_Localized: Fantastic! Your team are Champions finishing 1st out of {0} competitors.
+      You earned {1} points with {2} wins. Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12947316269056
+    m_Localized: Awesome! Your team finished in 2nd position out of {0} competitors.
+      You earned {1} points with {2} wins. Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 12983290814464
+    m_Localized: Great job! Your team finished in 3rd position out of {0} competitors.
+      You earned {1} points with {2} wins.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13186785861632
+    m_Localized: Congratulations! Your team finished in position {0} out of {1} competitors,
+      and has been promoted to a higher league. You earned {2} points with {3} wins.
+      Keep up the great work!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 13468517261312
+    m_Localized: Great job! Your team finished in position {0} out of {1} competitors.
+      You earned {2} points with {3} wins.
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

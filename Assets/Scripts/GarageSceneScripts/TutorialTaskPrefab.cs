@@ -57,8 +57,14 @@ public class TutorialTaskPrefab : MonoBehaviour
         }
         
         tutorialTaskType = tutorialTask.taskType;
-        taskName.text = tutorialTask.taskName;
-        
+        if (!tutorialTask.taskNameLocalizedString.IsEmpty)
+        {
+            taskName.text = tutorialTask.taskNameLocalizedString.GetLocalizedString();
+        }
+        else
+        {
+            taskName.text = tutorialTask.taskName;
+        }
         if (tutorialTask.completed)
         {
             taskCompletedImage.gameObject.SetActive(true);

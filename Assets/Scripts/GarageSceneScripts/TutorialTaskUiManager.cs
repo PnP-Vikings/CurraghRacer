@@ -43,7 +43,7 @@ public class TutorialTaskUiManager : MonoBehaviour
     }
     public void ProcessActiveTaskDialogue()
     {
-        if (activeTask != null && taskUiDialogueUi != null && activeTask.taskDialogs.Count > 0 && !activeTask.hasTutorialDialogsBeenShown)
+        if (activeTask != null && taskUiDialogueUi != null && (activeTask.taskDialogs.Count > 0 || activeTask.taskDialogsLocalizedStrings.Count > 0) && !activeTask.hasTutorialDialogsBeenShown)
         {
             taskUiDialogueUi.gameObject.SetActive(true);
             taskUiDialogueUi.Setup(activeTask);

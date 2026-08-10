@@ -14,7 +14,25 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::League.League
   standings: []
   leagueName: Tutorial League
+  localizedLeagueName:
+    m_TableReference:
+      m_TableCollectionName: GUID:026f0686b2b93d7449c3a38bf24d7bb2
+    m_TableEntryReference:
+      m_KeyId: 2135222640640
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description: The Tutorial League a league for learning the ropes
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:026f0686b2b93d7449c3a38bf24d7bb2
+    m_TableEntryReference:
+      m_KeyId: 2311697981440
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   leagueIcon: {fileID: 0}
   leagueColor: {r: 0, g: 0, b: 0, a: 0}
   teams:
@@ -41,3 +59,6 @@ MonoBehaviour:
   maxExperienceGivenPerRace: 400
   maxCurrencyGivenPerRace: 125
   maxCurrencyGivenPerSeasonCompletion: 500
+  references:
+    version: 2
+    RefIds: []

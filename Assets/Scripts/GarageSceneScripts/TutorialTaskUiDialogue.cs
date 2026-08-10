@@ -4,6 +4,7 @@ using System.Linq;
 using League;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class TutorialTaskUiDialogue : MonoBehaviour
@@ -23,14 +24,32 @@ public class TutorialTaskUiDialogue : MonoBehaviour
    public void Setup(TutorialTask injectedActiveTask)
    {
       activeTask = injectedActiveTask;
-      this.taskTitleText.text = activeTask.taskName;
+      if (!activeTask.taskNameLocalizedString.IsEmpty)
+      {
+         this.taskTitleText.text = activeTask.taskNameLocalizedString.GetLocalizedString();
+      }
+      else
+      {
+         this.taskTitleText.text = activeTask.taskName;
+      }
      
       if (!isDialogueActive)
       {
          isDialogueActive = true;   
-         foreach (string tl in activeTask.taskDialogs)
+         
+         if(activeTask.taskDialogsLocalizedStrings != null && activeTask.taskDialogsLocalizedStrings.Count > 0)
          {
-            dialogueLines.Add(tl);
+            foreach (LocalizedString tl in activeTask.taskDialogsLocalizedStrings)
+            {
+               dialogueLines.Add(tl.GetLocalizedString());
+            }
+         }
+         else
+         {
+            foreach (string tl in activeTask.taskDialogs)
+            {
+               dialogueLines.Add(tl);
+            }
          }
       
          this.currentDialogueIndex = 0;
@@ -62,9 +81,19 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          {
             dialogueLines.Clear();
             
-            foreach (string tl in activeTask.CompletedtaskDialogs)
+            if(activeTask.CompletedtaskDialogsLocalizedStrings != null && activeTask.CompletedtaskDialogsLocalizedStrings.Count > 0)
             {
-               dialogueLines.Add(tl);
+               foreach (LocalizedString tl in activeTask.CompletedtaskDialogsLocalizedStrings)
+               {
+                  dialogueLines.Add(tl.GetLocalizedString());
+               }
+            }
+            else
+            {
+               foreach (string tl in activeTask.CompletedtaskDialogs)
+               {
+                  dialogueLines.Add(tl);
+               }
             }
             GameManager.Instance.MarkTutorialTaskDialogsAsShown(activeTask);
 

@@ -15,6 +15,18 @@ MonoBehaviour:
   m_GroupName: Localization-String-Tables-English (Ireland) (en-IE)
   m_GUID: a16f07182ea746b4e86353dceb4a22e7
   m_SerializeEntries:
+  - m_GUID: 0493d4147cd9ac948ab344989b38d24f
+    m_Address: TutorialTasks_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3d0b039453b065e43a59f7775e4bc08c
+    m_Address: RaceScene_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3e2845d563f775e4c994122cae3300f4
     m_Address: TeamMemberDetailCards_en-IE
     m_ReadOnly: 1
@@ -29,6 +41,12 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 9e94dc2be0a3e05439ae5acc775f45e0
     m_Address: DecisionCards_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: c15b3e03edc408c42bc6243b1f0ff785
+    m_Address: League_en-IE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en-IE

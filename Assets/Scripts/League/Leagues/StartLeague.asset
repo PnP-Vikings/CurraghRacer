@@ -46,6 +46,15 @@ MonoBehaviour:
     wins: 0
     position: 8
   leagueName: Local Racing League
+  localizedLeagueName:
+    m_TableReference:
+      m_TableCollectionName: GUID:026f0686b2b93d7449c3a38bf24d7bb2
+    m_TableEntryReference:
+      m_KeyId: 2416299728896
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description: "The Local Racing League is the entry-level competition where new
     captains and teams prove their skills on the water.\\n  Featuring 8 determined
     crews, races are held over 8 Sunday race days with a maximum of 4 boats per heat.\\n 
@@ -56,6 +65,15 @@ MonoBehaviour:
     per race to the winners and 500 coins per season for the Champion \u2014\\nmaking
     it the perfect training ground for ambitious racers before moving on to more
     prestigious competitions."
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:026f0686b2b93d7449c3a38bf24d7bb2
+    m_TableEntryReference:
+      m_KeyId: 2965053104128
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   leagueIcon: {fileID: 0}
   leagueColor: {r: 0, g: 0, b: 0, a: 0}
   teams:
@@ -80,57 +98,12 @@ MonoBehaviour:
   numberOfTeamsToPromoteRelegate: 2
   maxNumberOfBoatsPerRace: 4
   repeatCount: 1
-  raceDays:
-  - races:
-    - teams:
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    - teams:
-      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    processed: 0
-  - races:
-    - teams:
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    - teams:
-      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    processed: 0
-  - races:
-    - teams:
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-      - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    - teams:
-      - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-      - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-      - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      positions: 00000000000000000000000000000000
-      processed: 0
-    processed: 0
+  raceDays: []
   raceTracks:
   - {fileID: 11400000, guid: 3de2264d6430c25458f1ffe33b918b5b, type: 2}
   maxExperienceGivenPerRace: 400
   maxCurrencyGivenPerRace: 125
   maxCurrencyGivenPerSeasonCompletion: 500
+  references:
+    version: 2
+    RefIds: []

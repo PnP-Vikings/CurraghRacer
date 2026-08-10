@@ -15,6 +15,16 @@ MonoBehaviour:
   m_GroupName: Localization-Assets-Shared
   m_GUID: d352f631e8d43804aa5f32a6e051c832
   m_SerializeEntries:
+  - m_GUID: 026f0686b2b93d7449c3a38bf24d7bb2
+    m_Address: Assets/Localization/League Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 081291486c03ce942ad43e4f8e01b1e7
+    m_Address: Assets/Localization/TutorialTasks Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8bde466f21db9854694374d161ec0da5
     m_Address: Assets/Localization/MainMenu Shared Data.asset
     m_ReadOnly: 1
@@ -22,6 +32,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8c3af7048c981494cb7b9eff636a2d2a
     m_Address: Assets/Localization/TeamMemberDetailCards Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 9e5abee2a7139084d9ea7bcd1b0be13c
+    m_Address: Assets/Localization/RaceScene Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

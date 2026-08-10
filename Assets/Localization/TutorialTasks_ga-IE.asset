@@ -1,0 +1,346 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TutorialTasks_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 081291486c03ce942ad43e4f8e01b1e7, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 18235777024
+    m_Localized: "Oscail an F\xE9ilire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 245848072192
+    m_Localized: "A dhuine uasail, d\u2019fh\xE1g do sheanathair an seid seo ina
+      dhiaidh nuair a theith s\xE9 as an t\xEDr."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 331147632640
+    m_Localized: "Seo do phr\xEDomhionad oibr\xEDochta, \xE1it a dtarla\xEDonn gach
+      rud t\xE1bhachtach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340958109696
+    m_Localized: "T\xE1 na himeachta\xED t\xE1bhachtacha ar fad at\xE1 le teacht
+      marc\xE1ilte agam ar do fh\xE9ilire; clice\xE1il ar an bhf\xE9ilire chun breathn\xFA
+      orthu."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 357454307328
+    m_Localized: "T\xE1 cnaip\xED ag an mbun a ligeann duit nasclean\xFAint a dh\xE9anamh
+      tr\xED na m\xEDonna."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 989963739136
+    m_Localized: "D\xE9an beag\xE1n taisc\xE9ala\xEDochta agus ansin br\xFAigh 'Folaigh
+      an f\xE9ilire' chun an f\xE9ilire a dh\xFAnadh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 899157057536
+    m_Localized: "D\xFAn an F\xE9ilire"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1712902365184
+    m_Localized: "Oscail Tasc an Bhulait\xEDn"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1825733337088
+    m_Localized: "Is ar an gcl\xE1r f\xF3gra\xED is f\xE9idir leat gach rud a bhainisti\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1860575420416
+    m_Localized: "Clice\xE1il ar an gCl\xE1r F\xF3gra\xED chun breathn\xFA air."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1990221357056
+    m_Localized: "Anseo is f\xE9idir leat gach rud a bhainisti\xFA: r\xE1s a thos\xFA,
+      poist a aimsi\xFA, baill d\u2019fhoireann a oili\xFAint, bill\xED a \xEDoc
+      agus codladh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1907589373952
+    m_Localized: "Is f\xE9idir leat gach rud a bhainisti\xFA anseo."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6026400096256
+    m_Localized: "Cuirimis t\xFAs d\xEDreach leis an r\xE1sa\xEDocht."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6064975110144
+    m_Localized: "Clice\xE1il ar an r\xE1s cleachtaidh chun eolas a chur ar chumas
+      reatha d'fhoirne."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6400930471936
+    m_Localized: "Clice\xE1il ar an teilif\xEDs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6513555922944
+    m_Localized: "Maith th\xFA as an r\xE1s a chr\xEDochn\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6566941024256
+    m_Localized: "Ba cheart duit clice\xE1il ar an teilif\xEDs chun a fheice\xE1il
+      cad at\xE1 ar si\xFAl."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6606333927424
+    m_Localized: "Anseo is f\xE9idir leat socruithe eile a sh\xE1bh\xE1il agus a
+      bhainisti\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6928729104384
+    m_Localized: "Scoir den teilif\xEDs"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7008689315840
+    m_Localized: "Nuair a bheidh t\xFA r\xE9idh, f\xE1g an teilif\xEDs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7367218421760
+    m_Localized: Oscail tasc an Bhainisteora Foirne
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7453130350592
+    m_Localized: Cuirimis aithne ar an bhfoireann.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7502409228288
+    m_Localized: "Clice\xE1il ar bhainisteoir na foirne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7522063736832
+    m_Localized: "Anseo is f\xE9idir leat staitistic\xED uile do fhoirne a fheice\xE1il."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7575671136256
+    m_Localized: "D\xE9antar na tr\xE9ithe uile a chomhcheangal chun c\xE1il\xEDocht
+      a chinnti\xFA."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7586299502592
+    m_Localized: "Coinnigh s\xFAil ar na r\xE9alta\xED; cuirfidh s\xE9 seo in i\xFAl
+      duit c\xE9n chaoi a gcuirtear i gcompar\xE1id iad le gach duine eile sa tsraith."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7597456351232
+    m_Localized: "Is f\xE9idir leat baill na foirne a mhalart\xFA freisin m\xE1s
+      mian leat, tr\xED chlice\xE1il ar bhaill ghn\xEDomhacha den fhoireann agus
+      ar bhall at\xE1 ar an mbinse."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8027963908096
+    m_Localized: "Oscail an roghchl\xE1r mairn\xE9alach ar f\xE9idir a fhost\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8148831166464
+    m_Localized: "Oscail an roghchl\xE1r mairn\xE9alach ar f\xE9idir a fhost\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8272705740800
+    m_Localized: "Is f\xE9idir leat r\xE1s\xE1laithe a fhost\xFA freisin m\xE1 t\xE1
+      roinnt boinn bhreise agat agus m\xE1 t\xE1 cabhair uait le haghaidh r\xE1sa."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 8319497396224
+    m_Localized: "N\xED f\xE9idir r\xE1s\xF3ir\xED ar c\xEDos a oili\xFAint agus
+      t\xE1 teorainn leis an l\xEDon r\xE1s\xF3ir\xED is f\xE9idir a bheith agat,
+      mar sin coinnigh sin i gcuimhne."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28058928013312
+    m_Localized: "D\xFAn Bainisteoir na Foirne"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28166373498880
+    m_Localized: "Nuair a bheidh t\xFA r\xE9idh, f\xE1g bainisteoir na foirne."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28617059852288
+    m_Localized: "Chun coinne\xE1il suas leis na c\xE9il\xED comhraic, n\xED m\xF3r
+      d\xFAinn \xE1r bhfoireann a oili\xFAint go lean\xFAnach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28656771522560
+    m_Localized: "Clice\xE1il ar an oili\xFAint"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28673494212608
+    m_Localized: "Anseo is f\xE9idir leat cnaipe a fheice\xE1il do gach tr\xE9ith;
+      cosn\xF3idh s\xE9 50 euro ort in aghaidh an chluiche oili\xFAna."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28727877558272
+    m_Localized: "D\xE9an cinnte an oili\xFAint a roinnt agus scuad maith cothrom
+      a bheith agat."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38401192484864
+    m_Localized: "Bhuel, anois agus airgead agat, \xEDocaimis bille."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38442229555200
+    m_Localized: "Clice\xE1il ar ais ar an gcl\xE1r f\xF3gra\xED, t\xE9igh isteach
+      sa bhainisteoir bille agus \xEDoc bille."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36514456133632
+    m_Localized: "Cuir oili\xFAint ar bhall den scuad"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36664897429504
+    m_Localized: "Clice\xE1il ar thr\xE9ith ar mhaith leat oili\xFAint a chur uirthi,
+      roghnaigh ball, agus ansin br\xFAigh 'oili\xFAint'."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 36944187744256
+    m_Localized: "Oscail an Roghchl\xE1r Bill\xED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37122294669312
+    m_Localized: "\xD3, rinne dearmad agam a lua go bhfuil na bill\xED go l\xE9ir
+      i d\u2019ainmse anois."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37166594908160
+    m_Localized: "Breathna\xEDmid ar an liosta ar an gcl\xE1r f\xF3gra\xED."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37362900918272
+    m_Localized: "D\xFAn an Roghchl\xE1r Bille"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37441443454976
+    m_Localized: "\xD3, n\xED hea, t\xE1 an chuma ar an sc\xE9al go bhfuil an t-airgead
+      imithe againn."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37487731793920
+    m_Localized: "Nuair a bheidh t\xFA r\xE9idh, f\xE1g roghchl\xE1r an bhille."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37668078477312
+    m_Localized: "Obair a dh\xE9anamh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37732465238016
+    m_Localized: "Beidh airgead uait chun \xEDoc as costais agus bill\xED na foirne."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 37763146571776
+    m_Localized: "Clice\xE1il ar an bpost chun seal oibre a thos\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38273652088832
+    m_Localized: "\xCDoc bille"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38632927780864
+    m_Localized: "Maith th\xFA as do ch\xE9ad bhille a \xEDoc."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38734207639552
+    m_Localized: "Cuimhnigh nach g\xE1 duit an bille a \xEDoc in am, ach beidh ort
+      \xFAs a \xEDoc agus bainfear an t-airgead as do chuntas go huathoibr\xEDoch
+      sa deireadh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 38787655655424
+    m_Localized: "Is \xE9 sin le r\xE1 go bhf\xE9adf\xE1 dul i bhfiacha, agus creid
+      uaimse \xE9, n\xEDor mhaith leat \xE9 sin a dh\xE9anamh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39012852031488
+    m_Localized: "D\xFAn an Bainisteoir Bill\xED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39130024108032
+    m_Localized: "D\xFAn an bainisteoir bille nuair a bheidh t\xFA r\xE9idh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39614881456128
+    m_Localized: Codladh
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39718426238976
+    m_Localized: "L\xE1 fada a bh\xED ann; ba ch\xF3ir duit codladh beag a dh\xE9anamh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39766371328000
+    m_Localized: "Is f\xE9idir leat clice\xE1il ar 'codladh' chun sosa a fh\xE1il."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39778950045696
+    m_Localized: "Cuimhnigh nach bhfuil an codladh saor in aisce, agus mura bhfuil
+      acmhainn agat \xE1it mhaith a fh\xE1il chun sc\xEDth a ligean, n\xED bheidh
+      t\xFA chomh haonmhaith sin an l\xE1 d\xE1r gcionn."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 39936861396992
+    m_Localized: "Glac p\xE1irt i Sraith na dTeagasc\xE1n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40036237041664
+    m_Localized: "Beidh r\xE1s ann i gc\xF3na\xED D\xE9 Domhnaigh."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40074870775808
+    m_Localized: "Seo an r\xE1s m\xF3r, agus d\u2019fh\xE9adfadh duaiseanna m\xF3ra
+      a bheith mar thoradh ar \xE9 a bhuachan."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40090226122752
+    m_Localized: "T\xE1 cuireadh ar t\xED teacht chugat \u2014 glac leis agus d\xE9anaimis
+      r\xE1s!!!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40500269670400
+    m_Localized: "Rith sa chom\xF3rtas"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40696508571648
+    m_Localized: "Ceart go leor, anois agus t\xFA tar \xE9is dul isteach sa tsraith,
+      is f\xE9idir leat clice\xE1il ar 'sraith' chun an t\xE1bla a fheice\xE1il."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40727919714304
+    m_Localized: "Sraith aon-r\xE1sa \xED seo, mar sin is ag an mbuaiteoir a bh\xEDonn
+      an bua ar fad."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 40865815846912
+    m_Localized: "Gach tasc curtha i gcr\xEDch"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41063656972288
+    m_Localized: "Maith th\xFA as na tascanna go l\xE9ir a chur i gcr\xEDch."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 41102273929216
+    m_Localized: "T\xE1 t\xFA i do aonar anois; d\xE9an cinnte aire a thabhairt do
+      do chomhph\xE1irtithe foirne, agus \xE1dh m\xF3r ort."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5861182267392
+    m_Localized: "Cr\xEDochnaigh r\xE1s cleachtaidh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 28441389817856
+    m_Localized: "Oscail an Roghchl\xE1r Oili\xFAna"
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

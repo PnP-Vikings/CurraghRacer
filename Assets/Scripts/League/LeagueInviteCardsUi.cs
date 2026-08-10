@@ -1,6 +1,7 @@
 using System.Collections;
 using League;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class LeagueInviteCardsUi : MonoBehaviour
@@ -10,7 +11,8 @@ public class LeagueInviteCardsUi : MonoBehaviour
   public TMPro.TMP_Text leagueNameText, leagueDescriptionText;
   public Image leagueLogoImage;
   public GameObject leagueInvitePanel;
-  
+  public LocalizedString leagueInviteLocalizedText = new LocalizedString("League"," LeagueInviteLocalizedText");
+  private string inviteText;
   
   public static LeagueInviteCardsUi Instance { get; private set; }
 
@@ -49,11 +51,31 @@ public class LeagueInviteCardsUi : MonoBehaviour
 
     Debug.Log($"Setting league data for invite: {league.leagueName}");
 
-    if (leagueNameText != null)
-      leagueNameText.text = "You have been invited to participate in\nThe " + league.leagueName;
+
+    inviteText = "You have been invited to participate in\nThe ";
     
-    if (leagueDescriptionText != null)
-      leagueDescriptionText.text = league.description;
+    if(leagueInviteLocalizedText != null && !leagueInviteLocalizedText.IsEmpty)
+    {
+        inviteText = leagueInviteLocalizedText.GetLocalizedString();
+    }
+    if(league.localizedLeagueName != null && !league.localizedLeagueName.IsEmpty)
+    {
+        leagueNameText.text = inviteText + league.localizedLeagueName.GetLocalizedString();
+    }
+    else
+    { if (leagueNameText != null)
+        leagueNameText.text = inviteText + league.leagueName;
+    }
+   
+    if (league.localizedDescription != null && !league.localizedDescription.IsEmpty)
+    {
+        leagueDescriptionText.text = league.localizedDescription.GetLocalizedString();
+    }
+    else
+    {
+        if (leagueDescriptionText != null)
+            leagueDescriptionText.text = league.description;
+    }
 
     if (leagueLogoImage != null)
     {
