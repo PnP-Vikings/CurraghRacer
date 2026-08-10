@@ -42,6 +42,18 @@ MonoBehaviour:
     m_Localized: Finish Results
     m_Metadata:
       m_Items: []
+  - m_Id: 704438011420672
+    m_Localized: You are the champion!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 704536095219712
+    m_Localized: You have won the race!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 704651010760704
+    m_Localized: Better luck next time!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

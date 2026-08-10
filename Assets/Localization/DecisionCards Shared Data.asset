@@ -99,6 +99,10 @@ MonoBehaviour:
     m_Key: DecisionCard.CrazyNight.OptionB.Description
     m_Metadata:
       m_Items: []
+  - m_Id: 1546493558251520
+    m_Key: DecisionCard.MakeADecisionTxt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

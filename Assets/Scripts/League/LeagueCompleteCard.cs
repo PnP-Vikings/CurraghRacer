@@ -47,15 +47,22 @@ public class LeagueCompleteCard : MonoBehaviour
             return;
         }
 
+        string leagueName = league.leagueName;
+        
+        if(league.localizedLeagueName != null && !league.localizedLeagueName.IsEmpty)
+        {
+            leagueName = league.localizedLeagueName.GetLocalizedString();
+        }
 
         if (leagueCompletionTitleLocalizedString != null && !leagueCompletionTitleLocalizedString.IsEmpty)
         {
-            leagueCompleteTitle = leagueCompletionTitleLocalizedString.GetLocalizedString() + " " + league.leagueName;
+            
+            leagueCompleteTitle = leagueCompletionTitleLocalizedString.GetLocalizedString() + " " + leagueName;
             
         }
         else
         {
-            leagueCompleteTitle =  "You have completed all of the races in \nThe " + league.leagueName;;
+            leagueCompleteTitle =  "You have completed all of the races in \nThe " + leagueName;;
         }
         
         leagueNameText.text =leagueCompleteTitle;

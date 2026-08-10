@@ -79,6 +79,10 @@ MonoBehaviour:
     m_Localized: "T\xFAs d\xE9anach leis an l\xE1"
     m_Metadata:
       m_Items: []
+  - m_Id: 1546493558251520
+    m_Localized: "D\xE9an cinneadh, le do thoil."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

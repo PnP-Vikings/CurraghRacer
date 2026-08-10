@@ -287,6 +287,10 @@ MonoBehaviour:
     m_Key: Garage.Bills.Pay
     m_Metadata:
       m_Items: []
+  - m_Id: 7888416975872000
+    m_Key: Garage.TutorialUi.NextTxt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

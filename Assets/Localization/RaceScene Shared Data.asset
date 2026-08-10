@@ -39,6 +39,18 @@ MonoBehaviour:
     m_Key: FinishResults.HeaderTxt
     m_Metadata:
       m_Items: []
+  - m_Id: 704438011420672
+    m_Key: RaceMessage.ChampionMessageTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 704536095219712
+    m_Key: RaceMessage.WonTheRaceTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 704651010760704
+    m_Key: RaceMessage.BetterLuckNextTimeTxt
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
