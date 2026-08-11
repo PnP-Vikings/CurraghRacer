@@ -64,7 +64,7 @@ public class Tractor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (FindFirstObjectByType<BalingSilageMinigame>().Collector == other.gameObject && FindFirstObjectByType<BalingSilageMinigame>().cutting == true)
+        if (FindFirstObjectByType<BalingSilageMinigame>().Collector == other.gameObject)
         {
             Destroy(FindFirstObjectByType<BalingSilageMinigame>().Collector);
             FindFirstObjectByType<BalingSilageMinigame>().collecting = true;
