@@ -126,6 +126,8 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance bodhran;
 
+    public EventInstance tutorialGuy;
+
     private Scene activeScene;
     void Awake()
     {
@@ -280,6 +282,8 @@ public class AudioManager : MonoBehaviour
         rain = RuntimeManager.CreateInstance("event:/Ambiences/Rain");
         roadworks = RuntimeManager.CreateInstance("event:/Ambiences/Roadworks");
 
+                            // Tutorial //
+        tutorialGuy = RuntimeManager.CreateInstance("event:/Tutorial/Tutorial Guy");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

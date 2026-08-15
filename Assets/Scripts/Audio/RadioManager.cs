@@ -44,6 +44,7 @@ public class RadioManager : MonoBehaviour
 
     void Start()
     {
+        // Comment out the line below to turn off the radio
         StartCoroutine(RadioCoroutine());                                   // Radio coroutine Starts
     }
 
