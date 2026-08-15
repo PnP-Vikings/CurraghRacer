@@ -21,6 +21,8 @@ public class TutorialTaskUiDialogue : MonoBehaviour
    [SerializeField] private float dialogueTextSpeed = .1f;
    private bool isDialogueActive = false;
    private Coroutine currentDialogueCoroutine;
+
+   [SerializeField] TutorialAudio TutorialAudio;
    public void Setup(TutorialTask injectedActiveTask)
    {
       activeTask = injectedActiveTask;
@@ -55,7 +57,13 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          this.currentDialogueIndex = 0;
          this.currentDialogueLine = dialogueLines[currentDialogueIndex];
          this.currentDialogueCoroutine = this.StartCoroutine(TypeText(currentDialogueLine));
-      }
+
+         // Play Tutorial Guy dialogue for the first tutorial dialogue box of each section
+         if (AudioManager.instance != null)
+         {
+             AudioManager.instance.tutorialGuy.start();
+         }
+        }
    }
 
    public void NextDialogue()
@@ -80,6 +88,15 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && activeTask != null)
          {
             dialogueLines.Clear();
+
+            // Stops the Tutorial Guy dialogue if there is no more dialogue boxes in the current section of the tutorial
+           
+            if(TutorialAudio != null)
+            {
+                //Debug.Log("TutorialAudio script found - AudioDebug");
+                TutorialAudio.CallStopTutorialGuyAudio();
+            }
+            
             
             if(activeTask.CompletedtaskDialogsLocalizedStrings != null && activeTask.CompletedtaskDialogsLocalizedStrings.Count > 0)
             {
@@ -106,7 +123,6 @@ public class TutorialTaskUiDialogue : MonoBehaviour
                      LeagueController.Instance.AddTutorialLeagueToList();
                      LeagueController.Instance.ShowLeagueInvite();
                   }
-                  
                }
             }
             
@@ -118,9 +134,11 @@ public class TutorialTaskUiDialogue : MonoBehaviour
         this.gameObject.SetActive(false);
       }
 
+      // Play Tutorial Guy dialogue & UIClick1 whenever the next button is pressed
       if (AudioManager.instance != null)
       {
           AudioManager.instance.UIClick1.start();
+          AudioManager.instance.tutorialGuy.start();
       }
    }
   

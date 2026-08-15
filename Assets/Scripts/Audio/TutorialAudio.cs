@@ -1,3 +1,4 @@
+using FMODUnity;
 using System.Collections;
 using UnityEngine;
 
@@ -18,6 +19,22 @@ public class TutorialAudio : MonoBehaviour
         {
             AudioManager.instance.miniGameProgression.start();
             AudioManager.instance.miniGameProgression.setParameterByName("miniGameProgression Volume", 0.95f);
+        }
+    }
+
+    public void CallStopTutorialGuyAudio()
+    {
+        StartCoroutine(StopTutorialGuyAudio());
+        //Debug.Log("Call StopTutorialGuyAudio - AudioDebug");
+    }
+
+    public IEnumerator StopTutorialGuyAudio()
+    {
+        if (AudioManager.instance != null)
+        {
+            yield return null;
+            AudioManager.instance.tutorialGuy.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //Debug.Log("StopTutorialGuyAudio - AudioDebug");
         }
     }
 }
