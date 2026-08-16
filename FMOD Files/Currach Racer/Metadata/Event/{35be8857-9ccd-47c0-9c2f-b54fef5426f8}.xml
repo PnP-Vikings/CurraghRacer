@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<objects serializationModel="Studio.02.03.00">
+<objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{35be8857-9ccd-47c0-9c2f-b54fef5426f8}">
 		<property name="name">
 			<value>Calender</value>
@@ -93,7 +93,7 @@
 			<value>2.1470833333333332</value>
 		</property>
 		<property name="volume">
-			<value>4</value>
+			<value>2</value>
 		</property>
 		<relationship name="sounds">
 			<destination>{76be90d2-159c-4a70-825a-cc26a9458fad}</destination>
@@ -123,6 +123,9 @@
 	<object class="MixerBusPanner" id="{e7ce1601-3461-41b4-8a58-c2a9e9bbd3d5}" />
 	<object class="MixerBusFader" id="{912487d1-6992-46c3-8baf-248b0c4a7135}" />
 	<object class="SingleSound" id="{76be90d2-159c-4a70-825a-cc26a9458fad}">
+		<property name="volume">
+			<value>-1</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{31d17744-a07d-4454-89d1-7c9caf37ac11}</destination>
 		</relationship>
@@ -133,6 +136,9 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{2a3bbbd6-a160-40c2-9276-c2163da11f66}">
+		<property name="volume">
+			<value>-4</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{6170cb9e-5c7d-4f44-a439-5db46b57dd04}</destination>
 		</relationship>

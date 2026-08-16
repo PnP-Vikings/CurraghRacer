@@ -88,7 +88,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{16d8e12b-1ecc-4d50-ac6a-eee8d8f0f010}">
 		<property name="volume">
-			<value>-5</value>
+			<value>-6.5</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{57b3ffca-fca7-4b1b-8163-db9f1d9ec5b4}</destination>
@@ -119,7 +119,7 @@
 			<value>0.15000000000000002</value>
 		</property>
 		<property name="volume">
-			<value>-12</value>
+			<value>-14</value>
 		</property>
 		<relationship name="fadeOutCurve">
 			<destination>{a70dcf61-4b8a-410b-a22e-35868ec4d1b2}</destination>
