@@ -39,6 +39,7 @@ public class AudioManager : MonoBehaviour
     public EventInstance radioAdOrNews5;
 
     public EventInstance angelus;
+    public EventInstance boglandRadioJingle;
 
     public EventInstance loadingScreenSong;
     public EventInstance tvButtonPushOut;
@@ -187,8 +188,9 @@ public class AudioManager : MonoBehaviour
         radioAdOrNews5 = RuntimeManager.CreateInstance("event:/Radio/Radio Ad Or News 5");
 
         angelus = RuntimeManager.CreateInstance("event:/Radio/Angelus");
+        boglandRadioJingle = RuntimeManager.CreateInstance("event:/Radio/Bogland Radio Jingle");
 
-                            // OST //
+        // OST //
         loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
         bodhran = RuntimeManager.CreateInstance("event:/Soundtrack/Bodhrán");
 
