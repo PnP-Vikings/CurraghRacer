@@ -101,6 +101,9 @@
 		<property name="maxVoices">
 			<value>1</value>
 		</property>
+		<property name="volume">
+			<value>-3</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{f8e00ff5-14fb-47c4-a5e2-5943f42c6280}</destination>
 		</relationship>

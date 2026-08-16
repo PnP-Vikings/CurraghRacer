@@ -18,7 +18,8 @@ public class TutorialAudio : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.miniGameProgression.start();
-            AudioManager.instance.miniGameProgression.setParameterByName("miniGameProgression Volume", 0.95f);
+            AudioManager.instance.miniGameProgression.setParameterByName("miniGameProgression Volume", 0.85f);
+            //Debug.Log("miniGameProgression called 0.85 volume - AudioDebug");
         }
     }
 
