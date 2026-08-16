@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{3a6c9795-1c48-4d5e-ae1d-f5e20cc42ff6}">
+		<property name="name">
+			<value>Bogland Radio Jingle Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{bb642588-8403-47ff-a1ca-8ef32f05e4dd}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{bb642588-8403-47ff-a1ca-8ef32f05e4dd}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>3</value>
+		</property>
+	</object>
+</objects>
