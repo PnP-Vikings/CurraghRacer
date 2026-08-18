@@ -17,7 +17,16 @@ namespace AwesomeTaskManager.Editor
     //Main Board Script
     public class TaskBoardWindow : EditorWindow
     {
-        public static TaskBoardWindow Instance { get; private set; }
+        private static TaskBoardWindow _instance;
+        public static TaskBoardWindow Instance
+        {
+            get
+            {
+                if (_instance == null) _instance = null;
+                return _instance;
+            }
+            private set => _instance = value;
+        }
 
         private SaveData _data;
         [SerializeField] private int _tab;
@@ -213,12 +222,29 @@ namespace AwesomeTaskManager.Editor
             {
                 ApplyPostLoadVisualState();
             }
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         private void OnDisable() 
         { 
-            if (Instance == this) Instance = null;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            if (_instance == this) _instance = null;
             Save(); 
+        }
+
+        private void OnDestroy()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            if (_instance == this) _instance = null;
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            if (_data != null)
+            {
+                ApplyPostLoadVisualState();
+            }
         }
 
         public void LoadData()

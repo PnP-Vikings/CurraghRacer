@@ -41,10 +41,31 @@ namespace AwesomeTaskManager.Editor
         {
             wantsMouseMove = true;
             LoadData();
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            _profileImageCache.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            _profileImageCache.Clear();
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            _profileImageCache.Clear();
+            RefreshVisualState();
         }
 
         private void RefreshVisualState()
         {
+            _profileImageCache.Clear();
             TBStyles.InvalidateCache();
             Repaint();
             EditorApplication.delayCall += () =>

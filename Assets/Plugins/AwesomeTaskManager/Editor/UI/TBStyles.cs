@@ -6,8 +6,19 @@ using AwesomeTaskManager.Data;
 
 namespace AwesomeTaskManager.UI
 {
+    [InitializeOnLoad]
     public static class TBStyles
     {
+        static TBStyles()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            InvalidateCache();
+        }
         public static readonly Color[] DefaultLabelColors = ThemeData.DefaultLabelColors;
         public static readonly string[] DefaultPriorityIcons = ThemeData.DefaultPriorityIcons;
 
@@ -716,8 +727,8 @@ namespace AwesomeTaskManager.UI
             var borderColor = LabelColors[Mathf.Clamp(assignee.borderColorIndex, 0, LabelColors.Length - 1)];
             var bgColor = LabelColors[Mathf.Clamp(assignee.colorIndex, 0, LabelColors.Length - 1)];
 
-            _circleTex ??= CreateCircleTexture(128);
-            _circleBorderTex ??= CreateCircleBorderTexture(128, 8);
+            if (_circleTex == null) _circleTex = CreateCircleTexture(128);
+            if (_circleBorderTex == null) _circleBorderTex = CreateCircleBorderTexture(128, 8);
 
             Texture2D circularProfileTex = GetCircularProfileTexture(assignee.profileImageGuid);
             if (circularProfileTex != null)
@@ -1359,13 +1370,24 @@ namespace AwesomeTaskManager.UI
             _themedSearchField = null;
             _checkmarkStyle = null;
 
+            foreach (var kvp in _texCache)
+            {
+                if (kvp.Value != null) UnityEngine.Object.DestroyImmediate(kvp.Value);
+            }
             _texCache.Clear();
-            _profileTexCache.Clear();
+
+            foreach (var kvp in _circularProfileTexCache)
+            {
+                if (kvp.Value != null) UnityEngine.Object.DestroyImmediate(kvp.Value);
+            }
             _circularProfileTexCache.Clear();
-            _circleTex = null;
-            _circleBorderTex = null;
-            _proBackdropTex = null;
-            _personalBackdropTex = null;
+
+            _profileTexCache.Clear();
+
+            if (_circleTex != null) { UnityEngine.Object.DestroyImmediate(_circleTex); _circleTex = null; }
+            if (_circleBorderTex != null) { UnityEngine.Object.DestroyImmediate(_circleBorderTex); _circleBorderTex = null; }
+            if (_proBackdropTex != null) { UnityEngine.Object.DestroyImmediate(_proBackdropTex); _proBackdropTex = null; }
+            if (_personalBackdropTex != null) { UnityEngine.Object.DestroyImmediate(_personalBackdropTex); _personalBackdropTex = null; }
         }
 
         private static GUIStyle _glassItemBox;

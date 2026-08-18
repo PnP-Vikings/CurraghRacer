@@ -19,12 +19,24 @@ namespace AwesomeTaskManager.UI
             w._value = defaultValue;
             w.minSize = w.maxSize = new Vector2(340, 110);
             w.ShowModal();
-            return _result;
+            string finalResult = _result;
+            _result = null;
+            return finalResult;
         }
 
         private void OnEnable()
         {
             wantsMouseMove = true;
+        }
+
+        private void OnDisable()
+        {
+            _result = null;
+        }
+
+        private void OnDestroy()
+        {
+            _result = null;
         }
 
         private void OnGUI()

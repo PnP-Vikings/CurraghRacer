@@ -34,7 +34,16 @@ namespace AwesomeTaskManager.Editor
         private bool _shouldFocusChecklist;
         [SerializeField] private bool _showArchivedInPicker;
 
-        public static CardDetailWindow Instance { get; private set; }
+        private static CardDetailWindow _instance;
+        public static CardDetailWindow Instance
+        {
+            get
+            {
+                if (_instance == null) _instance = null;
+                return _instance;
+            }
+            private set => _instance = value;
+        }
 
         public bool HasUnsavedChanges()
         {
@@ -182,16 +191,20 @@ namespace AwesomeTaskManager.Editor
             Instance = this;
             wantsMouseMove = true;
             LoadData();
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
         }
 
         private void OnDisable()
         {
-            if (Instance == this) Instance = null;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            if (_instance == this) _instance = null;
         }
 
         private void OnDestroy()
         {
-            if (Instance == this) Instance = null;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            if (_instance == this) _instance = null;
             if (_closedExplicitly) return;
 
             bool hasChanges = HasUnsavedChanges();
@@ -256,6 +269,11 @@ namespace AwesomeTaskManager.Editor
                     }
                 }
             };
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            RefreshVisualState();
         }
 
         private void RefreshVisualState()

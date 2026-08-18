@@ -100,6 +100,23 @@ namespace AwesomeTaskManager.UI
 
             EditorApplication.update -= OnEditorUpdate;
             EditorApplication.update += OnEditorUpdate;
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            ClearAll();
+        }
+
+        /// <summary>
+        /// Clears all cached tooltip window states and active hover tracking.
+        /// </summary>
+        public static void ClearAll()
+        {
+            _windowStates.Clear();
+            _activeHoveredTooltip = null;
+            ClearNativeTooltips();
         }
 
         private static bool IsMouseOverThemedWindow()

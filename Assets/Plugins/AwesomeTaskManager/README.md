@@ -199,7 +199,7 @@ Assets/Plugins/AwesomeTaskManager/
 
 | Requirement | Version |
 |-------------|---------|
-| Unity | **2021.3 LTS** or newer (including Unity 6) |
+| Unity | **Unity 6** or newer |
 | Render Pipeline | Any (SRP, URP, HDRP, Built-in) — it's editor-only! |
 | Platform | All — editor tool, no runtime dependencies |
 | Theme | ✅ Light & Dark editor themes |

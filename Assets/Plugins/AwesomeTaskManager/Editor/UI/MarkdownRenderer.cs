@@ -15,8 +15,51 @@ namespace AwesomeTaskManager.Editor
     /// Utility class to render Markdown content in the Unity Editor.
     /// Extracted from TaskBoardWindow to be reusable in NotePopupWindow.
     /// </summary>
+    [InitializeOnLoad]
     public static class MarkdownRenderer
     {
+        static MarkdownRenderer()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            ClearCache();
+        }
+
+        /// <summary>
+        /// Clears all cached preview textures and GIF decoders.
+        /// </summary>
+        public static void ClearCache()
+        {
+            foreach (var kvp in _imageCache)
+            {
+                if (kvp.Value != null && (kvp.Value.hideFlags & HideFlags.DontSave) != 0)
+                {
+                    UnityEngine.Object.DestroyImmediate(kvp.Value);
+                }
+            }
+            _imageCache.Clear();
+
+            foreach (var kvp in _gifCache)
+            {
+                if (kvp.Value != null && kvp.Value.Frames != null)
+                {
+                    foreach (var frame in kvp.Value.Frames)
+                    {
+                        if (frame.texture != null)
+                        {
+                            UnityEngine.Object.DestroyImmediate(frame.texture);
+                        }
+                    }
+                }
+            }
+            _gifCache.Clear();
+            _failedGifPaths.Clear();
+        }
+
         private static readonly Regex _imageEmbedRegex = new Regex(@"!\[\[([^\]]+)\]\]", RegexOptions.Compiled);
         private static readonly Regex _urlRegex = new Regex(@"(https?://[^\s\n\r]+)", RegexOptions.Compiled);
         public static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tga", ".psd", ".tiff", ".tif" };
