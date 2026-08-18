@@ -11,6 +11,7 @@ public class RadioManager : MonoBehaviour
 {
     public static RadioManager instance;
     private PLAYBACK_STATE angelusPlaybackState;
+    private PLAYBACK_STATE boglandRadioJinglePlaybackState;
     private PLAYBACK_STATE radioAdOrNews1PlaybackState;
     private PLAYBACK_STATE radioAdOrNews2PlaybackState;
     private PLAYBACK_STATE radioAdOrNews3PlaybackState;
@@ -44,6 +45,7 @@ public class RadioManager : MonoBehaviour
 
     void Start()
     {
+        // Comment out the line below to turn off the radio
         StartCoroutine(RadioCoroutine());                                   // Radio coroutine Starts
     }
 
@@ -76,6 +78,7 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.storyUpdateSecondRaceWon.getPlaybackState(out storyUpdateSecondRaceWonPlaybackState);
 
             AudioManager.instance.angelus.getPlaybackState(out angelusPlaybackState);   // Gets the playback state of the news and assigns it to the variable
+            AudioManager.instance.boglandRadioJingle.getPlaybackState(out boglandRadioJinglePlaybackState);
 
             AudioManager.instance.radioAdOrNews1.getPlaybackState(out radioAdOrNews1PlaybackState);   // Gets the playback state of the news and assigns it to the variable
             AudioManager.instance.radioAdOrNews2.getPlaybackState(out radioAdOrNews2PlaybackState);
@@ -83,21 +86,21 @@ public class RadioManager : MonoBehaviour
             AudioManager.instance.radioAdOrNews4.getPlaybackState(out radioAdOrNews4PlaybackState);
             AudioManager.instance.radioAdOrNews5.getPlaybackState(out radioAdOrNews5PlaybackState);
 
-            if (angelusPlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateIntroPlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateFirstRaceWonPlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateFirstRaceLostPlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateSecondRaceWonPlaybackState == PLAYBACK_STATE.STOPPING)
+            if (angelusPlaybackState == PLAYBACK_STATE.STOPPING | boglandRadioJinglePlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateIntroPlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateFirstRaceWonPlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateFirstRaceLostPlaybackState == PLAYBACK_STATE.STOPPING | storyUpdateSecondRaceWonPlaybackState == PLAYBACK_STATE.STOPPING)
             {
                 PlayRadioSong();                                                                      // if any of the playback states are "stopping" a random song starts
             }
 
             if (radioAdOrNewsHasJustPlayed)                                                           // checks if the news has just played (if the boolean is true)
             {
-                if (angelusPlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateIntroPlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateFirstRaceWonPlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateFirstRaceLostPlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateSecondRaceWonPlaybackState == PLAYBACK_STATE.STOPPED)
+                if (angelusPlaybackState == PLAYBACK_STATE.STOPPED & boglandRadioJinglePlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews1PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews2PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews3PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews4PlaybackState == PLAYBACK_STATE.STOPPED & radioAdOrNews5PlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateIntroPlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateFirstRaceWonPlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateFirstRaceLostPlaybackState == PLAYBACK_STATE.STOPPED & storyUpdateSecondRaceWonPlaybackState == PLAYBACK_STATE.STOPPED)
                 {
                     StartCoroutine(RadioCoroutine());                                                 // AND if any of the playback states are "stopped" the coroutine is called
                     radioAdOrNewsHasJustPlayed = false;                                               // the news has just played boolean is reset
                 }
             }
 
-            if (angelusPlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews1PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateIntroPlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateFirstRaceWonPlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateFirstRaceLostPlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateSecondRaceWonPlaybackState == PLAYBACK_STATE.PLAYING)
+            if (angelusPlaybackState == PLAYBACK_STATE.PLAYING | boglandRadioJinglePlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews1PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews2PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews3PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews4PlaybackState == PLAYBACK_STATE.PLAYING | radioAdOrNews5PlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateIntroPlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateFirstRaceWonPlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateFirstRaceLostPlaybackState == PLAYBACK_STATE.PLAYING | storyUpdateSecondRaceWonPlaybackState == PLAYBACK_STATE.PLAYING)
             {
                 StopAllRadioSongs();                                                                  // Prevents Songs from starting if ads are playing
             }
@@ -250,13 +253,14 @@ public class RadioManager : MonoBehaviour
 
     private void PlayRadioAdOrNews()
     {
-        int newRandomNumberAd = Random.Range(1, 7);
+        int newRandomNumberAd = Random.Range(1, 8);
         //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
 
         while (newRandomNumberAd == previousRandomNumberAd)
         {
             //Debug.Log("a newRandomNumberAd was chosen as it was equal to previousRandomNumberAd");
-            newRandomNumberAd = Random.Range(1, 3);
+            //newRandomNumberAd = Random.Range(1, 3);
+            newRandomNumberAd = Random.Range(1, 8);
             //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
         }
 
@@ -286,6 +290,10 @@ public class RadioManager : MonoBehaviour
             {
                 AudioManager.instance.radioAdOrNews5.start();
             }
+            else if (newRandomNumberAd == 7)
+            {
+                AudioManager.instance.boglandRadioJingle.start();
+            }
         }
         previousRandomNumberAd = newRandomNumberAd;
     }
@@ -294,6 +302,7 @@ public class RadioManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.angelus.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.boglandRadioJingle.stop(STOP_MODE.ALLOWFADEOUT);
 
             AudioManager.instance.storyUpdateIntro.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.storyUpdateFirstRaceWon.stop(STOP_MODE.ALLOWFADEOUT);
@@ -312,6 +321,7 @@ public class RadioManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.angelus.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.boglandRadioJingle.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews1.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews2.stop(STOP_MODE.ALLOWFADEOUT);
             AudioManager.instance.radioAdOrNews3.stop(STOP_MODE.ALLOWFADEOUT);
@@ -337,6 +347,7 @@ public class RadioManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.angelus.setParameterByName("Angelus Volume", 0f);
+            AudioManager.instance.boglandRadioJingle.setParameterByName("Bogland Radio Jingle Volume", 0f);
             AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update - Intro - Volume", 0f);
             AudioManager.instance.storyUpdateFirstRaceWon.setParameterByName("Story Update - First Race Won - Volume", 0f);
             AudioManager.instance.storyUpdateFirstRaceLost.setParameterByName("Story Update - First Race Lost - Volume", 0f);
@@ -359,6 +370,7 @@ public class RadioManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.angelus.setParameterByName("Angelus Volume", 1f);
+            AudioManager.instance.boglandRadioJingle.setParameterByName("Bogland Radio Jingle Volume", 1f);
             AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update - Intro - Volume", 1f);
             AudioManager.instance.storyUpdateFirstRaceWon.setParameterByName("Story Update - First Race Won - Volume", 1f);
             AudioManager.instance.storyUpdateFirstRaceLost.setParameterByName("Story Update - First Race Lost - Volume", 1f);

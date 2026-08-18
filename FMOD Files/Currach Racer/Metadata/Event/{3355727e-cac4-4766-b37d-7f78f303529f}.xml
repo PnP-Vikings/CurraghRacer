@@ -88,7 +88,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{16d8e12b-1ecc-4d50-ac6a-eee8d8f0f010}">
 		<property name="volume">
-			<value>-5</value>
+			<value>-6.5</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{57b3ffca-fca7-4b1b-8163-db9f1d9ec5b4}</destination>
@@ -119,7 +119,7 @@
 			<value>0.15000000000000002</value>
 		</property>
 		<property name="volume">
-			<value>-12</value>
+			<value>-14</value>
 		</property>
 		<relationship name="fadeOutCurve">
 			<destination>{a70dcf61-4b8a-410b-a22e-35868ec4d1b2}</destination>
@@ -173,7 +173,7 @@
 	<object class="MixerBusFader" id="{92527fb1-7185-4529-a6dc-e2775714c982}" />
 	<object class="AutomationPoint" id="{8c2c5c9b-0e98-438f-947a-150222c85467}">
 		<property name="position">
-			<value>7.2000000000000011</value>
+			<value>7.1000000000000005</value>
 		</property>
 		<property name="value">
 			<value>1</value>

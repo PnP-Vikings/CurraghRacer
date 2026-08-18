@@ -88,7 +88,7 @@
 	</object>
 	<object class="EventMixerMaster" id="{818ad81a-25fc-48d0-9b3d-ffb3b761e506}">
 		<property name="volume">
-			<value>-9</value>
+			<value>-10.5</value>
 		</property>
 		<relationship name="effectChain">
 			<destination>{bc97cbb8-72ec-47e3-822c-c9fd7a1e0149}</destination>
@@ -116,8 +116,11 @@
 			<value>11.5</value>
 		</property>
 		<property name="volume">
-			<value>-7</value>
+			<value>-9</value>
 		</property>
+		<relationship name="fadeOutCurve">
+			<destination>{044e146b-b1ad-4072-a073-8e6acdc582aa}</destination>
+		</relationship>
 		<relationship name="audioFile">
 			<destination>{c0cf0c17-1ee8-4f79-91fc-9626eb54970c}</destination>
 		</relationship>
@@ -147,6 +150,14 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{02186690-1ff0-4c2c-9588-2f268172f08a}" />
+	<object class="FadeCurve" id="{044e146b-b1ad-4072-a073-8e6acdc582aa}">
+		<relationship name="startPoint">
+			<destination>{e6605ce8-56ad-4845-835c-310505dd7f08}</destination>
+		</relationship>
+		<relationship name="endPoint">
+			<destination>{9c0d63d1-0c8a-47e1-96d3-ed97a3728b93}</destination>
+		</relationship>
+	</object>
 	<object class="MixerBusEffectChain" id="{3e40da81-733c-4d53-8099-67a01c85dc9b}">
 		<relationship name="effects">
 			<destination>{3e3988ac-4087-4d31-96d6-5f46c5674d1e}</destination>
@@ -157,6 +168,25 @@
 	</object>
 	<object class="MixerBusPanner" id="{375837b6-8bb8-4c76-b68a-d11d81ec877d}" />
 	<object class="MixerBusFader" id="{a052af14-23f3-490b-947b-d5c4b212f642}" />
+	<object class="AutomationPoint" id="{e6605ce8-56ad-4845-835c-310505dd7f08}">
+		<property name="position">
+			<value>10.800000000000001</value>
+		</property>
+		<property name="value">
+			<value>1</value>
+		</property>
+		<property name="curveShape">
+			<value>0.25471893</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{9c0d63d1-0c8a-47e1-96d3-ed97a3728b93}">
+		<property name="position">
+			<value>11.5</value>
+		</property>
+		<property name="value">
+			<value>0</value>
+		</property>
+	</object>
 	<object class="MultibandEqEffect" id="{3e3988ac-4087-4d31-96d6-5f46c5674d1e}">
 		<property name="filterTypeA">
 			<value>4</value>
