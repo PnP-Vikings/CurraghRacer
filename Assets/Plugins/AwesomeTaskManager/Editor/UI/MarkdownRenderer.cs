@@ -15,8 +15,51 @@ namespace AwesomeTaskManager.Editor
     /// Utility class to render Markdown content in the Unity Editor.
     /// Extracted from TaskBoardWindow to be reusable in NotePopupWindow.
     /// </summary>
+    [InitializeOnLoad]
     public static class MarkdownRenderer
     {
+        static MarkdownRenderer()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private static void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            ClearCache();
+        }
+
+        /// <summary>
+        /// Clears all cached preview textures and GIF decoders.
+        /// </summary>
+        public static void ClearCache()
+        {
+            foreach (var kvp in _imageCache)
+            {
+                if (kvp.Value != null && (kvp.Value.hideFlags & HideFlags.DontSave) != 0)
+                {
+                    UnityEngine.Object.DestroyImmediate(kvp.Value);
+                }
+            }
+            _imageCache.Clear();
+
+            foreach (var kvp in _gifCache)
+            {
+                if (kvp.Value != null && kvp.Value.Frames != null)
+                {
+                    foreach (var frame in kvp.Value.Frames)
+                    {
+                        if (frame.texture != null)
+                        {
+                            UnityEngine.Object.DestroyImmediate(frame.texture);
+                        }
+                    }
+                }
+            }
+            _gifCache.Clear();
+            _failedGifPaths.Clear();
+        }
+
         private static readonly Regex _imageEmbedRegex = new Regex(@"!\[\[([^\]]+)\]\]", RegexOptions.Compiled);
         private static readonly Regex _urlRegex = new Regex(@"(https?://[^\s\n\r]+)", RegexOptions.Compiled);
         public static readonly string[] ImageExtensions = { ".png", ".jpg", ".jpeg", ".gif", ".bmp", ".tga", ".psd", ".tiff", ".tif" };
@@ -236,7 +279,7 @@ namespace AwesomeTaskManager.Editor
 
         private static void OpenURLWithConfirmation(string url)
         {
-            if (EditorUtility.DisplayDialog("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
+            if (ThemedDialog.Show("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
             {
                 Application.OpenURL(url);
             }
@@ -514,7 +557,7 @@ namespace AwesomeTaskManager.Editor
         {
             if (TryPasteImageFromClipboard(note, markModified, repaint))
                 return;
-            EditorUtility.DisplayDialog("No Image", "No image found on the clipboard.\n\nTip: Copy an image or image file first, then paste.", "OK");
+            ThemedDialog.Show("No Image", "No image found on the clipboard.\n\nTip: Copy an image or image file first, then paste.", "OK");
         }
 
         public static bool TryPasteImageFromClipboard(QuickNote note, Action<QuickNote> markModified, Action repaint)

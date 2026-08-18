@@ -12,7 +12,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 2. Open via the menu: **Tools → Awesome Task Manager** (or press `Ctrl+Alt+T`)
 3. **New Shortcuts**: Press `Alt+Shift+C` to quickly create a card on the active board or `Ctrl+Alt+N` for a new note from anywhere in Unity.
 4. Your first board is already created — start adding cards!
-5. Switch to the **Notes** tab to start writing — use `![[image.png]]` to embed images inline
+5. Switch between **Board**, **Notes**, and **Style** tabs to manage tasks, write notes, or customize your workspace theme
+6. Switch to the **Notes** tab to start writing — use `![[image.png]]` to embed images inline
 
 ---
 
@@ -80,10 +81,47 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **Supports up to 200 frames** and files up to 50 MB
 - **One-time decode, session-cached** — zero ongoing performance cost
 
+### 🎨 Themes & Visual Customization
+- **Full Theme Engine & Style Tab** — complete visual customization hub to tailor the look and feel of Awesome Task Manager
+- **13 Built-in Theme Presets** — choose from classic, retro, vintage console, and modern styles, including Fruit Company-inspired translucent glassmorphism:
+  - **Vintage 8-Bit** — Classic 8-bit vintage console style with console gray casing, controller crimson red buttons, dark d-pad accents, and retro 8-bit gaming icons (🎮, 📜, 🪙, ⭐, ⚡, 👑, 🏁, 💀)
+  - **Retro Synthwave** — 80s arcade synthwave with neon magenta, cyan, laser pink, and arcade gaming icons (🕹️, 💾, 📼, 👾, 📟)
+  - **Fruit Company Glassmorphism** — macOS Big Sur/Monterey frosted translucent glass with vibrant system accents
+  - **Aurora Glow Glass** — Nordic arctic translucent night with glowing aurora emerald & violet glass panes
+  - **Cupertino Twilight** — Warm California sunset frosted peach, lavender, and coral glass tones
+  - **Frosted Ice** — Ultra-clean crystal ice glass with subtle frost overlays
+  - **Default** — Balanced modern dark & light theme
+  - **Dark Slate** — Refined deep navy and slate grey tones
+  - **Cyberpunk Neon** — High-contrast neon cyan, magenta, and deep purple
+  - **Forest Emerald** — Natural earthy greens and sage accents
+  - **Pastel Dream** — Soft soothing lavender, peach, and mint pastels
+  - **Sunset Warm** — Rich amber, terracotta, and warm dusk hues
+  - **Monochrome Minimal** — Ultra-clean grayscale typography and borders
+- **Independent Theme Storage for Teams** — theme preferences and custom styles are stored in a separate dedicated file (`AwesomeTaskManagerTheme.json`), completely decoupled from board and task data. Team members can each use their preferred visual theme without creating Git conflicts or modifying shared board data.
+- **Full Opacity & Alpha Channel Control** — every single color picker in the Style tab supports the alpha/opacity slider, enabling translucent overlays, subtle tints, and frosted glass aesthetics.
+- **Interactive Live Preview** — real-time preview mockup displays immediate feedback as you modify theme colors, backgrounds, opacity, and icons
+- **Dual Skin Support** — customize separate color palettes for Unity Pro Skin (Dark Mode) and Personal Skin (Light Mode) within each theme
+- **Comprehensive Color & Opacity Customization**:
+  - 17 customizable Label & Tag colors with alpha channel control
+  - Board canvas background and Top Bar / Tab Bar background colors
+  - Tab headers (active, inactive, hover) and button/dropdown colors with custom hover states
+  - Column header text, column background & alternating backgrounds, card backgrounds (`pro_CardBg` / `personal_CardBg`), borders, card titles, badges, and "+ Add Card" buttons
+  - Note view sidebar, note editor, note title text, text area input background & text colors, note card list items, and popout window backgrounds
+  - Card Detail and New Card window backgrounds
+  - Delete button and destructive action styling
+  - Dropdown menu options and modal popup background tones
+- **Customizable Icons** — customize priority icons, due date progression markers, tab icons, and UI action/navigation icons
+- **📤 Export & 📥 Import Themes (.attheme)** — export individual themes or multi-theme packs as JSON files to easily share styling across projects and team members
+- **Granular Reset Controls** — quickly reset colors, icons, or full themes back to default presets
+- **Themed Modal Dialogs (`ThemedDialog`)** — custom modal dialogs that fully respect active theme colors, borders, icons, and typography
+- **Searchable Themed Dropdowns (`ThemedDropdownPopup`)** — dropdown menus styled to the theme with real-time text search filtering and checkmark indicators
+
 ### 🎨 Polish & UX
-- Clean, modern UI that fits both **Light** and **Dark** editor themes
+- Clean, modern UI that fits both **Light** and **Dark** editor themes with complete custom theme support
 - Status bar with live card count, overdue alerts, and column count
-- Tab interface: switch between Board and Notes instantly
+- Tab interface: switch between **Board**, **Notes**, and **Style** customizer tabs instantly
+- Themed modal confirmation and alert dialogs (`ThemedDialog`) replacing native OS dialogs
+- Themed dropdown menus with real-time search filtering across all selectors
 - Keyboard shortcut: **Ctrl+Alt+T** to open
 - Keyboard shortcut: **Alt+Shift+C** to quick-create a Task Card from anywhere (works in background)
 - Keyboard shortcut: **Ctrl+Alt+N** to quick-create a Note from anywhere (works in background)
@@ -93,9 +131,14 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 
 ## 📂 Data Storage
 
-All data is saved as JSON at:
+Project board, note, category, and assignee data is saved as JSON at:
 ```
 ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json
+```
+
+Theme preferences, active theme selection, and custom styles are stored in an independent dedicated file:
+```
+ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json
 ```
 
 Attached images are stored in:
@@ -104,7 +147,7 @@ Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/
 ```
 
 - **Per-project** — each project has its own boards and notes
-- **Version-control friendly** — commit the JSON file and AttachedImages folder to share boards with your team
+- **Team & Version-control friendly** — commit `AwesomeTaskManager.json` and `AttachedImages/` to share tasks with your team. Theme preferences in `AwesomeTaskManagerTheme.json` can be kept personal (optionally added to `.gitignore`) without affecting shared board data.
 - Editor-only — zero impact on your game builds
 
 ---
@@ -132,14 +175,21 @@ Assets/Plugins/AwesomeTaskManager/
     ├── AwesomeTaskManager.Editor.asmdef
     ├── AttachedImages/           — Pasted/browsed images stored here
     ├── Data/
-    │   ├── TaskBoardData.cs      — All data models (boards, cards, notes, folders)
+    │   ├── TaskBoardData.cs      — All data models (boards, cards, notes, folders, themes)
     │   └── Persistence.cs        — JSON save/load to ProjectSettings
     └── UI/
-        ├── TBStyles.cs           — Colors, GUIStyles, visual constants
-        ├── TaskBoardWindow.cs    — Main editor window (board + notes views)
+        ├── TBStyles.cs           — Colors, dynamic GUIStyles, theme engine
+        ├── TaskBoardWindow.cs    — Main editor window (board, notes, style views)
         ├── CardDetailWindow.cs   — Card detail / creation popup with date picker
         ├── CategoryEditorWindow.cs — Global category manager
+        ├── AssigneeManagerWindow.cs — Global team member & assignee manager
+        ├── ImportFieldMappingWindow.cs — CSV/Excel import column mapping window
+        ├── ThemedDialog.cs       — Themed modal confirmation and alert dialogs
+        ├── ThemedDropdownPopup.cs — Themed searchable dropdown popup menus
+        ├── ImageLargePreviewWindow.cs — Large image / GIF viewer window
         ├── NotePopupWindow.cs    — Pop-out note editor window
+        ├── MarkdownRenderer.cs   — Markdown parsing and rich text renderer
+        ├── EditorInputDialog.cs  — Shared modal text input dialog
         └── GifDecoder.cs         — Built-in animated GIF parser & decoder
 ```
 
@@ -149,7 +199,7 @@ Assets/Plugins/AwesomeTaskManager/
 
 | Requirement | Version |
 |-------------|---------|
-| Unity | **2021.3 LTS** or newer (including Unity 6) |
+| Unity | **Unity 6** or newer |
 | Render Pipeline | Any (SRP, URP, HDRP, Built-in) — it's editor-only! |
 | Platform | All — editor tool, no runtime dependencies |
 | Theme | ✅ Light & Dark editor themes |
@@ -160,6 +210,12 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 💡 Tips & Tricks
 
+- **🎨 Customize Themes & Colors** — Open the `🎨 Style` tab to switch between 13 built-in presets (including Vintage 8-Bit, Retro Synthwave, Fruit Company Glassmorphism, and Aurora Glow Glass) or create your own custom theme. Customize board canvas backgrounds, top bars, buttons, dropdowns, note editors, card backgrounds, and 17 label colors with full opacity/alpha control for both Dark and Light skins.
+- **✨ Frosted Glass & Translucency** — Use the alpha channel slider on colors in the Style tab to create modern translucent / glassmorphic interfaces with layered depth.
+- **📤 Export & Share Themes** — In the Style tab, click "Export Theme" or "Export All Themes" to save `.attheme` JSON files that teammates can import directly.
+- **🏷 Customize Icons** — Change emoji or text icons for priority levels, due date status badges, tabs, and action buttons in the Style tab.
+- **🔍 Searchable Dropdowns** — Type directly into the search bar inside any dropdown menu (board, category, assignee, priority, theme) to instantly filter options.
+- **🪟 Themed Dialog Prompts** — All deletion, navigation, and confirmation dialogs now match your active theme colors and support Enter (confirm) and Escape (cancel) keyboard shortcuts.
 - **Inline images in notes** — Type `![[filename.png]]` in Edit mode, then switch to Preview to see it rendered inline
 - **Ctrl+V image paste** — Screenshot something, switch to a note, press Ctrl+V — the image is auto-embedded
 - **Quick-set due dates** — In the card editor, use the Today / +1d / +3d / +1w / +2w / +1m buttons instead of typing dates manually
@@ -189,6 +245,60 @@ Assets/Plugins/AwesomeTaskManager/
 ---
 
 ## 📄 Changelog
+
+### v1.8 (Custom Themes & Styling Engine, Opacity Controls, Frosted Glass Like Themes, Themed Dialogs)
+
+#### 🎨 Custom Themes & Styling Engine
+- **Added** 🎨 **Dedicated Style Customizer Tab** — new `🎨 Style` tab in the main window providing complete visual customization of the entire Awesome Task Manager.
+- **Added** 🎛 **13 Built-in Theme Presets** — choose from classic, retro, and translucent presets:
+  - **Vintage 8-Bit** (Classic 8-bit vintage console style with console gray casing, controller crimson buttons, and retro gaming icons)
+  - **Retro Synthwave** (80s arcade synthwave with neon magenta, cyan, laser pink, and arcade gaming icons)
+  - **Fruit Company Glassmorphism** (macOS Big Sur/Monterey frosted translucent glass with vibrant system accents)
+  - **Aurora Glow Glass** (Nordic arctic translucent night with glowing aurora emerald & violet glass panes)
+  - **Cupertino Twilight** (Warm California sunset frosted peach, lavender, and coral glass tones)
+  - **Frosted Ice** (Ultra-clean crystal ice glass with subtle frost overlays)
+  - **Default** (Balanced modern dark & light theme)
+  - **Dark Slate** (Refined deep navy and slate grey tones)
+  - **Cyberpunk Neon** (High-contrast neon cyan, magenta, and deep purple)
+  - **Forest Emerald** (Natural earthy greens and sage accents)
+  - **Pastel Dream** (Soft soothing lavender, peach, and mint pastels)
+  - **Sunset Warm** (Rich amber, terracotta, and warm dusk hues)
+  - **Monochrome Minimal** (Ultra-clean grayscale typography and borders)
+- **Added** 💾 **Independent Theme Storage for Teams** — theme preferences and custom styles are stored in a dedicated `AwesomeTaskManagerTheme.json` file, decoupled from `AwesomeTaskManager.json`. Teammates can each use distinct visual styles without creating Git conflicts or modifying board data.
+- **Added** ✨ **Full Opacity & Alpha Channel Controls** — enabled alpha/opacity sliders across all theme color pickers to allow translucent overlays, floating glass cards, and frosted glass styling.
+- **Added** 🪄 **Custom Theme Management** — create, duplicate, rename, customize, and delete custom user themes.
+- **Added** 🌓 **Dual-Skin Theme Support** — configure distinct color palettes for Unity Pro Skin (Dark Mode) and Personal Skin (Light Mode) within each theme.
+- **Added** 🌈 **Comprehensive Color & Opacity Customization**:
+  - **17 Label Colors** — full palette control over every category and tag color swatch with alpha opacity support.
+  - **Canvas & Header Backgrounds** — customize Board canvas background and Top Bar / Tab Bar background colors.
+  - **Tab Headers & Navigation** — customizable active, inactive, and hover background and text colors for Board, Notes, and Style tab buttons.
+  - **Card & Column Styling** — customize column header text, board header text, column backgrounds & alternating backgrounds, card backgrounds (`pro_CardBg` / `personal_CardBg`), borders, card titles, card body text/badges, card details metadata text, card category tags (`pro_CardCategoryTag` / `personal_CardCategoryTag`), card task checklist text, and "+ Add Card" button colors with hover states.
+  - **Definite Card States & Task Counts** — customize dedicated colors for Overdue (`pro_StatusOverdue`), Due Today (`pro_StatusDueToday`), Due Soon (`pro_StatusDueSoon`), Completed (`pro_StatusCompleted`), and Tasks Completed Count (`pro_TasksCompletedCount`) across board cards and detail editors.
+  - **Tooltips & Truncated Text Hover Popups** — customize dedicated colors for Tooltip Background (`pro_TooltipBg` / `personal_TooltipBg`), Tooltip Text (`pro_TooltipText` / `personal_TooltipText`), and Tooltip Border (`pro_TooltipBorder` / `personal_TooltipBorder`) with opacity and glass specular highlight support.
+  - **Notes & Editor Styling** — customize note sidebar background, note editor background, note markdown textarea input background & text colors, note title text color, note folders text color, "+ Note" button colors, "📥" import note button colors, note cards (normal, selected, hover), and note popout window backgrounds.
+  - **Card Details & Popouts** — customize Card Detail and New Card window backgrounds, description textarea input styling, themed year and day numeric date input fields, text colors, and section headers.
+  - **Buttons & Controls** — customizable normal and on-hover backgrounds and text colors for all buttons and toolbar dropdowns.
+  - **Delete Actions** — customizable delete buttons and destructive action styling across all windows.
+  - **Dropdown Menus & Popups** — customize background, text, hover background, and hover text colors for dropdown menus and popup dialogs.
+- **Added** 🖼 **Live Interactive Preview Mockup** — real-time preview panel in the Style tab displays immediate visual feedback for cards, notes, dropdowns, opacity, and buttons as you tweak theme properties.
+- **Added** 📤 **Theme Export & Import (.attheme)** — export individual themes or multi-theme packs as JSON files and import them into any project to share styles with team members.
+- **Added** 🔄 **Granular Reset Controls** — easily reset individual color sections, interface icons, or entire themes back to default presets.
+
+#### 🏷 Customizable Icons & Status Indicators
+- **Added** 🔥 **Custom Priority Icons** — customize the visual icons for all 5 priority levels (None, Low, Medium, High, Urgent).
+- **Added** 📅 **Custom Due Date Progression Icons** — customize status indicators for Overdue, Due Today, Due Soon, and Due Date badges.
+- **Added** 🧭 **Custom Interface & Navigation Icons** — customize icons for Board, Notes, Style tabs, Category, Assignee, Link, Archive, Unarchive, Detail, New Card, Checklists, Attachments, URLs, Save, Cancel, Move Up/Down, and Delete actions.
+
+#### 🪟 Themed Dialogs, Dropdowns & Tooltips Engine
+- **Added** 💬 **Custom Themed Tooltips & Truncated Text Popups (`ThemedTooltip`)** — replaced Unity's default plain black box tooltips and hover popups with theme-styled floating overlays supporting custom background colors, borders, typography, opacity, specular sheen, soft drop shadows, and automatic screen edge clamping.
+- **Added** 🪟 **Custom Themed Dialogs (`ThemedDialog`)** — replaced native OS modal dialogs (`EditorUtility.DisplayDialog` and `DisplayDialogComplex`) across all windows with customizable themed dialog windows matching the active theme's styling, colors, borders, icons, and keyboard navigation (Enter/Escape).
+- **Added** 🔍 **Searchable Themed Dropdown Menus (`ThemedDropdownPopup`)** — replaced native OS popups with themed dropdown menus featuring real-time text search filtering, checkmark indicators, color swatches, and accurate anchor positioning below trigger buttons.
+
+#### 🛠 Board & Card Improvements & Fixes
+- **Added** 🛡 **Unsaved Card Creation Guard** — pressing "+ Add Card" or opening another card while an existing card with unsaved edits is open now prompts with a styled confirmation dialog (`ThemedDialog`) to discard or keep changes, preventing unintended loss of work.
+- **Fixed** 📌 **Active Board Selection Retention** — adding a new card or saving changes in the card detail window now reliably preserves the active board without switching to a different board.
+- **Fixed** 🧹 **Board Selector Deduplication** — normalized board lists and cleansed backup duplicates from the board selector dropdown.
+- **Fixed** 📐 **Delete Board Button Alignment** — styled and aligned the toolbar delete board button to prevent vertical offset and layout overlapping.
 
 ### v1.7 (Beta Export/Import + Import Mapping Profiles)
 

@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.IO;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
@@ -24,7 +26,7 @@ namespace AwesomeTaskManager.Editor
         {
             // Allow multiple instances (one per note)
             var win = CreateInstance<NotePopupWindow>();
-            win.titleContent = new GUIContent($"📝 {note.title}");
+            win.titleContent = new GUIContent($"{TBStyles.NotesTabIcon} {note.title}");
             win._note = note;
             win._saveData = saveData;
             win._onChanged = onChanged;
@@ -37,7 +39,7 @@ namespace AwesomeTaskManager.Editor
         {
             // Allow multiple instances (one per note)
             var win = CreateInstance<NotePopupWindow>();
-            win.titleContent = new GUIContent($"📝 {note.title}");
+            win.titleContent = new GUIContent($"{TBStyles.NotesTabIcon} {note.title}");
             win._note = note;
             win._saveData = saveData;
             win._onChanged = onChanged;
@@ -63,7 +65,25 @@ namespace AwesomeTaskManager.Editor
 
         private void OnEnable()
         {
+            wantsMouseMove = true;
             LoadData();
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+
+        private void OnDestroy()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            RefreshVisualState();
         }
 
         private void RefreshVisualState()
@@ -78,132 +98,176 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
-            if (_note == null) { Close(); return; }
-
-            _hasAnimatedGif = false;
-
-            // Title bar
-            using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar))
+            try
             {
-                string newTitle = EditorGUILayout.TextField(_note.title, EditorStyles.toolbarTextField);
-                if (newTitle != _note.title)
+                if (_note == null) { Close(); return; }
+
+                _hasAnimatedGif = false;
+
+                if (Event.current.type == EventType.Repaint)
                 {
-                    _note.title = newTitle;
-                    titleContent = new GUIContent($"📝 {_note.title}");
-                    MarkModified();
+                    TBStyles.DrawCanvasBackground(new Rect(0, 0, position.width, position.height), TBStyles.NotePopoutBg, true);
                 }
 
-                // Preview Toggle
-                GUI.backgroundColor = _isPreview ? new Color(0.3f, 0.7f, 0.95f) : Color.white;
-                if (GUILayout.Button(_isPreview ? new GUIContent( "✍ Edit", "Switch to Preview Note Mode") : new GUIContent("👁 Preview", "Switch to Edit Note Mode"), EditorStyles.toolbarButton, GUILayout.Width(75)))
+                // Title bar
+                using (var tbScope = new EditorGUILayout.HorizontalScope(GUILayout.Height(24)))
                 {
-                    _isPreview = !_isPreview;
-                    GUI.FocusControl(null);
-                }
-                GUI.backgroundColor = Color.white;
-
-                // Pin
-                if (GUILayout.Button(_note.pinned ? new GUIContent( "📌","Unpin Card") : new GUIContent("Pin", "Pin Card"), EditorStyles.toolbarButton, GUILayout.Width(34)))
-                {
-                    _note.pinned = !_note.pinned;
-                    MarkModified();
-                }
-
-                // Color
-                int newCol = EditorGUILayout.Popup(_note.colorIndex, TBStyles.LabelNames, EditorStyles.toolbarPopup, GUILayout.Width(65));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Note color label"));
-                if (newCol != _note.colorIndex) { _note.colorIndex = newCol; MarkModified(); }
-
-                // Folder
-                if (_saveData != null && GUILayout.Button(new GUIContent("📁", "Select Folder"), EditorStyles.toolbarButton, GUILayout.Width(26)))
-                {
-                    var menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(_note.folderId), () =>
+                    if (Event.current.type == EventType.Repaint)
                     {
-                        _note.folderId = ""; MarkModified();
-                    });
-                    foreach (var folder in _saveData.noteFolders)
-                    {
-                        string fid = folder.id;
-                        menu.AddItem(new GUIContent(folder.name), _note.folderId == fid, () =>
-                        {
-                            _note.folderId = fid; MarkModified();
-                        });
-                    }
-                    menu.ShowAsContext();
-                }
-            }
-
-            // Color strip
-            if (_note.colorIndex > 0)
-            {
-                var c = TBStyles.LabelColors[Mathf.Clamp(_note.colorIndex, 0, TBStyles.LabelColors.Length - 1)];
-                var strip = GUILayoutUtility.GetRect(0, 3, GUILayout.ExpandWidth(true));
-                EditorGUI.DrawRect(strip, c);
-            }
-
-            // Metadata
-            GUILayout.Space(2);
-            string folderName = "Unfiled";
-            if (!string.IsNullOrEmpty(_note.folderId) && _saveData != null)
-            {
-                var f = _saveData.noteFolders.Find(x => x.id == _note.folderId);
-                if (f != null) folderName = f.name;
-            }
-            EditorGUILayout.LabelField(
-                $"📁 {folderName}  |  {_note.modifiedDate}  |  {_note.WordCount} words",
-                EditorStyles.miniLabel);
-            GUILayout.Space(2);
-
-            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
-            {
-                _scroll = scope.scrollPosition;
-                
-                if (!_isPreview)
-                {
-                    // ── Ctrl+V / Cmd+V to paste images from clipboard ──
-                    if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && (Event.current.control || Event.current.command))
-                    {
-                        if (MarkdownRenderer.TryPasteImageFromClipboard(_note, _ => MarkModified(), Repaint))
-                        {
-                            GUI.FocusControl(null);
-                            Event.current.Use();
-                        }
+                        TBStyles.DrawGlassPanel(tbScope.rect, TBStyles.TopBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
                     }
 
-                    // ── Drag and Drop images ──
-                    MarkdownRenderer.HandleNoteDragDropImages(_note, _ => MarkModified(), Repaint);
-
-                    string newContent = EditorGUILayout.TextArea(_note.content, new GUIStyle(EditorStyles.textArea)
+                    string newTitle = TBStyles.DrawThemedTextField(_note.title, TBStyles.NoteTitle, GUILayout.Height(24));
+                    if (newTitle != _note.title)
                     {
-                        wordWrap = true,
-                        fontSize = 13,
-                        padding = new RectOffset(8, 8, 8, 8)
-                    }, GUILayout.ExpandHeight(true));
-
-                    if (newContent != _note.content)
-                    {
-                        _note.content = newContent;
+                        _note.title = newTitle;
+                        titleContent = new GUIContent($"{TBStyles.NotesTabIcon} {_note.title}");
                         MarkModified();
                     }
-                }
-                else
-                {
-                    if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified()))
+
+                    // Preview Toggle
+                    if (ThemedTooltip.Button(_isPreview ? "✍ Edit" : "👁 Preview", _isPreview ? "Switch to Edit Note Mode" : "Switch to Preview Note Mode", TBStyles.ToolbarButton, GUILayout.Width(75)))
                     {
-                        _hasAnimatedGif = true;
+                        _isPreview = !_isPreview;
+                        GUI.FocusControl(null);
+                    }
+
+                    // Pin
+                    if (ThemedTooltip.Button(_note.pinned ? TBStyles.PinnedNoteIcon : "Pin", _note.pinned ? "Unpin Card" : "Pin Card", TBStyles.ToolbarButton, GUILayout.Width(34)))
+                    {
+                        _note.pinned = !_note.pinned;
+                        MarkModified();
+                    }
+
+                    // Color
+                    TBStyles.DrawThemedDropdown(_note.colorIndex, TBStyles.LabelNames, (newCol) =>
+                    {
+                        if (newCol != _note.colorIndex) { _note.colorIndex = newCol; MarkModified(); Repaint(); }
+                    }, TBStyles.ToolbarPopup, TBStyles.GetLabelColorsArray(), "Note color label", GUILayout.Width(65));
+
+                    // Folder
+                    if (_saveData != null && ThemedContextMenu.DropdownButton("📁", "Select Folder", TBStyles.ToolbarButton, out Rect folderBtnRect, GUILayout.Width(26)))
+                    {
+                        var menu = new ThemedContextMenu();
+                        menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(_note.folderId), () =>
+                        {
+                            _note.folderId = ""; MarkModified();
+                        });
+                        foreach (var folder in _saveData.noteFolders)
+                        {
+                            string fid = folder.id;
+                            menu.AddItem(new GUIContent(folder.name), _note.folderId == fid, () =>
+                            {
+                                _note.folderId = fid; MarkModified();
+                            });
+                        }
+                        menu.Show(folderBtnRect);
                     }
                 }
-            }
 
-            // Bottom status
-            var statusRect = GUILayoutUtility.GetRect(0, 18, GUILayout.ExpandWidth(true));
-            EditorGUI.DrawRect(statusRect, EditorGUIUtility.isProSkin
-                ? new Color(0.16f, 0.16f, 0.16f)
-                : new Color(0.85f, 0.85f, 0.85f));
-            EditorGUI.LabelField(statusRect,
-                $"  {_note.WordCount} words  •  {_note.CharCount} chars  •  Created: {_note.createdDate}",
-                EditorStyles.miniLabel);
+                // Color strip
+                if (_note.colorIndex > 0)
+                {
+                    var c = TBStyles.GetLabelColor(_note.colorIndex);
+                    var strip = GUILayoutUtility.GetRect(0, 3, GUILayout.ExpandWidth(true));
+                    EditorGUI.DrawRect(strip, c);
+                }
+
+                // Metadata
+                GUILayout.Space(2);
+                string folderName = "Unfiled";
+                if (!string.IsNullOrEmpty(_note.folderId) && _saveData != null)
+                {
+                    var f = _saveData.noteFolders.Find(x => x.id == _note.folderId);
+                    if (f != null) folderName = f.name;
+                }
+                EditorGUILayout.LabelField(
+                    $"📁 {folderName}  |  {_note.modifiedDate}  |  {_note.WordCount} words",
+                    EditorStyles.miniLabel);
+                GUILayout.Space(2);
+
+                using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+                {
+                    _scroll = scope.scrollPosition;
+                    
+                    if (!_isPreview)
+                    {
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
+                            if (ThemedTooltip.Button("📋 Paste", "Paste Image from Clipboard", TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(18)))
+                            {
+                                if (MarkdownRenderer.TryPasteImageFromClipboard(_note, _ => MarkModified(), Repaint))
+                                {
+                                    GUI.FocusControl(null);
+                                }
+                            }
+                            if (ThemedTooltip.Button("📎 Browse", "Browse for Image", TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(18)))
+                            {
+                                EditorApplication.delayCall += () =>
+                                {
+                                    string imgPath = EditorUtility.OpenFilePanel("Attach Image", "", "png,jpg,jpeg,gif,bmp,tga,psd,tiff");
+                                    if (!string.IsNullOrEmpty(imgPath))
+                                    {
+                                        string assetPath = MarkdownRenderer.CopyImageToProject(imgPath);
+                                        if (!string.IsNullOrEmpty(assetPath))
+                                        {
+                                            if (_note.imagePaths == null) _note.imagePaths = new List<string>();
+                                            if (!_note.imagePaths.Contains(assetPath)) _note.imagePaths.Add(assetPath);
+                                            string fileName = Path.GetFileName(assetPath);
+                                            _note.content = (_note.content ?? "") + $"\n![[{fileName}]]";
+                                            MarkModified();
+                                            Repaint();
+                                        }
+                                    }
+                                };
+                            }
+                            GUILayout.FlexibleSpace();
+                        }
+                        GUILayout.Space(2);
+
+                        // ── Ctrl+V / Cmd+V to paste images from clipboard ──
+                        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && (Event.current.control || Event.current.command))
+                        {
+                            if (MarkdownRenderer.TryPasteImageFromClipboard(_note, _ => MarkModified(), Repaint))
+                            {
+                                GUI.FocusControl(null);
+                                Event.current.Use();
+                            }
+                        }
+
+                        // ── Drag and Drop images ──
+                        MarkdownRenderer.HandleNoteDragDropImages(_note, _ => MarkModified(), Repaint);
+
+                        string newContent = EditorGUILayout.TextArea(_note.content, TBStyles.NoteTextArea, GUILayout.ExpandHeight(true));
+
+                        if (newContent != _note.content)
+                        {
+                            _note.content = newContent;
+                            MarkModified();
+                        }
+                    }
+                    else
+                    {
+                        if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified()))
+                        {
+                            _hasAnimatedGif = true;
+                        }
+                    }
+                }
+
+                // Bottom status
+                var statusRect = GUILayoutUtility.GetRect(0, 18, GUILayout.ExpandWidth(true));
+                TBStyles.DrawGlassPanel(statusRect, TBStyles.StatusBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
+                EditorGUI.LabelField(statusRect,
+                    $"  {_note.WordCount} words  •  {_note.CharCount} chars  •  Created: {_note.createdDate}",
+                    TBStyles.StatusBar);
+            }
+            finally
+            {
+                // Draw custom themed tooltip overlay
+                ThemedTooltip.Draw(this);
+            }
 
             // GIF repaint
             if (_hasAnimatedGif && EditorApplication.timeSinceStartup - _lastGifRepaintTime > 0.066)

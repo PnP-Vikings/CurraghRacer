@@ -122,6 +122,37 @@ namespace AwesomeTaskManager.UI
             }
         }
 
+        private void OnDisable()
+        {
+            CleanupTextures();
+        }
+
+        private void OnDestroy()
+        {
+            CleanupTextures();
+        }
+
+        private void CleanupTextures()
+        {
+            if (_texture != null && (_texture.hideFlags & HideFlags.DontSave) != 0)
+            {
+                DestroyImmediate(_texture);
+                _texture = null;
+            }
+
+            if (_gif != null && _gif.Frames != null)
+            {
+                foreach (var frame in _gif.Frames)
+                {
+                    if (frame.texture != null)
+                    {
+                        DestroyImmediate(frame.texture);
+                    }
+                }
+                _gif = null;
+            }
+        }
+
         private void OnGUI()
         {
             if (_gif != null && _gif.FrameCount > 0)

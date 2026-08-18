@@ -111,6 +111,10 @@ MonoBehaviour:
     m_Key: TeamMemberAttitude.Lazy
     m_Metadata:
       m_Items: []
+  - m_Id: 1155974155984896
+    m_Key: TeamMember.Selected
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

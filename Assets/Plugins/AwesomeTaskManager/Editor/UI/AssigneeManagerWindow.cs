@@ -22,7 +22,7 @@ namespace AwesomeTaskManager.Editor
 
         public static void ShowWindow(SaveData data, Action onChanged)
         {
-            var window = GetWindow<AssigneeManagerWindow>(true, "👥 Assignee Manager", true);
+            var window = GetWindow<AssigneeManagerWindow>(true, $"{TBStyles.AssigneeIcon} Assignee Manager", true);
             window._data = data;
             window._onChanged = onChanged;
             window.minSize = new Vector2(400, 400);
@@ -39,11 +39,33 @@ namespace AwesomeTaskManager.Editor
 
         private void OnEnable()
         {
+            wantsMouseMove = true;
             LoadData();
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+        }
+
+        private void OnDisable()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            _profileImageCache.Clear();
+        }
+
+        private void OnDestroy()
+        {
+            EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            _profileImageCache.Clear();
+        }
+
+        private void OnPlayModeStateChanged(PlayModeStateChange state)
+        {
+            _profileImageCache.Clear();
+            RefreshVisualState();
         }
 
         private void RefreshVisualState()
         {
+            _profileImageCache.Clear();
             TBStyles.InvalidateCache();
             Repaint();
             EditorApplication.delayCall += () =>
@@ -54,33 +76,51 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
-            if (_data == null)
+            try
             {
-                Close();
-                return;
+                if (_data == null)
+                {
+                    Close();
+                    return;
+                }
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    TBStyles.DrawCanvasBackground(new Rect(0, 0, position.width, position.height), TBStyles.PopupBg, true);
+                }
+
+                using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+                {
+                    _scroll = scope.scrollPosition;
+
+                    EditorGUILayout.LabelField("Assignee Manager", EditorStyles.boldLabel);
+                    EditorGUILayout.HelpBox("Manage project members. You can assign these people to task cards.", MessageType.None);
+                    GUILayout.Space(10);
+
+                    DrawAddSection();
+                    GUILayout.Space(15);
+                    DrawSeparator();
+                    GUILayout.Space(15);
+                    DrawList();
+                }
             }
-
-            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+            finally
             {
-                _scroll = scope.scrollPosition;
-
-                EditorGUILayout.LabelField("Assignee Manager", EditorStyles.boldLabel);
-                EditorGUILayout.HelpBox("Manage project members. You can assign these people to task cards.", MessageType.None);
-                GUILayout.Space(10);
-
-                DrawAddSection();
-                GUILayout.Space(15);
-                DrawSeparator();
-                GUILayout.Space(15);
-                DrawList();
+                // Draw custom themed tooltip overlay
+                ThemedTooltip.Draw(this);
             }
         }
 
         private void DrawAddSection()
         {
             EditorGUILayout.LabelField("Add New Member", EditorStyles.boldLabel);
-            using (new EditorGUILayout.VerticalScope("box"))
+            using (var cardScope = new EditorGUILayout.VerticalScope(TBStyles.CardBox))
             {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    TBStyles.DrawGlassPanel(cardScope.rect, TBStyles.CardBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+                }
+
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     // Profile Image Picker
@@ -90,6 +130,11 @@ namespace AwesomeTaskManager.Editor
                         Rect iconRect = GUILayoutUtility.GetRect(64, 64);
                         _newProfileImage = (Texture2D)EditorGUI.ObjectField(iconRect, _newProfileImage, typeof(Texture2D), false);
                         
+                        if (_newBorderColorIndex > 0)
+                        {
+                            TBStyles.DrawBorderRect(iconRect, TBStyles.GetLabelColor(_newBorderColorIndex), 2f);
+                        }
+
                         // Icon-specific handlers
                         HandleImageDragDrop(iconRect, (tex, path) => { 
                             _newProfileImage = tex ?? AssetDatabase.LoadAssetAtPath<Texture2D>(path);
@@ -100,7 +145,7 @@ namespace AwesomeTaskManager.Editor
                             Repaint(); 
                         });
 
-                        if (GUILayout.Button(new GUIContent("Browse...", "Select Profile Image from File System"), EditorStyles.miniButton, GUILayout.Width(64)))
+                        if (ThemedTooltip.Button("Browse...", "Select Profile Image from File System", TBStyles.StandardButton, GUILayout.Width(64)))
                         {
                             EditorApplication.delayCall += () =>
                             {
@@ -119,11 +164,23 @@ namespace AwesomeTaskManager.Editor
 
                     using (new EditorGUILayout.VerticalScope())
                     {
-                        _newName = EditorGUILayout.TextField("Name", _newName);
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("Name", GUILayout.Width(80));
+                            _newName = TBStyles.DrawThemedTextField(_newName, GUILayout.Height(20));
+                        }
                         GUILayout.Space(4);
                         
-                        _newColorIndex = EditorGUILayout.Popup(new GUIContent("Initials Color", "Colour for background when Image is not available"), _newColorIndex, TBStyles.LabelNames);
-                        _newBorderColorIndex = EditorGUILayout.Popup(new GUIContent("Border Color", "Colour for border"), _newBorderColorIndex, TBStyles.LabelNames);
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("Initials Color", GUILayout.Width(80));
+                            TBStyles.DrawThemedDropdown(_newColorIndex, TBStyles.LabelNames, (c) => { _newColorIndex = c; Repaint(); }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray());
+                        }
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("Border Color", GUILayout.Width(80));
+                            TBStyles.DrawThemedDropdown(_newBorderColorIndex, TBStyles.LabelNames, (bc) => { _newBorderColorIndex = bc; Repaint(); }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray());
+                        }
                     }
                 }
 
@@ -144,8 +201,7 @@ namespace AwesomeTaskManager.Editor
                 GUILayout.Space(10);
 
                 GUI.enabled = !string.IsNullOrWhiteSpace(_newName);
-                GUI.backgroundColor = new Color(0.3f, 0.75f, 0.35f);
-                if (GUILayout.Button("✅ Add Member", GUILayout.Height(30)))
+                if (GUILayout.Button("✅ Add Member", TBStyles.AddCardButton, GUILayout.Height(30)))
                 {
                     string guid = _newProfileImage != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(_newProfileImage)) : "";
                     _data.assignees.Add(new Assignee { 
@@ -160,7 +216,6 @@ namespace AwesomeTaskManager.Editor
                     GUI.FocusControl(null);
                     GUIUtility.ExitGUI();
                 }
-                GUI.backgroundColor = Color.white;
                 GUI.enabled = true;
             }
         }
@@ -182,8 +237,13 @@ namespace AwesomeTaskManager.Editor
                 if (!_nameBuffers.ContainsKey(assignee.id))
                     _nameBuffers[assignee.id] = assignee.name;
 
-                using (new EditorGUILayout.VerticalScope("box"))
+                using (var cardScope = new EditorGUILayout.VerticalScope(TBStyles.CardBox))
                 {
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        TBStyles.DrawGlassPanel(cardScope.rect, TBStyles.CardBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+                    }
+
                     using (new EditorGUILayout.HorizontalScope())
                     {
                         // Icon
@@ -193,6 +253,11 @@ namespace AwesomeTaskManager.Editor
                             Rect iconRect = GUILayoutUtility.GetRect(50, 50);
                             var newTex = (Texture2D)EditorGUI.ObjectField(iconRect, profileTex, typeof(Texture2D), false);
 
+                            if (assignee.borderColorIndex > 0)
+                            {
+                                TBStyles.DrawBorderRect(iconRect, TBStyles.GetLabelColor(assignee.borderColorIndex), 2f);
+                            }
+
                             if (newTex != profileTex)
                             {
                                 assignee.profileImageGuid = newTex != null ? AssetDatabase.AssetPathToGUID(AssetDatabase.GetAssetPath(newTex)) : "";
@@ -200,7 +265,7 @@ namespace AwesomeTaskManager.Editor
                                 NotifyChanged();
                             }
 
-                            if (GUILayout.Button(new GUIContent("Browse...", "Select Profile Image from File System"), EditorStyles.miniButton, GUILayout.Width(60)))
+                            if (ThemedTooltip.Button("Browse...", "Select Profile Image from File System", TBStyles.StandardButton, GUILayout.Width(60)))
                             {
                                 EditorApplication.delayCall += () =>
                                 {
@@ -225,7 +290,7 @@ namespace AwesomeTaskManager.Editor
                             using (new EditorGUILayout.HorizontalScope())
                             {
                                 EditorGUILayout.LabelField("Name", GUILayout.Width(50));
-                                _nameBuffers[assignee.id] = EditorGUILayout.TextField(_nameBuffers[assignee.id]);
+                                _nameBuffers[assignee.id] = TBStyles.DrawThemedTextField(_nameBuffers[assignee.id], GUILayout.Height(20));
                                 if (_nameBuffers[assignee.id] != assignee.name)
                                 {
                                     assignee.name = _nameBuffers[assignee.id];
@@ -236,33 +301,35 @@ namespace AwesomeTaskManager.Editor
                             // Colors
                             using (new EditorGUILayout.HorizontalScope())
                             {
-                                EditorGUILayout.LabelField(new GUIContent("Initials","Colour for background when Image is not available"), GUILayout.Width(50));
-                                int newColor = EditorGUILayout.Popup(assignee.colorIndex, TBStyles.LabelNames);
-                                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select initials background color"));
-                                if (newColor != assignee.colorIndex)
+                                ThemedTooltip.Label("Initials", "Colour for background when Image is not available", null, GUILayout.Width(50));
+                                var curAssignee = assignee;
+                                TBStyles.DrawThemedDropdown(assignee.colorIndex, TBStyles.LabelNames, (newColor) =>
                                 {
-                                    assignee.colorIndex = newColor;
-                                    NotifyChanged();
-                                }
+                                    if (newColor != curAssignee.colorIndex)
+                                    {
+                                        curAssignee.colorIndex = newColor;
+                                        NotifyChanged();
+                                    }
+                                }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Select initials background color");
 
-                                EditorGUILayout.LabelField(new GUIContent("Border", "Colour for border"), GUILayout.Width(50));
-                                int newBorderColor = EditorGUILayout.Popup(assignee.borderColorIndex, TBStyles.LabelNames);
-                                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select border color"));
-                                if (newBorderColor != assignee.borderColorIndex)
+                                ThemedTooltip.Label("Border", "Colour for border", null, GUILayout.Width(50));
+                                TBStyles.DrawThemedDropdown(assignee.borderColorIndex, TBStyles.LabelNames, (newBorderColor) =>
                                 {
-                                    assignee.borderColorIndex = newBorderColor;
-                                    NotifyChanged();
-                                }
+                                    if (newBorderColor != curAssignee.borderColorIndex)
+                                    {
+                                        curAssignee.borderColorIndex = newBorderColor;
+                                        NotifyChanged();
+                                    }
+                                }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Select border color");
                             }
                         }
 
                         GUILayout.Space(5);
 
                         // Delete
-                        GUI.backgroundColor = new Color(1f, 0.4f, 0.4f);
-                        if (GUILayout.Button(new GUIContent("🗑", "Delete Assignee"), GUILayout.Width(24), GUILayout.Height(50)))
+                        if (ThemedTooltip.DeleteIconButton(TBStyles.DeleteIcon, "Delete Assignee", GUILayout.Width(24), GUILayout.Height(50)))
                         {
-                            if (EditorUtility.DisplayDialog("Delete Assignee", $"Remove \"{assignee.name}\"?\nThey will be unassigned from all cards.", "Delete", "Cancel"))
+                            if (ThemedDialog.Show("Delete Assignee", $"Remove \"{assignee.name}\"?\nThey will be unassigned from all cards.", "Delete", "Cancel"))
                             {
                                 _data.assignees.RemoveAt(i);
                                 _nameBuffers.Remove(assignee.id);
@@ -277,7 +344,6 @@ namespace AwesomeTaskManager.Editor
                                 shouldExitGUI = true;
                             }
                         }
-                        GUI.backgroundColor = Color.white;
                     }
 
                     // Handle drag/paste for the whole row
@@ -336,6 +402,7 @@ namespace AwesomeTaskManager.Editor
 
         private void NotifyChanged()
         {
+            TBStyles.InvalidateCache();
             if (_data != null) Persistence.Save(_data);
 
             TaskBoardWindow.ReloadAllOpenWindows();
