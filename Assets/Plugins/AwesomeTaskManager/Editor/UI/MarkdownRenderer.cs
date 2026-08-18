@@ -236,7 +236,7 @@ namespace AwesomeTaskManager.Editor
 
         private static void OpenURLWithConfirmation(string url)
         {
-            if (EditorUtility.DisplayDialog("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
+            if (ThemedDialog.Show("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
             {
                 Application.OpenURL(url);
             }
@@ -514,7 +514,7 @@ namespace AwesomeTaskManager.Editor
         {
             if (TryPasteImageFromClipboard(note, markModified, repaint))
                 return;
-            EditorUtility.DisplayDialog("No Image", "No image found on the clipboard.\n\nTip: Copy an image or image file first, then paste.", "OK");
+            ThemedDialog.Show("No Image", "No image found on the clipboard.\n\nTip: Copy an image or image file first, then paste.", "OK");
         }
 
         public static bool TryPasteImageFromClipboard(QuickNote note, Action<QuickNote> markModified, Action repaint)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using AwesomeTaskManager.UI;
 using UnityEditor;
 using UnityEngine;
 
@@ -544,120 +545,146 @@ namespace AwesomeTaskManager.Editor
             window.ShowUtility();
         }
 
+        private void OnEnable()
+        {
+            wantsMouseMove = true;
+        }
+
         private void OnGUI()
         {
-            if (_mapping == null)
+            try
             {
-                Close();
-                return;
-            }
-
-            EditorGUILayout.HelpBox("Map incoming columns to Task Manager fields. Only Name is required.", MessageType.Info);
-
-            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
-            {
-                _scroll = scope.scrollPosition;
-
-                int presetIndex = (int)_mapping.preset;
-                int newPresetIndex = EditorGUILayout.Popup("Preset", presetIndex, PresetNames);
-                if (newPresetIndex != presetIndex)
+                if (_mapping == null)
                 {
-                    _mapping.preset = (ImportMappingPreset)newPresetIndex;
-                    ApplyPreset(_mapping.preset);
+                    Close();
+                    return;
                 }
 
-                int newProfileIndex = EditorGUILayout.Popup("Saved Profile", _selectedProfileIndex, _profileOptions);
-                if (newProfileIndex != _selectedProfileIndex)
+                if (Event.current.type == EventType.Repaint)
                 {
-                    _selectedProfileIndex = newProfileIndex;
-                    if (_selectedProfileIndex <= 0)
-                        RestoreSuggestedState();
-                    else
-                        ApplyProfile(_profiles[_selectedProfileIndex - 1]);
+                    TBStyles.DrawCanvasBackground(new Rect(0, 0, position.width, position.height), TBStyles.PopupBg, true);
                 }
 
-                EditorGUILayout.Space(6);
-                _saveProfile = EditorGUILayout.ToggleLeft("Save / update profile when importing", _saveProfile);
-                using (new EditorGUI.DisabledGroupScope(!_saveProfile))
+                EditorGUILayout.HelpBox("Map incoming columns to Task Manager fields. Only Name is required.", MessageType.Info);
+
+                using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
                 {
-                    _profileName = EditorGUILayout.TextField("Profile Name", _profileName);
+                    _scroll = scope.scrollPosition;
+
+                    int presetIndex = (int)_mapping.preset;
+                    int newPresetIndex = EditorGUILayout.Popup("Preset", presetIndex, PresetNames);
+                    if (newPresetIndex != presetIndex)
+                    {
+                        _mapping.preset = (ImportMappingPreset)newPresetIndex;
+                        ApplyPreset(_mapping.preset);
+                    }
+
+                    int newProfileIndex = EditorGUILayout.Popup("Saved Profile", _selectedProfileIndex, _profileOptions);
+                    if (newProfileIndex != _selectedProfileIndex)
+                    {
+                        _selectedProfileIndex = newProfileIndex;
+                        if (_selectedProfileIndex <= 0)
+                            RestoreSuggestedState();
+                        else
+                            ApplyProfile(_profiles[_selectedProfileIndex - 1]);
+                    }
+
+                    EditorGUILayout.Space(6);
+                    _saveProfile = EditorGUILayout.ToggleLeft("Save / update profile when importing", _saveProfile);
+                    using (new EditorGUI.DisabledGroupScope(!_saveProfile))
+                    {
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("Profile Name", GUILayout.Width(130));
+                            _profileName = TBStyles.DrawThemedTextField(_profileName, GUILayout.Height(20));
+                        }
+                    }
+
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        var selectedProfile = _selectedProfileIndex > 0 ? _profiles[_selectedProfileIndex - 1] : null;
+                        EditorGUI.BeginDisabledGroup(_selectedProfileIndex <= 0 || (selectedProfile != null && selectedProfile.isBuiltIn));
+                        if (GUILayout.Button("Delete Selected Profile", TBStyles.DeleteButton, GUILayout.Height(22), GUILayout.Width(170)))
+                        {
+                            if (selectedProfile != null && ThemedDialog.Show("Delete Import Profile", "Delete profile '" + selectedProfile.profileName + "'?", "Delete", "Cancel"))
+                            {
+                                _onConfirm?.Invoke(new ImportFieldMappingWindowResult
+                                {
+                                    scope = _scope,
+                                    deleteProfileId = selectedProfile.id
+                                });
+                                Close();
+                                GUIUtility.ExitGUI();
+                            }
+                        }
+                        EditorGUI.EndDisabledGroup();
+                    }
+
+                    _rememberLastMappingForPattern = EditorGUILayout.ToggleLeft("Remember last mapping for matching files", _rememberLastMappingForPattern);
+                    using (new EditorGUI.DisabledGroupScope(!_rememberLastMappingForPattern))
+                    {
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("Source File Pattern", GUILayout.Width(130));
+                            _sourcePattern = TBStyles.DrawThemedTextField(_sourcePattern, GUILayout.Height(20));
+                        }
+                        EditorGUILayout.HelpBox("Example patterns: trello-export*.csv, sprint_report_*.xlsx, *.xml", MessageType.None);
+                    }
+
+                    EditorGUILayout.Space(6);
+
+                    DrawMapField("Name *", ref _mapping.nameIndex);
+                    DrawMapField("Description", ref _mapping.descriptionIndex);
+                    DrawMapField("Status / Column", ref _mapping.statusIndex);
+                    DrawMapField("Priority", ref _mapping.priorityIndex);
+                    DrawMapField("Assignees / Members", ref _mapping.assigneeIndex);
+                    DrawMapField("Tags / Labels", ref _mapping.tagsIndex);
+                    DrawMapField("Due Date", ref _mapping.dueDateIndex);
+                    DrawMapField("Checklist", ref _mapping.checklistIndex);
+                    DrawMapField("Board/List Name", ref _mapping.listNameIndex);
+                    DrawMapField("Custom Fields", ref _mapping.customFieldsIndex);
                 }
 
+                GUILayout.FlexibleSpace();
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    GUILayout.FlexibleSpace();
-                    var selectedProfile = _selectedProfileIndex > 0 ? _profiles[_selectedProfileIndex - 1] : null;
-                    EditorGUI.BeginDisabledGroup(_selectedProfileIndex <= 0 || (selectedProfile != null && selectedProfile.isBuiltIn));
-                    if (GUILayout.Button("Delete Selected Profile", GUILayout.Height(22), GUILayout.Width(170)))
+                    if (GUILayout.Button("Cancel", TBStyles.StandardButton, GUILayout.Height(26)))
                     {
-                        if (selectedProfile != null && EditorUtility.DisplayDialog("Delete Import Profile", "Delete profile '" + selectedProfile.profileName + "'?", "Delete", "Cancel"))
+                        Close();
+                        GUIUtility.ExitGUI();
+                    }
+
+                    EditorGUI.BeginDisabledGroup(_mapping.nameIndex < 0);
+                    if (GUILayout.Button("Import", TBStyles.AddCardButton, GUILayout.Height(26)))
+                    {
+                        var result = new ImportFieldMappingWindowResult
                         {
-                            _onConfirm?.Invoke(new ImportFieldMappingWindowResult
-                            {
-                                scope = _scope,
-                                deleteProfileId = selectedProfile.id
-                            });
-                            Close();
-                            GUIUtility.ExitGUI();
-                        }
+                            scope = _scope,
+                            mapping = _mapping.Clone(),
+                            selectedProfileId = _selectedProfileIndex > 0 ? _profiles[_selectedProfileIndex - 1].id : null,
+                            saveProfile = _saveProfile,
+                            profileName = GetResolvedProfileName(),
+                            rememberLastMappingForPattern = _rememberLastMappingForPattern,
+                            headerSignature = _headerSignature,
+                            sourceFilePattern = _rememberLastMappingForPattern
+                                ? ImportFieldMappingPresets.NormalizePattern(string.IsNullOrWhiteSpace(_sourcePattern)
+                                    ? ImportFieldMappingPresets.BuildSuggestedPattern(_sourcePath)
+                                    : _sourcePattern)
+                                : string.Empty
+                        };
+
+                        _onConfirm?.Invoke(result);
+                        Close();
+                        GUIUtility.ExitGUI();
                     }
                     EditorGUI.EndDisabledGroup();
                 }
-
-                _rememberLastMappingForPattern = EditorGUILayout.ToggleLeft("Remember last mapping for matching files", _rememberLastMappingForPattern);
-                using (new EditorGUI.DisabledGroupScope(!_rememberLastMappingForPattern))
-                {
-                    _sourcePattern = EditorGUILayout.TextField("Source File Pattern", _sourcePattern);
-                    EditorGUILayout.HelpBox("Example patterns: trello-export*.csv, sprint_report_*.xlsx, *.xml", MessageType.None);
-                }
-
-                EditorGUILayout.Space(6);
-
-                DrawMapField("Name *", ref _mapping.nameIndex);
-                DrawMapField("Description", ref _mapping.descriptionIndex);
-                DrawMapField("Status / Column", ref _mapping.statusIndex);
-                DrawMapField("Priority", ref _mapping.priorityIndex);
-                DrawMapField("Assignees / Members", ref _mapping.assigneeIndex);
-                DrawMapField("Tags / Labels", ref _mapping.tagsIndex);
-                DrawMapField("Due Date", ref _mapping.dueDateIndex);
-                DrawMapField("Checklist", ref _mapping.checklistIndex);
-                DrawMapField("Board/List Name", ref _mapping.listNameIndex);
-                DrawMapField("Custom Fields", ref _mapping.customFieldsIndex);
             }
-
-            GUILayout.FlexibleSpace();
-            using (new EditorGUILayout.HorizontalScope())
+            finally
             {
-                if (GUILayout.Button("Cancel", GUILayout.Height(26)))
-                {
-                    Close();
-                    GUIUtility.ExitGUI();
-                }
-
-                EditorGUI.BeginDisabledGroup(_mapping.nameIndex < 0);
-                if (GUILayout.Button("Import", GUILayout.Height(26)))
-                {
-                    var result = new ImportFieldMappingWindowResult
-                    {
-                        scope = _scope,
-                        mapping = _mapping.Clone(),
-                        selectedProfileId = _selectedProfileIndex > 0 ? _profiles[_selectedProfileIndex - 1].id : null,
-                        saveProfile = _saveProfile,
-                        profileName = GetResolvedProfileName(),
-                        rememberLastMappingForPattern = _rememberLastMappingForPattern,
-                        headerSignature = _headerSignature,
-                        sourceFilePattern = _rememberLastMappingForPattern
-                            ? ImportFieldMappingPresets.NormalizePattern(string.IsNullOrWhiteSpace(_sourcePattern)
-                                ? ImportFieldMappingPresets.BuildSuggestedPattern(_sourcePath)
-                                : _sourcePattern)
-                            : string.Empty
-                    };
-
-                    _onConfirm?.Invoke(result);
-                    Close();
-                    GUIUtility.ExitGUI();
-                }
-                EditorGUI.EndDisabledGroup();
+                // Draw custom themed tooltip overlay
+                ThemedTooltip.Draw(this);
             }
         }
 

@@ -17,7 +17,7 @@ namespace AwesomeTaskManager.Editor
 
         public static void Open(SaveData data, System.Action onChanged)
         {
-            var window = GetWindow<CategoryEditorWindow>(true, "🏷 Category Editor", true);
+            var window = GetWindow<CategoryEditorWindow>(true, $"{TBStyles.CategoryIcon} Category Editor", true);
             window._data = data;
             window._onChanged = onChanged;
             window.minSize = new Vector2(420, 360);
@@ -34,6 +34,7 @@ namespace AwesomeTaskManager.Editor
 
         private void OnEnable()
         {
+            wantsMouseMove = true;
             LoadData();
         }
 
@@ -49,25 +50,38 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
-            if (_data == null)
+            try
             {
-                Close();
-                return;
+                if (_data == null)
+                {
+                    Close();
+                    return;
+                }
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    TBStyles.DrawCanvasBackground(new Rect(0, 0, position.width, position.height), TBStyles.PopupBg, true);
+                }
+
+                using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+                {
+                    _scroll = scope.scrollPosition;
+
+                    EditorGUILayout.LabelField("Category Manager", EditorStyles.boldLabel);
+                    EditorGUILayout.HelpBox("Add, rename, delete categories and choose each category's default card color.", MessageType.None);
+                    GUILayout.Space(4);
+
+                    DrawAddCategorySection();
+                    GUILayout.Space(8);
+                    DrawSeparator();
+                    GUILayout.Space(8);
+                    DrawCategoryList();
+                }
             }
-
-            using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+            finally
             {
-                _scroll = scope.scrollPosition;
-
-                EditorGUILayout.LabelField("Category Manager", EditorStyles.boldLabel);
-                EditorGUILayout.HelpBox("Add, rename, delete categories and choose each category's default card color.", MessageType.None);
-                GUILayout.Space(4);
-
-                DrawAddCategorySection();
-                GUILayout.Space(8);
-                DrawSeparator();
-                GUILayout.Space(8);
-                DrawCategoryList();
+                // Draw custom themed tooltip overlay
+                ThemedTooltip.Draw(this);
             }
         }
 
@@ -76,11 +90,14 @@ namespace AwesomeTaskManager.Editor
             EditorGUILayout.LabelField("Add Category", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
-                _newCategoryName = EditorGUILayout.TextField(_newCategoryName);
-                _newCategoryColor = EditorGUILayout.Popup(_newCategoryColor, TBStyles.LabelNames, GUILayout.Width(90));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select default color for this category"));
+                _newCategoryName = TBStyles.DrawThemedTextField(_newCategoryName, GUILayout.Height(22));
+                TBStyles.DrawThemedDropdown(_newCategoryColor, TBStyles.LabelNames, (c) =>
+                {
+                    _newCategoryColor = c;
+                    Repaint();
+                }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Select default color for this category", GUILayout.Width(90));
                 GUI.enabled = !string.IsNullOrWhiteSpace(_newCategoryName) && !_data.categories.Contains(_newCategoryName.Trim());
-                if (GUILayout.Button(new GUIContent("Add", "Add a new category"), GUILayout.Width(54)))
+                if (ThemedTooltip.Button("Add", "Add a new category", TBStyles.StandardButton, GUILayout.Width(54)))
                 {
                     string categoryName = _newCategoryName.Trim();
                     _data.categories.Add(categoryName);
@@ -112,27 +129,33 @@ namespace AwesomeTaskManager.Editor
                 if (!_renameBuffers.ContainsKey(category))
                     _renameBuffers[category] = category;
 
-                using (new EditorGUILayout.VerticalScope("box"))
+                using (var cardScope = new EditorGUILayout.VerticalScope(TBStyles.CardBox))
                 {
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        TBStyles.DrawGlassPanel(cardScope.rect, TBStyles.CardBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+                    }
                     using (new EditorGUILayout.HorizontalScope())
                     {
                         Rect colorRect = GUILayoutUtility.GetRect(14, 18, GUILayout.Width(14));
-                        EditorGUI.DrawRect(colorRect, TBStyles.LabelColors[Mathf.Clamp(_data.GetCategoryColor(category), 0, TBStyles.LabelColors.Length - 1)]);
+                        EditorGUI.DrawRect(colorRect, TBStyles.GetLabelColor(_data.GetCategoryColor(category)));
 
-                        _renameBuffers[category] = EditorGUILayout.TextField(_renameBuffers[category]);
+                        _renameBuffers[category] = TBStyles.DrawThemedTextField(_renameBuffers[category], GUILayout.Height(20));
 
-                        int newColor = EditorGUILayout.Popup(_data.GetCategoryColor(category), TBStyles.LabelNames, GUILayout.Width(90));
-                        GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select category color"));
-                        if (newColor != _data.GetCategoryColor(category))
+                        string currentCat = category;
+                        TBStyles.DrawThemedDropdown(_data.GetCategoryColor(category), TBStyles.LabelNames, (newColor) =>
                         {
-                            _data.SetCategoryColor(category, newColor);
-                            NotifyChanged();
-                        }
+                            if (newColor != _data.GetCategoryColor(currentCat))
+                            {
+                                _data.SetCategoryColor(currentCat, newColor);
+                                NotifyChanged();
+                            }
+                        }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Select category color", GUILayout.Width(90));
 
                         GUI.enabled = !string.IsNullOrWhiteSpace(_renameBuffers[category].Trim())
                                       && _renameBuffers[category].Trim() != category
                                       && !_data.categories.Contains(_renameBuffers[category].Trim());
-                        if (GUILayout.Button(new GUIContent("Rename", "Rename the selected category"), GUILayout.Width(62)))
+                        if (ThemedTooltip.Button("Rename", "Rename the selected category", TBStyles.StandardButton, GUILayout.Width(62)))
                         {
                             string renamed = _renameBuffers[category].Trim();
                             if (_data.RenameCategory(category, renamed))
@@ -145,10 +168,9 @@ namespace AwesomeTaskManager.Editor
                         }
                         GUI.enabled = true;
 
-                        GUI.backgroundColor = new Color(1f, 0.45f, 0.45f);
-                        if (GUILayout.Button(new GUIContent("Delete", "Delete the selected category"), GUILayout.Width(54)))
+                        if (ThemedTooltip.DeleteButton("Delete", "Delete the selected category", GUILayout.Width(54)))
                         {
-                            if (EditorUtility.DisplayDialog("Delete Category",
+                            if (ThemedDialog.Show("Delete Category",
                                 $"Delete category \"{category}\"?\nCards using it will be cleared to no category.",
                                 "Delete", "Cancel"))
                             {
@@ -158,7 +180,6 @@ namespace AwesomeTaskManager.Editor
                                 shouldExitGUI = true;
                             }
                         }
-                        GUI.backgroundColor = Color.white;
                     }
                 }
                 GUILayout.Space(2);

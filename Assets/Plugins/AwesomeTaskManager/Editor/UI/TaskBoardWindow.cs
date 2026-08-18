@@ -22,15 +22,19 @@ namespace AwesomeTaskManager.Editor
         private SaveData _data;
         [SerializeField] private int _tab;
         [SerializeField] private int _boardIndex;
+        public int BoardIndex => _boardIndex;
 
         // GIF cache state
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
-        [SerializeField] private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll;
+        [SerializeField] private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll, _styleScroll;
         [SerializeField] private string _searchFilter = "";
         [SerializeField] private string _categoryFilter = "";
         [SerializeField] private string _assigneeFilter = ""; // New filter
         [SerializeField] private int _priorityFilter = 0; // 0 = All
+        [SerializeField] private string _styleSearchFilter = "";
+        private bool _styleSearchForceShowCurrentSection;
+        private bool _styleSectionHasVisibleAttribute;
         private string _newColumnTitle = "";
         private bool _showAddColumn;
         private string _renameBoardName = "";
@@ -202,6 +206,7 @@ namespace AwesomeTaskManager.Editor
         private void OnEnable()
         {
             Instance = this;
+            wantsMouseMove = true;
             // Always refresh from disk on enable; EditorWindow serialized state can be stale.
             _data = Persistence.Load();
             if (_data != null)
@@ -221,7 +226,7 @@ namespace AwesomeTaskManager.Editor
             var freshData = Persistence.Load();
             if (freshData == null) 
             {
-                EditorUtility.DisplayDialog("Awesome Task Manager", "Failed to load data. The save file might be corrupted.", "OK");
+                ThemedDialog.Show("Awesome Task Manager", "Failed to load data. The save file might be corrupted.", "OK");
                 return;
             }
 
@@ -236,6 +241,12 @@ namespace AwesomeTaskManager.Editor
 
         private void ApplyPostLoadVisualState()
         {
+            if (_data != null && _data.themes != null && _data.themes.Count > 0)
+            {
+                int themeIdx = Mathf.Clamp(_data.currentThemeIndex, 0, _data.themes.Count - 1);
+                TBStyles.ApplyTheme(_data.themes[themeIdx]);
+            }
+
             ClampBoard();
             RefreshLinkCache();
             ValidateFiltersAgainstData();
@@ -273,7 +284,7 @@ namespace AwesomeTaskManager.Editor
             if (_priorityFilter < 0 || _priorityFilter > TBStyles.PriorityNames.Length)
                 _priorityFilter = 0;
 
-            if (_tab < 0 || _tab > 1)
+            if (_tab < 0 || _tab > 2)
                 _tab = 0;
         }
 
@@ -480,6 +491,7 @@ namespace AwesomeTaskManager.Editor
             _assigneeFilter = "";
             _priorityFilter = 0;
             _noteSearchFilter = "";
+            _styleSearchFilter = "";
         }
 
         private static void NotifySubWindowsToReload()
@@ -505,10 +517,32 @@ namespace AwesomeTaskManager.Editor
             ReloadAllOpenWindows();
         }
 
+        public void SaveTheme()
+        {
+            if (_data == null) return;
+            _data.themeSettings ??= new ThemeSaveData();
+            _data.themeSettings.themes = _data.themes;
+            _data.themeSettings.currentThemeIndex = _data.currentThemeIndex;
+            if (_data.themes != null && _data.currentThemeIndex >= 0 && _data.currentThemeIndex < _data.themes.Count)
+            {
+                _data.themeSettings.selectedThemeName = _data.themes[_data.currentThemeIndex].name;
+            }
+            Persistence.SaveTheme(_data.themeSettings);
+            ReloadAllOpenWindows();
+        }
+
         public void AddCardFromDetail(string boardId, string columnId, TaskCard card)
         {
-            LoadData(); // Fresh load to ensure we don't overwrite other recent changes
-            if (_data == null) return;
+            int targetIdx = -1;
+            if (_data != null)
+            {
+                targetIdx = _data.boards.FindIndex(b => b.id == boardId);
+            }
+
+            var freshData = Persistence.Load();
+            if (freshData == null) return;
+            _data = freshData;
+
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
             {
@@ -516,9 +550,17 @@ namespace AwesomeTaskManager.Editor
                 if (col != null)
                 {
                     col.cards.Add(card);
-                    Save();
+                    targetIdx = _data.boards.IndexOf(board);
                 }
             }
+
+            if (targetIdx >= 0 && targetIdx < _data.boards.Count)
+            {
+                _boardIndex = targetIdx;
+                _data.lastBoardIndex = targetIdx;
+            }
+
+            Save();
         }
 
         public void UpdateCardFromDetail(TaskCard updatedCard)
@@ -528,8 +570,16 @@ namespace AwesomeTaskManager.Editor
 
         public void DeleteCardFromDetail(string boardId, string columnId, string cardId)
         {
-            LoadData(); // Fresh load to ensure we don't overwrite other recent changes
-            if (_data == null) return;
+            int targetIdx = -1;
+            if (_data != null)
+            {
+                targetIdx = _data.boards.FindIndex(b => b.id == boardId);
+            }
+
+            var freshData = Persistence.Load();
+            if (freshData == null) return;
+            _data = freshData;
+
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
             {
@@ -543,11 +593,19 @@ namespace AwesomeTaskManager.Editor
                         _linkHighlightCardId = null;
                         _linkHighlightMode = LinkHighlightMode.None;
                     }
-                    Save();
-                    RefreshLinkCache();
-                    ReloadAllOpenWindows();
+                    targetIdx = _data.boards.IndexOf(board);
                 }
             }
+
+            if (targetIdx >= 0 && targetIdx < _data.boards.Count)
+            {
+                _boardIndex = targetIdx;
+                _data.lastBoardIndex = targetIdx;
+            }
+
+            Save();
+            RefreshLinkCache();
+            ReloadAllOpenWindows();
         }
 
         private void ClampBoard()
@@ -560,7 +618,15 @@ namespace AwesomeTaskManager.Editor
                 _data.categoryColors = new List<CategoryColorEntry>();
             if (_data.noteFolders == null)
                 _data.noteFolders = new List<NoteFolder>();
-            _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, _data.boards.Count - 1);
+
+            if (_boardIndex >= 0 && _boardIndex < _data.boards.Count)
+            {
+                _data.lastBoardIndex = _boardIndex;
+            }
+            else
+            {
+                _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, _data.boards.Count - 1);
+            }
         }
 
         private void RefreshLinkCache()
@@ -605,7 +671,7 @@ namespace AwesomeTaskManager.Editor
         {
             EditorApplication.delayCall += () =>
             {
-                if (EditorUtility.DisplayDialog("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
+                if (ThemedDialog.Show("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
                 {
                     Application.OpenURL(url);
                 }
@@ -614,32 +680,46 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
-            if (_data == null) 
+            try
             {
-                _data = Persistence.Load(); 
-                if (_data != null) ApplyPostLoadVisualState();
-            }
-
-            if (_data == null)
-            {
-                EditorGUILayout.HelpBox("Task Board data could not be loaded. This might happen if the save file is corrupted or locked by another process (like a Git sync).\n\nPlease check the Console for detailed error messages.", MessageType.Error);
-                if (GUILayout.Button("Retry Loading Data", GUILayout.Height(30)))
+                if (_data == null) 
                 {
-                    LoadData();
+                    _data = Persistence.Load(); 
+                    if (_data != null) ApplyPostLoadVisualState();
                 }
-                return;
+
+                if (_data == null)
+                {
+                    EditorGUILayout.HelpBox("Task Board data could not be loaded. This might happen if the save file is corrupted or locked by another process (like a Git sync).\n\nPlease check the Console for detailed error messages.", MessageType.Error);
+                    if (GUILayout.Button("Retry Loading Data", GUILayout.Height(30)))
+                    {
+                        LoadData();
+                    }
+                    return;
+                }
+
+                _hasAnimatedGif = false;
+
+                if (Event.current.type == EventType.Repaint)
+                {
+                    TBStyles.DrawCanvasBackground(new Rect(0, 0, position.width, position.height), TBStyles.BoardBg, false);
+                }
+
+                DrawTabs();
+                GUILayout.Space(1);
+
+                if (_tab == 0) DrawBoardView();
+                else if (_tab == 1) DrawNotesView();
+                else DrawStyleView();
+
+                DrawSuccessNotification();
+                DrawErrorNotification();
             }
-
-            _hasAnimatedGif = false;
-
-            DrawTabs();
-            GUILayout.Space(1);
-
-            if (_tab == 0) DrawBoardView();
-            else           DrawNotesView();
-
-            DrawSuccessNotification();
-            DrawErrorNotification();
+            finally
+            {
+                // Draw custom themed tooltip overlay at the end of OnGUI
+                ThemedTooltip.Draw(this);
+            }
 
             // Throttled repaint for GIF animation (~15 fps)
             if (_hasAnimatedGif && EditorApplication.timeSinceStartup - _lastGifRepaintTime > 0.066)
@@ -655,21 +735,26 @@ namespace AwesomeTaskManager.Editor
             {
                 if (Event.current.type == EventType.Repaint)
                 {
-                    EditorGUI.DrawRect(scope.rect, EditorGUIUtility.isProSkin
-                        ? new Color(0.18f, 0.18f, 0.18f)
-                        : new Color(0.82f, 0.82f, 0.82f));
+                    TBStyles.DrawGlassPanel(scope.rect, TBStyles.TopBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
+                    EditorGUI.DrawRect(new Rect(scope.rect.x, scope.rect.yMax - 1, scope.rect.width, 1), EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.35f) : new Color(0f, 0f, 0f, 0.12f));
                 }
 
                 GUILayout.Space(8);
-                if (GUILayout.Button("📋 Board", _tab == 0 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
+                if (ThemedTooltip.Button($"{TBStyles.BoardTabIcon} Board", "Switch to Task Board view", _tab == 0 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
                 {
                     _tab = 0;
                     GUIUtility.ExitGUI();
                 }
                 GUILayout.Space(4);
-                if (GUILayout.Button("📝 Notes", _tab == 1 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
+                if (ThemedTooltip.Button($"{TBStyles.NotesTabIcon} Notes", "Switch to Notes workspace", _tab == 1 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
                 {
                     _tab = 1;
+                    GUIUtility.ExitGUI();
+                }
+                GUILayout.Space(4);
+                if (ThemedTooltip.Button($"{TBStyles.StyleTabIcon} Style", "Switch to Theme & Style customization view", _tab == 2 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
+                {
+                    _tab = 2;
                     GUIUtility.ExitGUI();
                 }
 
@@ -690,181 +775,205 @@ namespace AwesomeTaskManager.Editor
             bool showLabels = windowWidth > 1000;
             bool mediumWidth = windowWidth > 850;
 
-            using (new EditorGUILayout.HorizontalScope(EditorStyles.toolbar, GUILayout.Height(24)))
+            using (var tbScope = new EditorGUILayout.VerticalScope(GUILayout.Height(26)))
             {
-                string[] names = _data.boards.Select(b => b.name).ToArray();
-                int newIdx = EditorGUILayout.Popup(_boardIndex, names, EditorStyles.toolbarPopup, GUILayout.Width(mediumWidth ? 150 : 120));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Select current board"));
-                if (newIdx != _boardIndex)
+                if (Event.current.type == EventType.Repaint)
                 {
-                    _boardIndex = newIdx;
-                    ResetFilters();
-                    GUIUtility.ExitGUI();
+                    TBStyles.DrawGlassPanel(tbScope.rect, TBStyles.TopBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.06f) : new Color(1f, 1f, 1f, 0.25f), false);
+                    EditorGUI.DrawRect(new Rect(tbScope.rect.x, tbScope.rect.yMax - 1, tbScope.rect.width, 1), EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.30f) : new Color(0f, 0f, 0f, 0.10f));
                 }
 
-                if (GUILayout.Button(new GUIContent("+", "Board Options"), EditorStyles.toolbarButton, GUILayout.Width(22)))
+                GUILayout.FlexibleSpace();
+
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    GenericMenu menu = new GenericMenu();
-                    menu.AddItem(new GUIContent("Create New Board/Blank Board"), false, () => CreateBoard(null));
-                    menu.AddSeparator("Create New Board/");
-                    foreach (var template in _data.templates)
+                    GUILayout.Space(8);
+
+                    string[] names = _data.boards.Select(b => b.name).ToArray();
+                    TBStyles.DrawThemedDropdown(_boardIndex, names, (newIdx) =>
                     {
-                        var t = template;
-                        menu.AddItem(new GUIContent("Create New Board/Template: " + t.name), false, () => CreateBoard(t));
-                    }
-                    menu.AddSeparator("");
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board (JSON - Native)..."), false, () => ExportBoard(board));
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board (JSON - Native)..."), false, ImportBoard);
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
-                    menu.AddSeparator("Beta (Export or Import)/");
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (CSV - External)"), false, () => ExportBoardToCSV(board));
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (Excel - External)"), false, () => ExportBoardToExcel(board));
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (CSV - External)"), false, ImportBoardFromCSV);
-                    menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (Excel - External)"), false, ImportBoardFromExcel);
-                    menu.AddSeparator("");
-                    menu.AddItem(new GUIContent("Save Current as Template..."), false, SaveCurrentAsTemplate);
-                    if (_data.templates.Count > 0)
+                        if (newIdx != _boardIndex)
+                        {
+                            _boardIndex = newIdx;
+                            _data.lastBoardIndex = _boardIndex;
+                            Persistence.Save(_data);
+                            ResetFilters();
+                            GUIUtility.ExitGUI();
+                        }
+                    }, TBStyles.ToolbarPopup, "Select current board", GUILayout.Width(mediumWidth ? 150 : 120), GUILayout.Height(20));
+
+                    GUILayout.Space(2);
+                    if (ThemedContextMenu.DropdownButton("+", "Board Options", TBStyles.ToolbarButton, out Rect btnRect, GUILayout.Width(22), GUILayout.Height(20)))
                     {
+                        var menu = new ThemedContextMenu();
+                        menu.AddItem(new GUIContent("Create New Board/Blank Board"), false, () => CreateBoard(null));
+                        menu.AddSeparator("Create New Board/");
                         foreach (var template in _data.templates)
                         {
                             var t = template;
-                            menu.AddItem(new GUIContent("Delete Template/" + t.name), false, () =>
+                            menu.AddItem(new GUIContent("Create New Board/Template: " + t.name), false, () => CreateBoard(t));
+                        }
+                        menu.AddSeparator("");
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board (JSON - Native)..."), false, () => ExportBoard(board));
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board (JSON - Native)..."), false, ImportBoard);
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
+                        menu.AddSeparator("Beta (Export or Import)/");
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (CSV - External)"), false, () => ExportBoardToCSV(board));
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (Excel - External)"), false, () => ExportBoardToExcel(board));
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (CSV - External)"), false, ImportBoardFromCSV);
+                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (Excel - External)"), false, ImportBoardFromExcel);
+                        menu.AddSeparator("");
+                        menu.AddItem(new GUIContent("Save Current as Template..."), false, SaveCurrentAsTemplate);
+                        if (_data.templates.Count > 0)
+                        {
+                            foreach (var template in _data.templates)
                             {
-                                if (EditorUtility.DisplayDialog("Delete Template", $"Delete template \"{t.name}\"?", "Delete", "Cancel"))
+                                var t = template;
+                                menu.AddItem(new GUIContent("Delete Template/" + t.name), false, () =>
                                 {
-                                    _data.templates.Remove(t);
+                                    if (ThemedDialog.Show("Delete Template", $"Delete template \"{t.name}\"?", "Delete", "Cancel"))
+                                    {
+                                        _data.templates.Remove(t);
+                                        Save();
+                                    }
+                                });
+                            }
+                        }
+                        menu.Show(btnRect);
+                    }
+                    if (_data.boards.Count > 1)
+                    {
+                        GUILayout.Space(2);
+                        if (ThemedTooltip.Button(TBStyles.DeleteIcon, "Delete Board", TBStyles.ToolbarDeleteButton, GUILayout.Width(22), GUILayout.Height(20)))
+                        {
+                            var targetBoard = _data.boards[_boardIndex];
+                            string boardName = targetBoard.name;
+                            EditorApplication.delayCall += () =>
+                            {
+                                if (ThemedDialog.Show("Delete Board", $"Delete \"{boardName}\"?", "Delete", "Cancel"))
+                                {
+                                    foreach (var col in targetBoard.columns)
+                                        foreach (var card in col.cards)
+                                            _data.CleanupReferencesToCard(card.id);
+                                    
+                                    _data.boards.Remove(targetBoard);
+                                    _boardIndex = Mathf.Clamp(_boardIndex, 0, _data.boards.Count - 1);
                                     Save();
+                                    RefreshLinkCache();
+                                    Repaint();
                                 }
-                            });
+                            };
                         }
                     }
-                    menu.ShowAsContext();
-                }
-                if (_data.boards.Count > 1 && GUILayout.Button(new GUIContent("✕", "Delete Board"), EditorStyles.toolbarButton, GUILayout.Width(22)))
-                {
-                    var targetBoard = _data.boards[_boardIndex];
-                    string boardName = targetBoard.name;
-                    EditorApplication.delayCall += () =>
+                
+                    GUILayout.Space(showLabels ? 8 : 4);
+
+                    if (showLabels) ThemedTooltip.Label("Category:", "Filter tasks by category", null, GUILayout.Width(58), GUILayout.Height(20));
+
+                    var catFilterOptions = new List<string> { "All" };
+                    catFilterOptions.AddRange(_data.categories);
+                    int catIdx = 0;
+                    if (!string.IsNullOrEmpty(_categoryFilter))
                     {
-                        if (EditorUtility.DisplayDialog("Delete Board", $"Delete \"{boardName}\"?", "Delete", "Cancel"))
+                        int f = catFilterOptions.IndexOf(_categoryFilter);
+                        if (f >= 0) catIdx = f;
+                    }
+                    TBStyles.DrawThemedDropdown(catIdx, catFilterOptions.ToArray(), (newCatIdx) =>
+                    {
+                        _categoryFilter = newCatIdx == 0 ? "" : catFilterOptions[newCatIdx];
+                        Repaint();
+                    }, TBStyles.ToolbarPopup, "Filter tasks by category", GUILayout.Width(90), GUILayout.Height(20));
+                    
+                    GUILayout.Space(2);
+                    if (ThemedTooltip.Button(TBStyles.CategoryIcon, "Category Editor", TBStyles.ToolbarButton, GUILayout.Width(24), GUILayout.Height(20)))
+                    {
+                        CategoryEditorWindow.Open(_data, () => { LoadData(); });
+                    }
+
+                    GUILayout.Space(showLabels ? 8 : 4);
+
+                    if (showLabels) ThemedTooltip.Label("Assignee:", "Filter tasks by assignee", null, GUILayout.Width(56), GUILayout.Height(20));
+
+                    var assigneeOptions = new List<string> { "All" };
+                    assigneeOptions.AddRange(_data.assignees.Select(a => a.name));
+                    int assIdx = 0;
+                    if (!string.IsNullOrEmpty(_assigneeFilter))
+                    {
+                        var found = _data.assignees.FirstOrDefault(a => a.id == _assigneeFilter);
+                        if (found != null) assIdx = assigneeOptions.IndexOf(found.name);
+                        if (assIdx < 0) assIdx = 0;
+                    }
+                  
+                    TBStyles.DrawThemedDropdown(assIdx, assigneeOptions.ToArray(), (newAssIdx) =>
+                    {
+                        if (newAssIdx == 0) _assigneeFilter = "";
+                        else
                         {
-                            foreach (var col in targetBoard.columns)
-                                foreach (var card in col.cards)
-                                    _data.CleanupReferencesToCard(card.id);
-                            
-                            _data.boards.Remove(targetBoard);
-                            _boardIndex = Mathf.Clamp(_boardIndex, 0, _data.boards.Count - 1);
-                            Save();
-                            RefreshLinkCache();
-                            Repaint();
+                            var selectedName = assigneeOptions[newAssIdx];
+                            var ass = _data.assignees.FirstOrDefault(a => a.name == selectedName);
+                            if (ass != null) _assigneeFilter = ass.id;
                         }
-                    };
-                }
-            
-                GUILayout.Space(showLabels ? 2:0);
+                        Repaint();
+                    }, TBStyles.ToolbarPopup, "Filter tasks by assignee", GUILayout.Width(90), GUILayout.Height(20));
 
-                if (showLabels) EditorGUILayout.LabelField(new GUIContent("Category:","Filter tasks by category"), GUILayout.Width(58));
-                
-                if (!showLabels && GUILayout.Button(new GUIContent("🏷", "Category Editor"), EditorStyles.toolbarButton, GUILayout.Width(26)))
-                {
-                    CategoryEditorWindow.Open(_data, () => { LoadData(); });
-                }
+                    GUILayout.Space(2);
+                    if (ThemedTooltip.Button(TBStyles.AssigneeIcon, "Assignee Manager", TBStyles.ToolbarButton, GUILayout.Width(24), GUILayout.Height(20)))
+                    {
+                        AssigneeManagerWindow.ShowWindow(_data, () => { LoadData(); });
+                    }
 
-                var catFilterOptions = new List<string> { "All" };
-                catFilterOptions.AddRange(_data.categories);
-                int catIdx = 0;
-                if (!string.IsNullOrEmpty(_categoryFilter))
-                {
-                    int f = catFilterOptions.IndexOf(_categoryFilter);
-                    if (f >= 0) catIdx = f;
-                }
-                int newCatIdx = EditorGUILayout.Popup(catIdx, catFilterOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(90));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Filter tasks by category"));
-                _categoryFilter = newCatIdx == 0 ? "" : catFilterOptions[newCatIdx];
-                
-                if (showLabels && GUILayout.Button(new GUIContent("🏷", "Category Editor"), EditorStyles.toolbarButton, GUILayout.Width(26)))
-                {
-                    CategoryEditorWindow.Open(_data, () => { LoadData(); });
-                }
+                    GUILayout.Space(showLabels ? 8 : 4);
 
-                GUILayout.Space(showLabels ? 8 : 0);
+                    if (showLabels) ThemedTooltip.Label("Priority:", "Filter tasks by priority", null, GUILayout.Width(52), GUILayout.Height(20));
+                    else ThemedTooltip.Label(TBStyles.PriorityFilterIcon, "Filter tasks by priority", null, GUILayout.Width(18), GUILayout.Height(20));
 
-                if (showLabels) EditorGUILayout.LabelField(new GUIContent("Assignee:", "Filter tasks by assignee"), GUILayout.Width(56));
-                
-                if (!showLabels && GUILayout.Button(new GUIContent("👥", "Assignee Manager"), EditorStyles.toolbarButton, GUILayout.Width(26)))
-                {
-                    AssigneeManagerWindow.ShowWindow(_data, () => { LoadData(); });
-                }
+                    var priorityOptions = new List<string> { "All" };
+                    priorityOptions.AddRange(TBStyles.GetPriorityDisplayNames());
+                    TBStyles.DrawThemedDropdown(_priorityFilter, priorityOptions.ToArray(), (newPri) =>
+                    {
+                        _priorityFilter = newPri;
+                        Repaint();
+                    }, TBStyles.ToolbarPopup, "Filter tasks by priority", GUILayout.Width(showLabels ? 80 : 60), GUILayout.Height(20));
 
-                var assigneeOptions = new List<string> { "All" };
-                assigneeOptions.AddRange(_data.assignees.Select(a => a.name));
-                int assIdx = 0;
-                if (!string.IsNullOrEmpty(_assigneeFilter))
-                {
-                    var found = _data.assignees.FirstOrDefault(a => a.id == _assigneeFilter);
-                    if (found != null) assIdx = assigneeOptions.IndexOf(found.name);
-                    if (assIdx < 0) assIdx = 0;
-                }
-              
-                int newAssIdx = EditorGUILayout.Popup(assIdx, assigneeOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(90));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Filter tasks by assignee"));
-                if (newAssIdx == 0) _assigneeFilter = "";
-                else
-                {
-                    var selectedName = assigneeOptions[newAssIdx];
-                    var ass = _data.assignees.FirstOrDefault(a => a.name == selectedName);
-                    if (ass != null) _assigneeFilter = ass.id;
-                }
+                    GUILayout.Space(showLabels ? 8 : 4);
 
-                if (showLabels && GUILayout.Button(new GUIContent("👥", "Assignee Manager"), EditorStyles.toolbarButton, GUILayout.Width(26)))
-                {
-                    AssigneeManagerWindow.ShowWindow(_data, () => { LoadData(); });
+                    ThemedTooltip.Label("🔍", "Search Tasks", null, GUILayout.Width(18), GUILayout.Height(20));
+                    _searchFilter = TBStyles.DrawThemedTextField(_searchFilter, TBStyles.ThemedSearchField, GUILayout.Width(mediumWidth ? 140 : 85), GUILayout.Height(20));
+
+                    GUILayout.Space(showLabels ? 8 : 4);
+                    
+                    if (ThemedTooltip.Button(showLabels ? "▾ Show All" : "▾", "Show All Checklists", TBStyles.ToolbarButton, GUILayout.Width(showLabels ? 70 : 25), GUILayout.Height(20)))
+                    {
+                        var board2 = _data.boards[_boardIndex];
+                        foreach (var c in board2.columns)
+                            foreach (var card in c.cards)
+                                card.showChecklist = true;
+                        Save();
+                    }
+                    GUILayout.Space(2);
+                    if (ThemedTooltip.Button(showLabels ? "▸ Hide All" : "▸", "Hide All Checklists", TBStyles.ToolbarButton, GUILayout.Width(showLabels ? 68 : 25), GUILayout.Height(20)))
+                    {
+                        var board2 = _data.boards[_boardIndex];
+                        foreach (var c in board2.columns)
+                            foreach (var card in c.cards)
+                                card.showChecklist = false;
+                        Save();
+                    }
+                    GUILayout.Space(2);
+                    // Show/Hide Archived toggle
+                    bool newShowArchived = ThemedTooltip.Toggle(_showArchived, _showArchived ? TBStyles.UnarchiveIcon : TBStyles.ArchiveIcon, _showArchived ? "Hide Archived Cards" : "Show Archived Cards", TBStyles.ToolbarButton, GUILayout.Width(28), GUILayout.Height(20));
+                    if (newShowArchived != _showArchived)
+                    {
+                        _showArchived = newShowArchived;
+                        Repaint();
+                    }
+                    
+                    GUILayout.FlexibleSpace();
                 }
 
-                GUILayout.Space(showLabels ? 8 : 4);
-
-                if (showLabels) EditorGUILayout.LabelField(new GUIContent("Priority:", "Filter tasks by priority"), GUILayout.Width(52));
-                else EditorGUILayout.LabelField(new GUIContent("🚩", "Filter tasks by priority"), GUILayout.Width(18));
-
-                var priorityOptions = new List<string> { "All" };
-                priorityOptions.AddRange(TBStyles.PriorityNames);
-                _priorityFilter = EditorGUILayout.Popup(_priorityFilter, priorityOptions.ToArray(), EditorStyles.toolbarPopup, GUILayout.Width(showLabels ? 80 : 60));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Filter tasks by priority"));
-
-                GUILayout.Space(showLabels ? 8 : 4);
-
-                EditorGUILayout.LabelField(new GUIContent("🔍", "Search Tasks"), GUILayout.Width(18));
-                _searchFilter = EditorGUILayout.TextField(_searchFilter, EditorStyles.toolbarSearchField, GUILayout.Width(mediumWidth ? 140 : 85));
-
-                GUILayout.Space(showLabels ? 8 : 4);
-                
-                if (GUILayout.Button(new GUIContent(showLabels ? "▾ Show All" : "▾", "Show All Checklists"), EditorStyles.toolbarButton, GUILayout.Width(showLabels ? 70 : 25)))
-                {
-                    var board2 = _data.boards[_boardIndex];
-                    foreach (var c in board2.columns)
-                        foreach (var card in c.cards)
-                            card.showChecklist = true;
-                    Save();
-                }
-                if (GUILayout.Button(new GUIContent(showLabels ? "▸ Hide All" : "▸", "Hide All Checklists"), EditorStyles.toolbarButton, GUILayout.Width(showLabels ? 68 : 25)))
-                {
-                    var board2 = _data.boards[_boardIndex];
-                    foreach (var c in board2.columns)
-                        foreach (var card in c.cards)
-                            card.showChecklist = false;
-                    Save();
-                }
-                // Show/Hide Archived toggle
-                bool newShowArchived = GUILayout.Toggle(_showArchived, new GUIContent(_showArchived ? "📦" : "🗃️", (_showArchived ? "Hide Archived Cards" : "Show Archived Cards")), EditorStyles.toolbarButton, GUILayout.Width(28));
-                if (newShowArchived != _showArchived)
-                {
-                    _showArchived = newShowArchived;
-                    Repaint();
-                }
-                
-                GUILayout.FlexibleSpace();
+                GUILayout.Space(2);
             }
 
             GUILayout.Space(2);
@@ -874,21 +983,21 @@ namespace AwesomeTaskManager.Editor
             {
                 if (_renamingBoard)
                 {
-                    _renameBoardName = EditorGUILayout.TextField(_renameBoardName, GUILayout.Width(250), GUILayout.Height(26));
-                    if (GUILayout.Button(new GUIContent("✔", "Save Board Name"), GUILayout.Width(26), GUILayout.Height(24)))
+                    _renameBoardName = TBStyles.DrawThemedTextField(_renameBoardName, TBStyles.ThemedTextField, GUILayout.Width(250), GUILayout.Height(26));
+                    if (ThemedTooltip.IconButton("✔", "Save Board Name", GUILayout.Width(26), GUILayout.Height(24)))
                     {
                         if (!string.IsNullOrWhiteSpace(_renameBoardName)) board.name = _renameBoardName.Trim();
                         _renamingBoard = false; Save();
                     }
-                    if (GUILayout.Button(new GUIContent("✕","Cancel Renaming"), GUILayout.Width(26), GUILayout.Height(24))) _renamingBoard = false;
+                    if (ThemedTooltip.IconButton("✕","Cancel Renaming", GUILayout.Width(26), GUILayout.Height(24))) _renamingBoard = false;
                 }
                 else
                 {
-                    string headerText = $"🎯 {TBStyles.TruncateString(board.name, 50)}";
+                    string headerText = $"{TBStyles.BoardHeaderIcon} {TBStyles.TruncateString(board.name, 50)}";
                     Vector2 headerSize = TBStyles.BoardHeader.CalcSize(new GUIContent(headerText));
                     EditorGUILayout.LabelField(headerText, TBStyles.BoardHeader, GUILayout.Width(headerSize.x + 4), GUILayout.Height(30));
                     
-                    if (GUILayout.Button(new GUIContent("✏", "Rename Board"), GUILayout.Width(26), GUILayout.Height(24)))
+                    if (ThemedTooltip.IconButton("✏", "Rename Board", GUILayout.Width(26), GUILayout.Height(24)))
                     {
                         _renamingBoard = true;
                         _renameBoardName = board.name;
@@ -898,18 +1007,18 @@ namespace AwesomeTaskManager.Editor
 
                 if (_showAddColumn)
                 {
-                    _newColumnTitle = EditorGUILayout.TextField(_newColumnTitle, GUILayout.Width(140), GUILayout.Height(22));
-                    if (GUILayout.Button(new GUIContent("Add", "Add a new Column"), GUILayout.Width(42), GUILayout.Height(22)) && !string.IsNullOrWhiteSpace(_newColumnTitle))
+                    _newColumnTitle = TBStyles.DrawThemedTextField(_newColumnTitle, TBStyles.ThemedTextField, GUILayout.Width(140), GUILayout.Height(22));
+                    if (ThemedTooltip.Button("Add", "Add a new Column", TBStyles.StandardButton, GUILayout.Width(42), GUILayout.Height(22)) && !string.IsNullOrWhiteSpace(_newColumnTitle))
                     {
                         board.columns.Add(new TaskColumn(_newColumnTitle.Trim()));
                         _newColumnTitle = ""; _showAddColumn = false; Save();
                         GUIUtility.ExitGUI();
                     }
-                    if (GUILayout.Button(new GUIContent("✕", "Cancel Column Creation"), GUILayout.Width(22), GUILayout.Height(22))) _showAddColumn = false;
+                    if (ThemedTooltip.IconButton("✕", "Cancel Column Creation", GUILayout.Width(22), GUILayout.Height(22))) _showAddColumn = false;
                 }
                 else
                 {
-                    if (GUILayout.Button(new GUIContent("+ Column" ,"Add a new Column"), GUILayout.Width(80), GUILayout.Height(24)))
+                    if (ThemedTooltip.Button("+ Column", "Add a new Column", TBStyles.StandardButton, GUILayout.Width(80), GUILayout.Height(24)))
                         _showAddColumn = true;
                 }
             }
@@ -950,15 +1059,17 @@ namespace AwesomeTaskManager.Editor
                 && DateTime.TryParse(c.dueDate, out var d) && d.Date == DateTime.Today);
 
             var statusRect = GUILayoutUtility.GetRect(0, 20, GUILayout.ExpandWidth(true));
-            EditorGUI.DrawRect(statusRect, EditorGUIUtility.isProSkin
-                ? new Color(0.16f, 0.16f, 0.16f) : new Color(0.85f, 0.85f, 0.85f));
+            if (Event.current.type == EventType.Repaint)
+            {
+                TBStyles.DrawGlassPanel(statusRect, TBStyles.StatusBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.06f) : new Color(1f, 1f, 1f, 0.30f), false);
+            }
 
             string statusText = $"  {totalCards} card(s)";
-            if(completedCount > 0) statusText += $"  •  🟢 {completedCount} Completed";
-            if (overdueCount > 0) statusText += $"  •  🔴 {overdueCount} overdue";
-            if (dueTodayCount > 0) statusText += $"  •  🟠 {dueTodayCount} due today";
+            if (completedCount > 0) statusText += $"  •  {TBStyles.CompletedIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusCompletedColor)}>{completedCount} Completed</color>";
+            if (overdueCount > 0) statusText += $"  •  {TBStyles.OverdueIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusOverdueColor)}>{overdueCount} overdue</color>";
+            if (dueTodayCount > 0) statusText += $"  •  {TBStyles.DueTodayIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusDueTodayColor)}>{dueTodayCount} due today</color>";
             statusText += $"  •  {board.columns.Count} column(s)";
-            EditorGUI.LabelField(statusRect, statusText, EditorStyles.miniLabel);
+            EditorGUI.LabelField(statusRect, statusText, TBStyles.StatusBar);
         }
 
         private void DrawColumn(TaskColumn col, int colIdx, TaskBoard board, float width)
@@ -967,12 +1078,12 @@ namespace AwesomeTaskManager.Editor
 
             using (new EditorGUILayout.VerticalScope(GUILayout.Width(width)))
             {
-                using (var scope = new EditorGUILayout.VerticalScope("box"))
+                using (var scope = new EditorGUILayout.VerticalScope(TBStyles.ColumnBox))
                 {
                     if (Event.current.type == EventType.Repaint)
                     {
-                        // The "box" style already draws a background, but we want our custom one
-                        EditorGUI.DrawRect(scope.rect, bg);
+                        // Custom themed column background with glass panel highlights
+                        TBStyles.DrawGlassPanel(scope.rect, bg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
                     }
 
                     // Column drag highlight overlay
@@ -999,20 +1110,20 @@ namespace AwesomeTaskManager.Editor
 
                         if (board.columns.Count > 1)
                         {
-                            if (colIdx > 0 && GUILayout.Button(new GUIContent("◀","Move Column Left"), TBStyles.IconButton))
+                            if (colIdx > 0 && ThemedTooltip.IconButton("◀", "Move Column Left", GUILayout.Width(22), GUILayout.Height(20)))
                             {
                                 board.columns.RemoveAt(colIdx); board.columns.Insert(colIdx - 1, col);
                                 Save(); GUIUtility.ExitGUI();
                             }
-                            if (colIdx < board.columns.Count - 1 && GUILayout.Button(new GUIContent("▶","Move Column Right"), TBStyles.IconButton))
+                            if (colIdx < board.columns.Count - 1 && ThemedTooltip.IconButton("▶", "Move Column Right", GUILayout.Width(22), GUILayout.Height(20)))
                             {
                                 board.columns.RemoveAt(colIdx); board.columns.Insert(colIdx + 1, col);
                                 Save(); GUIUtility.ExitGUI();
                             }
                         }
-                        if (GUILayout.Button(new GUIContent("⋮", "Show Column Options"), TBStyles.IconButton))
+                        if (ThemedContextMenu.DropdownButton("⋮", "Show Column Options", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(22), GUILayout.Height(20)))
                         {
-                            var menu = new GenericMenu();
+                            var menu = new ThemedContextMenu();
                             int ci = colIdx;
                             menu.AddItem(new GUIContent("Rename Column"), false, () =>
                             {
@@ -1036,7 +1147,7 @@ namespace AwesomeTaskManager.Editor
 
                             menu.AddItem(new GUIContent("Clear All Cards"), false, () =>
                             {
-                                if (EditorUtility.DisplayDialog("Clear Column", $"Remove all cards from \"{col.title}\"?", "Clear", "Cancel"))
+                                if (ThemedDialog.Show("Clear Column", $"Remove all cards from \"{col.title}\"?", "Clear", "Cancel"))
                                 {
                                     foreach(var card in col.cards) _data.CleanupReferencesToCard(card.id);
                                     col.cards.Clear(); 
@@ -1058,7 +1169,7 @@ namespace AwesomeTaskManager.Editor
                             menu.AddSeparator("");
                             menu.AddItem(new GUIContent("Delete Column"), false, () =>
                             {
-                                if (EditorUtility.DisplayDialog("Delete Column", $"Delete \"{col.title}\" and all its cards?", "Delete", "Cancel"))
+                                if (ThemedDialog.Show("Delete Column", $"Delete \"{col.title}\" and all its cards?", "Delete", "Cancel"))
                                 {
                                     foreach(var card in col.cards) _data.CleanupReferencesToCard(card.id);
                                     board.columns.RemoveAt(ci); 
@@ -1067,7 +1178,7 @@ namespace AwesomeTaskManager.Editor
                                     Repaint(); 
                                 }
                             });
-                            menu.ShowAsContext();
+                            menu.Show(btnRect);
                         }
                     }
 
@@ -1097,7 +1208,7 @@ namespace AwesomeTaskManager.Editor
 
                     GUILayout.Space(6);
 
-                    if (GUILayout.Button("+ Add Card", GUILayout.Height(26)))
+                    if (GUILayout.Button("+ Add Card", TBStyles.AddCardButton, GUILayout.Height(26)))
                     {
                         string boardId = board.id;
                         string columnId = col.id;
@@ -1123,7 +1234,7 @@ namespace AwesomeTaskManager.Editor
 
         private void DrawCard(TaskCard card, TaskColumn col, int idx)
         {
-            var labelColor = TBStyles.LabelColors[Mathf.Clamp(card.colorLabel, 0, TBStyles.LabelColors.Length - 1)];
+            var labelColor = TBStyles.GetLabelColor(card.colorLabel);
             
             bool isLinkHighlighted = _linkHighlightCardId == card.id;
             bool isChildOfHighlighted = _linkHighlightMode == LinkHighlightMode.Children && !string.IsNullOrEmpty(_linkHighlightCardId) && _parentToChildren.TryGetValue(_linkHighlightCardId, out var children) && children.Contains(card.id);
@@ -1135,6 +1246,15 @@ namespace AwesomeTaskManager.Editor
             using (var cardScope = new EditorGUILayout.VerticalScope(shouldHighlight ? TBStyles.CardBoxHighlighted : TBStyles.CardBox))
             {
                 cardRect = cardScope.rect;
+                if (Event.current.type == EventType.Repaint)
+                {
+                    Color cardBg = shouldHighlight
+                        ? (EditorGUIUtility.isProSkin ? TBStyles.Pro_CardHighlighted : TBStyles.Personal_CardHighlighted)
+                        : TBStyles.CardBg;
+                    Color? border = shouldHighlight ? (Color?)null : (EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.12f) : new Color(1f, 1f, 1f, 0.45f));
+                    TBStyles.DrawGlassPanel(cardRect, cardBg, border, true);
+                }
+
                 if (card.colorLabel > 0)
                 {
                     var stripRect = GUILayoutUtility.GetRect(0, 4, GUILayout.ExpandWidth(true));
@@ -1145,28 +1265,29 @@ namespace AwesomeTaskManager.Editor
                 using (new EditorGUILayout.HorizontalScope())
                 {
                     // Completed toggle
-                    string compIcon = card.completed ? "✅" : "⬜";
+                    string compIcon = card.completed ? TBStyles.CompletedIcon : "⬜";
                     string compToolTip = card.completed ? "Untick Card" : "Tick to Complete Card";
-                    if (GUILayout.Button(new GUIContent(compIcon,compToolTip), TBStyles.IconButton, GUILayout.Width(24), GUILayout.Height(20)))
+                    if (ThemedTooltip.IconButton(compIcon, compToolTip, GUILayout.Width(24), GUILayout.Height(20)))
                     {
                         card.completed = !card.completed;
                         _data.SyncLinkedChecklistItems(card.id, card.completed);
                         Save();
                     }
                     if (card.priority > 0)
-                        EditorGUILayout.LabelField(TBStyles.PriorityIcons[card.priority], GUILayout.Width(18));
+                        EditorGUILayout.LabelField(TBStyles.GetPriorityIcon(card.priority), GUILayout.Width(18));
 
                     var titleStyle = new GUIStyle(TBStyles.CardTitle);
                     if (card.completed)
                     {
                         titleStyle.fontStyle = FontStyle.Italic;
-                        titleStyle.normal = new GUIStyleState { textColor = new Color(0.5f, 0.8f, 0.5f) };
+                        titleStyle.normal = new GUIStyleState { textColor = TBStyles.StatusCompletedColor };
                     }
                     EditorGUILayout.LabelField(card.title, titleStyle);
                     Rect dragHandleRect = GUILayoutUtility.GetRect(new GUIContent("↕"), TBStyles.IconButton, GUILayout.Width(26), GUILayout.Height(24));
-                    GUI.Box(dragHandleRect, new GUIContent("↕", "Drag to reorder"), TBStyles.IconButton);
+                    GUI.Box(dragHandleRect, new GUIContent("↕"), TBStyles.IconButton);
+                    ThemedTooltip.SetTooltip(dragHandleRect, "Drag to reorder");
                     HandleCardDragHandle(card, col, dragHandleRect);
-                    if (GUILayout.Button(new GUIContent("✏","Show card details"), TBStyles.IconButton))
+                    if (ThemedTooltip.IconButton("✏", "Show card details", GUILayout.Width(26), GUILayout.Height(24)))
                     {
                         string boardId = Board.id;
                         string columnId = col.id;
@@ -1176,11 +1297,11 @@ namespace AwesomeTaskManager.Editor
                         });
                     }
                     
-                     // Card Options (⋮)
-                if (GUILayout.Button(new GUIContent("⋮", "Card Options"), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                // Card Options (⋮)
+                if (ThemedContextMenu.DropdownButton("⋮", "Card Options", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(22), GUILayout.Height(24)))
                 {
-                    var menu = new GenericMenu();
-                    menu.AddItem(new GUIContent(card.archived ? "Unarchive Card" : "Archive Card"), false, () =>
+                    var menu = new ThemedContextMenu();
+                    menu.AddItem(new GUIContent(card.archived ? $"{TBStyles.UnarchiveIcon} Unarchive Card" : $"{TBStyles.ArchiveIcon} Archive Card"), false, () =>
                     {
                         card.archived = !card.archived;
                         Save();
@@ -1236,7 +1357,7 @@ namespace AwesomeTaskManager.Editor
                             }
                             else
                             {
-                                EditorUtility.DisplayDialog("Error", "Target board has no columns.", "OK");
+                                ThemedDialog.Show("Error", "Target board has no columns.", "OK");
                             }
                         });
                     }
@@ -1244,12 +1365,12 @@ namespace AwesomeTaskManager.Editor
                     menu.AddSeparator("");
                     menu.AddItem(new GUIContent("Delete Card"), false, () =>
                     {
-                        if (EditorUtility.DisplayDialog("Delete Card", $"Delete \"{card.title}\"?", "Delete", "Cancel"))
+                        if (ThemedDialog.Show("Delete Card", $"Delete \"{card.title}\"?", "Delete", "Cancel"))
                         {
                             if (_linkHighlightCardId == card.id)
                             {
-                                _linkHighlightCardId = null;
                                 _linkHighlightMode = LinkHighlightMode.None;
+                                _linkHighlightCardId = null;
                             }
                             _data.CleanupReferencesToCard(card.id);
                             col.cards.Remove(card);
@@ -1258,7 +1379,7 @@ namespace AwesomeTaskManager.Editor
                             Repaint();
                         }
                     });
-                    menu.ShowAsContext();
+                    menu.Show(btnRect);
                 }
 
                 }
@@ -1272,7 +1393,7 @@ namespace AwesomeTaskManager.Editor
                         var badgeStyle = new GUIStyle(EditorStyles.miniLabel)
                         {
                             fontStyle = FontStyle.Bold,
-                            normal = { textColor = new Color(0.4f, 0.75f, 1f) }
+                            normal = { textColor = TBStyles.CardCategoryTagColor }
                         };
                         GUILayout.Label($"[{card.category}]", badgeStyle);
                         GUILayout.Space(5);
@@ -1285,7 +1406,7 @@ namespace AwesomeTaskManager.Editor
                             fontStyle = FontStyle.Bold,
                             normal = { textColor = new Color(1f, 0.65f, 0.1f) }
                         };
-                        GUILayout.Label("📦 ARCHIVED", archiveStyle);
+                        GUILayout.Label($"{TBStyles.ArchiveIcon} ARCHIVED", archiveStyle);
                     }
                     GUILayout.FlexibleSpace();
                 }
@@ -1294,7 +1415,11 @@ namespace AwesomeTaskManager.Editor
             if (!string.IsNullOrWhiteSpace(card.description))
             {
                 string preview = TBStyles.TruncateString(card.description, 80);
-                EditorGUILayout.LabelField(new GUIContent(preview, card.description), EditorStyles.wordWrappedMiniLabel);
+                var descStyle = new GUIStyle(EditorStyles.wordWrappedMiniLabel)
+                {
+                    normal = { textColor = TBStyles.CardDetailsTextColor }
+                };
+                ThemedTooltip.Label(preview, card.description, descStyle);
             }
 
             if (card.checklistItems.Count > 0)
@@ -1304,18 +1429,18 @@ namespace AwesomeTaskManager.Editor
                 var summaryStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
                     fontStyle = FontStyle.Bold,
-                    normal = { textColor = allDone ? new Color(0.3f, 0.85f, 0.4f) : new Color(0.7f, 0.7f, 0.7f) }
+                    normal = { textColor = allDone ? TBStyles.StatusCompletedColor : TBStyles.TasksCompletedCountColor }
                 };
 
                 using (new EditorGUILayout.HorizontalScope())
                 {
-                    EditorGUILayout.LabelField(allDone ? $"✅ {done}/{card.checklistItems.Count} complete" : $"☑ {done}/{card.checklistItems.Count}", summaryStyle);
+                    EditorGUILayout.LabelField(allDone ? $"{TBStyles.CompletedIcon} {done}/{card.checklistItems.Count} complete" : $"{TBStyles.ChecklistIcon} {done}/{card.checklistItems.Count}", summaryStyle);
                     // Hide Checklist button
                     if (card.checklistItems.Count > 0)
                     {
                         string toggleLabel = card.showChecklist ? "▾" : "▸";
                         string toggleToolTip = card.showChecklist ? "Hide Checklist" : "Show Checklist";
-                        if (GUILayout.Button(new GUIContent(toggleLabel, toggleToolTip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                        if (ThemedTooltip.IconButton(toggleLabel, toggleToolTip, GUILayout.Width(22), GUILayout.Height(24)))
                         {
                             card.showChecklist = !card.showChecklist;
                             Save();
@@ -1332,7 +1457,7 @@ namespace AwesomeTaskManager.Editor
                         {
                             GUILayout.Space(8);
                             bool wasDone = card.checklistStates[ci];
-                            bool nowDone = EditorGUILayout.Toggle(wasDone, GUILayout.Width(16));
+                            bool nowDone = TBStyles.DrawThemedCheckbox(wasDone, wasDone ? "Mark item incomplete" : "Mark item complete", GUILayout.Width(16), GUILayout.Height(18));
                             if (nowDone != wasDone)
                             {
                                 card.checklistStates[ci] = nowDone;
@@ -1351,11 +1476,14 @@ namespace AwesomeTaskManager.Editor
 
                                 Save();
                             }
-                            var itemStyle = new GUIStyle(EditorStyles.miniLabel);
+                            var itemStyle = new GUIStyle(EditorStyles.miniLabel)
+                            {
+                                normal = { textColor = TBStyles.CardTasksTextColor }
+                            };
                             if (wasDone) itemStyle.fontStyle = FontStyle.Italic;
                             string itemText = card.checklistItems[ci];
                             string displayItemText = TBStyles.TruncateString(itemText, 40);
-                            EditorGUILayout.LabelField(new GUIContent(displayItemText, itemText), itemStyle);
+                            ThemedTooltip.Label(displayItemText, itemText, itemStyle);
                         }
                     }
                 }
@@ -1389,7 +1517,7 @@ namespace AwesomeTaskManager.Editor
                             {
                                 var sceneIcon = EditorGUIUtility.IconContent("SceneAsset Icon").image;
                                 string sceneName = Path.GetFileNameWithoutExtension(sref.scenePath);
-                                if (GUILayout.Button(new GUIContent(sceneIcon, $"[{sceneName}] {sref.name}"), GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
+                                if (ThemedTooltip.Button(sceneIcon, $"[{sceneName}] {sref.name}", GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                                 {
                                     EditorApplication.delayCall += () => HandleSceneObjectClick(sref);
                                 }
@@ -1401,7 +1529,7 @@ namespace AwesomeTaskManager.Editor
                             var note = _data.notes.FirstOrDefault(n => n.id == item.guid);
                             var noteIcon = EditorGUIUtility.IconContent("TextAsset Icon").image;
                             string noteTitle = note != null ? note.title : "Missing Note";
-                            if (GUILayout.Button(new GUIContent(noteIcon, $"[Note] {noteTitle}"), GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
+                            if (ThemedTooltip.Button(noteIcon, $"[Note] {noteTitle}", GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                             {
                                 if (note != null) NotePopupWindow.OpenInPreviewMode(note, _data, () => { LoadData(); });
                             }
@@ -1411,7 +1539,7 @@ namespace AwesomeTaskManager.Editor
                         {
                             var urlIcon = EditorGUIUtility.IconContent("BuildSettings.Web.Small").image;
                             string label = string.IsNullOrEmpty(item.displayName) ? item.url : item.displayName;
-                            if (GUILayout.Button(new GUIContent(urlIcon, $"[Link] {label}"), GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
+                            if (ThemedTooltip.Button(urlIcon, $"[Link] {label}", GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                             {
                                 OpenURL(item.url);
                             }
@@ -1425,7 +1553,7 @@ namespace AwesomeTaskManager.Editor
                             if (obj != null)
                             {
                                 var icon = EditorGUIUtility.ObjectContent(obj, obj.GetType()).image;
-                                if (GUILayout.Button(new GUIContent(icon, obj.name), GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
+                                if (ThemedTooltip.Button(icon, obj.name, GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                                 {
                                     EditorGUIUtility.PingObject(obj);
                                     Selection.activeObject = obj;
@@ -1438,7 +1566,7 @@ namespace AwesomeTaskManager.Editor
 
                     if (totalCount > displayLimit)
                     {
-                        var linkStyle = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = new Color(0.6f, 0.6f, 0.6f) } };
+                        var linkStyle = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = TBStyles.CardDetailsTextColor } };
                         EditorGUILayout.LabelField($"+{totalCount - displayLimit}", linkStyle, GUILayout.Width(30));
                     }
                     GUILayout.FlexibleSpace();
@@ -1456,12 +1584,12 @@ namespace AwesomeTaskManager.Editor
                     if (hasDueDate)
                     {
                         var dueDateStyle = new GUIStyle(EditorStyles.miniLabel);
-                        string dueDateText = $"📅 {card.dueDate}";
+                        string dueDateText = $"{TBStyles.DueDateIcon} {card.dueDate}";
 
                         if (card.completed)
                         {
-                            dueDateText = "✅ Completed";
-                            dueDateStyle.normal = new GUIStyleState { textColor = new Color(0.3f, 0.85f, 0.4f) };
+                            dueDateText = $"{TBStyles.CompletedIcon} Completed";
+                            dueDateStyle.normal = new GUIStyleState { textColor = TBStyles.StatusCompletedColor };
                             dueDateStyle.fontStyle = FontStyle.Bold;
                         }
                         else if (DateTime.TryParse(card.dueDate, out DateTime parsedDue))
@@ -1471,24 +1599,25 @@ namespace AwesomeTaskManager.Editor
 
                             if (daysUntil < 0)
                             {
-                                dueDateText = $"🔴 Overdue ({-daysUntil}d ago)";
-                                dueDateStyle.normal = new GUIStyleState { textColor = new Color(1f, 0.3f, 0.25f) };
+                                dueDateText = $"{TBStyles.OverdueIcon} Overdue ({-daysUntil}d ago)";
+                                dueDateStyle.normal = new GUIStyleState { textColor = TBStyles.StatusOverdueColor };
                                 dueDateStyle.fontStyle = FontStyle.Bold;
                             }
                             else if (daysUntil == 0)
                             {
-                                dueDateText = "🟠 Due today!";
-                                dueDateStyle.normal = new GUIStyleState { textColor = new Color(1f, 0.65f, 0.1f) };
+                                dueDateText = $"{TBStyles.DueTodayIcon} Due today!";
+                                dueDateStyle.normal = new GUIStyleState { textColor = TBStyles.StatusDueTodayColor };
                                 dueDateStyle.fontStyle = FontStyle.Bold;
                             }
                             else if (daysUntil <= 3)
                             {
-                                dueDateText = $"🟡 Due in {daysUntil}d ({parsedDue:MMM dd})";
-                                dueDateStyle.normal = new GUIStyleState { textColor = new Color(0.95f, 0.85f, 0.15f) };
+                                dueDateText = $"{TBStyles.DueSoonIcon} Due in {daysUntil}d ({parsedDue:MMM dd})";
+                                dueDateStyle.normal = new GUIStyleState { textColor = TBStyles.StatusDueSoonColor };
                             }
                             else
                             {
-                                dueDateText = $"📅 {parsedDue:MMM dd, yyyy}";
+                                dueDateText = $"{TBStyles.DueDateIcon} {parsedDue:MMM dd, yyyy}";
+                                dueDateStyle.normal = new GUIStyleState { textColor = TBStyles.CardDetailsTextColor };
                             }
                         }
                         EditorGUILayout.LabelField(dueDateText, dueDateStyle);
@@ -1512,7 +1641,8 @@ namespace AwesomeTaskManager.Editor
                                     if (assignee != null)
                                     {
                                         DrawAssigneeCircleBoard(assignee);
-                                        GUILayout.Label(assignee.name, EditorStyles.miniLabel);
+                                        var assigneeNameStyle = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = TBStyles.CardDetailsTextColor } };
+                                        GUILayout.Label(assignee.name, assigneeNameStyle);
                                         GUILayout.Space(2);
                                     }
                                 }
@@ -1531,7 +1661,8 @@ namespace AwesomeTaskManager.Editor
                                 if (card.assigneeIds.Count > 4)
                                 {
                                     GUILayout.Space(6);
-                                    EditorGUILayout.LabelField($"+{card.assigneeIds.Count - 4}", EditorStyles.miniLabel, GUILayout.Width(18));
+                                    var extraStyle = new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = TBStyles.CardDetailsTextColor } };
+                                    EditorGUILayout.LabelField($"+{card.assigneeIds.Count - 4}", extraStyle, GUILayout.Width(18));
                                 }
                                 else GUILayout.Space(6);
                             }
@@ -1552,12 +1683,12 @@ namespace AwesomeTaskManager.Editor
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                if (idx > 0 && GUILayout.Button(new GUIContent("▲","Move card up the column"), TBStyles.IconButton))
+                if (idx > 0 && ThemedTooltip.IconButton(TBStyles.MoveUpIcon, "Move card up the column", GUILayout.Width(22), GUILayout.Height(20)))
                 {
                     col.cards.RemoveAt(idx); col.cards.Insert(idx - 1, card);
                     Save(); GUIUtility.ExitGUI();
                 }
-                if (idx < col.cards.Count - 1 && GUILayout.Button(new GUIContent("▼","Move card down the column"), TBStyles.IconButton))
+                if (idx < col.cards.Count - 1 && ThemedTooltip.IconButton(TBStyles.MoveDownIcon, "Move card down the column", GUILayout.Width(22), GUILayout.Height(20)))
                 {
                     col.cards.RemoveAt(idx); col.cards.Insert(idx + 1, card);
                     Save(); GUIUtility.ExitGUI();
@@ -1579,7 +1710,7 @@ namespace AwesomeTaskManager.Editor
                         tooltip = "Parent Card: Click to highlight subtasks:\n• " + string.Join("\n• ", names);
                     }
                     
-                    if (GUILayout.Button(new GUIContent("🌳", tooltip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                    if (ThemedTooltip.IconButton(TBStyles.ParentLinkIcon, tooltip, GUILayout.Width(22), GUILayout.Height(24)))
                     {
                         if (_linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Children)
                         {
@@ -1603,7 +1734,7 @@ namespace AwesomeTaskManager.Editor
                         tooltip = "Subtask: Click to highlight parent card: " + string.Join(", ", names);
                     }
 
-                    if (GUILayout.Button(new GUIContent("🌿", tooltip), TBStyles.IconButton, GUILayout.Width(22), GUILayout.Height(24)))
+                    if (ThemedTooltip.IconButton(TBStyles.ChildLinkIcon, tooltip, GUILayout.Width(22), GUILayout.Height(24)))
                     {
                         if (_linkHighlightCardId == card.id && _linkHighlightMode == LinkHighlightMode.Parents)
                         {
@@ -1826,7 +1957,7 @@ namespace AwesomeTaskManager.Editor
             // Color strip
             if (_dragCard.colorLabel > 0)
             {
-                var stripColor = TBStyles.LabelColors[Mathf.Clamp(_dragCard.colorLabel, 0, TBStyles.LabelColors.Length - 1)];
+                var stripColor = TBStyles.GetLabelColor(_dragCard.colorLabel);
                 EditorGUI.DrawRect(new Rect(ghostRect.x, ghostRect.y, ghostRect.width, 3), stripColor);
             }
 
@@ -1896,187 +2027,205 @@ namespace AwesomeTaskManager.Editor
         // ════════════════════════════════════════════
         private void DrawNotesView()
         {
+            GUILayout.Space(4);
             using (new EditorGUILayout.HorizontalScope())
             {
+                GUILayout.Space(4);
                 // ──────── LEFT PANEL: Folders + Note List ────────
-                using (new EditorGUILayout.VerticalScope("box", GUILayout.Width(260), GUILayout.ExpandHeight(true)))
+                using (var leftScope = new EditorGUILayout.VerticalScope(GUIStyle.none, GUILayout.Width(260), GUILayout.ExpandHeight(true)))
                 {
-
-            // Header + search
-            EditorGUILayout.LabelField("📝 Quick Notes", TBStyles.SectionLabel);
-            GUILayout.Space(2);
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField("🔍", GUILayout.Width(16));
-                _noteSearchFilter = EditorGUILayout.TextField(_noteSearchFilter, GUILayout.Height(20));
-            }
-            GUILayout.Space(4);
-
-            // Add note + Import
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                _newNoteTitle = EditorGUILayout.TextField(_newNoteTitle, GUILayout.Height(22));
-                if (GUILayout.Button(new GUIContent("+ Note", "Add a new Note"), GUILayout.Width(52), GUILayout.Height(22)))
-                {
-                    string fid = _selectedFolderId;
-                    if (fid == "__unfiled__") fid = "";
-                    string t = string.IsNullOrWhiteSpace(_newNoteTitle) ? "New Note" : _newNoteTitle.Trim();
-                    var n = new QuickNote { title = t, folderId = fid };
-                    _data.notes.Insert(0, n);
-                    _newNoteTitle = "";
-                    _selectedNote = 0;
-                    Save();
-                }
-                if (GUILayout.Button(new GUIContent("📥", "Import Note from File"), GUILayout.Width(28), GUILayout.Height(22)))
-                {
-                    EditorApplication.delayCall += () => ImportNoteFromFile();
-                }
-            }
-            GUILayout.Space(4);
-
-            // ── Folders section ──
-            DrawSeparator();
-            _folderDropRects.Clear();
-
-            using (new EditorGUILayout.HorizontalScope())
-            {
-                EditorGUILayout.LabelField("📁 Folders", EditorStyles.boldLabel);
-                if (_showAddFolder)
-                {
-                    _newFolderName = EditorGUILayout.TextField(_newFolderName, GUILayout.Width(80));
-                    if (GUILayout.Button(new GUIContent("✔", "Save Folder Name"), TBStyles.IconButton) && !string.IsNullOrWhiteSpace(_newFolderName))
+                    if (Event.current.type == EventType.Repaint)
                     {
-                        _data.noteFolders.Add(new NoteFolder(_newFolderName.Trim()));
-                        _newFolderName = ""; _showAddFolder = false; Save();
+                        TBStyles.DrawGlassPanel(leftScope.rect, TBStyles.NoteSidebarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
                     }
-                    if (GUILayout.Button(new GUIContent("✕", "Cancel Adding Folder"), TBStyles.IconButton)) _showAddFolder = false;
-                }
-                else
-                {
-                    if (GUILayout.Button(new GUIContent("+", "Add Folder"), TBStyles.IconButton)) _showAddFolder = true;
-                }
-            }
 
-            // "All Notes"
-            bool allSelected = string.IsNullOrEmpty(_selectedFolderId);
-            int totalNotes = _data.notes.Count;
-            if (GUILayout.Button(allSelected ? $"▸ All Notes ({totalNotes})" : $"   All Notes ({totalNotes})",
-                allSelected ? EditorStyles.boldLabel : EditorStyles.label))
-            {
-                _selectedFolderId = "";
-                _selectedNote = -1;
-            }
-
-            // "Unfiled" — also a drop target
-            int unfiledCount = _data.notes.Count(n => string.IsNullOrEmpty(n.folderId));
-            bool unfiledSel = _selectedFolderId == "__unfiled__";
-            var unfiledRect = GUILayoutUtility.GetRect(
-                new GUIContent(unfiledSel ? $"▸ Unfiled ({unfiledCount})" : $"   Unfiled ({unfiledCount})"),
-                unfiledSel ? EditorStyles.boldLabel : EditorStyles.label, GUILayout.ExpandWidth(true));
-
-            // Highlight unfiled during drag
-            if (_noteDragging)
-            {
-                string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
-                bool isSource = string.IsNullOrEmpty(dragNoteFolderId); // note is currently unfiled
-                if (_hoveredFolderDropId == "__unfiled__")
-                    EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDropHighlight);
-                else if (isSource)
-                    EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragSourceHighlight);
-                else
-                    EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragOtherHighlight);
-            }
-            if (GUI.Button(unfiledRect,
-                unfiledSel ? $"▸ Unfiled ({unfiledCount})" : $"   Unfiled ({unfiledCount})",
-                unfiledSel ? EditorStyles.boldLabel : EditorStyles.label))
-            {
-                _selectedFolderId = "__unfiled__";
-                _selectedNote = -1;
-            }
-            _folderDropRects["__unfiled__"] = unfiledRect;
-
-            // Each folder
-            for (int fi = 0; fi < _data.noteFolders.Count; fi++)
-            {
-                var folder = _data.noteFolders[fi];
-                int count = _data.notes.Count(n => n.folderId == folder.id);
-                bool fsel = _selectedFolderId == folder.id;
-
-                using (var scope = new EditorGUILayout.HorizontalScope())
-                {
-                    string fLabel = fsel ? $"▸ 📁 {folder.name} ({count})" : $"   📁 {folder.name} ({count})";
-                    var folderBtnRect = GUILayoutUtility.GetRect(new GUIContent(fLabel),
-                        fsel ? EditorStyles.boldLabel : EditorStyles.label, GUILayout.ExpandWidth(true));
-
-                    if (_noteDragging)
+                    GUILayout.Space(6);
+                    // Header + search
+                    EditorGUILayout.LabelField($"{TBStyles.NotesHeaderIcon} Quick Notes", TBStyles.SectionLabel);
+                    GUILayout.Space(2);
+                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
-                        bool isSource = dragNoteFolderId == folder.id;
-                        if (_hoveredFolderDropId == folder.id)
-                            EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDropHighlight);
-                        else if (isSource)
-                            EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragSourceHighlight);
+                        EditorGUILayout.LabelField("🔍", GUILayout.Width(16));
+                        _noteSearchFilter = TBStyles.DrawThemedTextField(_noteSearchFilter, TBStyles.ThemedSearchField, GUILayout.Height(20));
+                    }
+                    GUILayout.Space(4);
+
+                    // Add note + Import
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        _newNoteTitle = TBStyles.DrawThemedTextField(_newNoteTitle, TBStyles.ThemedTextField, GUILayout.Height(22));
+                        if (ThemedTooltip.Button("+ Note", "Add a new Note", TBStyles.AddNoteButton, GUILayout.Width(54), GUILayout.Height(22)))
+                        {
+                            string fid = _selectedFolderId;
+                            if (fid == "__unfiled__") fid = "";
+                            string t = string.IsNullOrWhiteSpace(_newNoteTitle) ? "New Note" : _newNoteTitle.Trim();
+                            var n = new QuickNote { title = t, folderId = fid };
+                            _data.notes.Insert(0, n);
+                            _newNoteTitle = "";
+                            _selectedNote = 0;
+                            Save();
+                        }
+                        if (ThemedTooltip.Button("📥", "Import Note from File", TBStyles.ImportNoteButton, GUILayout.Width(28), GUILayout.Height(22)))
+                        {
+                            EditorApplication.delayCall += () => ImportNoteFromFile();
+                        }
+                    }
+                    GUILayout.Space(4);
+
+                    // ── Folders section ──
+                    DrawSeparator();
+                    _folderDropRects.Clear();
+
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        var folderHeaderStyle = new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = TBStyles.NoteFolderTextColor } };
+                        EditorGUILayout.LabelField("📁 Folders", folderHeaderStyle);
+                        if (_showAddFolder)
+                        {
+                            _newFolderName = TBStyles.DrawThemedTextField(_newFolderName, TBStyles.ThemedTextField, GUILayout.Width(80), GUILayout.Height(20));
+                            if (ThemedTooltip.IconButton("✔", "Save Folder Name", GUILayout.Width(22), GUILayout.Height(20)) && !string.IsNullOrWhiteSpace(_newFolderName))
+                            {
+                                _data.noteFolders.Add(new NoteFolder(_newFolderName.Trim()));
+                                _newFolderName = ""; _showAddFolder = false; Save();
+                            }
+                            if (ThemedTooltip.IconButton("✕", "Cancel Adding Folder", GUILayout.Width(22), GUILayout.Height(20))) _showAddFolder = false;
+                        }
                         else
-                            EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragOtherHighlight);
+                        {
+                            if (ThemedTooltip.IconButton("+", "Add Folder", GUILayout.Width(22), GUILayout.Height(20))) _showAddFolder = true;
+                        }
                     }
 
-                    if (GUI.Button(folderBtnRect, fLabel, fsel ? EditorStyles.boldLabel : EditorStyles.label))
+                    // "All Notes"
+                    bool allSelected = string.IsNullOrEmpty(_selectedFolderId);
+                    int totalNotes = _data.notes.Count;
+                    var allNotesStyle = new GUIStyle(allSelected ? EditorStyles.boldLabel : EditorStyles.label)
                     {
-                        _selectedFolderId = folder.id;
+                        normal = { textColor = allSelected ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
+                        alignment = TextAnchor.MiddleLeft
+                    };
+                    if (GUILayout.Button(allSelected ? $"▸ All Notes ({totalNotes})" : $"   All Notes ({totalNotes})", allNotesStyle, GUILayout.Height(20)))
+                    {
+                        _selectedFolderId = "";
                         _selectedNote = -1;
                     }
-                    _folderDropRects[folder.id] = folderBtnRect;
 
-                    if (GUILayout.Button(new GUIContent("⋮", "Folder Options"), TBStyles.IconButton))
+                    // "Unfiled" — also a drop target
+                    int unfiledCount = _data.notes.Count(n => string.IsNullOrEmpty(n.folderId));
+                    bool unfiledSel = _selectedFolderId == "__unfiled__";
+                    var unfiledStyle = new GUIStyle(unfiledSel ? EditorStyles.boldLabel : EditorStyles.label)
                     {
-                        var menu = new GenericMenu();
-                        int capturedFi = fi;
-                        menu.AddItem(new GUIContent("Rename"), false, () =>
-                        {
-                            string nn = EditorInputDialog.Show("Rename Folder", "Folder name:", folder.name);
-                            if (!string.IsNullOrWhiteSpace(nn)) { folder.name = nn; Save(); Repaint(); }
-                        });
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Folder (.md)"), false, () => ExportFolder(folder));
-                        menu.AddSeparator("");
-                        menu.AddItem(new GUIContent("Delete Folder"), false, () =>
-                        {
-                            if (EditorUtility.DisplayDialog("Delete Folder",
-                                $"Delete folder \"{folder.name}\"?\nNotes inside will become unfiled.", "Delete", "Cancel"))
-                            {
-                                foreach (var n in _data.notes.Where(n => n.folderId == folder.id))
-                                    n.folderId = "";
-                                _data.noteFolders.RemoveAt(capturedFi);
-                                if (_selectedFolderId == folder.id) _selectedFolderId = "";
-                                Save(); Repaint();
-                            }
-                        });
-                        menu.ShowAsContext();
+                        normal = { textColor = unfiledSel ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
+                        alignment = TextAnchor.MiddleLeft
+                    };
+                    if (GUILayout.Button(unfiledSel ? $"▸ Unfiled ({unfiledCount})" : $"   Unfiled ({unfiledCount})", unfiledStyle, GUILayout.Height(20)))
+                    {
+                        _selectedFolderId = "__unfiled__";
+                        _selectedNote = -1;
                     }
-                }
-            }
+                    var unfiledRect = GUILayoutUtility.GetLastRect();
+                    _folderDropRects["__unfiled__"] = unfiledRect;
 
-            GUILayout.Space(4);
-            DrawSeparator();
-            GUILayout.Space(4);
+                    // Highlight unfiled during drag
+                    if (_noteDragging && Event.current.type == EventType.Repaint)
+                    {
+                        string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
+                        bool isSource = string.IsNullOrEmpty(dragNoteFolderId); // note is currently unfiled
+                        if (_hoveredFolderDropId == "__unfiled__")
+                            EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDropHighlight);
+                        else if (isSource)
+                            EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragSourceHighlight);
+                        else
+                            EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragOtherHighlight);
+                    }
 
-            // ── Note list ──
-            using (var scrollScope = new EditorGUILayout.ScrollViewScope(_notesListScroll))
-            {
-                _notesListScroll = scrollScope.scrollPosition;
+                    // Each folder
+                    for (int fi = 0; fi < _data.noteFolders.Count; fi++)
+                    {
+                        var folder = _data.noteFolders[fi];
+                        int count = _data.notes.Count(n => n.folderId == folder.id);
+                        bool fsel = _selectedFolderId == folder.id;
 
-                var filteredNotes = GetFilteredNotes();
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            string fLabel = fsel ? $"▸ 📁 {folder.name} ({count})" : $"   📁 {folder.name} ({count})";
+                            var folderStyle = new GUIStyle(fsel ? EditorStyles.boldLabel : EditorStyles.label)
+                            {
+                                normal = { textColor = fsel ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
+                                alignment = TextAnchor.MiddleLeft
+                            };
 
-                foreach (var (note, origIdx) in filteredNotes)
-                {
-                    DrawNoteListItem(note, origIdx);
-                }
-            }
+                            if (GUILayout.Button(new GUIContent(fLabel), folderStyle, GUILayout.ExpandWidth(true), GUILayout.Height(20)))
+                            {
+                                _selectedFolderId = folder.id;
+                                _selectedNote = -1;
+                            }
+                            var folderBtnRect = GUILayoutUtility.GetLastRect();
+                            _folderDropRects[folder.id] = folderBtnRect;
+
+                            if (_noteDragging && Event.current.type == EventType.Repaint)
+                            {
+                                string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
+                                bool isSource = dragNoteFolderId == folder.id;
+                                if (_hoveredFolderDropId == folder.id)
+                                    EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDropHighlight);
+                                else if (isSource)
+                                    EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragSourceHighlight);
+                                else
+                                    EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragOtherHighlight);
+                            }
+
+                            if (ThemedContextMenu.DropdownButton("⋮", "Folder Options", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(16), GUILayout.Height(20)))
+                            {
+                                var menu = new ThemedContextMenu();
+                                int capturedFi = fi;
+                                menu.AddItem(new GUIContent("Rename"), false, () =>
+                                {
+                                    string nn = EditorInputDialog.Show("Rename Folder", "Folder name:", folder.name);
+                                    if (!string.IsNullOrWhiteSpace(nn)) { folder.name = nn; Save(); Repaint(); }
+                                });
+                                menu.AddItem(new GUIContent("Beta (Export or Import)/Export Folder (.md)"), false, () => ExportFolder(folder));
+                                menu.AddSeparator("");
+                                menu.AddItem(new GUIContent("Delete Folder"), false, () =>
+                                {
+                                    if (ThemedDialog.Show("Delete Folder",
+                                        $"Delete folder \"{folder.name}\"?\nNotes inside will become unfiled.", "Delete", "Cancel"))
+                                    {
+                                        foreach (var n in _data.notes.Where(n => n.folderId == folder.id))
+                                            n.folderId = "";
+                                        _data.noteFolders.RemoveAt(capturedFi);
+                                        if (_selectedFolderId == folder.id) _selectedFolderId = "";
+                                        Save(); Repaint();
+                                    }
+                                });
+                                menu.Show(btnRect);
+                            }
+                        }
+                    }
+
+                    GUILayout.Space(4);
+                    DrawSeparator();
+                    GUILayout.Space(4);
+
+                    // ── Note list ──
+                    using (var scrollScope = new EditorGUILayout.ScrollViewScope(_notesListScroll))
+                    {
+                        _notesListScroll = scrollScope.scrollPosition;
+
+                        var filteredNotes = GetFilteredNotes();
+
+                        foreach (var (note, origIdx) in filteredNotes)
+                        {
+                            DrawNoteListItem(note, origIdx);
+                        }
+                    }
                 } // end left panel vertical scope
 
                 GUILayout.Space(4);
 
                 // ──────── RIGHT PANEL: Note Editor ────────
                 DrawNoteEditor();
+                GUILayout.Space(4);
             } // end outer horizontal scope
 
             // Process drag only after all folder rects have been registered this frame.
@@ -2098,7 +2247,7 @@ namespace AwesomeTaskManager.Editor
         private void DrawNoteListItem(QuickNote note, int origIdx)
         {
             bool selected = _selectedNote == origIdx;
-            var noteColor = TBStyles.LabelColors[Mathf.Clamp(note.colorIndex, 0, TBStyles.LabelColors.Length - 1)];
+            var noteColor = TBStyles.GetLabelColor(note.colorIndex);
 
             // Use selected style or normal style
             var boxStyle = selected ? TBStyles.NoteBoxSelected : TBStyles.NoteBox;
@@ -2108,20 +2257,22 @@ namespace AwesomeTaskManager.Editor
                 itemRect = scope.rect;
                 using (new EditorGUILayout.VerticalScope())
                 {
-                    string label = (note.pinned ? "📌 " : "") + note.title;
+                    string label = (note.pinned ? $"{TBStyles.PinnedNoteIcon} " : "") + note.title;
                     var titleStyle = selected
-                        ? new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = Color.white }, fontSize = 12, wordWrap = true }
-                        : new GUIStyle(EditorStyles.label) { fontSize = 12, wordWrap = true };
+                        ? new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = TBStyles.NoteTitleColor }, fontSize = 12, wordWrap = true }
+                        : new GUIStyle(EditorStyles.label) { normal = { textColor = TBStyles.NoteTitleColor }, fontSize = 12, wordWrap = true };
                     EditorGUILayout.LabelField(label, titleStyle);
 
-                    var infoStyle = selected
-                        ? new GUIStyle(EditorStyles.miniLabel) { normal = { textColor = new Color(0.85f, 0.9f, 1f) } }
-                        : EditorStyles.miniLabel;
+                    var subColor = new Color(TBStyles.CardTextColor.r, TBStyles.CardTextColor.g, TBStyles.CardTextColor.b, 0.75f);
+                    var infoStyle = new GUIStyle(EditorStyles.miniLabel)
+                    {
+                        normal = { textColor = selected ? TBStyles.CardTextColor : subColor }
+                    };
                     EditorGUILayout.LabelField($"{note.modifiedDate}  •  {note.WordCount} words", infoStyle);
                 }
 
                 GUILayout.FlexibleSpace();
-                if (GUILayout.Button(new GUIContent("↗", "Popout Note"), TBStyles.IconButton, GUILayout.Width(24), GUILayout.Height(22)))
+                if (ThemedTooltip.IconButton("↗", "Popout Note", GUILayout.Width(24), GUILayout.Height(22)))
                 {
                     NotePopupWindow.Open(note, _data, () => { LoadData(); });
                 }
@@ -2131,6 +2282,17 @@ namespace AwesomeTaskManager.Editor
             if (Event.current.type == EventType.Repaint)
             {
                 var lastRect = itemRect;
+                Color border = selected
+                    ? TBStyles.NoteSelectedAccent
+                    : (EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.10f) : new Color(1f, 1f, 1f, 0.40f));
+
+                // 1px top specular highlight
+                EditorGUI.DrawRect(new Rect(lastRect.x + 1, lastRect.y + 1, lastRect.width - 2, 1),
+                    EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.45f));
+
+                // Border
+                TBStyles.DrawBorderRect(lastRect, border);
+
                 // Selection accent (left edge)
                 if (selected)
                 {
@@ -2288,8 +2450,15 @@ namespace AwesomeTaskManager.Editor
 
         private void DrawNoteEditor()
         {
-            using (new EditorGUILayout.VerticalScope("box", GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
+            using (var rightScope = new EditorGUILayout.VerticalScope(GUIStyle.none, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
             {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    TBStyles.DrawGlassPanel(rightScope.rect, TBStyles.NoteEditorBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+                }
+
+                GUILayout.Space(6);
+
                 if (_selectedNote < 0 || _selectedNote >= _data.notes.Count)
                 {
                     GUILayout.FlexibleSpace();
@@ -2304,25 +2473,26 @@ namespace AwesomeTaskManager.Editor
             // ── Title bar ──
             using (new EditorGUILayout.HorizontalScope())
             {
-                string newTitle = EditorGUILayout.TextField(note.title, TBStyles.NoteTitle, GUILayout.Height(24));
+                GUILayout.Space(6);
+                string newTitle = TBStyles.DrawThemedTextField(note.title, TBStyles.NoteTitle, GUILayout.Height(24));
                 if (newTitle != note.title) { note.title = newTitle; MarkNoteModified(note); }
 
                 // Pin
-                GUIContent pinLabel = note.pinned ? new GUIContent("📌","Unpin Note") : new GUIContent("Pin","Pin Note");
-                if (GUILayout.Button(pinLabel, GUILayout.Width(36), GUILayout.Height(24)))
+                if (ThemedTooltip.Button(note.pinned ? TBStyles.PinnedNoteIcon : "Pin", note.pinned ? "Unpin Note" : "Pin Note", TBStyles.StandardButton, GUILayout.Width(36), GUILayout.Height(24)))
                 {
                     note.pinned = !note.pinned; Save(); Repaint();
                 }
 
                 // Color
-                int newCol = EditorGUILayout.Popup(note.colorIndex, TBStyles.LabelNames, GUILayout.Width(70));
-                GUI.Label(GUILayoutUtility.GetLastRect(), new GUIContent("", "Note color label"));
-                if (newCol != note.colorIndex) { note.colorIndex = newCol; Save(); }
+                TBStyles.DrawThemedDropdown(note.colorIndex, TBStyles.LabelNames, (newCol) =>
+                {
+                    if (newCol != note.colorIndex) { note.colorIndex = newCol; Save(); Repaint(); }
+                }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Note color label", GUILayout.Width(70));
 
                 // Move to folder
-                if (GUILayout.Button(new GUIContent("📁", "Move Note to Folder"), GUILayout.Width(28), GUILayout.Height(24)))
+                if (ThemedContextMenu.DropdownButton("📁", "Move Note to Folder", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(28), GUILayout.Height(24)))
                 {
-                    var menu = new GenericMenu();
+                    var menu = new ThemedContextMenu();
                     menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(note.folderId), () =>
                     {
                         note.folderId = ""; Save(); Repaint();
@@ -2335,28 +2505,27 @@ namespace AwesomeTaskManager.Editor
                             note.folderId = fid; Save(); Repaint();
                         });
                     }
-                    menu.ShowAsContext();
+                    menu.Show(btnRect);
                 }
 
                 // Export single note
-                if (GUILayout.Button(new GUIContent("📤", "Export Note"), GUILayout.Width(28), GUILayout.Height(24)))
+                if (ThemedTooltip.IconButton("📤", "Export Note", GUILayout.Width(28), GUILayout.Height(24)))
                 {
                     EditorApplication.delayCall += () => ExportSingleNote(note);
                 }
 
-                if (GUILayout.Button(new GUIContent("↗", "Popout Note"), GUILayout.Width(28), GUILayout.Height(24)))
+                if (ThemedTooltip.IconButton("↗", "Popout Note", GUILayout.Width(28), GUILayout.Height(24)))
                 {
                     NotePopupWindow.Open(note, _data, () => { LoadData(); });
                 }
 
                 // Delete
-                GUI.backgroundColor = new Color(1f, 0.45f, 0.45f);
-                if (GUILayout.Button(new GUIContent("🗑", "Delete Note"), GUILayout.Width(28), GUILayout.Height(24)))
+                if (ThemedTooltip.DeleteIconButton(TBStyles.DeleteIcon, "Delete Note", GUILayout.Width(28), GUILayout.Height(24)))
                 {
                     int idx = _selectedNote;
                     EditorApplication.delayCall += () =>
                     {
-                        if (EditorUtility.DisplayDialog("Delete Note", $"Delete \"{note.title}\"?", "Delete", "Cancel"))
+                        if (ThemedDialog.Show("Delete Note", $"Delete \"{note.title}\"?", "Delete", "Cancel"))
                         {
                             if (idx >= 0 && idx < _data.notes.Count)
                             {
@@ -2368,39 +2537,44 @@ namespace AwesomeTaskManager.Editor
                         }
                     };
                 }
-                GUI.backgroundColor = Color.white;
+                GUILayout.Space(6);
             }
 
             // ── Metadata row ──
             GUILayout.Space(2);
-            Rect metadataRect = EditorGUILayout.GetControlRect(false, 18);
-            string folderName = "Unfiled";
-            if (!string.IsNullOrEmpty(note.folderId))
+            using (new EditorGUILayout.HorizontalScope())
             {
-                var f = _data.noteFolders.FirstOrDefault(x => x.id == note.folderId);
-                if (f != null) folderName = f.name;
-            }
+                GUILayout.Space(6);
+                Rect metadataRect = EditorGUILayout.GetControlRect(false, 18);
+                string folderName = "Unfiled";
+                if (!string.IsNullOrEmpty(note.folderId))
+                {
+                    var f = _data.noteFolders.FirstOrDefault(x => x.id == note.folderId);
+                    if (f != null) folderName = f.name;
+                }
 
-            // Hover highlight for drag handle
-            if (metadataRect.Contains(Event.current.mousePosition))
-            {
-                EditorGUI.DrawRect(metadataRect, new Color(1f, 1f, 1f, 0.05f));
-                EditorGUIUtility.AddCursorRect(metadataRect, MouseCursor.Link);
-            }
+                // Hover highlight for drag handle
+                if (metadataRect.Contains(Event.current.mousePosition))
+                {
+                    EditorGUI.DrawRect(metadataRect, new Color(1f, 1f, 1f, 0.05f));
+                    EditorGUIUtility.AddCursorRect(metadataRect, MouseCursor.Link);
+                }
 
-            EditorGUI.LabelField(metadataRect,
-                $"📁 {folderName}  |  Created: {note.createdDate}  |  Modified: {note.modifiedDate}  |  {note.WordCount} words, {note.CharCount} chars",
-                EditorStyles.miniLabel);
+                EditorGUI.LabelField(metadataRect,
+                    $"📁 {folderName}  |  Created: {note.createdDate}  |  Modified: {note.modifiedDate}  |  {note.WordCount} words, {note.CharCount} chars",
+                    EditorStyles.miniLabel);
 
-            // Drag handle for the open note
-            if (metadataRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
-            {
-                _noteDragIdx = _selectedNote;
-                _noteDragStartPos = Event.current.mousePosition;
-                _noteDragging = false;
-                Event.current.Use();
+                // Drag handle for the open note
+                if (metadataRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
+                {
+                    _noteDragIdx = _selectedNote;
+                    _noteDragStartPos = Event.current.mousePosition;
+                    _noteDragging = false;
+                    Event.current.Use();
+                }
+                EditorGUI.LabelField(new Rect(metadataRect.xMax - 80, metadataRect.y, 80, 18), "(Drag to move)", EditorStyles.centeredGreyMiniLabel);
+                GUILayout.Space(6);
             }
-            EditorGUI.LabelField(new Rect(metadataRect.xMax - 80, metadataRect.y, 80, 18), "(Drag to move)", EditorStyles.centeredGreyMiniLabel);
 
             DrawSeparator();
             GUILayout.Space(4);
@@ -2410,14 +2584,15 @@ namespace AwesomeTaskManager.Editor
 
             using (new EditorGUILayout.HorizontalScope())
             {
-                EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(44));
-
-                if (GUILayout.Button(new GUIContent("📋 Paste", "Paste Image from Clipboard"), GUILayout.Width(60), GUILayout.Height(18)))
+                GUILayout.Space(6);
+                EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
+                GUILayout.Space(4);
+                if (GUILayout.Button(new GUIContent("📋 Paste", "Paste Image from Clipboard"), TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(20)))
                 {
                     PasteImageFromClipboard(note);
                     GUI.FocusControl(null);
                 }
-                if (GUILayout.Button(new GUIContent("📎 Browse", "Browse for Image"), GUILayout.Width(70), GUILayout.Height(18)))
+                if (GUILayout.Button(new GUIContent("📎 Browse", "Browse for Image"), TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(20)))
                 {
                     EditorApplication.delayCall += () =>
                     {
@@ -2442,13 +2617,11 @@ namespace AwesomeTaskManager.Editor
                 GUILayout.FlexibleSpace();
 
                 // Edit / Preview toggle
-                GUI.backgroundColor = _noteEditMode ? new Color(0.3f, 0.7f, 0.95f) : Color.grey;
-                if (GUILayout.Button(new GUIContent("✏ Edit", "Edit Note Mode"), GUILayout.Width(54), GUILayout.Height(18)))
+                if (GUILayout.Button(new GUIContent("✏ Edit", "Edit Note Mode"), _noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(58), GUILayout.Height(20)))
                     _noteEditMode = true;
-                GUI.backgroundColor = !_noteEditMode ? new Color(0.3f, 0.7f, 0.95f) : Color.grey;
-                if (GUILayout.Button(new GUIContent("👁 Preview", "Preview Note Mode"), GUILayout.Width(72), GUILayout.Height(18)))
+                if (GUILayout.Button(new GUIContent("👁 Preview", "Preview Note Mode"), !_noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(76), GUILayout.Height(20)))
                     _noteEditMode = false;
-                GUI.backgroundColor = Color.white;
+                GUILayout.Space(6);
             }
             GUILayout.Space(3);
 
@@ -2468,32 +2641,34 @@ namespace AwesomeTaskManager.Editor
                 }
             }
 
-            if (_noteEditMode)
+            using (new EditorGUILayout.HorizontalScope())
             {
-                // ── Raw markdown editor ──
-                using (var editorScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll))
+                GUILayout.Space(6);
+                if (_noteEditMode)
                 {
-                    _noteEditorScroll = editorScope.scrollPosition;
-                    string newContent = EditorGUILayout.TextArea(note.content, new GUIStyle(EditorStyles.textArea)
+                    // ── Raw markdown editor ──
+                    using (var editorScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll))
                     {
-                        wordWrap = true, fontSize = 13, padding = new RectOffset(10, 10, 10, 10),
-                        font = Font.CreateDynamicFontFromOSFont("Consolas", 13)
-                    }, GUILayout.ExpandHeight(true));
-                    if (newContent != note.content) { note.content = newContent; MarkNoteModified(note); }
-                }
-            }
-            else
-            {
-                // ── Rendered preview (Obsidian-style inline images) ──
-                using (var previewScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll))
-                {
-                    _noteEditorScroll = previewScope.scrollPosition;
-                    if (MarkdownRenderer.DrawMarkdownPreview(note, (n) => MarkNoteModified(n)))
-                    {
-                        _hasAnimatedGif = true;
+                        _noteEditorScroll = editorScope.scrollPosition;
+                        string newContent = EditorGUILayout.TextArea(note.content, TBStyles.NoteTextArea, GUILayout.ExpandHeight(true));
+                        if (newContent != note.content) { note.content = newContent; MarkNoteModified(note); }
                     }
                 }
+                else
+                {
+                    // ── Rendered preview (Obsidian-style inline images) ──
+                    using (var previewScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll))
+                    {
+                        _noteEditorScroll = previewScope.scrollPosition;
+                        if (MarkdownRenderer.DrawMarkdownPreview(note, (n) => MarkNoteModified(n)))
+                        {
+                            _hasAnimatedGif = true;
+                        }
+                    }
+                }
+                GUILayout.Space(6);
             }
+            GUILayout.Space(6);
             }
         }
 
@@ -2511,7 +2686,7 @@ namespace AwesomeTaskManager.Editor
             sb.AppendLine();
             sb.AppendLine(note.content);
             File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            EditorUtility.DisplayDialog("Exported", $"Note exported to:\n{path}", "OK");
+            ThemedDialog.Show("Exported", $"Note exported to:\n{path}", "OK");
         }
 
         private void ExportBoard(TaskBoard board)
@@ -3503,7 +3678,7 @@ namespace AwesomeTaskManager.Editor
             var folderNotes = _data.notes.Where(n => n.folderId == folder.id).ToList();
             if (folderNotes.Count == 0)
             {
-                EditorUtility.DisplayDialog("Empty", "This folder has no notes to export.", "OK");
+                ThemedDialog.Show("Empty", "This folder has no notes to export.", "OK");
                 return;
             }
 
@@ -3521,7 +3696,7 @@ namespace AwesomeTaskManager.Editor
                 File.WriteAllText(Path.Combine(path, fileName), sb.ToString(), Encoding.UTF8);
                 count++;
             }
-            EditorUtility.DisplayDialog("Exported", $"Exported {count} note(s) to:\n{path}", "OK");
+            ThemedDialog.Show("Exported", $"Exported {count} note(s) to:\n{path}", "OK");
         }
 
         private static string SanitizeFileName(string name)
@@ -4453,7 +4628,7 @@ namespace AwesomeTaskManager.Editor
                 _selectedNote = 0;
                 ResetFilters();
                 Save();
-                EditorUtility.DisplayDialog("Imported",
+                ThemedDialog.Show("Imported",
                     $"Imported \"{note.title}\" ({note.WordCount} words) from:\n{path}", "OK");
                 GUIUtility.ExitGUI();
             }
@@ -4480,7 +4655,7 @@ namespace AwesomeTaskManager.Editor
                     sceneName = "a different scene";
                 if(UnityEditor.EditorApplication.isPlaying)
                 {
-                    if (!EditorUtility.DisplayDialog("Cannot open scene in play mode",
+                    if (!ThemedDialog.Show("Cannot open scene in play mode",
                         $"This is an asset that was linked from {sceneName}. Please stop playing scene and try again.",
                         "OK"))
                     {
@@ -4489,7 +4664,7 @@ namespace AwesomeTaskManager.Editor
                     return;
                 }
                 
-                if (!EditorUtility.DisplayDialog("Open Scene?",
+                if (!ThemedDialog.Show("Open Scene?",
                     $"This is an asset that was linked from {sceneName}. Would you like to open that scene and select the {sceneRef.name} item?",
                     "Yes", "No"))
                 {
@@ -4654,7 +4829,7 @@ namespace AwesomeTaskManager.Editor
 
                 if (hasCards)
                 {
-                    int choice = EditorUtility.DisplayDialogComplex("Include Cards?",
+                    int choice = ThemedDialog.ShowComplex("Include Cards?",
                         "This board contains cards. Do you want to include them in the template, or only save the column layout?",
                         "Include Cards", "Only Columns", "Cancel");
 
@@ -4671,16 +4846,1613 @@ namespace AwesomeTaskManager.Editor
         }
 
 
+        // ════════════════════════════════════════════
+        //  STYLE & THEME VIEW
+        // ════════════════════════════════════════════
+        private void DrawStyleView()
+        {
+            if (_data == null) return;
+            _data.themes ??= new List<ThemeData>();
+            if (_data.themes.Count == 0)
+            {
+                _data.themes.Add(ThemeData.CreateDefault());
+            }
+
+            _data.currentThemeIndex = Mathf.Clamp(_data.currentThemeIndex, 0, _data.themes.Count - 1);
+            var currentTheme = _data.themes[_data.currentThemeIndex];
+            currentTheme.Normalize();
+
+            // ── Top Toolbar ──
+            using (var tbScope = new EditorGUILayout.HorizontalScope(GUILayout.Height(24)))
+            {
+                if (Event.current.type == EventType.Repaint)
+                {
+                    EditorGUI.DrawRect(tbScope.rect, TBStyles.TopBarBg);
+                }
+
+                ThemedTooltip.Label("Theme:", "Select or switch the active visual theme", EditorStyles.miniLabel, GUILayout.Width(48));
+
+                string[] themeNames = _data.themes.Select(t => t.name).ToArray();
+                TBStyles.DrawThemedDropdown(_data.currentThemeIndex, themeNames, (newThemeIdx) =>
+                {
+                    if (newThemeIdx != _data.currentThemeIndex)
+                    {
+                        _data.currentThemeIndex = newThemeIdx;
+                        TBStyles.ApplyTheme(_data.themes[_data.currentThemeIndex]);
+                        SaveTheme();
+                        GUIUtility.ExitGUI();
+                    }
+                }, TBStyles.ToolbarPopup, "Select active theme", GUILayout.Width(160));
+
+                // Theme Options Menu (+)
+                if (ThemedContextMenu.DropdownButton("+", "Theme Options (Create, Duplicate, Apply Preset, Reset, Import, Export, Delete)", TBStyles.ToolbarButton, out Rect themeBtnRect, GUILayout.Width(24)))
+                {
+                    var menu = new ThemedContextMenu();
+                    menu.AddItem(new GUIContent("Create New Theme/Blank Theme (Default)"), false, () =>
+                    {
+                        var newTheme = ThemeData.CreateDefault();
+                        newTheme.name = GetUniqueThemeName("New Theme");
+                        _data.themes.Add(newTheme);
+                        _data.currentThemeIndex = _data.themes.Count - 1;
+                        TBStyles.ApplyTheme(newTheme);
+                        SaveTheme();
+                        TriggerSuccessNotification($"Created theme \"{newTheme.name}\"");
+                    });
+                    menu.AddItem(new GUIContent("Create New Theme/Duplicate Current Theme"), false, () =>
+                    {
+                        var clone = currentTheme.Clone();
+                        clone.name = GetUniqueThemeName($"{currentTheme.name} Copy");
+                        _data.themes.Add(clone);
+                        _data.currentThemeIndex = _data.themes.Count - 1;
+                        TBStyles.ApplyTheme(clone);
+                        SaveTheme();
+                        TriggerSuccessNotification($"Duplicated theme as \"{clone.name}\"");
+                    });
+
+                    menu.AddSeparator("Create New Theme/");
+                    foreach (var preset in ThemeData.GetBuiltInPresets())
+                    {
+                        var p = preset;
+                        menu.AddItem(new GUIContent($"Create New Theme/From Preset: {p.name}"), false, () =>
+                        {
+                            var newPreset = p.Clone();
+                            newPreset.name = GetUniqueThemeName(p.name);
+                            _data.themes.Add(newPreset);
+                            _data.currentThemeIndex = _data.themes.Count - 1;
+                            TBStyles.ApplyTheme(newPreset);
+                            SaveTheme();
+                            TriggerSuccessNotification($"Created theme from preset \"{p.name}\"");
+                        });
+                    }
+
+                    menu.AddSeparator("");
+                    foreach (var preset in ThemeData.GetBuiltInPresets())
+                    {
+                        var p = preset;
+                        menu.AddItem(new GUIContent($"Apply Preset to Current Theme/{p.name}"), false, () =>
+                        {
+                            if (ThemedDialog.Show("Apply Preset", $"Overwrite current theme \"{currentTheme.name}\" with preset \"{p.name}\"?", "Apply", "Cancel"))
+                            {
+                                string savedName = currentTheme.name;
+                                var pClone = p.Clone();
+                                JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(pClone), currentTheme);
+                                currentTheme.name = savedName;
+                                currentTheme.Normalize();
+                                TBStyles.ApplyTheme(currentTheme);
+                                SaveTheme();
+                                TriggerSuccessNotification($"Applied preset \"{p.name}\" to current theme");
+                            }
+                        });
+                    }
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Reset Current Theme to Default Values"), false, () =>
+                    {
+                        if (ThemedDialog.Show("Reset Theme", $"Reset all colors and icons in \"{currentTheme.name}\" to defaults?", "Reset", "Cancel"))
+                        {
+                            string savedName = currentTheme.name;
+                            var def = ThemeData.CreateDefault();
+                            JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(def), currentTheme);
+                            currentTheme.name = savedName;
+                            currentTheme.Normalize();
+                            TBStyles.ApplyTheme(currentTheme);
+                            SaveTheme();
+                            TriggerSuccessNotification("Theme reset to defaults");
+                        }
+                    });
+
+                    menu.AddSeparator("");
+                    menu.AddItem(new GUIContent("Export/Export Active Theme (JSON)..."), false, () => ExportTheme(currentTheme));
+                    menu.AddItem(new GUIContent("Export/Export All Themes Pack (JSON)..."), false, ExportAllThemes);
+                    menu.AddItem(new GUIContent("Import/Import Theme(s) from JSON..."), false, ImportTheme);
+
+                    if (_data.themes.Count > 1)
+                    {
+                        menu.AddSeparator("");
+                        menu.AddItem(new GUIContent($"Delete Theme/{currentTheme.name}"), false, () =>
+                        {
+                            if (ThemedDialog.Show("Delete Theme", $"Are you sure you want to delete theme \"{currentTheme.name}\"?", "Delete", "Cancel"))
+                            {
+                                string deletedName = currentTheme.name;
+                                _data.themes.RemoveAt(_data.currentThemeIndex);
+                                _data.currentThemeIndex = Mathf.Clamp(_data.currentThemeIndex, 0, _data.themes.Count - 1);
+                                TBStyles.ApplyTheme(_data.themes[_data.currentThemeIndex]);
+                                SaveTheme();
+                                TriggerSuccessNotification($"Deleted theme \"{deletedName}\"");
+                            }
+                        });
+                    }
+
+                    menu.Show(themeBtnRect);
+                }
+
+                GUILayout.Space(6);
+
+                if (ThemedContextMenu.DropdownButton("Presets ▾", "Load or apply built-in theme presets (Dark Slate, Cyberpunk, Forest, Pastel, Sunset, Monochrome, Retro, Vintage 8-Bit, etc.)", TBStyles.ToolbarButton, out Rect presetBtnRect, GUILayout.Width(72)))
+                {
+                    var presetMenu = new ThemedContextMenu();
+                    foreach (var preset in ThemeData.GetBuiltInPresets())
+                    {
+                        var p = preset;
+                        presetMenu.AddItem(new GUIContent($"Add as New Theme/{p.name}"), false, () =>
+                        {
+                            var newPreset = p.Clone();
+                            newPreset.name = GetUniqueThemeName(p.name);
+                            _data.themes.Add(newPreset);
+                            _data.currentThemeIndex = _data.themes.Count - 1;
+                            TBStyles.ApplyTheme(newPreset);
+                            SaveTheme();
+                            TriggerSuccessNotification($"Added theme preset \"{p.name}\"");
+                        });
+                        presetMenu.AddItem(new GUIContent($"Apply to Current Theme/{p.name}"), false, () =>
+                        {
+                            if (ThemedDialog.Show("Apply Preset", $"Overwrite \"{currentTheme.name}\" with preset \"{p.name}\"?", "Apply", "Cancel"))
+                            {
+                                string savedName = currentTheme.name;
+                                var pClone = p.Clone();
+                                JsonUtility.FromJsonOverwrite(JsonUtility.ToJson(pClone), currentTheme);
+                                currentTheme.name = savedName;
+                                currentTheme.Normalize();
+                                TBStyles.ApplyTheme(currentTheme);
+                                SaveTheme();
+                                TriggerSuccessNotification($"Applied preset \"{p.name}\"");
+                            }
+                        });
+                    }
+                    presetMenu.Show(presetBtnRect);
+                }
+
+                GUILayout.Space(4);
+
+                if (ThemedContextMenu.DropdownButton("💾 Export", "Export theme configuration to JSON file", TBStyles.ToolbarButton, out Rect exportBtnRect, GUILayout.Width(64)))
+                {
+                    var exportMenu = new ThemedContextMenu();
+                    exportMenu.AddItem(new GUIContent($"Export Active Theme (\"{currentTheme.name}\")..."), false, () => ExportTheme(currentTheme));
+                    exportMenu.AddItem(new GUIContent($"Export All Themes Pack ({_data.themes.Count} themes)..."), false, ExportAllThemes);
+                    exportMenu.Show(exportBtnRect);
+                }
+
+                if (ThemedTooltip.Button("📥 Import", "Import theme JSON file or Theme Pack into your theme collection", TBStyles.ToolbarButton, GUILayout.Width(64)))
+                {
+                    ImportTheme();
+                }
+
+                if (_data.themes.Count > 1)
+                {
+                    GUILayout.Space(4);
+                    if (ThemedTooltip.Button($"{TBStyles.DeleteIcon} Delete", $"Delete active theme \"{currentTheme.name}\"", TBStyles.ToolbarDeleteButton, GUILayout.Width(76)))
+                    {
+                        if (ThemedDialog.Show("Delete Theme", $"Are you sure you want to delete theme \"{currentTheme.name}\"?", "Delete", "Cancel"))
+                        {
+                            string deletedName = currentTheme.name;
+                            _data.themes.RemoveAt(_data.currentThemeIndex);
+                            _data.currentThemeIndex = Mathf.Clamp(_data.currentThemeIndex, 0, _data.themes.Count - 1);
+                            TBStyles.ApplyTheme(_data.themes[_data.currentThemeIndex]);
+                            SaveTheme();
+                            TriggerSuccessNotification($"Deleted theme \"{deletedName}\"");
+                        }
+                    }
+                }
+
+                GUILayout.FlexibleSpace();
+            }
+
+            // ── Style View Body ──
+            using (var scope = new EditorGUILayout.ScrollViewScope(_styleScroll))
+            {
+                _styleScroll = scope.scrollPosition;
+
+            
+
+                EditorGUI.BeginChangeCheck();
+
+                // ── Section 1: Theme Identity & Live Interactive Preview ──
+                DrawStyleHeaderAndPreview(currentTheme);
+
+                GUILayout.Space(12);
+
+                using (new EditorGUILayout.HorizontalScope("box"))
+                {
+                    ThemedTooltip.Label("🔍 Style Search", "Filter style options by label, tooltip text, or current value", null, GUILayout.Width(95));
+                    _styleSearchFilter = TBStyles.DrawThemedTextField(_styleSearchFilter, TBStyles.ThemedSearchField, GUILayout.Height(20));
+
+                    if (ThemedTooltip.Button("Clear", "Clear the current style search and show all style options", TBStyles.ToolbarButton, GUILayout.Width(52), GUILayout.Height(18)))
+                    {
+                        _styleSearchFilter = "";
+                        GUI.FocusControl(null);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(_styleSearchFilter))
+                {
+                    using (new EditorGUILayout.VerticalScope("box"))
+                    {
+                        EditorGUILayout.HelpBox($"Searching style options for \"{_styleSearchFilter.Trim()}\". Matching sections are shown below; clear the search to reveal everything.", MessageType.Info);
+                    }
+                }
+
+                GUILayout.Space(12);
+                
+                // ── Section 2: Priority Icons ──
+                DrawStylePriorityIcons(currentTheme);
+
+                GUILayout.Space(12);
+
+                // ── Section 3: Interface & Navigation Icons ──
+                DrawStyleInterfaceIcons(currentTheme);
+
+                GUILayout.Space(12);
+
+                // ── Section 4: Card & Note Label Colors ──
+                DrawStyleLabelColors(currentTheme);
+
+                GUILayout.Space(12);
+
+                // ── Section 5: Board, Column & UI Accent Colors ──
+                DrawStyleBoardAndAccentColors(currentTheme);
+
+                GUILayout.Space(12);
+
+                // ── Section 6: Export / Import Tools ──
+                DrawStyleImportExportActions(currentTheme);
+
+                GUILayout.Space(24);
+
+                if (EditorGUI.EndChangeCheck())
+                {
+                    currentTheme.Normalize();
+                    TBStyles.ApplyTheme(currentTheme);
+                    SaveTheme();
+                }
+            }
+        }
+
+        private void DrawStyleHeaderAndPreview(ThemeData theme)
+        {
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                EditorGUILayout.LabelField($"{TBStyles.StyleTabIcon} Theme Information & Preview", EditorStyles.boldLabel);
+                EditorGUILayout.HelpBox("Customize theme name, colors, and icons. All changes apply live to your workspace in real-time.", MessageType.None);
+                GUILayout.Space(4);
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    ThemedTooltip.Label("Theme Name", "The display name identifying this visual theme preset in the theme selector and export packages", null, GUILayout.Width(90));
+                    theme.name = TBStyles.DrawThemedTextField(theme.name, TBStyles.ThemedTextField, GUILayout.Height(20));
+                    ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), "The display name identifying this visual theme preset in the theme selector and export packages");
+
+                    if (ThemedTooltip.Button("Duplicate", "Create a duplicate copy of this theme with all its color and icon settings", GUI.skin.button, GUILayout.Width(75)))
+                    {
+                        var clone = theme.Clone();
+                        clone.name = GetUniqueThemeName($"{theme.name} Copy");
+                        _data.themes.Add(clone);
+                        _data.currentThemeIndex = _data.themes.Count - 1;
+                        TBStyles.ApplyTheme(clone);
+                        SaveTheme();
+                        TriggerSuccessNotification($"Duplicated theme as \"{clone.name}\"");
+                        GUIUtility.ExitGUI();
+                    }
+                }
+
+                GUILayout.Space(8);
+
+                // ── Live Interactive Preview Mockup ──
+                EditorGUILayout.LabelField("Live Workspace Preview", EditorStyles.miniBoldLabel);
+                
+                var previewRect = GUILayoutUtility.GetRect(0, 156, GUILayout.ExpandWidth(true));
+                ThemedTooltip.SetTooltip(previewRect, "Live interactive preview reflecting the colors, typography, icons, and contrast settings of the currently selected theme");
+                Color boardBgColor = EditorGUIUtility.isProSkin ? theme.pro_BoardBg : theme.personal_BoardBg;
+                TBStyles.DrawCanvasBackground(previewRect, boardBgColor, false);
+                TBStyles.DrawBorderRect(previewRect, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.12f) : new Color(0f, 0f, 0f, 0.12f));
+
+                // Draw mock top bar strip inside preview
+                var topBarRect = new Rect(previewRect.x, previewRect.y, previewRect.width, 32);
+                Color topBarBgColor = EditorGUIUtility.isProSkin ? theme.pro_TopBarBg : theme.personal_TopBarBg;
+                TBStyles.DrawGlassPanel(topBarRect, topBarBgColor, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
+
+                // Draw mock tab bar inside preview (Active Tab)
+                var tabRect = new Rect(previewRect.x + 8, previewRect.y + 4, 85, 24);
+                Color tabActiveBg = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabActiveBg : theme.personal_HeaderTabActiveBg;
+                Color tabActiveText = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabActiveText : theme.personal_HeaderTabActiveText;
+                TBStyles.DrawGlassPanel(tabRect, tabActiveBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.20f) : new Color(1f, 1f, 1f, 0.60f), true);
+                var tabStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = tabActiveText }, fontSize = 11 };
+                GUI.Label(tabRect, $"{theme.boardTabIcon} Board", tabStyle);
+
+                // Inactive Tab
+                var noteTabRect = new Rect(tabRect.xMax + 4, previewRect.y + 4, 85, 24);
+                Color tabInactiveBg = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabInactiveBg : theme.personal_HeaderTabInactiveBg;
+                Color tabInactiveText = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabInactiveText : theme.personal_HeaderTabInactiveText;
+                TBStyles.DrawGlassPanel(noteTabRect, tabInactiveBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.10f) : new Color(1f, 1f, 1f, 0.40f), true);
+                var inactiveTabStyle = new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = tabInactiveText }, fontSize = 11 };
+                GUI.Label(noteTabRect, $"{theme.notesTabIcon} Notes", inactiveTabStyle);
+
+                // Mock Dropdown in top bar
+                var dropRect = new Rect(noteTabRect.xMax + 8, previewRect.y + 6, 90, 20);
+                Color dropBg = EditorGUIUtility.isProSkin ? theme.pro_DropdownBg : theme.personal_DropdownBg;
+                Color dropText = EditorGUIUtility.isProSkin ? theme.pro_DropdownText : theme.personal_DropdownText;
+                TBStyles.DrawGlassPanel(dropRect, dropBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.10f) : new Color(1f, 1f, 1f, 0.40f), true);
+                var dropStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleLeft, padding = new RectOffset(4, 4, 0, 0), normal = { textColor = dropText }, fontSize = 10 };
+                GUI.Label(dropRect, $"{theme.categoryIcon} All Categories ▾", dropStyle);
+
+                // Draw mock column inside preview
+                float colWidth = Mathf.Min(260, (previewRect.width - 24) * 0.55f);
+                var colRect = new Rect(previewRect.x + 8, previewRect.y + 38, colWidth, 94);
+                Color colBg = EditorGUIUtility.isProSkin ? theme.pro_ColumnBg : theme.personal_ColumnBg;
+                TBStyles.DrawGlassPanel(colRect, colBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+
+                var colHeaderStyle = new GUIStyle(EditorStyles.boldLabel) { fontSize = 11, normal = { textColor = EditorGUIUtility.isProSkin ? theme.pro_ColumnHeader : theme.personal_ColumnHeader } };
+                GUI.Label(new Rect(colRect.x + 6, colRect.y + 4, colRect.width - 12, 18), $"{theme.boardHeaderIcon} In Progress (1)", colHeaderStyle);
+
+                // Draw mock card inside column
+                var cardRect = new Rect(colRect.x + 6, colRect.y + 22, colRect.width - 12, 46);
+                Color cardBgColor = EditorGUIUtility.isProSkin ? theme.pro_CardBg : theme.personal_CardBg;
+                TBStyles.DrawGlassPanel(cardRect, cardBgColor, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.12f) : new Color(1f, 1f, 1f, 0.45f), true);
+                
+                // Card label bar
+                Color sampleLabelColor = theme.labelColors != null && theme.labelColors.Count > 2 ? theme.labelColors[2] : new Color(0.13f, 0.59f, 0.95f);
+                EditorGUI.DrawRect(new Rect(cardRect.x, cardRect.y, cardRect.width, 3), sampleLabelColor);
+
+                string priIcon = theme.priorityIcons != null && theme.priorityIcons.Count > 3 ? theme.priorityIcons[3] : "🟠";
+                var cardTitleStyle = new GUIStyle(EditorStyles.boldLabel) { fontSize = 10, normal = { textColor = EditorGUIUtility.isProSkin ? theme.pro_CardTitle : theme.personal_CardTitle } };
+                GUI.Label(new Rect(cardRect.x + 4, cardRect.y + 4, cardRect.width - 8, 16), $"{theme.completedIcon} {priIcon} Task Title", cardTitleStyle);
+
+                var cardCatStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 9, fontStyle = FontStyle.Bold, normal = { textColor = EditorGUIUtility.isProSkin ? theme.pro_CardCategoryTag : theme.personal_CardCategoryTag } };
+                var cardDueStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 9, fontStyle = FontStyle.Bold, normal = { textColor = EditorGUIUtility.isProSkin ? theme.pro_StatusDueToday : theme.personal_StatusDueToday } };
+                var cardTasksStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 9, fontStyle = FontStyle.Bold, normal = { textColor = EditorGUIUtility.isProSkin ? theme.pro_TasksCompletedCount : theme.personal_TasksCompletedCount } };
+                
+                float catWidth = 48;
+                GUI.Label(new Rect(cardRect.x + 4, cardRect.y + 24, catWidth, 16), $"[{theme.categoryIcon} Dev]", cardCatStyle);
+                float dueWidth = 54;
+                GUI.Label(new Rect(cardRect.x + 4 + catWidth + 2, cardRect.y + 24, dueWidth, 16), $"{theme.dueTodayIcon} Today", cardDueStyle);
+                float tasksOffset = catWidth + dueWidth + 6;
+                if (cardRect.width - tasksOffset > 38)
+                {
+                    var tickBoxRect = new Rect(cardRect.x + 4 + tasksOffset, cardRect.y + 26, 11, 11);
+                    Color tickBg = EditorGUIUtility.isProSkin ? theme.pro_ChecklistTickCheckedBg : theme.personal_ChecklistTickCheckedBg;
+                    Color tickBorder = EditorGUIUtility.isProSkin ? theme.pro_ChecklistTickBorder : theme.personal_ChecklistTickBorder;
+                    Color tickColor = EditorGUIUtility.isProSkin ? theme.pro_ChecklistTickColor : theme.personal_ChecklistTickColor;
+                    EditorGUI.DrawRect(tickBoxRect, tickBg);
+                    TBStyles.DrawBorderRect(tickBoxRect, tickBorder, 1f);
+                    var tickStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, fontSize = 8, fontStyle = FontStyle.Bold, normal = { textColor = tickColor } };
+                    TBStyles.DrawCheckmarkIcon(tickBoxRect, tickColor, theme.checklistTickStyle, theme.customChecklistTickChar);
+
+                    GUI.Label(new Rect(tickBoxRect.xMax + 3, cardRect.y + 24, cardRect.width - tickBoxRect.xMax - 7, 16), "2/3", cardTasksStyle);
+                }
+                else if (cardRect.width - tasksOffset > 24)
+                {
+                    GUI.Label(new Rect(cardRect.x + 4 + tasksOffset, cardRect.y + 24, cardRect.width - 8 - tasksOffset, 16), $"{theme.checklistIcon} 2/3", cardTasksStyle);
+                }
+
+                // Mock Add Card button inside column
+                var addCardRect = new Rect(colRect.x + 6, colRect.y + 72, colRect.width - 12, 18);
+                Color addCardBg = EditorGUIUtility.isProSkin ? theme.pro_AddCardBg : theme.personal_AddCardBg;
+                Color addCardText = EditorGUIUtility.isProSkin ? theme.pro_AddCardText : theme.personal_AddCardText;
+                TBStyles.DrawGlassPanel(addCardRect, addCardBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.12f) : new Color(1f, 1f, 1f, 0.45f), true);
+                var addCardStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = addCardText }, fontSize = 9, fontStyle = FontStyle.Bold };
+                GUI.Label(addCardRect, "+ Add Card", addCardStyle);
+
+                // Draw mock note inside preview
+                float noteX = colRect.xMax + 12;
+                float noteWidth = previewRect.xMax - noteX - 8;
+                if (noteWidth > 120)
+                {
+                    var noteRect = new Rect(noteX, previewRect.y + 38, noteWidth, 94);
+                    Color noteEdBg = EditorGUIUtility.isProSkin ? theme.pro_NoteEditorBg : theme.personal_NoteEditorBg;
+                    TBStyles.DrawGlassPanel(noteRect, noteEdBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+                    
+                    // Note selection accent bar
+                    EditorGUI.DrawRect(new Rect(noteRect.x, noteRect.y, 4, noteRect.height), theme.noteSelectedAccent);
+
+                    var noteTitleStyle = new GUIStyle(EditorStyles.boldLabel) { fontSize = 11, normal = { textColor = EditorGUIUtility.isProSkin ? theme.pro_NoteTitle : theme.personal_NoteTitle } };
+                    GUI.Label(new Rect(noteRect.x + 8, noteRect.y + 6, noteRect.width - 12, 18), $"{theme.pinnedNoteIcon} Level 1 Design", noteTitleStyle);
+
+                    // Mock text input area
+                    var noteInputMockRect = new Rect(noteRect.x + 8, noteRect.y + 26, noteRect.width - 16, 34);
+                    Color noteInBg = EditorGUIUtility.isProSkin ? theme.pro_NoteInputBg : theme.personal_NoteInputBg;
+                    Color noteInTxt = EditorGUIUtility.isProSkin ? theme.pro_NoteInputText : theme.personal_NoteInputText;
+                    TBStyles.DrawGlassPanel(noteInputMockRect, noteInBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(0f, 0f, 0f, 0.08f), false);
+
+                    var noteBodyStyle = new GUIStyle(EditorStyles.miniLabel) { fontSize = 9, normal = { textColor = noteInTxt } };
+                    GUI.Label(new Rect(noteInputMockRect.x + 4, noteInputMockRect.y + 2, noteInputMockRect.width - 8, noteInputMockRect.height - 4), $"• Bowling pins layout\n• {theme.cardDetailIcon} Setup shaders", noteBodyStyle);
+
+                    // Mock action button inside note preview
+                    float actionBtnWidth = Mathf.Min(52, (noteRect.width - 32) * 0.36f);
+                    var mockBtnRect = new Rect(noteRect.x + 8, noteRect.y + 64, actionBtnWidth, 20);
+                    Color addNoteBg = EditorGUIUtility.isProSkin ? theme.pro_AddNoteBg : theme.personal_AddNoteBg;
+                    Color addNoteText = EditorGUIUtility.isProSkin ? theme.pro_AddNoteText : theme.personal_AddNoteText;
+                    EditorGUI.DrawRect(mockBtnRect, addNoteBg);
+                    var mockBtnStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = addNoteText }, fontSize = 9, fontStyle = FontStyle.Bold };
+                    GUI.Label(mockBtnRect, "+ Note", mockBtnStyle);
+
+                    // Mock import button inside note preview
+                    var mockImportRect = new Rect(mockBtnRect.xMax + 4, noteRect.y + 64, 22, 20);
+                    Color importNoteBg = EditorGUIUtility.isProSkin ? theme.pro_ImportNoteBg : theme.personal_ImportNoteBg;
+                    Color importNoteText = EditorGUIUtility.isProSkin ? theme.pro_ImportNoteText : theme.personal_ImportNoteText;
+                    EditorGUI.DrawRect(mockImportRect, importNoteBg);
+                    var mockImportStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = importNoteText }, fontSize = 10, fontStyle = FontStyle.Bold };
+                    GUI.Label(mockImportRect, "📥", mockImportStyle);
+
+                    // Mock delete button inside note preview
+                    var mockDelRect = new Rect(mockImportRect.xMax + 6, noteRect.y + 64, Mathf.Min(54, noteRect.width - mockImportRect.xMax - 14), 20);
+                    Color delBg = EditorGUIUtility.isProSkin ? theme.pro_DeleteBtnBg : theme.personal_DeleteBtnBg;
+                    Color delText = EditorGUIUtility.isProSkin ? theme.pro_DeleteBtnText : theme.personal_DeleteBtnText;
+                    EditorGUI.DrawRect(mockDelRect, delBg);
+                    var mockDelStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = delText }, fontSize = 9, fontStyle = FontStyle.Bold };
+                    GUI.Label(mockDelRect, $"{theme.deleteIcon} Delete", mockDelStyle);
+                }
+
+                // Draw mock floating tooltip inside preview
+                var tooltipMockRect = new Rect(previewRect.xMax - 116, previewRect.y + 4, 108, 18);
+                Color ttBg = EditorGUIUtility.isProSkin ? theme.pro_TooltipBg : theme.personal_TooltipBg;
+                Color ttBorder = EditorGUIUtility.isProSkin ? theme.pro_TooltipBorder : theme.personal_TooltipBorder;
+                Color ttText = EditorGUIUtility.isProSkin ? theme.pro_TooltipText : theme.personal_TooltipText;
+                EditorGUI.DrawRect(new Rect(tooltipMockRect.x + 1, tooltipMockRect.y + 1, tooltipMockRect.width, tooltipMockRect.height), new Color(0, 0, 0, 0.35f));
+                EditorGUI.DrawRect(tooltipMockRect, ttBg);
+                TBStyles.DrawBorderRect(tooltipMockRect, ttBorder, 1f);
+                var ttMockStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = ttText }, fontSize = 9 };
+                GUI.Label(tooltipMockRect, "💬 Themed Tooltip", ttMockStyle);
+
+                // Draw mock status bar inside preview
+                var mockStatusRect = new Rect(previewRect.x, previewRect.yMax - 18, previewRect.width, 18);
+                Color statusBg = EditorGUIUtility.isProSkin ? theme.pro_StatusBarBg : theme.personal_StatusBarBg;
+                Color statusTextCol = EditorGUIUtility.isProSkin ? theme.pro_StatusBarText : theme.personal_StatusBarText;
+                TBStyles.DrawGlassPanel(mockStatusRect, statusBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.06f) : new Color(1f, 1f, 1f, 0.30f), false);
+                var mockStatusStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleLeft, padding = new RectOffset(6, 6, 0, 0), normal = { textColor = statusTextCol }, fontSize = 9, richText = true };
+                GUI.Label(mockStatusRect, $" 1 card  •  {theme.completedIcon} 0 completed  •  1 column", mockStatusStyle);
+            }
+        }
+
+        private void DrawStylePriorityIcons(ThemeData theme)
+        {
+            if (!StyleSectionMatchesSearch("priority", "priorities", "low", "medium", "high", "urgent", "none")) return;
+
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                _styleSectionHasVisibleAttribute = false;
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("🚩 Priority Icons", EditorStyles.boldLabel);
+                    GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset Priority Icons", "Reset all priority icons (None, Low, Medium, High, Urgent) to their default symbols", GUI.skin.button, GUILayout.Width(135)))
+                    {
+                        theme.priorityIcons = new List<string>(ThemeData.DefaultPriorityIcons);
+                    }
+                }
+
+                EditorGUILayout.HelpBox("Configure the icon / symbol used for each priority level (supports emoji or plain text).", MessageType.None);
+                GUILayout.Space(4);
+
+                theme.priorityIcons ??= new List<string>();
+                while (theme.priorityIcons.Count < 5) theme.priorityIcons.Add("");
+
+                string[] priorityLabels = { "0: None (—)", "1: Low", "2: Medium", "3: High", "4: Urgent" };
+                string[] priorityTooltips = {
+                    "Icon/symbol displayed on task cards and filter dropdowns when priority is None (empty by default)",
+                    "Icon/symbol displayed on task cards and filter dropdowns when priority is set to Low (e.g. 🔵)",
+                    "Icon/symbol displayed on task cards and filter dropdowns when priority is set to Medium (e.g. 🟡)",
+                    "Icon/symbol displayed on task cards and filter dropdowns when priority is set to High (e.g. 🟠)",
+                    "Icon/symbol displayed on task cards and filter dropdowns when priority is set to Urgent (e.g. 🔴)"
+                };
+                for (int i = 0; i < 5; i++)
+                {
+                    if (!StyleOptionMatches(priorityLabels[i], priorityTooltips[i], theme.priorityIcons[i]))
+                    {
+                        continue;
+                    }
+
+                    _styleSectionHasVisibleAttribute = true;
+
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        ThemedTooltip.Label(priorityLabels[i], priorityTooltips[i], null, GUILayout.Width(110));
+                        theme.priorityIcons[i] = TBStyles.DrawThemedTextField(theme.priorityIcons[i], GUILayout.Width(100), GUILayout.Height(20));
+                        ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), priorityTooltips[i]);
+
+                        string preview = string.IsNullOrEmpty(theme.priorityIcons[i]) ? TBStyles.PriorityNames[i] : $"{theme.priorityIcons[i]} {TBStyles.PriorityNames[i]}";
+                        EditorGUILayout.LabelField($"Preview: {preview}", EditorStyles.miniBoldLabel);
+                    }
+                }
+
+                DrawNoStyleAttributeMatchesHint();
+            }
+        }
+
+        private void DrawStyleInterfaceIcons(ThemeData theme)
+        {
+            if (!StyleSectionMatchesSearch("icon", "icons", "interface", "status", "navigation", "header", "headers", "tab", "tabs", "board", "notes", "style", "theme", "category", "assignee", "priority", "pinned", "completed", "overdue", "due", "archive", "unarchive", "attachment", "link", "checklist", "save", "cancel", "delete", "move", "new")) return;
+
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                _styleSectionHasVisibleAttribute = false;
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("🏷 Interface & Status Icons", EditorStyles.boldLabel);
+                    GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset Interface Icons", "Reset all navigation tabs, headers, status indicators, and action icons to their default symbols", GUI.skin.button, GUILayout.Width(145)))
+                    {
+                        var def = ThemeData.CreateDefault();
+                        theme.boardTabIcon = def.boardTabIcon;
+                        theme.notesTabIcon = def.notesTabIcon;
+                        theme.styleTabIcon = def.styleTabIcon;
+                        theme.boardHeaderIcon = def.boardHeaderIcon;
+                        theme.notesHeaderIcon = def.notesHeaderIcon;
+                        theme.categoryIcon = def.categoryIcon;
+                        theme.assigneeIcon = def.assigneeIcon;
+                        theme.priorityFilterIcon = def.priorityFilterIcon;
+                        theme.parentLinkIcon = def.parentLinkIcon;
+                        theme.childLinkIcon = def.childLinkIcon;
+                        theme.pinnedNoteIcon = def.pinnedNoteIcon;
+                        theme.completedIcon = def.completedIcon;
+                        theme.overdueIcon = def.overdueIcon;
+                        theme.dueTodayIcon = def.dueTodayIcon;
+                        theme.dueSoonIcon = def.dueSoonIcon;
+                        theme.dueDateIcon = def.dueDateIcon;
+                        theme.archiveIcon = def.archiveIcon;
+                        theme.unarchiveIcon = def.unarchiveIcon;
+                        theme.cardDetailIcon = def.cardDetailIcon;
+                        theme.newCardIcon = def.newCardIcon;
+                        theme.checklistIcon = def.checklistIcon;
+                        theme.attachmentIcon = def.attachmentIcon;
+                        theme.urlIcon = def.urlIcon;
+                        theme.deleteIcon = def.deleteIcon;
+                        theme.saveIcon = def.saveIcon;
+                        theme.cancelIcon = def.cancelIcon;
+                        theme.moveUpIcon = def.moveUpIcon;
+                        theme.moveDownIcon = def.moveDownIcon;
+                    }
+                }
+
+                EditorGUILayout.HelpBox("Customize icons used across navigation tabs, headers, buttons, cards, status tags, dialogs, and archival actions.", MessageType.None);
+                GUILayout.Space(4);
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    using (new EditorGUILayout.VerticalScope())
+                    {
+                        theme.boardTabIcon = DrawIconRow("Board Tab Icon", theme.boardTabIcon, "Icon displayed on the main Task Board navigation tab at the top toolbar");
+                        theme.notesTabIcon = DrawIconRow("Notes Tab Icon", theme.notesTabIcon, "Icon displayed on the Notes workspace navigation tab at the top toolbar");
+                        theme.styleTabIcon = DrawIconRow("Style Tab Icon", theme.styleTabIcon, "Icon displayed on the Style / Theme customization navigation tab at the top toolbar");
+                        theme.boardHeaderIcon = DrawIconRow("Board Header Icon", theme.boardHeaderIcon, "Icon prefix displayed on task column header titles across the board");
+                        theme.notesHeaderIcon = DrawIconRow("Notes Header Icon", theme.notesHeaderIcon, "Icon prefix displayed on note section headers and note workspace titles");
+                        theme.pinnedNoteIcon = DrawIconRow("Pinned Note Icon", theme.pinnedNoteIcon, "Icon displayed on pinned notes and toggle pin buttons to indicate stickied priority notes");
+                        theme.completedIcon = DrawIconRow("Completed Icon", theme.completedIcon, "Icon prefix displayed on completed task cards and checklist items when finished");
+                        theme.overdueIcon = DrawIconRow("Overdue Icon", theme.overdueIcon, "Status indicator icon displayed on task cards when their due date has passed without completion");
+                        theme.dueTodayIcon = DrawIconRow("Due Today Icon", theme.dueTodayIcon, "Status indicator icon displayed on task cards when their due date is set to today");
+                        theme.dueSoonIcon = DrawIconRow("Due Soon Icon", theme.dueSoonIcon, "Status indicator icon displayed on task cards when their due date is approaching within the next 48 hours");
+                        theme.dueDateIcon = DrawIconRow("Due Date Icon", theme.dueDateIcon, "Icon prefix for due date picker labels, calendar badges, and timeline indicators");
+                        theme.cardDetailIcon = DrawIconRow("Card Details Icon", theme.cardDetailIcon, "Icon used for the card details inspector button and edit card actions");
+                        theme.newCardIcon = DrawIconRow("New Card Icon", theme.newCardIcon, "Icon displayed on buttons and menu items for creating a new task card");
+                        theme.checklistIcon = DrawIconRow("Checklist Icon", theme.checklistIcon, "Icon displayed on card checklist progress indicators and subtask sections");
+                    }
+
+                    GUILayout.Space(16);
+
+                    using (new EditorGUILayout.VerticalScope())
+                    {
+                        theme.categoryIcon = DrawIconRow("Category Icon", theme.categoryIcon, "Icon prefix for category filter dropdowns, category badges, and category management");
+                        theme.assigneeIcon = DrawIconRow("Assignee Icon", theme.assigneeIcon, "Icon prefix for assignee selector dropdowns, member lists, and assignment filters");
+                        theme.priorityFilterIcon = DrawIconRow("Priority Filter Icon", theme.priorityFilterIcon, "Icon prefix for the priority filter dropdown on the main board toolbar");
+                        theme.parentLinkIcon = DrawIconRow("Parent Link Icon", theme.parentLinkIcon, "Icon representing parent / ancestor relationships on linked hierarchical task cards");
+                        theme.childLinkIcon = DrawIconRow("Child Link Icon", theme.childLinkIcon, "Icon representing subtask or dependent child cards on linked task cards");
+                        theme.archiveIcon = DrawIconRow("Archive Icon", theme.archiveIcon, "Icon displayed on buttons and menu items for archiving completed or inactive cards");
+                        theme.unarchiveIcon = DrawIconRow("Unarchive Icon", theme.unarchiveIcon, "Icon displayed on buttons to restore or unarchive previously archived cards");
+                        theme.attachmentIcon = DrawIconRow("Attachment Icon", theme.attachmentIcon, "Icon prefix for file attachment buttons, screenshot lists, and attached asset files");
+                        theme.urlIcon = DrawIconRow("URL / Link Icon", theme.urlIcon, "Icon displayed on hyperlinks, external URL attachments, and reference links");
+                        theme.deleteIcon = DrawIconRow("Delete Icon", theme.deleteIcon, "Icon displayed on delete and remove buttons across columns, cards, notes, and tags");
+                        theme.saveIcon = DrawIconRow("Save Icon", theme.saveIcon, "Icon displayed on save, commit, and export action buttons");
+                        theme.cancelIcon = DrawIconRow("Cancel / Close Icon", theme.cancelIcon, "Icon displayed on cancel, close, and dismiss buttons across dialogs and popouts");
+                        theme.moveUpIcon = DrawIconRow("Move Up Icon", theme.moveUpIcon, "Icon displayed on buttons to reorder columns, checklist items, or notes upward");
+                        theme.moveDownIcon = DrawIconRow("Move Down Icon", theme.moveDownIcon, "Icon displayed on buttons to reorder columns, checklist items, or notes downward");
+                    }
+                }
+
+                DrawNoStyleAttributeMatchesHint();
+            }
+        }
+
+        private string DrawIconRow(string label, string currentVal, string tooltip = null)
+        {
+            if (!_styleSearchForceShowCurrentSection && !StyleOptionMatches(label, tooltip, currentVal))
+            {
+                return currentVal;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                _styleSectionHasVisibleAttribute = true;
+
+                if (!string.IsNullOrEmpty(tooltip))
+                {
+                    ThemedTooltip.Label(label, tooltip, null, GUILayout.Width(130));
+                }
+                else
+                {
+                    EditorGUILayout.LabelField(label, GUILayout.Width(130));
+                }
+
+                string newVal = TBStyles.DrawThemedTextField(currentVal ?? "", GUILayout.Width(60), GUILayout.Height(20));
+                if (!string.IsNullOrEmpty(tooltip))
+                {
+                    ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+                }
+
+                EditorGUILayout.LabelField($" {newVal}", EditorStyles.boldLabel, GUILayout.Width(35));
+                return newVal;
+            }
+        }
+
+        private void DrawStyleLabelColors(ThemeData theme)
+        {
+            if (!StyleSectionMatchesSearch("label", "labels", "card", "cards", "note", "notes", "category", "categories", "avatar", "avatars", "color", "colors")) return;
+
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                _styleSectionHasVisibleAttribute = false;
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("🏷 Card & Note Label Colors", EditorStyles.boldLabel);
+                    GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset Label Colors", "Reset all 17 card and note label category colors to their default palette", GUI.skin.button, GUILayout.Width(130)))
+                    {
+                        theme.labelColors = new List<Color>(ThemeData.DefaultLabelColors);
+                    }
+                }
+
+                EditorGUILayout.HelpBox("Customize the 17 color tags used for cards, quick notes, categories, and member avatars.", MessageType.None);
+                GUILayout.Space(4);
+
+                theme.labelColors ??= new List<Color>();
+                while (theme.labelColors.Count < TBStyles.LabelNames.Length)
+                {
+                    int idx = theme.labelColors.Count;
+                    theme.labelColors.Add(ThemeData.DefaultLabelColors[Mathf.Clamp(idx, 0, ThemeData.DefaultLabelColors.Length - 1)]);
+                }
+
+                int half = Mathf.CeilToInt(TBStyles.LabelNames.Length / 2f);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    using (new EditorGUILayout.VerticalScope())
+                    {
+                        for (int i = 0; i < half; i++)
+                        {
+                            DrawColorSwatchRow(i, theme);
+                        }
+                    }
+
+                    GUILayout.Space(16);
+
+                    using (new EditorGUILayout.VerticalScope())
+                    {
+                        for (int i = half; i < TBStyles.LabelNames.Length; i++)
+                        {
+                            DrawColorSwatchRow(i, theme);
+                        }
+                    }
+                }
+
+                DrawNoStyleAttributeMatchesHint();
+            }
+        }
+
+        private void DrawColorSwatchRow(int index, ThemeData theme)
+        {
+            string labelName = (index >= 0 && index < TBStyles.LabelNames.Length) ? TBStyles.LabelNames[index] : $"Color {index}";
+            string tooltip = $"Customize tag color [{index}] ({labelName}), used for card color strips, note highlights, category tags, and member avatar borders";
+            if (!_styleSearchForceShowCurrentSection && !StyleOptionMatches($"[{index}] {labelName}", tooltip))
+            {
+                return;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                _styleSectionHasVisibleAttribute = true;
+
+                ThemedTooltip.Label($"[{index}] {labelName}", tooltip, null, GUILayout.Width(120));
+                theme.labelColors[index] = EditorGUILayout.ColorField(GUIContent.none, theme.labelColors[index], false, true, false, GUILayout.Width(65));
+                ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+
+                var swatchRect = GUILayoutUtility.GetRect(24, 18, GUILayout.Width(24));
+                EditorGUI.DrawRect(swatchRect, theme.labelColors[index]);
+                ThemedTooltip.SetTooltip(swatchRect, tooltip);
+            }
+        }
+
+        private Color DrawThemeColorOption(string label, Color current, string tooltip, float labelWidth, float fieldWidth)
+        {
+            if (!_styleSearchForceShowCurrentSection && !StyleOptionMatches(label, tooltip))
+            {
+                return current;
+            }
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                _styleSectionHasVisibleAttribute = true;
+
+                ThemedTooltip.Label(label, tooltip, null, GUILayout.Width(labelWidth));
+                current = EditorGUILayout.ColorField(GUIContent.none, current, false, true, false, GUILayout.Width(fieldWidth));
+                ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+            }
+
+            return current;
+        }
+
+        private static string BuildThemeOptionTooltip(string skinMode, string optionDescription)
+        {
+            return $"{skinMode}: {optionDescription}";
+        }
+
+        private void DrawNoStyleAttributeMatchesHint()
+        {
+            if (!string.IsNullOrWhiteSpace(_styleSearchFilter) && !_styleSectionHasVisibleAttribute)
+            {
+                EditorGUILayout.HelpBox("No attribute matches in this section.", MessageType.None);
+            }
+        }
+
+        private static string NormalizeStyleSearchText(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            var sb = new StringBuilder(value.Length);
+            foreach (char c in value)
+            {
+                if (!char.IsWhiteSpace(c))
+                {
+                    sb.Append(char.ToLowerInvariant(c));
+                }
+            }
+
+            return sb.ToString();
+        }
+
+        private static bool StyleSearchCandidateMatches(string candidate, string normalizedFilter, string[] normalizedTerms)
+        {
+            if (string.IsNullOrWhiteSpace(candidate))
+            {
+                return false;
+            }
+
+            string normalizedCandidate = NormalizeStyleSearchText(candidate);
+            if (normalizedCandidate.Contains(normalizedFilter))
+            {
+                return true;
+            }
+
+            for (int i = 0; i < normalizedTerms.Length; i++)
+            {
+                if (!normalizedCandidate.Contains(normalizedTerms[i]))
+                {
+                    return false;
+                }
+            }
+
+            return normalizedTerms.Length > 1;
+        }
+
+        private bool StyleSectionMatchesSearch(params string[] keywords)
+        {
+            if (string.IsNullOrWhiteSpace(_styleSearchFilter))
+            {
+                return true;
+            }
+
+            if (keywords == null)
+            {
+                return true;
+            }
+
+            string filter = _styleSearchFilter.Trim();
+            string normalizedFilter = NormalizeStyleSearchText(filter);
+            string[] normalizedTerms = Regex.Split(filter, @"\s+")
+                .Select(NormalizeStyleSearchText)
+                .Where(term => term.Length > 0)
+                .ToArray();
+
+            // Also match against the section keyword set as a whole.
+            string combinedKeywords = string.Join(" ", keywords.Where(k => !string.IsNullOrWhiteSpace(k)));
+            if (StyleSearchCandidateMatches(combinedKeywords, normalizedFilter, normalizedTerms))
+            {
+                return true;
+            }
+
+            foreach (string keyword in keywords)
+            {
+                if (StyleSearchCandidateMatches(keyword, normalizedFilter, normalizedTerms))
+                {
+                    return true;
+                }
+            }
+
+            // Do not hide sections on keyword-list misses.
+            // Row-level filtering is more precise and still narrows the actual attributes.
+            return true;
+        }
+
+        private bool StyleOptionMatches(string label, string tooltip = null, params string[] extraTerms)
+        {
+            if (string.IsNullOrWhiteSpace(_styleSearchFilter))
+            {
+                return true;
+            }
+
+            string filter = _styleSearchFilter.Trim();
+            string normalizedFilter = NormalizeStyleSearchText(filter);
+            string[] normalizedTerms = Regex.Split(filter, @"\s+")
+                .Select(NormalizeStyleSearchText)
+                .Where(term => term.Length > 0)
+                .ToArray();
+
+            bool Matches(string value)
+            {
+                return StyleSearchCandidateMatches(value, normalizedFilter, normalizedTerms);
+            }
+
+            if (Matches(label) || Matches(tooltip))
+            {
+                return true;
+            }
+
+            if (extraTerms != null)
+            {
+                foreach (string term in extraTerms)
+                {
+                    if (Matches(term))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private void DrawStyleBoardAndAccentColors(ThemeData theme)
+        {
+            if (!StyleSectionMatchesSearch("board", "notes", "button", "buttons", "ui", "tab", "tabs", "dropdown", "filter", "background", "backgrounds", "bg", "sidebar", "topbar", "statusbar", "dialog", "popup", "title", "text", "tasks", "task", "completed", "due", "colors", "color", "card", "cards", "column", "columns", "details", "status", "tooltip", "hover", "add", "plus", "+", "new", "delete", "save", "cancel", "move", "import", "export", "check", "checklist", "checkbox", "tick", "tickbox", "ticks", "checkmark")) return;
+
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                _styleSectionHasVisibleAttribute = false;
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    EditorGUILayout.LabelField("🎨 Board, Notes, Buttons & UI Colors", EditorStyles.boldLabel, GUILayout.Width(250));
+                    GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset All Theme Colors", "Reset all workspace and element colors to the default palette values", GUI.skin.button, GUILayout.Width(160)))
+                    {
+                        var def = ThemeData.CreateDefault();
+                        theme.tabActive = def.tabActive;
+                        theme.noteSelectedAccent = def.noteSelectedAccent;
+                        theme.linkColor = def.linkColor;
+
+                        theme.pro_BoardHeader = def.pro_BoardHeader;
+                        theme.pro_ColumnHeader = def.pro_ColumnHeader;
+                        theme.pro_CardTitle = def.pro_CardTitle;
+                        theme.pro_CardText = def.pro_CardText;
+                        theme.pro_SectionLabel = def.pro_SectionLabel;
+                        theme.pro_BoardBg = def.pro_BoardBg;
+                        theme.pro_TopBarBg = def.pro_TopBarBg;
+                        theme.pro_StatusBarBg = def.pro_StatusBarBg;
+                        theme.pro_StatusBarText = def.pro_StatusBarText;
+                        theme.pro_NoteSidebarBg = def.pro_NoteSidebarBg;
+                        theme.pro_NoteEditorBg = def.pro_NoteEditorBg;
+                        theme.pro_NotePopoutBg = def.pro_NotePopoutBg;
+                        theme.pro_NoteInputBg = def.pro_NoteInputBg;
+                        theme.pro_NoteInputText = def.pro_NoteInputText;
+                        theme.pro_NoteTitle = def.pro_NoteTitle;
+                        theme.pro_CardDetailBg = def.pro_CardDetailBg;
+                        theme.pro_ButtonBg = def.pro_ButtonBg;
+                        theme.pro_ButtonText = def.pro_ButtonText;
+                        theme.pro_ButtonHoverBg = def.pro_ButtonHoverBg;
+                        theme.pro_ButtonHoverText = def.pro_ButtonHoverText;
+                        theme.pro_DropdownBg = def.pro_DropdownBg;
+                        theme.pro_DropdownText = def.pro_DropdownText;
+                        theme.pro_DropdownHoverBg = def.pro_DropdownHoverBg;
+                        theme.pro_DropdownHoverText = def.pro_DropdownHoverText;
+                        theme.pro_DropdownMenuBg = def.pro_DropdownMenuBg;
+                        theme.pro_DropdownMenuText = def.pro_DropdownMenuText;
+                        theme.pro_DropdownMenuHoverBg = def.pro_DropdownMenuHoverBg;
+                        theme.pro_DropdownMenuHoverText = def.pro_DropdownMenuHoverText;
+                        theme.pro_PopupBg = def.pro_PopupBg;
+                        theme.pro_DeleteBtnBg = def.pro_DeleteBtnBg;
+                        theme.pro_DeleteBtnText = def.pro_DeleteBtnText;
+                        theme.pro_DeleteBtnHoverBg = def.pro_DeleteBtnHoverBg;
+                        theme.pro_HeaderTabActiveBg = def.pro_HeaderTabActiveBg;
+                        theme.pro_HeaderTabActiveText = def.pro_HeaderTabActiveText;
+                        theme.pro_HeaderTabInactiveBg = def.pro_HeaderTabInactiveBg;
+                        theme.pro_HeaderTabInactiveText = def.pro_HeaderTabInactiveText;
+                        theme.pro_HeaderTabHoverBg = def.pro_HeaderTabHoverBg;
+                        theme.pro_AddCardBg = def.pro_AddCardBg;
+                        theme.pro_AddCardText = def.pro_AddCardText;
+                        theme.pro_AddCardHoverBg = def.pro_AddCardHoverBg;
+                        theme.pro_NoteCardBg = def.pro_NoteCardBg;
+                        theme.pro_NoteCardSelectedBg = def.pro_NoteCardSelectedBg;
+                        theme.pro_NoteCardHoverBg = def.pro_NoteCardHoverBg;
+                        theme.pro_NoteActionBg = def.pro_NoteActionBg;
+                        theme.pro_NoteActionText = def.pro_NoteActionText;
+                        theme.pro_NoteActionHoverBg = def.pro_NoteActionHoverBg;
+                        theme.pro_NoteActionHoverText = def.pro_NoteActionHoverText;
+                        theme.pro_AddNoteBg = def.pro_AddNoteBg;
+                        theme.pro_AddNoteText = def.pro_AddNoteText;
+                        theme.pro_AddNoteHoverBg = def.pro_AddNoteHoverBg;
+                        theme.pro_AddNoteHoverText = def.pro_AddNoteHoverText;
+                        theme.pro_ImportNoteBg = def.pro_ImportNoteBg;
+                        theme.pro_ImportNoteText = def.pro_ImportNoteText;
+                        theme.pro_ImportNoteHoverBg = def.pro_ImportNoteHoverBg;
+                        theme.pro_ImportNoteHoverText = def.pro_ImportNoteHoverText;
+                        theme.pro_NoteFolderText = def.pro_NoteFolderText;
+                        theme.pro_CardDetailsText = def.pro_CardDetailsText;
+                        theme.pro_CardTasksText = def.pro_CardTasksText;
+                        theme.pro_CardCategoryTag = def.pro_CardCategoryTag;
+                        theme.pro_AssigneeAvatarBg = def.pro_AssigneeAvatarBg;
+                        theme.pro_ChecklistTickBg = def.pro_ChecklistTickBg;
+                        theme.pro_ChecklistTickCheckedBg = def.pro_ChecklistTickCheckedBg;
+                        theme.pro_ChecklistTickBorder = def.pro_ChecklistTickBorder;
+                        theme.pro_ChecklistTickColor = def.pro_ChecklistTickColor;
+                        theme.pro_StatusOverdue = def.pro_StatusOverdue;
+                        theme.pro_StatusDueToday = def.pro_StatusDueToday;
+                        theme.pro_StatusDueSoon = def.pro_StatusDueSoon;
+                        theme.pro_StatusCompleted = def.pro_StatusCompleted;
+                        theme.pro_TasksCompletedCount = def.pro_TasksCompletedCount;
+                        theme.pro_TooltipBg = def.pro_TooltipBg;
+                        theme.pro_TooltipText = def.pro_TooltipText;
+                        theme.pro_TooltipBorder = def.pro_TooltipBorder;
+                        theme.pro_ColumnBg = def.pro_ColumnBg;
+                        theme.pro_ColumnBgAlt = def.pro_ColumnBgAlt;
+                        theme.pro_CardBg = def.pro_CardBg;
+                        theme.pro_CardHighlighted = def.pro_CardHighlighted;
+
+                        theme.personal_BoardHeader = def.personal_BoardHeader;
+                        theme.personal_ColumnHeader = def.personal_ColumnHeader;
+                        theme.personal_CardTitle = def.personal_CardTitle;
+                        theme.personal_CardText = def.personal_CardText;
+                        theme.personal_SectionLabel = def.personal_SectionLabel;
+                        theme.personal_BoardBg = def.personal_BoardBg;
+                        theme.personal_TopBarBg = def.personal_TopBarBg;
+                        theme.personal_StatusBarBg = def.personal_StatusBarBg;
+                        theme.personal_StatusBarText = def.personal_StatusBarText;
+                        theme.personal_NoteSidebarBg = def.personal_NoteSidebarBg;
+                        theme.personal_NoteEditorBg = def.personal_NoteEditorBg;
+                        theme.personal_NotePopoutBg = def.personal_NotePopoutBg;
+                        theme.personal_NoteInputBg = def.personal_NoteInputBg;
+                        theme.personal_NoteInputText = def.personal_NoteInputText;
+                        theme.personal_NoteTitle = def.personal_NoteTitle;
+                        theme.personal_CardDetailBg = def.personal_CardDetailBg;
+                        theme.personal_ButtonBg = def.personal_ButtonBg;
+                        theme.personal_ButtonText = def.personal_ButtonText;
+                        theme.personal_ButtonHoverBg = def.personal_ButtonHoverBg;
+                        theme.personal_ButtonHoverText = def.personal_ButtonHoverText;
+                        theme.personal_DropdownBg = def.personal_DropdownBg;
+                        theme.personal_DropdownText = def.personal_DropdownText;
+                        theme.personal_DropdownHoverBg = def.personal_DropdownHoverBg;
+                        theme.personal_DropdownHoverText = def.personal_DropdownHoverText;
+                        theme.personal_DropdownMenuBg = def.personal_DropdownMenuBg;
+                        theme.personal_DropdownMenuText = def.personal_DropdownMenuText;
+                        theme.personal_DropdownMenuHoverBg = def.personal_DropdownMenuHoverBg;
+                        theme.personal_DropdownMenuHoverText = def.personal_DropdownMenuHoverText;
+                        theme.personal_PopupBg = def.personal_PopupBg;
+                        theme.personal_DeleteBtnBg = def.personal_DeleteBtnBg;
+                        theme.personal_DeleteBtnText = def.personal_DeleteBtnText;
+                        theme.personal_DeleteBtnHoverBg = def.personal_DeleteBtnHoverBg;
+                        theme.personal_HeaderTabActiveBg = def.personal_HeaderTabActiveBg;
+                        theme.personal_HeaderTabActiveText = def.personal_HeaderTabActiveText;
+                        theme.personal_HeaderTabInactiveBg = def.personal_HeaderTabInactiveBg;
+                        theme.personal_HeaderTabInactiveText = def.personal_HeaderTabInactiveText;
+                        theme.personal_HeaderTabHoverBg = def.personal_HeaderTabHoverBg;
+                        theme.personal_AddCardBg = def.personal_AddCardBg;
+                        theme.personal_AddCardText = def.personal_AddCardText;
+                        theme.personal_AddCardHoverBg = def.personal_AddCardHoverBg;
+                        theme.personal_NoteCardBg = def.personal_NoteCardBg;
+                        theme.personal_NoteCardSelectedBg = def.personal_NoteCardSelectedBg;
+                        theme.personal_NoteCardHoverBg = def.personal_NoteCardHoverBg;
+                        theme.personal_NoteActionBg = def.personal_NoteActionBg;
+                        theme.personal_NoteActionText = def.personal_NoteActionText;
+                        theme.personal_NoteActionHoverBg = def.personal_NoteActionHoverBg;
+                        theme.personal_NoteActionHoverText = def.personal_NoteActionHoverText;
+                        theme.personal_AddNoteBg = def.personal_AddNoteBg;
+                        theme.personal_AddNoteText = def.personal_AddNoteText;
+                        theme.personal_AddNoteHoverBg = def.personal_AddNoteHoverBg;
+                        theme.personal_AddNoteHoverText = def.personal_AddNoteHoverText;
+                        theme.personal_ImportNoteBg = def.personal_ImportNoteBg;
+                        theme.personal_ImportNoteText = def.personal_ImportNoteText;
+                        theme.personal_ImportNoteHoverBg = def.personal_ImportNoteHoverBg;
+                        theme.personal_ImportNoteHoverText = def.personal_ImportNoteHoverText;
+                        theme.personal_NoteFolderText = def.personal_NoteFolderText;
+                        theme.personal_CardDetailsText = def.personal_CardDetailsText;
+                        theme.personal_CardTasksText = def.personal_CardTasksText;
+                        theme.personal_CardCategoryTag = def.personal_CardCategoryTag;
+                        theme.personal_AssigneeAvatarBg = def.personal_AssigneeAvatarBg;
+                        theme.personal_ChecklistTickBg = def.personal_ChecklistTickBg;
+                        theme.personal_ChecklistTickCheckedBg = def.personal_ChecklistTickCheckedBg;
+                        theme.personal_ChecklistTickBorder = def.personal_ChecklistTickBorder;
+                        theme.personal_ChecklistTickColor = def.personal_ChecklistTickColor;
+                        theme.personal_StatusOverdue = def.personal_StatusOverdue;
+                        theme.personal_StatusDueToday = def.personal_StatusDueToday;
+                        theme.personal_StatusDueSoon = def.personal_StatusDueSoon;
+                        theme.personal_StatusCompleted = def.personal_StatusCompleted;
+                        theme.personal_TasksCompletedCount = def.personal_TasksCompletedCount;
+                        theme.personal_TooltipBg = def.personal_TooltipBg;
+                        theme.personal_TooltipText = def.personal_TooltipText;
+                        theme.personal_TooltipBorder = def.personal_TooltipBorder;
+                        theme.personal_ColumnBg = def.personal_ColumnBg;
+                        theme.personal_ColumnBgAlt = def.personal_ColumnBgAlt;
+                        theme.personal_CardBg = def.personal_CardBg;
+                        theme.personal_CardHighlighted = def.personal_CardHighlighted;
+                        theme.checklistTickStyle = def.checklistTickStyle;
+                        theme.customChecklistTickChar = def.customChecklistTickChar;
+                    }
+                }
+
+                EditorGUILayout.HelpBox("Configure tab header buttons, standard buttons, dropdowns, add card buttons, notes backgrounds & cards, card details, and workspace tones.", MessageType.None);
+                GUILayout.Space(4);
+
+                string darkMode = "Dark mode (Pro Skin)";
+                string lightMode = "Light mode (Personal Skin)";
+
+                EditorGUILayout.LabelField("Accent & Global Colors", EditorStyles.boldLabel);
+                theme.tabActive = DrawThemeColorOption("Active Tab Highlight", theme.tabActive, BuildThemeOptionTooltip("Global", "Color used to highlight the currently selected top navigation tab"), 160f, 70f);
+                theme.noteSelectedAccent = DrawThemeColorOption("Note Selection Accent", theme.noteSelectedAccent, BuildThemeOptionTooltip("Global", "Accent strip color used for the selected note card and note preview marker"), 160f, 70f);
+                theme.linkColor = DrawThemeColorOption("Link / Reference Text", theme.linkColor, BuildThemeOptionTooltip("Global", "Text color used for clickable links and reference URLs"), 160f, 70f);
+
+                GUILayout.Space(8);
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    // Dark Theme (Unity Pro Skin)
+                    using (new EditorGUILayout.VerticalScope("box"))
+                    {
+                        EditorGUILayout.LabelField("Dark Mode (Pro Skin)", EditorStyles.boldLabel);
+                        GUILayout.Space(2);
+
+                        // Header / Tabs
+                        EditorGUILayout.LabelField("Top Header & Tabs", EditorStyles.miniBoldLabel);
+                        theme.pro_HeaderTabActiveBg = DrawThemeColorOption("Tab Active Background", theme.pro_HeaderTabActiveBg, BuildThemeOptionTooltip(darkMode, "Background color of the active top tab"), 140f, 60f);
+                        theme.pro_HeaderTabActiveText = DrawThemeColorOption("Tab Active Text", theme.pro_HeaderTabActiveText, BuildThemeOptionTooltip(darkMode, "Text color of the active top tab"), 140f, 60f);
+                        theme.pro_HeaderTabInactiveBg = DrawThemeColorOption("Tab Inactive Background", theme.pro_HeaderTabInactiveBg, BuildThemeOptionTooltip(darkMode, "Background color of inactive top tabs"), 140f, 60f);
+                        theme.pro_HeaderTabInactiveText = DrawThemeColorOption("Tab Inactive Text", theme.pro_HeaderTabInactiveText, BuildThemeOptionTooltip(darkMode, "Text color of inactive top tabs"), 140f, 60f);
+                        theme.pro_HeaderTabHoverBg = DrawThemeColorOption("Tab Hover Background", theme.pro_HeaderTabHoverBg, BuildThemeOptionTooltip(darkMode, "Background color shown when hovering top tabs"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Buttons & Hover
+                        EditorGUILayout.LabelField("Buttons & Hover", EditorStyles.miniBoldLabel);
+                        theme.pro_ButtonBg = DrawThemeColorOption("Button Background", theme.pro_ButtonBg, BuildThemeOptionTooltip(darkMode, "Background color for standard buttons"), 140f, 60f);
+                        theme.pro_ButtonText = DrawThemeColorOption("Button Text Color", theme.pro_ButtonText, BuildThemeOptionTooltip(darkMode, "Text color for standard buttons"), 140f, 60f);
+                        theme.pro_ButtonHoverBg = DrawThemeColorOption("Button Hover Background", theme.pro_ButtonHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when standard buttons are hovered"), 140f, 60f);
+                        theme.pro_ButtonHoverText = DrawThemeColorOption("Button Hover Text", theme.pro_ButtonHoverText, BuildThemeOptionTooltip(darkMode, "Text color when standard buttons are hovered"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Dropdowns & Hover
+                        EditorGUILayout.LabelField("Dropdowns & Hover", EditorStyles.miniBoldLabel);
+                        theme.pro_DropdownBg = DrawThemeColorOption("Dropdown Background", theme.pro_DropdownBg, BuildThemeOptionTooltip(darkMode, "Background color of closed dropdown controls"), 140f, 60f);
+                        theme.pro_DropdownText = DrawThemeColorOption("Dropdown Text Color", theme.pro_DropdownText, BuildThemeOptionTooltip(darkMode, "Text color of closed dropdown controls"), 140f, 60f);
+                        theme.pro_DropdownHoverBg = DrawThemeColorOption("Dropdown Hover Bg", theme.pro_DropdownHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering dropdown controls"), 140f, 60f);
+                        theme.pro_DropdownHoverText = DrawThemeColorOption("Dropdown Hover Text", theme.pro_DropdownHoverText, BuildThemeOptionTooltip(darkMode, "Text color when hovering dropdown controls"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Dropdown Menu (Options Popup)
+                        EditorGUILayout.LabelField("Dropdown Menu (Options List)", EditorStyles.miniBoldLabel);
+                        theme.pro_DropdownMenuBg = DrawThemeColorOption("Menu Background", theme.pro_DropdownMenuBg, BuildThemeOptionTooltip(darkMode, "Background color of the opened dropdown option list"), 140f, 60f);
+                        theme.pro_DropdownMenuText = DrawThemeColorOption("Menu Text Color", theme.pro_DropdownMenuText, BuildThemeOptionTooltip(darkMode, "Text color of options in opened dropdown menus"), 140f, 60f);
+                        theme.pro_DropdownMenuHoverBg = DrawThemeColorOption("Menu Hover / Select Bg", theme.pro_DropdownMenuHoverBg, BuildThemeOptionTooltip(darkMode, "Background color of hovered or selected dropdown options"), 140f, 60f);
+                        theme.pro_DropdownMenuHoverText = DrawThemeColorOption("Menu Hover / Select Text", theme.pro_DropdownMenuHoverText, BuildThemeOptionTooltip(darkMode, "Text color of hovered or selected dropdown options"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Delete Buttons & Actions
+                        EditorGUILayout.LabelField("Delete Buttons & Actions", EditorStyles.miniBoldLabel);
+                        theme.pro_DeleteBtnBg = DrawThemeColorOption("Delete Button Background", theme.pro_DeleteBtnBg, BuildThemeOptionTooltip(darkMode, "Background color for delete and destructive action buttons"), 140f, 60f);
+                        theme.pro_DeleteBtnText = DrawThemeColorOption("Delete Button Text Color", theme.pro_DeleteBtnText, BuildThemeOptionTooltip(darkMode, "Text color for delete and destructive action buttons"), 140f, 60f);
+                        theme.pro_DeleteBtnHoverBg = DrawThemeColorOption("Delete Button Hover Bg", theme.pro_DeleteBtnHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering delete buttons"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Add Card Button
+                        EditorGUILayout.LabelField("Add Card Button", EditorStyles.miniBoldLabel);
+                        theme.pro_AddCardBg = DrawThemeColorOption("Add Card Background", theme.pro_AddCardBg, BuildThemeOptionTooltip(darkMode, "Background color for the '+ Add Card' button in columns"), 140f, 60f);
+                        theme.pro_AddCardText = DrawThemeColorOption("Add Card Text Color", theme.pro_AddCardText, BuildThemeOptionTooltip(darkMode, "Text color for the '+ Add Card' button"), 140f, 60f);
+                        theme.pro_AddCardHoverBg = DrawThemeColorOption("Add Card Hover Bg", theme.pro_AddCardHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering the '+ Add Card' button"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Notes View Backgrounds & Cards
+                        EditorGUILayout.LabelField("Notes View & Cards", EditorStyles.miniBoldLabel);
+                        theme.pro_NoteSidebarBg = DrawThemeColorOption("Note Sidebar Bg", theme.pro_NoteSidebarBg, BuildThemeOptionTooltip(darkMode, "Background color of the note list sidebar"), 140f, 60f);
+                        theme.pro_NoteEditorBg = DrawThemeColorOption("Note Editor Bg", theme.pro_NoteEditorBg, BuildThemeOptionTooltip(darkMode, "Background color of the note editor panel"), 140f, 60f);
+                        theme.pro_NotePopoutBg = DrawThemeColorOption("Note Popout Bg", theme.pro_NotePopoutBg, BuildThemeOptionTooltip(darkMode, "Background color of detached or popout note windows"), 140f, 60f);
+                        theme.pro_NoteInputBg = DrawThemeColorOption("Note Text Input Bg", theme.pro_NoteInputBg, BuildThemeOptionTooltip(darkMode, "Background color of note text input fields"), 140f, 60f);
+                        theme.pro_NoteInputText = DrawThemeColorOption("Note Text Color", theme.pro_NoteInputText, BuildThemeOptionTooltip(darkMode, "Text color used inside note input fields"), 140f, 60f);
+                        theme.pro_NoteTitle = DrawThemeColorOption("Note Title Text", theme.pro_NoteTitle, BuildThemeOptionTooltip(darkMode, "Text color of note titles"), 140f, 60f);
+                        theme.pro_NoteCardBg = DrawThemeColorOption("Note Card Background", theme.pro_NoteCardBg, BuildThemeOptionTooltip(darkMode, "Background color of note list cards"), 140f, 60f);
+                        theme.pro_NoteCardSelectedBg = DrawThemeColorOption("Note Card Selected", theme.pro_NoteCardSelectedBg, BuildThemeOptionTooltip(darkMode, "Background color of the selected note card"), 140f, 60f);
+                        theme.pro_NoteCardHoverBg = DrawThemeColorOption("Note Card Hover", theme.pro_NoteCardHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering note cards"), 140f, 60f);
+                        theme.pro_NoteActionBg = DrawThemeColorOption("Note Action Button Bg", theme.pro_NoteActionBg, BuildThemeOptionTooltip(darkMode, "Background color of action buttons in notes"), 140f, 60f);
+                        theme.pro_NoteActionText = DrawThemeColorOption("Note Action Text Color", theme.pro_NoteActionText, BuildThemeOptionTooltip(darkMode, "Text color of action buttons in notes"), 140f, 60f);
+                        theme.pro_NoteActionHoverBg = DrawThemeColorOption("Note Action Hover Bg", theme.pro_NoteActionHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering note action buttons"), 140f, 60f);
+                        theme.pro_NoteActionHoverText = DrawThemeColorOption("Note Action Hover Text", theme.pro_NoteActionHoverText, BuildThemeOptionTooltip(darkMode, "Text color when hovering note action buttons"), 140f, 60f);
+                        theme.pro_NoteFolderText = DrawThemeColorOption("Note Folders Text", theme.pro_NoteFolderText, BuildThemeOptionTooltip(darkMode, "Text color of note folder names"), 140f, 60f);
+                        theme.pro_AddNoteBg = DrawThemeColorOption("+ Note Button Bg", theme.pro_AddNoteBg, BuildThemeOptionTooltip(darkMode, "Background color of the add note button"), 140f, 60f);
+                        theme.pro_AddNoteText = DrawThemeColorOption("+ Note Text Color", theme.pro_AddNoteText, BuildThemeOptionTooltip(darkMode, "Text color of the add note button"), 140f, 60f);
+                        theme.pro_AddNoteHoverBg = DrawThemeColorOption("+ Note Hover Bg", theme.pro_AddNoteHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering the add note button"), 140f, 60f);
+                        theme.pro_AddNoteHoverText = DrawThemeColorOption("+ Note Hover Text", theme.pro_AddNoteHoverText, BuildThemeOptionTooltip(darkMode, "Text color when hovering the add note button"), 140f, 60f);
+                        theme.pro_ImportNoteBg = DrawThemeColorOption("Import Note Button Bg", theme.pro_ImportNoteBg, BuildThemeOptionTooltip(darkMode, "Background color of the note import button"), 140f, 60f);
+                        theme.pro_ImportNoteText = DrawThemeColorOption("Import Note Text Color", theme.pro_ImportNoteText, BuildThemeOptionTooltip(darkMode, "Text color of the note import button"), 140f, 60f);
+                        theme.pro_ImportNoteHoverBg = DrawThemeColorOption("Import Note Hover Bg", theme.pro_ImportNoteHoverBg, BuildThemeOptionTooltip(darkMode, "Background color when hovering the note import button"), 140f, 60f);
+                        theme.pro_ImportNoteHoverText = DrawThemeColorOption("Import Note Hover Text", theme.pro_ImportNoteHoverText, BuildThemeOptionTooltip(darkMode, "Text color when hovering the note import button"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Card Details & Board
+                        EditorGUILayout.LabelField("Board, Columns, Popups & Details", EditorStyles.miniBoldLabel);
+                        theme.pro_PopupBg = DrawThemeColorOption("Popup Dialog Bg", theme.pro_PopupBg, BuildThemeOptionTooltip(darkMode, "Background color of popup dialogs and context windows"), 140f, 60f);
+                        theme.pro_CardDetailBg = DrawThemeColorOption("Card Details Bg", theme.pro_CardDetailBg, BuildThemeOptionTooltip(darkMode, "Background color of the card details panel"), 140f, 60f);
+                        theme.pro_BoardBg = DrawThemeColorOption("Board Background", theme.pro_BoardBg, BuildThemeOptionTooltip(darkMode, "Background color of the task board canvas"), 140f, 60f);
+                        theme.pro_TopBarBg = DrawThemeColorOption("Top Bar Background", theme.pro_TopBarBg, BuildThemeOptionTooltip(darkMode, "Background color of the top toolbar"), 140f, 60f);
+                        theme.pro_StatusBarBg = DrawThemeColorOption("Status Bar Background", theme.pro_StatusBarBg, BuildThemeOptionTooltip(darkMode, "Background color of the bottom status bar"), 140f, 60f);
+                        theme.pro_StatusBarText = DrawThemeColorOption("Status Bar Text", theme.pro_StatusBarText, BuildThemeOptionTooltip(darkMode, "Text color of the bottom status bar"), 140f, 60f);
+                        theme.pro_BoardHeader = DrawThemeColorOption("Board Header Text", theme.pro_BoardHeader, BuildThemeOptionTooltip(darkMode, "Text color of board-level headers"), 140f, 60f);
+                        theme.pro_ColumnHeader = DrawThemeColorOption("Column Header Text", theme.pro_ColumnHeader, BuildThemeOptionTooltip(darkMode, "Text color of column headers"), 140f, 60f);
+                        theme.pro_CardTitle = DrawThemeColorOption("Card Title Text", theme.pro_CardTitle, BuildThemeOptionTooltip(darkMode, "Text color of card titles"), 140f, 60f);
+                        theme.pro_CardText = DrawThemeColorOption("Card Text / Badges", theme.pro_CardText, BuildThemeOptionTooltip(darkMode, "Text color of card body text and badge labels"), 140f, 60f);
+                        theme.pro_CardDetailsText = DrawThemeColorOption("Card Details Text", theme.pro_CardDetailsText, BuildThemeOptionTooltip(darkMode, "Text color in the card details view"), 140f, 60f);
+                        theme.pro_CardTasksText = DrawThemeColorOption("Card Tasks Text", theme.pro_CardTasksText, BuildThemeOptionTooltip(darkMode, "Text color of checklist and task list content"), 140f, 60f);
+                        theme.pro_CardCategoryTag = DrawThemeColorOption("Card Category Tag", theme.pro_CardCategoryTag, BuildThemeOptionTooltip(darkMode, "Text color of category tags shown on cards"), 140f, 60f);
+                        theme.pro_AssigneeAvatarBg = DrawThemeColorOption("Assignee Picture Bg", theme.pro_AssigneeAvatarBg, BuildThemeOptionTooltip(darkMode, "Background color behind member avatar pictures"), 140f, 60f);
+                        theme.pro_StatusOverdue = DrawThemeColorOption("Status Overdue", theme.pro_StatusOverdue, BuildThemeOptionTooltip(darkMode, "Text/accent color for overdue status indicators"), 140f, 60f);
+                        theme.pro_StatusDueToday = DrawThemeColorOption("Status Due Today", theme.pro_StatusDueToday, BuildThemeOptionTooltip(darkMode, "Text/accent color for due-today status indicators"), 140f, 60f);
+                        theme.pro_StatusDueSoon = DrawThemeColorOption("Status Due Soon", theme.pro_StatusDueSoon, BuildThemeOptionTooltip(darkMode, "Text/accent color for due-soon status indicators"), 140f, 60f);
+                        theme.pro_StatusCompleted = DrawThemeColorOption("Status Completed", theme.pro_StatusCompleted, BuildThemeOptionTooltip(darkMode, "Text/accent color for completed status indicators"), 140f, 60f);
+                        theme.pro_TasksCompletedCount = DrawThemeColorOption("Tasks Completed Count", theme.pro_TasksCompletedCount, BuildThemeOptionTooltip(darkMode, "Text color of checklist completion counters"), 140f, 60f);
+                        theme.pro_SectionLabel = DrawThemeColorOption("Section Label Text", theme.pro_SectionLabel, BuildThemeOptionTooltip(darkMode, "Text color of section labels and minor headings"), 140f, 60f);
+                        theme.pro_ColumnBg = DrawThemeColorOption("Column Background", theme.pro_ColumnBg, BuildThemeOptionTooltip(darkMode, "Background color of task columns"), 140f, 60f);
+                        theme.pro_ColumnBgAlt = DrawThemeColorOption("Column Background Alt", theme.pro_ColumnBgAlt, BuildThemeOptionTooltip(darkMode, "Alternate/background blend color used for column depth"), 140f, 60f);
+                        theme.pro_CardBg = DrawThemeColorOption("Card Background", theme.pro_CardBg, BuildThemeOptionTooltip(darkMode, "Background color of task cards"), 140f, 60f);
+                        theme.pro_CardHighlighted = DrawThemeColorOption("Card Highlight / Hover", theme.pro_CardHighlighted, BuildThemeOptionTooltip(darkMode, "Highlight color shown when cards are selected or hovered"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Tooltip & Hover Popup
+                        EditorGUILayout.LabelField("Tooltip & Truncated Text Hover", EditorStyles.miniBoldLabel);
+                        theme.pro_TooltipBg = DrawThemeColorOption("Tooltip Background", theme.pro_TooltipBg, BuildThemeOptionTooltip(darkMode, "Background color of custom themed tooltips"), 140f, 60f);
+                        theme.pro_TooltipText = DrawThemeColorOption("Tooltip Text Color", theme.pro_TooltipText, BuildThemeOptionTooltip(darkMode, "Text color of custom themed tooltips"), 140f, 60f);
+                        theme.pro_TooltipBorder = DrawThemeColorOption("Tooltip Border Color", theme.pro_TooltipBorder, BuildThemeOptionTooltip(darkMode, "Border color of custom themed tooltips"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Checklist Tick Boxes
+                        EditorGUILayout.LabelField("Checklist Tick Boxes", EditorStyles.miniBoldLabel);
+                        theme.pro_ChecklistTickBg = DrawThemeColorOption("Tick Box Background", theme.pro_ChecklistTickBg, BuildThemeOptionTooltip(darkMode, "Background color of unchecked checklist tick boxes"), 140f, 60f);
+                        theme.pro_ChecklistTickCheckedBg = DrawThemeColorOption("Tick Box Checked Bg", theme.pro_ChecklistTickCheckedBg, BuildThemeOptionTooltip(darkMode, "Background fill color of checked checklist tick boxes"), 140f, 60f);
+                        theme.pro_ChecklistTickBorder = DrawThemeColorOption("Tick Box Border Color", theme.pro_ChecklistTickBorder, BuildThemeOptionTooltip(darkMode, "Border outline color of checklist tick boxes"), 140f, 60f);
+                        theme.pro_ChecklistTickColor = DrawThemeColorOption("Checkmark Icon Color", theme.pro_ChecklistTickColor, BuildThemeOptionTooltip(darkMode, "Color of the checkmark icon inside checked tick boxes"), 140f, 60f);
+                        DrawStyleChecklistTickIconOption(theme, isDarkMode: true);
+                    }
+
+                    GUILayout.Space(8);
+
+                    // Light Theme (Unity Personal Skin)
+                    using (new EditorGUILayout.VerticalScope("box"))
+                    {
+                        EditorGUILayout.LabelField("Light Mode (Personal Skin)", EditorStyles.boldLabel);
+                        GUILayout.Space(2);
+
+                        // Header & Tabs
+                        EditorGUILayout.LabelField("Top Header & Tabs", EditorStyles.miniBoldLabel);
+                        theme.personal_HeaderTabActiveBg = DrawThemeColorOption("Tab Active Background", theme.personal_HeaderTabActiveBg, BuildThemeOptionTooltip(lightMode, "Background color of the active top tab"), 140f, 60f);
+                        theme.personal_HeaderTabActiveText = DrawThemeColorOption("Tab Active Text", theme.personal_HeaderTabActiveText, BuildThemeOptionTooltip(lightMode, "Text color of the active top tab"), 140f, 60f);
+                        theme.personal_HeaderTabInactiveBg = DrawThemeColorOption("Tab Inactive Background", theme.personal_HeaderTabInactiveBg, BuildThemeOptionTooltip(lightMode, "Background color of inactive top tabs"), 140f, 60f);
+                        theme.personal_HeaderTabInactiveText = DrawThemeColorOption("Tab Inactive Text", theme.personal_HeaderTabInactiveText, BuildThemeOptionTooltip(lightMode, "Text color of inactive top tabs"), 140f, 60f);
+                        theme.personal_HeaderTabHoverBg = DrawThemeColorOption("Tab Hover Background", theme.personal_HeaderTabHoverBg, BuildThemeOptionTooltip(lightMode, "Background color shown when hovering top tabs"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Buttons & Hover
+                        EditorGUILayout.LabelField("Buttons & Hover", EditorStyles.miniBoldLabel);
+                        theme.personal_ButtonBg = DrawThemeColorOption("Button Background", theme.personal_ButtonBg, BuildThemeOptionTooltip(lightMode, "Background color for standard buttons"), 140f, 60f);
+                        theme.personal_ButtonText = DrawThemeColorOption("Button Text Color", theme.personal_ButtonText, BuildThemeOptionTooltip(lightMode, "Text color for standard buttons"), 140f, 60f);
+                        theme.personal_ButtonHoverBg = DrawThemeColorOption("Button Hover Background", theme.personal_ButtonHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when standard buttons are hovered"), 140f, 60f);
+                        theme.personal_ButtonHoverText = DrawThemeColorOption("Button Hover Text", theme.personal_ButtonHoverText, BuildThemeOptionTooltip(lightMode, "Text color when standard buttons are hovered"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Dropdowns & Hover
+                        EditorGUILayout.LabelField("Dropdowns & Hover", EditorStyles.miniBoldLabel);
+                        theme.personal_DropdownBg = DrawThemeColorOption("Dropdown Background", theme.personal_DropdownBg, BuildThemeOptionTooltip(lightMode, "Background color of closed dropdown controls"), 140f, 60f);
+                        theme.personal_DropdownText = DrawThemeColorOption("Dropdown Text Color", theme.personal_DropdownText, BuildThemeOptionTooltip(lightMode, "Text color of closed dropdown controls"), 140f, 60f);
+                        theme.personal_DropdownHoverBg = DrawThemeColorOption("Dropdown Hover Bg", theme.personal_DropdownHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering dropdown controls"), 140f, 60f);
+                        theme.personal_DropdownHoverText = DrawThemeColorOption("Dropdown Hover Text", theme.personal_DropdownHoverText, BuildThemeOptionTooltip(lightMode, "Text color when hovering dropdown controls"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Dropdown Menu (Options Popup)
+                        EditorGUILayout.LabelField("Dropdown Menu (Options List)", EditorStyles.miniBoldLabel);
+                        theme.personal_DropdownMenuBg = DrawThemeColorOption("Menu Background", theme.personal_DropdownMenuBg, BuildThemeOptionTooltip(lightMode, "Background color of the opened dropdown option list"), 140f, 60f);
+                        theme.personal_DropdownMenuText = DrawThemeColorOption("Menu Text Color", theme.personal_DropdownMenuText, BuildThemeOptionTooltip(lightMode, "Text color of options in opened dropdown menus"), 140f, 60f);
+                        theme.personal_DropdownMenuHoverBg = DrawThemeColorOption("Menu Hover / Select Bg", theme.personal_DropdownMenuHoverBg, BuildThemeOptionTooltip(lightMode, "Background color of hovered or selected dropdown options"), 140f, 60f);
+                        theme.personal_DropdownMenuHoverText = DrawThemeColorOption("Menu Hover / Select Text", theme.personal_DropdownMenuHoverText, BuildThemeOptionTooltip(lightMode, "Text color of hovered or selected dropdown options"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Delete Buttons & Actions
+                        EditorGUILayout.LabelField("Delete Buttons & Actions", EditorStyles.miniBoldLabel);
+                        theme.personal_DeleteBtnBg = DrawThemeColorOption("Delete Button Background", theme.personal_DeleteBtnBg, BuildThemeOptionTooltip(lightMode, "Background color for delete and destructive action buttons"), 140f, 60f);
+                        theme.personal_DeleteBtnText = DrawThemeColorOption("Delete Button Text Color", theme.personal_DeleteBtnText, BuildThemeOptionTooltip(lightMode, "Text color for delete and destructive action buttons"), 140f, 60f);
+                        theme.personal_DeleteBtnHoverBg = DrawThemeColorOption("Delete Button Hover Bg", theme.personal_DeleteBtnHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering delete buttons"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Add Card Button
+                        EditorGUILayout.LabelField("Add Card Button", EditorStyles.miniBoldLabel);
+                        theme.personal_AddCardBg = DrawThemeColorOption("Add Card Background", theme.personal_AddCardBg, BuildThemeOptionTooltip(lightMode, "Background color for the '+ Add Card' button in columns"), 140f, 60f);
+                        theme.personal_AddCardText = DrawThemeColorOption("Add Card Text Color", theme.personal_AddCardText, BuildThemeOptionTooltip(lightMode, "Text color for the '+ Add Card' button"), 140f, 60f);
+                        theme.personal_AddCardHoverBg = DrawThemeColorOption("Add Card Hover Bg", theme.personal_AddCardHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering the '+ Add Card' button"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Notes View Backgrounds & Cards
+                        EditorGUILayout.LabelField("Notes View & Cards", EditorStyles.miniBoldLabel);
+                        theme.personal_NoteSidebarBg = DrawThemeColorOption("Note Sidebar Bg", theme.personal_NoteSidebarBg, BuildThemeOptionTooltip(lightMode, "Background color of the note list sidebar"), 140f, 60f);
+                        theme.personal_NoteEditorBg = DrawThemeColorOption("Note Editor Bg", theme.personal_NoteEditorBg, BuildThemeOptionTooltip(lightMode, "Background color of the note editor panel"), 140f, 60f);
+                        theme.personal_NotePopoutBg = DrawThemeColorOption("Note Popout Bg", theme.personal_NotePopoutBg, BuildThemeOptionTooltip(lightMode, "Background color of detached or popout note windows"), 140f, 60f);
+                        theme.personal_NoteInputBg = DrawThemeColorOption("Note Text Input Bg", theme.personal_NoteInputBg, BuildThemeOptionTooltip(lightMode, "Background color of note text input fields"), 140f, 60f);
+                        theme.personal_NoteInputText = DrawThemeColorOption("Note Text Color", theme.personal_NoteInputText, BuildThemeOptionTooltip(lightMode, "Text color used inside note input fields"), 140f, 60f);
+                        theme.personal_NoteTitle = DrawThemeColorOption("Note Title Text", theme.personal_NoteTitle, BuildThemeOptionTooltip(lightMode, "Text color of note titles"), 140f, 60f);
+                        theme.personal_NoteCardBg = DrawThemeColorOption("Note Card Background", theme.personal_NoteCardBg, BuildThemeOptionTooltip(lightMode, "Background color of note list cards"), 140f, 60f);
+                        theme.personal_NoteCardSelectedBg = DrawThemeColorOption("Note Card Selected", theme.personal_NoteCardSelectedBg, BuildThemeOptionTooltip(lightMode, "Background color of the selected note card"), 140f, 60f);
+                        theme.personal_NoteCardHoverBg = DrawThemeColorOption("Note Card Hover", theme.personal_NoteCardHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering note cards"), 140f, 60f);
+                        theme.personal_NoteActionBg = DrawThemeColorOption("Note Action Button Bg", theme.personal_NoteActionBg, BuildThemeOptionTooltip(lightMode, "Background color of action buttons in notes"), 140f, 60f);
+                        theme.personal_NoteActionText = DrawThemeColorOption("Note Action Text Color", theme.personal_NoteActionText, BuildThemeOptionTooltip(lightMode, "Text color of action buttons in notes"), 140f, 60f);
+                        theme.personal_NoteActionHoverBg = DrawThemeColorOption("Note Action Hover Bg", theme.personal_NoteActionHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering note action buttons"), 140f, 60f);
+                        theme.personal_NoteActionHoverText = DrawThemeColorOption("Note Action Hover Text", theme.personal_NoteActionHoverText, BuildThemeOptionTooltip(lightMode, "Text color when hovering note action buttons"), 140f, 60f);
+                        theme.personal_NoteFolderText = DrawThemeColorOption("Note Folders Text", theme.personal_NoteFolderText, BuildThemeOptionTooltip(lightMode, "Text color of note folder names"), 140f, 60f);
+                        theme.personal_AddNoteBg = DrawThemeColorOption("+ Note Button Bg", theme.personal_AddNoteBg, BuildThemeOptionTooltip(lightMode, "Background color of the add note button"), 140f, 60f);
+                        theme.personal_AddNoteText = DrawThemeColorOption("+ Note Text Color", theme.personal_AddNoteText, BuildThemeOptionTooltip(lightMode, "Text color of the add note button"), 140f, 60f);
+                        theme.personal_AddNoteHoverBg = DrawThemeColorOption("+ Note Hover Bg", theme.personal_AddNoteHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering the add note button"), 140f, 60f);
+                        theme.personal_AddNoteHoverText = DrawThemeColorOption("+ Note Hover Text", theme.personal_AddNoteHoverText, BuildThemeOptionTooltip(lightMode, "Text color when hovering the add note button"), 140f, 60f);
+                        theme.personal_ImportNoteBg = DrawThemeColorOption("Import Note Button Bg", theme.personal_ImportNoteBg, BuildThemeOptionTooltip(lightMode, "Background color of the note import button"), 140f, 60f);
+                        theme.personal_ImportNoteText = DrawThemeColorOption("Import Note Text Color", theme.personal_ImportNoteText, BuildThemeOptionTooltip(lightMode, "Text color of the note import button"), 140f, 60f);
+                        theme.personal_ImportNoteHoverBg = DrawThemeColorOption("Import Note Hover Bg", theme.personal_ImportNoteHoverBg, BuildThemeOptionTooltip(lightMode, "Background color when hovering the note import button"), 140f, 60f);
+                        theme.personal_ImportNoteHoverText = DrawThemeColorOption("Import Note Hover Text", theme.personal_ImportNoteHoverText, BuildThemeOptionTooltip(lightMode, "Text color when hovering the note import button"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Card Details & Board
+                        EditorGUILayout.LabelField("Board, Columns, Popups & Details", EditorStyles.miniBoldLabel);
+                        theme.personal_PopupBg = DrawThemeColorOption("Popup Dialog Bg", theme.personal_PopupBg, BuildThemeOptionTooltip(lightMode, "Background color of popup dialogs and context windows"), 140f, 60f);
+                        theme.personal_CardDetailBg = DrawThemeColorOption("Card Details Bg", theme.personal_CardDetailBg, BuildThemeOptionTooltip(lightMode, "Background color of the card details panel"), 140f, 60f);
+                        theme.personal_BoardBg = DrawThemeColorOption("Board Background", theme.personal_BoardBg, BuildThemeOptionTooltip(lightMode, "Background color of the task board canvas"), 140f, 60f);
+                        theme.personal_TopBarBg = DrawThemeColorOption("Top Bar Background", theme.personal_TopBarBg, BuildThemeOptionTooltip(lightMode, "Background color of the top toolbar"), 140f, 60f);
+                        theme.personal_StatusBarBg = DrawThemeColorOption("Status Bar Background", theme.personal_StatusBarBg, BuildThemeOptionTooltip(lightMode, "Background color of the bottom status bar"), 140f, 60f);
+                        theme.personal_StatusBarText = DrawThemeColorOption("Status Bar Text", theme.personal_StatusBarText, BuildThemeOptionTooltip(lightMode, "Text color of the bottom status bar"), 140f, 60f);
+                        theme.personal_BoardHeader = DrawThemeColorOption("Board Header Text", theme.personal_BoardHeader, BuildThemeOptionTooltip(lightMode, "Text color of board-level headers"), 140f, 60f);
+                        theme.personal_ColumnHeader = DrawThemeColorOption("Column Header Text", theme.personal_ColumnHeader, BuildThemeOptionTooltip(lightMode, "Text color of column headers"), 140f, 60f);
+                        theme.personal_CardTitle = DrawThemeColorOption("Card Title Text", theme.personal_CardTitle, BuildThemeOptionTooltip(lightMode, "Text color of card titles"), 140f, 60f);
+                        theme.personal_CardText = DrawThemeColorOption("Card Text / Badges", theme.personal_CardText, BuildThemeOptionTooltip(lightMode, "Text color of card body text and badge labels"), 140f, 60f);
+                        theme.personal_CardDetailsText = DrawThemeColorOption("Card Details Text", theme.personal_CardDetailsText, BuildThemeOptionTooltip(lightMode, "Text color in the card details view"), 140f, 60f);
+                        theme.personal_CardTasksText = DrawThemeColorOption("Card Tasks Text", theme.personal_CardTasksText, BuildThemeOptionTooltip(lightMode, "Text color of checklist and task list content"), 140f, 60f);
+                        theme.personal_CardCategoryTag = DrawThemeColorOption("Card Category Tag", theme.personal_CardCategoryTag, BuildThemeOptionTooltip(lightMode, "Text color of category tags shown on cards"), 140f, 60f);
+                        theme.personal_AssigneeAvatarBg = DrawThemeColorOption("Assignee Picture Bg", theme.personal_AssigneeAvatarBg, BuildThemeOptionTooltip(lightMode, "Background color behind member avatar pictures"), 140f, 60f);
+                        theme.personal_StatusOverdue = DrawThemeColorOption("Status Overdue", theme.personal_StatusOverdue, BuildThemeOptionTooltip(lightMode, "Text/accent color for overdue status indicators"), 140f, 60f);
+                        theme.personal_StatusDueToday = DrawThemeColorOption("Status Due Today", theme.personal_StatusDueToday, BuildThemeOptionTooltip(lightMode, "Text/accent color for due-today status indicators"), 140f, 60f);
+                        theme.personal_StatusDueSoon = DrawThemeColorOption("Status Due Soon", theme.personal_StatusDueSoon, BuildThemeOptionTooltip(lightMode, "Text/accent color for due-soon status indicators"), 140f, 60f);
+                        theme.personal_StatusCompleted = DrawThemeColorOption("Status Completed", theme.personal_StatusCompleted, BuildThemeOptionTooltip(lightMode, "Text/accent color for completed status indicators"), 140f, 60f);
+                        theme.personal_TasksCompletedCount = DrawThemeColorOption("Tasks Completed Count", theme.personal_TasksCompletedCount, BuildThemeOptionTooltip(lightMode, "Text color of checklist completion counters"), 140f, 60f);
+                        theme.personal_SectionLabel = DrawThemeColorOption("Section Label Text", theme.personal_SectionLabel, BuildThemeOptionTooltip(lightMode, "Text color of section labels and minor headings"), 140f, 60f);
+                        theme.personal_ColumnBg = DrawThemeColorOption("Column Background", theme.personal_ColumnBg, BuildThemeOptionTooltip(lightMode, "Background color of task columns"), 140f, 60f);
+                        theme.personal_ColumnBgAlt = DrawThemeColorOption("Column Background Alt", theme.personal_ColumnBgAlt, BuildThemeOptionTooltip(lightMode, "Alternate/background blend color used for column depth"), 140f, 60f);
+                        theme.personal_CardBg = DrawThemeColorOption("Card Background", theme.personal_CardBg, BuildThemeOptionTooltip(lightMode, "Background color of task cards"), 140f, 60f);
+                        theme.personal_CardHighlighted = DrawThemeColorOption("Card Highlight / Hover", theme.personal_CardHighlighted, BuildThemeOptionTooltip(lightMode, "Highlight color shown when cards are selected or hovered"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Tooltip & Hover Popup
+                        EditorGUILayout.LabelField("Tooltip & Truncated Text Hover", EditorStyles.miniBoldLabel);
+                        theme.personal_TooltipBg = DrawThemeColorOption("Tooltip Background", theme.personal_TooltipBg, BuildThemeOptionTooltip(lightMode, "Background color of custom themed tooltips"), 140f, 60f);
+                        theme.personal_TooltipText = DrawThemeColorOption("Tooltip Text Color", theme.personal_TooltipText, BuildThemeOptionTooltip(lightMode, "Text color of custom themed tooltips"), 140f, 60f);
+                        theme.personal_TooltipBorder = DrawThemeColorOption("Tooltip Border Color", theme.personal_TooltipBorder, BuildThemeOptionTooltip(lightMode, "Border color of custom themed tooltips"), 140f, 60f);
+
+                        GUILayout.Space(4);
+
+                        // Checklist Tick Boxes
+                        EditorGUILayout.LabelField("Checklist Tick Boxes", EditorStyles.miniBoldLabel);
+                        theme.personal_ChecklistTickBg = DrawThemeColorOption("Tick Box Background", theme.personal_ChecklistTickBg, BuildThemeOptionTooltip(lightMode, "Background color of unchecked checklist tick boxes"), 140f, 60f);
+                        theme.personal_ChecklistTickCheckedBg = DrawThemeColorOption("Tick Box Checked Bg", theme.personal_ChecklistTickCheckedBg, BuildThemeOptionTooltip(lightMode, "Background fill color of checked checklist tick boxes"), 140f, 60f);
+                        theme.personal_ChecklistTickBorder = DrawThemeColorOption("Tick Box Border Color", theme.personal_ChecklistTickBorder, BuildThemeOptionTooltip(lightMode, "Border outline color of checklist tick boxes"), 140f, 60f);
+                        theme.personal_ChecklistTickColor = DrawThemeColorOption("Checkmark Icon Color", theme.personal_ChecklistTickColor, BuildThemeOptionTooltip(lightMode, "Color of the checkmark icon inside checked tick boxes"), 140f, 60f);
+                        DrawStyleChecklistTickIconOption(theme, isDarkMode: false);
+                    }
+                }
+
+                GUILayout.Space(8);
+           
+
+                DrawNoStyleAttributeMatchesHint();
+            }
+        }
+
+        private void DrawStyleChecklistTickIconOption(ThemeData theme, bool isDarkMode)
+        {
+            string skinMode = isDarkMode ? "Dark mode (Pro Skin)" : "Light mode (Personal Skin)";
+            string tooltip = BuildThemeOptionTooltip(skinMode, "Choose the visual style and glyph used when checklist tick boxes are checked off");
+
+            if (!_styleSearchForceShowCurrentSection && !StyleOptionMatches("Checkmark Icon Style", tooltip, "checklist", "checkbox", "tick", "checkmark", "icon", "vector", "classic", "heavy", "square", "dot", "cross", "unity", "custom", theme.checklistTickStyle.ToString(), theme.customChecklistTickChar))
+            {
+                return;
+            }
+
+            _styleSectionHasVisibleAttribute = true;
+
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                ThemedTooltip.Label("Checkmark Icon Style", tooltip, null, GUILayout.Width(140f));
+
+                string[] tickStyleDisplayNames = {
+                    "Vector Line Check (Crisp)",
+                    "Classic Checkmark (✓)",
+                    "Heavy Checkmark (✔)",
+                    "Minimal Inset Square (■)",
+                    "Minimal Dot / Circle (●)",
+                    "Clean Cross Mark (✕)",
+                    "Unity Native Icon",
+                    "Custom Symbol / Emoji"
+                };
+
+                int selectedIndex = (int)theme.checklistTickStyle;
+                if (selectedIndex < 0 || selectedIndex >= tickStyleDisplayNames.Length) selectedIndex = 0;
+
+                TBStyles.DrawThemedDropdown(
+                    selectedIndex,
+                    tickStyleDisplayNames,
+                    (newIndex) =>
+                    {
+                        if (newIndex != (int)theme.checklistTickStyle)
+                        {
+                            theme.checklistTickStyle = (ChecklistTickStyle)newIndex;
+                            TBStyles.ChecklistTickStyle = theme.checklistTickStyle;
+                            TBStyles.InvalidateCache();
+                        }
+                    },
+                    TBStyles.StandardDropdown,
+                    tooltip,
+                    GUILayout.MinWidth(120),
+                    GUILayout.MaxWidth(200),
+                    GUILayout.Height(18)
+                );
+
+                GUILayout.Space(6);
+
+                // Live Interactive Preview Box matching mode colors
+                Rect prevRect = GUILayoutUtility.GetRect(18, 18, GUILayout.Width(18), GUILayout.Height(18));
+                Color prevBg = isDarkMode ? theme.pro_ChecklistTickCheckedBg : theme.personal_ChecklistTickCheckedBg;
+                Color prevBorder = isDarkMode ? theme.pro_ChecklistTickBorder : theme.personal_ChecklistTickBorder;
+                Color prevTickCol = isDarkMode ? theme.pro_ChecklistTickColor : theme.personal_ChecklistTickColor;
+                EditorGUI.DrawRect(prevRect, prevBg);
+                TBStyles.DrawBorderRect(prevRect, prevBorder, 1f);
+                TBStyles.DrawCheckmarkIcon(prevRect, prevTickCol, theme.checklistTickStyle, theme.customChecklistTickChar);
+                ThemedTooltip.SetTooltip(prevRect, $"{skinMode} preview of checked tick box with {theme.checklistTickStyle} icon");
+
+                GUILayout.FlexibleSpace();
+            }
+
+            if (theme.checklistTickStyle == ChecklistTickStyle.Custom)
+            {
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    string customTooltip = BuildThemeOptionTooltip(skinMode, "Type any custom character, emoji, or symbol to use as the checked glyph");
+                    ThemedTooltip.Label("Custom Glyph / Symbol", customTooltip, null, GUILayout.Width(140f));
+                    string newChar = TBStyles.DrawThemedTextField(theme.customChecklistTickChar ?? "", GUILayout.Width(60), GUILayout.Height(18));
+                    ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), customTooltip);
+                    if (newChar != theme.customChecklistTickChar)
+                    {
+                        theme.customChecklistTickChar = newChar;
+                        TBStyles.CustomChecklistTickChar = newChar;
+                        TBStyles.InvalidateCache();
+                    }
+
+                    GUILayout.FlexibleSpace();
+                }
+            }
+        }
+
+        private void DrawStyleImportExportActions(ThemeData theme)
+        {
+            if (!StyleSectionMatchesSearch("export", "exports", "import", "imports", "style", "styles", "theme", "themes", "json", "pack", "bundle")) return;
+
+            using (new EditorGUILayout.VerticalScope("box"))
+            {
+                EditorGUILayout.LabelField("💾 Style Import & Export", EditorStyles.boldLabel);
+                EditorGUILayout.HelpBox("Export custom styles to share with your teammates, or import style JSON files created by others.", MessageType.None);
+                GUILayout.Space(4);
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (GUILayout.Button(new GUIContent("💾 Export Active Theme...", "Export active theme to a JSON file"), GUILayout.Height(24)))
+                    {
+                        ExportTheme(theme);
+                    }
+
+                    if (GUILayout.Button(new GUIContent("📦 Export All Themes Pack...", "Export all themes into a bundle JSON file"), GUILayout.Height(24)))
+                    {
+                        ExportAllThemes();
+                    }
+
+                    if (GUILayout.Button(new GUIContent("📥 Import Theme(s)...", "Import theme JSON file or Theme Pack"), GUILayout.Height(24)))
+                    {
+                        ImportTheme();
+                    }
+                }
+            }
+        }
+
+        private void ExportTheme(ThemeData theme)
+        {
+            if (theme == null) return;
+            string defaultName = $"{SanitizeFileName(theme.name)}_Theme.json";
+            string path = EditorUtility.SaveFilePanel("Export Theme", "", defaultName, "json");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                theme.Normalize();
+                string json = JsonUtility.ToJson(theme, true);
+                File.WriteAllText(path, json, Encoding.UTF8);
+                TriggerSuccessNotification($"Theme \"{theme.name}\" exported!");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AwesomeTaskManager] Failed to export theme: {ex.Message}");
+                TriggerErrorNotification($"Export failed: {ex.Message}");
+            }
+        }
+
+        private void ExportAllThemes()
+        {
+            if (_data?.themes == null || _data.themes.Count == 0) return;
+            string defaultName = "AwesomeTaskManager_ThemesPack.json";
+            string path = EditorUtility.SaveFilePanel("Export All Themes", "", defaultName, "json");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                var bundle = new ThemeExportBundle
+                {
+                    bundleName = "Awesome Task Manager Themes",
+                    version = "1.0",
+                    themes = new List<ThemeData>(_data.themes.Select(t => t.Clone()))
+                };
+                string json = JsonUtility.ToJson(bundle, true);
+                File.WriteAllText(path, json, Encoding.UTF8);
+                TriggerSuccessNotification($"Exported {_data.themes.Count} theme(s) to pack!");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AwesomeTaskManager] Failed to export themes pack: {ex.Message}");
+                TriggerErrorNotification($"Export failed: {ex.Message}");
+            }
+        }
+
+        private void ImportTheme()
+        {
+            string path = EditorUtility.OpenFilePanel("Import Theme", "", "json");
+            if (string.IsNullOrEmpty(path) || !File.Exists(path)) return;
+
+            try
+            {
+                string json = File.ReadAllText(path, Encoding.UTF8);
+                if (string.IsNullOrWhiteSpace(json))
+                {
+                    TriggerErrorNotification("Selected file is empty.");
+                    return;
+                }
+
+                // First try to parse as ThemeExportBundle
+                ThemeExportBundle bundle = null;
+                try
+                {
+                    bundle = JsonUtility.FromJson<ThemeExportBundle>(json);
+                }
+                catch { }
+
+                if (bundle != null && bundle.themes != null && bundle.themes.Count > 0)
+                {
+                    int count = 0;
+                    foreach (var t in bundle.themes)
+                    {
+                        if (t != null && !string.IsNullOrWhiteSpace(t.name))
+                        {
+                            t.Normalize();
+                            t.name = GetUniqueThemeName(t.name);
+                            _data.themes.Add(t);
+                            count++;
+                        }
+                    }
+
+                    if (count > 0)
+                    {
+                        _data.currentThemeIndex = _data.themes.Count - 1;
+                        TBStyles.ApplyTheme(_data.themes[_data.currentThemeIndex]);
+                        SaveTheme();
+                        TriggerSuccessNotification($"Imported {count} theme(s) from pack!");
+                        return;
+                    }
+                }
+
+                // Try parsing as single ThemeData
+                ThemeData single = null;
+                try
+                {
+                    single = JsonUtility.FromJson<ThemeData>(json);
+                }
+                catch { }
+
+                if (single != null && !string.IsNullOrWhiteSpace(single.name))
+                {
+                    single.Normalize();
+                    single.name = GetUniqueThemeName(single.name);
+                    _data.themes.Add(single);
+                    _data.currentThemeIndex = _data.themes.Count - 1;
+                    TBStyles.ApplyTheme(_data.themes[_data.currentThemeIndex]);
+                    SaveTheme();
+                    TriggerSuccessNotification($"Imported theme \"{single.name}\"!");
+                    return;
+                }
+
+                TriggerErrorNotification("Could not parse valid theme data in JSON file.");
+            }
+            catch (Exception ex)
+            {
+                Debug.LogError($"[AwesomeTaskManager] Failed to import theme: {ex.Message}");
+                TriggerErrorNotification($"Import failed: {ex.Message}");
+            }
+        }
+
+        private string GetUniqueThemeName(string baseName)
+        {
+            if (string.IsNullOrWhiteSpace(baseName)) baseName = "Theme";
+            if (_data.themes.All(t => t.name != baseName)) return baseName;
+            int counter = 2;
+            while (_data.themes.Any(t => t.name == $"{baseName} {counter}"))
+            {
+                counter++;
+            }
+            return $"{baseName} {counter}";
+        }
+
         private void DrawAssigneeCircleBoard(Assignee assignee)
         {
             var rect = GUILayoutUtility.GetRect(24, 24);
             string initials = GetInitials(assignee.name);
             var circleStyle = new GUIStyle(TBStyles.AssigneeCircle) { fixedWidth = 24, fixedHeight = 24, fontSize = 9 };
             
-            // Mask color matches card background (helpBox)
-            Color maskColor = EditorGUIUtility.isProSkin ? new Color(0.22f, 0.22f, 0.22f) : new Color(0.76f, 0.76f, 0.76f);
-            
-            TBStyles.DrawAssigneeIcon(rect, assignee, initials, circleStyle, maskColor);
+            TBStyles.DrawAssigneeIcon(rect, assignee, initials, circleStyle);
         }
 
         private string GetInitials(string name)
