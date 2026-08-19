@@ -4216,7 +4216,6 @@ namespace AwesomeTaskManager.Editor
                 if (status.Equals("Archived", StringComparison.OrdinalIgnoreCase))
                 {
                     card.archived = true;
-                    card.isArchived = true;
                 }
                 if (status.Equals("Done", StringComparison.OrdinalIgnoreCase) || status.Equals("Closed", StringComparison.OrdinalIgnoreCase) || status.Equals("Complete", StringComparison.OrdinalIgnoreCase) || status.Equals("Completed", StringComparison.OrdinalIgnoreCase))
                 {
@@ -5363,6 +5362,10 @@ namespace AwesomeTaskManager.Editor
                     if (ThemedTooltip.Button("Reset Priority Icons", "Reset all priority icons (None, Low, Medium, High, Urgent) to their default symbols", GUI.skin.button, GUILayout.Width(135)))
                     {
                         theme.priorityIcons = new List<string>(ThemeData.DefaultPriorityIcons);
+                        theme.Normalize();
+                        TBStyles.ApplyTheme(theme);
+                        SaveTheme();
+                        Repaint();
                     }
                 }
 
@@ -5447,6 +5450,10 @@ namespace AwesomeTaskManager.Editor
                         theme.cancelIcon = def.cancelIcon;
                         theme.moveUpIcon = def.moveUpIcon;
                         theme.moveDownIcon = def.moveDownIcon;
+                        theme.Normalize();
+                        TBStyles.ApplyTheme(theme);
+                        SaveTheme();
+                        Repaint();
                     }
                 }
 
@@ -5544,6 +5551,10 @@ namespace AwesomeTaskManager.Editor
                     if (ThemedTooltip.Button("Reset Label Colors", "Reset all 17 card and note label category colors to their default palette", GUI.skin.button, GUILayout.Width(130)))
                     {
                         theme.labelColors = new List<Color>(ThemeData.DefaultLabelColors);
+                        theme.Normalize();
+                        TBStyles.ApplyTheme(theme);
+                        SaveTheme();
+                        Repaint();
                     }
                 }
 
@@ -5932,6 +5943,10 @@ namespace AwesomeTaskManager.Editor
                         theme.personal_CardHighlighted = def.personal_CardHighlighted;
                         theme.checklistTickStyle = def.checklistTickStyle;
                         theme.customChecklistTickChar = def.customChecklistTickChar;
+                        theme.Normalize();
+                        TBStyles.ApplyTheme(theme);
+                        SaveTheme();
+                        Repaint();
                     }
                 }
 
@@ -6264,6 +6279,10 @@ namespace AwesomeTaskManager.Editor
                             theme.checklistTickStyle = (ChecklistTickStyle)newIndex;
                             TBStyles.ChecklistTickStyle = theme.checklistTickStyle;
                             TBStyles.InvalidateCache();
+                            theme.Normalize();
+                            TBStyles.ApplyTheme(theme);
+                            SaveTheme();
+                            Repaint();
                         }
                     },
                     TBStyles.StandardDropdown,
@@ -6301,6 +6320,10 @@ namespace AwesomeTaskManager.Editor
                         theme.customChecklistTickChar = newChar;
                         TBStyles.CustomChecklistTickChar = newChar;
                         TBStyles.InvalidateCache();
+                        theme.Normalize();
+                        TBStyles.ApplyTheme(theme);
+                        SaveTheme();
+                        Repaint();
                     }
 
                     GUILayout.FlexibleSpace();

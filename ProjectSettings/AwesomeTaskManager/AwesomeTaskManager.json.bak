@@ -115,7 +115,7 @@
                         {
                             "id": "ff84cc38-e6d4-4448-a94d-83096847c88e",
                             "title": "Add Loading screen",
-                            "description": "",
+                            "description": "Add The loading screen when switching from scene to scene ",
                             "category": "Design",
                             "colorLabel": 10,
                             "priority": 0,
@@ -148,10 +148,12 @@
                                     "displayName": ""
                                 }
                             ],
-                            "imagePath": "",
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260818_215931.png",
                             "showChecklist": true,
                             "completed": false,
-                            "assigneeIds": [],
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
                             "isArchived": false
                         },
                         {
@@ -279,7 +281,9 @@
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": true,
-                            "assigneeIds": [],
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ],
                             "isArchived": false
                         },
                         {
@@ -675,7 +679,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": true,
                             "assigneeIds": [],
                             "isArchived": false
