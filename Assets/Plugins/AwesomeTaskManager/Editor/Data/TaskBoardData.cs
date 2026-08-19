@@ -71,7 +71,6 @@ namespace AwesomeTaskManager.Data
         public bool showChecklist = true; // per-card toggle for showing checklist on board
         public bool completed; // manually mark card as completed (overrides overdue styling)
         public List<string> assigneeIds = new List<string>();
-        public bool isArchived; // for explicit archival logic
 
         public TaskCard() { id = Guid.NewGuid().ToString(); createdDate = Now(); category = ""; }
         public TaskCard(string title) : this() { this.title = title; description = ""; }
@@ -3807,10 +3806,6 @@ namespace AwesomeTaskManager.Data
                         card.linkedSceneObjects ??= new List<SceneObjectReference>();
                         card.linkedItems ??= new List<LinkedItem>();
                         card.assigneeIds ??= new List<string>();
-
-                        // Sync archived and isArchived to ensure UI consistency
-                        if (card.isArchived) card.archived = true;
-                        if (card.archived) card.isArchived = true;
 
                         // Migrate old separate lists to unified linkedItems
                         if (card.linkedAssetGuids.Count > 0)
