@@ -148,6 +148,17 @@ public class GameManager : MonoBehaviour
             PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
             return; // Not enough energy to sleep
         }
+        
+        if (tutorialModeActive && !tutorialModeCompleted && !IsTutorialTaskActive(TutorialTaskType.SleepTask))
+        {
+            PlayerStatsView.Instance.DisplayInfo("You cannot sleep yet. Complete your current tutorial task first.", 3);
+            return; // Not enough energy to sleep
+        }
+        
+        if(tutorialModeActive && !tutorialModeCompleted && IsTutorialTaskActive(TutorialTaskType.SleepTask))
+        {
+          sleepCost = 0; // Override sleep cost to 0 during tutorial sleep task
+        }
 
         if (PlayerManager.Instance.PurchaseItem(sleepCost))
         {
@@ -476,7 +487,9 @@ public class GameManager : MonoBehaviour
         tutorialModeActive = false;
         Debug.Log("All tutorial tasks are completed.");
         onTutorialModeCompleted?.Invoke();
-
+        
+        GameManager.Instance.Sleep(0); // Automatically sleep the player after completing all tutorial tasks
+        LeagueController.Instance.ShowLeagueInviteAfterDelay(2f);;
         if (TutorialAudio != null)
         {
             StartCoroutine(TutorialAudio.PlayTutorialCompleteAudio());

@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using Calendar;
+using DG.Tweening;
 using League;
 using UnityEngine;
 using UnityEngine.Localization;
@@ -14,6 +15,7 @@ public class StartMenu : MonoBehaviour
     [SerializeField] private UnityEngine.UI.Button startRaceButtonGarage;
     [SerializeField] private TMPro.TMP_Text _startRaceButtonText;
     [SerializeField] CameraController cameraController;
+    [SerializeField] UnityEngine.UI.Button closeButton;
     public GameObject trainingMenuPrefab;
     public bool isTooLateForActivities = false;
     public static StartMenu Instance { get; private set; }
@@ -22,6 +24,7 @@ public class StartMenu : MonoBehaviour
     [SerializeField] private string practiceRaceText="Practice";
     [SerializeField] private LocalizedString _localizedRaceText;
     [SerializeField] private LocalizedString _localizedPracticeText;
+    [SerializeField] private LocalizedString _localizedNoRaceAvailableText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.BulletinBoard.RaceButton.RaceText.NoRaceAvailable" };
     
     public void Awake()
     {
@@ -58,10 +61,9 @@ public class StartMenu : MonoBehaviour
         
         UpdateRaceDayStatus();
         
+        TimeManager.Instance.onNewDay.AddListener(CloseBulletinBoard);
         TimeManager.Instance.onNewDay.AddListener(UpdateRaceDayStatus); 
         LeagueController.Instance.onPlayerJoinedLeague.AddListener(UpdateRaceDayStatus);
-
-     
     }
     
     public enum RaceDayStatus
@@ -96,8 +98,10 @@ public class StartMenu : MonoBehaviour
     {
         if(LeagueController.Instance == null || RaceManager.Instance == null)
             return;
-
-        
+        DOVirtual.DelayedCall(0.1f, () =>
+        {
+           
+    
         RaceDayStatus status = GetRaceDayStatus();
         TryGetLocalizedStrings();
         switch (status)
@@ -113,15 +117,20 @@ public class StartMenu : MonoBehaviour
                 _startRaceButton.text = RaceManager.Instance.isRaceDay ? startRaceText : practiceRaceText;
                 break;
             case RaceDayStatus.NotInLeague:
-                if (startRaceButtonGarage != null && _startRaceButtonText != null)
+                if (startRaceButtonGarage == null || _startRaceButtonText == null)
+                    return;
+                startRaceButtonGarage.interactable = false;
+                if(_localizedNoRaceAvailableText != null && !_localizedNoRaceAvailableText.IsEmpty)
                 {
-                    startRaceButtonGarage.interactable = false;
+                    _startRaceButtonText.text = _localizedNoRaceAvailableText.GetLocalizedString();
+                }
+                else
+                {
                     _startRaceButtonText.text = "No Race Available";
-                    break;
                 }
                 _startRaceButton.SetEnabled(false);
-                _startRaceButton.text = "No Race Available";
                 break;
+
             case RaceDayStatus.NotRaceDay:
             default:
                 if (startRaceButtonGarage != null && _startRaceButtonText != null)
@@ -134,20 +143,14 @@ public class StartMenu : MonoBehaviour
                 _startRaceButton.text = practiceRaceText;
                 break;
         }
+        });
     }
 
     public RaceDayStatus GetRaceDayStatus()
     {
-        if (LeagueController.Instance.currentLeague != null && RaceManager.Instance.isRaceDay)
+        if (LeagueController.Instance.currentLeague != null && (RaceManager.Instance.isRaceDay && !RaceManager.Instance.hasPlayerCompletedRace))
         {
-            if (!LeagueController.Instance.currentLeague.playerHasJoined)
-            {
-                return RaceDayStatus.NotInLeague;
-            }
-            else
-            {
-                return RaceDayStatus.CanRace;
-            }
+            return LeagueController.Instance.currentLeague.playerHasJoined ? RaceDayStatus.CanRace : RaceDayStatus.NotInLeague;
         }
         else
         {
@@ -250,6 +253,11 @@ public class StartMenu : MonoBehaviour
                // PlayerManager.Instance.ModifyPlayerEnergy(-25);
             }
         }
+        else if(GameManager.Instance.IsTutorialModeActive() && !GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.WorkJobTask) && !GameManager.Instance.IsTutorialTaskCompleted(TutorialTaskType.WorkJobTask))
+        {
+            PlayerStatsView.Instance.DisplayInfo("You Must complete the tutorial task first", 3);
+            return;
+        }
         
 
         if (PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !isTooLateForActivities )
@@ -285,10 +293,26 @@ public class StartMenu : MonoBehaviour
         }
         else
         {
-            GameManager.Instance.Sleep(30);
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && !GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.SleepTask))
+            {
+                PlayerStatsView.Instance.DisplayInfo("You Must complete the tutorial task first", 3);
+            }
+            else
+            {
+                GameManager.Instance.Sleep(30);
+            }
+          
         }
     }
     
+    
+    public void CloseBulletinBoard()
+    {
+        if (closeButton != null)
+        {
+            closeButton.onClick.Invoke();
+        }
+    }
     private void OnDisable()
     {
         if(_startRaceButton != null)

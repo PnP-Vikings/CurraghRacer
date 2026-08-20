@@ -151,39 +151,6 @@
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ]
-                        },
-                        {
-                            "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
-                            "title": "What needs to Localized",
-                            "description": "What still needs to be Localized",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-08-07 16:25",
-                            "dueDate": "2026-08-14",
-                            "archived": false,
-                            "checklistItems": [
-                                "League Invitaition card",
-                                "All the tutorial tasks",
-                                "Minigames need to be Localized"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": []
                         }
                     ]
                 },
@@ -213,7 +180,8 @@
                                 "also add the race completed today in race manager to save system",
                                 "Toggle not working then its been reset by the save system",
                                 "Need to make save system allow player to pick up half way through a tutorial",
-                                "Add no enery check for tutorial"
+                                "Add no enery check for tutorial",
+                                "Show new league invite after tutorial complete"
                             ],
                             "checklistStates": [
                                 true,
@@ -222,7 +190,8 @@
                                 true,
                                 true,
                                 true,
-                                false,
+                                true,
+                                true,
                                 true,
                                 true,
                                 true,
@@ -237,6 +206,7 @@
                                 "47a20766-1f19-423d-a291-3c7a970aa0c0",
                                 "280b78cb-0607-423e-aadf-65a35d376d2d",
                                 "100e6d20-b68e-49d6-b522-e339af988a06",
+                                "",
                                 "",
                                 "",
                                 "",
@@ -281,24 +251,33 @@
                             ]
                         },
                         {
-                            "id": "100e6d20-b68e-49d6-b522-e339af988a06",
-                            "title": "Tutorial Dialogue",
-                            "description": "Tutorial Dialogue Little guy at the bottom of the screen \nwhen task starts ",
+                            "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
+                            "title": "What needs to Localized",
+                            "description": "What still needs to be Localized",
                             "category": "Gameplay",
                             "colorLabel": 1,
                             "priority": 0,
-                            "createdDate": "2026-06-30 22:12",
-                            "dueDate": "",
+                            "createdDate": "2026-08-07 16:25",
+                            "dueDate": "2026-08-23",
                             "archived": false,
                             "checklistItems": [
-                                "Make text show on a delay ",
-                                "Figure out easiest way to keep track of text in game for easy transaction"
+                                "League Invitaition card",
+                                "All the tutorial tasks",
+                                "Minigames need to be Localized",
+                                "You are in dept popup",
+                                "No Race Available"
                             ],
                             "checklistStates": [
                                 true,
+                                true,
+                                false,
+                                false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
                                 "",
                                 ""
                             ],
@@ -996,6 +975,36 @@
                                     "displayName": ""
                                 }
                             ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "100e6d20-b68e-49d6-b522-e339af988a06",
+                            "title": "Tutorial Dialogue",
+                            "description": "Tutorial Dialogue Little guy at the bottom of the screen \nwhen task starts ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-06-30 22:12",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Make text show on a delay ",
+                                "Figure out easiest way to keep track of text in game for easy transaction"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": true,

@@ -291,6 +291,10 @@ MonoBehaviour:
     m_Key: Garage.TutorialUi.NextTxt
     m_Metadata:
       m_Items: []
+  - m_Id: 11428190256881664
+    m_Key: Garage.BulletinBoard.RaceButton.RaceText.NoRaceAvailable
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

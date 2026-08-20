@@ -143,6 +143,16 @@ namespace League
             
             showInviteCoroutine=   StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
         }
+        
+        public void ShowLeagueInviteAfterDelay(float delaySeconds)
+        {
+            if(showInviteCoroutine!= null)
+            {
+                StopCoroutine(showInviteCoroutine);
+            }
+            
+            showInviteCoroutine=   StartCoroutine(StartLeagueInviteMessageAfterDelay(delaySeconds));
+        }
 
 
         public void ShowLeagueInvite()

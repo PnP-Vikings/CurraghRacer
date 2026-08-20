@@ -129,6 +129,7 @@ public class TutorialTaskUiDialogue : MonoBehaviour
             if(activeTask.taskType == TutorialTaskType.CompleteAllTasks)
             {
                GameManager.Instance.CompleteTutorialTask(activeTask.taskType);
+            
             }
          }
         this.gameObject.SetActive(false);
