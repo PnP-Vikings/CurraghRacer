@@ -188,8 +188,9 @@ public class StartMenu : MonoBehaviour
             if (!PlayerManager.Instance.PurchaseItem(raceCost,PurchaseType.RaceEntry))
             {
                 PlayerStatsView.Instance.ClearInfo();
+                
                 PlayerStatsView.Instance.DisplayInfo(
-                    $"Couldn't Afford The Race Entry Fee \n the Gang covered You. You are now in debt. \n IF YOU GO 200 IN DEBT THE GAME WILL BE OVER!!!", 3);
+                    $"Couldn't Afford The Race Entry Fee \n the Gang covered You. You are now in debt. \n IF YOU GO 400 IN DEBT THE GAME WILL BE OVER!!!", 3);
             }
             else
             {
