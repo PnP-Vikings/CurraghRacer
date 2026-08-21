@@ -16,8 +16,65 @@ MonoBehaviour:
     m_Code: en-IE
   m_SharedData: {fileID: 11400000, guid: f4f341c7665ae8c4aba93b5bc2e33b93, type: 2}
   m_Metadata:
-    m_Items: []
-  m_TableData: []
+    m_Items:
+    - rid: 7162749194343809025
+  m_TableData:
+  - m_Id: 42747289600
+    m_Localized: You cannot sleep before completing your race
+    m_Metadata:
+      m_Items: []
+  - m_Id: 206077681664
+    m_Localized: You are not Tired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 255557885952
+    m_Localized: You cannot sleep yet. Complete your current tutorial task first.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648744525824
+    m_Localized: You could not afford a place to sleep so slept on street
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539734564864
+    m_Localized: You Spent {0} on a place to sleep
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809025
+  - m_Id: 1078866206720
+    m_Localized: You Have Regained {0} Energy
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809025
+  - m_Id: 1211456544768
+    m_Localized: Use the energy you regained to go to work
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1492441358336
+    m_Localized: You Worked and Earned {0} Coins
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809025
+  - m_Id: 2429197213696
+    m_Localized: Invalid stat type selected for training.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2549749899264
+    m_Localized: GAME OVER\nThe mob got tired of waiting for you to pay up\nand destroyed
+      the boat \nYou were forced to flee the country
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3640474460160
+    m_Localized: Auto Save
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162749194343809025
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 539734564864
+        - id: 1492441358336
+        - id: 1078866206720

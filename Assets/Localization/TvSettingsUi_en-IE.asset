@@ -17,7 +17,19 @@ MonoBehaviour:
   m_SharedData: {fileID: 11400000, guid: 401d28548f102324281fade90abd101f, type: 2}
   m_Metadata:
     m_Items: []
-  m_TableData: []
+  m_TableData:
+  - m_Id: 10723778560
+    m_Localized: Quick Save
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97625563136
+    m_Localized: Quick Save completed!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 131595231232
+    m_Localized: Quick Save failed!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

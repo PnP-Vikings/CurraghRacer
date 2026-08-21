@@ -16,8 +16,70 @@ MonoBehaviour:
     m_Code: ga-IE
   m_SharedData: {fileID: 11400000, guid: f4f341c7665ae8c4aba93b5bc2e33b93, type: 2}
   m_Metadata:
-    m_Items: []
-  m_TableData: []
+    m_Items:
+    - rid: 7162749194343809026
+  m_TableData:
+  - m_Id: 539734564864
+    m_Localized: "Chaith t\xFA {0} ar \xE1it le codladh inti."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809026
+  - m_Id: 1492441358336
+    m_Localized: "D'oibrigh t\xFA agus thuill t\xFA {0} bonn."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809026
+  - m_Id: 1078866206720
+    m_Localized: "T\xE1 {0} fuinnimh faighte ar ais agat."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809026
+  - m_Id: 2549749899264
+    m_Localized: "CLUICHE THART\\nBh\xED an drong tuirseach de bheith ag fanacht
+      leat \xEDoc\\nagus scrios siad an b\xE1d\\nB\u2019\xE9igean duit teitheadh
+      \u200B\u200B\xF3n t\xEDr"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2429197213696
+    m_Localized: "Roghna\xEDodh cine\xE1l staitistic\xED neamhbhail\xED don oili\xFAint."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1211456544768
+    m_Localized: "Bain \xFAs\xE1id as an bhfuinneamh a fuair t\xFA ar ais chun dul
+      ag obair."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648744525824
+    m_Localized: "N\xED raibh s\xE9 d'acmhainn agat \xE1it chodlata a fh\xE1il, mar
+      sin chodail t\xFA ar an tsr\xE1id."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 255557885952
+    m_Localized: "N\xED f\xE9idir leat codladh go f\xF3ill. Cr\xEDochnaigh do thasc
+      teagaisc reatha ar dt\xFAs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 206077681664
+    m_Localized: "N\xEDl t\xFA tuirseach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 42747289600
+    m_Localized: "N\xED f\xE9idir leat codladh sula gcr\xEDochna\xEDonn t\xFA do
+      r\xE1s."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3640474460160
+    m_Localized: "S\xE1bh\xE1il Uathoibr\xEDoch"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162749194343809026
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 539734564864
+        - id: 1492441358336
+        - id: 1078866206720

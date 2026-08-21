@@ -16,8 +16,58 @@ MonoBehaviour:
     m_Code: ga-IE
   m_SharedData: {fileID: 11400000, guid: 48b7c9ec7d0faff4089147425c06862d, type: 2}
   m_Metadata:
-    m_Items: []
-  m_TableData: []
+    m_Items:
+    - rid: 7162749194343809115
+  m_TableData:
+  - m_Id: 205188489216
+    m_Localized: Leictreachas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 309572132864
+    m_Localized: "C\xF3ras t\xE9imh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 394280296448
+    m_Localized: "C\xEDos"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6728547557376
+    m_Localized: "N\xED f\xE9idir leat do bhille {0} a \xEDoc."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809115
+  - m_Id: 7080319639552
+    m_Localized: "T\xE1 do bhille {0} ar luach \u20AC{1} \xEDoctha agat."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809115
+  - m_Id: 7184816529408
+    m_Localized: "\xCDocadh do bhille {0} go huathoibr\xEDoch toisc go raibh s\xE9
+      10 l\xE1 thar t\xE9arma. Gearradh {1} ort."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809115
+  - m_Id: 7582499463168
+    m_Localized: "T\xE1 do bhille {0} thar t\xE9arma; is \xE9 {1} an m\xE9id at\xE1
+      dlite anois."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809115
+  - m_Id: 7819351810048
+    m_Localized: "T\xE1 do bhille {0} ar luach \u20AC{1} dlite ar\xEDs."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809115
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162749194343809115
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 6728547557376
+        - id: 7080319639552
+        - id: 7184816529408
+        - id: 7582499463168
+        - id: 7819351810048

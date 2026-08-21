@@ -1,6 +1,7 @@
 using System.Collections;
 using MiniGames;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UIElements;
 
 public class TrainingMenu : MonoBehaviour
@@ -21,9 +22,20 @@ public class TrainingMenu : MonoBehaviour
     public TeamMember selectedTeamMember;
     
     public bool isTooLateForActivities = false;
+    
+    
     //FMOD.Studio.EventInstance Dumbbell;
     //FMOD.Studio.EventInstance UIClick2;
 
+    
+    [Header("Localization")]
+    LocalizedString localizedTooLateToTrain = new LocalizedString { TableReference = "TrainingMenu", TableEntryReference = "TrainingMenu.TooLateToTrain" };
+    LocalizedString localizedGettingLate = new LocalizedString { TableReference = "TrainingMenu", TableEntryReference = "TrainingMenu.GettingLate" };
+    LocalizedString localizedNoMiniGameAvailable = new LocalizedString { TableReference = "TrainingMenu", TableEntryReference = "TrainingMenu.NoMiniGameAvailable" };
+    LocalizedString localizedNotEnoughEnergy = new LocalizedString { TableReference = "TrainingMenu", TableEntryReference = "TrainingMenu.NotEnoughEnergy" };
+    LocalizedString localizedNotEnoughCurrency = new LocalizedString { TableReference = "TrainingMenu", TableEntryReference = "TrainingMenu.NotEnoughCurrency" };
+    
+    
     void OnEnable()
     {
         if(_trainStrengthButton != null)
@@ -233,13 +245,24 @@ public class TrainingMenu : MonoBehaviour
             
             if (isTooLateForActivities)
             {
-                PlayerStatsView.Instance.DisplayInfo("It's too late to Train today. Try again tomorrow.", 3);
+                string tooLateMessage = "It's too late to Train today. Try again tomorrow.";
+                
+                if (localizedTooLateToTrain != null&&!localizedTooLateToTrain.IsEmpty)
+                {
+                    tooLateMessage = localizedTooLateToTrain.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(tooLateMessage, 3);
                 return false;
             }
             
             
             if(TimeManager.Instance.IsNight()){
-                PlayerStatsView.Instance.DisplayInfo("It's getting late, consider resting soon.", 1, Color.yellow);
+                string gettingLateMessage = "It's getting late, consider resting soon.";
+                if (localizedGettingLate != null&&!localizedGettingLate.IsEmpty)
+                {
+                    gettingLateMessage = localizedGettingLate.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(gettingLateMessage, 1, Color.yellow);
             }
             
             if(!TimeManager.Instance.RealtimeDayDurationEnabled()) 
@@ -250,7 +273,15 @@ public class TrainingMenu : MonoBehaviour
         {
             if (!MiniGameManager.Instance.HasMiniGameOfStatType(selectedStatType))
             {
-                PlayerStatsView.Instance.DisplayInfo($"No mini-game available to train {selectedStatType}", 3, Color.red);
+                string noMiniGameMessage = $"No mini-game available to train {  selectedTeamMember.GetLocalizedStatName(selectedStatType)}";
+                if (localizedNoMiniGameAvailable != null && !localizedNoMiniGameAvailable.IsEmpty)
+                {
+                    localizedNoMiniGameAvailable.Arguments = new object[] { selectedTeamMember.GetLocalizedStatName(selectedStatType) };
+                    localizedNoMiniGameAvailable.Arguments[0] = selectedTeamMember.GetLocalizedStatName(selectedStatType);
+                    localizedNoMiniGameAvailable.RefreshString();
+                    noMiniGameMessage = localizedNoMiniGameAvailable.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(noMiniGameMessage, 3, Color.red);
                 return false;
             }
         }
@@ -258,14 +289,31 @@ public class TrainingMenu : MonoBehaviour
         // Check if the player has enough energy
         if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCost))
         {
-            PlayerStatsView.Instance.DisplayInfo($"You must have at least {energyCost} Energy to train", 3);
+            string notEnoughEnergyMessage = $"You must have at least {energyCost} Energy to train";
+            if(localizedNotEnoughEnergy != null && !localizedNotEnoughEnergy.IsEmpty)
+            {
+                localizedNotEnoughEnergy.Arguments = new object[] { energyCost };
+                localizedNotEnoughEnergy.Arguments[0] = energyCost;
+                localizedNotEnoughEnergy.RefreshString();
+                notEnoughEnergyMessage = localizedNotEnoughEnergy.GetLocalizedString();
+            }
+            
+            PlayerStatsView.Instance.DisplayInfo(notEnoughEnergyMessage, 3, Color.red);
             return false;
         }
 
         // Check if the player has enough currency WITHOUT deducting yet
         if (PlayerManager.Instance.GetPlayerCoins() < currencyCost)
         {
-            PlayerStatsView.Instance.DisplayInfo($"You must have at least €{currencyCost} Currency to train", 3);
+            string notEnoughCurrencyMessage = $"You must have at least €{currencyCost} Currency to train";
+            if(localizedNotEnoughCurrency != null && !localizedNotEnoughCurrency.IsEmpty)
+            {
+                localizedNotEnoughCurrency.Arguments = new object[] { currencyCost };
+                localizedNotEnoughCurrency.Arguments[0] = currencyCost;
+                localizedNotEnoughCurrency.RefreshString();
+                notEnoughCurrencyMessage = localizedNotEnoughCurrency.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(notEnoughCurrencyMessage, 3, Color.red);
             return false;
         }
 

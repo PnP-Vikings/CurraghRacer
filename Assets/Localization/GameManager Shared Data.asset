@@ -13,8 +13,52 @@ MonoBehaviour:
   m_Name: GameManager Shared Data
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: GameManager
-  m_TableCollectionNameGuidString: 00000000000000000000000000000000
-  m_Entries: []
+  m_TableCollectionNameGuidString: f4f341c7665ae8c4aba93b5bc2e33b93
+  m_Entries:
+  - m_Id: 42747289600
+    m_Key: GameManager.Sleep.CantSleepBeforeRace
+    m_Metadata:
+      m_Items: []
+  - m_Id: 206077681664
+    m_Key: GameManager.Sleep.NotTired
+    m_Metadata:
+      m_Items: []
+  - m_Id: 255557885952
+    m_Key: GameManager.Sleep.CantSleepTutorial
+    m_Metadata:
+      m_Items: []
+  - m_Id: 539734564864
+    m_Key: GameManager.Sleep.YouSpentOnSleep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 648744525824
+    m_Key: GameManager.Sleep.CouldntAffordPlaceToSleep
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1078866206720
+    m_Key: GameManager.Sleep.AmountOfEnergyRegained
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1211456544768
+    m_Key: GameManager.Sleep.UseTheEnergyYouRegainedToGoToWork
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1492441358336
+    m_Key: GameManager.Work.YouHaveWorked
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2429197213696
+    m_Key: GameManager.Train.InvalidStatType
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2549749899264
+    m_Key: GameManager.GameOverText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3640474460160
+    m_Key: GameManager.AutoSave
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

@@ -13,8 +13,20 @@ MonoBehaviour:
   m_Name: TvSettingsUi Shared Data
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: TvSettingsUi
-  m_TableCollectionNameGuidString: 00000000000000000000000000000000
-  m_Entries: []
+  m_TableCollectionNameGuidString: 401d28548f102324281fade90abd101f
+  m_Entries:
+  - m_Id: 10723778560
+    m_Key: TvSettingsUi.QuickSave.Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97625563136
+    m_Key: TvSettingsUi.QuickSave.Completed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 131595231232
+    m_Key: TvSettingsUi.QuickSave.Failed
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

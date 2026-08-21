@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MiniGameManager_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 75031818c3931c34582fec424c1fe7b0, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162749194343809143
+  m_TableData:
+  - m_Id: 4826587136
+    m_Localized: You Didn't work Hard Enough\nThe Boss is pissed\nYou have not gotten
+      paid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 114876735488
+    m_Localized: You Failed\n{0} has not improved at {1}
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809143
+  - m_Id: 158593966080
+    m_Localized: No Stats have changed
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162749194343809143
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 114876735488

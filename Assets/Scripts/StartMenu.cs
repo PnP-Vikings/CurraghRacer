@@ -19,12 +19,25 @@ public class StartMenu : MonoBehaviour
     public GameObject trainingMenuPrefab;
     public bool isTooLateForActivities = false;
     public static StartMenu Instance { get; private set; }
-
+    
+    [Header("")]
+    [SerializeField] private int energyCostForRace = 25;
+    [SerializeField] private int energyCostForWork = 25;
+    
+    [Header("Localization")]
     [SerializeField] private string startRaceText="Start Race";
     [SerializeField] private string practiceRaceText="Practice";
-    [SerializeField] private LocalizedString _localizedRaceText;
-    [SerializeField] private LocalizedString _localizedPracticeText;
+    [SerializeField] private LocalizedString _localizedRaceText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.BulletinBoard.Preview.RaceText.Race" };
+    [SerializeField] private LocalizedString _localizedPracticeText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.BulletinBoard.Preview.RaceText.Practice" };
     [SerializeField] private LocalizedString _localizedNoRaceAvailableText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.BulletinBoard.RaceButton.RaceText.NoRaceAvailable" };
+    [SerializeField] private LocalizedString localizedWaitingOnAd = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.waitingOnAd" };
+    [SerializeField] private LocalizedString localizedYouMustHaveEnergyToRace = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.YouMustHaveEnergyToRace" };
+    [SerializeField] private LocalizedString localizedCouldntAffordRaceFee = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.CouldntAffordRaceFee" };
+    [SerializeField] private LocalizedString localizedYouMustHaveEntryFee = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.YouMustHaveEntryFee" };
+    [SerializeField] private LocalizedString localizedTooLateToWorkToday = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.TooLateToWorkToday" };
+    [SerializeField] private LocalizedString localizedCompleteTutorialFirst = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.CompleteTutorialFirst" };
+    [SerializeField] private LocalizedString localizedYouMustHaveEnergyToWork = new LocalizedString { TableReference = "StartMenu", TableEntryReference = "StartMenu.YouMustHaveEnergyToWork" };
+    
     
     public void Awake()
     {
@@ -165,13 +178,24 @@ public class StartMenu : MonoBehaviour
 
         if (RaceManager.Instance.waitingForAd == true)
         {
-            PlayerStatsView.Instance.DisplayInfo("Waiting for ad to show, please wait...", 3);
+            string waitingMessage = localizedWaitingOnAd != null && !localizedWaitingOnAd.IsEmpty
+                ? localizedWaitingOnAd.GetLocalizedString()
+                : "Waiting for ad to show, please wait...";
+            PlayerStatsView.Instance.DisplayInfo(waitingMessage, 3);
             return;
         }
 
-        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !RaceManager.Instance.isRaceDay)
+        if (!PlayerManager.Instance.PlayerHasEnoughEnergy(energyCostForRace) && !RaceManager.Instance.isRaceDay)
         {
-            PlayerStatsView.Instance.DisplayInfo("You Must have 25 Energy to Race", 3);
+            string energyMessage = $"You Must have {energyCostForRace} Energy";
+            if (localizedYouMustHaveEnergyToRace != null && !localizedYouMustHaveEnergyToRace.IsEmpty)
+            {
+                localizedYouMustHaveEnergyToRace.Arguments = new object[] { energyCostForRace };
+                localizedYouMustHaveEnergyToRace.Arguments[0] = energyCostForRace;
+                localizedYouMustHaveEnergyToRace.RefreshString();
+                energyMessage = localizedYouMustHaveEnergyToRace.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(energyMessage, 3);
             return;
         }
 
@@ -189,13 +213,32 @@ public class StartMenu : MonoBehaviour
             {
                 PlayerStatsView.Instance.ClearInfo();
                 
-                PlayerStatsView.Instance.DisplayInfo(
-                    $"Couldn't Afford The Race Entry Fee \n the Gang covered You. You are now in debt. \n IF YOU GO 400 IN DEBT THE GAME WILL BE OVER!!!", 3);
+                float maxDept = 400;
+                if(PlayerManager.Instance != null)
+                {
+                    maxDept = PlayerManager.Instance.maxAmountOfDebt;
+                }
+                string debtMessage = $"Couldn't Afford The Race Entry Fee \n the Gang covered You. You are now in debt. \n IF YOU GO {maxDept} IN DEBT THE GAME WILL BE OVER!!!";
+                if (localizedCouldntAffordRaceFee != null && !localizedCouldntAffordRaceFee.IsEmpty && PlayerManager.Instance != null)
+                {
+                    localizedCouldntAffordRaceFee.Arguments = new object[] { PlayerManager.Instance.maxAmountOfDebt };
+                    localizedCouldntAffordRaceFee.Arguments[0] = PlayerManager.Instance.maxAmountOfDebt;
+                    localizedCouldntAffordRaceFee.RefreshString();
+                    debtMessage = localizedCouldntAffordRaceFee.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(debtMessage, 3);
             }
             else
             {
-                PlayerStatsView.Instance.DisplayInfo(
-                    $"You have paid the {raceCost} entry fee", 3);
+                string entryFeeMessage = $"You have paid the {raceCost} entry fee";
+                if (localizedYouMustHaveEntryFee != null && !localizedYouMustHaveEntryFee.IsEmpty)
+                {
+                    localizedYouMustHaveEntryFee.Arguments = new object[] { raceCost };
+                    localizedYouMustHaveEntryFee.Arguments[0] = raceCost;
+                    localizedYouMustHaveEntryFee.RefreshString();
+                    entryFeeMessage = localizedYouMustHaveEntryFee.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(entryFeeMessage, 3);
             }
 
         }
@@ -232,7 +275,10 @@ public class StartMenu : MonoBehaviour
             
             if (isTooLateForActivities)
             {
-                PlayerStatsView.Instance.DisplayInfo("It's too late to work today. Try again tomorrow.", 3);
+                string tooLateMessage = localizedTooLateToWorkToday != null && !localizedTooLateToWorkToday.IsEmpty
+                    ? localizedTooLateToWorkToday.GetLocalizedString()
+                    : "It's too late to work today. Try again tomorrow.";
+                PlayerStatsView.Instance.DisplayInfo(tooLateMessage, 3);
                 return;
             }
         }
@@ -256,7 +302,11 @@ public class StartMenu : MonoBehaviour
         }
         else if(GameManager.Instance.IsTutorialModeActive() && !GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.WorkJobTask) && !GameManager.Instance.IsTutorialTaskCompleted(TutorialTaskType.WorkJobTask))
         {
-            PlayerStatsView.Instance.DisplayInfo("You Must complete the tutorial task first", 3);
+            PlayerStatsView.Instance.ClearInfo();
+            string completeTutorialMessage = localizedCompleteTutorialFirst != null && !localizedCompleteTutorialFirst.IsEmpty
+                ? localizedCompleteTutorialFirst.GetLocalizedString()
+                : "You Must complete the current tutorial task first";
+            PlayerStatsView.Instance.DisplayInfo(completeTutorialMessage, 1.5f);
             return;
         }
         
@@ -283,7 +333,15 @@ public class StartMenu : MonoBehaviour
         }
         else
         {
-            PlayerStatsView.Instance.DisplayInfo("You Must have 25 Energy to Work", 3);
+            string workCostMessage= $"You Must have {energyCostForWork} Energy to Work";
+            if (localizedYouMustHaveEnergyToWork != null && !localizedYouMustHaveEnergyToWork.IsEmpty)
+            {
+                localizedYouMustHaveEnergyToWork.Arguments = new object[] { energyCostForWork };
+                localizedYouMustHaveEnergyToWork.Arguments[0] = energyCostForWork;
+                localizedYouMustHaveEnergyToWork.RefreshString();
+                workCostMessage = localizedYouMustHaveEnergyToWork.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(workCostMessage, 3);
         }
     }
     public void OnSleepButtonClicked()
@@ -296,7 +354,11 @@ public class StartMenu : MonoBehaviour
         {
             if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && !GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.SleepTask))
             {
-                PlayerStatsView.Instance.DisplayInfo("You Must complete the tutorial task first", 3);
+                PlayerStatsView.Instance.ClearInfo();
+                string completeTutorialMessage = localizedCompleteTutorialFirst != null && !localizedCompleteTutorialFirst.IsEmpty
+                    ? localizedCompleteTutorialFirst.GetLocalizedString()
+                    : "You Must complete the current tutorial task first";
+                PlayerStatsView.Instance.DisplayInfo(completeTutorialMessage, 1.5f);
             }
             else
             {

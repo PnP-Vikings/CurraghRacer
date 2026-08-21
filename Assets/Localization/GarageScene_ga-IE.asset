@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: ga-IE
   m_SharedData: {fileID: 11400000, guid: a07bb808be2c6a044a89c4fcb95f0acd, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 7162749194343809148
   m_TableData:
   - m_Id: 173689266176
     m_Localized: Bord
@@ -276,27 +277,33 @@ MonoBehaviour:
   - m_Id: 6753046620004352
     m_Localized: "Point\xED: {0}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809148
   - m_Id: 6753240728199168
     m_Localized: 'Post: {0}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809148
   - m_Id: 6753210558570496
     m_Localized: 'Buaiteanna: {0}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809148
   - m_Id: 6753277134757888
     m_Localized: "R\xE1t\xE1il R\xE9alta\xED: {0}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809148
   - m_Id: 6760545930698752
     m_Localized: "Go dt\xED: {0} l\xE1"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809148
   - m_Id: 6760822691848192
     m_Localized: "M\xE9id: \u20AC{0}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809148
   - m_Id: 6761975680851968
     m_Localized: "\xCDoc"
     m_Metadata:
@@ -309,6 +316,31 @@ MonoBehaviour:
     m_Localized: "N\xEDl aon r\xE1s ar f\xE1il"
     m_Metadata:
       m_Items: []
+  - m_Id: 11833262962892800
+    m_Localized: Glac
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11833401689497600
+    m_Localized: "B\xED c\xFAramach"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11833506513543168
+    m_Localized: "T\xE1 fiacha ort leis an Irish Mob.\r\nN\xED dh\xE9anfaidh siad
+      dearmad air, agus m\xE1 t\xE1 n\xEDos m\xF3 n\xE1 {0} dlite agat,\r\nd\u2019fh\xE9adfadh
+      rud \xE9igin dona tarl\xFA..."
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162749194343809148
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 6753046620004352
+        - id: 6753210558570496
+        - id: 6753240728199168
+        - id: 6753277134757888
+        - id: 6760545930698752
+        - id: 6760822691848192

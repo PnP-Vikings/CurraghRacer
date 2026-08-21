@@ -13,8 +13,40 @@ MonoBehaviour:
   m_Name: BillsController Shared Data
   m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
   m_TableCollectionName: BillsController
-  m_TableCollectionNameGuidString: 00000000000000000000000000000000
-  m_Entries: []
+  m_TableCollectionNameGuidString: 48b7c9ec7d0faff4089147425c06862d
+  m_Entries:
+  - m_Id: 205188489216
+    m_Key: BillsController.ElectricityBillName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 309572132864
+    m_Key: BillsController.HeatingBillName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 394280296448
+    m_Key: BillsController.RentBillName
+    m_Metadata:
+      m_Items: []
+  - m_Id: 6728547557376
+    m_Key: BillsController.YouCantAfford
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7080319639552
+    m_Key: BillsController.YouHavePaid
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7184816529408
+    m_Key: BillsController.AutoPay
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7582499463168
+    m_Key: BillsController.BillOverdue
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7819351810048
+    m_Key: BillsController.Billdue
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

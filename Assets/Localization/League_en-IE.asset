@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: en-IE
   m_SharedData: {fileID: 11400000, guid: 026f0686b2b93d7449c3a38bf24d7bb2, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 7162749194343809145
   m_TableData:
   - m_Id: 7531913216
     m_Localized: 'You have been invited to participate in\nThe '
@@ -64,57 +65,82 @@ MonoBehaviour:
       and has been relegated to a lower league. You earned {2} points with {3} wins.
       Don't be disheartened, use this as motivation to come back stronger!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 11867756945408
     m_Localized: Outstanding! Your team finished in 1st position out of {0} competitors,
       and has been promoted to a higher league. You earned {1} points with {2} wins.
       Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 12039886987264
     m_Localized: Excellent! Your team finished in 2nd position out of {0} competitors,
       and has been promoted to a higher league. You earned {1} points with {2} wins.
       Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 12212566482944
     m_Localized: Great work! Your team finished in 3rd position out of {0} competitors,
       and has been promoted to a higher league. You earned {1} points with {2} wins.
       Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 12412232130560
     m_Localized: Well done! Your team finished in position {0} out of {1} competitors,
       and has been promoted to a higher league. You earned {2} points with {3} wins.
       Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 12655556288512
     m_Localized: Fantastic! Your team are Champions finishing 1st out of {0} competitors.
       You earned {1} points with {2} wins. Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 12947316269056
     m_Localized: Awesome! Your team finished in 2nd position out of {0} competitors.
       You earned {1} points with {2} wins. Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 12983290814464
     m_Localized: Great job! Your team finished in 3rd position out of {0} competitors.
       You earned {1} points with {2} wins.
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 13186785861632
     m_Localized: Congratulations! Your team finished in position {0} out of {1} competitors,
       and has been promoted to a higher league. You earned {2} points with {3} wins.
       Keep up the great work!
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   - m_Id: 13468517261312
     m_Localized: Great job! Your team finished in position {0} out of {1} competitors.
       You earned {2} points with {3} wins.
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809145
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162749194343809145
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 12655556288512
+        - id: 12412232130560
+        - id: 12212566482944
+        - id: 12039886987264
+        - id: 11867756945408
+        - id: 8916015505408
+        - id: 12947316269056
+        - id: 12983290814464
+        - id: 13186785861632
+        - id: 13468517261312

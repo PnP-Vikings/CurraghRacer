@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TrainingMenu_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 6d88e3c441113fa49b48367c884ba677, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162749194343809129
+  m_TableData:
+  - m_Id: 13739483136
+    m_Localized: It's too late to train today. Try again tomorrow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 300856369152
+    m_Localized: It's getting late, consider resting soon.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 385195433984
+    m_Localized: No mini-game available to train {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809129
+  - m_Id: 497057521664
+    m_Localized: You must have at least {0} Energy to train
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809129
+  - m_Id: 622370742272
+    m_Localized: "You must have at least \u20AC{0} Currency to train"
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809129
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162749194343809129
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 622370742272
+        - id: 497057521664
+        - id: 385195433984

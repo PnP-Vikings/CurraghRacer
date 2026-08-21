@@ -1,17 +1,30 @@
 using DG.Tweening;
 using League;
+using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class GarageSceneManager : MonoBehaviour
 {
     public static GarageSceneManager Instance { get; private set; }
     public DecisionCardUiMaster De;
     public WelcomeCardUi welcomeCardUi;
-    public GameObject DebtWarningScreen;
     [Tooltip("Delay before showing the welcome card for new players. Adjust as needed.")]
     public float showIntroDelay = 1.2f;
     public TutorialTaskUiManager tutorialTaskUiManager;
     public GameObject tutorialUi;
+    
+    
+    
+    [Header("Debt Warning")]
+    public GameObject DebtWarningScreen;
+    public TMP_Text debtWarningTitleText;
+    public TMP_Text debtWarningText;
+    public TMP_Text debtWarningBtnText;
+    
+    LocalizedString localizedDebtWarningTitleText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.DebtWarning.Title" };
+    LocalizedString localizedDebtWarningDescriptionText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.DebtWarning.DescriptionText" };
+    LocalizedString localizedDebtWarningBtnText = new LocalizedString { TableReference = "GarageScene", TableEntryReference = "Garage.DebtWarning.AcceptBtnTxt" };
     private void Awake()
     {
         if (Instance == null)
@@ -92,6 +105,33 @@ public class GarageSceneManager : MonoBehaviour
     {
         if(GameManager.Instance != null && !GameManager.Instance.GetHasBeenShownWarningAboutDebt())
         {
+            if (debtWarningTitleText != null)
+            {
+                if(!localizedDebtWarningTitleText.IsEmpty)
+                {
+                    localizedDebtWarningTitleText.RefreshString();
+                    debtWarningTitleText.text = localizedDebtWarningTitleText.GetLocalizedString();
+                }
+            }
+            
+            if (debtWarningText != null)
+            {
+                if(!localizedDebtWarningDescriptionText.IsEmpty)
+                {
+                    localizedDebtWarningDescriptionText.RefreshString();
+                    debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString();
+                }
+            }
+            
+            if (debtWarningBtnText != null)
+            {
+                if(!localizedDebtWarningBtnText.IsEmpty)
+                {
+                    localizedDebtWarningBtnText.RefreshString();
+                    debtWarningBtnText.text = localizedDebtWarningBtnText.GetLocalizedString();
+                }
+            }
+            
             DebtWarningScreen.SetActive(true);
             GameManager.Instance.SetHasBeenShownWarningAboutDebt(true);
         }

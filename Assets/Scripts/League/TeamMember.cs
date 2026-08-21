@@ -76,6 +76,13 @@ public class TeamMember : ScriptableObject
     [SerializeField] private LocalizedString _localizedAttitudeAggressive = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Aggressive" };
     [SerializeField] private LocalizedString _localizedAttitudeEnergetic = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Energetic" };
     [SerializeField] private LocalizedString _localizedAttitudeLazy = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Lazy" };
+    [SerializeField] private LocalizedString _localizedStatStrength = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMember.Stat.Strength" };
+    [SerializeField] private LocalizedString _localizedStatStamina = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMember.Stat.Stamina" };
+    [SerializeField] private LocalizedString _localizedStatTechnique = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMember.Stat.Technique" };
+    [SerializeField] private LocalizedString _localizedStatTeamWork = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMember.Stat.TeamWork" };
+    [SerializeField] private LocalizedString _localizedStatUnknown = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMember.Stat.UnknownStat" };
+    
+    
     public CharacterStats GetStats()
     {
         return characterStats;
@@ -401,6 +408,42 @@ public class TeamMember : ScriptableObject
         TeamWork
     }
     
+    public string GetLocalizedStatName(StatType statType)
+    {
+        switch (statType)
+        {
+            case StatType.Strength:
+                if (!_localizedStatStrength.IsEmpty)
+                {
+                    return _localizedStatStrength.GetLocalizedString();
+                }
+                return "Strength"; 
+            case StatType.Stamina:
+                if (!_localizedStatStamina.IsEmpty)
+                {
+                    return _localizedStatStamina.GetLocalizedString();
+                }
+                return "Stamina"; 
+            case StatType.Technique:
+                if (!_localizedStatTechnique.IsEmpty)
+                {
+                    return _localizedStatTechnique.GetLocalizedString();
+                }
+                return "Technique"; 
+            case StatType.TeamWork:
+                if (!_localizedStatTeamWork.IsEmpty)
+                {
+                    return _localizedStatTeamWork.GetLocalizedString();
+                }
+                return "Team Work"; 
+            default:
+                if (!_localizedStatUnknown.IsEmpty)
+                {
+                    return _localizedStatUnknown.GetLocalizedString();
+                }
+                return "Unknown Stat";
+        }
+    }
     
 }
 

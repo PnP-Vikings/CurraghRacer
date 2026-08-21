@@ -7,6 +7,7 @@ using MiniGames.DishWashingMinigame;
 using MiniGames.BeerMinigame;
 using UnityEngine.SceneManagement;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 
 namespace MiniGames
 {
@@ -40,6 +41,12 @@ namespace MiniGames
         
         public bool playerHasFailedMinigame = false;
 
+        
+        [Header("Localization")]
+        LocalizedString localizedFailedWork = new LocalizedString { TableReference = "MiniGameManager", TableEntryReference = "MiniGameManager.FailedWork" };
+        LocalizedString localizedFailedTraining = new LocalizedString { TableReference = "MiniGameManager", TableEntryReference = "MiniGameManager.FailedTraining" };
+        LocalizedString localizedNoStatsChanged = new LocalizedString { TableReference = "MiniGameManager", TableEntryReference = "MiniGameManager.FailedTraining.NoStats" };
+        
 
         void Awake()
         {
@@ -451,7 +458,12 @@ namespace MiniGames
                 {
                     // For work activities, use the GameManager method but with our calculated earnings
                     // This ensures time updates and proper energy deduction
-                    PlayerStatsView.Instance.DisplayInfo("You Didn't work Hard Enough\nThe Boss is pissed\nYou have not gotten paid", 3);
+                    string failedWorkMessage = "You Didn't work Hard Enough\nThe Boss is pissed\nYou have not gotten paid";
+                    if (localizedFailedWork != null && !localizedFailedWork.IsEmpty)
+                    {
+                        failedWorkMessage = localizedFailedWork.GetLocalizedString();
+                    }
+                    PlayerStatsView.Instance.DisplayInfo(failedWorkMessage, 3);
                 }
                 else if( currentGame.category == ActivityCategory.Training)
                 {
@@ -465,11 +477,25 @@ namespace MiniGames
                     {
                         // Update time via GameManager
                         Debug.LogWarning(selectedTeamMember.memberName + " has failed to improve at " + selectedTrainingStatType);
-                        PlayerStatsView.Instance.DisplayInfo($"You Failed\n{selectedTeamMember.memberName} has not improved at {selectedTrainingStatType}", 3);
+                        string failedTrainingMessage = $"You Failed\n{selectedTeamMember.memberName} has not improved at {selectedTeamMember.GetLocalizedStatName(selectedTrainingStatType)}";
+                        if (localizedFailedTraining != null && !localizedFailedTraining.IsEmpty)
+                        {
+                            localizedFailedTraining.Arguments = new object[] { selectedTeamMember.memberName, selectedTeamMember.GetLocalizedStatName(selectedTrainingStatType) };
+                            localizedFailedTraining.Arguments[0] = selectedTeamMember.memberName;
+                            localizedFailedTraining.Arguments[1] = selectedTeamMember.GetLocalizedStatName(selectedTrainingStatType);
+                            localizedFailedTraining.RefreshString();
+                            failedTrainingMessage = localizedFailedTraining.GetLocalizedString();
+                        }
+                        PlayerStatsView.Instance.DisplayInfo(failedTrainingMessage, 3);
                     }
                     else
                     {
-                        PlayerStatsView.Instance.DisplayInfo($"No Stats have changed", 3);
+                        string noStatsMessage = "No Stats have changed";
+                        if (localizedNoStatsChanged != null && !localizedNoStatsChanged.IsEmpty)
+                        {
+                            noStatsMessage = localizedNoStatsChanged.GetLocalizedString();
+                        }
+                        PlayerStatsView.Instance.DisplayInfo(noStatsMessage, 3);
                     }
                 }
             }  

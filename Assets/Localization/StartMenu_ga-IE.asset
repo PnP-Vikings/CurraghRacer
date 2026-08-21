@@ -1,0 +1,69 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: StartMenu_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 963db569f87ef5c4b9c32a2df4e6d57e, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162749194343809142
+  m_TableData:
+  - m_Id: 23927447552
+    m_Localized: "Ag fanacht leis an bhf\xF3gra a bheith le feice\xE1il, fan le do
+      thoil..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 72149360640
+    m_Localized: "Caithfidh {0} Fuinneamh a bheith agat chun r\xE1s a rith."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809142
+  - m_Id: 119310114816
+    m_Localized: "N\xED raibh t\xFA in ann \xEDoc as t\xE1ille iontr\xE1la an r\xE1sa
+      \u2014 d\u2019\xEDoc an drong duit. T\xE1 fiacha ort anois. \\n M\xC1 BH\xCDONN
+      FIACHA {0} ort, BEIDH DEIREADH LEIS AN gCLUICHE!!!"
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809142
+  - m_Id: 224180297728
+    m_Localized: "T\xE1 an t\xE1ille iontr\xE1la {0} \xEDoctha agat."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809142
+  - m_Id: 300256583680
+    m_Localized: "T\xE1 s\xE9 r\xF3-dh\xE9anach oibri\xFA inniu. Bain triail as ar\xEDs
+      am\xE1rach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 306325741568
+    m_Localized: "Caithfidh t\xFA an tasc teagaisc reatha a chur i gcr\xEDch ar dt\xFAs."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 340458987520
+    m_Localized: "Caithfidh {0} fuinnimh a bheith agat chun oibri\xFA."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809142
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162749194343809142
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 224180297728
+        - id: 72149360640
+        - id: 119310114816
+        - id: 340458987520

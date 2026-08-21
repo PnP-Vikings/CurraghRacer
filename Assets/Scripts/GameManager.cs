@@ -189,13 +189,14 @@ public class GameManager : MonoBehaviour
         
         if (tutorialModeActive && !tutorialModeCompleted && !IsTutorialTaskActive(TutorialTaskType.SleepTask))
         {
+            PlayerStatsView.Instance.ClearInfo();
             string cantSleepTutorialMessage = "You cannot sleep yet. Complete your current tutorial task first.";
             if(localizedCantSleepTutorial != null && !localizedCantSleepTutorial.IsEmpty)
             {
                 localizedCantSleepTutorial.RefreshString();
                 cantSleepTutorialMessage = localizedCantSleepTutorial.GetLocalizedString();
             }
-            PlayerStatsView.Instance.DisplayInfo(cantSleepTutorialMessage, 3);
+            PlayerStatsView.Instance.DisplayInfo(cantSleepTutorialMessage, 1.5f);
             return; // Not enough energy to sleep
         }
         

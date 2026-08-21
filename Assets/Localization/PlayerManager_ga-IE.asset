@@ -1,0 +1,44 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: PlayerManager_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 326fa1781012ec0438368862a1d431e6, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162749194343809133
+  m_TableData:
+  - m_Id: 353146757120
+    m_Localized: '{0} fuair {1} {2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809133
+  - m_Id: 507098685440
+    m_Localized: "Rabhadh: T\xE1 t\xFA i bhfiacha! Tuill n\xEDos m\xF3 airgid chun
+      pion\xF3is a sheachaint."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 742348808192
+    m_Localized: "T\xE1 an teorainn uasta fiachais bainte amach agat! Cluiche thart."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162749194343809133
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 353146757120

@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using League;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 using UnityEngine.Serialization;
 
 public class PlayerManager : MonoBehaviour
@@ -14,6 +15,12 @@ public class PlayerManager : MonoBehaviour
     public float maxAmountOfDebt = -400f; // Maximum debt allowed
     public PlayerStatsView playerStatsView;
     public UnityEvent onDebtWarning;
+    
+    
+    [Header("Localization")]
+    [SerializeField] private LocalizedString localizedStatGainedText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.TeamMemberStatGained" };
+    [SerializeField] private LocalizedString localizedDebtWarningEarnMoneyText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.DebtWarning.EarnMoney" };
+    [SerializeField] private LocalizedString localizedDebtWarningReachedMaximumDebtLimitText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.DebtWarning.ReachedMaximumDebtLimit" };
     
     private void Awake()
     {
@@ -191,8 +198,18 @@ public class PlayerManager : MonoBehaviour
         if (tempList.Contains(member))
         {
             member.ImproveStat(statType, amount);
-            playerStatsView.ClearInfo();
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {amount} {statType}", 3);
+            PlayerStatsView.Instance.ClearInfo();
+            string statGainedMessage = $"{member.memberName} gained {amount} {member.GetLocalizedStatName(statType)}";
+            if (localizedStatGainedText != null && !localizedStatGainedText.IsEmpty)
+            {
+             localizedStatGainedText.Arguments = new object[] { member.memberName, amount, member.GetLocalizedStatName(statType) };
+             localizedStatGainedText.Arguments[0] = member.memberName;
+             localizedStatGainedText.Arguments[1] = amount;
+             localizedStatGainedText.Arguments[2] = member.GetLocalizedStatName(statType);
+             localizedStatGainedText.RefreshString();
+             statGainedMessage = localizedStatGainedText.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(statGainedMessage, 3);
             Debug.Log($"{member.memberName}'s {statType} modified: " + member.GetTeamMemberStat(statType));
         }
         else
@@ -208,7 +225,12 @@ public class PlayerManager : MonoBehaviour
             onDebtWarning.Invoke();
             if (PlayerStatsView.Instance != null)
             {
-                PlayerStatsView.Instance.DisplayInfo("Warning: You are in debt! Earn more money to avoid penalties.", 5);
+                string warningMessage = "Warning: You are in debt! Earn more money to avoid penalties.";
+                if (localizedDebtWarningEarnMoneyText != null && !localizedDebtWarningEarnMoneyText.IsEmpty)
+                {
+                    warningMessage = localizedDebtWarningEarnMoneyText.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(warningMessage, 5);
             }
             Debug.LogWarning("Player is in debt!");
         }
@@ -220,7 +242,12 @@ public class PlayerManager : MonoBehaviour
         {
             if (PlayerStatsView.Instance != null)
             {
-                PlayerStatsView.Instance.DisplayInfo("You have reached the maximum debt limit! Game Over.", 5);
+                string warningMessage = "You have reached the maximum debt limit! Game Over.";
+                if (localizedDebtWarningReachedMaximumDebtLimitText != null && !localizedDebtWarningReachedMaximumDebtLimitText.IsEmpty)
+                {
+                    warningMessage = localizedDebtWarningReachedMaximumDebtLimitText.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(warningMessage, 5);
             }
             Debug.LogError("Player has reached maximum debt limit!");
             GameManager.Instance.TriggerGameOver();
