@@ -22,6 +22,12 @@ MonoBehaviour:
     - Locale-ga-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 0d31531c7aacbc2499ff2b257a23f6a5
+    m_Address: StartMenu_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 383fcc8c598acbd468049e8e0f607f5e
     m_Address: MainMenu_ga-IE
     m_ReadOnly: 1
@@ -42,8 +48,26 @@ MonoBehaviour:
     - Locale-ga-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 502478b84a26f7c43a253fbebf05fca9
+    m_Address: TrainingMenu_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 5d23162b5e781524088883e1fc2731d5
+    m_Address: MiniGameManager_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 73b76dc58dd72944a84998c52266c768
     m_Address: TutorialTasks_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 81d03da52e3432a4ab99c6f4f0750ceb
+    m_Address: TvSettingsUi_ga-IE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ga-IE
@@ -60,6 +84,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ga-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b59ebf2247a6cbe4db3259339a96ee25
+    m_Address: BillsController_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: bcdf9054ec7cb9f49bdf8efaabd550c2
     m_Address: RaceScene_ga-IE
     m_ReadOnly: 1
@@ -68,6 +98,19 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: c31d37139191dac49a369ae8c81f736f
     m_Address: DecisionCards_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: cf15b2bfcb15a5a48b207ec364857892
+    m_Address: GameManager_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: fb715b652293c234fb4631a512424b8b
+    m_Address: PlayerManager_ga-IE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-ga-IE

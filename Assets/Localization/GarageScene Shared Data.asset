@@ -136,7 +136,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6362235751358464
-    m_Key: Garage.BulletinBoard.Preview.RaceText.Pratice
+    m_Key: Garage.BulletinBoard.Preview.RaceText.Practice
     m_Metadata:
       m_Items: []
   - m_Id: 6681263640403968
@@ -289,6 +289,22 @@ MonoBehaviour:
       m_Items: []
   - m_Id: 7888416975872000
     m_Key: Garage.TutorialUi.NextTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11428190256881664
+    m_Key: Garage.BulletinBoard.RaceButton.RaceText.NoRaceAvailable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11833262962892800
+    m_Key: Garage.DebtWarning.AcceptBtnTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11833401689497600
+    m_Key: Garage.DebtWarning.Title
+    m_Metadata:
+      m_Items: []
+  - m_Id: 11833506513543168
+    m_Key: Garage.DebtWarning.DescriptionText
     m_Metadata:
       m_Items: []
   m_Metadata:

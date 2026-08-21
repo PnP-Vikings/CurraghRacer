@@ -83,6 +83,7 @@ public class TeamMemberUiHandler : MonoBehaviour
         if (member.memberIcon != null)
         {
             memberIconImage.sprite = member.memberIcon;
+            memberIconImage.color = Color.white; // Ensure the image is visible
         }
         else
         {

@@ -901,10 +901,46 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::TutorialTaskUiDialogue
   dialogueText: {fileID: 9092473971200903981}
   taskTitleText: {fileID: 4376624811565136900}
-  dialogueSprite:
-  - {fileID: 21300000, guid: 37fb0ceea8e91fc47b2d8e062ac1dce5, type: 3}
-  - {fileID: 21300000, guid: 57041d22d3794334d8c37294fd44cd88, type: 3}
+  dialogueSprites: []
   dialogueCharacterImage: {fileID: 1075416538573666941}
+  dialogueLines: []
+  currentDialogueLine: 
+  currentDialogueIndex: 0
+  activeTask:
+    taskName: 
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    taskDialogs: []
+    taskDialogsLocalizedStrings: []
+    CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
+    taskType: 0
+    hasTutorialDialogsBeenShown: 0
+    isTaskActive: 0
+    completed: 0
+  dialogueSpriteSpeed: 0.25
+  dialogueTextSpeed: 0.1
+  TutorialAudio: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &6976904737313664325
 GameObject:
   m_ObjectHideFlags: 0
@@ -953,12 +989,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   De: {fileID: 0}
-  inviteDelay: 5
   welcomeCardUi: {fileID: 1724744006512994638}
-  DebtWarningScreen: {fileID: 5257301473936113575}
   showIntroDelay: 1.2
   tutorialTaskUiManager: {fileID: 7424250990424201332}
   tutorialUi: {fileID: 141115735899094446}
+  DebtWarningScreen: {fileID: 5257301473936113575}
+  debtWarningTitleText: {fileID: 7009461576659916887}
+  debtWarningText: {fileID: 2219371772582745149}
+  debtWarningBtnText: {fileID: 2120684284915244650}
 --- !u!1 &7996528257874443494
 GameObject:
   m_ObjectHideFlags: 0
@@ -1122,6 +1160,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 2678443173690977792, guid: d21b8de0e01a4cc4e8357bf50179b1e7, type: 3}
+      propertyPath: m_Name
+      value: AcceptTxt
+      objectReference: {fileID: 0}
     - target: {fileID: 5664502143122024280, guid: d21b8de0e01a4cc4e8357bf50179b1e7, type: 3}
       propertyPath: m_Name
       value: DebtWarningScreenUi
@@ -1140,6 +1182,28 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 2091124022436608327, guid: d21b8de0e01a4cc4e8357bf50179b1e7, type: 3}
   m_PrefabInstance: {fileID: 462170341001877759}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &2120684284915244650 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1947765499542832789, guid: d21b8de0e01a4cc4e8357bf50179b1e7, type: 3}
+  m_PrefabInstance: {fileID: 462170341001877759}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &2219371772582745149 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1775895617385630914, guid: d21b8de0e01a4cc4e8357bf50179b1e7, type: 3}
+  m_PrefabInstance: {fileID: 462170341001877759}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f4688fdb7df04437aeb418b961361dc5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &5257301473936113575 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 5664502143122024280, guid: d21b8de0e01a4cc4e8357bf50179b1e7, type: 3}
@@ -1281,6 +1345,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3695997404174212714}
     m_Modifications:
+    - target: {fileID: 601892031207717620, guid: 732136d19f5df424b8df5a6ccecd38a7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 30.599976
+      objectReference: {fileID: 0}
     - target: {fileID: 1750209074227920742, guid: 732136d19f5df424b8df5a6ccecd38a7, type: 3}
       propertyPath: m_LocalPosition.x
       value: 0

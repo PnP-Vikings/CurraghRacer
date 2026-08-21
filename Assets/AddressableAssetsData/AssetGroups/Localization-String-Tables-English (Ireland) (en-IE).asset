@@ -21,6 +21,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 2bdb2b0595d13414096b295dc528a67d
+    m_Address: TrainingMenu_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3d0b039453b065e43a59f7775e4bc08c
     m_Address: RaceScene_en-IE
     m_ReadOnly: 1
@@ -33,8 +39,39 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 425dcf2c1c0c10b4ba1db5e6c2c47c2c
+    m_Address: MiniGameManager_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 477cbfa03f93f06438d62040d33e59fa
+    m_Address: GameManager_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 4c3a4fcb6d28aa848adb9ab3c9e6797c
+    m_Address: StartMenu_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 55f538f24a17cd14f9fb2ae2f54f7775
+    m_Address: PlayerManager_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 5dedb8391f974f6498a5f4095e2518e4
     m_Address: TimeManager_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 80e9fd8677e84de4ea55032ad92871db
+    m_Address: BillsController_en-IE
     m_ReadOnly: 1
     m_SerializedLabels:
     - Locale-en-IE
@@ -71,6 +108,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-IE
     - Preload
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: ec739e2703a6f0247a332180b615bbde
+    m_Address: TvSettingsUi_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
     FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 1
   m_Settings: {fileID: 11400000, guid: 35a8a1f60e0679743a65d48dd1db6fec, type: 2}

@@ -8125,6 +8125,17 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 89e1d5e2e5b03884c9141a9d9a03d91c, type: 3}
   m_PrefabInstance: {fileID: 1146619322}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1353531096 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 7403869330894755503, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+  m_PrefabInstance: {fileID: 5166841709830490626}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2012541216}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4e29b1a8efbd4b44bb3f3716e73f07ff, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1369719521
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -13154,6 +13165,10 @@ PrefabInstance:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 1732428147}
+    - target: {fileID: 1350123167166785459, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
+      propertyPath: closeButton
+      value: 
+      objectReference: {fileID: 1353531096}
     - target: {fileID: 1350123167166785459, guid: 6e05abfbaa066db46b0ed82c08a1be28, type: 3}
       propertyPath: practiceRaceText
       value: "R\xE1s Cleachtaidh"

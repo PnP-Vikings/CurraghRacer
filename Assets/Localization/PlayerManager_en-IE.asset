@@ -1,0 +1,43 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: PlayerManager_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 326fa1781012ec0438368862a1d431e6, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162749194343809132
+  m_TableData:
+  - m_Id: 507098685440
+    m_Localized: 'Warning: You are in debt! Earn more money to avoid penalties.'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 742348808192
+    m_Localized: You have reached the maximum debt limit! Game Over.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 353146757120
+    m_Localized: '{0} gained {1} {2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809132
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162749194343809132
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 353146757120

@@ -5255,7 +5255,7 @@
                 "b": 1.0,
                 "a": 1.0
             },
-            "checklistTickStyle": 4,
+            "checklistTickStyle": 0,
             "customChecklistTickChar": "",
             "pro_StatusOverdue": {
                 "r": 0.949999988079071,

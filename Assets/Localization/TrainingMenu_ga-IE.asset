@@ -1,0 +1,59 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: TrainingMenu_ga-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: ga-IE
+  m_SharedData: {fileID: 11400000, guid: 6d88e3c441113fa49b48367c884ba677, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7162749194343809130
+  m_TableData:
+  - m_Id: 622370742272
+    m_Localized: "Caithfidh \u20AC{0} ar a laghad a bheith agat chun oili\xFAint
+      a dh\xE9anamh."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809130
+  - m_Id: 497057521664
+    m_Localized: "Caithfidh ar a laghad {0} Fuinneamh a bheith agat chun traen\xE1il
+      a dh\xE9anamh."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809130
+  - m_Id: 385195433984
+    m_Localized: "N\xEDl aon mhionchluiche ar f\xE1il chun {0} a oili\xFAint."
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809130
+  - m_Id: 13739483136
+    m_Localized: "T\xE1 s\xE9 r\xF3-dh\xE9anach traen\xE1il inniu. Bain triail as
+      ar\xEDs am\xE1rach."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 300856369152
+    m_Localized: "T\xE1 s\xE9 ag \xE9ir\xED d\xE9anach; smaoinigh ar sc\xEDth a ligean
+      go luath."
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7162749194343809130
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 622370742272
+        - id: 497057521664
+        - id: 385195433984

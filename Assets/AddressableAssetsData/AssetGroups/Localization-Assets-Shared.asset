@@ -25,6 +25,31 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 326fa1781012ec0438368862a1d431e6
+    m_Address: Assets/Localization/PlayerManager Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 401d28548f102324281fade90abd101f
+    m_Address: Assets/Localization/TvSettingsUi Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 48b7c9ec7d0faff4089147425c06862d
+    m_Address: Assets/Localization/BillsController Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6d88e3c441113fa49b48367c884ba677
+    m_Address: Assets/Localization/TrainingMenu Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 75031818c3931c34582fec424c1fe7b0
+    m_Address: Assets/Localization/MiniGameManager Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8bde466f21db9854694374d161ec0da5
     m_Address: Assets/Localization/MainMenu Shared Data.asset
     m_ReadOnly: 1
@@ -32,6 +57,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 8c3af7048c981494cb7b9eff636a2d2a
     m_Address: Assets/Localization/TeamMemberDetailCards Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 963db569f87ef5c4b9c32a2df4e6d57e
+    m_Address: Assets/Localization/StartMenu Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -52,6 +82,11 @@ MonoBehaviour:
     FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b2ee0c25f3b58ff41a135fa739ae672c
     m_Address: Assets/Localization/DecisionCards Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f4f341c7665ae8c4aba93b5bc2e33b93
+    m_Address: Assets/Localization/GameManager Shared Data.asset
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0

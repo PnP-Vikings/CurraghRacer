@@ -16,7 +16,8 @@ MonoBehaviour:
     m_Code: ga-IE
   m_SharedData: {fileID: 11400000, guid: 026f0686b2b93d7449c3a38bf24d7bb2, type: 2}
   m_Metadata:
-    m_Items: []
+    m_Items:
+    - rid: 7162749194343809146
   m_TableData:
   - m_Id: 7531913216
     m_Localized: "T\xE1 cuireadh tugtha duit p\xE1irt a ghlacadh i\\nan"
@@ -71,60 +72,85 @@ MonoBehaviour:
       t\xFA {2} phointe le {3} bua. N\xE1 b\xEDodh d\xEDspreagadh ort; bain \xFAs\xE1id
       as seo mar spreagadh chun teacht ar ais n\xEDos l\xE1idre!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 11867756945408
     m_Localized: "Ar fheabhas! Chr\xEDochnaigh bhur bhfoireann sa ch\xE9ad \xE1it
       as {0} iomaitheoir, agus cuireadh chun sraithe n\xEDos airde iad. Ghn\xF3thaigh
       sibh {1} pointe le {2} bua. Lean oraibh leis an obair den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 12039886987264
     m_Localized: "Ar fheabhas! Chr\xEDochnaigh do fhoireann sa dara h\xE1it as {0}
       iomaitheoir, agus cuireadh chun cinn iad chuig sraith n\xEDos airde. Ghn\xF3thaigh
       t\xFA {1} pointe le {2} bua. Lean ort leis an obair den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 12212566482944
     m_Localized: "Obair den scoth! Chr\xEDochnaigh bhur bhfoireann sa tr\xED\xFA
       h\xE1it as {0} iomaitheoir, agus cuireadh chun cinn iad chuig sraith n\xEDos
       airde. Ghn\xF3thaigh sibh {1} pointe le {2} bua. Lean oraibh leis an obair
       den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 12412232130560
     m_Localized: "Maith sibh! Chr\xEDochnaigh bhur bhfoireann sa {0}\xFA h\xE1it
       as {1} iomaitheoir, agus cuireadh chun sraithe n\xEDos airde sibh. Ghn\xF3thaigh
       sibh {2} pointe le {3} bua. Leanig\xED leis an obair den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 12655556288512
     m_Localized: "Ar fheabhas! Is curaidh iad bhur bhfoireann, agus iad sa ch\xE9ad
       \xE1it as {0} iomaitheoir. Ghn\xF3thaigh sibh {1} pointe le {2} bua. Leanig\xED
       oraibh leis an obair den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 12947316269056
     m_Localized: "Ar fheabhas! Chr\xEDochnaigh bhur bhfoireann sa dara h\xE1it as
       {0} iomaitheoir. Ghn\xF3thaigh sibh {1} pointe le {2} bua. Lean oraibh leis
       an obair den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 12983290814464
     m_Localized: "S\xE1r-obair! Chr\xEDochnaigh bhur bhfoireann sa tr\xED\xFA h\xE1it
       as {0} iomaitheoir. Ghn\xF3thaigh sibh {1} pointe le {2} bua."
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 13186785861632
     m_Localized: "Comhghairdeas! Chr\xEDochnaigh do fhoireann sa {0}\xFA h\xE1it
       as {1} iomaitheoir, agus cuireadh chun sraithe n\xEDos airde iad. Ghn\xF3thaigh
       t\xFA {2} phointe le {3} bhua. Lean ort leis an obair den scoth!"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   - m_Id: 13468517261312
     m_Localized: "S\xE1r-obair! Chr\xEDochnaigh bhur bhfoireann sa {0}\xFA h\xE1it
       as {1} iomaitheoir. Ghn\xF3thaigh sibh {2} phointe le {3} bua."
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809146
   references:
     version: 2
-    RefIds: []
+    RefIds:
+    - rid: 7162749194343809146
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 12655556288512
+        - id: 12412232130560
+        - id: 12212566482944
+        - id: 12039886987264
+        - id: 11867756945408
+        - id: 8916015505408
+        - id: 12947316269056
+        - id: 12983290814464
+        - id: 13186785861632
+        - id: 13468517261312

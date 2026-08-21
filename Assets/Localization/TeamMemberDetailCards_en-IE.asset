@@ -134,6 +134,26 @@ MonoBehaviour:
     m_Localized: Selected
     m_Metadata:
       m_Items: []
+  - m_Id: 5093309985841152
+    m_Localized: Strength
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5093470636072960
+    m_Localized: Stamina
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5093505817894912
+    m_Localized: Technique
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5093625686908928
+    m_Localized: Team Work
+    m_Metadata:
+      m_Items: []
+  - m_Id: 5093687062159360
+    m_Localized: Unknown Stat
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
