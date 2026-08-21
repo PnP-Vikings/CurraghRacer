@@ -5,6 +5,7 @@ using DG.Tweening;
 using League;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.Serialization;
 
@@ -34,6 +35,20 @@ public class GameManager : MonoBehaviour
     public UnityEvent onTutorialModeCompleted;
     [SerializeField] TutorialAudio TutorialAudio;
 
+    [Header("Localization")]
+    LocalizedString localizedAutoSaveName = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.AutoSave" };
+    LocalizedString localizedCantSleepBeforeRace = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.CantSleepBeforeRace" };
+    LocalizedString localizedNotTired = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.NotTired" };
+    LocalizedString localizedCantSleepTutorial = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.CantSleepTutorial" };
+    LocalizedString localizedYouSpentOnSleep = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.YouSpentOnSleep" };
+    LocalizedString localizedCouldntAffordPlaceToSleep = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.CouldntAffordPlaceToSleep" };
+    LocalizedString localizedAmountOfEnergyRegained = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.AmountOfEnergyRegained" };
+    LocalizedString localizedUseTheEnergyYouRegainedToGoToWork = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Sleep.UseTheEnergyYouRegainedToGoToWork" };
+    LocalizedString localizedYouHaveWorked = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Work.YouHaveWorked" };
+    LocalizedString localizedInvalidStatType = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.Train.InvalidStatType" };
+    LocalizedString localizedGameOverText = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.GameOverText" };
+    
+    
 
     private void Awake()
     {
@@ -50,6 +65,11 @@ public class GameManager : MonoBehaviour
         StartCoroutine(DisplayBannerWithDelay());
         StartCoroutine(TrackPlayTime());
 
+        
+        localizedYouSpentOnSleep.Arguments = new object[] { 0 }; // Placeholder for sleep cost
+        localizedAmountOfEnergyRegained.Arguments = new object[] { 0 }; // Placeholder for energy regained
+        localizedYouHaveWorked.Arguments = new object[] { 0 }; // Placeholder for rewarded coins
+      
     }
 
 
@@ -104,7 +124,13 @@ public class GameManager : MonoBehaviour
     {
         if (SaveSystem.Instance != null && SaveSystem.Instance.CanAutoSaveGame())
         {
-            SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, "Auto Save");
+            string autoSaveName = "Auto Save";
+            if(localizedAutoSaveName != null && !localizedAutoSaveName.IsEmpty)
+            {
+                localizedAutoSaveName.RefreshString();
+                autoSaveName = localizedAutoSaveName.GetLocalizedString();
+            }
+            SaveSystem.Instance.SaveGame(SaveSystem.Instance.maxSaveSlots - 1, autoSaveName);
             Debug.Log("Auto-save triggered");
         }
     }
@@ -139,19 +165,37 @@ public class GameManager : MonoBehaviour
     {
         if (RaceManager.Instance != null && (RaceManager.Instance.isRaceDay && !RaceManager.Instance.hasPlayerCompletedRace))
         {
-            PlayerStatsView.Instance.DisplayInfo("You cannot sleep before completing your race", 3);
+            string cantSleepMessage = "You cannot sleep before completing your race";
+            if(localizedCantSleepBeforeRace != null && !localizedCantSleepBeforeRace.IsEmpty)
+            {
+                localizedCantSleepBeforeRace.RefreshString();
+                cantSleepMessage = localizedCantSleepBeforeRace.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(cantSleepMessage, 3);
             return; // Player cannot sleep before completing the race
         }
 
         if (PlayerManager.Instance.PlayerHasEnoughEnergy(100) && !tutorialModeActive)
         {
-            PlayerStatsView.Instance.DisplayInfo("You are not Tired", 3);
+            string notTiredMessage = "You are not Tired";
+            if(localizedNotTired != null && !localizedNotTired.IsEmpty)
+            {
+                localizedNotTired.RefreshString();
+                notTiredMessage = localizedNotTired.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(notTiredMessage, 3);
             return; // Not enough energy to sleep
         }
         
         if (tutorialModeActive && !tutorialModeCompleted && !IsTutorialTaskActive(TutorialTaskType.SleepTask))
         {
-            PlayerStatsView.Instance.DisplayInfo("You cannot sleep yet. Complete your current tutorial task first.", 3);
+            string cantSleepTutorialMessage = "You cannot sleep yet. Complete your current tutorial task first.";
+            if(localizedCantSleepTutorial != null && !localizedCantSleepTutorial.IsEmpty)
+            {
+                localizedCantSleepTutorial.RefreshString();
+                cantSleepTutorialMessage = localizedCantSleepTutorial.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(cantSleepTutorialMessage, 3);
             return; // Not enough energy to sleep
         }
         
@@ -162,17 +206,53 @@ public class GameManager : MonoBehaviour
 
         if (PlayerManager.Instance.PurchaseItem(sleepCost))
         {
-            PlayerManager.Instance.ModifyPlayerEnergy(100);
-            PlayerStatsView.Instance.DisplayInfo($"You Spent {sleepCost} on a place to sleep", 3);
-            PlayerStatsView.Instance.DisplayInfo("You Have Regained 100 Energy", 3);
+            int energyRegained = 100;
+            PlayerManager.Instance.ModifyPlayerEnergy(energyRegained);
+            string spentMessage = $"You Spent {sleepCost} on a place to sleep";
+            if(localizedYouSpentOnSleep != null && !localizedYouSpentOnSleep.IsEmpty)
+            {
+                localizedYouSpentOnSleep.RefreshString();
+                localizedYouSpentOnSleep.Arguments[0] = sleepCost;
+                spentMessage = localizedYouSpentOnSleep.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(spentMessage, 3);
+            string energyRegainedMessage = $"You Have Regained {energyRegained} Energy";
+            if(localizedAmountOfEnergyRegained != null && !localizedAmountOfEnergyRegained.IsEmpty)
+            {
+                localizedAmountOfEnergyRegained.Arguments[0] = energyRegained;
+                localizedAmountOfEnergyRegained.RefreshString();
+                energyRegainedMessage = localizedAmountOfEnergyRegained.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(energyRegainedMessage, 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
         }
         else
         {
-            PlayerStatsView.Instance.DisplayInfo($"You could not afford a place to sleep so slept on street", 3);
-            PlayerManager.Instance.ModifyPlayerEnergy(25);
-            PlayerStatsView.Instance.DisplayInfo("You Have Regained 25 Energy", 3);
-            PlayerStatsView.Instance.DisplayInfo($"Use the energy you regained to go to work", 3);
+            int energyRegained = 25;
+            string CouldntAffordPlaceToSleepMessage = "You could not afford a place to sleep so slept on street";
+            string energyRegainedMessage = $"You Have Regained {energyRegained} Energy";
+            if(localizedCouldntAffordPlaceToSleep != null && !localizedCouldntAffordPlaceToSleep.IsEmpty)
+            {
+                localizedCouldntAffordPlaceToSleep.RefreshString();
+                CouldntAffordPlaceToSleepMessage = localizedCouldntAffordPlaceToSleep.GetLocalizedString();
+            }
+            if(localizedAmountOfEnergyRegained != null && !localizedAmountOfEnergyRegained.IsEmpty)
+            {
+                localizedAmountOfEnergyRegained.Arguments[0] = energyRegained;
+                localizedAmountOfEnergyRegained.RefreshString();
+                energyRegainedMessage = localizedAmountOfEnergyRegained.GetLocalizedString();
+            }
+            
+            PlayerStatsView.Instance.DisplayInfo(CouldntAffordPlaceToSleepMessage, 3);
+            PlayerManager.Instance.ModifyPlayerEnergy(energyRegained);
+            PlayerStatsView.Instance.DisplayInfo(energyRegainedMessage, 3);
+            string useEnergyMessage = $"Use the energy you regained to go to work";
+            if(localizedUseTheEnergyYouRegainedToGoToWork != null && !localizedUseTheEnergyYouRegainedToGoToWork.IsEmpty)
+            {
+                localizedUseTheEnergyYouRegainedToGoToWork.RefreshString();
+                useEnergyMessage = localizedUseTheEnergyYouRegainedToGoToWork.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(useEnergyMessage, 3);
             TimeManager.Instance.SleepTime(); // Reset time of day to 6 AM
         }
         
@@ -193,7 +273,15 @@ public class GameManager : MonoBehaviour
         
         PlayerManager.Instance.ModifyPlayerCoins(rewardedCoins);
         PlayerManager.Instance.ModifyPlayerEnergy(energyCost);
-        PlayerStatsView.Instance.DisplayInfo($"You Worked and Earned {rewardedCoins} Coins", 3);
+        
+        string workedMessage = $"You Worked and Earned {rewardedCoins} Coins";
+        if(localizedYouHaveWorked != null && !localizedYouHaveWorked.IsEmpty)
+        {
+            localizedYouHaveWorked.Arguments[0] = rewardedCoins; // Update the argument for the localized string
+            localizedYouHaveWorked.RefreshString();
+            workedMessage = localizedYouHaveWorked.GetLocalizedString();
+        }
+        PlayerStatsView.Instance.DisplayInfo(workedMessage, 3);
         TimeManager.Instance.UpdateTime(); // Update the time after working
     }
 
@@ -226,7 +314,15 @@ public class GameManager : MonoBehaviour
             default:
                 Debug.LogError("Invalid stat type selected for training.");
                 if (PlayerStatsView.Instance != null)
-                    PlayerStatsView.Instance.DisplayInfo("Invalid stat type selected for training.", 3);
+                {
+                    string invalidStatTypeMessage = "Invalid stat type selected for training.";
+                    if(localizedInvalidStatType != null && !localizedInvalidStatType.IsEmpty)
+                    {
+                        localizedInvalidStatType.RefreshString();
+                        invalidStatTypeMessage = localizedInvalidStatType.GetLocalizedString();
+                    }
+                    PlayerStatsView.Instance.DisplayInfo(invalidStatTypeMessage, 3);
+                }
                 break;
         }
 
@@ -333,7 +429,13 @@ public class GameManager : MonoBehaviour
         if (PlayerStatsView.Instance != null)
         {
             PlayerStatsView.Instance.ClearInfo();
-            PlayerStatsView.Instance.DisplayEndGame("GAME OVER\nThe mob got tired of waiting for you to pay up\nand destroyed the boat \nYou were forced to flee the country", 5);
+            string gameOverMessage = "GAME OVER\nThe mob got tired of waiting for you to pay up\nand destroyed the boat \nYou were forced to flee the country";
+            if(localizedGameOverText != null && !localizedGameOverText.IsEmpty)
+            {
+                localizedGameOverText.RefreshString();
+                gameOverMessage = localizedGameOverText.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayEndGame(gameOverMessage, 5);
         }
     }
 
@@ -483,6 +585,12 @@ public class GameManager : MonoBehaviour
             }
         }
         
+        if(tutorialModeCompleted)
+        {
+            Debug.Log("All tutorial tasks are already completed.");
+            return; // If tutorial mode is already marked as completed, exit the method
+        }
+        
         tutorialModeCompleted = true;
         tutorialModeActive = false;
         Debug.Log("All tutorial tasks are completed.");
@@ -490,6 +598,9 @@ public class GameManager : MonoBehaviour
         
         GameManager.Instance.Sleep(0); // Automatically sleep the player after completing all tutorial tasks
         LeagueController.Instance.ShowLeagueInviteAfterDelay(2f);;
+        
+        if(BillsController.Instance != null)
+            BillsController.Instance.GenerateBillsAfterTutorial();
         if (TutorialAudio != null)
         {
             StartCoroutine(TutorialAudio.PlayTutorialCompleteAudio());

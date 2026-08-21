@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class TvSettingsUi : MonoBehaviour
@@ -8,6 +9,10 @@ public class TvSettingsUi : MonoBehaviour
     [Header("Settings")]
     public int quickSaveSlot = 0;
     public float messageDisplayTime = 1.5f;
+    
+    LocalizedString quickSaveName = new LocalizedString { TableReference = "TvSettingsUi", TableEntryReference = "TvSettingsUi.QuickSave.Name" };
+    LocalizedString quickSaveCompletedMessage = new LocalizedString { TableReference = "TvSettingsUi", TableEntryReference = "TvSettingsUi.QuickSave.Completed" };
+    LocalizedString quickSaveFailedMessage = new LocalizedString { TableReference = "TvSettingsUi", TableEntryReference = "TvSettingsUi.QuickSave.Failed" };
     void Start()
     {
         if (quickSaveButton != null)
@@ -25,17 +30,20 @@ public class TvSettingsUi : MonoBehaviour
 
     public void QuickSave()
     {
-        if (SaveSystem.Instance.SaveGame(quickSaveSlot, "Quick Save"))
+        string quickSaveDisplayName = !quickSaveName.IsEmpty ? quickSaveName.GetLocalizedString() : "Quick Save";
+        if (SaveSystem.Instance.SaveGame(quickSaveSlot, quickSaveDisplayName))
         {
            if (PlayerStatsView.Instance == null) return;
             PlayerStatsView.Instance.ClearInfo();
-            PlayerStatsView.Instance.DisplayInfo("Quick Save completed!" , messageDisplayTime);
+            string quickSaveCompleted = !quickSaveCompletedMessage.IsEmpty ? quickSaveCompletedMessage.GetLocalizedString() : "Quick Save completed!";
+            PlayerStatsView.Instance.DisplayInfo(quickSaveCompleted , messageDisplayTime);
         }
         else
         {
             if (PlayerStatsView.Instance == null) return;
             PlayerStatsView.Instance.ClearInfo();
-            PlayerStatsView.Instance.DisplayInfo("Quick Save failed!" , messageDisplayTime);
+            string quickSaveFailed = !quickSaveFailedMessage.IsEmpty ? quickSaveFailedMessage.GetLocalizedString() : "Quick Save failed!";
+            PlayerStatsView.Instance.DisplayInfo(quickSaveFailed , messageDisplayTime);
         }
     }
     

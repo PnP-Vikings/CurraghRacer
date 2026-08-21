@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 
 public class BillsController : MonoBehaviour
 {
@@ -14,6 +15,20 @@ public class BillsController : MonoBehaviour
     public List <Bill> bills = new List<Bill>();
     public List <Bill> recurringPaidBills = new List<Bill>();
     public GameObject billPrefab;
+    
+    
+    LocalizedString localizedelectricityBillName = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.ElectricityBillName" };
+    LocalizedString localizedheatingBillName = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.HeatingBillName" };
+    LocalizedString localizedrentBillName = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.RentBillName" };
+    LocalizedString localizedYouCantAfford = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.YouCantAfford" };
+    LocalizedString localizedYouHavePaid = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.YouHavePaid" };
+    LocalizedString localizedAutoPay = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.AutoPay" };
+    LocalizedString localizedBillOverdue = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.BillOverdue" };
+    LocalizedString localizedBilldue = new LocalizedString { TableReference = "BillsController", TableEntryReference = "BillsController.BillDue" };
+    
+    string rentBillName= "Rent";
+    string electricityBillName = "Electricity";
+    string heatingBillName = "Heating";
     
     private void Awake()
     {
@@ -33,6 +48,52 @@ public class BillsController : MonoBehaviour
     {
         if(TimeManager.Instance != null)
                 TimeManager.Instance.onNewDay.AddListener(HandleNewDay);
+        
+        if(localizedelectricityBillName != null && !localizedelectricityBillName.IsEmpty)
+        {
+            electricityBillName = localizedelectricityBillName.GetLocalizedString();
+        }
+        if(localizedheatingBillName != null && !localizedheatingBillName.IsEmpty)
+        {
+            heatingBillName = localizedheatingBillName.GetLocalizedString();
+        }
+        if(localizedrentBillName != null && !localizedrentBillName.IsEmpty)
+        {
+            rentBillName = localizedrentBillName.GetLocalizedString();
+        }
+        
+        if(localizedYouCantAfford != null && !localizedYouCantAfford.IsEmpty)
+        {
+            localizedYouCantAfford.Arguments = new object[] { "" };
+            localizedYouCantAfford.RefreshString();
+        }
+        if(localizedYouHavePaid != null && !localizedYouHavePaid.IsEmpty)
+        {
+            localizedYouHavePaid.Arguments = new object[] { "",0 };
+            localizedYouHavePaid.RefreshString();
+        }
+        if(localizedAutoPay != null && !localizedAutoPay.IsEmpty)
+        {
+            localizedAutoPay.Arguments = new object[] { "",0 };
+            localizedAutoPay.RefreshString();
+        }
+        if (localizedBillOverdue != null && !localizedBillOverdue.IsEmpty)
+        {
+            localizedBillOverdue.Arguments = new object[]
+            {
+                "", 0
+            };
+            localizedBillOverdue.RefreshString();
+        }
+        if (localizedBilldue != null && !localizedBilldue.IsEmpty)
+        {
+            localizedBilldue.Arguments = new object[]
+            {
+                "", 0
+            };
+            localizedBilldue.RefreshString();
+        }
+
     }
     void OnDisable()
     {
@@ -63,7 +124,17 @@ public class BillsController : MonoBehaviour
             {
                 if(PlayerStatsView.Instance != null)
                 {
-                    PlayerStatsView.Instance.DisplayInfo($"Your {bill.billName} bill is overdue amount due is now {bill.amountDue}", 3);
+                    string billOverdueMessage = $"Your {bill.billName} bill is overdue amount due is now {bill.amountDue}";
+                    if(localizedBillOverdue != null && !localizedBillOverdue.IsEmpty)
+                    {
+                        localizedBillOverdue.Arguments = new object[] { bill.billName, bill.amountDue };
+                        localizedBillOverdue.Arguments[0] = bill.billName;
+                        localizedBillOverdue.Arguments[1] = bill.amountDue;
+                        localizedBillOverdue.RefreshString();
+                        billOverdueMessage = localizedBillOverdue.GetLocalizedString();
+                    }
+                    
+                    PlayerStatsView.Instance.DisplayInfo(billOverdueMessage, 3);
                 }
                 bill.ApplyLateFee(bill.amountDue * 0.1f); // 10% late fee
             }
@@ -75,7 +146,16 @@ public class BillsController : MonoBehaviour
                 bill.daysUntilDue =    bill.daysTillNextBill-5; // Reset due day
                 if(PlayerStatsView.Instance != null)
                 {
-                    PlayerStatsView.Instance.DisplayInfo($"Your {bill.billName} bill of amount €{bill.amount} is due again", 3);
+                    string billDueMessage = $"Your {bill.billName} bill of amount €{bill.amount} is due again";
+                    if(localizedBilldue != null && !localizedBilldue.IsEmpty)
+                    {
+                        localizedBilldue.Arguments = new object[] { bill.billName, bill.amount };
+                        localizedBilldue.Arguments[0] = bill.billName;
+                        localizedBilldue.Arguments[1] = bill.amount;
+                        localizedBilldue.RefreshString();
+                        billDueMessage = localizedBilldue.GetLocalizedString();
+                    }
+                    PlayerStatsView.Instance.DisplayInfo(billDueMessage, 3);
                 }
             }
 
@@ -111,27 +191,81 @@ public class BillsController : MonoBehaviour
             
             if(PlayerStatsView.Instance != null)
             {
-                PlayerStatsView.Instance.DisplayInfo($"Your {paidBill.billName} bill of amount €{paidBill.amount} is due again", 3);
+                string billDueMessage = $"Your {paidBill.billName} bill of amount €{paidBill.amount} is due again";
+                if(localizedBilldue != null && !localizedBilldue.IsEmpty)
+                {
+                    localizedBilldue.Arguments = new object[] { paidBill.billName, paidBill.amount };
+                    localizedBilldue.Arguments[0] = paidBill.billName;
+                    localizedBilldue.Arguments[1] = paidBill.amount;
+                    localizedBilldue.RefreshString();
+                    billDueMessage = localizedBilldue.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(billDueMessage, 3);
             }
         }
     }
+    
 
     public void GenerateBills()
     {
         if(SaveSystem.Instance != null && SaveSystem.Instance.IsNewGame)
         {
+            RefreshBillNames();
             Debug.Log("New game detected, generating initial bills.");
             bills.Clear();
-            CreateNewBill("Electricity", electricityBillAmount, electricityBillAmount,5, BillType.Utilities, true);
-            CreateNewBill("Heating", heatingBillAmount, heatingBillAmount,10, BillType.Utilities, true);
-            CreateNewBill("Rent", rentBillAmount, rentBillAmount,1, BillType.Rent, true);
+            
+        
+            if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && !GameManager.Instance.IsTutorialModeCompleted())
+            {
+                CreateNewBill(rentBillName, 5, 5, 1, BillType.Rent, false);
+            }
+            else
+            {
+                CreateNewBill(electricityBillName, electricityBillAmount, electricityBillAmount, 5, BillType.Utilities, true);
+                CreateNewBill(heatingBillName, heatingBillAmount, heatingBillAmount, 10, BillType.Utilities, true);
+                CreateNewBill(rentBillName, rentBillAmount, rentBillAmount, 5, BillType.Rent, true);
+            }
         }
         else
         {
             Debug.Log("Not a new game, skipping bill generation.");
         }
-     
-       
+    }
+    
+    public void GenerateBillsAfterTutorial()
+    {
+        if(SaveSystem.Instance != null && SaveSystem.Instance.IsNewGame)
+        {
+            RefreshBillNames();
+            Debug.Log("New game detected, generating initial bills after tutorial.");
+            bills.Clear();
+            CreateNewBill(electricityBillName, electricityBillAmount, electricityBillAmount, 5, BillType.Utilities, true);
+            CreateNewBill(heatingBillName, heatingBillAmount, heatingBillAmount, 10, BillType.Utilities, true);
+            CreateNewBill(rentBillName, rentBillAmount, rentBillAmount, 7, BillType.Rent, true);
+        }
+        else
+        {
+            Debug.Log("Not a new game, skipping bill generation after tutorial.");
+        }
+    }
+    
+    public void RefreshBillNames()
+    {
+        if(localizedelectricityBillName != null && !localizedelectricityBillName.IsEmpty)
+        {
+            localizedelectricityBillName.RefreshString();
+            electricityBillName = localizedelectricityBillName.GetLocalizedString();
+        }
+        if(localizedheatingBillName != null && !localizedheatingBillName.IsEmpty)
+        {
+            localizedheatingBillName.RefreshString();
+            heatingBillName = localizedheatingBillName.GetLocalizedString();
+        }
+        if(localizedrentBillName != null && !localizedrentBillName.IsEmpty)
+        {
+            localizedrentBillName.RefreshString();
+            rentBillName = localizedrentBillName.GetLocalizedString();
+        }
     }
     
     public void CreateNewBill(string billName, float amount, float amountDue, int dueDay, BillType billType, bool isRecurring)
@@ -165,7 +299,15 @@ public class BillsController : MonoBehaviour
             if(PlayerStatsView.Instance != null)
             {
                 PlayerStatsView.Instance.ClearInfo(); 
-                PlayerStatsView.Instance.DisplayInfo($"You cannot Afford to pay your {bill.billName} bill", 3);
+                string cannotAffordMessage = $"You cannot Afford to pay your {bill.billName} bill";
+                if(localizedYouCantAfford != null && !localizedYouCantAfford.IsEmpty)
+                {
+                    localizedYouCantAfford.Arguments = new object[] { bill.billName };
+                    localizedYouCantAfford.Arguments[0] = bill.billName;
+                    localizedYouCantAfford.RefreshString();
+                    cannotAffordMessage = localizedYouCantAfford.GetLocalizedString();
+                }
+                PlayerStatsView.Instance.DisplayInfo(cannotAffordMessage, 3);
             }
             
             Debug.Log("Not enough coins to pay the bill!");
@@ -195,11 +337,29 @@ public class BillsController : MonoBehaviour
         if (!isAutoPay)
         {
             PlayerStatsView.Instance.ClearInfo(); 
-            PlayerStatsView.Instance.DisplayInfo($"You have paid your {bill.billName} bill of amount €{cost}", 3);
+            string paidBillMessage = $"You have paid your {bill.billName} bill of amount €{cost}";
+            if(localizedYouHavePaid != null && !localizedYouHavePaid.IsEmpty)
+            {
+                localizedYouHavePaid.Arguments = new object[] { bill.billName, cost };
+                localizedYouHavePaid.Arguments[0] = bill.billName;
+                localizedYouHavePaid.Arguments[1] = cost;
+                localizedYouHavePaid.RefreshString();
+                paidBillMessage = localizedYouHavePaid.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(paidBillMessage, 3);
         }
         else
         {
-            PlayerStatsView.Instance.DisplayInfo($"Your {bill.billName} bill has been auto-paid due to being overdue for 10 days\n You were Charged {cost}", 3);
+            string autoPaidBillMessage = $"Your {bill.billName} bill has been auto-paid due to being overdue for 10 days\n You were Charged {cost}";
+            if(localizedAutoPay != null && !localizedAutoPay.IsEmpty)
+            {
+                localizedYouHavePaid.Arguments = new object[] { bill.billName, cost };
+                localizedYouHavePaid.Arguments[0] = bill.billName;
+                localizedYouHavePaid.Arguments[1] = cost;
+                localizedAutoPay.RefreshString();
+                autoPaidBillMessage = localizedAutoPay.GetLocalizedString();
+            }
+            PlayerStatsView.Instance.DisplayInfo(autoPaidBillMessage, 3);
         }
     }
     

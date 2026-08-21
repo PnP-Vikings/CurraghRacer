@@ -181,18 +181,6 @@ public class PlayerManager : MonoBehaviour
         return energy >= energyCost;
     }
     // Method to update player stats
-    public void ModifyPlayerStrength(int strength)
-    {
-        playerStatsView.ClearInfo();
-        foreach (TeamMember member in team)
-        {
-            member.ImproveStat(TeamMember.StatType.Strength,strength);
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {strength} Strength", 3);
-            Debug.Log(member.memberName+" strength modified: " + member.GetTeamMemberStat(TeamMember.StatType.Strength));
-        }
-
-    }
-    
     public void ModifyTeamMemberStat(TeamMember member, TeamMember.StatType statType, int amount)
     {
         List<TeamMember> tempList = new List<TeamMember>();
@@ -212,42 +200,6 @@ public class PlayerManager : MonoBehaviour
             Debug.LogWarning("The specified member is not in the player's team.");
         }
     }
-    
-    
-
-    public void ModifyPlayerStamina(int stamina)
-    {
-        playerStatsView.ClearInfo();
-        foreach (TeamMember member in team)
-        {
-            member.ImproveStat(TeamMember.StatType.Stamina,stamina);
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {stamina} Stamina", 3);
-            Debug.Log(member.memberName+" stamina modified: " + member.GetTeamMemberStat(TeamMember.StatType.Stamina));
-        }
-
-    }
-    public void ModifyPlayerTechnique(int technique)
-    {
-        playerStatsView.ClearInfo();
-        foreach (TeamMember member in team)
-        {
-            member.ImproveStat(TeamMember.StatType.Technique,technique);
-            
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {technique} Technique", 3);
-            Debug.Log(member.memberName+" technique modified: " + member.GetTeamMemberStat(TeamMember.StatType.Technique));
-        }
-
-    }
-    public void ModifyPlayerTeamWork(int teamWork)
-    {
-        playerStatsView.ClearInfo();
-        foreach (TeamMember member in team)
-        {
-            member.ImproveStat(TeamMember.StatType.TeamWork,teamWork);
-            PlayerStatsView.Instance.DisplayInfo($"{member.memberName} gained {teamWork} TeamWork", 3);
-            Debug.Log(member.memberName+" teamwork modified: " + member.GetTeamMemberStat(TeamMember.StatType.TeamWork));
-        }
-    }
 
     public void CheckForDebtWarnings()
     {
@@ -256,7 +208,7 @@ public class PlayerManager : MonoBehaviour
             onDebtWarning.Invoke();
             if (PlayerStatsView.Instance != null)
             {
-                PlayerStatsView.Instance.DisplayInfo("Warning: You are in debt! Earn more coins to avoid penalties.", 5);
+                PlayerStatsView.Instance.DisplayInfo("Warning: You are in debt! Earn more money to avoid penalties.", 5);
             }
             Debug.LogWarning("Player is in debt!");
         }
