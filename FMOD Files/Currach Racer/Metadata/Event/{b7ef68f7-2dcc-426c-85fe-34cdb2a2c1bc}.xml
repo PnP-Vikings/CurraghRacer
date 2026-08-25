@@ -285,7 +285,7 @@
 	</object>
 	<object class="LimiterEffect" id="{898f8da8-71eb-4c08-adbf-d862dd9d59a4}">
 		<property name="boost">
-			<value>12</value>
+			<value>7</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{14bfdd6f-ceb4-45d7-a389-fca24db29e44}" />

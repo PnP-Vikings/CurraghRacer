@@ -121,7 +121,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{b97d70b2-2716-4165-b947-177f9b4a3311}">
 		<property name="volume">
-			<value>-10.5</value>
+			<value>-12.5</value>
 		</property>
 		<property name="name">
 			<value>First race - won</value>
@@ -138,6 +138,8 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{e6e103cd-66b0-486a-a51e-ffc157f4527e}">
 		<relationship name="effects">
+			<destination>{f953d92e-d63f-4156-9b9a-047ddd107a41}</destination>
+			<destination>{579b2be8-ea39-4d4a-9639-e37f0abfd924}</destination>
 			<destination>{48d99868-9735-4bd9-9f5f-21bc6947b6ba}</destination>
 			<destination>{05a878fa-a956-4930-85bb-aa73e5af170b}</destination>
 		</relationship>
@@ -150,19 +152,11 @@
 	<object class="MixerBusFader" id="{c2659651-2c28-4bda-b534-0f2989814a8a}" />
 	<object class="MixerBusEffectChain" id="{946b5b00-d2b9-456a-849f-416486d64d37}">
 		<relationship name="effects">
-			<destination>{6c34229a-9371-45bf-a0c1-05d65098b1f5}</destination>
-			<destination>{6ccac764-ce56-4c4d-ba3b-7c5876807c16}</destination>
 			<destination>{1db42cba-12f2-4aaf-b0da-98b2366f7349}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{352f6501-49fc-4812-bf23-aa6cc805e666}" />
-	<object class="GainEffect" id="{48d99868-9735-4bd9-9f5f-21bc6947b6ba}">
-		<relationship name="automators">
-			<destination>{e9c629f2-7512-447a-bb2e-a2879ba472aa}</destination>
-		</relationship>
-	</object>
-	<object class="MixerBusFader" id="{05a878fa-a956-4930-85bb-aa73e5af170b}" />
-	<object class="MultibandEqEffect" id="{6c34229a-9371-45bf-a0c1-05d65098b1f5}">
+	<object class="MultibandEqEffect" id="{f953d92e-d63f-4156-9b9a-047ddd107a41}">
 		<property name="filterTypeA">
 			<value>4</value>
 		</property>
@@ -173,13 +167,13 @@
 			<value>1</value>
 		</property>
 		<property name="frequencyA">
-			<value>54</value>
+			<value>90</value>
 		</property>
 		<property name="frequencyD">
-			<value>2100</value>
+			<value>2200</value>
 		</property>
 		<property name="frequencyE">
-			<value>8000</value>
+			<value>2200</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
@@ -188,22 +182,23 @@
 			<value>0.560000002</value>
 		</property>
 		<property name="qualityE">
-			<value>0.234999999</value>
+			<value>0.204999998</value>
 		</property>
 		<property name="gainD">
-			<value>11</value>
+			<value>13</value>
 		</property>
-		<relationship name="automators">
-			<destination>{910650dc-65d6-4644-bb4c-723040211764}</destination>
-			<destination>{2498c0c2-219f-4751-94e5-6098a1358594}</destination>
-			<destination>{6c048a03-4da8-4e07-8874-1a36864c1980}</destination>
-		</relationship>
 	</object>
-	<object class="DistortionEffect" id="{6ccac764-ce56-4c4d-ba3b-7c5876807c16}">
+	<object class="DistortionEffect" id="{579b2be8-ea39-4d4a-9639-e37f0abfd924}">
 		<property name="level">
 			<value>0.299999982</value>
 		</property>
 	</object>
+	<object class="GainEffect" id="{48d99868-9735-4bd9-9f5f-21bc6947b6ba}">
+		<relationship name="automators">
+			<destination>{e9c629f2-7512-447a-bb2e-a2879ba472aa}</destination>
+		</relationship>
+	</object>
+	<object class="MixerBusFader" id="{05a878fa-a956-4930-85bb-aa73e5af170b}" />
 	<object class="MixerBusFader" id="{1db42cba-12f2-4aaf-b0da-98b2366f7349}" />
 	<object class="Automator" id="{e9c629f2-7512-447a-bb2e-a2879ba472aa}">
 		<property name="nameOfPropertyBeingAutomated">
@@ -212,21 +207,6 @@
 		<relationship name="automationCurves">
 			<destination>{584fa55e-89a1-4bd9-8609-11481cbbd1c7}</destination>
 		</relationship>
-	</object>
-	<object class="Automator" id="{910650dc-65d6-4644-bb4c-723040211764}">
-		<property name="nameOfPropertyBeingAutomated">
-			<value>gainD</value>
-		</property>
-	</object>
-	<object class="Automator" id="{2498c0c2-219f-4751-94e5-6098a1358594}">
-		<property name="nameOfPropertyBeingAutomated">
-			<value>frequencyE</value>
-		</property>
-	</object>
-	<object class="Automator" id="{6c048a03-4da8-4e07-8874-1a36864c1980}">
-		<property name="nameOfPropertyBeingAutomated">
-			<value>qualityE</value>
-		</property>
 	</object>
 	<object class="AutomationCurve" id="{584fa55e-89a1-4bd9-8609-11481cbbd1c7}">
 		<relationship name="parameter">

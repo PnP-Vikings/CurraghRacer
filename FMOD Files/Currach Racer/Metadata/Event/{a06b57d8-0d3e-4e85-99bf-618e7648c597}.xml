@@ -130,7 +130,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{268ad116-ed54-4dff-b37c-e32425ed5851}">
 		<property name="volume">
-			<value>-6</value>
+			<value>-8</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -147,6 +147,8 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{c880e0ad-b6e3-4eb0-b1c3-89d8c278e5b2}">
 		<relationship name="effects">
+			<destination>{2f380526-e1e1-47a4-874d-5410f52d3726}</destination>
+			<destination>{a452c493-c11b-4ab7-a5a6-02a9b19fc943}</destination>
 			<destination>{f9ff7771-6301-437f-b001-334ac00ef539}</destination>
 			<destination>{bb817733-5a7f-4c02-aeb8-29f6e9057283}</destination>
 		</relationship>
@@ -167,12 +169,47 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{509cee04-0bae-4784-8b05-7d1c4c5c38e6}">
 		<relationship name="effects">
-			<destination>{3cc4ff6c-65d3-4864-b9e2-d4d4cb22834a}</destination>
-			<destination>{fc9b7cf9-1431-467a-b001-130f90368fed}</destination>
 			<destination>{972e9398-bc08-4535-82a3-4dbbf423d7e2}</destination>
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{a18255de-4353-40e8-951c-3bfaac5c8ecf}" />
+	<object class="MultibandEqEffect" id="{2f380526-e1e1-47a4-874d-5410f52d3726}">
+		<property name="filterTypeA">
+			<value>4</value>
+		</property>
+		<property name="filterTypeD">
+			<value>9</value>
+		</property>
+		<property name="filterTypeE">
+			<value>1</value>
+		</property>
+		<property name="frequencyA">
+			<value>90</value>
+		</property>
+		<property name="frequencyD">
+			<value>2200</value>
+		</property>
+		<property name="frequencyE">
+			<value>2200</value>
+		</property>
+		<property name="qualityA">
+			<value>0.100000001</value>
+		</property>
+		<property name="qualityD">
+			<value>0.560000002</value>
+		</property>
+		<property name="qualityE">
+			<value>0.204999998</value>
+		</property>
+		<property name="gainD">
+			<value>13</value>
+		</property>
+	</object>
+	<object class="DistortionEffect" id="{a452c493-c11b-4ab7-a5a6-02a9b19fc943}">
+		<property name="level">
+			<value>0.299999982</value>
+		</property>
+	</object>
 	<object class="GainEffect" id="{f9ff7771-6301-437f-b001-334ac00ef539}">
 		<relationship name="automators">
 			<destination>{9ac51161-cc4a-4119-8728-12645346a2eb}</destination>
@@ -196,43 +233,6 @@
 		</property>
 		<property name="value">
 			<value>0</value>
-		</property>
-	</object>
-	<object class="MultibandEqEffect" id="{3cc4ff6c-65d3-4864-b9e2-d4d4cb22834a}">
-		<property name="filterTypeA">
-			<value>4</value>
-		</property>
-		<property name="filterTypeD">
-			<value>9</value>
-		</property>
-		<property name="filterTypeE">
-			<value>1</value>
-		</property>
-		<property name="frequencyA">
-			<value>54</value>
-		</property>
-		<property name="frequencyD">
-			<value>2100</value>
-		</property>
-		<property name="frequencyE">
-			<value>8000</value>
-		</property>
-		<property name="qualityA">
-			<value>0.100000001</value>
-		</property>
-		<property name="qualityD">
-			<value>0.560000002</value>
-		</property>
-		<property name="qualityE">
-			<value>0.234999999</value>
-		</property>
-		<property name="gainD">
-			<value>11</value>
-		</property>
-	</object>
-	<object class="DistortionEffect" id="{fc9b7cf9-1431-467a-b001-130f90368fed}">
-		<property name="level">
-			<value>0.299999982</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{972e9398-bc08-4535-82a3-4dbbf423d7e2}" />

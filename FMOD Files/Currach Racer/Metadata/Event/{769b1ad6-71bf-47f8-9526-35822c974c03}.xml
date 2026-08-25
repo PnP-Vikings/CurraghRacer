@@ -127,7 +127,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{7be7154a-cbbd-404e-b56f-c897684ae5b0}">
 		<property name="volume">
-			<value>-2</value>
+			<value>-4</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -173,13 +173,13 @@
 			<value>1</value>
 		</property>
 		<property name="frequencyA">
-			<value>54</value>
+			<value>90</value>
 		</property>
 		<property name="frequencyD">
-			<value>2100</value>
+			<value>2200</value>
 		</property>
 		<property name="frequencyE">
-			<value>8000</value>
+			<value>2200</value>
 		</property>
 		<property name="qualityA">
 			<value>0.100000001</value>
@@ -188,10 +188,10 @@
 			<value>0.560000002</value>
 		</property>
 		<property name="qualityE">
-			<value>0.234999999</value>
+			<value>0.204999998</value>
 		</property>
 		<property name="gainD">
-			<value>11</value>
+			<value>13</value>
 		</property>
 	</object>
 	<object class="DistortionEffect" id="{34811dc6-f6d0-4793-9e56-2d835ad48bee}">
