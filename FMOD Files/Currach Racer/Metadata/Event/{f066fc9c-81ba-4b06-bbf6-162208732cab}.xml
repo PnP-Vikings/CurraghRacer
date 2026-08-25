@@ -137,6 +137,9 @@
 		<property name="length">
 			<value>28.993895833333333</value>
 		</property>
+		<property name="volume">
+			<value>-1</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{8040182b-aafd-408d-930b-6d2b396f3620}</destination>
 		</relationship>
@@ -161,6 +164,9 @@
 	<object class="SingleSound" id="{365b6ff9-faf7-4585-a077-002a6ca4c86a}">
 		<property name="length">
 			<value>28.993895833333333</value>
+		</property>
+		<property name="volume">
+			<value>-1</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{24bf5736-fefb-471b-b46c-ee157bd5d057}</destination>
@@ -284,11 +290,23 @@
 		<property name="filterTypeA">
 			<value>4</value>
 		</property>
+		<property name="filterTypeC">
+			<value>9</value>
+		</property>
 		<property name="frequencyA">
-			<value>20</value>
+			<value>38</value>
+		</property>
+		<property name="frequencyC">
+			<value>447.46637</value>
 		</property>
 		<property name="qualityA">
 			<value>0.179999992</value>
+		</property>
+		<property name="qualityC">
+			<value>0.234999999</value>
+		</property>
+		<property name="gainC">
+			<value>-9</value>
 		</property>
 	</object>
 	<object class="GainEffect" id="{cd3fbfca-9f2a-44e8-8713-f52e63c8e4db}">
