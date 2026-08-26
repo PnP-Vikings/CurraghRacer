@@ -2911,7 +2911,7 @@ MonoBehaviour:
   - Name: Radioify
     Value: 1
   - Name: Dance Track Volume
-    Value: 0.8
+    Value: 1
   - Name: Radioify Dance Track
     Value: 1
   OverrideAttenuation: 0
