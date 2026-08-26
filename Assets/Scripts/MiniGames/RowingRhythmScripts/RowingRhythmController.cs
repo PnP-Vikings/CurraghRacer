@@ -373,9 +373,15 @@ public class RowingRhythmController : MonoBehaviour
       MiniGameManager.Instance.CompleteGame((int)Math.Round(score));
     }
 
-    if(AudioManager.instance != null)
+    if (AudioManager.instance != null)
     {
         AudioManager.instance.miniGame_Over.start();
+    }
+
+    if (RowingGameAudio != null)
+    {
+        RowingGameAudio.rowingAmbienceEmitter.SetParameter("Rowing Game Ambient Encouragement", 0f, false);
+        //Debug.Log("Rowing game ended, ambient encouragement muted - AudioDebug");
     }
   }
   
@@ -611,9 +617,9 @@ public class RowingRhythmController : MonoBehaviour
     hasStartedRowing = true;
 
     if (AudioManager.instance != null)
-        {
-            AudioManager.instance.rowing.setParameterByName("Rowing Volume (Minigame)", 1f);
-        }
+    {
+        AudioManager.instance.rowing.setParameterByName("Rowing Volume (Minigame)", 1f);
+    }
   }
 
   private void StopPaddleAnimations()
@@ -626,9 +632,9 @@ public class RowingRhythmController : MonoBehaviour
     }
 
     if (AudioManager.instance != null)
-        {
-            AudioManager.instance.rowing.setParameterByName("Rowing Volume (Minigame)", 0f);
-        }
+    {
+        AudioManager.instance.rowing.setParameterByName("Rowing Volume (Minigame)", 0f);
+    }
   }
   
  
