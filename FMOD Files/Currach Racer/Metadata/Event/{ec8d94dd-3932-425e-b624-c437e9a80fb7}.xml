@@ -391,9 +391,6 @@
 		</relationship>
 	</object>
 	<object class="GainEffect" id="{58065cd7-1292-4e8e-9c32-ea7402eeb710}">
-		<property name="gain">
-			<value>2</value>
-		</property>
 		<relationship name="modulators">
 			<destination>{cf2e5598-f4a6-4130-b2c8-8c4a2e46c735}</destination>
 		</relationship>

@@ -942,7 +942,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BoxingAudio
   boomBapEmitter: {fileID: 1980710209}
-  AmbientEncouragementEmitter: {fileID: 1980710211}
+  ambientEncouragementEmitter: {fileID: 1980710211}
+  gymAmbienceEmitter: {fileID: 1980710207}
 --- !u!114 &1980710211
 MonoBehaviour:
   m_ObjectHideFlags: 0
