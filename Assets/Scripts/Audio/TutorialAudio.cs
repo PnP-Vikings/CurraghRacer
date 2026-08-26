@@ -38,4 +38,20 @@ public class TutorialAudio : MonoBehaviour
             //Debug.Log("StopTutorialGuyAudio - AudioDebug");
         }
     }
+
+    public void CallStopTutorialGuyAudioImmediate()
+    {
+        StartCoroutine(StopTutorialGuyAudioImmediate());
+        //Debug.Log("Call StopTutorialGuyAudioImmediate - AudioDebug");
+    }
+
+    public IEnumerator StopTutorialGuyAudioImmediate()
+    {
+        if (AudioManager.instance != null)
+        {
+            yield return null;
+            AudioManager.instance.tutorialGuy.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            //Debug.Log("StopTutorialGuyAudioImmediate - AudioDebug");
+        }
+    }
 }
