@@ -1541,6 +1541,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8c6e6fdcf20d5ad40b7b225e5a2650db, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::RowingGameAudio
+  rowingAmbienceEmitter: {fileID: 1763469265}
 --- !u!1 &1801670561
 GameObject:
   m_ObjectHideFlags: 0

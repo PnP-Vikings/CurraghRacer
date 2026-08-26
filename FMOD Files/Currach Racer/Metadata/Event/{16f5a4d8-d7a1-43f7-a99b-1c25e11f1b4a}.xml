@@ -101,6 +101,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{f430bc0e-e0a3-492d-8f62-9dc3211f8b40}">
+		<property name="volume">
+			<value>-1</value>
+		</property>
 		<property name="name">
 			<value>Pay Bill</value>
 		</property>
