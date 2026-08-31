@@ -18,8 +18,8 @@ public class TutorialAudio : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.miniGameProgression.start();
-            AudioManager.instance.miniGameProgression.setParameterByName("miniGameProgression Volume", 0.85f);
-            //Debug.Log("miniGameProgression called 0.85 volume - AudioDebug");
+            AudioManager.instance.miniGameProgression.setParameterByName("miniGameProgression Volume", 0.76f);
+            //Debug.Log("miniGameProgression called 0.76 volume - AudioDebug");
         }
     }
 
@@ -36,6 +36,22 @@ public class TutorialAudio : MonoBehaviour
             yield return null;
             AudioManager.instance.tutorialGuy.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
             //Debug.Log("StopTutorialGuyAudio - AudioDebug");
+        }
+    }
+
+    public void CallStopTutorialGuyAudioImmediate()
+    {
+        StartCoroutine(StopTutorialGuyAudioImmediate());
+        //Debug.Log("Call StopTutorialGuyAudioImmediate - AudioDebug");
+    }
+
+    public IEnumerator StopTutorialGuyAudioImmediate()
+    {
+        if (AudioManager.instance != null)
+        {
+            yield return null;
+            AudioManager.instance.tutorialGuy.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            //Debug.Log("StopTutorialGuyAudioImmediate - AudioDebug");
         }
     }
 }

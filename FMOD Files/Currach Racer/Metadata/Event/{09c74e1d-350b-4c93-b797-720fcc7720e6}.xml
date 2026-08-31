@@ -101,6 +101,9 @@
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{e8552f87-3078-49a3-ad23-a3ba3d1acbfe}">
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<property name="name">
 			<value>Delete Save</value>
 		</property>
@@ -127,6 +130,9 @@
 		</relationship>
 	</object>
 	<object class="SingleSound" id="{de9e8961-0d3f-451e-95ac-4b5d8c1eb3b9}">
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="audioFile">
 			<destination>{5f1c36d6-bfc7-41e9-b897-dda004d42dc4}</destination>
 		</relationship>

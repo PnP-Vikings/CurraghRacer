@@ -7,7 +7,8 @@ using UnityEngine;
 public class BoxingAudio : MonoBehaviour
 {
     [SerializeField] StudioEventEmitter boomBapEmitter;
-    [SerializeField] StudioEventEmitter AmbientEncouragementEmitter;
+    [SerializeField] StudioEventEmitter ambientEncouragementEmitter;
+    [SerializeField] StudioEventEmitter gymAmbienceEmitter;
 
     public static BoxingAudio instance;
     void Awake()
@@ -27,7 +28,7 @@ public class BoxingAudio : MonoBehaviour
     public IEnumerator BoxingGameOverAudio()
     {
         boomBapEmitter.SetParameter("Boom Bap Volume", 0f, false);
-        AmbientEncouragementEmitter.Stop();
+        ambientEncouragementEmitter.Stop();
         //Debug.Log("Boom Bap volume decreased - AudioDebug");
 
         if(AudioManager.instance != null)
@@ -43,13 +44,13 @@ public class BoxingAudio : MonoBehaviour
             AudioManager.instance.miniGameCompleteDialogue.start();
         }
 
-        boomBapEmitter.SetParameter("Boom Bap Volume", 1f, false);
-        //Debug.Log("Boom Bap volume increased - AudioDebug");
+        boomBapEmitter.Stop();
+        gymAmbienceEmitter.Stop();
     }
 
     public IEnumerator BoxingSuccessAfterFailIEnum()
     {
-        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
+        ambientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
 
         if (AudioManager.instance != null)
         {
@@ -59,11 +60,11 @@ public class BoxingAudio : MonoBehaviour
 
         yield return new WaitForSeconds(1.9f);
 
-        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
+        ambientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
     }
     public IEnumerator BoxingEncouragementOnLastLifeIEnum()
     {
-        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
+        ambientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 0f, false);
 
         if (AudioManager.instance != null)
         {
@@ -72,6 +73,6 @@ public class BoxingAudio : MonoBehaviour
 
         yield return new WaitForSeconds(1.2f);
 
-        AmbientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
+        ambientEncouragementEmitter.SetParameter("Ambient Boxing Encouragement Volume", 1f, false);
     }
 }

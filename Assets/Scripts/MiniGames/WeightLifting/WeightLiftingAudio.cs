@@ -82,6 +82,19 @@ public class WeightLiftingAudio : MonoBehaviour
                 }
             }
         }
+
+        if (WeightLiftingController.Instance != null)
+        {
+            if (WeightLiftingController.Instance.currentLiftState != WeightLiftingController.LiftState.Hold)
+            {
+                if(AudioManager.instance != null)
+                {
+                    AudioManager.instance.holdPhaseEncouragement.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    //Debug.Log("currentLiftState is not hold - AudioDebug");
+                }
+            }
+        }
+
         //if (WeightLiftingController.Instance != null)
         //{
         //    //Debug.Log("Power Meter Position is " + WeightLiftingController.Instance.powerMeterPosition);

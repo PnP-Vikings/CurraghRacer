@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{706a5d44-a958-4128-8421-2427843e6080}">
+		<property name="name">
+			<value>Rowing Game Ambient Encouragement</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{97f0dfc0-405c-4f67-85e2-e91843ca4d5c}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{97f0dfc0-405c-4f67-85e2-e91843ca4d5c}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.85999995470046997</value>
+		</property>
+	</object>
+</objects>

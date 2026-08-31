@@ -7,6 +7,7 @@ public class RowingGameAudio : MonoBehaviour
     private bool hasJustMissed = false;
     private PLAYBACK_STATE rowingGameFailDialoguePlaybackState;
     private PLAYBACK_STATE rowingGameSuccessDialoguePlaybackState;
+    public StudioEventEmitter rowingAmbienceEmitter;
 
     public void PlayRowingGameSuccess()
     {

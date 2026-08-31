@@ -94,7 +94,7 @@ public class TutorialTaskUiDialogue : MonoBehaviour
             if(TutorialAudio != null)
             {
                 //Debug.Log("TutorialAudio script found - AudioDebug");
-                TutorialAudio.CallStopTutorialGuyAudio();
+                TutorialAudio.CallStopTutorialGuyAudioImmediate();
             }
             
             
@@ -172,6 +172,12 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          dialogueText.text = currentDialogueLine;
          isDialogueActive = false;
       }
+
+      if (TutorialAudio != null)
+      {
+          //Debug.Log("Tutorial guy stopped because the player clicked Next - AudioDebug");
+          TutorialAudio.CallStopTutorialGuyAudio();
+      }
    }
    
    //This is the function that types the text
@@ -185,5 +191,11 @@ public class TutorialTaskUiDialogue : MonoBehaviour
          yield return new WaitForSeconds(dialogueTextSpeed);
       }
       isDialogueActive = false;
+
+      if (TutorialAudio != null)
+      {
+          //Debug.Log("Tutorial guy stopped because the text finished typing - AudioDebug");
+          TutorialAudio.CallStopTutorialGuyAudio();
+      }
    }
 }

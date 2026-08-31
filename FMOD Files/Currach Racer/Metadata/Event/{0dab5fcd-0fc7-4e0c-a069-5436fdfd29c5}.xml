@@ -98,7 +98,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{45df75c5-cca2-4dff-b1fd-309cf0556503}">
 		<property name="volume">
-			<value>-2</value>
+			<value>-4</value>
 		</property>
 		<property name="name">
 			<value>TV Button Push Out</value>
