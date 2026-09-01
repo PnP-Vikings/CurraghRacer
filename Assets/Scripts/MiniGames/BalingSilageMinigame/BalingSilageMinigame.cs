@@ -33,7 +33,7 @@ namespace MiniGames.BalingSilageMinigame
 
         public void Start()
         {
-            Instantiate(tractorPrefab, new Vector3(-2, 4.5f, -0.5f), Quaternion.identity);
+            Instantiate(tractorPrefab, new Vector3(-2f, 0, 5f), Quaternion.Euler(0, 90, 0));
             cutting = true;
             grassText.text = "Cut the grass";
             gameTimer = 180;
@@ -51,7 +51,7 @@ namespace MiniGames.BalingSilageMinigame
                 grassText.text = "Collect the grass";
             }
 
-            if (grassCounter > 3)
+            if (grassCounter >= 10)
             {
                 grassCounter = 0;
                 score++;
@@ -65,16 +65,17 @@ namespace MiniGames.BalingSilageMinigame
                 grassText.text = "Hurry and collect the grass";
             }
 
-            if (gameTimer <= 0)
+            if (FindFirstObjectByType<Tractor>().wallHit == true)
             {
                 gameTimer = 0;
-                grassText.text = "Game completed";
+                grassText.text = "Tractor crashed into fence. Game Over";
                 EndGame();
             }
 
-            if (FindFirstObjectByType<Tractor>().movement == false)
+            if (gameTimer <= 0 && FindFirstObjectByType<Tractor>().wallHit == false)
             {
                 gameTimer = 0;
+                grassText.text = "Game completed";
                 EndGame();
             }
         }
