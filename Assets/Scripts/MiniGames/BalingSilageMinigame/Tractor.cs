@@ -13,12 +13,14 @@ public class Tractor : MonoBehaviour
     public float moveSpeed;
     public GameObject collectorPrefab;
     public bool movement;
+    public bool wallHit;
 
     void Start()
     {
-        transform.Rotate(0, 90, 0);
+        transform.Rotate(0, 0, 0);
         moveSpeed = 0.005f;
         movement = true;
+        wallHit = false;
     }
 
     // Update is called once per frame
@@ -48,12 +50,12 @@ public class Tractor : MonoBehaviour
         
         if (Keyboard.current.aKey.isPressed && movement == true)
         {
-            transform.Rotate(transform.rotation.x - 1, 0, 0);
+            transform.Rotate(0, transform.rotation.y - 1, 0);
         }
 
         if (Keyboard.current.dKey.isPressed && movement == true)
         {
-            transform.Rotate(transform.rotation.x + 1, 0, 0);
+            transform.Rotate(0, transform.rotation.y + 1, 0);
         }
     }
 
@@ -75,7 +77,7 @@ public class Tractor : MonoBehaviour
         if (other.name.Contains("Fence"))
         {
             movement = false;
-            FindFirstObjectByType<BalingSilageMinigame>().grassText.text = "Tractor crashed into fence. Game Over";
+            wallHit = true;
         }
     }
 }

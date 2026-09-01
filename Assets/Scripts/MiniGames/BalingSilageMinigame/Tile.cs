@@ -46,6 +46,15 @@ public class Tile : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
+        if (FindFirstObjectByType<BalingSilageMinigame>().collecting == false && FindFirstObjectByType<BalingSilageMinigame>().cutting == true && highlight == true)
+        {
+            highlight = false;
+            inactive = true;
+        }
+    }
+
+    void OnTriggerExit(Collider other)
+    {
         if (FindFirstObjectByType<BalingSilageMinigame>().cutting == true && highlight == false)
         {
             highlight = true;
@@ -56,16 +65,5 @@ public class Tile : MonoBehaviour
             collected = true;
             FindFirstObjectByType<BalingSilageMinigame>().grassCounter++;
         }
-
-        if (FindFirstObjectByType<BalingSilageMinigame>().collecting == false && FindFirstObjectByType<BalingSilageMinigame>().cutting == false && highlight == true)
-        {
-            highlight = false;
-            inactive = true;
-        }
-    }
-
-    void OnTriggerExit(Collider other)
-    {
-
     }
 }

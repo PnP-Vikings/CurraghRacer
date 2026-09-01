@@ -31,7 +31,7 @@ public class TileManager : MonoBehaviour
         {
             for (int z = 0; z < height; z++)
             {
-                var spawnedTile = Instantiate(tilePrefab, new Vector3((float)x/tileSize, (float)z/tileSize), Quaternion.identity);
+                var spawnedTile = Instantiate(tilePrefab, new Vector3((float)x/tileSize, 0, (float)z/tileSize), Quaternion.Euler(90,0,0));
                 spawnedTile.name = $"Tile {x} {z}";
 
                 var isOffset = (x % 2 == 0 && z % 2 != 0) || (x % 2 != 0 && z % 2 == 0);
