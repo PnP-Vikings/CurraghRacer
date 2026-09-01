@@ -2,6 +2,7 @@ using MiniGames;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -30,6 +31,13 @@ public class MinigameCanvasUI : MonoBehaviour
 
     private Scene activeScene;
 
+    [Header(("Minigame Canvas Localization"))]
+    [SerializeField] LocalizedString localizedGameOverText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "MiniGames.MinigameCanvasUI.GameOver" };
+    [SerializeField] LocalizedString localizedVictoryText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "MiniGames.MinigameCanvasUI.Victory" };
+    [SerializeField] LocalizedString localizedSmartScoreText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "MiniGames.MinigameCanvasUI.SmartScore" };
+    [SerializeField] LocalizedString localizedTimeText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "MiniGames.MinigameCanvasUI.Time" };
+    [SerializeField] LocalizedString localizedLivesText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "MiniGames.MinigameCanvasUI.Lives" };
+    
     public void SetUpUI(bool useScore, bool useTimer, bool useLives, bool showTestRestartsButtons, bool showAdditionalInfo = false)
     {
         if (scoreText != null)
@@ -78,7 +86,17 @@ public class MinigameCanvasUI : MonoBehaviour
     {
         if(scoreText != null)
         {
-            scoreText.text = "Score: " + score;
+            if (localizedSmartScoreText != null && !localizedSmartScoreText.IsEmpty)
+            {
+                localizedSmartScoreText.Arguments = new object[] { score };
+                localizedSmartScoreText.Arguments[0] = score;
+                localizedSmartScoreText.RefreshString();
+                scoreText.text = localizedSmartScoreText.GetLocalizedString();
+            }
+            else
+            {
+                scoreText.text = "Score: " + score.ToString();
+            }
         }
     }
     public virtual void UpdateScore(string score)
@@ -117,7 +135,17 @@ public class MinigameCanvasUI : MonoBehaviour
         }
         if(timerText != null)
         {
-            timerText.text = "Time: " + Mathf.CeilToInt(timeRemaining).ToString();
+            if (localizedTimeText != null && !localizedTimeText.IsEmpty)
+            {
+                localizedTimeText.Arguments = new object[] { Mathf.CeilToInt(timeRemaining) };
+                localizedTimeText.Arguments[0] = Mathf.CeilToInt(timeRemaining);
+                localizedTimeText.RefreshString();
+                timerText.text = localizedTimeText.GetLocalizedString();
+            }
+            else
+            {
+                timerText.text = "Time: " + Mathf.CeilToInt(timeRemaining).ToString();
+            }
         }
     }
     
@@ -132,7 +160,17 @@ public class MinigameCanvasUI : MonoBehaviour
     {
         if(playerLivesText != null)
         {
-            playerLivesText.text = "Lives: " + lives.ToString();
+            if (localizedLivesText != null && !localizedLivesText.IsEmpty)
+            {
+                localizedLivesText.Arguments = new object[] { lives };
+                localizedLivesText.Arguments[0] = lives;
+                localizedLivesText.RefreshString();
+                playerLivesText.text = localizedLivesText.GetLocalizedString();
+            }
+            else
+            {
+                playerLivesText.text = "Lives: " + lives.ToString();
+            }
             if(AudioManager.instance != null)
             {
                 if(lives < 3 && lives > 0)
@@ -164,7 +202,16 @@ public class MinigameCanvasUI : MonoBehaviour
         if(timerText != null)
         {
             gameOverText.gameObject.SetActive(true);
-            gameOverText.text = "Game Over!";
+            
+            if (localizedGameOverText != null && !localizedGameOverText.IsEmpty)
+            {
+                localizedGameOverText.RefreshString();
+                gameOverText.text = localizedGameOverText.GetLocalizedString();
+            }
+            else
+            {
+                gameOverText.text = "Game Over!";
+            }
 
             if (AudioManager.instance != null)
             {
@@ -250,7 +297,15 @@ public class MinigameCanvasUI : MonoBehaviour
     {
         if(timerText != null)
         {
-            timerText.text = "Victory!";
+            if (localizedVictoryText != null && !localizedVictoryText.IsEmpty)
+            {
+                localizedVictoryText.RefreshString();
+                timerText.text = localizedVictoryText.GetLocalizedString();
+            }
+            else
+            {
+                timerText.text = "Victory!";
+            }
             trafficWardenAudio.StopRainAndRoadworks();
         }
     }

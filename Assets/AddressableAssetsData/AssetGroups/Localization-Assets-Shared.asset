@@ -85,6 +85,11 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b940557e21d16524386f53bac54b4d77
+    m_Address: Assets/Localization/MiniGames Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: f4f341c7665ae8c4aba93b5bc2e33b93
     m_Address: Assets/Localization/GameManager Shared Data.asset
     m_ReadOnly: 1

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using MiniGames;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 
 public class BeerGameController : MonoBehaviour
@@ -60,6 +61,13 @@ public class BeerGameController : MonoBehaviour
         "Moore", "McLoughlin", "Carroll", "Connolly", "Daly", "O'Neill", "Fitzpatrick",
         "Griffin", "Hayes", "Martin", "Collins", "Byrne", "Casey"
     };
+
+    [Header("Localization")]
+    LocalizedString localizedBeerTypeLagerText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.BeerType.Lager" };
+    LocalizedString localizedBeerTypeAleText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.BeerType.Ale" };
+    LocalizedString localizedBeerTypePilsnerText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.BeerType.Pilsner" };
+    LocalizedString localizedBeerTypeIPAText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.BeerType.IPA" };
+    LocalizedString localizedBeerTypeStoutText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.BeerType.Stout" };
 
     public void OnEnable()
     {
@@ -393,7 +401,7 @@ public class BeerGameController : MonoBehaviour
                 tap.associatedPourPoint.beerEnterBoxCollider.currentBeerShaderPour = beer;
 
                 // Update UI
-                minigameCanvasUI.UpdateTapOrder(i, order.beerType.ToString(), order.customerName);
+                minigameCanvasUI.UpdateTapOrder(i, GetLocalizedBeerType(order.beerType), order.customerName);
 
                 // Start timer
                 tapTimers[i] = StartCoroutine(StartTapTimer(i, order.customerPatienceTime));
@@ -538,6 +546,25 @@ public class BeerGameController : MonoBehaviour
         // Move to next round
         currentRoundIndex++;
         StartNextRound();
+    }
+    
+    private string GetLocalizedBeerType(BeerType beerType)
+    {
+        switch (beerType)
+        {
+            case BeerType.Pilsner:
+                return localizedBeerTypePilsnerText.IsEmpty ? "Pilsner" : localizedBeerTypePilsnerText.GetLocalizedString();
+            case BeerType.Lager:
+                return localizedBeerTypeLagerText.IsEmpty ? "Lager" : localizedBeerTypeLagerText.GetLocalizedString();
+            case BeerType.IPA:
+                return localizedBeerTypeIPAText.IsEmpty ? "IPA" : localizedBeerTypeIPAText.GetLocalizedString();
+            case BeerType.Ale:
+                return localizedBeerTypeAleText.IsEmpty ? "Ale" : localizedBeerTypeAleText.GetLocalizedString();
+            case BeerType.Stout:
+                return localizedBeerTypeStoutText.IsEmpty ? "Stout" : localizedBeerTypeStoutText.GetLocalizedString();
+            default:
+                return "Unknown";
+        }
     }
 }
 

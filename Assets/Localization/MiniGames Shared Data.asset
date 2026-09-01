@@ -1,0 +1,128 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: MiniGames Shared Data
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.SharedTableData
+  m_TableCollectionName: MiniGames
+  m_TableCollectionNameGuidString: b940557e21d16524386f53bac54b4d77
+  m_Entries:
+  - m_Id: 2650107011072
+    m_Key: Minigames.BeerPouringGame.Pour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49731903414272
+    m_Key: Minigames.BeerPouringGame.GameOver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49978440409088
+    m_Key: MiniGames.MinigameCanvasUI.GameOver
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52228357349376
+    m_Key: MiniGames.MinigameCanvasUI.SmartScore
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52429964959744
+    m_Key: MiniGames.MinigameCanvasUI.Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52828662915072
+    m_Key: MiniGames.MinigameCanvasUI.Victory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 60576456761344
+    m_Key: MiniGames.MinigameCanvasUI.Lives
+    m_Metadata:
+      m_Items: []
+  - m_Id: 62722023612416
+    m_Key: Minigames.BeerPouringGame.TapOrderText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 75409260535808
+    m_Key: Minigames.BeerPouringGame.TapTimerText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78115236732928
+    m_Key: Minigames.BeerPouringGame.PerfectStreakText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81156635615232
+    m_Key: Minigames.BeerPouringGame.Quality.Perfect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81354715815936
+    m_Key: Minigames.BeerPouringGame.Quality.Good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81388932947968
+    m_Key: Minigames.BeerPouringGame.Quality.Acceptable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81459179151360
+    m_Key: Minigames.BeerPouringGame.Quality.Poor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 90986628767744
+    m_Key: Minigames.BeerPouringGame.PourQuality.Perfect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91039061762048
+    m_Key: Minigames.BeerPouringGame.PourQuality.Good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91068879069184
+    m_Key: Minigames.BeerPouringGame.PourQuality.Acceptable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91113477103616
+    m_Key: Minigames.BeerPouringGame.PourQuality.Poor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97311777611776
+    m_Key: Minigames.BeerPouringGame.RoundFeedbackText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98087962927104
+    m_Key: Minigames.BeerPouringGame.SummaryText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100776163663872
+    m_Key: Minigames.BeerPouringGame.BeerType.Lager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100828806373376
+    m_Key: Minigames.BeerPouringGame.BeerType.Ale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100859139579904
+    m_Key: Minigames.BeerPouringGame.BeerType.Stout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100898150801408
+    m_Key: Minigames.BeerPouringGame.BeerType.IPA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100925766098944
+    m_Key: Minigames.BeerPouringGame.BeerType.Pilsner
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 7084867036035678208
+  references:
+    version: 2
+    RefIds:
+    - rid: 7084867036035678208
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1788268786702
