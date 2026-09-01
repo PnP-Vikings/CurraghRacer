@@ -1,0 +1,138 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: MiniGames_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: b940557e21d16524386f53bac54b4d77, type: 2}
+  m_Metadata:
+    m_Items:
+    - rid: 7084867036035678297
+  m_TableData:
+  - m_Id: 2650107011072
+    m_Localized: Pour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49731903414272
+    m_Localized: Game Over!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 49978440409088
+    m_Localized: Game Over!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 52228357349376
+    m_Localized: 'Score: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 52429964959744
+    m_Localized: 'Time: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 52828662915072
+    m_Localized: Victory!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 60576456761344
+    m_Localized: 'Lives: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 62722023612416
+    m_Localized: '{0} for {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 75409260535808
+    m_Localized: 'Tap {0}: {1}s'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 78115236732928
+    m_Localized: 'Perfect Streak: {0} ({1}x)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81156635615232
+    m_Localized: PERFECT!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81354715815936
+    m_Localized: Good
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81388932947968
+    m_Localized: Acceptable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 81459179151360
+    m_Localized: Poor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 90986628767744
+    m_Localized: PERFECT POUR!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91039061762048
+    m_Localized: Good Pour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91068879069184
+    m_Localized: Acceptable Pour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 91113477103616
+    m_Localized: Poor Pour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 97311777611776
+    m_Localized: 'Round {0}/{1} Complete!\nBase: +{2}\nBonus: +{3}\nTotal: +{4}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 98087962927104
+    m_Localized: 'GAME COMPLETE!\n\nTotal Score: {0}\nMax Streak: {1}\n\n"Perfect:
+      {2}\nGood: {3}\nAcceptable: {4}\nPoor: {5}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100776163663872
+    m_Localized: Lager
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100828806373376
+    m_Localized: Ale
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100859139579904
+    m_Localized: Stout
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100898150801408
+    m_Localized: IPA
+    m_Metadata:
+      m_Items: []
+  - m_Id: 100925766098944
+    m_Localized: Pilsner
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds:
+    - rid: 7084867036035678297
+      type: {class: SmartFormatTag, ns: UnityEngine.Localization.Metadata, asm: Unity.Localization}
+      data:
+        m_Entries: 
+        m_SharedEntries:
+        - id: 52228357349376
+        - id: 52429964959744
+        - id: 60576456761344
+        - id: 62722023612416

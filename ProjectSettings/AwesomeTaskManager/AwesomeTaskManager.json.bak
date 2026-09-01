@@ -159,53 +159,44 @@
                     "title": "🔨 In Progress",
                     "cards": [
                         {
-                            "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
-                            "title": "Add Tutorial that player can play through on new game",
+                            "id": "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
+                            "title": "Localize Minigames ",
                             "description": "",
-                            "category": "Feature",
-                            "colorLabel": 6,
+                            "category": "UI",
+                            "colorLabel": 11,
                             "priority": 0,
-                            "createdDate": "2026-06-03 23:00",
-                            "dueDate": "2026-07-03",
+                            "createdDate": "2026-09-01 21:09",
+                            "dueDate": "2026-09-08",
                             "archived": false,
                             "checklistItems": [
-                                "Verify the player can complete a task",
-                                "Once player has completed all tasks in list set tutorial completed",
-                                "Setup task tracking for tutorial",
-                                "Setup Ui Task Tracking",
-                                "Test different layor for tasklist",
-                                "Setup Tutorial League",
-                                "Complete Dialogue text ui",
-                                "Add tutorial to save system",
-                                "also add the race completed today in race manager to save system",
-                                "Toggle not working then its been reset by the save system",
-                                "Need to make save system allow player to pick up half way through a tutorial",
-                                "Add no enery check for tutorial",
-                                "Show new league invite after tutorial complete"
+                                "Beer Pouring Minigame",
+                                "Minigame canvas ui",
+                                "Dishwashing Minigame",
+                                "FootRacing Minigame",
+                                "RockSkipping Minigame",
+                                "RowingRythm Minigame",
+                                "WeightLifting Minigame",
+                                "Boxing Minigame",
+                                "FootTurfing Minigame",
+                                "Traffic Warden Minigame"
                             ],
                             "checklistStates": [
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
                             ],
                             "checklistLinkedCardIds": [
                                 "",
                                 "",
-                                "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
-                                "3bc4723e-533b-4361-bd07-e3b78861990a",
-                                "47a20766-1f19-423d-a291-3c7a970aa0c0",
-                                "280b78cb-0607-423e-aadf-65a35d376d2d",
-                                "100e6d20-b68e-49d6-b522-e339af988a06",
+                                "",
+                                "",
                                 "",
                                 "",
                                 "",
@@ -220,7 +211,7 @@
                                     "isSceneObject": false,
                                     "isNote": false,
                                     "isUrl": false,
-                                    "guid": "80428de81aaf5474ea7d4c4ab7cbf45c",
+                                    "guid": "d656f11150715614ba5129183425e650",
                                     "sceneObject": {
                                         "scenePath": "",
                                         "globalObjectId": "",
@@ -233,7 +224,98 @@
                                     "isSceneObject": false,
                                     "isNote": false,
                                     "isUrl": false,
-                                    "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                                    "guid": "684d0156ce3b8224baf6a0a22d0d48e4",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d9ea1e419eff46e4eb9d372bd978623e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d3dcb19df9baec645b45a4a5908530ef",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "6c511b683549518408e649958f1ef4c1",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "1ba54d77acab60d4b83df2747b441583",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "e3c55d46df2d7014e8389576297fd2cb",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "c00e22e7495bad0458852f21c9a8ba00",
                                     "sceneObject": {
                                         "scenePath": "",
                                         "globalObjectId": "",
@@ -245,10 +327,8 @@
                             ],
                             "imagePath": "",
                             "showChecklist": true,
-                            "completed": true,
-                            "assigneeIds": [
-                                "8910e6f1-befc-4526-8924-25f6df0bd590"
-                            ]
+                            "completed": false,
+                            "assigneeIds": []
                         },
                         {
                             "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
@@ -258,7 +338,7 @@
                             "colorLabel": 1,
                             "priority": 0,
                             "createdDate": "2026-08-07 16:25",
-                            "dueDate": "2026-08-23",
+                            "dueDate": "2026-09-08",
                             "archived": false,
                             "checklistItems": [
                                 "League Invitaition card",
@@ -291,7 +371,7 @@
                             "checklistLinkedCardIds": [
                                 "",
                                 "",
-                                "",
+                                "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
                                 "",
                                 "",
                                 "",
@@ -1030,6 +1110,98 @@
                             "showChecklist": true,
                             "completed": true,
                             "assigneeIds": []
+                        },
+                        {
+                            "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
+                            "title": "Add Tutorial that player can play through on new game",
+                            "description": "",
+                            "category": "Feature",
+                            "colorLabel": 6,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 23:00",
+                            "dueDate": "2026-07-03",
+                            "archived": false,
+                            "checklistItems": [
+                                "Verify the player can complete a task",
+                                "Once player has completed all tasks in list set tutorial completed",
+                                "Setup task tracking for tutorial",
+                                "Setup Ui Task Tracking",
+                                "Test different layor for tasklist",
+                                "Setup Tutorial League",
+                                "Complete Dialogue text ui",
+                                "Add tutorial to save system",
+                                "also add the race completed today in race manager to save system",
+                                "Toggle not working then its been reset by the save system",
+                                "Need to make save system allow player to pick up half way through a tutorial",
+                                "Add no enery check for tutorial",
+                                "Show new league invite after tutorial complete"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                                "3bc4723e-533b-4361-bd07-e3b78861990a",
+                                "47a20766-1f19-423d-a291-3c7a970aa0c0",
+                                "280b78cb-0607-423e-aadf-65a35d376d2d",
+                                "100e6d20-b68e-49d6-b522-e339af988a06",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "80428de81aaf5474ea7d4c4ab7cbf45c",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ]
                         }
                     ]
                 },

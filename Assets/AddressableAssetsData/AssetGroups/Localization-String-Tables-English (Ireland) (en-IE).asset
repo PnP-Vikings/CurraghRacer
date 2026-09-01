@@ -95,6 +95,12 @@ MonoBehaviour:
     - Locale-en-IE
     - Preload
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: d24fd7d6de050ee4797eb8d302a66510
+    m_Address: MiniGames_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: e1081219f00d7764ca41fe0a6b16af8d
     m_Address: MainMenu_en-IE
     m_ReadOnly: 1

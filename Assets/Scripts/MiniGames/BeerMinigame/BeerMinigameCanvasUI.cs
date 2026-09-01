@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Localization;
 
 public class BeerMinigameCanvasUI : MinigameCanvasUI
 {
@@ -26,12 +27,38 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
     
     [Tooltip("Container for summary entries")]
     public Transform summaryContainer;
+    
+    [Header("Beer Minigames Localization")]
+    [SerializeField] LocalizedString localizedTapOrderTextText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.TapOrderText" };
+    [SerializeField] LocalizedString localizedTapTimerTextText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.TapTimerText" };
+    [SerializeField] LocalizedString localizedPerfectStreakTextText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.PerfectStreakText" };
+    [SerializeField] LocalizedString localizedPerfectQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.Quality.Perfect" };
+    [SerializeField] LocalizedString localizedGoodQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.Quality.Good" };
+    [SerializeField] LocalizedString localizedAcceptableQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.Quality.Acceptable" };
+    [SerializeField] LocalizedString localizedPoorQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.Quality.Poor" };
+    [SerializeField] LocalizedString localizedPerfectPourQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.PourQuality.Perfect" };
+    [SerializeField] LocalizedString localizedGoodPourQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.PourQuality.Good" };
+    [SerializeField] LocalizedString localizedAcceptablePourQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.PourQuality.Acceptable" };
+    [SerializeField] LocalizedString localizedPoorPourQualityText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.PourQuality.Poor" };
+    [SerializeField] LocalizedString localizedRoundFeedbackText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.RoundFeedbackText" };
+    [SerializeField] LocalizedString localizedSummaryText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.BeerPouringGame.SummaryText" };
 
     public void UpdateTapOrder(int tapIndex, string beerType, string customerName)
     {
         if (tapIndex >= 0 && tapIndex < tapOrderTexts.Length && tapOrderTexts[tapIndex] != null)
         {
-            tapOrderTexts[tapIndex].text = $"{beerType} for {customerName}";
+            if(localizedTapOrderTextText != null && !localizedTapOrderTextText.IsEmpty)
+            {
+                localizedTapOrderTextText.Arguments = new object[] { beerType, customerName };
+                localizedTapOrderTextText.Arguments[0] = beerType;
+                localizedTapOrderTextText.Arguments[1] = customerName;
+                localizedTapOrderTextText.RefreshString();
+                tapOrderTexts[tapIndex].text = localizedTapOrderTextText.GetLocalizedString();
+            }
+            else
+            {
+                tapOrderTexts[tapIndex].text = $"{beerType} for {customerName}";
+            }
             tapOrderTexts[tapIndex].gameObject.SetActive(true);
         }
     }
@@ -42,7 +69,18 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
         {
             if (isActive)
             {
-                tapTimerTexts[tapIndex].text = $"Tap {tapIndex + 1}: {Mathf.CeilToInt(time)}s";
+                if(localizedTapTimerTextText != null && !localizedTapTimerTextText.IsEmpty)
+                {
+                    localizedTapTimerTextText.Arguments = new object[] { tapIndex + 1, Mathf.CeilToInt(time) };
+                    localizedTapTimerTextText.Arguments[0] = tapIndex + 1;
+                    localizedTapTimerTextText.Arguments[1] = Mathf.CeilToInt(time);
+                    localizedTapTimerTextText.RefreshString();
+                    tapTimerTexts[tapIndex].text = localizedTapTimerTextText.GetLocalizedString();
+                }
+                else
+                {
+                    tapTimerTexts[tapIndex].text = $"Tap {tapIndex + 1}: {Mathf.CeilToInt(time)}s";
+                }
                 tapTimerTexts[tapIndex].gameObject.SetActive(true);
             }
             else
@@ -58,7 +96,18 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
         {
             if (streak > 0)
             {
+                if(localizedPerfectStreakTextText != null && !localizedPerfectStreakTextText.IsEmpty)
+                {
+                    localizedPerfectStreakTextText.Arguments = new object[] { streak, multiplier };
+                    localizedPerfectStreakTextText.Arguments[0] = streak;
+                    localizedPerfectStreakTextText.Arguments[1] = multiplier;
+                    localizedPerfectStreakTextText.RefreshString();
+                    perfectStreakText.text = localizedPerfectStreakTextText.GetLocalizedString();
+                }
+                else
+                {
                 perfectStreakText.text = $"Perfect Streak: {streak} ({multiplier:F1}x)";
+                }
                 perfectStreakText.gameObject.SetActive(true);
             }
             else
@@ -74,10 +123,10 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
         // Show brief feedback at tap location
         string qualityText = quality switch
         {
-            PourQuality.Perfect => "PERFECT!",
-            PourQuality.Good => "Good",
-            PourQuality.Acceptable => "Acceptable",
-            PourQuality.Poor => "Poor",
+            PourQuality.Perfect => localizedPerfectQualityText != null && !localizedPerfectQualityText.IsEmpty ? localizedPerfectQualityText.GetLocalizedString() : "PERFECT!",
+            PourQuality.Good => localizedGoodQualityText != null && !localizedGoodQualityText.IsEmpty ? localizedGoodQualityText.GetLocalizedString() : "Good",
+            PourQuality.Acceptable => localizedAcceptableQualityText != null && !localizedAcceptableQualityText.IsEmpty ? localizedAcceptableQualityText.GetLocalizedString() : "Acceptable",
+            PourQuality.Poor => localizedPoorQualityText != null && !localizedPoorQualityText.IsEmpty ? localizedPoorQualityText.GetLocalizedString() : "Poor",
             _ => ""
         };
         
@@ -102,19 +151,19 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
             switch (quality)
             {
                 case PourQuality.Perfect:
-                    pourResultText.text = "PERFECT POUR!";
+                    pourResultText.text = localizedPerfectPourQualityText != null && !localizedPerfectPourQualityText.IsEmpty ? localizedPerfectPourQualityText.GetLocalizedString() : "PERFECT POUR!";
                     pourResultText.color = Color.green;
                     break;
                 case PourQuality.Good:
-                    pourResultText.text = "Good Pour";
+                    pourResultText.text = localizedGoodPourQualityText != null && !localizedGoodPourQualityText.IsEmpty ? localizedGoodPourQualityText.GetLocalizedString() : "Good Pour";
                     pourResultText.color = Color.cyan;
                     break;  
                 case PourQuality.Acceptable:
-                    pourResultText.text = "Acceptable Pour";
+                    pourResultText.text = localizedAcceptablePourQualityText != null && !localizedAcceptablePourQualityText.IsEmpty ? localizedAcceptablePourQualityText.GetLocalizedString() : "Acceptable Pour";
                     pourResultText.color = Color.yellow;
                     break;
                 case PourQuality.Poor:
-                    pourResultText.text = "Poor Pour";
+                    pourResultText.text = localizedPoorPourQualityText != null && !localizedPoorPourQualityText.IsEmpty ? localizedPoorPourQualityText.GetLocalizedString() : "Poor Pour";
                     pourResultText.color = Color.red;
                     break;
                 default:
@@ -135,10 +184,24 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
     {
         if (roundFeedbackText != null)
         {
-            roundFeedbackText.text = $"Round {roundNum}/{totalRounds} Complete!\n" +
-                                     $"Base: +{basePoints}\n" +
-                                     $"Bonus: +{bonusPoints}\n" +
-                                     $"Total: +{totalPoints}";
+            if(localizedRoundFeedbackText != null && !localizedRoundFeedbackText.IsEmpty)
+            {
+                localizedRoundFeedbackText.Arguments = new object[] { roundNum, totalRounds, basePoints, bonusPoints, totalPoints };
+                localizedRoundFeedbackText.Arguments[0] = roundNum;
+                localizedRoundFeedbackText.Arguments[1] = totalRounds;
+                localizedRoundFeedbackText.Arguments[2] = basePoints;
+                localizedRoundFeedbackText.Arguments[3] = bonusPoints;
+                localizedRoundFeedbackText.Arguments[4] = totalPoints;
+                localizedRoundFeedbackText.RefreshString();
+                roundFeedbackText.text = localizedRoundFeedbackText.GetLocalizedString();
+            }
+            else
+            {
+                roundFeedbackText.text = $"Round {roundNum}/{totalRounds} Complete!\n" +
+                    $"Base: +{basePoints}\n" +
+                    $"Bonus: +{bonusPoints}\n" +
+                    $"Total: +{totalPoints}";
+            }
             roundFeedbackText.gameObject.SetActive(true);
         }
 
@@ -170,13 +233,30 @@ public class BeerMinigameCanvasUI : MinigameCanvasUI
             }
         }
 
-        string summaryText = $"GAME COMPLETE!\n\n" +
-                            $"Total Score: {totalScore}\n" +
-                            $"Max Streak: {maxStreak}\n\n" +
-                            $"Perfect: {perfectCount}\n" +
-                            $"Good: {goodCount}\n" +
-                            $"Acceptable: {acceptableCount}\n" +
-                            $"Poor: {poorCount}";
+        string summaryText = " ";
+        
+        if(localizedSummaryText != null && !localizedSummaryText.IsEmpty)
+        {
+            localizedSummaryText.Arguments = new object[] { totalScore, maxStreak, perfectCount, goodCount, acceptableCount, poorCount };
+            localizedSummaryText.Arguments[0] = totalScore;
+            localizedSummaryText.Arguments[1] = maxStreak;
+            localizedSummaryText.Arguments[2] = perfectCount;
+            localizedSummaryText.Arguments[3] = goodCount;
+            localizedSummaryText.Arguments[4] = acceptableCount;
+            localizedSummaryText.Arguments[5] = poorCount;
+            localizedSummaryText.RefreshString();
+            summaryText = localizedSummaryText.GetLocalizedString();
+        }
+        else
+        {
+            summaryText =  $"GAME COMPLETE!\n\n" +
+                $"Total Score: {totalScore}\n" +
+                $"Max Streak: {maxStreak}\n\n" +
+                $"Perfect: {perfectCount}\n" +
+                $"Good: {goodCount}\n" +
+                $"Acceptable: {acceptableCount}\n" +
+                $"Poor: {poorCount}";
+        }
 
         Debug.Log(summaryText);
         

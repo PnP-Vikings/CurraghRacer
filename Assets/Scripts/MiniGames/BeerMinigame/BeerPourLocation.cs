@@ -27,13 +27,7 @@ public class BeerPourLocation : MonoBehaviour
             return false;
         }
     }
-
-    /*public void TestPourBeer()
-    {
-        Debug.Log("TestPourBeer");
-    }
-    */
-
+    
     public void Reset()
     {
         beerEnterBoxCollider.ClearBeerShaderPour();
