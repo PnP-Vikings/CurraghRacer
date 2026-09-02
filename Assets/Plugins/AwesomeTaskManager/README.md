@@ -246,7 +246,10 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 📄 Changelog
 
-### v1.8 (Custom Themes & Styling Engine, Opacity Controls, Frosted Glass Like Themes, Themed Dialogs)
+### v2.1 (Unity 6.6+ Compatibility Fix)
+- **Fixed** 🛠 **Unity 6.6+ Compatibility (CS0619 Obsolete GetInstanceID)** — resolved compilation errors (`error CS0619: 'Object.GetInstanceID()' is obsolete: 'Use GetEntityId instead.'`) in `ThemedTooltip.cs` when building on Unity 6.6+ (`UNITY_6000_3_OR_NEWER`) by safely resolving editor window identifiers using `GetEntityId()`, while maintaining backwards compatibility with `GetInstanceID()` on earlier Unity versions.
+
+### v2 (Custom Themes & Styling Engine, Opacity Controls, Frosted Glass Like Themes, Themed Dialogs)
 
 #### 🎨 Custom Themes & Styling Engine
 - **Added** 🎨 **Dedicated Style Customizer Tab** — new `🎨 Style` tab in the main window providing complete visual customization of the entire Awesome Task Manager.
@@ -467,7 +470,7 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 📬 Support
 
-Found a bug or have a feature request? Please reach out via the **Asset Store** page or open an issue on the support channel.
+Found a bug or have a feature request? Please reach out via the **Asset Store** page.
 
 ---
 

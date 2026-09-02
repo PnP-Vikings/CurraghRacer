@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Reflection;
 using UnityEditor;
 using UnityEngine;
+#if UNITY_6000_3_OR_NEWER
+using WindowId = UnityEngine.EntityId;
+#else
+using WindowId = System.Int32;
+#endif
 
 namespace AwesomeTaskManager.UI
 {
@@ -27,7 +32,7 @@ namespace AwesomeTaskManager.UI
             public bool isWarm;
         }
 
-        private static readonly Dictionary<int, TooltipState> _windowStates = new Dictionary<int, TooltipState>();
+        private static readonly Dictionary<WindowId, TooltipState> _windowStates = new Dictionary<WindowId, TooltipState>();
         private const float ColdHoverDelay = 0.55f; // Standard delay (550ms) on cold hover before showing
         private const float WarmHoverDelay = 0.2f;  // Slight delay (200ms) when switching between adjacent items
         private const float WarmWindowDuration = 0.3f; // Time window to consider hover transition warm
@@ -119,6 +124,15 @@ namespace AwesomeTaskManager.UI
             ClearNativeTooltips();
         }
 
+        private static WindowId GetObjectId(UnityEngine.Object obj)
+        {
+#if UNITY_6000_3_OR_NEWER
+            return obj.GetEntityId();
+#else
+            return obj.GetInstanceID();
+#endif
+        }
+
         private static bool IsMouseOverThemedWindow()
         {
             try
@@ -126,7 +140,7 @@ namespace AwesomeTaskManager.UI
                 var mouseOver = EditorWindow.mouseOverWindow;
                 if (mouseOver != null)
                 {
-                    int winId = mouseOver.GetInstanceID();
+                    WindowId winId = GetObjectId(mouseOver);
                     if (_windowStates.ContainsKey(winId)) return true;
                     string typeName = mouseOver.GetType().FullName;
                     if (typeName != null && (typeName.StartsWith("AwesomeTaskManager.") || typeName.Contains("Themed"))) return true;
@@ -149,14 +163,14 @@ namespace AwesomeTaskManager.UI
         private static void OnEditorUpdate()
         {
             double now = EditorApplication.timeSinceStartup;
-            List<int> toRemove = null;
+            List<WindowId> toRemove = null;
 
             foreach (var kvp in _windowStates)
             {
                 var state = kvp.Value;
                 if (state.windowRef == null || !state.windowRef.TryGetTarget(out var win) || win == null)
                 {
-                    if (toRemove == null) toRemove = new List<int>();
+                    if (toRemove == null) toRemove = new List<WindowId>();
                     toRemove.Add(kvp.Key);
                     continue;
                 }
@@ -186,7 +200,7 @@ namespace AwesomeTaskManager.UI
 
             if (toRemove != null)
             {
-                foreach (int id in toRemove)
+                foreach (WindowId id in toRemove)
                 {
                     _windowStates.Remove(id);
                 }
@@ -485,7 +499,7 @@ namespace AwesomeTaskManager.UI
         {
             if (window == null) return;
 
-            int winId = window.GetInstanceID();
+            WindowId winId = GetObjectId(window);
             if (!_windowStates.TryGetValue(winId, out var state))
             {
                 state = new TooltipState { windowRef = new WeakReference<EditorWindow>(window) };
