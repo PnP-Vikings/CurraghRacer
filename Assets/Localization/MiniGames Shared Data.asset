@@ -151,6 +151,38 @@ MonoBehaviour:
     m_Key: Minigames.RowingRhythn.DirectionButtonsText.Right
     m_Metadata:
       m_Items: []
+  - m_Id: 863024549191680
+    m_Key: Minigames.FootingTurfMinigame.StartGameText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863183932743680
+    m_Key: Minigames.FootingTurfMinigame.StartGameInfo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863249951088640
+    m_Key: Minigames.FootingTurfMinigame.StackBtnText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863313951973376
+    m_Key: Minigames.FootingTurfMinigame.StackAmountText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863697177141248
+    m_Key: Minigames.FootingTurfMinigame.SelectAStack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 866954834337792
+    m_Key: Minigames.FootingTurfMinigame.StackComplete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867426764840960
+    m_Key: Minigames.FootingTurfMinigame.GameOver.Won
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867472075907072
+    m_Key: Minigames.FootingTurfMinigame.GameOver.Lost
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

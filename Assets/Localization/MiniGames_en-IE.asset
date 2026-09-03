@@ -160,6 +160,45 @@ MonoBehaviour:
     m_Localized: Right
     m_Metadata:
       m_Items: []
+  - m_Id: 863024549191680
+    m_Localized: Start Game
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863183932743680
+    m_Localized: "Click on a stack to select it. \nthen press stack button to flip.\nFlip
+      at least {0} stacks before time runs out to win!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 863249951088640
+    m_Localized: Stack
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863313951973376
+    m_Localized: Stack Completed X {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 863697177141248
+    m_Localized: Select a stack to Foot
+    m_Metadata:
+      m_Items: []
+  - m_Id: 866954834337792
+    m_Localized: Stack Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867426764840960
+    m_Localized: Time's Up!\n Congrats You flipped {0}  stacks! \n You needed to
+      flip at least {1} stacks to win.
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 867472075907072
+    m_Localized: Time's Up!\n You flipped {0} stacks! \n You needed to flip at least
+      {1} stacks to win.
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
   references:
     version: 2
     RefIds:
@@ -172,3 +211,7 @@ MonoBehaviour:
         - id: 52429964959744
         - id: 60576456761344
         - id: 62722023612416
+        - id: 863313951973376
+        - id: 863183932743680
+        - id: 867426764840960
+        - id: 867472075907072

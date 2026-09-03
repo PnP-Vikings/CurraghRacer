@@ -161,6 +161,46 @@ MonoBehaviour:
     m_Localized: Ceart go leor
     m_Metadata:
       m_Items: []
+  - m_Id: 863024549191680
+    m_Localized: "Cuir t\xFAs leis an gcluiche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863183932743680
+    m_Localized: "Clice\xE1il ar charn chun \xE9 a roghn\xFA.\r\nAnsin br\xFAigh
+      an cnaipe cairn chun \xE9 a chasadh.\r\nCas {0} carn ar a laghad sula rachaidh
+      an t-am in \xE9ag chun an bua a fh\xE1il!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 863249951088640
+    m_Localized: Cruach
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863313951973376
+    m_Localized: "Cruach Cr\xEDochnaithe X {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 863697177141248
+    m_Localized: Roghnaigh cruach le cur ag bun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 866954834337792
+    m_Localized: "Cruach Cr\xEDochnaithe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867426764840960
+    m_Localized: "T\xE1 an t-am istigh! \\n Comhghairdeas! Chas t\xFA {0} carn! \\n
+      Bh\xED ort ar a laghad {1} carn a chasadh chun an bua a fh\xE1il."
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 867472075907072
+    m_Localized: "T\xE1 an t-am istigh! \\n D'iompaigh t\xFA {0} carn! \\n Bh\xED
+      ort ar a laghad {1} carn a iomp\xFA chun buachan."
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
   references:
     version: 2
     RefIds:
@@ -173,3 +213,7 @@ MonoBehaviour:
         - id: 52429964959744
         - id: 60576456761344
         - id: 62722023612416
+        - id: 863313951973376
+        - id: 863183932743680
+        - id: 867426764840960
+        - id: 867472075907072
