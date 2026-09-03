@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using MiniGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public class FootRaceMiniGameManager : MonoBehaviour
@@ -67,7 +68,9 @@ public class FootRaceMiniGameManager : MonoBehaviour
     
     [Header("Ui Elements")]
     public MinigameCanvasUI minigameCanvasUI;
-   
+    private string speedText = "";
+    LocalizedString localizedSpeedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.FootRacingMiniGame.Speed" };
+    
     private void Awake()
     {
         if (Instance == null)
@@ -201,7 +204,22 @@ public class FootRaceMiniGameManager : MonoBehaviour
             {
                 minigameCanvasUI.UpdateScore(score);
                 minigameCanvasUI.UpdateTimer(Time.timeSinceLevelLoad.ToString("F1") + "s");
-                minigameCanvasUI.UpdatePlayerLives("Speed: " + playerRigidbody.linearVelocity.z.ToString("F1"));
+
+               
+                
+                if(localizedSpeedText != null && !localizedSpeedText.IsEmpty)   
+                {
+                    localizedSpeedText.Arguments = new object[] { playerRigidbody.linearVelocity.z.ToString("F1") };
+                    localizedSpeedText.Arguments[0] = playerRigidbody.linearVelocity.z.ToString("F1");
+                    localizedSpeedText.RefreshString();
+                    speedText = localizedSpeedText.GetLocalizedString();
+                }
+                else
+                {
+                    speedText = "Speed: " + playerRigidbody.linearVelocity.z.ToString("F1");
+                }
+                
+                minigameCanvasUI.UpdatePlayerLives(speedText);
             }
             
             if (CheckIsPlayerTooSlow() && Time.timeSinceLevelLoad > 3f)

@@ -115,6 +115,42 @@ MonoBehaviour:
     m_Key: Minigames.BeerPouringGame.BeerType.Pilsner
     m_Metadata:
       m_Items: []
+  - m_Id: 734563864141824
+    m_Key: Minigames.FootRacingMiniGame.Speed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 736914264023040
+    m_Key: Minigames.FootRacingMiniGame.Jump
+    m_Metadata:
+      m_Items: []
+  - m_Id: 736939597619200
+    m_Key: Minigames.FootRacingMiniGame.Slide
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741165505699840
+    m_Key: Minigames.RowingRhythn.PaddleHitResult.Miss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741305192800256
+    m_Key: Minigames.RowingRhythn.PaddleHitResult.Early
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741355616722944
+    m_Key: Minigames.RowingRhythn.PaddleHitResult.Perfect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741385161400320
+    m_Key: Minigames.RowingRhythn.PaddleHitResult.Late
+    m_Metadata:
+      m_Items: []
+  - m_Id: 743283276898304
+    m_Key: Minigames.RowingRhythn.DirectionButtonsText.Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 743344094306304
+    m_Key: Minigames.RowingRhythn.DirectionButtonsText.Right
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

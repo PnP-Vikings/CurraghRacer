@@ -99,6 +99,24 @@ public class MinigameCanvasUI : MonoBehaviour
             }
         }
     }
+    public virtual void UpdateScore(float score)
+    {
+        if(scoreText != null)
+        {
+            if (localizedSmartScoreText != null && !localizedSmartScoreText.IsEmpty)
+            {
+                localizedSmartScoreText.Arguments = new object[] { score };
+                localizedSmartScoreText.Arguments[0] = score;
+                localizedSmartScoreText.RefreshString();
+                scoreText.text = localizedSmartScoreText.GetLocalizedString();
+            }
+            else
+            {
+                scoreText.text = "Score: " + score.ToString();
+            }
+        }
+    }
+    
     public virtual void UpdateScore(string score)
     {
         if(scoreText != null)

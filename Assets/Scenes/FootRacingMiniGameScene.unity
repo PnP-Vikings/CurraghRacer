@@ -777,8 +777,9 @@ GameObject:
   - component: {fileID: 240538856}
   - component: {fileID: 240538858}
   - component: {fileID: 240538857}
+  - component: {fileID: 240538859}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SlideText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -903,6 +904,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 240538855}
   m_CullTransparentMesh: 1
+--- !u!114 &240538859
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 240538855}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 736939597619200
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 240538857}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &288004591
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -3518,8 +3559,9 @@ GameObject:
   - component: {fileID: 1172935269}
   - component: {fileID: 1172935271}
   - component: {fileID: 1172935270}
+  - component: {fileID: 1172935272}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: JumpText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3644,6 +3686,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1172935268}
   m_CullTransparentMesh: 1
+--- !u!114 &1172935272
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1172935268}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 736914264023040
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1172935270}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1189576492
 GameObject:
   m_ObjectHideFlags: 0
@@ -4508,6 +4590,54 @@ MonoBehaviour:
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}
   trafficWardenAudio: {fileID: 0}
+  localizedGameOverText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.GameOver
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedVictoryText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Victory
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedSmartScoreText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.SmartScore
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedTimeText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Time
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLivesText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Lives
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1450603467
 GameObject:
   m_ObjectHideFlags: 0

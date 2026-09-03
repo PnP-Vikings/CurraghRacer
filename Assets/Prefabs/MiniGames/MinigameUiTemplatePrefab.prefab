@@ -662,7 +662,7 @@ RectTransform:
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: -155.58, y: -63.8}
-  m_SizeDelta: {x: 250, y: 200}
+  m_SizeDelta: {x: 277, y: 200}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &4898244421967223830
 CanvasRenderer:
@@ -895,9 +895,59 @@ MonoBehaviour:
   bonusFlashText: {fileID: 4356545059130105695}
   warningText: {fileID: 1954397770308687198}
   multiplierText: {fileID: 1404277368642682772}
+  showRestartButtons: 0
   testDemoButtons: {fileID: 2500917261912182892}
   backToMainMenuButton: {fileID: 5668899932907447530}
   restartMinigameButton: {fileID: 3993063374783738226}
+  trafficWardenAudio: {fileID: 0}
+  localizedGameOverText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.GameOver
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedVictoryText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Victory
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedSmartScoreText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.SmartScore
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedTimeText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Time
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLivesText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Lives
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &4314603328685551936
 GameObject:
   m_ObjectHideFlags: 0

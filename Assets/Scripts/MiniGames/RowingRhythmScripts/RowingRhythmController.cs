@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using MiniGames;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
@@ -43,12 +44,20 @@ public class RowingRhythmController : MonoBehaviour
   
   public int maxLives = 5; // Maximum lives before game over
   public int currentLives; // Current remaining lives
-
+  public int lastUpdateLivesUi; // To track when to update the UI for lives
   private bool hasStartedRowing = false;
   private bool rowingAudioHasStarted = false;
 
   [SerializeField] RowingGameAudio RowingGameAudio;
 
+  
+  [Header("Localization")]
+  [SerializeField] private LocalizedString localizedPerfectHitText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RowingRhythn.PaddleHitResult.Perfect" };
+  [SerializeField] private LocalizedString localizedEarlyHitText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RowingRhythn.PaddleHitResult.Early" };
+  [SerializeField] private LocalizedString localizedLateHitText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RowingRhythn.PaddleHitResult.Late" };
+  [SerializeField] private LocalizedString localizedMissHitText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RowingRhythn.PaddleHitResult.Miss" };
+  
+  
   private void StartGame()
   {
     if (minigameCanvasUI != null)
@@ -259,9 +268,13 @@ public class RowingRhythmController : MonoBehaviour
       
       if (minigameCanvasUI != null)
       {
-        minigameCanvasUI.UpdateScore( "Score: " + score);
+        minigameCanvasUI.UpdateScore(score);
         minigameCanvasUI.UpdateTimer(Time.timeSinceLevelLoad.ToString("F1") + "s");
-        minigameCanvasUI.UpdatePlayerLives("Lives: " + currentLives);
+        if (currentLives != lastUpdateLivesUi)
+        {
+            minigameCanvasUI.UpdatePlayerLives(currentLives);
+            lastUpdateLivesUi = currentLives;
+        }
       }
       // Check for missed paddles
       CheckForMissedPaddles();
@@ -360,9 +373,13 @@ public class RowingRhythmController : MonoBehaviour
     activeRightPaddle.Clear();
     if (minigameCanvasUI != null)
     {
-      minigameCanvasUI.UpdateScore( "Score: " + score);
+      minigameCanvasUI.UpdateScore(score);
       minigameCanvasUI.UpdateTimer(Time.timeSinceLevelLoad.ToString("F1") + "s");
-      minigameCanvasUI.UpdatePlayerLives("Lives: " + currentLives);
+      if (currentLives != lastUpdateLivesUi)
+      {
+        minigameCanvasUI.UpdatePlayerLives(currentLives);
+        lastUpdateLivesUi = currentLives;
+      }
     }
     StopPaddleAnimations();
     minigameCanvasUI.ShowGameOver();
@@ -699,21 +716,54 @@ public class RowingRhythmController : MonoBehaviour
   
   public void ShowHitFeedback(PaddleHitResult feedback)
   {
+    string feedbackText = "";
     if (rhythmCanvas != null)
     {
       switch (feedback)
       {
         case PaddleHitResult.Miss:
-          rhythmCanvas.ShowHitFeedback("Miss!", feedback, 1f);
+          if (localizedMissHitText != null && !localizedMissHitText.IsEmpty)
+          {
+            feedbackText = localizedMissHitText.GetLocalizedString();
+          }
+          else
+          {
+            feedbackText = "Miss!";
+          }
+          rhythmCanvas.ShowHitFeedback(feedbackText, feedback, 1f);
           break;
         case PaddleHitResult.Early:
-          rhythmCanvas.ShowHitFeedback("Early!", feedback, 1f);
+          if (localizedEarlyHitText != null && !localizedEarlyHitText.IsEmpty)
+          {
+            feedbackText = localizedEarlyHitText.GetLocalizedString();
+          }
+          else
+          {
+            feedbackText = "Early!";
+          }
+          rhythmCanvas.ShowHitFeedback(feedbackText, feedback, 1f);
           break;
         case PaddleHitResult.Perfect:
-          rhythmCanvas.ShowHitFeedback("Perfect!", feedback, 1f);
+          if (localizedPerfectHitText != null && !localizedPerfectHitText.IsEmpty)
+          {
+            feedbackText = localizedPerfectHitText.GetLocalizedString();
+          }
+          else
+          {
+            feedbackText = "Perfect!";
+          }
+          rhythmCanvas.ShowHitFeedback(feedbackText, feedback, 1f);
           break;
         case PaddleHitResult.Late:
-          rhythmCanvas.ShowHitFeedback("Late!", feedback, 1f);
+          if (localizedLateHitText != null && !localizedLateHitText.IsEmpty)
+          {
+            feedbackText = localizedLateHitText.GetLocalizedString();
+          }
+          else
+          {
+            feedbackText = "Late!";
+          }
+          rhythmCanvas.ShowHitFeedback(feedbackText, feedback, 1f);
           break;
       }
     }

@@ -125,6 +125,42 @@ MonoBehaviour:
     m_Localized: Pilsner
     m_Metadata:
       m_Items: []
+  - m_Id: 734563864141824
+    m_Localized: 'Luas: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 736914264023040
+    m_Localized: "L\xE9im"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 736939597619200
+    m_Localized: "Sleamhn\xE1n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741165505699840
+    m_Localized: Teip!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741305192800256
+    m_Localized: Luath!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741355616722944
+    m_Localized: Foirfe!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741385161400320
+    m_Localized: mall!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 743283276898304
+    m_Localized: "Ar chl\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 743344094306304
+    m_Localized: Ceart go leor
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:
