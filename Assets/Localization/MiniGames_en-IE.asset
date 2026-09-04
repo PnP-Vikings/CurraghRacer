@@ -199,6 +199,42 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7084867036035678297
+  - m_Id: 1067783289823232
+    m_Localized: Dipping Plate!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068051607838720
+    m_Localized: Dip Plate Again!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068138169884672
+    m_Localized: Spawning Plates...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069485623599104
+    m_Localized: Waiting for Plate...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069552292061184
+    m_Localized: Dip Plate in Water...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069607040311296
+    m_Localized: Clean Plate...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069642746421248
+    m_Localized: All Plates Cleaned!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069854600716288
+    m_Localized: Plate Cleaned!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1074592704618496
+    m_Localized: Swipe down to Dip Plate
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

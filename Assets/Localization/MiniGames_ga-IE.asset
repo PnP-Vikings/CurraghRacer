@@ -201,6 +201,42 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7084867036035678298
+  - m_Id: 1067783289823232
+    m_Localized: "Pl\xE1ta tumtha!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068051607838720
+    m_Localized: "Tum an pl\xE1ta ar\xEDs!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068138169884672
+    m_Localized: "Pl\xE1ta\xED sceite..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069485623599104
+    m_Localized: "Ag fanacht leis an pl\xE1ta..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069552292061184
+    m_Localized: "Tum an pl\xE1ta in uisce..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069607040311296
+    m_Localized: "Pl\xE1ta glan..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069642746421248
+    m_Localized: "Gach pl\xE1ta glanta!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069854600716288
+    m_Localized: "Pl\xE1ta glanta!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1074592704618496
+    m_Localized: "Svaidhp\xE1il s\xEDos go dt\xED an Pl\xE1ta Tumtha"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

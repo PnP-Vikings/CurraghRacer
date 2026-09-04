@@ -183,6 +183,42 @@ MonoBehaviour:
     m_Key: Minigames.FootingTurfMinigame.GameOver.Lost
     m_Metadata:
       m_Items: []
+  - m_Id: 1067783289823232
+    m_Key: Minigames.DishWashingMinigame.DippingPlate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068051607838720
+    m_Key: Minigames.DishWashingMinigame.DipPlateAgain
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068138169884672
+    m_Key: Minigames.DishWashingMinigame.SpawningPlates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069485623599104
+    m_Key: Minigames.DishWashingMinigame.WaitingForPlates
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069552292061184
+    m_Key: Minigames.DishWashingMinigame.DipPlateInWater
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069607040311296
+    m_Key: Minigames.DishWashingMinigame.CleanPlate
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069642746421248
+    m_Key: Minigames.DishWashingMinigame.AllPlatesCleaned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069854600716288
+    m_Key: Minigames.DishWashingMinigame.PlateCleaned
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1074592704618496
+    m_Key: Minigames.DishWashingMinigame.SwipeToDipPlate
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
