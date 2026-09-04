@@ -235,6 +235,177 @@ MonoBehaviour:
     m_Localized: Swipe down to Dip Plate
     m_Metadata:
       m_Items: []
+  - m_Id: 1081469714817024
+    m_Localized: Rock Selected!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1082705507770368
+    m_Localized: Skip All
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1082981165817856
+    m_Localized: Round Results
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083160153546752
+    m_Localized: Player Name
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083336716967936
+    m_Localized: Round 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083503100813312
+    m_Localized: Round 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083515297849344
+    m_Localized: Round 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083904495706112
+    m_Localized: Final Results
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1084337515651072
+    m_Localized: Winner Panel
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1085356458893312
+    m_Localized: Confirm Selection
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1086546940780544
+    m_Localized: Small
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1086590725120000
+    m_Localized: Medium
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1086625483317248
+    m_Localized: Large
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101256008392704
+    m_Localized: 'Type: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1101307761909760
+    m_Localized: 'Acceleration: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1101406592294912
+    m_Localized: 'Bounce Force: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1101439072985088
+    m_Localized: 'Max Bounces: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1101474842009600
+    m_Localized: Select this rock to use it!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101562129670144
+    m_Localized: '{0} rock selected!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1104360539938816
+    m_Localized: Swipe to throw!\nDirection = Angle,\n Distance = Power
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1104879954157568
+    m_Localized: Press on the BEAT to throw
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1104934735962112
+    m_Localized: Hold to charge power\nRelease to throw!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110274315640832
+    m_Localized: Tap when the circle hits the target!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110749454786560
+    m_Localized: PERFECT!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110801569013760
+    m_Localized: GOOD!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110840269856768
+    m_Localized: OK
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110859941142528
+    m_Localized: MISS
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1111695714934784
+    m_Localized: x{0} COMBO!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1112234095796224
+    m_Localized: 'Player Distance: {0}m'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1112603668504576
+    m_Localized: 'AI Distance: {0}m'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1115289004531712
+    m_Localized: You
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1116540261883904
+    m_Localized: Player {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1117066240188416
+    m_Localized: '{0}''s Turn'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1117272096628736
+    m_Localized: Round {0}/3
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1120846646075392
+    m_Localized: Player {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1121224221515776
+    m_Localized: YOU WIN!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1121390114627584
+    m_Localized: 'Total: {0}m'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1121315263078400
+    m_Localized: '{0} Wins!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 1125568421552128
+    m_Localized: Player {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
   references:
     version: 2
     RefIds:
@@ -251,3 +422,18 @@ MonoBehaviour:
         - id: 863183932743680
         - id: 867426764840960
         - id: 867472075907072
+        - id: 1101439072985088
+        - id: 1101406592294912
+        - id: 1101307761909760
+        - id: 1101256008392704
+        - id: 1101562129670144
+        - id: 1112603668504576
+        - id: 1112234095796224
+        - id: 1111695714934784
+        - id: 1116540261883904
+        - id: 1117066240188416
+        - id: 1117272096628736
+        - id: 1121390114627584
+        - id: 1121315263078400
+        - id: 1120846646075392
+        - id: 1125568421552128

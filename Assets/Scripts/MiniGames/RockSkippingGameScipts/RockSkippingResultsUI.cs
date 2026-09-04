@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Localization;
 
 /// <summary>
 /// Displays results for the rock skipping game
@@ -56,6 +57,16 @@ public class RockSkippingResultsUI : MonoBehaviour
     private string[] playerNames = { "You", "AI 1", "AI 2", "AI 3" };
     private Color[] playerColors;
     
+    [Header("Localization")]
+    [SerializeField] private LocalizedString playerNameLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.PlayerName" };
+    [SerializeField] private LocalizedString playerNameFallbackLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.PlayerTurnIndicator.PlayerNameFallback" };
+    [SerializeField] private LocalizedString playerTurnTextLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.PlayerTurnIndicator.PlayerTurnText" };
+    [SerializeField] private LocalizedString roundTextLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.PlayerTurnIndicator.RoundText" };
+    [SerializeField] private LocalizedString playerWinsTextLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.FinalResult.PlayerWins" };
+    [SerializeField] private LocalizedString playerLostTextLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.FinalResult.PlayerLost" };
+    [SerializeField] private LocalizedString totalTextLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.FinalResult.TotalText" };
+    [SerializeField] private LocalizedString playerNameFinalFallbackLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockSkippingResults.FinalResult.PlayerNameFallback" };
+    
     private void Awake()
     {
         playerColors = new Color[] { playerColor, ai1Color, ai2Color, ai3Color };
@@ -71,6 +82,12 @@ public class RockSkippingResultsUI : MonoBehaviour
         
         if (exitButton != null)
             exitButton.onClick.AddListener(OnExitPressed);
+        
+        
+        if(playerNameLocalizedString != null && !playerNameLocalizedString.IsEmpty)
+        {
+            playerNames[0] = playerNameLocalizedString.GetLocalizedString();
+        }
         
         // Initialize player names
         for (int i = 0; i < playerNameTexts.Length && i < playerNames.Length; i++)
@@ -163,15 +180,15 @@ public class RockSkippingResultsUI : MonoBehaviour
         if (currentTurnText != null)
         {
             currentTurnText.gameObject.SetActive(true);
-            string playerName = playerIndex < playerNames.Length ? playerNames[playerIndex] : $"Player {playerIndex}";
-            currentTurnText.text = $"{playerName}'s Turn";
+            string playerName = playerIndex < playerNames.Length ? playerNames[playerIndex] : playerNameFallbackLocalizedString?.IsEmpty! ==false? playerNameFallbackLocalizedString.GetLocalizedString(playerIndex) : $"Player {playerIndex}";
+            currentTurnText.text = playerTurnTextLocalizedString?.IsEmpty! == false ? playerTurnTextLocalizedString.GetLocalizedString(playerName) : $"Turn {playerName}'s Turn";
             currentTurnText.color = playerIndex < playerColors.Length ? playerColors[playerIndex] : Color.white;
         }
         
         if (currentRoundText != null)
         {
             currentRoundText.gameObject.SetActive(true);
-            currentRoundText.text = $"Round {round}/3";
+            currentRoundText.text = roundTextLocalizedString?.IsEmpty! == false ? roundTextLocalizedString.GetLocalizedString(round) : $"Round {round}/3";
         }
         
         // Highlight current player's row
@@ -287,8 +304,8 @@ public class RockSkippingResultsUI : MonoBehaviour
             
             if (winnerText != null)
             {
-                string winnerName = winnerIndex < playerNames.Length ? playerNames[winnerIndex] : $"Player {winnerIndex}";
-                winnerText.text = winnerIndex == 0 ? "YOU WIN!" : $"{winnerName} Wins!";
+                string winnerName = winnerIndex < playerNames.Length ? playerNames[winnerIndex] : playerNameFinalFallbackLocalizedString?.IsEmpty! == false ? playerNameFinalFallbackLocalizedString.GetLocalizedString(winnerIndex) : $"Player {winnerIndex}";
+                winnerText.text = winnerIndex == 0 ? playerWinsTextLocalizedString?.IsEmpty! == false ?  playerWinsTextLocalizedString.GetLocalizedString() : "YOU WIN!" : playerLostTextLocalizedString?.IsEmpty! == false ? playerLostTextLocalizedString.GetLocalizedString(winnerName): $"{winnerName} Wins!";
                 winnerText.color = winnerIndex < playerColors.Length ? playerColors[winnerIndex] : Color.white;
             }
             
@@ -299,7 +316,7 @@ public class RockSkippingResultsUI : MonoBehaviour
                 {
                     total += d;
                 }
-                winnerDistanceText.text = $"Total: {total:F1}m";
+                winnerDistanceText.text = totalTextLocalizedString?.IsEmpty! == false ? totalTextLocalizedString.GetLocalizedString(total.ToString("F1")): $"Total: {total:F1}m";
             }
         }
         

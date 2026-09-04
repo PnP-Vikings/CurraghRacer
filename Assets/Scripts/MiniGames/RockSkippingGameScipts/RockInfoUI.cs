@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.InputSystem;
 using TMPro;
+using UnityEngine.Localization;
 
 /// <summary>
 /// Optional UI component to display rock statistics on hover
@@ -23,6 +24,14 @@ public class RockInfoUI : MonoBehaviour
     private RectTransform rectTransform;
     private Canvas canvas;
     
+    [Header(("Localization"))]
+    [SerializeField] private LocalizedString rockTypeLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.InfoPanel.RockTypeText" };
+    [SerializeField] private LocalizedString accelerationLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.InfoPanel.Acceleration" };
+    [SerializeField] private LocalizedString bounceForceLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.InfoPanel.BounceForce" };
+    [SerializeField] private LocalizedString maxBouncesLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.InfoPanel.MaxBounces" };
+    [SerializeField] private LocalizedString selectThisRockLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.InfoPanel.SelectThisRockToUseText" };
+    [SerializeField] private LocalizedString rockSelectedLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.InfoPanel.RockSelected" };
+    
     private void Awake()
     {
         rectTransform = infoPanel.GetComponent<RectTransform>();
@@ -40,27 +49,79 @@ public class RockInfoUI : MonoBehaviour
         
         // Update text with rock stats
         if (rockTypeText != null)
-            rockTypeText.text = $"Type: {rock.rockType}";
-        
+        {
+            if(rockTypeLocalizedString != null &&!rockTypeLocalizedString.IsEmpty)
+            {
+                rockTypeText.text = rockTypeLocalizedString.GetLocalizedString(rock.GetLocalizedRockType());
+            }
+            else
+            {
+                rockTypeText.text = $"Type: {rock.GetLocalizedRockType()}";
+            }
+        }
         if (accelerationText != null)
-            accelerationText.text = $"Acceleration: {rock.acceleration:F1}";
+        {
+            if(accelerationLocalizedString != null && !accelerationLocalizedString.IsEmpty)
+            {
+                accelerationText.text = accelerationLocalizedString.GetLocalizedString(rock.acceleration.ToString("F1"));
+            }
+            else
+            {
+                accelerationText.text = $"Acceleration: {rock.acceleration:F1}";
+            }
+        }
         
         if (bounceForceText != null)
-            bounceForceText.text = $"Bounce Force: {rock.bounceForce:F1}";
-        
+        {
+            if(bounceForceLocalizedString != null && !bounceForceLocalizedString.IsEmpty)
+            {
+                bounceForceText.text = bounceForceLocalizedString.GetLocalizedString(rock.bounceForce.ToString("F1"));
+            }
+            else
+            {
+                bounceForceText.text = $"Bounce Force: {rock.bounceForce:F1}";
+            }
+        }
         if (maxBouncesText != null)
-            maxBouncesText.text = $"Max Bounces: {rock.maxBounces}";
-        
-        if(rockSelectionText != null)
+        {
+            if(maxBouncesLocalizedString != null && !maxBouncesLocalizedString.IsEmpty)
+            {
+                maxBouncesText.text = maxBouncesLocalizedString.GetLocalizedString(rock.maxBounces.ToString());
+            }
+            else
+            {
+                maxBouncesText.text = $"Max Bounces: {rock.maxBounces}";
+            }
+        }
+
+        if (rockSelectionText != null)
+        {
             rockSelectionText.gameObject.SetActive(true);
-            rockSelectionText.text = $"Select this rock to use it!";
+            if(selectThisRockLocalizedString != null && !selectThisRockLocalizedString.IsEmpty)
+            {
+                rockSelectionText.text = selectThisRockLocalizedString.GetLocalizedString();
+            }
+            else
+            {
+                rockSelectionText.text = $"Select this rock to use it!";
+            }
+        }
         //FollowMousePosition();
     }
     
     public void RockSelected(Rock rock)
     {
-        if(rockSelectionText != null)
-            rockSelectionText.text = $"{rock.rockType} rock selected!";
+        if (rockSelectionText != null)
+        {
+            if(rockSelectedLocalizedString != null && !rockSelectedLocalizedString.IsEmpty)
+            {
+                rockSelectionText.text = rockSelectedLocalizedString.GetLocalizedString(rock.GetLocalizedRockType());
+            }
+            else
+            {
+                rockSelectionText.text = $"{rock.GetLocalizedRockType()} rock selected!";
+            }
+        }
     }
     
     public void HideInfo()

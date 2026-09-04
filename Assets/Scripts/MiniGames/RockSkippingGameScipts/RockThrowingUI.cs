@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using DG.Tweening;
+using UnityEngine.Localization;
 
 /// <summary>
 /// UI feedback for rock throwing mechanics
@@ -66,6 +67,20 @@ public class RockThrowingUI : MonoBehaviour
     private Sequence currentTimingSequence;
     private Coroutine messageCoroutine;
     
+    [Header(("Localization"))]
+    
+    [SerializeField] private LocalizedString modeInstructionsTxtFlickModeLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.ModeInstructionsTxt.FlickMode" };
+    [SerializeField] private LocalizedString modeInstructionsTxtRhythmModeLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.ModeInstructionsTxt.RhythmMode" };
+    [SerializeField] private LocalizedString modeInstructionsTxtOscillatorModeLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.ModeInstructionsTxt.OscillatorMode" };
+    [SerializeField] private LocalizedString tapCircleTextLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.TapCircleText" };
+    [SerializeField] private LocalizedString perfectLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.Result.Perfect" };
+    [SerializeField] private LocalizedString goodLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.Result.Good" };
+    [SerializeField] private LocalizedString okayLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.Result.Okay" };
+    [SerializeField] private LocalizedString missLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.Result.Miss" };
+    [SerializeField] private LocalizedString comboLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.Combo" };
+    [SerializeField] private LocalizedString playerDistanceLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.PlayerDistance" };
+    [SerializeField] private LocalizedString aiDistanceLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.AIDistance" };
+    
     private void Awake()
     {
         // Initialize gradient if not set
@@ -118,9 +133,9 @@ public class RockThrowingUI : MonoBehaviour
         {
             instructionText.text = mode switch
             {
-                RockThrowingController.ThrowingMode.Flick => "Swipe to throw!\nDirection = Angle, Distance = Power",
-                RockThrowingController.ThrowingMode.Rhythm => "Press on the BEAT to throw!",
-                RockThrowingController.ThrowingMode.Oscillator => "Hold to charge power\nRelease to throw!",
+                RockThrowingController.ThrowingMode.Flick =>  modeInstructionsTxtFlickModeLocalizedString?.IsEmpty! == false ? modeInstructionsTxtFlickModeLocalizedString.GetLocalizedString() : "Swipe to throw!\\nDirection = Angle,\\n Distance = Power",
+                RockThrowingController.ThrowingMode.Rhythm => modeInstructionsTxtRhythmModeLocalizedString?.IsEmpty! == false ? modeInstructionsTxtRhythmModeLocalizedString.GetLocalizedString() : "Press on the BEAT to throw",
+                RockThrowingController.ThrowingMode.Oscillator => modeInstructionsTxtOscillatorModeLocalizedString?.IsEmpty! == false ? modeInstructionsTxtOscillatorModeLocalizedString.GetLocalizedString() : "Hold to charge power\\nRelease to throw!",
                 _ => ""
             };
             instructionText.gameObject.SetActive(true);
@@ -161,7 +176,7 @@ public class RockThrowingUI : MonoBehaviour
         
         if (instructionText != null)
         {
-            instructionText.text = "Tap when the circle hits the target!";
+            instructionText.text = tapCircleTextLocalizedString?.IsEmpty! == false ? tapCircleTextLocalizedString.GetLocalizedString() : "Tap when the circle hits the target!";
             instructionText.gameObject.SetActive(true);
         }
     }
@@ -279,19 +294,19 @@ public class RockThrowingUI : MonoBehaviour
         switch (result)
         {
             case BounceResult.Perfect:
-                resultText.text = "PERFECT!";
+                resultText.text = perfectLocalizedString?.IsEmpty! == false ? perfectLocalizedString.GetLocalizedString() : "PERFECT!";
                 resultText.color = perfectColor;
                 break;
             case BounceResult.Good:
-                resultText.text = "GOOD!";
+                resultText.text = goodLocalizedString?.IsEmpty! == false ? goodLocalizedString.GetLocalizedString() : "GOOD!";
                 resultText.color = goodColor;
                 break;
             case BounceResult.Okay:
-                resultText.text = "OK";
+                resultText.text = okayLocalizedString?.IsEmpty! == false ? okayLocalizedString.GetLocalizedString() : "OK";
                 resultText.color = okayColor;
                 break;
             case BounceResult.Miss:
-                resultText.text = "MISS";
+                resultText.text = missLocalizedString?.IsEmpty! == false ? missLocalizedString.GetLocalizedString() : "MISS";
                 resultText.color = missColor;
                 break;
         }
@@ -301,7 +316,7 @@ public class RockThrowingUI : MonoBehaviour
         {
             if (comboCount > 1)
             {
-                comboText.text = $"x{comboCount} COMBO!";
+                comboText.text = comboLocalizedString?.IsEmpty! == false ? comboLocalizedString.GetLocalizedString(comboCount) : $"x{comboCount} COMBO!";
                 comboText.gameObject.SetActive(true);
                 comboText.transform.DOKill();
                 comboText.transform.DOPunchScale(Vector3.one * 0.3f, 0.3f, 5);
@@ -367,9 +382,9 @@ public class RockThrowingUI : MonoBehaviour
         resultPopup.SetActive(true);
         resultText.text = text;
         
-        if (text == "PERFECT!")
+        if (text == "PERFECT!" || text == perfectLocalizedString?.GetLocalizedString())
             resultText.color = perfectColor;
-        else if (text == "GOOD!")
+        else if (text == "GOOD!" || text == goodLocalizedString?.GetLocalizedString())
             resultText.color = goodColor;
         else
             resultText.color = okayColor;
@@ -398,7 +413,7 @@ public class RockThrowingUI : MonoBehaviour
         float currentValue = 0f;
         DOTween.To(() => currentValue, x => {
             currentValue = x;
-            distanceText.text = $"Player Distance: {currentValue:F1}m";
+            distanceText.text = playerDistanceLocalizedString?.IsEmpty! == false ? playerDistanceLocalizedString.GetLocalizedString(currentValue.ToString("F1")) : $"Player Distance: {currentValue:F1}m";
         }, distance, distanceCountDuration).SetEase(Ease.OutQuad);
         
         // Punch scale on complete
@@ -421,7 +436,7 @@ public class RockThrowingUI : MonoBehaviour
         if (aiDistancePanel == null || aiDistanceText == null) return;
         
         aiDistancePanel.SetActive(true);
-        aiDistanceText.text = $"AI Distance: {distance:F1}m";
+        aiDistanceText.text = aiDistanceLocalizedString?.IsEmpty! == false ? aiDistanceLocalizedString.GetLocalizedString(distance.ToString("F1")) : $"AI Distance: {distance:F1}m";
         
         // Animate punch
         aiDistanceText.transform.DOKill();

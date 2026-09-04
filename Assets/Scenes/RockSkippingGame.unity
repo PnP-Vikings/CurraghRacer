@@ -2766,8 +2766,9 @@ GameObject:
   - component: {fileID: 106141372}
   - component: {fileID: 106141374}
   - component: {fileID: 106141373}
+  - component: {fileID: 106141375}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ConfirmSelectionBtnText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2892,6 +2893,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 106141371}
   m_CullTransparentMesh: 1
+--- !u!114 &106141375
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 106141371}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1085356458893312
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 106141373}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &110149460 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
@@ -4190,6 +4231,7 @@ GameObject:
   - component: {fileID: 187877288}
   - component: {fileID: 187877290}
   - component: {fileID: 187877289}
+  - component: {fileID: 187877291}
   m_Layer: 5
   m_Name: Round Results
   m_TagString: Untagged
@@ -4316,6 +4358,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 187877287}
   m_CullTransparentMesh: 1
+--- !u!114 &187877291
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 187877287}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1082981165817856
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 187877289}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &192997223
 GameObject:
   m_ObjectHideFlags: 0
@@ -7980,6 +8062,81 @@ MonoBehaviour:
   currentTurnHighlightColor: {r: 1, g: 1, b: 1, a: 0.3}
   scoreCountDuration: 0.5
   resultRevealDelay: 0.3
+  playerNameLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.PlayerName
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerNameFallbackLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.PlayerTurnIndicator.PlayerNameFallback
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerTurnTextLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.PlayerTurnIndicator.PlayerTurnText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  roundTextLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.PlayerTurnIndicator.RoundText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerWinsTextLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.FinalResult.PlayerWins
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerLostTextLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.FinalResult.PlayerLost
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  totalTextLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.FinalResult.TotalText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerNameFinalFallbackLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockSkippingResults.FinalResult.PlayerNameFallback
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &378434115
 GameObject:
   m_ObjectHideFlags: 0
@@ -11033,8 +11190,9 @@ GameObject:
   - component: {fileID: 542368774}
   - component: {fileID: 542368776}
   - component: {fileID: 542368775}
+  - component: {fileID: 542368777}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: SkipAllBtnText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -11159,6 +11317,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 542368773}
   m_CullTransparentMesh: 1
+--- !u!114 &542368777
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 542368773}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1082705507770368
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 542368775}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &547564985
 GameObject:
   m_ObjectHideFlags: 0
@@ -15601,6 +15799,108 @@ MonoBehaviour:
   missColor: {r: 0.8, g: 0.2, b: 0.2, a: 1}
   resultPopupDuration: 1
   distanceCountDuration: 1.5
+  modeInstructionsTxtFlickModeLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.ModeInstructionsTxt.FlickMode
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  modeInstructionsTxtRhythmModeLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.ModeInstructionsTxt.RhythmMode
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  modeInstructionsTxtOscillatorModeLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.ModeInstructionsTxt.OscillatorMode
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  tapCircleTextLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.TapCircleText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  perfectLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.Result.Perfect
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  goodLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.Result.Good
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  okayLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.Result.Okay
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  missLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.Result.Miss
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  comboLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.Combo
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  playerDistanceLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.PlayerDistance
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  aiDistanceLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.AIDistance
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &745096386
 GameObject:
   m_ObjectHideFlags: 0
@@ -16033,6 +16333,7 @@ GameObject:
   - component: {fileID: 760930937}
   - component: {fileID: 760930939}
   - component: {fileID: 760930938}
+  - component: {fileID: 760930940}
   m_Layer: 5
   m_Name: PlayerName
   m_TagString: Untagged
@@ -16159,6 +16460,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 760930936}
   m_CullTransparentMesh: 1
+--- !u!114 &760930940
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 760930936}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1083160153546752
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 760930938}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &762806600 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
@@ -17269,6 +17610,18 @@ MonoBehaviour:
   randomBounceMode: 1
   bounceInputEnabled: 0
   RockSkippingAudio: {fileID: 490022900}
+  playerNameLocalized:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.RockThrowingUi.PlayerName
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &811612953
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -19584,6 +19937,7 @@ GameObject:
   - component: {fileID: 902009119}
   - component: {fileID: 902009121}
   - component: {fileID: 902009120}
+  - component: {fileID: 902009122}
   m_Layer: 5
   m_Name: FinalResults
   m_TagString: Untagged
@@ -19710,6 +20064,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 902009118}
   m_CullTransparentMesh: 1
+--- !u!114 &902009122
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 902009118}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1083904495706112
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 902009120}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &906332459
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -28406,6 +28800,7 @@ GameObject:
   - component: {fileID: 1326367337}
   - component: {fileID: 1326367339}
   - component: {fileID: 1326367338}
+  - component: {fileID: 1326367340}
   m_Layer: 5
   m_Name: Round 3
   m_TagString: Untagged
@@ -28532,6 +28927,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1326367336}
   m_CullTransparentMesh: 1
+--- !u!114 &1326367340
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1326367336}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1083515297849344
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1326367338}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1333113415
 GameObject:
   m_ObjectHideFlags: 0
@@ -31634,6 +32069,7 @@ GameObject:
   - component: {fileID: 1509178277}
   - component: {fileID: 1509178279}
   - component: {fileID: 1509178278}
+  - component: {fileID: 1509178280}
   m_Layer: 5
   m_Name: Round 1
   m_TagString: Untagged
@@ -31760,6 +32196,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1509178276}
   m_CullTransparentMesh: 1
+--- !u!114 &1509178280
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1509178276}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1083336716967936
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1509178278}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &1509689099 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
@@ -32187,6 +32663,63 @@ MonoBehaviour:
   maxBouncesText: {fileID: 1744086009}
   rockSelectionText: {fileID: 1993660326}
   offset: {x: 10, y: 10}
+  rockTypeLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.InfoPanel.RockTypeText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  accelerationLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.InfoPanel.Acceleration
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  bounceForceLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.InfoPanel.BounceForce
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  maxBouncesLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.InfoPanel.MaxBounces
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  selectThisRockLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.InfoPanel.SelectThisRockToUseText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  rockSelectedLocalizedString:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.RockSkippingGame.InfoPanel.RockSelected
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1532771632
 GameObject:
   m_ObjectHideFlags: 0
@@ -32221,8 +32754,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -0.00012207031, y: 507.59998}
-  m_SizeDelta: {x: 999.8, y: 50}
+  m_AnchoredPosition: {x: -0.00012207031, y: 333.1}
+  m_SizeDelta: {x: 1197.7, y: 431}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1532771634
 MonoBehaviour:
@@ -40584,6 +41117,7 @@ GameObject:
   - component: {fileID: 1985863179}
   - component: {fileID: 1985863181}
   - component: {fileID: 1985863180}
+  - component: {fileID: 1985863182}
   m_Layer: 5
   m_Name: winnerPanelText
   m_TagString: Untagged
@@ -40608,7 +41142,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 198.6}
-  m_SizeDelta: {x: 200, y: 50}
+  m_SizeDelta: {x: 391.64, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1985863180
 MonoBehaviour:
@@ -40657,7 +41191,7 @@ MonoBehaviour:
   m_faceColor:
     serializedVersion: 2
     rgba: 4294967295
-  m_fontSize: 38.65
+  m_fontSize: 42.45
   m_fontSizeBase: 36
   m_fontWeight: 400
   m_enableAutoSizing: 1
@@ -40710,6 +41244,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1985863178}
   m_CullTransparentMesh: 1
+--- !u!114 &1985863182
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1985863178}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1084337515651072
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1985863180}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1987823494
 GameObject:
   m_ObjectHideFlags: 0
@@ -41225,6 +41799,7 @@ GameObject:
   - component: {fileID: 1993660325}
   - component: {fileID: 1993660327}
   - component: {fileID: 1993660326}
+  - component: {fileID: 1993660328}
   m_Layer: 5
   m_Name: RockSelectionTxt
   m_TagString: Untagged
@@ -41351,6 +41926,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1993660324}
   m_CullTransparentMesh: 1
+--- !u!114 &1993660328
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1993660324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1081469714817024
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 1993660326}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &1994149918 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: e981fb68d0afcb342a31934a869f3a47, type: 3}
@@ -42902,6 +43517,7 @@ GameObject:
   - component: {fileID: 2056220892}
   - component: {fileID: 2056220894}
   - component: {fileID: 2056220893}
+  - component: {fileID: 2056220895}
   m_Layer: 5
   m_Name: Round 2
   m_TagString: Untagged
@@ -43028,6 +43644,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2056220891}
   m_CullTransparentMesh: 1
+--- !u!114 &2056220895
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2056220891}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 1083503100813312
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 2056220893}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1001 &2059683245
 PrefabInstance:
   m_ObjectHideFlags: 0

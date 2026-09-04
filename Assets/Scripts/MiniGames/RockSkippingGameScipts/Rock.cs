@@ -1,6 +1,7 @@
 using System;
 using UnityEngine;
 using DG.Tweening;
+using UnityEngine.Localization;
 using Random = UnityEngine.Random;
 
 public class Rock : MonoBehaviour
@@ -50,6 +51,12 @@ public class Rock : MonoBehaviour
     
     public float timeSinceRockWasThrown =0f;
     public float timeRockHasBeforeTouchingWater = 2f;
+    
+    
+    [Header(("Localization"))]
+    [SerializeField] private LocalizedString rockTypeSmallLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockType.Small" };
+    [SerializeField] private LocalizedString rockTypeMediumLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockType.Medium" };
+    [SerializeField] private LocalizedString rockTypeLargeLocalizedString = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockType.Large" };
     
     void Awake()
     {
@@ -452,6 +459,47 @@ public class Rock : MonoBehaviour
     /// Get total distance traveled (including vertical movement)
     /// </summary>
     public float GetTotalDistanceTraveled() => totalDistanceTraveled;
+    
+    public string GetLocalizedRockType()
+    {
+        string localizedType = "";
+        switch (rockType)
+        {
+            case RockType.Small:
+                if (rockTypeSmallLocalizedString != null && !rockTypeSmallLocalizedString.IsEmpty)
+                {
+                    localizedType = rockTypeSmallLocalizedString.GetLocalizedString();
+                }
+                else
+                {
+                    localizedType = "Small"; // Fallback
+                }
+                break;
+            case RockType.Medium:
+                if (rockTypeMediumLocalizedString != null && !rockTypeMediumLocalizedString.IsEmpty)
+                {
+                    localizedType = rockTypeMediumLocalizedString.GetLocalizedString();
+                }
+                else
+                {
+                    localizedType = "Medium"; // Fallback
+                }
+                break;
+            case RockType.Large:
+                if (rockTypeLargeLocalizedString != null && !rockTypeLargeLocalizedString.IsEmpty)
+                {
+                    localizedType = rockTypeLargeLocalizedString.GetLocalizedString();
+                }
+                else
+                {
+                    localizedType = "Large"; // Fallback
+                }
+                break;
+            default:
+                return "Unknown";
+        }
+        return localizedType;
+    }
     
     private void OnDestroy()
     {
