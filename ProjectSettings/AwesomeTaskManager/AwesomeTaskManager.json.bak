@@ -151,6 +151,36 @@
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ]
+                        },
+                        {
+                            "id": "c1614a4c-76a9-440b-9d67-e8fc58f50e45",
+                            "title": "Change the Ui in the rockskipping game to player instead of ai",
+                            "description": "Its a bit weird at the moment and teh numbers are different because of it which is not nice \nso would be a nice fix will have to localize the the player also",
+                            "category": "Design",
+                            "colorLabel": 10,
+                            "priority": 0,
+                            "createdDate": "2026-09-04 16:58",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Change AI to player",
+                                "localize player to work with Irish"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         }
                     ]
                 },
@@ -181,15 +211,15 @@
                                 "Traffic Warden Minigame"
                             ],
                             "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
                                 false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
+                                true,
+                                true,
                                 false
                             ],
                             "checklistLinkedCardIds": [

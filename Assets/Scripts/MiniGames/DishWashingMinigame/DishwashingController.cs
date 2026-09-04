@@ -5,6 +5,7 @@ using DG.Tweening;
 using League;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 
 public class DishwashingController : MonoBehaviour
@@ -47,6 +48,16 @@ public class DishwashingController : MonoBehaviour
     
     
     Sequence _currentTween;
+    
+    [Header("Localization")]
+    [SerializeField] private LocalizedString localizedDippingPlateText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.DippingPlate" };
+    [SerializeField] private LocalizedString localizedDipPlateAgainText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.DipPlateAgain" };
+    [SerializeField] private LocalizedString localizedSpawningPlatesText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.SpawningPlates" };
+    [SerializeField] private LocalizedString localizedWaitingForPlatesText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.WaitingForPlates" };
+    [SerializeField] private LocalizedString localizedDipPlateInWaterText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.DipPlateInWater" };
+    [SerializeField] private LocalizedString localizedCleanPlateText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.CleanPlate" };
+    [SerializeField] private LocalizedString localizedAllPlatesCleanedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.AllPlatesCleaned" };
+    [SerializeField] private LocalizedString localizedPlateCleanedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.DishWashingMinigame.PlateCleaned" };
 
     void OnEnable()
     {
@@ -182,7 +193,19 @@ public class DishwashingController : MonoBehaviour
             _currentTween = DOTween.Sequence()
                 .Append(plates[0].transform.DOMove(plates[0].transform.position - new Vector3(0,1f,0), 1f).SetEase(Ease.InOutSine))
                 .SetUpdate(true).SetEase(Ease.OutQuad);
-            minigameCanvasUI.UpdateAdditionalInfo("Dipping Plate!");
+
+            string dippingText = "";
+            
+            if(localizedDippingPlateText != null && !localizedDippingPlateText.IsEmpty)
+            {
+                dippingText = localizedDippingPlateText.GetLocalizedString();
+            }
+            else
+            {
+                dippingText = "Dipping Plate!";
+            }
+            
+            minigameCanvasUI.UpdateAdditionalInfo(dippingText);
             _currentTween.OnComplete(ReturnPlateFromWater);
 
             if(AudioManager.instance != null)
@@ -212,7 +235,16 @@ public class DishwashingController : MonoBehaviour
                 else
                 {
                     readyForDipping = true;
-                    minigameCanvasUI.UpdateAdditionalInfo("Dip Plate Again!");
+                    string dipAgainText = "";
+                    if(localizedDipPlateAgainText != null && !localizedDipPlateAgainText.IsEmpty)
+                    {
+                        dipAgainText = localizedDipPlateAgainText.GetLocalizedString();
+                    }
+                    else
+                    {
+                        dipAgainText = "Dip Plate Again!";
+                    }
+                    minigameCanvasUI.UpdateAdditionalInfo(dipAgainText);
                 }
             });
         }
@@ -256,24 +288,66 @@ public class DishwashingController : MonoBehaviour
     
     public void UpdateAdditionalUI()
     {
+        string additionalInfoText = "";
        if(minigameCanvasUI != null)
        {
            switch (currentStage)
            {
                case PlateDishwashingStages.SpawningPlates:
-                   minigameCanvasUI.UpdateAdditionalInfo("Spawning Plates...");
+                   
+                   if(localizedSpawningPlatesText != null && !localizedSpawningPlatesText.IsEmpty)
+                   {
+                       additionalInfoText = localizedSpawningPlatesText.GetLocalizedString();
+                   }
+                   else
+                   {
+                       additionalInfoText = "Spawning Plates...";
+                   }
+                   minigameCanvasUI.UpdateAdditionalInfo(additionalInfoText);
                    break;
                case PlateDishwashingStages.WaitingForPlate:
-                   minigameCanvasUI.UpdateAdditionalInfo("Waiting for Plate...");
+                   if(localizedWaitingForPlatesText != null && !localizedWaitingForPlatesText.IsEmpty)
+                   {
+                       additionalInfoText = localizedWaitingForPlatesText.GetLocalizedString();
+                   }
+                   else
+                   {
+                       additionalInfoText = "Waiting for Plate...";
+                   }
+                   minigameCanvasUI.UpdateAdditionalInfo(additionalInfoText);
                    break;
                case PlateDishwashingStages.Dipping:
-                   minigameCanvasUI.UpdateAdditionalInfo("Dip Plate in Water...");
+                   if(localizedDipPlateInWaterText != null && !localizedDipPlateInWaterText.IsEmpty)
+                   {
+                       additionalInfoText = localizedDipPlateInWaterText.GetLocalizedString();
+                   }
+                   else
+                   {
+                       additionalInfoText = "Dip Plate in Water...";
+                   }
+                   minigameCanvasUI.UpdateAdditionalInfo(additionalInfoText);
                    break;
                case PlateDishwashingStages.Cleaning:
-                   minigameCanvasUI.UpdateAdditionalInfo("Clean Plate...");
+                   if(localizedCleanPlateText != null && !localizedCleanPlateText.IsEmpty)
+                   {
+                       additionalInfoText = localizedCleanPlateText.GetLocalizedString();
+                   }
+                   else
+                   {
+                       additionalInfoText = "Clean Plate...";
+                   }
+                   minigameCanvasUI.UpdateAdditionalInfo(additionalInfoText);
                    break;
                case PlateDishwashingStages.Finished:
-                   minigameCanvasUI.UpdateAdditionalInfo("All Plates Cleaned!");
+                   if(localizedAllPlatesCleanedText != null && !localizedAllPlatesCleanedText.IsEmpty)
+                   {
+                       additionalInfoText = localizedAllPlatesCleanedText.GetLocalizedString();
+                   }
+                   else
+                   {
+                       additionalInfoText = "All Plates Cleaned!";
+                   }
+                   minigameCanvasUI.UpdateAdditionalInfo(additionalInfoText);
                    break;
                default:
                    minigameCanvasUI.UpdateAdditionalInfo("");
@@ -325,9 +399,18 @@ public class DishwashingController : MonoBehaviour
     public void PlateCleaned()
     {
         StopSplashParticles();
+        string additionalInfoText = "";
         if (minigameCanvasUI != null)
         {
-            minigameCanvasUI.UpdateAdditionalInfo("Plate Cleaned!");
+            if(localizedPlateCleanedText != null && !localizedPlateCleanedText.IsEmpty)
+            {
+                additionalInfoText = localizedPlateCleanedText.GetLocalizedString();
+            }
+            else
+            {
+                additionalInfoText = "Plate Cleaned!";
+            }
+            minigameCanvasUI.UpdateAdditionalInfo(additionalInfoText);
         }
         if(spongeInstance != null)
             spongeInstance.SetActive(false); // Hide the sponge

@@ -3,6 +3,7 @@ using System.Collections;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using DG.Tweening;
+using UnityEngine.Localization;
 
 /// <summary>
 /// Handles rock throwing mechanics with three different modes:
@@ -116,6 +117,9 @@ public class RockThrowingController : MonoBehaviour
     private Coroutine bounceTimingCoroutine;
 
     [SerializeField] RockSkippingAudio RockSkippingAudio;
+    
+    [Header("Localization")]
+    [SerializeField] private LocalizedString playerNameLocalized = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.RockSkippingGame.RockThrowingUi.PlayerName" };
     private void Awake()
     {
         if (Instance == null)
@@ -973,7 +977,7 @@ public class RockThrowingController : MonoBehaviour
         // Placeholder for updating UI with player info
         Debug.Log($"UI updated for player {playerId} throwing");
         
-        string playerName = $"Player {playerId}";
+        string playerName = playerNameLocalized?.IsEmpty! == false ? playerNameLocalized.GetLocalizedString(playerId) : $"Player {playerId}";
         if (throwingUI != null)
         {
             throwingUI.UpdateInstructionText(playerName);

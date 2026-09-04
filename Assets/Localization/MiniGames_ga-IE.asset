@@ -125,6 +125,289 @@ MonoBehaviour:
     m_Localized: Pilsner
     m_Metadata:
       m_Items: []
+  - m_Id: 734563864141824
+    m_Localized: 'Luas: {0}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 736914264023040
+    m_Localized: "L\xE9im"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 736939597619200
+    m_Localized: "Sleamhn\xE1n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741165505699840
+    m_Localized: Teip!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741305192800256
+    m_Localized: Luath!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741355616722944
+    m_Localized: Foirfe!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 741385161400320
+    m_Localized: mall!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 743283276898304
+    m_Localized: "Ar chl\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 743344094306304
+    m_Localized: Ceart go leor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863024549191680
+    m_Localized: "Cuir t\xFAs leis an gcluiche"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863183932743680
+    m_Localized: "Clice\xE1il ar charn chun \xE9 a roghn\xFA.\r\nAnsin br\xFAigh
+      an cnaipe cairn chun \xE9 a chasadh.\r\nCas {0} carn ar a laghad sula rachaidh
+      an t-am in \xE9ag chun an bua a fh\xE1il!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 863249951088640
+    m_Localized: Cruach
+    m_Metadata:
+      m_Items: []
+  - m_Id: 863313951973376
+    m_Localized: "Cruach Cr\xEDochnaithe X {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 863697177141248
+    m_Localized: Roghnaigh cruach le cur ag bun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 866954834337792
+    m_Localized: "Cruach Cr\xEDochnaithe"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 867426764840960
+    m_Localized: "T\xE1 an t-am istigh! \\n Comhghairdeas! Chas t\xFA {0} carn! \\n
+      Bh\xED ort ar a laghad {1} carn a chasadh chun an bua a fh\xE1il."
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 867472075907072
+    m_Localized: "T\xE1 an t-am istigh! \\n D'iompaigh t\xFA {0} carn! \\n Bh\xED
+      ort ar a laghad {1} carn a iomp\xFA chun buachan."
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1067783289823232
+    m_Localized: "Pl\xE1ta tumtha!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068051607838720
+    m_Localized: "Tum an pl\xE1ta ar\xEDs!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1068138169884672
+    m_Localized: "Pl\xE1ta\xED sceite..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069485623599104
+    m_Localized: "Ag fanacht leis an pl\xE1ta..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069552292061184
+    m_Localized: "Tum an pl\xE1ta in uisce..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069607040311296
+    m_Localized: "Pl\xE1ta glan..."
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069642746421248
+    m_Localized: "Gach pl\xE1ta glanta!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1069854600716288
+    m_Localized: "Pl\xE1ta glanta!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1074592704618496
+    m_Localized: "Svaidhp\xE1il s\xEDos go dt\xED an Pl\xE1ta Tumtha"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1081469714817024
+    m_Localized: Carraig Roghnaithe!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1082705507770368
+    m_Localized: "Scipe\xE1il gach rud"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1082981165817856
+    m_Localized: "Tortha\xED na Babhta\xED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083160153546752
+    m_Localized: Ainm an Imreora
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083336716967936
+    m_Localized: Babhta 1
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083503100813312
+    m_Localized: Babhta 2
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083515297849344
+    m_Localized: Babhta 3
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1083904495706112
+    m_Localized: "Tortha\xED Deiridh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1084337515651072
+    m_Localized: "Pain\xE9al na nBuaiteoir\xED"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1085356458893312
+    m_Localized: "Deimhnigh an roghn\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1086546940780544
+    m_Localized: Beag
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1086590725120000
+    m_Localized: "Me\xE1nach"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1086625483317248
+    m_Localized: "M\xF3r"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101256008392704
+    m_Localized: "Cine\xE1l: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1101307761909760
+    m_Localized: "Luasgh\xE9ar\xFA: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1101406592294912
+    m_Localized: "F\xF3rsa Preabtha: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1101439072985088
+    m_Localized: "Uasl\xEDon preabanna: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1101474842009600
+    m_Localized: "Roghnaigh an chloch seo chun \xED a \xFAs\xE1id!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1101562129670144
+    m_Localized: '{0} cloch roghnaithe!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1104360539938816
+    m_Localized: Svaip chun caitheamh! \nTreoir = Uillinn,\n Fad = Cumhacht
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1104879954157568
+    m_Localized: "Br\xFAigh ar an BEAT le caitheamh"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1104934735962112
+    m_Localized: "Coinnigh chun cumhacht a lucht\xFA\\nSaoirsigh chun caitheamh!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110274315640832
+    m_Localized: "Tap\xE1il nuair a bhuaileann an ciorcal an sprioc!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110749454786560
+    m_Localized: Foirfe!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110801569013760
+    m_Localized: Go maith!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110840269856768
+    m_Localized: Ceart go leor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1110859941142528
+    m_Localized: CAILL
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1111695714934784
+    m_Localized: x{0} Teaglaim!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1112234095796224
+    m_Localized: 'Fad an Imreora: {0}m'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1112603668504576
+    m_Localized: 'Fad AI: {0}m'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1115289004531712
+    m_Localized: "T\xFA"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1116540261883904
+    m_Localized: Imreoir {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1117066240188416
+    m_Localized: Seal {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1117272096628736
+    m_Localized: Babhta {0}/3
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1120846646075392
+    m_Localized: Imreoir {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1121224221515776
+    m_Localized: "T\xE1 an bua agat!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 1121315263078400
+    m_Localized: Bua ag {0}!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1121390114627584
+    m_Localized: "Ioml\xE1n: {0}m"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 1125568421552128
+    m_Localized: Imreoir {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
   references:
     version: 2
     RefIds:
@@ -137,3 +420,22 @@ MonoBehaviour:
         - id: 52429964959744
         - id: 60576456761344
         - id: 62722023612416
+        - id: 863313951973376
+        - id: 863183932743680
+        - id: 867426764840960
+        - id: 867472075907072
+        - id: 1101439072985088
+        - id: 1101406592294912
+        - id: 1101307761909760
+        - id: 1101256008392704
+        - id: 1101562129670144
+        - id: 1112603668504576
+        - id: 1112234095796224
+        - id: 1111695714934784
+        - id: 1116540261883904
+        - id: 1117066240188416
+        - id: 1117272096628736
+        - id: 1121390114627584
+        - id: 1121315263078400
+        - id: 1120846646075392
+        - id: 1125568421552128

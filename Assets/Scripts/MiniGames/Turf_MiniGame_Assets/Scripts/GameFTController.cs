@@ -3,6 +3,7 @@ using DG.Tweening;
 using MiniGames;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -32,6 +33,14 @@ public class GameFTController : MonoBehaviour
   }
 
   [SerializeField] private int _StacksDone = 0;
+
+  
+  [Header("Localization")]
+  [SerializeField] private LocalizedString localizedStartGameText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.FootingTurfMinigame.StartGameInfo" };
+  [SerializeField] private LocalizedString localizedStackAmountText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.FootingTurfMinigame.StackAmountText" };
+  [SerializeField] private LocalizedString localizedStackCompleteText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.FootingTurfMinigame.StackComplete" };
+  [SerializeField] private LocalizedString localizedGameOverWonText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.FootingTurfMinigame.GameOver.Won" };
+  [SerializeField] private LocalizedString localizedGameOverLostText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.FootingTurfMinigame.GameOver.Lost" };
   
   private void Awake()
   {
@@ -45,7 +54,14 @@ public class GameFTController : MonoBehaviour
     _Counter.gameObject.SetActive(false);
     SetSelectAStackTextVisible(false);
     
-    startGameText.text = $"Click on a stack to select it \nthen press stack button to flip it \nYou need to flip at least {minStackFlippedRequired} stacks before time runs out to win!";
+    if (!localizedStartGameText.IsEmpty && localizedStartGameText != null)
+    {
+      startGameText.text = localizedStartGameText.GetLocalizedString(minStackFlippedRequired);
+    }
+    else
+    {
+      startGameText.text = $"Click on a stack to select it \nthen press stack button to flip it \nYou need to flip at least {minStackFlippedRequired} stacks before time runs out to win!";
+    }
   }
 
   public void StartGame()
@@ -55,7 +71,15 @@ public class GameFTController : MonoBehaviour
     
     
     minigameCanvasUI.SetUpUI(false, true, false, false, false);
-    _Counter.gameObject.SetActive(true);
+
+    if (!localizedStackAmountText.IsEmpty && localizedStackAmountText != null)
+    {
+      _Counter.text = localizedStackAmountText.GetLocalizedString(_StacksDone);
+    }
+ 
+      _Counter.gameObject.SetActive(true);
+      
+    
     SetSelectAStackTextVisible(true);
   }
   
@@ -115,7 +139,14 @@ public class GameFTController : MonoBehaviour
       if (_selectedStack.Index == _selectedStack.Animators.Count)
       {
         _StacksDone++; // add fineshed stack to counter.
-        _Counter.text = string.Format("Stack Completed X {0}", _StacksDone); // Update display counter
+        if (!localizedStackAmountText.IsEmpty && localizedStackAmountText != null)
+        {
+          _Counter.text = localizedStackAmountText.GetLocalizedString(_StacksDone);
+        }
+        else
+        {
+          _Counter.text = string.Format("Stack Completed X {0}", _StacksDone); // Update display counter
+        }
         DisplayStackComplete();
         _selectedStack.SetCompleted(true); // mark stack as completed to be unselectable and hide selection marker.
         if(turfFlipperController != null)
@@ -172,13 +203,33 @@ public class GameFTController : MonoBehaviour
       gameOver = true;
       if (minStackFlippedRequired <= _StacksDone)
       {
-        minigameCanvasUI.ShowGameOver($"Time's Up!\n Congrats You flipped {_StacksDone}  stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
+        string winMessage = "";
+
+        if (localizedGameOverWonText != null && !localizedGameOverWonText.IsEmpty)
+        {
+          winMessage = localizedGameOverWonText.GetLocalizedString(_StacksDone, minStackFlippedRequired);
+        }
+        else
+        {
+          winMessage = $"Time's Up!\n Congrats You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.";
+        }
+        minigameCanvasUI.ShowGameOver(winMessage);
         Debug.Log("Game Over: Timer completed and minimum stacks flipped requirement met.");
         MiniGameAudio.instance.PlayMiniGameOverWinAudio();
       }
       else
       {
-        minigameCanvasUI.ShowGameOver($"Time's Up!\n You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.");
+        string loseMessage = "";
+        
+        if (localizedGameOverLostText != null && !localizedGameOverLostText.IsEmpty)
+        {
+          loseMessage = localizedGameOverLostText.GetLocalizedString(_StacksDone, minStackFlippedRequired);
+        }
+        else
+        {
+          loseMessage = $"Time's Up!\n You flipped {_StacksDone} stacks! \n You needed to flip at least {minStackFlippedRequired} stacks to win.";
+        }
+        minigameCanvasUI.ShowGameOver(loseMessage);
         Debug.Log("Game Over: Timer completed but minimum stacks flipped requirement not met.");
         MiniGameAudio.instance.PlayMiniGameOverAudio();
       }
@@ -203,7 +254,20 @@ public class GameFTController : MonoBehaviour
 
   private void DisplayStackComplete()
   {
-    minigameCanvasUI.UpdateMultiplier("Stack Complete");
+    string stackCompleteMessage = "";
+
+
+    if (localizedStackCompleteText != null && !localizedStackCompleteText.IsEmpty)
+    {
+    
+     stackCompleteMessage = localizedStackCompleteText.GetLocalizedString();
+    }
+    else
+    {
+      stackCompleteMessage = $"Stack Complete";
+    }
+    
+    minigameCanvasUI.UpdateMultiplier(stackCompleteMessage);
     
     StartCoroutine(minigameCanvasUI.FadeTextRoutine(minigameCanvasUI.multiplierText, 1.5f));
   }

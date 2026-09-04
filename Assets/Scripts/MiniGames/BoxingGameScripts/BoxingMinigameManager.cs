@@ -388,7 +388,7 @@ public class BoxingMinigameManager : MonoBehaviour
             Debug.Log($"Difficulty increased! Now spawning up to {currentMaxTargets} targets at once.");
         }
         
-        // TODO: Add particle effects, sound, etc.
+       
         
         // Return the target to the pool
         ReturnTargetToPool(target);
