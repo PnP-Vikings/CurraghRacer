@@ -375,6 +375,206 @@ MonoBehaviour:
     m_Key: Minigames.RockSkippingGame.RockThrowingUi.PlayerName
     m_Metadata:
       m_Items: []
+  - m_Id: 2162591773220864
+    m_Key: Minigames.WeightLifting.SelectionUi.Confrim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2164260942635008
+    m_Key: Minigames.WeightLifting.SelectionUi.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2164737650450432
+    m_Key: Minigames.WeightLifting.SelectionUi.ChooseWeightText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2166124841000960
+    m_Key: Minigames.WeightLifting.FailedLift.PhaseText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2166223377784832
+    m_Key: Minigames.WeightLifting.FailedLift.InstructionText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2167955491119104
+    m_Key: Minigames.WeightLifting.AttemptsLeft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171300104626176
+    m_Key: Minigames.WeightLifting.PhaseText.GetReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171375593709568
+    m_Key: Minigames.WeightLifting.PhaseText.Go
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171494997155840
+    m_Key: Minigames.WeightLifting.YouHaveSelectedWeightStart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2173112656322560
+    m_Key: Minigames.WeightLifting.YouHaveSelectedWeightCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2173130373062656
+    m_Key: Minigames.WeightLifting.YouHaveSelectedWeightCountdownFinished
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2174202948870144
+    m_Key: Minigames.WeightLifting.Grip.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2181464702574592
+    m_Key: Minigames.WeightLifting.Grip.GoText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190386427584512
+    m_Key: Minigames.WeightLifting.Grip.GripCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190543651069952
+    m_Key: Minigames.WeightLifting.Grip.GripNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190692032962560
+    m_Key: Minigames.WeightLifting.Grip.GripSecondsCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190780096569344
+    m_Key: Minigames.WeightLifting.Grip.GripSuccessful
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190905720168448
+    m_Key: Minigames.WeightLifting.Grip.GripFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191098247110656
+    m_Key: Minigames.WeightLifting.Hold.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191145449807872
+    m_Key: Minigames.WeightLifting.Hold.GoTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191240719228928
+    m_Key: Minigames.WeightLifting.Hold.Failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191536161808384
+    m_Key: Minigames.WeightLifting.Hold.Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191621524283392
+    m_Key: Minigames.WeightLifting.RackingBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2200075445985280
+    m_Key: Minigames.WeightLifting.Grip.Gripping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2221803056390144
+    m_Key: Minigames.WeightLifting.Hold.GetReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2251346337062912
+    m_Key: Minigames.WeightLifting.Hold.UseBtnsTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2263539690496000
+    m_Key: Minigames.WeightLifting.Hold.Fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2267635721953280
+    m_Key: Minigames.WeightLifting.Lift.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270584753872896
+    m_Key: Minigames.WeightLifting.Lift.TapMeterGo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270630773776384
+    m_Key: Minigames.WeightLifting.Lift.TapMeterCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270673408876544
+    m_Key: Minigames.WeightLifting.Lift.TapMeter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270744888205312
+    m_Key: Minigames.WeightLifting.Lift.Failed.InTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270761854164992
+    m_Key: Minigames.WeightLifting.Lift.Failed.MissedTiming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270933531222016
+    m_Key: Minigames.WeightLifting.Lift.GoodEnough
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2271008466657280
+    m_Key: Minigames.WeightLifting.Lift.Perfect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2272520148344832
+    m_Key: Minigames.WeightLifting.Lift.GetReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2275806016430080
+    m_Key: Minigames.WeightLifting.WeightSelected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2275861649678336
+    m_Key: Minigames.WeightLifting.WeightText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2283902348550144
+    m_Key: Minigames.WeightLifting.SuccessTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2283969432248320
+    m_Key: Minigames.WeightLifting.Success.PerfectLiftNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284027540135936
+    m_Key: Minigames.WeightLifting.Success.GoodLiftNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284075086766080
+    m_Key: Minigames.WeightLifting.Success.GoodLiftWithCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284531557064704
+    m_Key: Minigames.WeightLifting.Failed.FailedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284629972213760
+    m_Key: Minigames.WeightLifting.Failed.FailedNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284736578838528
+    m_Key: Minigames.WeightLifting.Failed.FailedWithCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285280307437568
+    m_Key: Minigames.WeightLifting.GameFinished.WonText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285361496580096
+    m_Key: Minigames.WeightLifting.GameFinished.LostText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2286243915227136
+    m_Key: Minigames.WeightLifting.GameFinished.GameFinishedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2286400408903680
+    m_Key: Minigames.WeightLifting.GameFinished.Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2298243965771776
+    m_Key: Minigames.WeightLifting.Success.PerfectLiftWithCountdown
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

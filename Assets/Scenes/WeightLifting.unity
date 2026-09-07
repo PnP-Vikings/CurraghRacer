@@ -1221,6 +1221,441 @@ MonoBehaviour:
   transitionDuration: 1
   lookAtBenchLocation: {fileID: 296186913}
   weightLiftingAudio: {fileID: 809329824}
+  localizedPhase0Text:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.SelectionUi.PhaseTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedChooseWeightText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.SelectionUi.ChooseWeightText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedPhaseFailedLiftText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.FailedLift.PhaseText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedInstructionFailedLiftText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.FailedLift.InstructionText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedAttemptsLeftText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.AttemptsLeft
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGetReadyText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.PhaseText.GetReady
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGoText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.PhaseText.Go
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedYouHaveSelectedWeightStart:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.YouHaveSelectedWeightStart
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedYouHaveSelectedWeightCountdown:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.YouHaveSelectedWeightCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedYouHaveSelectedWeightCountdownFinished:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.YouHaveSelectedWeightCountdownFinished
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripPhaseText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.PhaseTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripGoText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.GoText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.GripCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripNoCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.GripNoCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripSecondsCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.GripSecondsCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripGrippingText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.Gripping
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripSuccessfulText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.GripSuccessful
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGripFailedText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Grip.GripFailed
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedHoldPhaseText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Hold.PhaseTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedHoldGoText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Hold.GoTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedHoldFailedText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Hold.Failed
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedHoldCompleteText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Hold.Complete
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedRackingBarText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.RackingBar
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedHoldGetReadyText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Hold.GetReady
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedHoldUseBtnsText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Hold.UseBtnsTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftPhaseText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.PhaseTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftTapMeterGoText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.TapMeterGo
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftTapMeterCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.TapMeterCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftTapMeterText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.TapMeter
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftFailedInTimeText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.Failed.InTime
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftFailedMissedTimingText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.Failed.MissedTiming
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftGoodEnoughText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.GoodEnough
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftPerfectText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.Perfect
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLiftGetReadyText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Lift.GetReady
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedWeightSelectedText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.WeightSelected
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedWeightText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.WeightText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedSuccessText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.SuccessTxt
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedPerfectLiftNoCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Success.PerfectLiftNoCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedPerfectWithCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Success.PerfectLiftWithCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGoodLiftNoCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Success.GoodLiftNoCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGoodLiftWithCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Success.GoodLiftWithCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedWonText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.GameFinished.WonText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLostText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.GameFinished.LostText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGameFinishedText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.GameFinished.GameFinishedText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedGameFinishedStatsText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.GameFinished.Stats
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedFailedText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Failed.FailedText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedFailedNoCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Failed.FailedNoCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedFailedWithCountdownText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: Minigames.WeightLifting.Failed.FailedWithCountdown
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!4 &345291561
 Transform:
   m_ObjectHideFlags: 0
@@ -1949,8 +2384,9 @@ GameObject:
   - component: {fileID: 677158914}
   - component: {fileID: 677158916}
   - component: {fileID: 677158915}
+  - component: {fileID: 677158917}
   m_Layer: 5
-  m_Name: Text (TMP)
+  m_Name: ConfrimText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2075,6 +2511,46 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 677158913}
   m_CullTransparentMesh: 1
+--- !u!114 &677158917
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 677158913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 56eb0353ae6e5124bb35b17aff880f16, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Components.LocalizeStringEvent
+  m_StringReference:
+    m_TableReference:
+      m_TableCollectionName: GUID:b940557e21d16524386f53bac54b4d77
+    m_TableEntryReference:
+      m_KeyId: 2162591773220864
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  m_FormatArguments: []
+  m_UpdateString:
+    m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 677158915}
+        m_TargetAssemblyTypeName: TMPro.TextMeshProUGUI, Unity.TextMeshPro
+        m_MethodName: set_text
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &711980756
 GameObject:
   m_ObjectHideFlags: 0
@@ -5385,7 +5861,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -249.4, y: -97.899994}
+  m_AnchoredPosition: {x: -277.23, y: -97.899994}
   m_SizeDelta: {x: 530.92, y: 165.09998}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1672836143
@@ -5442,7 +5918,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
@@ -7230,7 +7706,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
