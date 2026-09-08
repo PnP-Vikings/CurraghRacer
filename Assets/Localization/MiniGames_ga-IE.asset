@@ -631,6 +631,187 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7084867036035678298
+  - m_Id: 2531680467279872
+    m_Localized: '{0}Am: {1}:{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2528599285424128
+    m_Localized: "Thuairte\xE1il an carr"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2538783655321600
+    m_Localized: 'Am: 2:00'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2567687766007808
+    m_Localized: "Ar chl\xE9"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568812112109568
+    m_Localized: Ceart go leor
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568843724578816
+    m_Localized: Barr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568865178443776
+    m_Localized: Bun
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594706721595392
+    m_Localized: '\n<color=#44AAFF>[SHIELD]</color> Gan Tuairteanna: +{0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2594915111395328
+    m_Localized: "\\n<color=#44AAFF>[SHIELD]</color> Tuairteanna \xCDseal-D\xE9ine:
+      +{0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2596850082242560
+    m_Localized: "\\n<color=#FF6600>[FIRE]</color> An measc\xE1n is fearr x{0}: +{1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2597536798859264
+    m_Localized: "<color=#FFD700>[TROPHY]</color> Bua!\\n\\nSc\xF3r Deiridh: {0}\\nAn
+      Comhcheangal is Fearr: x{1}\\nTuairteanna: {2}{3}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2606406128623616
+    m_Localized: "{0} L\xE1na"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606490589323264
+    m_Localized: "L\xE1na {0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610426817798144
+    m_Localized: "<color=#FF4400>Pl\xE9asc!</color> Gluaiste\xE1in thapa \xF3n <color=#FFFFFF>{0}</color>!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2610494664859648
+    m_Localized: "<color=#FFAA00>Uair an Phl\xF3daithe!</color> Tr\xE1cht trom \xF3n
+      <color=#FFFFFF>{0}</color>!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2610530270306304
+    m_Localized: "<color=#FFAA00>CONVOI!</color> Dl\xFAthfhoirmi\xFA \xF3n <color=#FFFFFF>{0}</color>!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2610558439251968
+    m_Localized: "<color=#FF0000>!! AN C\xC1OS !!</color> T\xE1 na l\xE1na\xED go
+      l\xE9ir ag tuilte!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2612488976719872
+    m_Localized: Stoptha le linn imeacht an otharchairr
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620570976903168
+    m_Localized: '{0} Fearg ag cur thar maoil!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2620853173870592
+    m_Localized: "<color=#4488FF>T\xE1 b\xE1isteach ag teacht!</color> Sleiffidh
+      gluaiste\xE1in!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620920718942208
+    m_Localized: "<color=#FFAA00>Oibreacha B\xF3thair!</color> Beidh l\xE1na bloc\xE1ilte!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620966508158976
+    m_Localized: "<color=#AAAAFF>TRASN\xDA DO DHAOINE SCOITE!</color> T\xE1 l\xE1na
+      amh\xE1in ag bogadh go mall!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620997726363648
+    m_Localized: "<color=#FF4444>Otharcharr!</color> Coinnigh na l\xE1na\xED oscailte!"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621301213618176
+    m_Localized: "<color=#AAAAFF>TRASN\xDA DO DHAOINE SCOITE!</color> An {0} Lane
+      ag dul go mall!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2621737333153792
+    m_Localized: "<color=#AAAAFF>B\xF3thar Bloc\xE1ilte!</color> An {0} Lane ag dul
+      go mall!"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2636762957471744
+    m_Localized: <color=#FF2200>DO-SHTOPTA</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636905836437504
+    m_Localized: <color=#FF4400>Ar lasadh</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636984416722944
+    m_Localized: <color=#FF6600>Sraith iontach</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2637035465596928
+    m_Localized: "<color=#FFDD00>Measc\xE1n deas</color>"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638373129805824
+    m_Localized: '{0}! x{1} Comhcheangal! +{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2638598263267328
+    m_Localized: <color=#00FF88>Beagnach buailte!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638862881906688
+    m_Localized: <color=#FF44FF>Caol-sheans!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639259562401792
+    m_Localized: "<color=#00DDFF>Athr\xFA tapa!</color> +{0}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639627197341696
+    m_Localized: x{0} Iolraitheoir
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2640030181875712
+    m_Localized: <color=#44FF44>Baintear an stailc!</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640172532359168
+    m_Localized: "<color=#FF4444>STRA\xCDC:</color> {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2640364098805760
+    m_Localized: 'Stailceanna: {0}/{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2640704999251968
+    m_Localized: "Sc\xF3r: {0}  |  Comhcheangal: x{1}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
+  - m_Id: 2640615811571712
+    m_Localized: "Sc\xF3r: {0}"
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678298
   references:
     version: 2
     RefIds:
@@ -676,3 +857,20 @@ MonoBehaviour:
         - id: 2284629972213760
         - id: 2284075086766080
         - id: 2298243965771776
+        - id: 2531680467279872
+        - id: 2594706721595392
+        - id: 2594915111395328
+        - id: 2596850082242560
+        - id: 2597536798859264
+        - id: 2610426817798144
+        - id: 2610494664859648
+        - id: 2610530270306304
+        - id: 2620570976903168
+        - id: 2621737333153792
+        - id: 2621301213618176
+        - id: 2638373129805824
+        - id: 2639627197341696
+        - id: 2640364098805760
+        - id: 2640172532359168
+        - id: 2640704999251968
+        - id: 2640615811571712

@@ -575,6 +575,162 @@ MonoBehaviour:
     m_Key: Minigames.WeightLifting.Success.PerfectLiftWithCountdown
     m_Metadata:
       m_Items: []
+  - m_Id: 2528599285424128
+    m_Key: Minigames.TrafficWarden.CarCrashed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2531680467279872
+    m_Key: Minigames.TrafficWarden.UpdateTimerText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2538783655321600
+    m_Key: Minigames.TrafficWarden.TimerStartText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2567687766007808
+    m_Key: Minigames.TrafficWarden.LeftOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568812112109568
+    m_Key: Minigames.TrafficWarden.RightOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568843724578816
+    m_Key: Minigames.TrafficWarden.TopOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568865178443776
+    m_Key: Minigames.TrafficWarden.BottomOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594706721595392
+    m_Key: Minigames.TrafficWarden.BonusSummary.NoCrashes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594915111395328
+    m_Key: Minigames.TrafficWarden.BonusSummary.LowCrashes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2596850082242560
+    m_Key: Minigames.TrafficWarden.BonusSummary.BestCombo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2597536798859264
+    m_Key: Minigames.TrafficWarden.GameOver.Victory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606406128623616
+    m_Key: Minigames.TrafficWarden.LaneDir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606490589323264
+    m_Key: Minigames.TrafficWarden.LaneDir.ChosenLane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610426817798144
+    m_Key: Minigames.TrafficWarden.WarningMsg.Burst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610494664859648
+    m_Key: Minigames.TrafficWarden.WarningMsg.RushHour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610530270306304
+    m_Key: Minigames.TrafficWarden.WarningMsg.Convoy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610558439251968
+    m_Key: Minigames.TrafficWarden.WarningMsg.Chaos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2612488976719872
+    m_Key: Minigames.TrafficWarden.AddStrike.StoppedAbulanceEvent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620570976903168
+    m_Key: Minigames.TrafficWarden.AddStrike.LaneAngerOverflow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620853173870592
+    m_Key: Minigames.TrafficWarden.WarningMsg.RainIncoming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620920718942208
+    m_Key: Minigames.TrafficWarden.WarningMsg.RoadWorks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620966508158976
+    m_Key: Minigames.TrafficWarden.WarningMsg.OldPerson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620997726363648
+    m_Key: Minigames.TrafficWarden.WarningMsg.Ambulance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621301213618176
+    m_Key: Minigames.TrafficWarden.WarningMsg.OldPersonWithLane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621737333153792
+    m_Key: Minigames.TrafficWarden.WarningMsg.RoadWorksWithLane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636762957471744
+    m_Key: Minigames.TrafficWarden.Label.Unstoppable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636905836437504
+    m_Key: Minigames.TrafficWarden.Label.OnFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636984416722944
+    m_Key: Minigames.TrafficWarden.Label.GreatStreak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2637035465596928
+    m_Key: Minigames.TrafficWarden.Label.NiceCombo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638373129805824
+    m_Key: Minigames.TrafficWarden.Label.ShowBonusFlashCombo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638598263267328
+    m_Key: Minigames.TrafficWarden.Label.AwardNearMiss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638862881906688
+    m_Key: Minigames.TrafficWarden.Label.AwardCloseCall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639259562401792
+    m_Key: Minigames.TrafficWarden.Label.QuickToggle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639627197341696
+    m_Key: Minigames.TrafficWarden.UpdateMultiplier.MultiplierText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640030181875712
+    m_Key: Minigames.TrafficWarden.StrikeRemoved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640172532359168
+    m_Key: Minigames.TrafficWarden.Strike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640364098805760
+    m_Key: Minigames.TrafficWarden.StrikesText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640615811571712
+    m_Key: Minigames.TrafficWarden.ScoreText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640704999251968
+    m_Key: Minigames.TrafficWarden.ScoreTextWithCombo
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

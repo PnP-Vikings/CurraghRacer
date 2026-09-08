@@ -622,6 +622,180 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7084867036035678297
+  - m_Id: 2528599285424128
+    m_Localized: Car crashed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2531680467279872
+    m_Localized: '{0}Time: {1}:{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2538783655321600
+    m_Localized: 'Time: 2:00'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2567687766007808
+    m_Localized: Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568812112109568
+    m_Localized: Right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568843724578816
+    m_Localized: Top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568865178443776
+    m_Localized: Bottom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594706721595392
+    m_Localized: '\n<color=#44AAFF>[SHIELD]</color> No Crashes: +{0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2594915111395328
+    m_Localized: '\n<color=#44AAFF>[SHIELD]</color> Low Crashes: +{0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2596850082242560
+    m_Localized: '\n<color=#FF6600>[FIRE]</color> Best Combo x{0}: +{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2597536798859264
+    m_Localized: '<color=#FFD700>[TROPHY]</color> Victory!\n\nFinal Score: {0}\nBest
+      Combo: x{1}\nCrashes: {2}{3}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2606406128623616
+    m_Localized: '{0} Lane'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606490589323264
+    m_Localized: Lane {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610426817798144
+    m_Localized: <color=#FF4400>BURST!</color> Rapid cars from the <color=#FFFFFF>{0}</color>!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2610494664859648
+    m_Localized: <color=#FFAA00>RUSH HOUR!</color> Heavy traffic from the <color=#FFFFFF>{0}</color>!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2610530270306304
+    m_Localized: <color=#FFAA00>CONVOY!</color> Tight formation from the <color=#FFFFFF>{0}</color>!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2610558439251968
+    m_Localized: <color=#FF0000>!! CHAOS !!</color> ALL lanes flooding!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2612488976719872
+    m_Localized: Stopped during Ambulance event
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620570976903168
+    m_Localized: '{0} Lane anger overflow!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2620853173870592
+    m_Localized: <color=#4488FF>RAIN INCOMING!</color> Cars will slide!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620920718942208
+    m_Localized: <color=#FFAA00>ROADWORKS!</color> A lane will be blocked!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620966508158976
+    m_Localized: <color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620997726363648
+    m_Localized: <color=#FF4444>AMBULANCE!</color> Keep lanes open!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621301213618176
+    m_Localized: <color=#AAAAFF>OLD PERSON CROSSING!</color> The {0} lane is crawling!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2621737333153792
+    m_Localized: <color=#AAAAFF>Road Blocked!</color> The {0} lane is crawling!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2636762957471744
+    m_Localized: <color=#FF2200>UNSTOPPABLE</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636905836437504
+    m_Localized: <color=#FF4400>ON FIRE</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636984416722944
+    m_Localized: <color=#FF6600>GREAT STREAK</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2637035465596928
+    m_Localized: <color=#FFDD00>NICE COMBO</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638373129805824
+    m_Localized: '{0}! x{1} Combo! +{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2638598263267328
+    m_Localized: <color=#00FF88>NEAR MISS!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638862881906688
+    m_Localized: <color=#FF44FF>CLOSE CALL!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639259562401792
+    m_Localized: <color=#00DDFF>QUICK TOGGLE!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639627197341696
+    m_Localized: x{0} MULTIPLIER
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640030181875712
+    m_Localized: <color=#44FF44>Strike Removed!</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640172532359168
+    m_Localized: <color=#FF4444>STRIKE:</color> {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640364098805760
+    m_Localized: 'Strikes: {0}/{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640704999251968
+    m_Localized: 'Score: {0}  |  Combo: x{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640615811571712
+    m_Localized: 'Score: {0} '
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
   references:
     version: 2
     RefIds:
@@ -667,3 +841,20 @@ MonoBehaviour:
         - id: 2284629972213760
         - id: 2284075086766080
         - id: 2298243965771776
+        - id: 2531680467279872
+        - id: 2594706721595392
+        - id: 2594915111395328
+        - id: 2596850082242560
+        - id: 2597536798859264
+        - id: 2610426817798144
+        - id: 2610494664859648
+        - id: 2610530270306304
+        - id: 2620570976903168
+        - id: 2621737333153792
+        - id: 2621301213618176
+        - id: 2638373129805824
+        - id: 2639627197341696
+        - id: 2640364098805760
+        - id: 2640172532359168
+        - id: 2640704999251968
+        - id: 2640615811571712
