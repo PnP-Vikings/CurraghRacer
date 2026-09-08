@@ -375,6 +375,362 @@ MonoBehaviour:
     m_Key: Minigames.RockSkippingGame.RockThrowingUi.PlayerName
     m_Metadata:
       m_Items: []
+  - m_Id: 2162591773220864
+    m_Key: Minigames.WeightLifting.SelectionUi.Confrim
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2164260942635008
+    m_Key: Minigames.WeightLifting.SelectionUi.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2164737650450432
+    m_Key: Minigames.WeightLifting.SelectionUi.ChooseWeightText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2166124841000960
+    m_Key: Minigames.WeightLifting.FailedLift.PhaseText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2166223377784832
+    m_Key: Minigames.WeightLifting.FailedLift.InstructionText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2167955491119104
+    m_Key: Minigames.WeightLifting.AttemptsLeft
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171300104626176
+    m_Key: Minigames.WeightLifting.PhaseText.GetReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171375593709568
+    m_Key: Minigames.WeightLifting.PhaseText.Go
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171494997155840
+    m_Key: Minigames.WeightLifting.YouHaveSelectedWeightStart
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2173112656322560
+    m_Key: Minigames.WeightLifting.YouHaveSelectedWeightCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2173130373062656
+    m_Key: Minigames.WeightLifting.YouHaveSelectedWeightCountdownFinished
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2174202948870144
+    m_Key: Minigames.WeightLifting.Grip.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2181464702574592
+    m_Key: Minigames.WeightLifting.Grip.GoText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190386427584512
+    m_Key: Minigames.WeightLifting.Grip.GripCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190543651069952
+    m_Key: Minigames.WeightLifting.Grip.GripNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190692032962560
+    m_Key: Minigames.WeightLifting.Grip.GripSecondsCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190780096569344
+    m_Key: Minigames.WeightLifting.Grip.GripSuccessful
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190905720168448
+    m_Key: Minigames.WeightLifting.Grip.GripFailed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191098247110656
+    m_Key: Minigames.WeightLifting.Hold.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191145449807872
+    m_Key: Minigames.WeightLifting.Hold.GoTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191240719228928
+    m_Key: Minigames.WeightLifting.Hold.Failed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191536161808384
+    m_Key: Minigames.WeightLifting.Hold.Complete
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191621524283392
+    m_Key: Minigames.WeightLifting.RackingBar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2200075445985280
+    m_Key: Minigames.WeightLifting.Grip.Gripping
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2221803056390144
+    m_Key: Minigames.WeightLifting.Hold.GetReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2251346337062912
+    m_Key: Minigames.WeightLifting.Hold.UseBtnsTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2263539690496000
+    m_Key: Minigames.WeightLifting.Hold.Fail
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2267635721953280
+    m_Key: Minigames.WeightLifting.Lift.PhaseTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270584753872896
+    m_Key: Minigames.WeightLifting.Lift.TapMeterGo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270630773776384
+    m_Key: Minigames.WeightLifting.Lift.TapMeterCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270673408876544
+    m_Key: Minigames.WeightLifting.Lift.TapMeter
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270744888205312
+    m_Key: Minigames.WeightLifting.Lift.Failed.InTime
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270761854164992
+    m_Key: Minigames.WeightLifting.Lift.Failed.MissedTiming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270933531222016
+    m_Key: Minigames.WeightLifting.Lift.GoodEnough
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2271008466657280
+    m_Key: Minigames.WeightLifting.Lift.Perfect
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2272520148344832
+    m_Key: Minigames.WeightLifting.Lift.GetReady
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2275806016430080
+    m_Key: Minigames.WeightLifting.WeightSelected
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2275861649678336
+    m_Key: Minigames.WeightLifting.WeightText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2283902348550144
+    m_Key: Minigames.WeightLifting.SuccessTxt
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2283969432248320
+    m_Key: Minigames.WeightLifting.Success.PerfectLiftNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284027540135936
+    m_Key: Minigames.WeightLifting.Success.GoodLiftNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284075086766080
+    m_Key: Minigames.WeightLifting.Success.GoodLiftWithCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284531557064704
+    m_Key: Minigames.WeightLifting.Failed.FailedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284629972213760
+    m_Key: Minigames.WeightLifting.Failed.FailedNoCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284736578838528
+    m_Key: Minigames.WeightLifting.Failed.FailedWithCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285280307437568
+    m_Key: Minigames.WeightLifting.GameFinished.WonText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285361496580096
+    m_Key: Minigames.WeightLifting.GameFinished.LostText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2286243915227136
+    m_Key: Minigames.WeightLifting.GameFinished.GameFinishedText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2286400408903680
+    m_Key: Minigames.WeightLifting.GameFinished.Stats
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2298243965771776
+    m_Key: Minigames.WeightLifting.Success.PerfectLiftWithCountdown
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2528599285424128
+    m_Key: Minigames.TrafficWarden.CarCrashed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2531680467279872
+    m_Key: Minigames.TrafficWarden.UpdateTimerText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2538783655321600
+    m_Key: Minigames.TrafficWarden.TimerStartText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2567687766007808
+    m_Key: Minigames.TrafficWarden.LeftOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568812112109568
+    m_Key: Minigames.TrafficWarden.RightOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568843724578816
+    m_Key: Minigames.TrafficWarden.TopOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568865178443776
+    m_Key: Minigames.TrafficWarden.BottomOrientation
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594706721595392
+    m_Key: Minigames.TrafficWarden.BonusSummary.NoCrashes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594915111395328
+    m_Key: Minigames.TrafficWarden.BonusSummary.LowCrashes
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2596850082242560
+    m_Key: Minigames.TrafficWarden.BonusSummary.BestCombo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2597536798859264
+    m_Key: Minigames.TrafficWarden.GameOver.Victory
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606406128623616
+    m_Key: Minigames.TrafficWarden.LaneDir
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606490589323264
+    m_Key: Minigames.TrafficWarden.LaneDir.ChosenLane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610426817798144
+    m_Key: Minigames.TrafficWarden.WarningMsg.Burst
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610494664859648
+    m_Key: Minigames.TrafficWarden.WarningMsg.RushHour
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610530270306304
+    m_Key: Minigames.TrafficWarden.WarningMsg.Convoy
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610558439251968
+    m_Key: Minigames.TrafficWarden.WarningMsg.Chaos
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2612488976719872
+    m_Key: Minigames.TrafficWarden.AddStrike.StoppedAbulanceEvent
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620570976903168
+    m_Key: Minigames.TrafficWarden.AddStrike.LaneAngerOverflow
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620853173870592
+    m_Key: Minigames.TrafficWarden.WarningMsg.RainIncoming
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620920718942208
+    m_Key: Minigames.TrafficWarden.WarningMsg.RoadWorks
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620966508158976
+    m_Key: Minigames.TrafficWarden.WarningMsg.OldPerson
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620997726363648
+    m_Key: Minigames.TrafficWarden.WarningMsg.Ambulance
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621301213618176
+    m_Key: Minigames.TrafficWarden.WarningMsg.OldPersonWithLane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621737333153792
+    m_Key: Minigames.TrafficWarden.WarningMsg.RoadWorksWithLane
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636762957471744
+    m_Key: Minigames.TrafficWarden.Label.Unstoppable
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636905836437504
+    m_Key: Minigames.TrafficWarden.Label.OnFire
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636984416722944
+    m_Key: Minigames.TrafficWarden.Label.GreatStreak
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2637035465596928
+    m_Key: Minigames.TrafficWarden.Label.NiceCombo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638373129805824
+    m_Key: Minigames.TrafficWarden.Label.ShowBonusFlashCombo
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638598263267328
+    m_Key: Minigames.TrafficWarden.Label.AwardNearMiss
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638862881906688
+    m_Key: Minigames.TrafficWarden.Label.AwardCloseCall
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639259562401792
+    m_Key: Minigames.TrafficWarden.Label.QuickToggle
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639627197341696
+    m_Key: Minigames.TrafficWarden.UpdateMultiplier.MultiplierText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640030181875712
+    m_Key: Minigames.TrafficWarden.StrikeRemoved
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640172532359168
+    m_Key: Minigames.TrafficWarden.Strike
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640364098805760
+    m_Key: Minigames.TrafficWarden.StrikesText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640615811571712
+    m_Key: Minigames.TrafficWarden.ScoreText
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640704999251968
+    m_Key: Minigames.TrafficWarden.ScoreTextWithCombo
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

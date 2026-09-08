@@ -7,6 +7,7 @@ using MiniGames;
 using TMPro;
 using Unity.VisualScripting;
 using UnityEngine.InputSystem;
+using UnityEngine.Localization;
 using Sequence = DG.Tweening.Sequence;
 
 public class WeightLiftingController : MonoBehaviour
@@ -188,6 +189,62 @@ public class WeightLiftingController : MonoBehaviour
 
     private bool barSlideAudioIsPlaying = false;
     [SerializeField] WeightLiftingAudio weightLiftingAudio;
+    
+    [Header("Localization")]
+    
+    [SerializeField] LocalizedString  localizedPhase0Text = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.SelectionUi.PhaseTxt" };
+    [SerializeField] LocalizedString  localizedChooseWeightText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.SelectionUi.ChooseWeightText" };
+    [SerializeField] LocalizedString  localizedPhaseFailedLiftText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.FailedLift.PhaseText" };
+    [SerializeField] LocalizedString  localizedInstructionFailedLiftText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.FailedLift.InstructionText" };
+    [SerializeField] LocalizedString  localizedAttemptsLeftText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.AttemptsLeft" };
+    [SerializeField] LocalizedString  localizedGetReadyText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.PhaseText.GetReady" };
+    [SerializeField] LocalizedString  localizedGoText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.PhaseText.Go" };
+    [SerializeField] LocalizedString  localizedYouHaveSelectedWeightStart = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.YouHaveSelectedWeightStart" };
+    [SerializeField] LocalizedString  localizedYouHaveSelectedWeightCountdown = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.YouHaveSelectedWeightCountdown" };
+    [SerializeField] LocalizedString  localizedYouHaveSelectedWeightCountdownFinished = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.YouHaveSelectedWeightCountdownFinished" };
+    [SerializeField] LocalizedString  localizedGripPhaseText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.PhaseTxt" };
+    [SerializeField] LocalizedString  localizedGripGoText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.GoText" };
+    [SerializeField] LocalizedString  localizedGripCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.GripCountdown" };
+    [SerializeField] LocalizedString  localizedGripNoCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.GripNoCountdown" };
+    [SerializeField] LocalizedString  localizedGripSecondsCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.GripSecondsCountdown" };
+    [SerializeField] LocalizedString  localizedGripGrippingText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.Gripping" };
+    [SerializeField] LocalizedString  localizedGripSuccessfulText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.GripSuccessful" };
+    [SerializeField] LocalizedString  localizedGripFailedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Grip.GripFailed" };
+    [SerializeField] LocalizedString  localizedHoldPhaseText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Hold.PhaseTxt" };
+    [SerializeField] LocalizedString  localizedHoldGoText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Hold.GoTxt" };
+    [SerializeField] LocalizedString  localizedHoldFailedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Hold.Failed" };
+    [SerializeField] LocalizedString  localizedHoldCompleteText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Hold.Complete" };
+    [SerializeField] LocalizedString  localizedRackingBarText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.RackingBar" };
+    [SerializeField] LocalizedString  localizedHoldGetReadyText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Hold.GetReady" };
+    [SerializeField] LocalizedString  localizedHoldUseBtnsText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Hold.UseBtnsTxt" };
+    [SerializeField] LocalizedString  localizedLiftPhaseText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.PhaseTxt" };
+    [SerializeField] LocalizedString  localizedLiftTapMeterGoText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.TapMeterGo" };
+    [SerializeField] LocalizedString  localizedLiftTapMeterCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.TapMeterCountdown" };
+    [SerializeField] LocalizedString  localizedLiftTapMeterText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.TapMeter" };
+    [SerializeField] LocalizedString  localizedLiftFailedInTimeText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.Failed.InTime" };
+    [SerializeField] LocalizedString  localizedLiftFailedMissedTimingText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.Failed.MissedTiming" };
+    [SerializeField] LocalizedString  localizedLiftGoodEnoughText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.GoodEnough" };
+    [SerializeField] LocalizedString  localizedLiftPerfectText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.Perfect" };
+    [SerializeField] LocalizedString  localizedLiftGetReadyText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Lift.GetReady" };
+    [SerializeField] LocalizedString  localizedWeightSelectedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.WeightSelected" };
+    [SerializeField] LocalizedString  localizedWeightText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.WeightText" };
+    [SerializeField] LocalizedString  localizedSuccessText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.SuccessTxt" };
+    [SerializeField] LocalizedString  localizedPerfectLiftNoCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Success.PerfectLiftNoCountdown" };
+    [SerializeField] LocalizedString  localizedPerfectWithCountdownText  = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Success.PerfectLiftWithCountdown" };
+    [SerializeField] LocalizedString  localizedGoodLiftNoCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Success.GoodLiftNoCountdown" };
+    [SerializeField] LocalizedString  localizedGoodLiftWithCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Success.GoodLiftWithCountdown" };
+    [SerializeField] LocalizedString  localizedWonText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.GameFinished.WonText" };
+    [SerializeField] LocalizedString  localizedLostText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.GameFinished.LostText" };
+    [SerializeField] LocalizedString  localizedGameFinishedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.GameFinished.GameFinishedText" };
+    [SerializeField] LocalizedString  localizedGameFinishedStatsText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.GameFinished.Stats" };
+    [SerializeField] LocalizedString  localizedFailedText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Failed.FailedText" };
+    [SerializeField] LocalizedString  localizedFailedNoCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Failed.FailedNoCountdown" };
+    [SerializeField] LocalizedString  localizedFailedWithCountdownText = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.WeightLifting.Failed.FailedWithCountdown" };
+    
+    
+    
+    
+    
 
     private void Awake()
     {
@@ -298,11 +355,14 @@ public class WeightLiftingController : MonoBehaviour
     public void StartNewLift()
     {
         ResetForNewLift();
-        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
+        liftsRemainingTxt .text = localizedAttemptsLeftText?.IsEmpty! == false?  localizedAttemptsLeftText.GetLocalizedString((maxFailedAttempts - failedAttempts).ToString()): "Attempts Left: " + (maxFailedAttempts - failedAttempts);
         if (failedAttempts >= maxFailedAttempts)
         {
-            UpdatePhaseUI("FAILED!", "You have Failed\nAttempts remaining: " + (maxFailedAttempts - failedAttempts));
-
+        
+             
+            UpdatePhaseUI(localizedPhaseFailedLiftText?.IsEmpty! == false ? localizedPhaseFailedLiftText.GetLocalizedString() : "FAILED!", localizedInstructionFailedLiftText?.IsEmpty! == false ? localizedInstructionFailedLiftText.GetLocalizedString((maxFailedAttempts - failedAttempts).ToString()) : "You have Failed\nAttempts remaining: " + (maxFailedAttempts - failedAttempts));
+   
+            
             EndGame();
             return;
         }
@@ -312,7 +372,6 @@ public class WeightLiftingController : MonoBehaviour
     }
     
     #region Phase 0 - WeightSelection
-    // Currently not implemented, but could be added for player to choose starting weight
     private void TransitionToWeightSelectionPhase()
     {
         currentLiftState = LiftState.WeightSelection;
@@ -322,7 +381,8 @@ public class WeightLiftingController : MonoBehaviour
         SetAllPhasesUIInactive();
         ClearAllOtherUI();
         HideArmModel();
-        UpdatePhaseUI("PHASE 0: Weight Selection", "Choose your starting weight.");
+       
+        UpdatePhaseUI(localizedPhase0Text?.IsEmpty! == false ? localizedPhase0Text.GetLocalizedString() : "PHASE 0: Weight Selection", localizedChooseWeightText?.IsEmpty! == false ? localizedChooseWeightText.GetLocalizedString() : "Choose your starting weight.");
     }
     
     public List<int> GetAvailableWeights()
@@ -359,26 +419,20 @@ public class WeightLiftingController : MonoBehaviour
             // Update UI BEFORE the delay
             
             Debug.Log("Confirmed starting weight: " + currentWeight + "kg");
-
-            // Then wait and start the lift
-            /*currentDelayTween = DOVirtual.DelayedCall(2f, () =>
-            {
-                StartNewLift();
-            });*/
             
             phaseTransitionCamera.transform.position = weightSelectionCamera.transform.position;
             SwitchCamera(phaseTransitionCamera);
             Sequence transitionSequence = DOTween.Sequence();
             
-            transitionSequence.AppendCallback(() => UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
+            transitionSequence.AppendCallback(() => UpdatePhaseUI( localizedGetReadyText.IsEmpty! == false? localizedGetReadyText.GetLocalizedString(): "GET READY", localizedYouHaveSelectedWeightStart.IsEmpty! == false? localizedYouHaveSelectedWeightStart.GetLocalizedString(currentWeight.ToString()): "You selected " + currentWeight + "kg\nStarting in 3 seconds..."))
                 .Append(DOVirtual.Float(3, 0, 3f, (countdown) =>
                 {
                     int seconds = Mathf.CeilToInt(countdown);
-                    UpdatePhaseUI("GET READY", "You selected " + currentWeight + "kg\nStarting in " + seconds + " seconds...");
+                    UpdatePhaseUI(localizedGetReadyText.IsEmpty! == false? localizedGetReadyText.GetLocalizedString(): "GET READY", localizedYouHaveSelectedWeightCountdown.IsEmpty! == false? localizedYouHaveSelectedWeightCountdown.GetLocalizedString(currentWeight.ToString(), seconds.ToString()): "You selected " + currentWeight + "kg\nStarting in " + seconds + " seconds...");
                 }))
                 .Join(phaseTransitionCamera.transform.DOMove(lookAtBenchLocation.transform.position + new Vector3(0, 1, 0), 3f))
                 .Join(phaseTransitionCamera.transform.DOLookAt(lookAtBenchLocation.position, 3f))
-                .AppendCallback(() => UpdatePhaseUI("GO!", "Lift that weight!"))
+                .AppendCallback(() => UpdatePhaseUI(localizedGoText.IsEmpty! == false? localizedGoText.GetLocalizedString(): "GO!", localizedYouHaveSelectedWeightCountdownFinished.IsEmpty! == false? localizedYouHaveSelectedWeightCountdownFinished.GetLocalizedString(): "Lift that weight!"))
                 .Append(phaseTransitionCamera.transform.DOMove(gripCamera.transform.position , 1.5f))
                 .Join(phaseTransitionCamera.transform.DORotate(gripCamera.transform.rotation.eulerAngles, 3f))
                 .AppendInterval(1f)
@@ -448,7 +502,7 @@ public class WeightLiftingController : MonoBehaviour
         SetAllPhasesUIInactive();
         if (gripPhaseUI) gripPhaseUI.SetActive(true);
         
-        UpdatePhaseUI("PHASE 1: GRIP", "Get ready...");
+        UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedLiftGetReadyText.IsEmpty! == false? localizedLiftGetReadyText.GetLocalizedString(): "Get ready...");
         UpdateUI();
     }
     
@@ -463,14 +517,14 @@ public class WeightLiftingController : MonoBehaviour
             {
                 gripPhaseReady = true;
                 goMessageTimer = 0f; // Start GO message timer
-                UpdatePhaseUI("PHASE 1: GRIP", "GO!\nTap rapidly to grip the bar!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripGoText.IsEmpty! == false? localizedGripGoText.GetLocalizedString(): "GO!\nTap rapidly to grip the bar!");
                 phaseTimer = 0f; // Reset timer for grip duration
             }
             else
             {
                 // Show countdown
                 int countdown = Mathf.CeilToInt(gripCountdownDuration - phaseTimer);
-                UpdatePhaseUI("PHASE 1: GRIP", countdown.ToString()+"\n Tap rapidly to grip the bar!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripCountdownText.IsEmpty! == false? localizedGripCountdownText.GetLocalizedString(countdown.ToString()): countdown.ToString()+"\n Tap rapidly to grip the bar!");
             }
             return;
         }
@@ -481,7 +535,7 @@ public class WeightLiftingController : MonoBehaviour
             goMessageTimer += Time.deltaTime;
             if (goMessageTimer >= goMessageDuration)
             {
-                UpdatePhaseUI("PHASE 1: GRIP", "Tap rapidly to grip the bar!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripNoCountdownText.IsEmpty! == false? localizedGripNoCountdownText.GetLocalizedString(): "Tap rapidly to grip the bar!");
                 
                 
             }
@@ -502,23 +556,23 @@ public class WeightLiftingController : MonoBehaviour
             Debug.Log("Time left in grip phase: " + timeleft + " seconds");
             if (timeleft > 3)
             {
-                UpdatePhaseUI("PHASE 1: GRIP", "Tap rapidly to grip the bar!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripNoCountdownText.IsEmpty! == false? localizedGripNoCountdownText.GetLocalizedString(): "Tap rapidly to grip the bar!");
             }
             else if(timeleft == 3)
             {
-                UpdatePhaseUI("PHASE 1: GRIP", "3 Seconds Left!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripSecondsCountdownText.IsEmpty! == false? localizedGripSecondsCountdownText.GetLocalizedString("3"): "3 Seconds Left!");
             }
             else if(timeleft == 2)
             {
-                UpdatePhaseUI("PHASE 1: GRIP", "2 Seconds Left!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripSecondsCountdownText.IsEmpty! == false? localizedGripSecondsCountdownText.GetLocalizedString("2"): "2 Seconds Left!");
             }
             else if(timeleft == 1)
             {
-                UpdatePhaseUI("PHASE 1: GRIP", "1 Second Left!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripSecondsCountdownText.IsEmpty! == false? localizedGripSecondsCountdownText.GetLocalizedString("1"): "1 Second Left!");
             }
             else
             {
-                UpdatePhaseUI("PHASE 1: GRIP", "Gripping!!!");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripGrippingText.IsEmpty! == false? localizedGripGrippingText.GetLocalizedString(): "Gripping!!!");
             }
         }
         // Update UI
@@ -534,7 +588,7 @@ public class WeightLiftingController : MonoBehaviour
             if (gripBarPosition >= gripBarTargetMin && gripBarPosition <= gripBarTargetMax)
             {
                 gripPhaseCompleted = true;
-                UpdatePhaseUI("PHASE 1: GRIP", "Grip successful!\nPreparing to lift...");
+                UpdatePhaseUI(localizedGripPhaseText.IsEmpty! == false? localizedGripPhaseText.GetLocalizedString(): "PHASE 1: GRIP", localizedGripSuccessfulText.IsEmpty! == false? localizedGripSuccessfulText.GetLocalizedString(): "Grip successful!\nPreparing to lift...");
                 
                 Sequence transitionSequence = DOTween.Sequence();
                 transitionSequence
@@ -560,7 +614,7 @@ public class WeightLiftingController : MonoBehaviour
             {
                 gripPhaseCompleted = true; // Stop the grip phase from updating
                 Debug.Log("Failed to grip! Try again.");
-                FailLift("Failed to establish proper grip!");
+                FailLift( localizedGripFailedText.IsEmpty! == false? localizedGripFailedText.GetLocalizedString(): "Failed to establish proper grip!");
             }
         }
     }
@@ -625,7 +679,7 @@ public class WeightLiftingController : MonoBehaviour
         SetAllPhasesUIInactive();
         if (liftPhaseUI) liftPhaseUI.SetActive(true);
         
-        UpdatePhaseUI("PHASE 2: LIFT", "Get ready...");
+        UpdatePhaseUI( localizedLiftPhaseText?.IsEmpty! == false ? localizedLiftPhaseText.GetLocalizedString() : "PHASE 2: LIFT", localizedLiftGetReadyText?.IsEmpty! == false ? localizedLiftGetReadyText.GetLocalizedString() : "Get ready...");
         UpdateUI();
     }
     
@@ -642,7 +696,7 @@ public class WeightLiftingController : MonoBehaviour
             {
                 liftPhaseReady = true;
                 goMessageTimer = 0f; // Start GO message timer
-                UpdatePhaseUI("PHASE 2: LIFT", "GO!\nTap when the meter hits the green zone!");
+                UpdatePhaseUI( localizedLiftPhaseText?.IsEmpty! == false ? localizedLiftPhaseText.GetLocalizedString() : "PHASE 2: LIFT", localizedLiftTapMeterGoText?.IsEmpty! == false ? localizedLiftTapMeterGoText.GetLocalizedString() : "GO!\nTap when the meter hits the green zone!");
                 phaseTimer = 0f; // Reset timer for lift duration
 
 
@@ -653,7 +707,7 @@ public class WeightLiftingController : MonoBehaviour
             {
                 // Show countdown
                 int countdown = Mathf.CeilToInt(liftCountdownDuration - phaseTimer);
-                UpdatePhaseUI("PHASE 2: LIFT", countdown.ToString() +"\n Tap when the meter hits the green zone!");
+                UpdatePhaseUI(localizedLiftPhaseText?.IsEmpty! == false ? localizedLiftPhaseText.GetLocalizedString() : "PHASE 2: LIFT", localizedLiftTapMeterCountdownText?.IsEmpty! == false ? localizedLiftTapMeterCountdownText.GetLocalizedString(countdown.ToString()) : countdown.ToString() +"\n Tap when the meter hits the green zone!");
             }
             return;
         }
@@ -664,7 +718,7 @@ public class WeightLiftingController : MonoBehaviour
             goMessageTimer += Time.deltaTime;
             if (goMessageTimer >= goMessageDuration)
             {
-                UpdatePhaseUI("PHASE 2: LIFT", "Tap when the meter hits the green zone!");
+                UpdatePhaseUI(localizedLiftPhaseText?.IsEmpty! == false ? localizedLiftPhaseText.GetLocalizedString() : "PHASE 2: LIFT", localizedLiftTapMeterText?.IsEmpty! == false ? localizedLiftTapMeterText.GetLocalizedString() : "Tap when the meter hits the green zone!");
             }
         }
         
@@ -701,7 +755,7 @@ public class WeightLiftingController : MonoBehaviour
         {
             if (isProcessingPhaseTransition) return;
             isProcessingPhaseTransition = true;
-            FailLift("Failed to lift in time!");
+            FailLift(localizedLiftFailedInTimeText?.IsEmpty! == false ? localizedLiftFailedInTimeText.GetLocalizedString() : "Failed to lift in time!");
         }
     }
     
@@ -720,7 +774,7 @@ public class WeightLiftingController : MonoBehaviour
             Debug.Log("Perfect lift timing!");
             isPerfectLift = true;
             liftPhaseCompleted = true;
-            UpdatePhaseUI("PHASE 2: LIFT", "Perfect lift!\nPreparing to hold...");
+            UpdatePhaseUI(localizedLiftPhaseText?.IsEmpty! == false ? localizedLiftPhaseText.GetLocalizedString() : "PHASE 2: LIFT", localizedLiftPerfectText?.IsEmpty! == false ? localizedLiftPerfectText.GetLocalizedString() : "Perfect lift!\nPreparing to hold...");
             /*currentDelayTween?.Kill();
             
             currentDelayTween = DOVirtual.DelayedCall(1f, () =>
@@ -739,13 +793,13 @@ public class WeightLiftingController : MonoBehaviour
             Debug.Log("Good lift timing!");
             isPerfectLift = false;
             liftPhaseCompleted = true;
-            UpdatePhaseUI("PHASE 2: LIFT", "Good Enough!\nPreparing to hold...");
+            UpdatePhaseUI(localizedLiftPhaseText?.IsEmpty! == false ? localizedLiftPhaseText.GetLocalizedString() : "PHASE 2: LIFT", localizedLiftGoodEnoughText?.IsEmpty! == false ? localizedLiftGoodEnoughText.GetLocalizedString() : "Good Enough!\nPreparing to hold...");
             DoLiftThenProgressToHold();
         }
         else
         {
             Debug.Log("Poor lift timing!");
-            FailLift("Missed the timing window!");
+            FailLift( localizedLiftFailedMissedTimingText?.IsEmpty! == false ? localizedLiftFailedMissedTimingText.GetLocalizedString() : "Missed the timing window!");
             weightLiftingAudio.StopLiftPhaseAudio();
         }
     }
@@ -796,7 +850,7 @@ public class WeightLiftingController : MonoBehaviour
             pushRightButton.onClick.AddListener(OnPushRightButton);
         }
         
-        UpdatePhaseUI("PHASE 3: HOLD", "Get ready...");
+        UpdatePhaseUI(localizedHoldPhaseText.IsEmpty! == false? localizedHoldPhaseText.GetLocalizedString(): "PHASE 3: HOLD", localizedHoldGetReadyText.IsEmpty! == false? localizedHoldGetReadyText.GetLocalizedString(): "Get ready...");
         UpdateUI();
     }
     
@@ -813,7 +867,7 @@ public class WeightLiftingController : MonoBehaviour
             {
                 holdPhaseReady = true;
                 goMessageTimer = 0f; // Start GO message timer
-                UpdatePhaseUI("PHASE 3: HOLD", "GO!\nUse buttons to keep the bar balanced!");
+                UpdatePhaseUI(localizedHoldPhaseText.IsEmpty! == false? localizedHoldPhaseText.GetLocalizedString(): "PHASE 3: HOLD", localizedHoldGoText.IsEmpty! == false? localizedHoldGoText.GetLocalizedString(): "GO!\nUse buttons to keep the bar balanced!");
                 phaseTimer = 0f; // Reset timer for hold duration
 
                 weightLiftingAudio.StartHoldPhaseAudio();
@@ -822,7 +876,7 @@ public class WeightLiftingController : MonoBehaviour
             {
                 // Show countdown
                 int countdown = Mathf.CeilToInt(holdCountdownDuration - phaseTimer);
-                UpdatePhaseUI("PHASE 3: HOLD", countdown.ToString());
+                UpdatePhaseUI(localizedHoldPhaseText.IsEmpty! == false? localizedHoldPhaseText.GetLocalizedString(): "PHASE 3: HOLD", countdown.ToString());
             }
             return;
         }
@@ -833,7 +887,7 @@ public class WeightLiftingController : MonoBehaviour
             goMessageTimer += Time.deltaTime;
             if (goMessageTimer >= goMessageDuration)
             {
-                UpdatePhaseUI("PHASE 3: HOLD", "Use buttons to keep the bar balanced!");
+                UpdatePhaseUI(localizedHoldPhaseText.IsEmpty! == false? localizedHoldPhaseText.GetLocalizedString(): "PHASE 3: HOLD", localizedHoldUseBtnsText.IsEmpty! == false? localizedHoldUseBtnsText.GetLocalizedString(): "Use buttons to keep the bar balanced!");
             }
         }
         
@@ -883,7 +937,7 @@ public class WeightLiftingController : MonoBehaviour
             PlayDumbbellSlideSound();
             Debug.Log("Balance failed! Tilt angle: " + barTiltAngle);
             currentLiftState = LiftState.Idle;
-            FailLift("Lost balance! Bar tilted too far!");
+            FailLift( localizedHoldFailedText.IsEmpty! == false? localizedHoldFailedText.GetLocalizedString(): "Lost balance! Bar tilted too far!");
             return;
         }
         
@@ -907,9 +961,9 @@ public class WeightLiftingController : MonoBehaviour
         Sequence transitionSequence = DOTween.Sequence();
         
         transitionSequence
-            .AppendCallback(() => UpdatePhaseUI("PHASE 3: HOLD", "Holding complete!\nRacking the bar..."))
+            .AppendCallback(() => UpdatePhaseUI(localizedHoldPhaseText.IsEmpty! == false? localizedHoldPhaseText.GetLocalizedString(): "PHASE 3: HOLD", localizedHoldCompleteText.IsEmpty! == false? localizedHoldCompleteText.GetLocalizedString(): "Holding complete!\nRacking the bar..."))
             .AppendInterval(1f)
-            .AppendCallback(() => UpdatePhaseUI("Racking the bar", ""))
+            .AppendCallback(() => UpdatePhaseUI(localizedRackingBarText.IsEmpty! == false? localizedRackingBarText.GetLocalizedString(): "Racking the bar", ""))
             .Append(bar.transform.DORotate(new Vector3(0f, 0f, 0f), 1f).SetRelative(false))
             .Append(bar.transform.DOMove(bar.transform.position + new Vector3(0f,-0.10f, 0f), 1f).SetRelative(false))
             .AppendCallback(() => { }) // Force evaluation
@@ -1028,7 +1082,7 @@ public class WeightLiftingController : MonoBehaviour
     {
         failedAttempts++;
         Debug.Log("Lift failed! Reason: " + reason + " (Attempt " + failedAttempts + "/" + maxFailedAttempts + ")");
-        liftsRemainingTxt .text = "Attempts Left: " + (maxFailedAttempts - failedAttempts);
+        liftsRemainingTxt .text = localizedAttemptsLeftText?.IsEmpty! == false?  localizedAttemptsLeftText.GetLocalizedString((maxFailedAttempts - failedAttempts).ToString()): "Attempts Left: " + (maxFailedAttempts - failedAttempts);
 
         if (AudioManager.instance != null)
         {
@@ -1052,14 +1106,16 @@ public class WeightLiftingController : MonoBehaviour
     private void ShowSuccessAndContinue()
     {
         Sequence transitionSequence = DOTween.Sequence();
+
+        string successText = localizedSuccessText?.IsEmpty! == false ? localizedSuccessText.GetLocalizedString() : "SUCCESS!";
         
         transitionSequence
-            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!"))
-            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!" +"\nStarting new lift... 3 seconds"))
+            .AppendCallback(() => UpdatePhaseUI(successText, isPerfectLift ? localizedPerfectLiftNoCountdownText?.IsEmpty! == false ? localizedPerfectLiftNoCountdownText.GetLocalizedString() : "Perfect lift! Weight increased!" : localizedGoodLiftNoCountdownText?.IsEmpty! == false ? localizedGoodLiftNoCountdownText.GetLocalizedString() : "Good lift! Weight increased!"))
+            .AppendCallback( () =>  UpdatePhaseUI(successText, isPerfectLift ?  localizedPerfectWithCountdownText?.IsEmpty! == false ? localizedPerfectWithCountdownText.GetLocalizedString("3") :  "Perfect lift! Weight increased!" : localizedGoodLiftWithCountdownText?.IsEmpty! == false ? localizedGoodLiftWithCountdownText.GetLocalizedString("3"):"Good lift! Weight increased!" +"\nStarting new lift... 3 seconds"))
             .AppendInterval(1f)
-            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!" +"\nStarting new lift... 2 seconds"))
+            .AppendCallback( () =>  UpdatePhaseUI(successText, isPerfectLift ?  localizedPerfectWithCountdownText?.IsEmpty! == false ? localizedPerfectWithCountdownText.GetLocalizedString("2") :  "Perfect lift! Weight increased!" : localizedGoodLiftWithCountdownText?.IsEmpty! == false ? localizedGoodLiftWithCountdownText.GetLocalizedString("2"):"Good lift! Weight increased!" +"\nStarting new lift... 2 seconds"))
             .AppendInterval(1f)
-            .AppendCallback( () =>  UpdatePhaseUI("SUCCESS!", isPerfectLift ? "Perfect lift! Weight increased!" : "Good lift! Weight increased!" +"\nStarting new lift... 1 seconds"))
+            .AppendCallback( () =>  UpdatePhaseUI(successText, isPerfectLift ?  localizedPerfectWithCountdownText?.IsEmpty! == false ? localizedPerfectWithCountdownText.GetLocalizedString("1") :  "Perfect lift! Weight increased!" : localizedGoodLiftWithCountdownText?.IsEmpty! == false ? localizedGoodLiftWithCountdownText.GetLocalizedString("1"):"Good lift! Weight increased!" +"\nStarting new lift... 1 seconds"))
             .AppendInterval(1f)
             // Retry same weight
             .AppendCallback(() =>   StartNewLift());
@@ -1071,13 +1127,15 @@ public class WeightLiftingController : MonoBehaviour
         
         Sequence transitionSequence = DOTween.Sequence();
         
+        string failText = localizedFailedText?.IsEmpty! == false ? localizedFailedText.GetLocalizedString() : "FAILED!";
+        
         transitionSequence
-            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts)))
-            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 3 seconds"))
+            .AppendCallback( () =>  UpdatePhaseUI(failText,    localizedFailedNoCountdownText?.IsEmpty! == false ? localizedFailedNoCountdownText.GetLocalizedString(reason,(maxFailedAttempts - failedAttempts).ToString()) : $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts)))
+            .AppendCallback( () =>  UpdatePhaseUI(failText,   localizedFailedWithCountdownText?.IsEmpty! == false ? localizedFailedWithCountdownText.GetLocalizedString(reason,(maxFailedAttempts - failedAttempts).ToString(),"3") : $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 3 seconds"))
             .AppendInterval(1f)
-            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 2 seconds"))
+            .AppendCallback( () =>  UpdatePhaseUI(failText, localizedFailedWithCountdownText?.IsEmpty! == false ? localizedFailedWithCountdownText.GetLocalizedString(reason,(maxFailedAttempts - failedAttempts).ToString(),"2") :$"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 2 seconds"))
             .AppendInterval(1f)
-            .AppendCallback( () =>  UpdatePhaseUI("FAILED!", $"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 1 seconds"))
+            .AppendCallback( () =>  UpdatePhaseUI(failText,  localizedFailedWithCountdownText?.IsEmpty! == false ? localizedFailedWithCountdownText.GetLocalizedString(reason,(maxFailedAttempts - failedAttempts).ToString(),"1") :$"You have {reason}\nAttempts remaining: " + (maxFailedAttempts - failedAttempts) +"\nStarting new lift... 1 seconds"))
             .AppendInterval(1f)
             // Retry same weight
             .AppendCallback(() => StartNewLift());
@@ -1110,9 +1168,9 @@ public class WeightLiftingController : MonoBehaviour
         if (resultsUI) resultsUI.SetActive(true);
         
         if(successfulReps >= maxSuccessfulReps)
-            UpdatePhaseUI("Game Finished", "Congratulations!\nYou are a Beast!");
+            UpdatePhaseUI( localizedGameFinishedText?.IsEmpty! == false ? localizedGameFinishedText.GetLocalizedString() : "Game Finished",  localizedWonText?.IsEmpty! == false ? localizedWonText.GetLocalizedString() : "Congratulations!\nYou are a Beast!");
         else
-            UpdatePhaseUI("Game Finished", "Oops\nYou Suck Man!");
+            UpdatePhaseUI( localizedGameFinishedText?.IsEmpty! == false ? localizedGameFinishedText.GetLocalizedString() : "Game Finished", localizedLostText?.IsEmpty! == false ? localizedLostText.GetLocalizedString() : "Oops\nYou Suck Man!");
 
         weightLiftingAudio.PlayWeightliftingMiniGameOver();
 
@@ -1199,10 +1257,10 @@ public class WeightLiftingController : MonoBehaviour
         {
             if (currentLiftState == LiftState.WeightSelection)
             {
-                weightText.text = "Weight Selected " + selectedWeight + "kg";
+                weightText.text =   localizedWeightSelectedText?.IsEmpty! == false ? localizedWeightSelectedText.GetLocalizedString(selectedWeight) : "Weight Selected " + selectedWeight + "kg";
             }
             else
-                weightText.text = "Weight: " + currentWeight + "kg";
+                weightText.text = localizedWeightText?.IsEmpty! == false ? localizedWeightText.GetLocalizedString(currentWeight) : "Weight: " + currentWeight + "kg";
         }
     }
     
@@ -1223,7 +1281,8 @@ public class WeightLiftingController : MonoBehaviour
     {
         if (statsText)
         {
-            statsText.text = "Training Complete!\n\n" +
+            statsText.text = localizedGameFinishedStatsText?.IsEmpty! == false ? localizedGameFinishedStatsText.GetLocalizedString(successfulReps, perfectLifts, maxWeightLifted, totalStrengthGained) : 
+                            "Training Complete!\n\n" +
                             "Successful Reps: " + successfulReps + "\n" +
                             "Perfect Lifts: " + perfectLifts + "\n" +
                             "Max Weight: " + maxWeightLifted + "kg\n" +

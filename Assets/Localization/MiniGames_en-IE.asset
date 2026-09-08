@@ -406,6 +406,396 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7084867036035678297
+  - m_Id: 2162591773220864
+    m_Localized: Confirm
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2164260942635008
+    m_Localized: 'PHASE 0: Weight Selection'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2164737650450432
+    m_Localized: Choose your starting weight.
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2166124841000960
+    m_Localized: FAILED!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2166223377784832
+    m_Localized: 'You have Failed\nAttempts remaining: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2167955491119104
+    m_Localized: 'Attempts Left: {0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2171300104626176
+    m_Localized: GET READY
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171375593709568
+    m_Localized: GO!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2171494997155840
+    m_Localized: You selected {0}kg\nStarting in 3 seconds...
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2173112656322560
+    m_Localized: You selected {0}kg\nStarting in {1} seconds...
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2173130373062656
+    m_Localized: Lift that weight!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2174202948870144
+    m_Localized: 'PHASE 1: GRIP'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2181464702574592
+    m_Localized: GO!\nTap rapidly to grip the bar!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190386427584512
+    m_Localized: '{0}\n Tap rapidly to grip the bar!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2190543651069952
+    m_Localized: Tap rapidly to grip the bar!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190692032962560
+    m_Localized: '{0} Seconds Left!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2190780096569344
+    m_Localized: Grip successful!\nPreparing to lift...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2190905720168448
+    m_Localized: Failed to establish proper grip!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191098247110656
+    m_Localized: 'PHASE 3: HOLD'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191145449807872
+    m_Localized: GO!\nUse buttons to keep the bar balanced!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191240719228928
+    m_Localized: Lost balance! Bar tilted too far!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191536161808384
+    m_Localized: Holding complete!\nRacking the bar...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2191621524283392
+    m_Localized: Racking the bar
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2200075445985280
+    m_Localized: Gripping!!!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2221803056390144
+    m_Localized: Get ready...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2251346337062912
+    m_Localized: Use buttons to keep the bar balanced!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2263539690496000
+    m_Localized: Lost balance! Bar tilted too far!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2267635721953280
+    m_Localized: 'PHASE 2: LIFT'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270761854164992
+    m_Localized: Missed the timing window!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270933531222016
+    m_Localized: Good Enough!\nPreparing to hold...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2271008466657280
+    m_Localized: Perfect lift!\nPreparing to hold...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270744888205312
+    m_Localized: Failed to lift in time!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270673408876544
+    m_Localized: Tap when the meter hits the green zone!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2270630773776384
+    m_Localized: '{0} \n Tap when the meter hits the green zone!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2270584753872896
+    m_Localized: GO!\nTap when the meter hits the green zone!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2272520148344832
+    m_Localized: Get ready...
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2275861649678336
+    m_Localized: 'Weight: {0} kg'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2275806016430080
+    m_Localized: Weight Selected {0} kg
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2283902348550144
+    m_Localized: SUCCESS!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2283969432248320
+    m_Localized: Perfect lift! Weight increased!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284027540135936
+    m_Localized: Good lift! Weight increased!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284075086766080
+    m_Localized: Good lift! Weight increased!\nStarting new lift... {0} seconds
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2284531557064704
+    m_Localized: FAILED!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2284629972213760
+    m_Localized: 'You have {0}\nAttempts remaining: {1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2284736578838528
+    m_Localized: 'You have {0}\nAttempts remaining: {1}\nStarting new lift... {2}
+      seconds"'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2285280307437568
+    m_Localized: Congratulations!\nYou are a Beast!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2285361496580096
+    m_Localized: Oops\nYou Suck Man!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2286243915227136
+    m_Localized: Game Finished
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2286400408903680
+    m_Localized: 'Training Complete!\n\nSuccessful Reps: {0}\nPerfect Lifts: {1}\nMax
+      Weight: {2} kg\nStrength Gained: {3}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2298243965771776
+    m_Localized: Perfect lift! Weight increased!\nStarting new lift... {0} seconds
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2528599285424128
+    m_Localized: Car crashed
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2531680467279872
+    m_Localized: '{0}Time: {1}:{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2538783655321600
+    m_Localized: 'Time: 2:00'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2567687766007808
+    m_Localized: Left
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568812112109568
+    m_Localized: Right
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568843724578816
+    m_Localized: Top
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2568865178443776
+    m_Localized: Bottom
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2594706721595392
+    m_Localized: '\n<color=#44AAFF>[SHIELD]</color> No Crashes: +{0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2594915111395328
+    m_Localized: '\n<color=#44AAFF>[SHIELD]</color> Low Crashes: +{0}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2596850082242560
+    m_Localized: '\n<color=#FF6600>[FIRE]</color> Best Combo x{0}: +{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2597536798859264
+    m_Localized: '<color=#FFD700>[TROPHY]</color> Victory!\n\nFinal Score: {0}\nBest
+      Combo: x{1}\nCrashes: {2}{3}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2606406128623616
+    m_Localized: '{0} Lane'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2606490589323264
+    m_Localized: Lane {0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2610426817798144
+    m_Localized: <color=#FF4400>BURST!</color> Rapid cars from the <color=#FFFFFF>{0}</color>!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2610494664859648
+    m_Localized: <color=#FFAA00>RUSH HOUR!</color> Heavy traffic from the <color=#FFFFFF>{0}</color>!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2610530270306304
+    m_Localized: <color=#FFAA00>CONVOY!</color> Tight formation from the <color=#FFFFFF>{0}</color>!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2610558439251968
+    m_Localized: <color=#FF0000>!! CHAOS !!</color> ALL lanes flooding!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2612488976719872
+    m_Localized: Stopped during Ambulance event
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620570976903168
+    m_Localized: '{0} Lane anger overflow!'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2620853173870592
+    m_Localized: <color=#4488FF>RAIN INCOMING!</color> Cars will slide!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620920718942208
+    m_Localized: <color=#FFAA00>ROADWORKS!</color> A lane will be blocked!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620966508158976
+    m_Localized: <color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2620997726363648
+    m_Localized: <color=#FF4444>AMBULANCE!</color> Keep lanes open!
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2621301213618176
+    m_Localized: <color=#AAAAFF>OLD PERSON CROSSING!</color> The {0} lane is crawling!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2621737333153792
+    m_Localized: <color=#AAAAFF>Road Blocked!</color> The {0} lane is crawling!
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2636762957471744
+    m_Localized: <color=#FF2200>UNSTOPPABLE</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636905836437504
+    m_Localized: <color=#FF4400>ON FIRE</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2636984416722944
+    m_Localized: <color=#FF6600>GREAT STREAK</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2637035465596928
+    m_Localized: <color=#FFDD00>NICE COMBO</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638373129805824
+    m_Localized: '{0}! x{1} Combo! +{2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2638598263267328
+    m_Localized: <color=#00FF88>NEAR MISS!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2638862881906688
+    m_Localized: <color=#FF44FF>CLOSE CALL!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639259562401792
+    m_Localized: <color=#00DDFF>QUICK TOGGLE!</color> +{0}
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2639627197341696
+    m_Localized: x{0} MULTIPLIER
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640030181875712
+    m_Localized: <color=#44FF44>Strike Removed!</color>
+    m_Metadata:
+      m_Items: []
+  - m_Id: 2640172532359168
+    m_Localized: <color=#FF4444>STRIKE:</color> {0}
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640364098805760
+    m_Localized: 'Strikes: {0}/{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640704999251968
+    m_Localized: 'Score: {0}  |  Combo: x{1}'
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
+  - m_Id: 2640615811571712
+    m_Localized: 'Score: {0} '
+    m_Metadata:
+      m_Items:
+      - rid: 7084867036035678297
   references:
     version: 2
     RefIds:
@@ -437,3 +827,34 @@ MonoBehaviour:
         - id: 1121315263078400
         - id: 1120846646075392
         - id: 1125568421552128
+        - id: 2270630773776384
+        - id: 2190692032962560
+        - id: 2171494997155840
+        - id: 2173112656322560
+        - id: 2190386427584512
+        - id: 2167955491119104
+        - id: 2166223377784832
+        - id: 2275806016430080
+        - id: 2275861649678336
+        - id: 2286400408903680
+        - id: 2284736578838528
+        - id: 2284629972213760
+        - id: 2284075086766080
+        - id: 2298243965771776
+        - id: 2531680467279872
+        - id: 2594706721595392
+        - id: 2594915111395328
+        - id: 2596850082242560
+        - id: 2597536798859264
+        - id: 2610426817798144
+        - id: 2610494664859648
+        - id: 2610530270306304
+        - id: 2620570976903168
+        - id: 2621737333153792
+        - id: 2621301213618176
+        - id: 2638373129805824
+        - id: 2639627197341696
+        - id: 2640364098805760
+        - id: 2640172532359168
+        - id: 2640704999251968
+        - id: 2640615811571712

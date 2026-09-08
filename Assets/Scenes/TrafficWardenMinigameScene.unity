@@ -210,7 +210,7 @@ PrefabInstance:
       objectReference: {fileID: 1695512241}
     - target: {fileID: 5927496644200560060, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: laneOrientation
-      value: Bottom
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -1490,7 +1490,7 @@ PrefabInstance:
       objectReference: {fileID: 1259216562}
     - target: {fileID: 5927496644200560060, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: laneOrientation
-      value: Top
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -2949,10 +2949,59 @@ MonoBehaviour:
   bonusFlashText: {fileID: 0}
   warningText: {fileID: 0}
   multiplierText: {fileID: 0}
+  showRestartButtons: 0
   testDemoButtons: {fileID: 1450603467}
   backToMainMenuButton: {fileID: 1189576496}
   restartMinigameButton: {fileID: 1828485789}
   trafficWardenAudio: {fileID: 1853407906}
+  localizedGameOverText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.GameOver
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedVictoryText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Victory
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedSmartScoreText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.SmartScore
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedTimeText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Time
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedLivesText:
+    m_TableReference:
+      m_TableCollectionName: MiniGames
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: MiniGames.MinigameCanvasUI.Lives
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!1 &1450603467
 GameObject:
   m_ObjectHideFlags: 0
@@ -4054,7 +4103,7 @@ PrefabInstance:
       objectReference: {fileID: 580732237}
     - target: {fileID: 5927496644200560060, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: laneOrientation
-      value: Right
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7536853571189246881, guid: 188c9473cfe94e644b8c36b5ef8e59e7, type: 3}
       propertyPath: m_LocalPosition.x
@@ -4822,11 +4871,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3141948303632656649, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -192.26
+      value: -300.3
       objectReference: {fileID: 0}
     - target: {fileID: 3312150881344673577, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_Name
       value: MinigameUiTemplatePrefab
+      objectReference: {fileID: 0}
+    - target: {fileID: 4314603328685551936, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6402830158333456447, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_AnchorMax.x
@@ -4886,7 +4939,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7595075280194196313, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: -79.05
+      value: -103.1
       objectReference: {fileID: 0}
     - target: {fileID: 8156387063174394417, guid: e2cd39d8fbeeeeb4bb86fc1660aa8a57, type: 3}
       propertyPath: m_IsActive

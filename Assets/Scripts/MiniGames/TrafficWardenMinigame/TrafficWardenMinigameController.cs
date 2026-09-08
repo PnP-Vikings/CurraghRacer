@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using MiniGames;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.Localization;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
@@ -173,6 +174,43 @@ public class TrafficWardenMinigameController : MonoBehaviour
     public float oldPersonIntervalFactor = 2.5f;
     int oldPersonLane = -1;
 
+    [Header("Localization")]
+    LocalizedString localizedCarCrashedString = new LocalizedString("MiniGames", "Minigames.TrafficWarden.CarCrashed");
+    LocalizedString localizedUpdateTimerText = new LocalizedString("MiniGames", "Minigames.TrafficWarden.UpdateTimerText");
+    LocalizedString localizedTimerStartText = new LocalizedString("MiniGames", "Minigames.TrafficWarden.TimerStartText");
+    LocalizedString localizedNoCrashesBonusSummary = new LocalizedString("MiniGames", "Minigames.TrafficWarden.BonusSummary.NoCrashes");
+    LocalizedString localizedLowCrashesBonusSummary = new LocalizedString("MiniGames", "Minigames.TrafficWarden.BonusSummary.LowCrashes");
+    LocalizedString localizedBestComboBonusSummary = new LocalizedString("MiniGames", "Minigames.TrafficWarden.BonusSummary.BestCombo");
+    LocalizedString localizedVictoryBonusSummary = new LocalizedString("MiniGames", "Minigames.TrafficWarden.GameOver.Victory");
+    LocalizedString localizedLaneDir = new LocalizedString("MiniGames", "Minigames.TrafficWarden.LaneDir");
+    LocalizedString localizedChosenLaneDir = new LocalizedString("MiniGames", "Minigames.TrafficWarden.LaneDir.ChosenLane");
+    LocalizedString localizedBurstWarningMsg = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.Burst");
+    LocalizedString localizedRushHourWarningMsg = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.RushHour");
+    LocalizedString localizedConvoyWarningMsg = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.Convoy");
+    LocalizedString localizedChaosWarningMsg = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.Chaos");
+    LocalizedString localizedStoppedAmbulanceEvent = new LocalizedString("MiniGames", "Minigames.TrafficWarden.AddStrike.StoppedAmbulanceEvent");
+    LocalizedString localizedLaneAngerOverflow = new LocalizedString("MiniGames", "Minigames.TrafficWarden.AddStrike.LaneAngerOverflow");
+    LocalizedString localizedRainIncoming = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.RainIncoming");
+    LocalizedString localizedRoadWorks = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.RoadWorks");
+    LocalizedString localizedOldPerson = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.OldPerson");
+    LocalizedString localizedAmbulance = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.Ambulance");
+    LocalizedString localizedOldPersonWithLane = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.OldPersonWithLane");
+    LocalizedString localizedRoadWorksWithLane = new LocalizedString("MiniGames", "Minigames.TrafficWarden.WarningMsg.RoadWorksWithLane");
+    LocalizedString localizedUnstoppable = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.Unstoppable");
+    LocalizedString localizedOnFire = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.OnFire");
+    LocalizedString localizedGreatStreak = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.GreatStreak");
+    LocalizedString localizedNiceCombo = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.NiceCombo");
+    LocalizedString localizedShowBonusFlashCombo = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.ShowBonusFlashCombo");
+    LocalizedString localizedAwardNearMiss = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.AwardNearMiss");
+    LocalizedString localizedAwardCloseCall = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.AwardCloseCall");
+    LocalizedString localizedQuickToggle = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Label.QuickToggle");
+    LocalizedString localizedMultiplierText = new LocalizedString("MiniGames", "Minigames.TrafficWarden.UpdateMultiplier.MultiplierText");
+    LocalizedString localizedStrikeRemoved = new LocalizedString("MiniGames", "Minigames.TrafficWarden.StrikeRemoved");
+    LocalizedString localizedStrike = new LocalizedString("MiniGames", "Minigames.TrafficWarden.Strike");
+    LocalizedString localizedStrikesText = new LocalizedString("MiniGames", "Minigames.TrafficWarden.StrikesText");
+    LocalizedString localizedScoreText = new LocalizedString("MiniGames", "Minigames.TrafficWarden.ScoreText");
+    LocalizedString localizedScoreTextWithCombo = new LocalizedString("MiniGames", "Minigames.TrafficWarden.ScoreTextWithCombo");
+    
     void Awake()
     {
         if (Instance != null && Instance != this)
@@ -222,7 +260,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         ScheduleNextPattern();
         SetupUi();
         onCarCrashed.AddListener(() => { 
-            Penalize("Car crashed");
+            Penalize(localizedCarCrashedString?.IsEmpty! == false ? localizedCarCrashedString.GetLocalizedString() : "Car crashed");
             totalCrashes++;
         });
     }
@@ -255,7 +293,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             int seconds = Mathf.FloorToInt(timeRemaining % 60f);
             
             string timerPrefix = timeRemaining <= timePressureThreshold ? "<color=#FF4444>! </color>" : "";
-            minigameCanvasUI.UpdateTimer($"{timerPrefix}Time: {minutes}:{seconds:00}");
+            minigameCanvasUI.UpdateTimer( localizedUpdateTimerText?.IsEmpty! == false ? localizedUpdateTimerText.GetLocalizedString(timerPrefix,minutes,seconds)  : $"{timerPrefix}Time: {minutes}:{seconds:00}");
         }
 
         if (timeRemaining <= 0f && !gameEnded)
@@ -280,13 +318,13 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (totalCrashes == 0)
             {
                 finalScore += crashFreeBonus;
-                bonusSummary += $"\n<color=#44AAFF>[SHIELD]</color> No Crashes: +{crashFreeBonus}";
+                bonusSummary += localizedNoCrashesBonusSummary?.IsEmpty! == false? localizedNoCrashesBonusSummary.GetLocalizedString(crashFreeBonus): $"\n<color=#44AAFF>[SHIELD]</color> No Crashes: +{crashFreeBonus}";
                 Debug.Log($"Perfect! No crashes! Bonus: +{crashFreeBonus}");
             }
             else if (totalCrashes <= 2)
             {
                 finalScore += lowCrashBonus;
-                bonusSummary += $"\n<color=#44AAFF>[SHIELD]</color> Low Crashes: +{lowCrashBonus}";
+                bonusSummary += localizedLowCrashesBonusSummary?.IsEmpty! == false? localizedLowCrashesBonusSummary.GetLocalizedString(lowCrashBonus): $"\n<color=#44AAFF>[SHIELD]</color> Low Crashes: +{lowCrashBonus}";
                 Debug.Log($"Good job! Low crashes. Bonus: +{lowCrashBonus}");
             }
             
@@ -295,7 +333,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             {
                 int comboBonus = perfectComboBonus + (bestCombo - 10) * 20;
                 finalScore += comboBonus;
-                bonusSummary += $"\n<color=#FF6600>[FIRE]</color> Best Combo x{bestCombo}: +{comboBonus}";
+                bonusSummary +=  localizedBestComboBonusSummary?.IsEmpty! == false? localizedBestComboBonusSummary.GetLocalizedString(bestCombo,comboBonus): $"\n<color=#FF6600>[FIRE]</color> Best Combo x{bestCombo}: +{comboBonus}";
                 Debug.Log($"Amazing combo streak of {bestCombo}! Bonus: +{comboBonus}");
             }
             
@@ -311,7 +349,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             if (gameOverText != null)
             {
                 gameOverText.gameObject.SetActive(true);
-                gameOverText.text = $"<color=#FFD700>[TROPHY]</color> Victory!\n\nFinal Score: {finalScore}\nBest Combo: x{bestCombo}\nCrashes: {totalCrashes}{bonusSummary}";
+                gameOverText.text = localizedVictoryBonusSummary?.IsEmpty! == false? localizedVictoryBonusSummary.GetLocalizedString(finalScore,bestCombo,totalCrashes,bonusSummary): $"<color=#FFD700>[TROPHY]</color> Victory!\n\nFinal Score: {finalScore}\nBest Combo: x{bestCombo}\nCrashes: {totalCrashes}{bonusSummary}";
             }
             
             if (showRestartButtons && testDemoButtons != null)
@@ -516,33 +554,33 @@ public class TrafficWardenMinigameController : MonoBehaviour
         // Pre-pick the target lane so we can show the orientation in the warning
         int chosenLane = Random.Range(0, spawners.Length);
         string laneDir = (stopLines != null && chosenLane < stopLines.Length && stopLines[chosenLane] != null)
-            ? stopLines[chosenLane].laneOrientation + " Lane"
-            : $"Lane {chosenLane + 1}";
+            ?  localizedLaneDir?.IsEmpty! ==false? localizedLaneDir.GetLocalizedString(stopLines[chosenLane].GetLocalizedLaneOrientation()) :  stopLines[chosenLane].GetLocalizedLaneOrientation() + " Lane"
+            :  localizedChosenLaneDir?.IsEmpty! ==false? localizedChosenLaneDir.GetLocalizedString((chosenLane + 1).ToString()) : $"Lane {chosenLane + 1}";
         
         if (r < 0.30f)
         {
             chosenPattern = SpawnPattern.Burst;
-            warningMsg = $"<color=#FF4400>* BURST!</color> Rapid cars from the <color=#FFFFFF>{laneDir}</color>!";
+            warningMsg = localizedBurstWarningMsg?.IsEmpty! ==false? localizedBurstWarningMsg.GetLocalizedString(laneDir) : $"<color=#FF4400>* BURST!</color> Rapid cars from the <color=#FFFFFF>{laneDir}</color>!";
         }
         else if (r < 0.55f)
         {
             chosenPattern = SpawnPattern.RushHour;
-            warningMsg = $"<color=#FFAA00>RUSH HOUR!</color> Heavy traffic from the <color=#FFFFFF>{laneDir}</color>!";
+            warningMsg = localizedRushHourWarningMsg?.IsEmpty! ==false? localizedRushHourWarningMsg.GetLocalizedString(laneDir) : $"<color=#FFAA00>RUSH HOUR!</color> Heavy traffic from the <color=#FFFFFF>{laneDir}</color>!";
         }
         else if (r < 0.80f)
         {
             chosenPattern = SpawnPattern.Convoy;
-            warningMsg = $"<color=#FFAA00>CONVOY!</color> Tight formation from the <color=#FFFFFF>{laneDir}</color>!";
+            warningMsg = localizedConvoyWarningMsg?.IsEmpty! ==false? localizedConvoyWarningMsg.GetLocalizedString(laneDir) : $"<color=#FFAA00>CONVOY!</color> Tight formation from the <color=#FFFFFF>{laneDir}</color>!";
         }
         else if (t > 0.5f) // Chaos only after halfway through difficulty curve
         {
             chosenPattern = SpawnPattern.Chaos;
-            warningMsg = "<color=#FF0000>!! CHAOS !!</color> ALL lanes flooding!";
+            warningMsg = localizedChaosWarningMsg?.IsEmpty! ==false? localizedChaosWarningMsg.GetLocalizedString() : "<color=#FF0000>!! CHAOS !!</color> ALL lanes flooding!";
         }
         else
         {
             chosenPattern = SpawnPattern.Burst;
-            warningMsg = $"<color=#FF4400>* BURST!</color> Rapid cars from the <color=#FFFFFF>{laneDir}</color>!";
+            warningMsg = localizedBurstWarningMsg?.IsEmpty! ==false? localizedBurstWarningMsg.GetLocalizedString(laneDir) : $"<color=#FF4400>* BURST!</color> Rapid cars from the <color=#FFFFFF>{laneDir}</color>!";
         }
 
         // Show warning, then activate after a short heads-up
@@ -693,7 +731,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (activeEvent == TrafficEventType.Ambulance && stopLines[0].GetState() == CrossingState.Go)
             {
-                AddStrike("Stopped during Ambulance event");
+                AddStrike( localizedStoppedAmbulanceEvent?.IsEmpty! ==false? localizedStoppedAmbulanceEvent.GetLocalizedString() : "Stopped during Ambulance event");
                 ResetCombo();
                 return;
             }
@@ -711,7 +749,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (activeEvent == TrafficEventType.Ambulance && stopLines[1].GetState() == CrossingState.Go)
             {
-                AddStrike("Stopped during Ambulance event");
+                AddStrike( localizedStoppedAmbulanceEvent?.IsEmpty! ==false? localizedStoppedAmbulanceEvent.GetLocalizedString() : "Stopped during Ambulance event");
                 ResetCombo();
                 return;
             }
@@ -729,7 +767,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (activeEvent == TrafficEventType.Ambulance && stopLines[2].GetState() == CrossingState.Go)
             {
-                AddStrike("Stopped during Ambulance event");
+                AddStrike( localizedStoppedAmbulanceEvent?.IsEmpty! ==false? localizedStoppedAmbulanceEvent.GetLocalizedString() : "Stopped during Ambulance event");
                 ResetCombo();
                 return;
             }
@@ -747,7 +785,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (activeEvent == TrafficEventType.Ambulance && stopLines[3].GetState() == CrossingState.Go)
             {
-                AddStrike("Stopped during Ambulance event");
+                AddStrike( localizedStoppedAmbulanceEvent?.IsEmpty! ==false? localizedStoppedAmbulanceEvent.GetLocalizedString() : "Stopped during Ambulance event");
                 ResetCombo();
                 return;
             }
@@ -766,7 +804,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (activeEvent == TrafficEventType.Ambulance && stopLine.GetState() == CrossingState.Go)
             {
-                AddStrike("Stopped during Ambulance event");
+                AddStrike( localizedStoppedAmbulanceEvent?.IsEmpty! ==false? localizedStoppedAmbulanceEvent.GetLocalizedString() : "Stopped during Ambulance event");
                 ResetCombo();
                 return;
             }
@@ -866,7 +904,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             {
                 // Unleash all cars on this lane — they floor it through the stop
                 UnleashLane(i);
-                AddStrike($"{stopLines[i].laneOrientation} Lane anger overflow!");
+                AddStrike(localizedLaneAngerOverflow?.IsEmpty! == false ? localizedLaneAngerOverflow.GetLocalizedString(stopLines[i].laneOrientation) : $"{stopLines[i].laneOrientation} Lane anger overflow!");
                 laneAnger[i] = 0f;
                 ResetCombo();
             }
@@ -919,24 +957,24 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (r < 0.30f)
         {
             chosenEvent = TrafficEventType.Rain;
-            warningMsg = "<color=#4488FF>RAIN INCOMING!</color> Cars will slide!";
+            warningMsg =  localizedRainIncoming?.IsEmpty! == false ? localizedRainIncoming.GetLocalizedString() : "<color=#4488FF>RAIN INCOMING!</color> Cars will slide!";
         }
         else if (r < 0.55f)
         {
             chosenEvent = TrafficEventType.Roadworks;
-            warningMsg = "<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
+            warningMsg = localizedRoadWorks?.IsEmpty! == false ? localizedRoadWorks.GetLocalizedString() :"<color=#FFAA00>ROADWORKS!</color> A lane will be blocked!";
            
         }
         else if (r < 0.75f)
         {
             chosenEvent = TrafficEventType.OldPerson;
-            warningMsg = "<color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!";
+            warningMsg = localizedOldPerson?.IsEmpty! == false ? localizedOldPerson.GetLocalizedString() :"<color=#AAAAFF>OLD PERSON CROSSING!</color> One lane is crawling!";
             
         }
         else
         {
             chosenEvent = TrafficEventType.Ambulance;
-            warningMsg = "<color=#FF4444>AMBULANCE!</color> Keep lanes open!";
+            warningMsg = localizedAmbulance?.IsEmpty! == false ? localizedAmbulance.GetLocalizedString() : "<color=#FF4444>AMBULANCE!</color> Keep lanes open!";
         }
         
         
@@ -948,14 +986,14 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             if (stopLines[roadworksBlockedLane] != null)
             {
-                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[roadworksBlockedLane].laneOrientation} lane is crawling!";
+                warningMsg = localizedRoadWorksWithLane?.IsEmpty! == false ? localizedRoadWorksWithLane.GetLocalizedString(stopLines[roadworksBlockedLane].GetLocalizedLaneOrientation()) : $"<color=#AAAAFF>Road Blocked!</color> The {stopLines[roadworksBlockedLane].GetLocalizedLaneOrientation()} lane is crawling!";
             }
         }
         else if (chosenEvent == TrafficEventType.OldPerson)
         {
             if (stopLines[oldPersonLane] != null)
             {
-                warningMsg = $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[oldPersonLane].laneOrientation} lane is crawling!";
+                warningMsg = localizedOldPersonWithLane?.IsEmpty! == false ? localizedOldPersonWithLane.GetLocalizedString(stopLines[oldPersonLane].GetLocalizedLaneOrientation()) : $"<color=#AAAAFF>OLD PERSON CROSSING!</color> The {stopLines[oldPersonLane].GetLocalizedLaneOrientation()} lane is crawling!";
             }
         }
         // Show warning, then activate after delay
@@ -1121,25 +1159,25 @@ public class TrafficWardenMinigameController : MonoBehaviour
         {
             milestone = comboTier3;
             bonus = milestone4Bonus;
-            label = "<color=#FF2200>*** UNSTOPPABLE</color>";
+            label = localizedUnstoppable?.IsEmpty! == false ? localizedUnstoppable.GetLocalizedString(): "<color=#FF2200>*** UNSTOPPABLE</color>";
         }
         else if (combo >= 15 && lastMilestoneHit < 15)
         {
             milestone = 15;
             bonus = milestone3Bonus;
-            label = "<color=#FF4400>** ON FIRE</color>";
+            label = localizedOnFire?.IsEmpty! == false ? localizedOnFire.GetLocalizedString():"<color=#FF4400>** ON FIRE</color>";
         }
         else if (combo >= comboTier2 && lastMilestoneHit < comboTier2)
         {
             milestone = comboTier2;
             bonus = milestone2Bonus;
-            label = "<color=#FF6600>* GREAT STREAK</color>";
+            label = localizedGreatStreak?.IsEmpty! == false ? localizedGreatStreak.GetLocalizedString():"<color=#FF6600>* GREAT STREAK</color>";
         }
         else if (combo >= comboTier1 && lastMilestoneHit < comboTier1)
         {
             milestone = comboTier1;
             bonus = milestone1Bonus;
-            label = "<color=#FFDD00>* NICE COMBO</color>";
+            label = localizedNiceCombo?.IsEmpty! == false ? localizedNiceCombo.GetLocalizedString():"<color=#FFDD00>* NICE COMBO</color>";
         }
         
         if (milestone > 0)
@@ -1148,7 +1186,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             score += bonus;
             Debug.Log($"Combo milestone {milestone}! Bonus: +{bonus}");
             if (minigameCanvasUI != null)
-                minigameCanvasUI.ShowBonusFlash($"{label}! x{combo} Combo! +{bonus}");
+                minigameCanvasUI.ShowBonusFlash(  localizedShowBonusFlashCombo?.IsEmpty! == false ? localizedShowBonusFlashCombo.GetLocalizedString(label,combo,bonus) : $"{label}! x{combo} Combo! +{bonus}");
         }
     }
     
@@ -1162,7 +1200,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (combo > bestCombo) bestCombo = combo;
         Debug.Log($"NEAR MISS on lane {lane + 1}! +{nearMissBonus}");
         if (minigameCanvasUI != null)
-            minigameCanvasUI.ShowBonusFlash($"<color=#00FF88>NEAR MISS!</color> +{nearMissBonus}");
+            minigameCanvasUI.ShowBonusFlash(  localizedAwardNearMiss?.IsEmpty! == false ? localizedAwardNearMiss.GetLocalizedString(nearMissBonus) : $"<color=#00FF88>NEAR MISS!</color> +{nearMissBonus}");
         UpdateUi();
     }
     
@@ -1177,7 +1215,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         score += closeCallBonus;
         Debug.Log($"CLOSE CALL! +{closeCallBonus}");
         if (minigameCanvasUI != null)
-            minigameCanvasUI.ShowBonusFlash($"<color=#FF44FF>CLOSE CALL!</color> +{closeCallBonus}");
+            minigameCanvasUI.ShowBonusFlash(  localizedAwardCloseCall?.IsEmpty! == false ? localizedAwardCloseCall.GetLocalizedString(closeCallBonus) : $"<color=#FF44FF>CLOSE CALL!</color> +{closeCallBonus}");
         UpdateUi();
     }
     
@@ -1206,7 +1244,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
             score += quickToggleBonus;
             Debug.Log($"QUICK TOGGLE! {recentToggleLanes.Count} lanes in {quickToggleWindow}s! +{quickToggleBonus}");
             if (minigameCanvasUI != null)
-                minigameCanvasUI.ShowBonusFlash($"<color=#00DDFF>QUICK TOGGLE!</color> +{quickToggleBonus}");
+                minigameCanvasUI.ShowBonusFlash( localizedQuickToggle?.IsEmpty! == false ? localizedQuickToggle.GetLocalizedString(quickToggleBonus) : $"<color=#00DDFF>QUICK TOGGLE!</color> +{quickToggleBonus}");
             recentToggleTimes.Clear();
             recentToggleLanes.Clear();
             UpdateUi();
@@ -1221,7 +1259,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         
         float mul = GetTotalMultiplier();
         if (mul > 1f)
-            minigameCanvasUI.UpdateMultiplier($"x{mul:F0} MULTIPLIER");
+            minigameCanvasUI.UpdateMultiplier( localizedMultiplierText?.IsEmpty! == false ? localizedMultiplierText.GetLocalizedString(mul.ToString("F0")) : $"x{mul:F0} MULTIPLIER");
         else
             minigameCanvasUI.HideMultiplier();
     }
@@ -1302,7 +1340,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
         }
 
         minigameCanvasUI.ShowAdditionalInfo();
-        minigameCanvasUI.UpdateAdditionalInfo("<color=#44FF44>Strike Removed!</color>");
+        minigameCanvasUI.UpdateAdditionalInfo( localizedStrikeRemoved?.IsEmpty! == false ? localizedStrikeRemoved.GetLocalizedString() : "<color=#44FF44>Strike Removed!</color>");
         yield return new WaitForSeconds(1.5f);
         minigameCanvasUI.HideAdditionalInfo();
     }
@@ -1310,7 +1348,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
     System.Collections.IEnumerator ShowStrikeReason(string reason)
     {
         minigameCanvasUI.ShowAdditionalInfo();
-        minigameCanvasUI.UpdateAdditionalInfo($"<color=#FF4444>STRIKE:</color> {reason}");
+        minigameCanvasUI.UpdateAdditionalInfo( localizedStrike?.IsEmpty! == false ? localizedStrike.GetLocalizedString(reason) : $"<color=#FF4444>STRIKE:</color> {reason}");
         yield return new WaitForSeconds(2f);
         minigameCanvasUI.HideAdditionalInfo();
     }
@@ -1327,8 +1365,8 @@ public class TrafficWardenMinigameController : MonoBehaviour
             minigameCanvasUI.SetUpUI(true, true, true, false, true); // Enable timer & additional info
             
             minigameCanvasUI.UpdateScore(score);
-            minigameCanvasUI.UpdatePlayerLives($"Strikes: {strikes}/{maxStrikes}");
-            minigameCanvasUI.UpdateTimer("Time: 2:00");
+            minigameCanvasUI.UpdatePlayerLives(localizedStrikesText?.IsEmpty! == false ? localizedStrikesText.GetLocalizedString(strikes, maxStrikes) : $"Strikes: {strikes}/{maxStrikes}");
+            minigameCanvasUI.UpdateTimer(localizedTimerStartText?.IsEmpty! == false ? localizedTimerStartText.GetLocalizedString() : "Time: 2:00");
             minigameCanvasUI.HideAdditionalInfo(); // Start hidden
         }
     }
@@ -1338,9 +1376,9 @@ public class TrafficWardenMinigameController : MonoBehaviour
         if (minigameCanvasUI != null)
         {
             minigameCanvasUI.UpdateScore(combo > 0 
-                ? $"Score: {score}  |  Combo: x{combo}" 
-                : $"Score: {score}");
-            minigameCanvasUI.UpdatePlayerLives($"Strikes: {strikes}/{maxStrikes}");
+                ?  localizedScoreTextWithCombo?.IsEmpty! == false ? localizedScoreTextWithCombo.GetLocalizedString(score, combo) : $"Score: {score}  |  Combo: x{combo}" 
+                : localizedScoreText?.IsEmpty! == false ? localizedScoreText.GetLocalizedString(score) : $"Score: {score}");
+            minigameCanvasUI.UpdatePlayerLives(localizedStrikesText?.IsEmpty! == false ? localizedStrikesText.GetLocalizedString(strikes, maxStrikes) : $"Strikes: {strikes}/{maxStrikes}");
         }
     }
 }

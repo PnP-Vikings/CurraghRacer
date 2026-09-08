@@ -364,6 +364,9 @@ public class MinigameCanvasUI : MonoBehaviour
         TMPro.TMP_Text target = bonusFlashText != null ? bonusFlashText : additionalInfoText;
         if (target == null) yield break;
         
+        Color original = target.color;
+        float alpha = 1f;
+        target.color = new Color(original.r, original.g, original.b, alpha);
         target.gameObject.SetActive(true);
         target.text = message;
         
@@ -386,13 +389,12 @@ public class MinigameCanvasUI : MonoBehaviour
         yield return new WaitForSeconds(duration - punchDuration);
         
         // Fade out
-        Color original = target.color;
         float fadeDuration = 0.3f;
         elapsed = 0f;
         while (elapsed < fadeDuration)
         {
             elapsed += Time.deltaTime;
-            float alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
+            alpha = Mathf.Lerp(1f, 0f, elapsed / fadeDuration);
             target.color = new Color(original.r, original.g, original.b, alpha);
             yield return null;
         }

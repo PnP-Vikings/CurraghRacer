@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Localization;
 using UnityEngine.UI;
 
 public enum CrossingState { Go, Stop }
@@ -30,13 +31,20 @@ public class StopLine : MonoBehaviour
     public int laneIndex = -1; // Set by controller to identify which lane this is (0, 1, or 2)
     
     [Header("View from TopdownCamera")]
-    public string laneOrientation = "Left"; 
+    public LaneOrientation laneOrientation = LaneOrientation.Left; 
 
     [Header("Mood Thresholds")]
     [Tooltip("Anger value below this → Happy")]
     public float happyThreshold = 0.33f;
     [Tooltip("Anger value below this → Neutral (above → Angry)")]
     public float angryThreshold = 0.66f;
+    
+    [Header(("Localization"))]
+    [Tooltip("Localized name for this lane, e.g. 'Left Lane'")]
+    private LocalizedString localizedLeftOrientation = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.TrafficWarden.LeftOrientation" };
+    private LocalizedString localizedRightOrientation = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.TrafficWarden.RightOrientation" };
+    private LocalizedString localizedTopOrientation = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.TrafficWarden.TopOrientation" };
+    private LocalizedString localizedBottomOrientation = new LocalizedString { TableReference = "MiniGames", TableEntryReference = "Minigames.TrafficWarden.BottomOrientation" };
 
     public void Start()
     {
@@ -130,4 +138,23 @@ public class StopLine : MonoBehaviour
         
         
     }
+    
+    public string GetLocalizedLaneOrientation()
+    {
+      switch (laneOrientation)
+      {
+          case LaneOrientation.Left:
+              return localizedLeftOrientation?.IsEmpty! ==false? localizedLeftOrientation.GetLocalizedString() : "Left";
+          case LaneOrientation.Right:
+                return localizedRightOrientation?.IsEmpty! ==false? localizedRightOrientation.GetLocalizedString() : "Right";
+          case LaneOrientation.Top:
+                return localizedTopOrientation?.IsEmpty! ==false? localizedTopOrientation.GetLocalizedString() : "Top";
+              break;
+          case LaneOrientation.Bottom:
+                return localizedBottomOrientation?.IsEmpty! ==false? localizedBottomOrientation.GetLocalizedString() : "Bottom";
+      }
+      return "Unknown";
+    }
+    
+    public enum LaneOrientation { Left, Right, Top, Bottom }
 }

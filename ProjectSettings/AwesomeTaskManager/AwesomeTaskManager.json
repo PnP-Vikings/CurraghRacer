@@ -187,240 +187,7 @@
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
                     "title": "🔨 In Progress",
-                    "cards": [
-                        {
-                            "id": "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
-                            "title": "Localize Minigames ",
-                            "description": "",
-                            "category": "UI",
-                            "colorLabel": 11,
-                            "priority": 0,
-                            "createdDate": "2026-09-01 21:09",
-                            "dueDate": "2026-09-08",
-                            "archived": false,
-                            "checklistItems": [
-                                "Beer Pouring Minigame",
-                                "Minigame canvas ui",
-                                "Dishwashing Minigame",
-                                "FootRacing Minigame",
-                                "RockSkipping Minigame",
-                                "RowingRythm Minigame",
-                                "WeightLifting Minigame",
-                                "Boxing Minigame",
-                                "FootTurfing Minigame",
-                                "Traffic Warden Minigame"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                false,
-                                true,
-                                true,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d656f11150715614ba5129183425e650",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "684d0156ce3b8224baf6a0a22d0d48e4",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d9ea1e419eff46e4eb9d372bd978623e",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d3dcb19df9baec645b45a4a5908530ef",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "6c511b683549518408e649958f1ef4c1",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "1ba54d77acab60d4b83df2747b441583",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "e3c55d46df2d7014e8389576297fd2cb",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                },
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": false,
-                                    "isUrl": false,
-                                    "guid": "c00e22e7495bad0458852f21c9a8ba00",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                }
-                            ],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": []
-                        },
-                        {
-                            "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
-                            "title": "What needs to Localized",
-                            "description": "What still needs to be Localized",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-08-07 16:25",
-                            "dueDate": "2026-09-08",
-                            "archived": false,
-                            "checklistItems": [
-                                "League Invitaition card",
-                                "All the tutorial tasks",
-                                "Minigames need to be Localized",
-                                "You are in dept popup",
-                                "No Race Available",
-                                "All DisplayInfos in GameManager",
-                                "BillController DisplayInfos",
-                                "PlayerStats DisplayInfos",
-                                "Training DisplayInfos",
-                                "TvSettingsUi DisplayInfos",
-                                "Minigame Manager DisplayInfos",
-                                "StartMenu DisplayInfos"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true,
-                                false,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true,
-                                true
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": []
-                        }
-                    ]
+                    "cards": []
                 },
                 {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
@@ -1232,6 +999,238 @@
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
                             ]
+                        },
+                        {
+                            "id": "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
+                            "title": "Localize Minigames ",
+                            "description": "",
+                            "category": "UI",
+                            "colorLabel": 11,
+                            "priority": 0,
+                            "createdDate": "2026-09-01 21:09",
+                            "dueDate": "2026-09-08",
+                            "archived": false,
+                            "checklistItems": [
+                                "Beer Pouring Minigame",
+                                "Minigame canvas ui",
+                                "Dishwashing Minigame",
+                                "FootRacing Minigame",
+                                "RockSkipping Minigame",
+                                "RowingRythm Minigame",
+                                "WeightLifting Minigame",
+                                "Boxing Minigame",
+                                "FootTurfing Minigame",
+                                "Traffic Warden Minigame"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d656f11150715614ba5129183425e650",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "684d0156ce3b8224baf6a0a22d0d48e4",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d9ea1e419eff46e4eb9d372bd978623e",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d3dcb19df9baec645b45a4a5908530ef",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "6c511b683549518408e649958f1ef4c1",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "1ba54d77acab60d4b83df2747b441583",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "e3c55d46df2d7014e8389576297fd2cb",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                },
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "c00e22e7495bad0458852f21c9a8ba00",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
+                            "title": "What needs to Localized",
+                            "description": "What still needs to be Localized",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-08-07 16:25",
+                            "dueDate": "2026-09-08",
+                            "archived": false,
+                            "checklistItems": [
+                                "League Invitaition card",
+                                "All the tutorial tasks",
+                                "Minigames need to be Localized",
+                                "You are in dept popup",
+                                "No Race Available",
+                                "All DisplayInfos in GameManager",
+                                "BillController DisplayInfos",
+                                "PlayerStats DisplayInfos",
+                                "Training DisplayInfos",
+                                "TvSettingsUi DisplayInfos",
+                                "Minigame Manager DisplayInfos",
+                                "StartMenu DisplayInfos"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": true,
+                            "assigneeIds": []
                         }
                     ]
                 },
