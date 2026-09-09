@@ -181,6 +181,36 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
+                        },
+                        {
+                            "id": "72262f05-438b-46d9-b0a0-6395ce6a9be1",
+                            "title": "Localize Calendar event ",
+                            "description": "",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-09 22:33",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add localization for name",
+                                "Add localization for description"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         }
                     ]
                 },
