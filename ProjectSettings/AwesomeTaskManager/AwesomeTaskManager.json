@@ -16,7 +16,7 @@
                             "colorLabel": 1,
                             "priority": 0,
                             "createdDate": "2026-06-03 22:56",
-                            "dueDate": "2026-09-07",
+                            "dueDate": "2026-09-24",
                             "archived": false,
                             "checklistItems": [
                                 "Add Calendar event",
@@ -181,7 +181,13 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
-                        },
+                        }
+                    ]
+                },
+                {
+                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
+                    "title": "🔨 In Progress",
+                    "cards": [
                         {
                             "id": "72262f05-438b-46d9-b0a0-6395ce6a9be1",
                             "title": "Localize Calendar event ",
@@ -194,13 +200,16 @@
                             "archived": false,
                             "checklistItems": [
                                 "Add localization for name",
-                                "Add localization for description"
+                                "Add localization for description",
+                                "Localize all the text at the bottom of the completedRaces class"
                             ],
                             "checklistStates": [
-                                false,
+                                true,
+                                true,
                                 false
                             ],
                             "checklistLinkedCardIds": [
+                                "",
                                 "",
                                 ""
                             ],
@@ -213,11 +222,6 @@
                             "assigneeIds": []
                         }
                     ]
-                },
-                {
-                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
-                    "title": "🔨 In Progress",
-                    "cards": []
                 },
                 {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",

@@ -1,6 +1,7 @@
 using Calendar;
 using UnityEngine;
 using System;
+using UnityEngine.Localization;
 
 namespace Calendar
 {
@@ -8,7 +9,9 @@ namespace Calendar
     public class CompletedRaceData
     {
         public string leagueName;
+        public LocalizedString localizedLeagueName;
         public string raceName;
+        public LocalizedString localizedRaceName;
         public DateTime raceDate;
         public int playerPosition;
         public int totalParticipants;
@@ -21,7 +24,7 @@ namespace Calendar
         
         public CompletedRaceData(string leagueName, string raceName, DateTime raceDate, 
                                int playerPosition, int totalParticipants, string trackName, 
-                               float raceTime, int pointsEarned, string[] participantNames)
+                               float raceTime, int pointsEarned, string[] participantNames, LocalizedString localizedLeagueName = null, LocalizedString localizedRaceName = null)
         {
             this.leagueName = leagueName;
             this.raceName = raceName;
@@ -33,6 +36,8 @@ namespace Calendar
             this.pointsEarned = pointsEarned;
             this.participantNames = participantNames;
             this.playerWon = playerPosition == 1;
+            this.localizedLeagueName = localizedLeagueName;
+            this.localizedRaceName = localizedRaceName;
         }
         
         public string GetFormattedTime()
@@ -87,7 +92,10 @@ namespace Calendar
         {
             if (dayEventType == null || raceData == null) return;
             
-            dayEventType.eventName = $"{raceData.leagueName} - {raceData.raceName}";
+            string leagueDisplayName = raceData.localizedLeagueName != null && !raceData.localizedLeagueName.IsEmpty ? raceData.localizedLeagueName.GetLocalizedString() : raceData.leagueName;
+            string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString() : raceData.raceName;
+            
+            dayEventType.eventName = $"{leagueDisplayName} - {raceDisplayName}";
             dayEventType.description = GetRaceDescription();
             dayEventType.OccasionType = OccasionType.Race;
             dayEventType.eventActive = true;
@@ -136,8 +144,12 @@ namespace Calendar
         
         public string GetDetailedTooltip()
         {
-            string tooltip = $"<b>{raceData.leagueName}</b>\n";
-            tooltip += $"<i>{raceData.raceName}</i>\n\n";
+            string leagueDisplayName = raceData.localizedLeagueName != null && !raceData.localizedLeagueName.IsEmpty ? raceData.localizedLeagueName.GetLocalizedString() : raceData.leagueName;
+            string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString() : raceData.raceName;
+            
+            string tooltip = $"<b>{leagueDisplayName}</b>\n";
+             
+            tooltip += $"<i>{raceDisplayName}</i>\n\n";
             tooltip += $"<b>Result:</b> {raceData.GetPositionText()} / {raceData.totalParticipants}\n";
             tooltip += $"<b>Time:</b> {raceData.GetFormattedTime()}\n";
             tooltip += $"<b>Track:</b> {raceData.trackName}\n";

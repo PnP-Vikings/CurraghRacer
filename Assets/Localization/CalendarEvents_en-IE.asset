@@ -1,0 +1,87 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e9620f8c34305754d8cc9a7e49e852d9, type: 3}
+  m_Name: CalendarEvents_en-IE
+  m_EditorClassIdentifier: Unity.Localization::UnityEngine.Localization.Tables.StringTable
+  m_LocaleId:
+    m_Code: en-IE
+  m_SharedData: {fileID: 11400000, guid: 42e76dd0e663ebf4590c9beca8ff6879, type: 2}
+  m_Metadata:
+    m_Items: []
+  m_TableData:
+  - m_Id: 7155712000
+    m_Localized: '{0} Race (Completed)'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 92895674368
+    m_Localized: '{0} Race'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 183295508480
+    m_Localized: You participated in this race
+    m_Metadata:
+      m_Items: []
+  - m_Id: 278502014976
+    m_Localized: Upcoming race day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3349374271488
+    m_Localized: Christmas
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3472829415424
+    m_Localized: Xmas celebration
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3530534649856
+    m_Localized: Halloween
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3610197065728
+    m_Localized: Spooky Night
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3677507256320
+    m_Localized: New Year's Day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3713787985920
+    m_Localized: Start of the new year
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4225883144192
+    m_Localized: Travel Date
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4297622519808
+    m_Localized: 'I''m leaving on this day no matter what '
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4439641653248
+    m_Localized: Day of love
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4379130429440
+    m_Localized: Valentine's Day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 3789256097792
+    m_Localized: Race Day
+    m_Metadata:
+      m_Items: []
+  - m_Id: 4185366167552
+    m_Localized: Big Sunday Races
+    m_Metadata:
+      m_Items: []
+  references:
+    version: 2
+    RefIds: []

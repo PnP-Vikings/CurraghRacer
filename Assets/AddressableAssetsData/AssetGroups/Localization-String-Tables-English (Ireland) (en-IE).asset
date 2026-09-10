@@ -39,6 +39,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-en-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3e2f73556441e404e82764432d392b1d
+    m_Address: CalendarEvents_en-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-en-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 425dcf2c1c0c10b4ba1db5e6c2c47c2c
     m_Address: MiniGameManager_en-IE
     m_ReadOnly: 1

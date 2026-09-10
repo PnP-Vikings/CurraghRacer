@@ -13,7 +13,25 @@ MonoBehaviour:
   m_Name: Travel Date Event
   m_EditorClassIdentifier: 
   eventName: Travel Date
+  localizedEventName:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
+    m_TableEntryReference:
+      m_KeyId: 4225883144192
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description: 'I''m leaving on this day no matter what '
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
+    m_TableEntryReference:
+      m_KeyId: 4297622519808
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   color: {r: 0.94509804, g: 0.0754263, b: 0, a: 1}
   textColor: {r: 0, g: 0, b: 0, a: 1}
@@ -31,3 +49,6 @@ MonoBehaviour:
   dayOfWeek: 0
   intervalDays: 1
   playerHasTakenPart: 0
+  references:
+    version: 2
+    RefIds: []

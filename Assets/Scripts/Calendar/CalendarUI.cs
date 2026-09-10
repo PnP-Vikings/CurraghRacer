@@ -50,12 +50,21 @@ namespace Calendar
                 
                 // IMPORTANT: Pass CalendarEvents reference to each cell for tooltip functionality
                 cell.calendarEvents = calendarEvents;
-                var allEvents = calendarEvents.GetEventsOnDate(cellDate);
-                foreach (var eventOccasion in new List<DayEventType>(allEvents))
+                if (calendarEvents != null)
                 {
-                    if(eventOccasion.OccasionType == OccasionType.Race && LeagueController.Instance != null &&  !LeagueController.Instance.hasPlayerJoinedLeague)
+                    var allEvents = calendarEvents.GetEventsOnDate(cellDate);
+                    if (allEvents != null)
                     {
-                        cell.calendarEvents.calendarDayEvents.RemoveAll(e => e.OccasionType == OccasionType.Race);
+                        foreach (var eventOccasion in new List<DayEventType>(allEvents))
+                        {
+                            if(eventOccasion != null && eventOccasion.OccasionType == OccasionType.Race && LeagueController.Instance != null && !LeagueController.Instance.hasPlayerJoinedLeague)
+                            {
+                                if (cell.calendarEvents != null && cell.calendarEvents.calendarDayEvents != null)
+                                {
+                                    cell.calendarEvents.calendarDayEvents.RemoveAll(e => e != null && e.OccasionType == OccasionType.Race);
+                                }
+                            }
+                        }
                     }
                 }
                 
@@ -124,15 +133,18 @@ namespace Calendar
             }
             
             // Check for tournament race events from the enhanced GetEventsOnDate method
-            foreach (var eventType in allEvents)
+            if (allEvents != null)
             {
-                if (LeagueController.Instance != null)
+                foreach (var eventType in allEvents)
                 {
-                    if (eventType.OccasionType == OccasionType.Race && eventType.playerHasTakenPart && LeagueController.Instance.hasPlayerJoinedLeague)
+                    if (eventType != null && LeagueController.Instance != null)
                     {
-                        cell.SetEvent(eventType, currentDate, eventDate);
-                        Debug.Log($"Race event found on {currentDate.ToShortDateString()} for league {LeagueController.Instance.currentLeague.leagueName}");
-                        return; // Race event found and displayed
+                        if (eventType.OccasionType == OccasionType.Race && eventType.playerHasTakenPart && LeagueController.Instance.hasPlayerJoinedLeague)
+                        {
+                            cell.SetEvent(eventType, currentDate, eventDate);
+                            Debug.Log($"Race event found on {currentDate.ToShortDateString()} for league {LeagueController.Instance.currentLeague?.leagueName}");
+                            return; // Race event found and displayed
+                        }
                     }
                 }
             }

@@ -13,7 +13,6 @@ MonoBehaviour:
   m_Name: CalendarEvents
   m_EditorClassIdentifier: 
   calendarDayEvents:
-  - {fileID: 11400000, guid: 11ca6a867295c1743a568bda8d0a7104, type: 2}
   - {fileID: 11400000, guid: c053123ad31d8584cbda84305834d44a, type: 2}
   commonHolidays:
   - {fileID: 11400000, guid: a65839161d2822d47af908c5f0b5deae, type: 2}
@@ -21,3 +20,42 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 504d34ca69c128948943aa76ca8ce2e1, type: 2}
   - {fileID: 11400000, guid: d154d1a084d9bad44a6048ca5f761699, type: 2}
   completedRaces: []
+  localizedRaceCompletedText:
+    m_TableReference:
+      m_TableCollectionName: CalendarEvents
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: CalendarEvents.CompletedRaceText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedRaceNotCompletedText:
+    m_TableReference:
+      m_TableCollectionName: CalendarEvents
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: CalendarEvents.NotCompletedRaceText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedYouHaveParticipatedText:
+    m_TableReference:
+      m_TableCollectionName: CalendarEvents
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: CalendarEvents.YouHaveParticipatedText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedUpcomingRaceText:
+    m_TableReference:
+      m_TableCollectionName: CalendarEvents
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: CalendarEvents.UpcomingRaceText
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []

@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using League;
+using UnityEngine.Localization;
 
 namespace Calendar
 {
@@ -15,6 +16,12 @@ namespace Calendar
         [Header("Completed Races (for tracking)")]
         public List<CompletedRaces> completedRaces = new List<CompletedRaces>();
 
+        [Header("Localization")]
+        public LocalizedString localizedRaceCompletedText = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaceText" };
+        public LocalizedString localizedRaceNotCompletedText = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.NotCompletedRaceText" };
+        public LocalizedString localizedYouHaveParticipatedText = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.YouHaveParticipatedText" };
+        public LocalizedString localizedUpcomingRaceText = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.UpcomingRaceText" };
+        
         /// <summary>
         /// Add a custom event to the calendar
         /// </summary>
@@ -113,9 +120,11 @@ namespace Calendar
                     // Skip generic holidays unless they're player-specific
                     if (evt.playerHasTakenPart || evt.OccasionType == OccasionType.Race)
                     {
-                        tooltip += $"<b>{evt.eventName}</b>\n";
-                        if (!string.IsNullOrEmpty(evt.description))
-                            tooltip += evt.description;
+                        string eventName = evt.localizedEventName != null && !evt.localizedEventName.IsEmpty ? evt.localizedEventName.GetLocalizedString() : evt.eventName;
+                        string eventDescription = evt.localizedDescription != null && !evt.localizedDescription.IsEmpty ? evt.localizedDescription.GetLocalizedString() : evt.description;
+                        tooltip += $"<b>{eventName}</b>\n";
+                        if (!string.IsNullOrEmpty(eventDescription))
+                            tooltip += eventDescription;
                     }
                 }
             }
@@ -181,7 +190,8 @@ namespace Calendar
                         // Only return race event if player is actually participating
                         if (playerParticipating)
                         {
-                            return CreateRaceEvent(currentLeague.leagueName, raceCompleted);
+                            string leagueDisplayName = currentLeague.localizedLeagueName != null && !currentLeague.localizedLeagueName.IsEmpty ? currentLeague.localizedLeagueName.GetLocalizedString() : currentLeague.leagueName;
+                            return CreateRaceEvent(leagueDisplayName, raceCompleted);
                         }
                     }
                 }
@@ -196,8 +206,12 @@ namespace Calendar
         private DayEventType CreateRaceEvent(string leagueName, bool completed)
         {
             var raceEvent = ScriptableObject.CreateInstance<DayEventType>();
-            raceEvent.eventName = completed ? $"{leagueName} Race (Completed)" : $"{leagueName} Race";
-            raceEvent.description = completed ? "You participated in this race" : "Upcoming race day";
+            raceEvent.eventName = completed 
+                ? (localizedRaceCompletedText != null && !localizedRaceCompletedText.IsEmpty ? localizedRaceCompletedText.GetLocalizedString(leagueName) : $"{leagueName} Race (Completed)") 
+                : (localizedRaceNotCompletedText != null && !localizedRaceNotCompletedText.IsEmpty ? localizedRaceNotCompletedText.GetLocalizedString(leagueName) : $"{leagueName} Race");
+            raceEvent.description = completed 
+                ? (localizedYouHaveParticipatedText != null && !localizedYouHaveParticipatedText.IsEmpty ? localizedYouHaveParticipatedText.GetLocalizedString() : "You participated in this race") 
+                : (localizedUpcomingRaceText != null && !localizedUpcomingRaceText.IsEmpty ? localizedUpcomingRaceText.GetLocalizedString() : "Upcoming race day");
             raceEvent.OccasionType = OccasionType.Race;
             raceEvent.eventActive = true;
             raceEvent.playerHasTakenPart = true;

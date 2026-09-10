@@ -35,6 +35,11 @@ MonoBehaviour:
     m_ReadOnly: 1
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 42e76dd0e663ebf4590c9beca8ff6879
+    m_Address: Assets/Localization/CalendarEvents Shared Data.asset
+    m_ReadOnly: 1
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 48b7c9ec7d0faff4089147425c06862d
     m_Address: Assets/Localization/BillsController Shared Data.asset
     m_ReadOnly: 1
