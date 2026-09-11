@@ -133,6 +133,7 @@ namespace Calendar
             return string.IsNullOrEmpty(tooltip) ? null : tooltip;
         }
         
+        
         /// <summary>
         /// Get completed race data for a specific date (for UI purposes)
         /// </summary>
@@ -217,6 +218,8 @@ namespace Calendar
             raceEvent.playerHasTakenPart = true;
             raceEvent.haspassed = completed;
             
+            
+            Debug.Log($"Created race event: {raceEvent.eventName} | Completed: {completed}  | Description: {raceEvent.description}");
             // Set colors based on completion status
             if (completed)
             {

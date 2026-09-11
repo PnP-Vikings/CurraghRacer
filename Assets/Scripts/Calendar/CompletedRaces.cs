@@ -1,6 +1,7 @@
 using Calendar;
 using UnityEngine;
 using System;
+using League;
 using UnityEngine.Localization;
 
 namespace Calendar
@@ -20,6 +21,7 @@ namespace Calendar
         public int pointsEarned;
         public string[] participantNames;
         public bool playerWon;
+
         
         
         public CompletedRaceData(string leagueName, string raceName, DateTime raceDate, 
@@ -75,6 +77,18 @@ namespace Calendar
         public Color podiumColor = new Color(0.75f, 0.75f, 0.75f); // Silver
         public Color participatedColor = new Color(0.68f, 0.85f, 0.9f); // Light blue
         
+        [Header("Localization")]
+        LocalizedString localizedRaceDescription = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.RaceDescription" };
+        LocalizedString localizedDetailedRaceResult = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.GetDetailedTooltip.Result" };
+        LocalizedString localizedDetailedRaceTime = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.GetDetailedTooltip.Time" };
+        LocalizedString localizedDetailedRaceTrack = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.GetDetailedTooltip.Track" };
+        LocalizedString localizedDetailedRacePoints = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.GetDetailedTooltip.Points" };
+        LocalizedString localizedDetailedRaceDate = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.GetDetailedTooltip.Date" };
+        LocalizedString localizedDetailedRaceParticipants = new LocalizedString { TableReference = "CalendarEvents", TableEntryReference = "CalendarEvents.CompletedRaces.GetDetailedTooltip.Participants" };
+
+        
+        
+        
         public void Initialize(CompletedRaceData data)
         {
             raceData = data;
@@ -93,7 +107,7 @@ namespace Calendar
             if (dayEventType == null || raceData == null) return;
             
             string leagueDisplayName = raceData.localizedLeagueName != null && !raceData.localizedLeagueName.IsEmpty ? raceData.localizedLeagueName.GetLocalizedString() : raceData.leagueName;
-            string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString() : raceData.raceName;
+            string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString(LeagueController.Instance.currentLeague.currentRace) : raceData.raceName;
             
             dayEventType.eventName = $"{leagueDisplayName} - {raceDisplayName}";
             dayEventType.description = GetRaceDescription();
@@ -136,29 +150,32 @@ namespace Calendar
         
         private string GetRaceDescription()
         {
-            return $"Finished {raceData.GetPositionText()} out of {raceData.totalParticipants} participants\n" +
-                   $"Time: {raceData.GetFormattedTime()}\n" +
-                   $"Points Earned: {raceData.pointsEarned}\n" +
-                   $"Track: {raceData.trackName}";
+            string raceDescription =  localizedRaceDescription != null && !localizedRaceDescription.IsEmpty ?  localizedRaceDescription.GetLocalizedString(raceData.GetPositionText(),raceData.totalParticipants,raceData.GetFormattedTime(),raceData.pointsEarned,raceData.trackName) :
+                $"Finished {raceData.GetPositionText()} out of {raceData.totalParticipants} participants\n" +
+                $"Time: {raceData.GetFormattedTime()}\n" +
+                $"Points Earned: {raceData.pointsEarned}\n" +
+                $"Track: {raceData.trackName}";
+            
+            return raceDescription;
         }
         
         public string GetDetailedTooltip()
         {
             string leagueDisplayName = raceData.localizedLeagueName != null && !raceData.localizedLeagueName.IsEmpty ? raceData.localizedLeagueName.GetLocalizedString() : raceData.leagueName;
-            string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString() : raceData.raceName;
+            string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString(LeagueController.Instance.currentLeague.currentRace) : raceData.raceName;
             
             string tooltip = $"<b>{leagueDisplayName}</b>\n";
              
             tooltip += $"<i>{raceDisplayName}</i>\n\n";
-            tooltip += $"<b>Result:</b> {raceData.GetPositionText()} / {raceData.totalParticipants}\n";
-            tooltip += $"<b>Time:</b> {raceData.GetFormattedTime()}\n";
-            tooltip += $"<b>Track:</b> {raceData.trackName}\n";
-            tooltip += $"<b>Points:</b> {raceData.pointsEarned}\n";
-            tooltip += $"<b>Date:</b> {raceData.raceDate.ToString("MMM dd, yyyy")}\n\n";
+            tooltip += localizedDetailedRaceResult != null && !localizedDetailedRaceResult.IsEmpty ?  localizedDetailedRaceResult.GetLocalizedString(raceData.GetPositionText(),raceData.totalParticipants) : $"<b>Result:</b> {raceData.GetPositionText()} / {raceData.totalParticipants}\n";
+            tooltip += localizedDetailedRaceTime != null && !localizedDetailedRaceTime.IsEmpty ? localizedDetailedRaceTime.GetLocalizedString(raceData.GetFormattedTime()) : $"<b>Time:</b> {raceData.GetFormattedTime()}\n";
+            tooltip += localizedDetailedRaceTrack != null && !localizedDetailedRaceTrack.IsEmpty ? localizedDetailedRaceTrack.GetLocalizedString(raceData.trackName) : $"<b>Track:</b> {raceData.trackName}\n";
+            tooltip += localizedDetailedRacePoints != null && !localizedDetailedRacePoints.IsEmpty ? localizedDetailedRacePoints.GetLocalizedString(raceData.pointsEarned) : $"<b>Points:</b> {raceData.pointsEarned}\n";
+            tooltip += localizedDetailedRaceDate != null && !localizedDetailedRaceDate.IsEmpty ? localizedDetailedRaceDate.GetLocalizedString(raceData.raceDate.ToString("MMM dd, yyyy")) : $"<b>Date:</b> {raceData.raceDate.ToString("MMM dd, yyyy")}\n\n";
             
             if (raceData.participantNames != null && raceData.participantNames.Length > 0)
             {
-                tooltip += "<b>Participants:</b>\n";
+                tooltip += localizedDetailedRaceParticipants != null && !localizedDetailedRaceParticipants.IsEmpty ?  localizedDetailedRaceParticipants.GetLocalizedString() :"<b>Participants:</b>\n";
                 for (int i = 0; i < raceData.participantNames.Length; i++)
                 {
                     tooltip += $"{i + 1}. {raceData.participantNames[i]}\n";

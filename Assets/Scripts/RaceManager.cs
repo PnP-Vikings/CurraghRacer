@@ -61,6 +61,12 @@ public class RaceManager : MonoBehaviour
     LocalizedString wonTheRaceText = new LocalizedString("RaceScene", "RaceMessage.WonTheRaceTxt");
 
     LocalizedString betterLuckNextTimeText = new LocalizedString("RaceScene", "RaceMessage.BetterLuckNextTimeTxt");
+    
+    
+    LocalizedString localizedRaceDayText = new LocalizedString("RaceScene", "LocalizedRaceDay");
+    
+    
+    
 
     
     private void Awake()
@@ -1005,13 +1011,27 @@ public class RaceManager : MonoBehaviour
         if (Calendar.CompletedRacesManager.Instance != null)
         {
             string leagueName = LeagueController.Instance.currentLeague.leagueName;
+            LocalizedString localizedLeagueName = null;
             string raceName = $"Race Day {(TimeManager.Instance?.GetCurrentDate().DayOfYear ?? System.DateTime.Now.DayOfYear)}";
+            LocalizedString localizedRaceDay = null;
+            if(LeagueController.Instance.currentLeague)
+            {
+                raceName = $"Race Day {LeagueController.Instance.currentLeague.currentRace}";
+                localizedRaceDay = localizedRaceDayText;
+            }
+            
+            if(LeagueController.Instance.currentLeague.localizedLeagueName != null)
+            {
+                localizedLeagueName = LeagueController.Instance.currentLeague.localizedLeagueName;
+            }
+            
             DateTime raceDate = TimeManager.Instance?.GetCurrentDate() ?? DateTime.Now;
             string trackName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             int totalParticipants = raceTeams.Length;
             float playerRaceTime = Time.time; // Simple fallback - can be enhanced later
             string[] participantNames = new string[RaceMovementPositions.Count];
-            
+           
+          
             // Get participant names in finishing order
             for (int i = 0; i < RaceMovementPositions.Count; i++)
             {
@@ -1044,7 +1064,7 @@ public class RaceManager : MonoBehaviour
                 trackName,
                 playerRaceTime,
                 pointsEarned,
-                participantNames
+                participantNames,localizedLeagueName,localizedRaceDay
             );
 
             Debug.Log($"Completed race tracked: {leagueName} - {raceName} (Position: {playerPosition})");
