@@ -54,6 +54,10 @@ MonoBehaviour:
     m_Localized: "\xC1dh m\xF3r an ch\xE9ad uair eile!"
     m_Metadata:
       m_Items: []
+  - m_Id: 12269388316008448
+    m_Localized: "L\xE1 na R\xE1ise {0}"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

@@ -82,6 +82,35 @@ MonoBehaviour:
     m_Localized: Big Sunday Races
     m_Metadata:
       m_Items: []
+  - m_Id: 295831679787008
+    m_Localized: 'Finished {0} out of {1} participants\nTime: {2}\nPoints Earned:
+      {3}\nTrack: {4}'
+    m_Metadata:
+      m_Items: []
+  - m_Id: 300670258241536
+    m_Localized: <b>Result:</b> {0} / {1}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301498641670144
+    m_Localized: <b>Time:</b> {0}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301523702636544
+    m_Localized: <b>Track:</b> {0}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301567474393088
+    m_Localized: <b>Points:</b> {0}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301576613781504
+    m_Localized: <b>Date:</b> {0}\n\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301648730644480
+    m_Localized: <b>Participants:</b>\n
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

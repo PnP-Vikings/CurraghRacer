@@ -79,6 +79,34 @@ MonoBehaviour:
     m_Key: CalendarEvents.EventDescription.Valentines
     m_Metadata:
       m_Items: []
+  - m_Id: 295831679787008
+    m_Key: CalendarEvents.CompletedRaces.RaceDescription
+    m_Metadata:
+      m_Items: []
+  - m_Id: 300670258241536
+    m_Key: CalendarEvents.CompletedRaces.GetDetailedTooltip.Result
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301498641670144
+    m_Key: CalendarEvents.CompletedRaces.GetDetailedTooltip.Time
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301523702636544
+    m_Key: CalendarEvents.CompletedRaces.GetDetailedTooltip.Track
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301567474393088
+    m_Key: CalendarEvents.CompletedRaces.GetDetailedTooltip.Points
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301576613781504
+    m_Key: CalendarEvents.CompletedRaces.GetDetailedTooltip.Date
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301648730644480
+    m_Key: CalendarEvents.CompletedRaces.GetDetailedTooltip.Participants
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

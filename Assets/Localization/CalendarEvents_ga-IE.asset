@@ -82,6 +82,35 @@ MonoBehaviour:
     m_Localized: "L\xE1 an Ghr\xE1"
     m_Metadata:
       m_Items: []
+  - m_Id: 295831679787008
+    m_Localized: "Cr\xEDochnaithe {0} as {1} rannph\xE1irt\xED\\nAm: {2}\\nPoint\xED
+      Gn\xF3thaithe: {3}\\nRian: {4}"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 300670258241536
+    m_Localized: <b>Toradh:</b> {0} / {1}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301498641670144
+    m_Localized: <b>Am:</b> {0}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301523702636544
+    m_Localized: <b>Rian:</b> {0}\n
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301567474393088
+    m_Localized: "<b>Point\xED:</b> {0}\\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301576613781504
+    m_Localized: "<b>D\xE1ta:</b> {0}\\n\\n"
+    m_Metadata:
+      m_Items: []
+  - m_Id: 301648730644480
+    m_Localized: "<b>Rannph\xE1irtithe:</b>\\n"
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

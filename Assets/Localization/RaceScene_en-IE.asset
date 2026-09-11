@@ -54,6 +54,10 @@ MonoBehaviour:
     m_Localized: Better luck next time!
     m_Metadata:
       m_Items: []
+  - m_Id: 12269388316008448
+    m_Localized: Race Day {0}
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

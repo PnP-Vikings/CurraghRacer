@@ -51,6 +51,10 @@ MonoBehaviour:
     m_Key: RaceMessage.BetterLuckNextTimeTxt
     m_Metadata:
       m_Items: []
+  - m_Id: 12269388316008448
+    m_Key: LocalizedRaceDay
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:
