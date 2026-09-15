@@ -33,7 +33,8 @@ namespace Calendar
         Work,
         SpecialEvent
         ,Race,
-        Custom
+        Custom,
+        TravelDate,
     }
 
     [CreateAssetMenu(fileName = "DayEventType", menuName = "Scriptable Objects/DayEventType")]

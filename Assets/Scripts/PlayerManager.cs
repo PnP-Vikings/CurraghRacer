@@ -254,6 +254,11 @@ public class PlayerManager : MonoBehaviour
         }
     }
     
+    public float GetMaxDebtLimit()
+    {
+        return maxAmountOfDebt;
+    }
+    
     
 }
 

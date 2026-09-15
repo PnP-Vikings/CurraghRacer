@@ -24,7 +24,7 @@
                                 "For now just add place holder text or image"
                             ],
                             "checklistStates": [
-                                false,
+                                true,
                                 false,
                                 false
                             ],

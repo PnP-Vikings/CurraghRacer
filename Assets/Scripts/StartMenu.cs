@@ -83,7 +83,8 @@ public class StartMenu : MonoBehaviour
     {
         CanRace,
         NotInLeague,
-        NotRaceDay
+        NotRaceDay,
+        NoRaceAvailable
     }
 
     public void TryGetLocalizedStrings()
@@ -143,7 +144,20 @@ public class StartMenu : MonoBehaviour
                 }
                 _startRaceButton.SetEnabled(false);
                 break;
-
+            case RaceDayStatus.NoRaceAvailable:
+                if (startRaceButtonGarage == null || _startRaceButtonText == null)
+                    return;
+                startRaceButtonGarage.interactable = false;
+                if(_localizedNoRaceAvailableText != null && !_localizedNoRaceAvailableText.IsEmpty)
+                {
+                    _startRaceButtonText.text = _localizedNoRaceAvailableText.GetLocalizedString();
+                }
+                else
+                {
+                    _startRaceButtonText.text = "No Race Available";
+                }
+                _startRaceButton.SetEnabled(false);
+                break;
             case RaceDayStatus.NotRaceDay:
             default:
                 if (startRaceButtonGarage != null && _startRaceButtonText != null)
@@ -164,6 +178,10 @@ public class StartMenu : MonoBehaviour
         if (LeagueController.Instance.currentLeague != null && (RaceManager.Instance.isRaceDay && !RaceManager.Instance.hasPlayerCompletedRace))
         {
             return LeagueController.Instance.currentLeague.playerHasJoined ? RaceDayStatus.CanRace : RaceDayStatus.NotInLeague;
+        }
+        else if (LeagueController.Instance.currentLeague != null  && (RaceManager.Instance.isRaceDay && RaceManager.Instance.hasPlayerCompletedRace) )
+        {
+            return RaceDayStatus.NoRaceAvailable;
         }
         else
         {

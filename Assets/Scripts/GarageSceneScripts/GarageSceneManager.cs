@@ -119,7 +119,12 @@ public class GarageSceneManager : MonoBehaviour
                 if(!localizedDebtWarningDescriptionText.IsEmpty)
                 {
                     localizedDebtWarningDescriptionText.RefreshString();
-                    debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString();
+                    debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString("400");
+                    
+                    if(PlayerManager.Instance != null)
+                    {
+                        debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString(PlayerManager.Instance.GetMaxDebtLimit());
+                    }
                 }
             }
             
