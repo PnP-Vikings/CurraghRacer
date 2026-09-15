@@ -55,6 +55,10 @@ MonoBehaviour:
     m_Key: LocalizedRaceDay
     m_Metadata:
       m_Items: []
+  - m_Id: 13843332198293504
+    m_Key: RaceMessage.Go
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

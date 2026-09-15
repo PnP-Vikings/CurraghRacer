@@ -58,6 +58,10 @@ MonoBehaviour:
     m_Localized: "L\xE1 na R\xE1ise {0}"
     m_Metadata:
       m_Items: []
+  - m_Id: 13843332198293504
+    m_Localized: Ar aghaidh leat!
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds: []

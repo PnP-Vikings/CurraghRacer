@@ -34,8 +34,8 @@ MonoBehaviour:
     m_LocalVariables: []
   icon: {fileID: 0}
   color: {r: 0.94509804, g: 0.0754263, b: 0, a: 1}
-  textColor: {r: 0, g: 0, b: 0, a: 1}
-  OccasionType: 3
+  textColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
+  OccasionType: 6
   recurrenceType: 0
   dayOfMonth: 30
   month: 3

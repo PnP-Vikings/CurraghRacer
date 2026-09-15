@@ -157,7 +157,7 @@ namespace League
 
         public void ShowLeagueInvite()
         {
-            if (currentLeague != null && TimeManager.Instance != null)
+            if (currentLeague != null && TimeManager.Instance != null && !currentLeague.playerHasJoined && !GameManager.Instance.playerIsBusy)
             {
                 
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)
