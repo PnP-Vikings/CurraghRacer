@@ -6077,6 +6077,7 @@ GameObject:
   - component: {fileID: 256566672}
   - component: {fileID: 256566671}
   - component: {fileID: 256566673}
+  - component: {fileID: 256566674}
   m_Layer: 0
   m_Name: Main Menu Ambience
   m_TagString: Untagged
@@ -6150,6 +6151,37 @@ MonoBehaviour:
       Data3: -1703459455
       Data4: -1873149110
     Path: event:/Main Menu/Water
+  Event: 
+  EventPlayTrigger: 1
+  EventStopTrigger: 2
+  AllowFadeout: 1
+  TriggerOnce: 0
+  Preload: 0
+  NonRigidbodyVelocity: 0
+  Params: []
+  OverrideAttenuation: 0
+  OverrideMinDistance: 1
+  OverrideMaxDistance: 20
+--- !u!114 &256566674
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 256566670}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9a6610d2e704f1648819acc8d7460285, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioEventEmitter
+  CollisionTag: 
+  EventReference:
+    Guid:
+      Data1: 305518577
+      Data2: 1240142618
+      Data3: -1717963380
+      Data4: -1361220576
+    Path: event:/Soundtrack/Main Theme
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
