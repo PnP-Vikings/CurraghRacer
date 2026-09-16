@@ -1813,9 +1813,9 @@ public class SaveSystem : MonoBehaviour
         if (TimeManager.Instance != null)
         {
             // Set to a default starting date - you may want to adjust this
-            
             TimeManager.Instance.SetCurrentDate(TimeManager.Instance.StartDate);
             Debug.Log($"New game starting date: {TimeManager.Instance.StartDate}");
+            TimeManager.Instance.ResetTimeForNewDay();
         }
         
         // Reset League data to initial state
@@ -1987,6 +1987,9 @@ public class SaveSystem : MonoBehaviour
         if (TimeManager.Instance != null)
         {
             saveData.calendarData.currentDate = TimeManager.Instance.StartDate.ToString("yyyy-MM-dd");
+            TimeManager.Instance.ResetTimeForNewDay();
+            saveData.timeData.timeOfDay = TimeManager.Instance.GetTimeOfDay();
+        
         }
         else
         {

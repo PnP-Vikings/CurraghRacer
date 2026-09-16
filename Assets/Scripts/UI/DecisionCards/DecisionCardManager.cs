@@ -91,12 +91,24 @@ public class DecisionCardManager : MonoBehaviour
     /// </summary>
     private void OnNewDay()
     {
+        if (GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive())
+        {
+            Debug.Log("Game is over - skipping decision card generation");
+            return;
+        }
+        
         Debug.Log("New day started - generating decision cards");
         cardsPresentedToUi = false;
         
         if(GameManager.Instance != null && GameManager.Instance.IsGameOver())
         {
             Debug.Log("Game is over - skipping decision card generation");
+            return;
+        }
+        
+        if(TimeManager.Instance != null && TimeManager.Instance.GetCurrentDay() <= 8)
+        {
+            Debug.Log("Current day is 0 or less - skipping decision card generation");
             return;
         }
         

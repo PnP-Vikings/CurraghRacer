@@ -642,6 +642,11 @@ public class TimeManager : MonoBehaviour
         isTimePaused = paused;
     }
     
+    public void ResetTimeForNewDay()
+    {
+        SetTimeOfDay(6f); // Reset to 6 AM
+    }
+    
     public bool GetIsTimePaused()
     {
         return isTimePaused;

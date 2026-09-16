@@ -9,41 +9,6 @@
                     "title": "📋 To Do",
                     "cards": [
                         {
-                            "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
-                            "title": "Add 90 day idea ",
-                            "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-06-03 22:56",
-                            "dueDate": "2026-09-24",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add Calendar event",
-                                "Add Processing final day of player money",
-                                "For now just add place holder text or image"
-                            ],
-                            "checklistStates": [
-                                true,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [
-                                "8910e6f1-befc-4526-8924-25f6df0bd590"
-                            ]
-                        },
-                        {
                             "id": "dd77139c-c06b-4042-97e8-20b28c995737",
                             "title": "Add More Bouys to race scene",
                             "description": "Place a boy ever 100 meters ",
@@ -69,7 +34,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
                         },
@@ -105,7 +70,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
                         },
@@ -181,6 +146,27 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
+                        },
+                        {
+                            "id": "0202d3eb-d573-44f0-8d6c-dfc0cb6e389c",
+                            "title": "May be an issue loading older saves check this ",
+                            "description": "I have saves from a week ago that won't load ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-16 15:21",
+                            "dueDate": "2026-09-23",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "checklistLinkedCardIds": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         }
                     ]
                 },
@@ -189,23 +175,23 @@
                     "title": "🔨 In Progress",
                     "cards": [
                         {
-                            "id": "72262f05-438b-46d9-b0a0-6395ce6a9be1",
-                            "title": "Localize Calendar event ",
-                            "description": "",
+                            "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
+                            "title": "Add 90 day idea ",
+                            "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
                             "category": "Gameplay",
                             "colorLabel": 1,
                             "priority": 0,
-                            "createdDate": "2026-09-09 22:33",
-                            "dueDate": "",
+                            "createdDate": "2026-06-03 22:56",
+                            "dueDate": "2026-09-24",
                             "archived": false,
                             "checklistItems": [
-                                "Add localization for name",
-                                "Add localization for description",
-                                "Localize all the text at the bottom of the completedRaces class"
+                                "Add Calendar event",
+                                "Add Processing final day of player money",
+                                "For now just add place holder text or image"
                             ],
                             "checklistStates": [
                                 true,
-                                true,
+                                false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
@@ -219,7 +205,9 @@
                             "imagePath": "",
                             "showChecklist": true,
                             "completed": false,
-                            "assigneeIds": []
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ]
                         }
                     ]
                 },
@@ -253,7 +241,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -362,7 +350,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
@@ -456,7 +444,7 @@
                                 }
                             ],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260428_215615_20260428_221916.png",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
@@ -488,7 +476,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -509,7 +497,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-06-03 003259.png",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -536,7 +524,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
@@ -577,7 +565,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -643,7 +631,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -673,7 +661,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -703,7 +691,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -773,7 +761,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -806,7 +794,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -908,7 +896,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -938,7 +926,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -1202,7 +1190,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -1262,7 +1250,40 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "72262f05-438b-46d9-b0a0-6395ce6a9be1",
+                            "title": "Localize Calendar event ",
+                            "description": "",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-09 22:33",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add localization for name",
+                                "Add localization for description",
+                                "Localize all the text at the bottom of the completedRaces class"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         }
@@ -1289,7 +1310,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": false,
                             "assigneeIds": []
                         }
