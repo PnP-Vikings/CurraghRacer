@@ -160,10 +160,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>4500</value>
+			<value>5950</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>7000</value>
+			<value>7500</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -279,7 +279,7 @@
 	</object>
 	<object class="GainEffect" id="{a1896a67-4f1f-407a-b4a7-25c748b191a7}">
 		<property name="gain">
-			<value>-2</value>
+			<value>-3</value>
 		</property>
 	</object>
 	<object class="MultibandEqEffect" id="{29a61a77-7830-49ef-9b75-66e0700133d0}">
@@ -317,11 +317,23 @@
 		<property name="filterTypeC">
 			<value>9</value>
 		</property>
+		<property name="filterTypeD">
+			<value>8</value>
+		</property>
+		<property name="filterTypeE">
+			<value>8</value>
+		</property>
 		<property name="frequencyA">
 			<value>20</value>
 		</property>
 		<property name="frequencyC">
 			<value>284</value>
+		</property>
+		<property name="frequencyD">
+			<value>1000</value>
+		</property>
+		<property name="frequencyE">
+			<value>2000</value>
 		</property>
 		<property name="qualityA">
 			<value>0.280000001</value>
@@ -331,6 +343,12 @@
 		</property>
 		<property name="gainC">
 			<value>-3.4000001</value>
+		</property>
+		<property name="gainD">
+			<value>-1</value>
+		</property>
+		<property name="gainE">
+			<value>-2</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{c94ee9b8-7031-430c-a7cc-c239bd8d8b84}" />
