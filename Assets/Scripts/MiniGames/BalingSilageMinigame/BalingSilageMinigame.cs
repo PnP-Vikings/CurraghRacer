@@ -18,6 +18,7 @@ namespace MiniGames.BalingSilageMinigame
         public TextMeshProUGUI grassText;
         public bool cutting;
         public bool collecting;
+        [SerializeField] BailingSilageAudio bailingSilageAudio;
 
         public void Initialize(MiniGameManager manager, MiniGameData data)
         {
@@ -69,6 +70,12 @@ namespace MiniGames.BalingSilageMinigame
             {
                 gameTimer = 0;
                 grassText.text = "Tractor crashed into fence. Game Over";
+
+                if (bailingSilageAudio != null)
+                {
+                    bailingSilageAudio.PlayTractorCrashAudio();
+                }
+
                 EndGame();
             }
 
