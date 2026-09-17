@@ -2330,7 +2330,7 @@ MonoBehaviour:
       Data2: 1114385868
       Data3: -852164987
       Data4: -1128160590
-    Path: event:/Main Menu/Main Menu
+    Path: event:/Ambiences/Countryside
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
@@ -2340,7 +2340,7 @@ MonoBehaviour:
   NonRigidbodyVelocity: 0
   Params:
   - Name: Countryside Volume
-    Value: 0.897
+    Value: 1
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
@@ -7600,7 +7600,6 @@ SceneRoots:
   - {fileID: 1384253467}
   - {fileID: 2059391189}
   - {fileID: 1697457371}
-  - {fileID: 746810453}
   - {fileID: 673240818}
   - {fileID: 452910172}
   - {fileID: 1894607631}
@@ -7613,3 +7612,4 @@ SceneRoots:
   - {fileID: 1214076386}
   - {fileID: 2015498638}
   - {fileID: 83304057}
+  - {fileID: 746810453}

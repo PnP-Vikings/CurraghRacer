@@ -144,6 +144,7 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{d335cbbb-b867-4fa6-9e8b-fee47a98054e}">
 		<relationship name="effects">
+			<destination>{3b6bb620-4d7b-4487-a076-aaddb35ab0f6}</destination>
 			<destination>{8cceea09-aaaf-4bcd-ad2e-3663128adffa}</destination>
 			<destination>{955951d4-9283-41df-b5f2-4c6968833a87}</destination>
 			<destination>{c523f731-e832-41da-825c-0ba81879fa5e}</destination>
@@ -186,6 +187,11 @@
 		</relationship>
 	</object>
 	<object class="MixerBusPanner" id="{b71f3c38-7109-4af7-b3c8-62fd125e5126}" />
+	<object class="GainEffect" id="{3b6bb620-4d7b-4487-a076-aaddb35ab0f6}">
+		<property name="gain">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MultibandEqEffect" id="{8cceea09-aaaf-4bcd-ad2e-3663128adffa}">
 		<property name="filterTypeA">
 			<value>4</value>
@@ -249,7 +255,7 @@
 			<value>-0.587577224</value>
 		</property>
 		<property name="releaseTime">
-			<value>3400</value>
+			<value>4000</value>
 		</property>
 		<property name="releaseShape">
 			<value>-0.271852672</value>

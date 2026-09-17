@@ -2,13 +2,13 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="Event" id="{b7ef68f7-2dcc-426c-85fe-34cdb2a2c1bc}">
 		<property name="name">
-			<value>Main Menu</value>
+			<value>Countryside</value>
 		</property>
 		<property name="outputFormat">
 			<value>1</value>
 		</property>
 		<relationship name="folder">
-			<destination>{bacd4279-8b59-4440-b93d-a1a95d3fdbf8}</destination>
+			<destination>{468b599b-6270-4d8f-9b02-45a9fc29dfea}</destination>
 		</relationship>
 		<relationship name="mixer">
 			<destination>{5068dad3-0ec9-4baa-a2ca-779c4687d692}</destination>
@@ -160,10 +160,10 @@
 			<value>1</value>
 		</property>
 		<property name="minimumTimeBetweenSounds">
-			<value>4500</value>
+			<value>5950</value>
 		</property>
 		<property name="maximumTimeBetweenSounds">
-			<value>7000</value>
+			<value>7500</value>
 		</property>
 		<property name="minimumScatterDistance">
 			<value>0</value>
@@ -222,6 +222,8 @@
 	</object>
 	<object class="MixerBusEffectChain" id="{254dd652-184b-4650-b5bc-1fd7b12a1495}">
 		<relationship name="effects">
+			<destination>{a1896a67-4f1f-407a-b4a7-25c748b191a7}</destination>
+			<destination>{29a61a77-7830-49ef-9b75-66e0700133d0}</destination>
 			<destination>{ca2ba516-ba8e-479a-b9c3-66591a02810e}</destination>
 			<destination>{898f8da8-71eb-4c08-adbf-d862dd9d59a4}</destination>
 			<destination>{14bfdd6f-ceb4-45d7-a389-fca24db29e44}</destination>
@@ -275,9 +277,28 @@
 			<destination>{b6e156cf-d154-4592-9822-0d5ded740deb}</destination>
 		</relationship>
 	</object>
+	<object class="GainEffect" id="{a1896a67-4f1f-407a-b4a7-25c748b191a7}">
+		<property name="gain">
+			<value>-1</value>
+		</property>
+	</object>
+	<object class="MultibandEqEffect" id="{29a61a77-7830-49ef-9b75-66e0700133d0}">
+		<property name="filterTypeA">
+			<value>8</value>
+		</property>
+		<property name="frequencyA">
+			<value>900</value>
+		</property>
+		<property name="frequencyB">
+			<value>20</value>
+		</property>
+		<property name="gainA">
+			<value>-3</value>
+		</property>
+	</object>
 	<object class="GainEffect" id="{ca2ba516-ba8e-479a-b9c3-66591a02810e}">
 		<property name="gain">
-			<value>-6</value>
+			<value>-11</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{14c19a81-30e2-48cf-86ef-e74fa94866a2}</destination>
@@ -296,11 +317,23 @@
 		<property name="filterTypeC">
 			<value>9</value>
 		</property>
+		<property name="filterTypeD">
+			<value>8</value>
+		</property>
+		<property name="filterTypeE">
+			<value>8</value>
+		</property>
 		<property name="frequencyA">
 			<value>20</value>
 		</property>
 		<property name="frequencyC">
 			<value>284</value>
+		</property>
+		<property name="frequencyD">
+			<value>1000</value>
+		</property>
+		<property name="frequencyE">
+			<value>2000</value>
 		</property>
 		<property name="qualityA">
 			<value>0.280000001</value>
@@ -310,6 +343,12 @@
 		</property>
 		<property name="gainC">
 			<value>-3.4000001</value>
+		</property>
+		<property name="gainD">
+			<value>-1</value>
+		</property>
+		<property name="gainE">
+			<value>-2</value>
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{c94ee9b8-7031-430c-a7cc-c239bd8d8b84}" />
@@ -351,7 +390,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-80</value>
+			<value>-2</value>
 		</property>
 	</object>
 	<object class="ADSRModulator" id="{14c19a81-30e2-48cf-86ef-e74fa94866a2}">
