@@ -23,7 +23,8 @@ MonoBehaviour:
     m_Localized: "N\xEDor oibrigh t\xFA go crua go leor\\nT\xE1 an boss ar buile\\nN\xED
       bhfuair t\xFA \xEDoca\xEDocht"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809144
   - m_Id: 158593966080
     m_Localized: "N\xEDl aon staitistic\xED athraithe."
     m_Metadata:
@@ -42,3 +43,4 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 114876735488
+        - id: 4826587136

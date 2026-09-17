@@ -23,7 +23,8 @@ MonoBehaviour:
     m_Localized: You Didn't work Hard Enough\nThe Boss is pissed\nYou have not gotten
       paid
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809143
   - m_Id: 114876735488
     m_Localized: You Failed\n{0} has not improved at {1}
     m_Metadata:
@@ -42,3 +43,4 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 114876735488
+        - id: 4826587136
