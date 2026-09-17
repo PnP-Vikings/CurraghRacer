@@ -59,14 +59,18 @@
 			<destination>{0f71a8c1-d689-4d9e-be4f-1784464d4a22}</destination>
 		</relationship>
 	</object>
-	<object class="EventAutomatableProperties" id="{c367b5c2-d12a-49b2-a1a1-b644f5f4b60f}" />
+	<object class="EventAutomatableProperties" id="{c367b5c2-d12a-49b2-a1a1-b644f5f4b60f}">
+		<property name="maxVoices">
+			<value>1</value>
+		</property>
+	</object>
 	<object class="MarkerTrack" id="{20172719-541f-4226-9c0d-9b1e250679e7}" />
 	<object class="GroupTrack" id="{4b060080-36be-4f90-9b4c-e0c41b94a3e8}">
 		<relationship name="automationTracks">
 			<destination>{1feef46a-ffc2-4819-8a50-f293abe1f7f4}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{04f27b58-a408-468c-97b6-1384832b07b1}</destination>
+			<destination>{ae5a41dd-b7f4-46d9-b6a0-7da9cb14d3e6}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{b27897c3-90ab-4327-addb-6a5d6ba83ad2}</destination>
@@ -79,7 +83,7 @@
 	</object>
 	<object class="Timeline" id="{de1a9c66-c1e4-4a0d-aed1-ee020c311212}">
 		<relationship name="modules">
-			<destination>{04f27b58-a408-468c-97b6-1384832b07b1}</destination>
+			<destination>{ae5a41dd-b7f4-46d9-b6a0-7da9cb14d3e6}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{bebc8143-5bd3-464c-a49b-51b92ba788c2}</destination>
@@ -107,15 +111,12 @@
 			<destination>{c52eeab2-b0b4-4760-b47f-f4d0febfb420}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{04f27b58-a408-468c-97b6-1384832b07b1}">
+	<object class="SingleSound" id="{ae5a41dd-b7f4-46d9-b6a0-7da9cb14d3e6}">
 		<property name="length">
 			<value>70.786530612244903</value>
 		</property>
-		<property name="volume">
-			<value>-2</value>
-		</property>
 		<relationship name="audioFile">
-			<destination>{97bdc034-e0cf-4448-b910-2f791a276c23}</destination>
+			<destination>{e3a18291-575f-4137-b9ba-f94260f845c4}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{b27897c3-90ab-4327-addb-6a5d6ba83ad2}">
@@ -259,10 +260,10 @@
 			<value>-80</value>
 		</property>
 		<property name="attackTime">
-			<value>3019.23145</value>
+			<value>2800</value>
 		</property>
 		<property name="attackShape">
-			<value>-0.095856823</value>
+			<value>-0.0635773167</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>

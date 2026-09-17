@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{5f1a7158-aa90-44b2-900a-b04847cad78c}">
+		<property name="name">
+			<value>Increase Water Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{c49f2755-e03e-4bf2-9321-6720ba0e1de4}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{c49f2755-e03e-4bf2-9321-6720ba0e1de4}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>
