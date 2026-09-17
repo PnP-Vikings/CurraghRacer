@@ -390,7 +390,7 @@
 			<value>0</value>
 		</property>
 		<property name="value">
-			<value>-80</value>
+			<value>-2</value>
 		</property>
 	</object>
 	<object class="ADSRModulator" id="{14c19a81-30e2-48cf-86ef-e74fa94866a2}">

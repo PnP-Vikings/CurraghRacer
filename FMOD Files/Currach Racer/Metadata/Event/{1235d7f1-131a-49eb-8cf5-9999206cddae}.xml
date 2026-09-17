@@ -70,7 +70,7 @@
 			<destination>{1feef46a-ffc2-4819-8a50-f293abe1f7f4}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{ae5a41dd-b7f4-46d9-b6a0-7da9cb14d3e6}</destination>
+			<destination>{1a01b792-4242-4e86-ae11-d62bb71574b1}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{b27897c3-90ab-4327-addb-6a5d6ba83ad2}</destination>
@@ -83,7 +83,7 @@
 	</object>
 	<object class="Timeline" id="{de1a9c66-c1e4-4a0d-aed1-ee020c311212}">
 		<relationship name="modules">
-			<destination>{ae5a41dd-b7f4-46d9-b6a0-7da9cb14d3e6}</destination>
+			<destination>{1a01b792-4242-4e86-ae11-d62bb71574b1}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{bebc8143-5bd3-464c-a49b-51b92ba788c2}</destination>
@@ -111,12 +111,15 @@
 			<destination>{c52eeab2-b0b4-4760-b47f-f4d0febfb420}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{ae5a41dd-b7f4-46d9-b6a0-7da9cb14d3e6}">
+	<object class="SingleSound" id="{1a01b792-4242-4e86-ae11-d62bb71574b1}">
 		<property name="length">
 			<value>70.786530612244903</value>
 		</property>
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="audioFile">
-			<destination>{e3a18291-575f-4137-b9ba-f94260f845c4}</destination>
+			<destination>{ab3b523d-e453-45ef-92e5-1049a1004ed5}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{b27897c3-90ab-4327-addb-6a5d6ba83ad2}">
@@ -138,7 +141,7 @@
 	</object>
 	<object class="EventMixerReturn" id="{e1a43376-7c9a-4f37-85be-3e3d63d69287}">
 		<property name="volume">
-			<value>-12</value>
+			<value>-10</value>
 		</property>
 		<property name="name">
 			<value>Reverb 1</value>
@@ -158,7 +161,7 @@
 			<value>0</value>
 		</property>
 		<property name="length">
-			<value>66.780000000000001</value>
+			<value>66.799999999999997</value>
 		</property>
 		<relationship name="timeline">
 			<destination>{de1a9c66-c1e4-4a0d-aed1-ee020c311212}</destination>
@@ -263,7 +266,7 @@
 			<value>2800</value>
 		</property>
 		<property name="attackShape">
-			<value>-0.0635773167</value>
+			<value>-0.128746271</value>
 		</property>
 		<property name="finalValue">
 			<value>-80</value>
@@ -284,22 +287,58 @@
 		<relationship name="automationPoints">
 			<destination>{1135eff1-b279-45db-bae3-4e8d494d323d}</destination>
 			<destination>{dfb96d2c-f7fe-400b-b144-b9333f198e5b}</destination>
+			<destination>{6280e682-6f02-4e57-ae5a-a4584ed7534a}</destination>
+			<destination>{aff02d04-b25b-4563-bdb5-4d759017e4c6}</destination>
+			<destination>{61424996-d408-47fa-a58c-075eb5848450}</destination>
 		</relationship>
 	</object>
 	<object class="AutomationPoint" id="{1135eff1-b279-45db-bae3-4e8d494d323d}">
 		<property name="position">
-			<value>63.700000000000003</value>
+			<value>63</value>
+		</property>
+		<property name="value">
+			<value>-80</value>
+		</property>
+		<property name="curveShape">
+			<value>-0.0754766166</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{dfb96d2c-f7fe-400b-b144-b9333f198e5b}">
+		<property name="position">
+			<value>66.700000000000003</value>
+		</property>
+		<property name="value">
+			<value>10</value>
+		</property>
+		<property name="curveShape">
+			<value>1</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{6280e682-6f02-4e57-ae5a-a4584ed7534a}">
+		<property name="position">
+			<value>66.799999999999997</value>
 		</property>
 		<property name="value">
 			<value>-80</value>
 		</property>
 	</object>
-	<object class="AutomationPoint" id="{dfb96d2c-f7fe-400b-b144-b9333f198e5b}">
+	<object class="AutomationPoint" id="{aff02d04-b25b-4563-bdb5-4d759017e4c6}">
 		<property name="position">
-			<value>66.100000000000009</value>
+			<value>2</value>
+		</property>
+		<property name="value">
+			<value>-80</value>
+		</property>
+	</object>
+	<object class="AutomationPoint" id="{61424996-d408-47fa-a58c-075eb5848450}">
+		<property name="position">
+			<value>0</value>
 		</property>
 		<property name="value">
 			<value>10</value>
+		</property>
+		<property name="curveShape">
+			<value>0.907811224</value>
 		</property>
 	</object>
 </objects>
