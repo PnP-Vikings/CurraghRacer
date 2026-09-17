@@ -66,7 +66,7 @@
 			<destination>{1feef46a-ffc2-4819-8a50-f293abe1f7f4}</destination>
 		</relationship>
 		<relationship name="modules">
-			<destination>{cc47013e-3270-4b4c-95b0-36ddd9f89cd0}</destination>
+			<destination>{04f27b58-a408-468c-97b6-1384832b07b1}</destination>
 		</relationship>
 		<relationship name="mixerGroup">
 			<destination>{b27897c3-90ab-4327-addb-6a5d6ba83ad2}</destination>
@@ -79,7 +79,7 @@
 	</object>
 	<object class="Timeline" id="{de1a9c66-c1e4-4a0d-aed1-ee020c311212}">
 		<relationship name="modules">
-			<destination>{cc47013e-3270-4b4c-95b0-36ddd9f89cd0}</destination>
+			<destination>{04f27b58-a408-468c-97b6-1384832b07b1}</destination>
 		</relationship>
 		<relationship name="markers">
 			<destination>{bebc8143-5bd3-464c-a49b-51b92ba788c2}</destination>
@@ -107,18 +107,15 @@
 			<destination>{c52eeab2-b0b4-4760-b47f-f4d0febfb420}</destination>
 		</relationship>
 	</object>
-	<object class="SingleSound" id="{cc47013e-3270-4b4c-95b0-36ddd9f89cd0}">
+	<object class="SingleSound" id="{04f27b58-a408-468c-97b6-1384832b07b1}">
 		<property name="length">
-			<value>66.780000000000001</value>
+			<value>70.786530612244903</value>
 		</property>
-		<relationship name="fadeInCurve">
-			<destination>{28976b82-a2b9-4fa6-ac20-1ce1d8119b22}</destination>
-		</relationship>
-		<relationship name="fadeOutCurve">
-			<destination>{0f09f20c-fed5-43cb-8393-b2413acfff95}</destination>
-		</relationship>
+		<property name="volume">
+			<value>-2</value>
+		</property>
 		<relationship name="audioFile">
-			<destination>{030422b2-2889-4ecb-be3e-03e81bf9a0b8}</destination>
+			<destination>{97bdc034-e0cf-4448-b910-2f791a276c23}</destination>
 		</relationship>
 	</object>
 	<object class="EventMixerGroup" id="{b27897c3-90ab-4327-addb-6a5d6ba83ad2}">
@@ -177,22 +174,6 @@
 	</object>
 	<object class="MixerBusPanner" id="{63883198-fe34-43be-902b-d8fb8072f417}" />
 	<object class="MixerBusFader" id="{384126ab-4c47-470b-a574-a9e62a84411a}" />
-	<object class="FadeCurve" id="{28976b82-a2b9-4fa6-ac20-1ce1d8119b22}">
-		<relationship name="startPoint">
-			<destination>{ad2dfad8-c241-4c2d-8e55-51dfdd291b57}</destination>
-		</relationship>
-		<relationship name="endPoint">
-			<destination>{2208b1e3-a54e-42fc-ad49-5d442287bec8}</destination>
-		</relationship>
-	</object>
-	<object class="FadeCurve" id="{0f09f20c-fed5-43cb-8393-b2413acfff95}">
-		<relationship name="startPoint">
-			<destination>{84815810-793c-4ddc-afd9-d6ecf7720a18}</destination>
-		</relationship>
-		<relationship name="endPoint">
-			<destination>{7f1b6256-db96-4cb8-b3cc-6ff944ff5a57}</destination>
-		</relationship>
-	</object>
 	<object class="MixerBusEffectChain" id="{be464175-da61-43c6-b47c-b4a66bfddd93}">
 		<relationship name="effects">
 			<destination>{d7f92669-96e2-421b-bbfc-74f16136f1de}</destination>
@@ -215,44 +196,6 @@
 		</relationship>
 	</object>
 	<object class="MixerBusFader" id="{ce02003d-4a7b-4896-940f-f4b9b502999a}" />
-	<object class="AutomationPoint" id="{ad2dfad8-c241-4c2d-8e55-51dfdd291b57}">
-		<property name="position">
-			<value>0</value>
-		</property>
-		<property name="value">
-			<value>0</value>
-		</property>
-		<property name="curveShape">
-			<value>-0.2547189</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{2208b1e3-a54e-42fc-ad49-5d442287bec8}">
-		<property name="position">
-			<value>0.025000000000000001</value>
-		</property>
-		<property name="value">
-			<value>1</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{84815810-793c-4ddc-afd9-d6ecf7720a18}">
-		<property name="position">
-			<value>66.720000000000013</value>
-		</property>
-		<property name="value">
-			<value>1</value>
-		</property>
-		<property name="curveShape">
-			<value>0.25471893</value>
-		</property>
-	</object>
-	<object class="AutomationPoint" id="{7f1b6256-db96-4cb8-b3cc-6ff944ff5a57}">
-		<property name="position">
-			<value>66.780000000000001</value>
-		</property>
-		<property name="value">
-			<value>0</value>
-		</property>
-	</object>
 	<object class="MultibandEqEffect" id="{d7f92669-96e2-421b-bbfc-74f16136f1de}">
 		<property name="filterTypeA">
 			<value>4</value>

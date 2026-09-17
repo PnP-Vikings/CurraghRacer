@@ -279,7 +279,7 @@
 	</object>
 	<object class="GainEffect" id="{a1896a67-4f1f-407a-b4a7-25c748b191a7}">
 		<property name="gain">
-			<value>-3</value>
+			<value>-1</value>
 		</property>
 	</object>
 	<object class="MultibandEqEffect" id="{29a61a77-7830-49ef-9b75-66e0700133d0}">
@@ -298,7 +298,7 @@
 	</object>
 	<object class="GainEffect" id="{ca2ba516-ba8e-479a-b9c3-66591a02810e}">
 		<property name="gain">
-			<value>-6</value>
+			<value>-11</value>
 		</property>
 		<relationship name="modulators">
 			<destination>{14c19a81-30e2-48cf-86ef-e74fa94866a2}</destination>
