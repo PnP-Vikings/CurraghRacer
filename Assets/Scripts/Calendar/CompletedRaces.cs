@@ -104,7 +104,7 @@ namespace Calendar
         
         private void SetupDayEvent()
         {
-            if (dayEventType == null || raceData == null) return;
+            if (dayEventType == null || raceData == null || LeagueController.Instance == null || LeagueController.Instance.currentLeague == null) return;
             
             string leagueDisplayName = raceData.localizedLeagueName != null && !raceData.localizedLeagueName.IsEmpty ? raceData.localizedLeagueName.GetLocalizedString() : raceData.leagueName;
             string raceDisplayName = raceData.localizedRaceName != null && !raceData.localizedRaceName.IsEmpty ? raceData.localizedRaceName.GetLocalizedString(LeagueController.Instance.currentLeague.currentRace) : raceData.raceName;

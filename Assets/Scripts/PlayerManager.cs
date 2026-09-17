@@ -16,6 +16,20 @@ public class PlayerManager : MonoBehaviour
     public PlayerStatsView playerStatsView;
     public UnityEvent onDebtWarning;
     
+    [Header("Energy and Currency Costs")]
+    [Tooltip("The amount of energy required to participate in a race")]
+    [SerializeField] private int energyCostForRace = 25;
+    [Tooltip("The amount of energy required to work")]
+    [SerializeField] private int energyCostForWork = 25;
+    [Tooltip("The amount of currency required to sleep")]
+    [SerializeField] private int currencyCostForSleep = 30;
+    [Tooltip("The amount of energy required for training")]
+    [SerializeField] private int energyCostForTraining = 30;
+    [Tooltip("The amount of currency required for training")]
+    [SerializeField] private int currencyCostForTraining = 50;
+    
+    
+    
     
     [Header("Localization")]
     [SerializeField] private LocalizedString localizedStatGainedText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.TeamMemberStatGained" };
@@ -259,7 +273,29 @@ public class PlayerManager : MonoBehaviour
         return maxAmountOfDebt;
     }
     
+    public int GetEnergyCostForRace()
+    {
+        return energyCostForRace;
+    }
     
+    public int GetEnergyCostForWork()
+    {
+        return energyCostForWork;
+    }
+
+    public int GetCurrencyCostForSleep()
+    {
+        return currencyCostForSleep;
+    }
+    
+    public int GetEnergyCostForTraining()
+    {
+        return energyCostForTraining;
+    }
+    public int GetCurrencyCostForTraining()
+    {
+        return currencyCostForTraining;
+    }
 }
 
 

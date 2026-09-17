@@ -48,10 +48,13 @@ public class TimeManager : MonoBehaviour
     private TimeManager() { }
 
     // Time variables
+    [Tooltip("Current time of day in hours (0-24). 0 = midnight, 12 = noon, 24 = midnight.")]
     [SerializeField, Range(0, 24)] private float timeOfDay;
-    [SerializeField, Range(0f, 1f)] private float timeMultiplier = 1f;
+    [Tooltip("Multiplier for how fast time passes in the game. 1 = normal speed, 2 = double speed, etc.")]
+    [SerializeField, Range(0f, 10f)] private float timeMultiplier = 1f;
     private int daysPassed = 0;
     private bool newItemSpawned = false;
+    [Tooltip("If true, time will be paused and not advance.")]
     [SerializeField] private bool isTimePaused = false;
     
     
@@ -74,10 +77,20 @@ public class TimeManager : MonoBehaviour
     
     // Properties
     public float TimeOfDay { get => timeOfDay; }
+    
     public float TimeMultiplier { get => timeMultiplier; set => timeMultiplier = Mathf.Max(value, 0f); }
     public int DaysPassed { get => daysPassed; }
     
+    [Header("Starting Time")]
+    public float StartDayTime { get => 8f; } // Start at 8 AM
     
+    [Header("Time Cost For Activities")]
+    [Tooltip("Allow time cost for work and training activities")]
+    [SerializeField] private bool allowTimeCostForActivities = true;
+    [Tooltip("Time cost in hours for work activities")]
+    [SerializeField] private float timeCostForWork = 4f; // 4 hours for work
+    [Tooltip("Time cost in hours for training activities")]
+    [SerializeField] private float timeCostForTraining = 3f; // 3 hours for training
     
     [Header("Localization")]
     internal LocalizedString[] _localizedDays = {new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Sunday" },
@@ -117,7 +130,7 @@ public class TimeManager : MonoBehaviour
         // Initialize starting date
         StartDate = new DateTime(startYear, startMonth, startDay);
         
-        timeOfDay = 6f; // Start at 6 AM
+        timeOfDay = StartDayTime; // Start at 8 AM
         daysPassed = 0;
         
         // Calculate the correct day of the week for the starting date (January 1st, 2008 = Tuesday)
@@ -182,7 +195,7 @@ public class TimeManager : MonoBehaviour
     public void SleepTime()
     {
         // Reset time of day to 0 (start of a new day)
-        timeOfDay = 6f;
+        timeOfDay = StartDayTime;
         daysPassed++;
         newItemSpawned = false;
         
@@ -644,13 +657,28 @@ public class TimeManager : MonoBehaviour
     
     public void ResetTimeForNewDay()
     {
-        SetTimeOfDay(6f); // Reset to 6 AM
+        SetTimeOfDay(StartDayTime); // Reset to 6 AM
     }
     
     public bool GetIsTimePaused()
     {
         return isTimePaused;
     }
+    
+    public void PlayerWorkedPassTime()
+    {
+        if(!allowTimeCostForActivities) return;
+        
+        AdjustTimeOfDay(timeCostForWork);
+    }
+    
+    public void PlayerTrainedPassTime()
+    {
+        if(!allowTimeCostForActivities) return;
+        
+        AdjustTimeOfDay(timeCostForTraining);
+    }
+    
     /// <summary>
     /// Alternative method using current date as start date
     /// </summary>

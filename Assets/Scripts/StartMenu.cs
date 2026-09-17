@@ -20,9 +20,13 @@ public class StartMenu : MonoBehaviour
     public bool isTooLateForActivities = false;
     public static StartMenu Instance { get; private set; }
     
-    [Header("")]
+    [Header("Energy Costs and Currency Costs")]
+    [Tooltip("The amount of energy required to participate in a race is overridden in PlayerManager")]
     [SerializeField] private int energyCostForRace = 25;
+    [Tooltip("The amount of energy required to work is overridden in PlayerManager")]
     [SerializeField] private int energyCostForWork = 25;
+    [Tooltip("The amount of currency required to sleep is overridden in PlayerManager")]
+    [SerializeField] private int currencyCostForSleep = 30;
     
     [Header("Localization")]
     [SerializeField] private string startRaceText="Start Race";
@@ -77,6 +81,13 @@ public class StartMenu : MonoBehaviour
         TimeManager.Instance.onNewDay.AddListener(CloseBulletinBoard);
         TimeManager.Instance.onNewDay.AddListener(UpdateRaceDayStatus); 
         LeagueController.Instance.onPlayerJoinedLeague.AddListener(UpdateRaceDayStatus);
+        
+        if(PlayerManager.Instance != null)
+        {
+            energyCostForRace= PlayerManager.Instance.GetEnergyCostForRace();
+            energyCostForWork= PlayerManager.Instance.GetEnergyCostForWork();
+            currencyCostForSleep= PlayerManager.Instance.GetCurrencyCostForSleep();
+        }
     }
     
     public enum RaceDayStatus
@@ -314,8 +325,6 @@ public class StartMenu : MonoBehaviour
                     uiDoc.gameObject.SetActive(false);
                 
                 return;
-                // Deduct energy cost
-               // PlayerManager.Instance.ModifyPlayerEnergy(-25);
             }
         }
         else if(GameManager.Instance.IsTutorialModeActive() && !GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.WorkJobTask) && !GameManager.Instance.IsTutorialTaskCompleted(TutorialTaskType.WorkJobTask))
@@ -329,7 +338,7 @@ public class StartMenu : MonoBehaviour
         }
         
 
-        if (PlayerManager.Instance.PlayerHasEnoughEnergy(25) && !isTooLateForActivities )
+        if (PlayerManager.Instance.PlayerHasEnoughEnergy(energyCostForWork) && !isTooLateForActivities )
         {
             // Use MiniGameManager instead of loading separate scenes
             if (MiniGames.MiniGameManager.Instance != null)
@@ -346,7 +355,7 @@ public class StartMenu : MonoBehaviour
                     uiDoc.gameObject.SetActive(false);
                 
                 // Deduct energy cost
-                PlayerManager.Instance.ModifyPlayerEnergy(-25);
+                PlayerManager.Instance.ModifyPlayerEnergy(-energyCostForWork);
             }
         }
         else
@@ -380,7 +389,7 @@ public class StartMenu : MonoBehaviour
             }
             else
             {
-                GameManager.Instance.Sleep(30);
+                GameManager.Instance.Sleep(currencyCostForSleep);
             }
           
         }
