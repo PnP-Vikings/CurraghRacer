@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 
 namespace League
 {
@@ -157,7 +158,7 @@ namespace League
 
         public void ShowLeagueInvite()
         {
-            if (currentLeague != null && TimeManager.Instance != null)
+            if (currentLeague != null && TimeManager.Instance != null && !currentLeague.playerHasJoined && !GameManager.Instance.playerIsBusy && SceneManager.GetActiveScene().name == "Garage")
             {
                 
                 if(leagueInviteCardsUi != null && !currentLeague.playerHasJoined)

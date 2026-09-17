@@ -51,6 +51,9 @@ public class RaceManager : MonoBehaviour
     private FinishMenu finishMenu;
     public bool hasJustWonRace = false; // Used for RadioManager
     
+    [Tooltip("Only spawn the player's ship for practice purposes")]
+    [SerializeField] private bool onlySpawnPlayerShipForPractice = true; //only spawn the player's ship
+    
     [SerializeField]
     public bool waitingForAd = false; // Flag to check if we are waiting for an ad to show
 
@@ -61,6 +64,12 @@ public class RaceManager : MonoBehaviour
     LocalizedString wonTheRaceText = new LocalizedString("RaceScene", "RaceMessage.WonTheRaceTxt");
 
     LocalizedString betterLuckNextTimeText = new LocalizedString("RaceScene", "RaceMessage.BetterLuckNextTimeTxt");
+    
+    
+    LocalizedString localizedRaceDayText = new LocalizedString("RaceScene", "LocalizedRaceDay");
+    
+    
+    
 
     
     private void Awake()
@@ -188,6 +197,11 @@ public class RaceManager : MonoBehaviour
         var raceTeamsList = raceTeams.ToList();
         // Ensure we don't spawn more ships than we have start positions
         int shipsToSpawn = Mathf.Min(raceTeams.Length, raceStartPositions.Count);
+
+        if (!isRaceDay && onlySpawnPlayerShipForPractice)
+        {
+            shipsToSpawn = 1; // Only spawn player for practice race
+        }
         
         Team playerTeamTemp = null; 
         
@@ -222,31 +236,22 @@ public class RaceManager : MonoBehaviour
             Debug.LogError("Ship prefab is null! Cannot spawn ships. Please assign the ship prefab in the RaceManager inspector.");
             return;
         }
-       
-        for (int i = 0; i < shipsToSpawn; i++)
-        {
-            Transform racepos = raceStartPositions[i];
-            Team team = raceTeams[i];
-            
-            if (racepos == null)
-            {
-                Debug.LogWarning($"Race start position {i} is null - skipping team {team.teamName}");
-                continue;
-            }
 
-            Debug.Log($"Spawning ship for team: {team.teamName} at position: {racepos.position}");
-            
+        if (!isRaceDay && onlySpawnPlayerShipForPractice)
+        {
+            int raceStartPos = raceStartPositions.Count-1;
+            Transform racepos = raceStartPositions[raceStartPos];
+            Team team = raceTeams[raceStartPos];
             GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
             var movement = ship.GetComponent<ShipMovement>();
             
-            // Assign team data to ship
             movement.shipName = team.teamName;
             ship.name = team.teamName + "_Ship";
-            
+
             // Check if this is the last boat position (closest to camera) and if player team is in this race
-            bool isLastBoat = (i == shipsToSpawn - 1);
+            bool isLastBoat = (raceStartPos == shipsToSpawn - 1);
             bool playerInRace = raceTeams.Any(t => t.teamType == TeamType.Player);
-            
+
             if (isLastBoat && playerInRace)
             {
                 // Set up player ship on the last (closest to camera) position
@@ -265,7 +270,7 @@ public class RaceManager : MonoBehaviour
                     );
                 }
                 movement.isPlayerShip = true;
-               
+
                 playerShip = movement;
             }
             else if (team.teamType == TeamType.Player)
@@ -276,17 +281,78 @@ public class RaceManager : MonoBehaviour
                 movement.isPlayerShip = false;
                 // We'll handle the player assignment after the loop
             }
-            else
-            {
-                // Set up AI ship with team stats
-                movement.stats = team.GetTeamStats();
-                movement.isPlayerShip = false;
-            }
-            
-            movement.shipName = raceTeams[i].teamName;
-            ship.name = raceTeams[i].teamName;
+            movement.shipName = raceTeams[raceStartPos].teamName;
+            ship.name = raceTeams[raceStartPos].teamName;
             
             ships.Add(ship);
+        }
+        else{
+            for (int i = 0; i < shipsToSpawn; i++)
+            {
+                Transform racepos = raceStartPositions[i];
+                Team team = raceTeams[i];
+
+                if (racepos == null)
+                {
+                    Debug.LogWarning($"Race start position {i} is null - skipping team {team.teamName}");
+                    continue;
+                }
+
+                Debug.Log($"Spawning ship for team: {team.teamName} at position: {racepos.position}");
+
+                GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
+                var movement = ship.GetComponent<ShipMovement>();
+
+                // Assign team data to ship
+                movement.shipName = team.teamName;
+                ship.name = team.teamName + "_Ship";
+
+                // Check if this is the last boat position (closest to camera) and if player team is in this race
+                bool isLastBoat = (i == shipsToSpawn - 1);
+                bool playerInRace = raceTeams.Any(t => t.teamType == TeamType.Player);
+
+                if (isLastBoat && playerInRace)
+                {
+                    // Set up player ship on the last (closest to camera) position
+                    if (PlayerManager.Instance != null)
+                    {
+                        movement.stats = PlayerManager.Instance.GetPlayerStats();
+                    }
+                    else
+                    {
+                        Debug.LogWarning("PlayerManager.Instance is null, using fallback player stats");
+                        movement.stats = new CharacterStats(
+                            strength: 12f,
+                            stamina: 12f,
+                            technique: 10f,
+                            teamWork: 10f
+                        );
+                    }
+                    movement.isPlayerShip = true;
+
+                    playerShip = movement;
+                }
+                else if (team.teamType == TeamType.Player)
+                {
+                    // If player team is not in last position, swap it to last position
+                    // This ensures player is always in the last boat regardless of team order
+                    movement.stats = team.GetTeamStats();
+                    movement.isPlayerShip = false;
+                    // We'll handle the player assignment after the loop
+                }
+                else
+                {
+                    // Set up AI ship with team stats
+                    movement.stats = team.GetTeamStats();
+                    movement.isPlayerShip = false;
+                }
+                movement.shipName = raceTeams[i].teamName;
+                ship.name = raceTeams[i].teamName;
+            
+                ships.Add(ship);
+            }
+            
+           
         }
         
         // Ensure player is always in the last boat (closest to camera)
@@ -417,18 +483,13 @@ public class RaceManager : MonoBehaviour
             Team[] fallbackTeams = GetFallbackTeams(raceStartPositions.Count);
             
             int teamIndex = 0;
-            foreach (Transform racepos in raceStartPositions)
+            if (!isRaceDay && onlySpawnPlayerShipForPractice)
             {
-                if (racepos == null)
-                {
-                    Debug.LogWarning("Found null Transform in raceStartPositions - skipping this spawn position");
-                    continue;
-                }
-                
-                Debug.Log("Spawning ship at position: " + racepos.position);
-                GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
+                int raceStartPos = raceStartPositions.Count-1;
+                Debug.Log("Spawning ship at position: " +raceStartPositions[raceStartPos].position);
+                GameObject ship = Instantiate(shipPrefab, raceStartPositions[raceStartPos].position, shipPrefab.transform.rotation);
                 var movement = ship.GetComponent<ShipMovement>();
-                
+
                 // Use real team name and stats instead of generic "Ship X"
                 if (teamIndex < fallbackTeams.Length)
                 {
@@ -452,16 +513,55 @@ public class RaceManager : MonoBehaviour
                 }
 
                 ships.Add(ship);
-                teamIndex++;
             }
-
-            // Check if we actually spawned any ships
-            if (ships.Count == 0)
+            else
             {
-                Debug.LogError("No ships were spawned! All race start positions were null. Cannot start race.");
-                return;
-            }
+               foreach (Transform racepos in raceStartPositions)
+                {
+                    if (racepos == null)
+                    {
+                        Debug.LogWarning("Found null Transform in raceStartPositions - skipping this spawn position");
+                        continue;
+                    }
 
+                    Debug.Log("Spawning ship at position: " + racepos.position);
+                    GameObject ship = Instantiate(shipPrefab, racepos.position, shipPrefab.transform.rotation);
+                    var movement = ship.GetComponent<ShipMovement>();
+
+                    // Use real team name and stats instead of generic "Ship X"
+                    if (teamIndex < fallbackTeams.Length)
+                    {
+                        Team currentTeam = fallbackTeams[teamIndex];
+                        movement.shipName = currentTeam.teamName;
+                        ship.name = currentTeam.teamName + "_Ship";
+                        movement.stats = currentTeam.GetTeamStats();
+                        Debug.Log($"Fallback: Using team {currentTeam.teamName} with stats from league system");
+                    }
+                    else
+                    {
+                        // Ultimate fallback if we somehow don't have enough teams
+                        movement.shipName = "Ship " + (ships.Count + 1);
+                        movement.stats = new CharacterStats(
+                            strength: Random.Range(8f, 12f) * difficulty,
+                            stamina: Random.Range(8f, 12f) * difficulty,
+                            technique: Random.Range(5f, 10f) * difficulty,
+                            teamWork: Random.Range(5f, 10f) * difficulty
+                        );
+                        Debug.LogWarning($"Using ultimate fallback for ship {movement.shipName}");
+                    }
+
+                    ships.Add(ship);
+                    teamIndex++;
+                }
+
+                // Check if we actually spawned any ships
+                if (ships.Count == 0)
+                {
+                    Debug.LogError("No ships were spawned! All race start positions were null. Cannot start race.");
+                    return;
+                }
+
+            }
             // Mark one as "player" for fallback
             var playerGO = ships[ships.Count - 1];
             var playerMove = playerGO.GetComponent<ShipMovement>();
@@ -683,17 +783,29 @@ public class RaceManager : MonoBehaviour
             {
                 finishMenu = FindFirstObjectByType<FinishLine>().finishMenu;
             }
-            
-            
+            string firstPlaceShip = "";
+            string secondPlaceShip = "";
+            string thirdPlaceShip = "";
+            string forthPlaceShip = "";
             finishMenu.gameObject.SetActive(true);
-            
-            string firstPlaceShip = RaceMovementPositions[0].shipName;
-            string secondPlaceShip = RaceMovementPositions[1].shipName;
-            string thirdPlaceShip = RaceMovementPositions[2].shipName;
-            string forthPlaceShip = RaceMovementPositions.Count > 3 ? RaceMovementPositions[3].shipName : "N/A";
+            if (!isRaceDay && onlySpawnPlayerShipForPractice)
+            {
+                firstPlaceShip = playerShip.shipName;
+                secondPlaceShip = "N/A";
+                thirdPlaceShip = "N/A";
+                forthPlaceShip = "N/A";
+            }
+            else
+            { 
+                firstPlaceShip = RaceMovementPositions[0].shipName;
+                secondPlaceShip = RaceMovementPositions[1].shipName;
+                thirdPlaceShip = RaceMovementPositions[2].shipName;
+                forthPlaceShip = RaceMovementPositions.Count > 3 ? RaceMovementPositions[3].shipName : "N/A";
+            }
             
             Debug.Log(firstPlaceShip + " finished first!" + secondPlaceShip + " finished second!" + thirdPlaceShip + " finished third!" + forthPlaceShip + " finished forth!"); 
             finishMenu.UpdatePositions( firstPlaceShip, secondPlaceShip, thirdPlaceShip, forthPlaceShip);
+     
             
             Transform cameraStartPosition = GameManager.Instance.GetCameraStartPosition();
             
@@ -1005,13 +1117,27 @@ public class RaceManager : MonoBehaviour
         if (Calendar.CompletedRacesManager.Instance != null)
         {
             string leagueName = LeagueController.Instance.currentLeague.leagueName;
+            LocalizedString localizedLeagueName = null;
             string raceName = $"Race Day {(TimeManager.Instance?.GetCurrentDate().DayOfYear ?? System.DateTime.Now.DayOfYear)}";
+            LocalizedString localizedRaceDay = null;
+            if(LeagueController.Instance.currentLeague)
+            {
+                raceName = $"Race Day {LeagueController.Instance.currentLeague.currentRace}";
+                localizedRaceDay = localizedRaceDayText;
+            }
+            
+            if(LeagueController.Instance.currentLeague.localizedLeagueName != null)
+            {
+                localizedLeagueName = LeagueController.Instance.currentLeague.localizedLeagueName;
+            }
+            
             DateTime raceDate = TimeManager.Instance?.GetCurrentDate() ?? DateTime.Now;
             string trackName = UnityEngine.SceneManagement.SceneManager.GetActiveScene().name;
             int totalParticipants = raceTeams.Length;
             float playerRaceTime = Time.time; // Simple fallback - can be enhanced later
             string[] participantNames = new string[RaceMovementPositions.Count];
-            
+           
+          
             // Get participant names in finishing order
             for (int i = 0; i < RaceMovementPositions.Count; i++)
             {
@@ -1044,7 +1170,7 @@ public class RaceManager : MonoBehaviour
                 trackName,
                 playerRaceTime,
                 pointsEarned,
-                participantNames
+                participantNames,localizedLeagueName,localizedRaceDay
             );
 
             Debug.Log($"Completed race tracked: {leagueName} - {raceName} (Position: {playerPosition})");

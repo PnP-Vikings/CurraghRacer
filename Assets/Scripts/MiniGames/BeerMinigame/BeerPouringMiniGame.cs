@@ -8,6 +8,7 @@ namespace MiniGames.BeerMinigame
         private MiniGameManager gameManager;
         private MiniGameData gameData;
         private BeerGameController controller;
+        // Set the target number of beers to complete the game HAVE OVERRIDEN THIS NOW CHECK BEERGAMECONTROLLER
         private int targetBeerCount = 5;
         private bool gameCompleted;
 
@@ -44,12 +45,12 @@ namespace MiniGames.BeerMinigame
             gameManager.UpdateScore(currentScore);
             gameManager.UpdateProgress($"Beers Poured: {beersCompleted}/{targetBeerCount}");
 
-            // Check if game is completed
+            /*// Check if game is completed
             if (beersCompleted >= targetBeerCount && !gameCompleted)
             {
                 gameCompleted = true;
                 gameManager.CompleteGame(currentScore);
-            }
+            }*/
         }
 
         public void EndGame()

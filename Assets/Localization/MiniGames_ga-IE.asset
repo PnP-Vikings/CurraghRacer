@@ -58,11 +58,13 @@ MonoBehaviour:
   - m_Id: 75409260535808
     m_Localized: "Tap\xE1il {0}: {1}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678298
   - m_Id: 78115236732928
     m_Localized: 'Sraith Fhoirfe: {0} ({1}x)'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678298
   - m_Id: 81156635615232
     m_Localized: Foirfe!
     m_Metadata:
@@ -99,12 +101,14 @@ MonoBehaviour:
     m_Localized: "Babhta {0}/{1} cr\xEDochnaithe!\\nBunluach: +{2}\\nB\xF3nas: +{3}\\nIoml\xE1n:
       +{4}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678298
   - m_Id: 98087962927104
     m_Localized: "CLUICHE CR\xCDOCHNATHE!\\n\\nSc\xF3r Ioml\xE1n: {0}\\nAn Sruth
       is Faide: {1}\\n\\n\"Foirfe: {2}\\nGo Maith: {3}\\nInghlactha: {4}\\nLag: {5}"
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678298
   - m_Id: 100776163663872
     m_Localized: Lager
     m_Metadata:
@@ -128,7 +132,8 @@ MonoBehaviour:
   - m_Id: 734563864141824
     m_Localized: 'Luas: {0}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678298
   - m_Id: 736914264023040
     m_Localized: "L\xE9im"
     m_Metadata:
@@ -874,3 +879,8 @@ MonoBehaviour:
         - id: 2640172532359168
         - id: 2640704999251968
         - id: 2640615811571712
+        - id: 98087962927104
+        - id: 97311777611776
+        - id: 734563864141824
+        - id: 78115236732928
+        - id: 75409260535808

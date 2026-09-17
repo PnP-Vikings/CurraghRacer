@@ -36,7 +36,7 @@ MonoBehaviour:
   cardImage: {fileID: 0}
   category: 1
   isFollowUpOnly: 0
-  minDayToAppear: 1
+  minDayToAppear: 8
   canRepeat: 1
   cooldownDays: 7
   targetsSpecificMember: 1

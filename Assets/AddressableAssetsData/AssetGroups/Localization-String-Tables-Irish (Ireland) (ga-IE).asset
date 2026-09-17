@@ -84,6 +84,12 @@ MonoBehaviour:
     m_SerializedLabels:
     - Locale-ga-IE
     FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a72be6483efb30e4d8a6c2a6d434012f
+    m_Address: CalendarEvents_ga-IE
+    m_ReadOnly: 1
+    m_SerializedLabels:
+    - Locale-ga-IE
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: b59ebf2247a6cbe4db3259339a96ee25
     m_Address: BillsController_ga-IE
     m_ReadOnly: 1

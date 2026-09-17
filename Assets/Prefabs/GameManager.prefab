@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 3942734090947527062}
   - component: {fileID: 6272484885003525780}
   - component: {fileID: 2148385281798546612}
+  - component: {fileID: 2588623060899366716}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -69,74 +70,349 @@ MonoBehaviour:
   SleepAudioChangesCoroutineIsActive: 0
   defaultTutorialTasks:
   - taskName: Open Calendar
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 18235777024
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 204844556288
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Hey Mate your Grandad left this shed behind when he fled the Country
     - 'This is your main base of operation where everything important happens  '
     - I have marked your calendar up with all the important upcoming events click
       on the calendar to have a look
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 245848072192
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 331147632640
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 340958109696
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - 'There are buttons at the bottom that allow you to navigate the months  '
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 357454307328
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 1
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 1
     completed: 0
   - taskName: Close Calendar
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 899157057536
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 949262213120
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Do a bit of exploring then press Hide calendar to close the calendar '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 989963739136
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 2
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Bulletin Task
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 1712902365184
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 1786852139008
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'The bulletin board is where you can manage everthing '
     - 'Click on the Bulletin Board to have a look '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 1825733337088
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 1860575420416
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - 'Here you can manage everything  '
     - 'Start race, find jobs, train your team members ,pay bills and sleep  '
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 1907589373952
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 1990221357056
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 0
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Complete A Practice Race
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 5861182267392
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 5983974711296
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Lets get right into the racing  '
     - 'Click on pratice race to get familar with your current team ability '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6026400096256
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6064975110144
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 4
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: 'Click on the tv '
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6400930471936
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6448288358400
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Good Job on completing the race '
     - 'You should click on the tv to see whats on '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6513555922944
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6566941024256
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - Here you can save and manage other settings
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6606333927424
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 14
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Exit Tv
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6928729104384
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 6974145028096
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - When your ready exit the tv
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7008689315840
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 15
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Team Manager Task
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7367218421760
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7422117666816
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Lets get familiar with the team '
     - 'Click on team manager '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7453130350592
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7502409228288
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - 'Here you can see all your teams stats '
     - 'All the attributes are combined together to teams quality '
@@ -144,221 +420,901 @@ MonoBehaviour:
       else in the league '
     - You may also swap around team members if you desire by clicking on active team
       members and one that is benched
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7522063736832
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7575671136256
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7586299502592
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 7597456351232
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 3
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Hireable Sailor Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 8027963908096
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 8092925288448
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Open Hireable Sailor Menu
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 8148831166464
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - You may also hire racers if you have a bit extra coins and are in need of some
       help for a race
     - Hired racers can not be trained and are limited to a certain amount of racers
       so keep that in mind
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 8272705740800
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 8319497396224
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 18
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Close Team Manager
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28058928013312
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28117694406656
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - When ready leave the team manager
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28166373498880
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 19
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Training Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28441389817856
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28572734447616
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - In order to keep up with the opponents we must constantly train our team
     - 'click on training '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28617059852288
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28656771522560
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - Here you can see a button for each attribute it will cost you 50 euros per
       training game
     - 'be sure to spread around the training and to have a nice balanced squad '
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28673494212608
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 28727877558272
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 12
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Train a member of the squad
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 36514456133632
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 36635377917952
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Click on a attribute you want to train and select a member then press train  '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 36664897429504
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 5
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Bill Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 36944187744256
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37051662589952
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Oh I forgot to mention all the bills are now in your name
     - Lets check out the bill menu on the bulletin board
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37122294669312
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37166594908160
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 6
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Close Bill Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37362900918272
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37413505196032
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Ohh no looks like we are out of money '
     - When your ready Exit the bill menu
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37441443454976
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37487731793920
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 17
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Work a Job
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37668078477312
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37709069410304
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - You will require money to pay for the teams expensives and bills
     - 'Click on job to start a shift '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37732465238016
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 37763146571776
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 7
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: 'Pay a bill '
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38273652088832
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38341507538944
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Alright now that you have some money lets pay a bill
     - Click back on the bulletin board and go into the bill manager and pay a bill
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38401192484864
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38442229555200
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs:
     - 'Good job paying your first bill '
     - Keep in mind that you don't have to pay the bill on time but it will cost you
       interest and eventually it will get auto debited
     - 'meaning you may go into debt and trust me you don''t want to do that '
+    CompletedtaskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38632927780864
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38734207639552
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 38787655655424
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskType: 8
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Close Bill Manager
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39012852031488
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39100194217984
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Close the bill manager when your ready '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39130024108032
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 20
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Sleep
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39614881456128
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39677615661056
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Its been a long day you should get some sleep '
     - 'You can click on sleep to get some rest '
     - keep in mind sleeping isn't free and if you can't afford a nice place to rest
       you won't be as well rested the next day
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39718426238976
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39766371328000
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39778950045696
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 9
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Join Tutorial League
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39936861396992
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 39989944508416
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - There will always be a race on sunday
     - This is the big race and winning it can lead to some big prizes
     - Your about to get an invite accept it and LET'S RACE!!!
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40036237041664
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40074870775808
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40090226122752
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 10
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Race in the tournment
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40500269670400
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40589855809536
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Alright now that you've joined the league you can click on league to see the
       table
     - 'This is a 1 race league so winner takes it all '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40696508571648
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40727919714304
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 11
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Completed all Tasks
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40865815846912
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 40944215777280
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Good Job Completing all tasks
     - 'You are now on your own be sure to take care of your teammates and good luck '
+    taskDialogsLocalizedStrings:
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 41063656972288
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
+    - m_TableReference:
+        m_TableCollectionName: GUID:081291486c03ce942ad43e4f8e01b1e7
+      m_TableEntryReference:
+        m_KeyId: 41102273929216
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 16
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   tutorialTasks:
   - taskName: Open Calendar
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Hey Mate your Grandad left this shed behind when he fled the Country
     - 'This is your main base of operation where everything important happens  '
     - I have marked your calendar up with all the important upcoming events click
       on the calendar to have a look
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - 'There are buttons at the bottom that allow you to navigate the months  '
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 1
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 1
     completed: 0
   - taskName: Close Calendar
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Do a bit of exploring then press Hide calendar to close the calendar '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 2
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Bulletin Task
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'The bulletin board is where you can manage everthing '
     - 'Click on the Bulletin Board to have a look '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - 'Here you can manage everything  '
     - 'Start race, find jobs, train your team members ,pay bills and sleep  '
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 0
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Complete A Practice Race
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Lets get right into the racing  '
     - 'Click on pratice race to get familar with your current team ability '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 4
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: 'Click on the tv '
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Good Job on completing the race '
     - 'You should click on the tv to see whats on '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - Here you can save and manage other settings
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 14
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Exit Tv
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - When your ready exit the tv
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 15
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Team Manager Task
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Lets get familiar with the team '
     - 'Click on team manager '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - 'Here you can see all your teams stats '
     - 'All the attributes are combined together to teams quality '
@@ -366,147 +1322,408 @@ MonoBehaviour:
       else in the league '
     - You may also swap around team members if you desire by clicking on active team
       members and one that is benched
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 3
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Hireable Sailor Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Open Hireable Sailor Menu
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - You may also hire racers if you have a bit extra coins and are in need of some
       help for a race
     - Hired racers can not be trained and are limited to a certain amount of racers
       so keep that in mind
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 18
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Close Team Manager
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - When ready leave the team manager
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 19
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Training Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - In order to keep up with the opponents we must constantly train our team
     - 'click on training '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - Here you can see a button for each attribute it will cost you 50 euros per
       training game
     - 'be sure to spread around the training and to have a nice balanced squad '
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 12
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Train a member of the squad
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Click on a attribute you want to train and select a member then press train  '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 5
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Open Bill Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Oh I forgot to mention all the bills are now in your name
     - Lets check out the bill menu on the bulletin board
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 6
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Close Bill Menu
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Ohh no looks like we are out of money '
     - When your ready Exit the bill menu
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 17
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Work a Job
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - You will require money to pay for the teams expensives and bills
     - 'Click on job to start a shift '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 7
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: 'Pay a bill '
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Alright now that you have some money lets pay a bill
     - Click back on the bulletin board and go into the bill manager and pay a bill
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs:
     - 'Good job paying your first bill '
     - Keep in mind that you don't have to pay the bill on time but it will cost you
       interest and eventually it will get auto debited
     - 'meaning you may go into debt and trust me you don''t want to do that '
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 8
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Close Bill Manager
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Close the bill manager when your ready '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 20
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Sleep
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - 'Its been a long day you should get some sleep '
     - 'You can click on sleep to get some rest '
     - keep in mind sleeping isn't free and if you can't afford a nice place to rest
       you won't be as well rested the next day
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 9
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Join Tutorial League
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - There will always be a race on sunday
     - This is the big race and winning it can lead to some big prizes
     - Your about to get an invite accept it and LET'S RACE!!!
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 10
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Race in the tournment
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Alright now that you've joined the league you can click on league to see the
       table
     - 'This is a 1 race league so winner takes it all '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 11
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
     completed: 0
   - taskName: Completed all Tasks
+    taskNameLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDescription: 
+    taskDescriptionLocalizedString:
+      m_TableReference:
+        m_TableCollectionName: 
+      m_TableEntryReference:
+        m_KeyId: 0
+        m_Key: 
+      m_FallbackState: 0
+      m_WaitForCompletion: 0
+      m_LocalVariables: []
     taskDialogs:
     - Good Job Completing all tasks
     - 'You are now on your own be sure to take care of your teammates and good luck '
+    taskDialogsLocalizedStrings: []
     CompletedtaskDialogs: []
+    CompletedtaskDialogsLocalizedStrings: []
     taskType: 16
     hasTutorialDialogsBeenShown: 0
     isTaskActive: 0
@@ -520,6 +1737,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   TutorialAudio: {fileID: 0}
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &1471334263890786786
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -577,6 +1797,36 @@ MonoBehaviour:
   onDebtWarning:
     m_PersistentCalls:
       m_Calls: []
+  localizedStatGainedText:
+    m_TableReference:
+      m_TableCollectionName: PlayerManager
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: PlayerManager.TeamMemberStatGained
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDebtWarningEarnMoneyText:
+    m_TableReference:
+      m_TableCollectionName: PlayerManager
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: PlayerManager.DebtWarning.EarnMoney
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  localizedDebtWarningReachedMaximumDebtLimitText:
+    m_TableReference:
+      m_TableCollectionName: PlayerManager
+    m_TableEntryReference:
+      m_KeyId: 0
+      m_Key: PlayerManager.DebtWarning.ReachedMaximumDebtLimit
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
+  references:
+    version: 2
+    RefIds: []
 --- !u!114 &2191016002663425716
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -621,6 +1871,7 @@ MonoBehaviour:
         m_CallState: 2
   selectedTeamMember: {fileID: 0}
   selectedTrainingStatType: 0
+  playerHasFailedMinigame: 0
 --- !u!114 &8150581909809056547
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -635,6 +1886,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tutorialLeague: {fileID: 11400000, guid: 205834f6965991846aad899d3689c617, type: 2}
   currentLeague: {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
+  defaultLeagues:
+  - {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
   leagues:
   - {fileID: 11400000, guid: 3bbab3edcecbe9a4db0a9d5ae4684fa6, type: 2}
   leagueInviteCardsUi: {fileID: 6545524236131076258, guid: e7af4e1578bb16f42881e823255c1a23, type: 3}
@@ -715,3 +1968,19 @@ MonoBehaviour:
   selectedBenchTeamMember: {fileID: 0}
   oldSelectedActiveTeamMember: {fileID: 0}
   oldSelectedBenchTeamMember: {fileID: 0}
+--- !u!114 &2588623060899366716
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1539091530887075933}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: abe7d91a0057c584eae055d47804726c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::LocalizationManager
+  isActive: 0
+  OnLanguageChanged:
+    m_PersistentCalls:
+      m_Calls: []

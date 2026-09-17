@@ -99,6 +99,7 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
         OnGameStarted?.Invoke();
         SceneManager.LoadScene(mainSceneName);
+      
     }
 
     public bool GetGameStarted()

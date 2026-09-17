@@ -13,7 +13,25 @@ MonoBehaviour:
   m_Name: Race Day
   m_EditorClassIdentifier: 
   eventName: Race Day
+  localizedEventName:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
+    m_TableEntryReference:
+      m_KeyId: 3789256097792
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description: Big Sunday Races
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
+    m_TableEntryReference:
+      m_KeyId: 4185366167552
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   color: {r: 0.7264151, g: 0.6720769, b: 0, a: 1}
   textColor: {r: 0, g: 0, b: 0, a: 1}
@@ -30,3 +48,7 @@ MonoBehaviour:
   hasPassedtextColor: {r: 0, g: 0, b: 0, a: 1}
   dayOfWeek: 0
   intervalDays: 1
+  playerHasTakenPart: 0
+  references:
+    version: 2
+    RefIds: []

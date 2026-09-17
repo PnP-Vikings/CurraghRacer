@@ -75,7 +75,12 @@ public class GarageSceneManager : MonoBehaviour
         CheckAndShowLeagueInvite();
         
         ProcessTutorialUi();
-
+        
+        DOVirtual.DelayedCall(6f, () =>
+        {
+            ShowDebtWarningScreen();
+        });
+      
     }
     
     void OnDisable()
@@ -103,7 +108,7 @@ public class GarageSceneManager : MonoBehaviour
     
     public void ShowDebtWarningScreen()
     {
-        if(GameManager.Instance != null && !GameManager.Instance.GetHasBeenShownWarningAboutDebt())
+        if(GameManager.Instance != null && !GameManager.Instance.GetHasBeenShownWarningAboutDebt() && GameManager.Instance.IsTutorialModeActive() == false && GameManager.Instance.playerIsBusy == false && PlayerManager.Instance != null && PlayerManager.Instance.coins < 0)
         {
             if (debtWarningTitleText != null)
             {
@@ -119,7 +124,13 @@ public class GarageSceneManager : MonoBehaviour
                 if(!localizedDebtWarningDescriptionText.IsEmpty)
                 {
                     localizedDebtWarningDescriptionText.RefreshString();
-                    debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString();
+                    debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString("400");
+                    
+                    if(PlayerManager.Instance != null)
+                    {
+                        float maxDebtLimit = (-1 * PlayerManager.Instance.GetMaxDebtLimit()); // Get the max debt limit as a positive value
+                        debtWarningText.text = localizedDebtWarningDescriptionText.GetLocalizedString(maxDebtLimit);
+                    }
                 }
             }
             
@@ -135,6 +146,7 @@ public class GarageSceneManager : MonoBehaviour
             DebtWarningScreen.SetActive(true);
             GameManager.Instance.SetHasBeenShownWarningAboutDebt(true);
         }
+        
        
     }
     

@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System;
+using UnityEngine.Localization;
 
 namespace Calendar
 {
@@ -32,7 +33,8 @@ namespace Calendar
         Work,
         SpecialEvent
         ,Race,
-        Custom
+        Custom,
+        TravelDate,
     }
 
     [CreateAssetMenu(fileName = "DayEventType", menuName = "Scriptable Objects/DayEventType")]
@@ -40,7 +42,9 @@ namespace Calendar
     {
         [Header("Event Info")]
         public string eventName;
+        public LocalizedString localizedEventName;
         public string description;
+        public LocalizedString localizedDescription;
         public Image icon;
         public Color color = Color.white;
         public Color textColor = Color.black;

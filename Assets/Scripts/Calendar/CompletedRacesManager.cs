@@ -3,6 +3,7 @@ using System.IO;
 using UnityEngine;
 using System;
 using Calendar;
+using UnityEngine.Localization;
 
 namespace Calendar
 {
@@ -56,10 +57,10 @@ namespace Calendar
         /// </summary>
         public void AddCompletedRace(string leagueName, string raceName, DateTime raceDate, 
                                     int playerPosition, int totalParticipants, string trackName, 
-                                    float raceTime, int pointsEarned, string[] participantNames)
+                                    float raceTime, int pointsEarned, string[] participantNames,LocalizedString localizedLeagueName = null, LocalizedString localizedRaceName = null)
         {
             var raceData = new CompletedRaceData(leagueName, raceName, raceDate, playerPosition, 
-                                               totalParticipants, trackName, raceTime, pointsEarned, participantNames);
+                                               totalParticipants, trackName, raceTime, pointsEarned, participantNames,localizedLeagueName, localizedRaceName);
             
             // Check if this race already exists (prevent duplicates)
             bool alreadyExists = persistentData.completedRaces.Exists(r => 

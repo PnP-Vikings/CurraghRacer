@@ -58,11 +58,13 @@ MonoBehaviour:
   - m_Id: 75409260535808
     m_Localized: 'Tap {0}: {1}s'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678297
   - m_Id: 78115236732928
     m_Localized: 'Perfect Streak: {0} ({1}x)'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678297
   - m_Id: 81156635615232
     m_Localized: PERFECT!
     m_Metadata:
@@ -98,12 +100,14 @@ MonoBehaviour:
   - m_Id: 97311777611776
     m_Localized: 'Round {0}/{1} Complete!\nBase: +{2}\nBonus: +{3}\nTotal: +{4}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678297
   - m_Id: 98087962927104
     m_Localized: 'GAME COMPLETE!\n\nTotal Score: {0}\nMax Streak: {1}\n\n"Perfect:
       {2}\nGood: {3}\nAcceptable: {4}\nPoor: {5}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678297
   - m_Id: 100776163663872
     m_Localized: Lager
     m_Metadata:
@@ -127,7 +131,8 @@ MonoBehaviour:
   - m_Id: 734563864141824
     m_Localized: 'Speed: {0}'
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7084867036035678297
   - m_Id: 736914264023040
     m_Localized: Jump
     m_Metadata:
@@ -858,3 +863,8 @@ MonoBehaviour:
         - id: 2640172532359168
         - id: 2640704999251968
         - id: 2640615811571712
+        - id: 98087962927104
+        - id: 97311777611776
+        - id: 734563864141824
+        - id: 78115236732928
+        - id: 75409260535808

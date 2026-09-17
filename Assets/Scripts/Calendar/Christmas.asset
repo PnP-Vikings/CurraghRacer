@@ -13,7 +13,25 @@ MonoBehaviour:
   m_Name: Christmas
   m_EditorClassIdentifier: 
   eventName: Christmas
+  localizedEventName:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
+    m_TableEntryReference:
+      m_KeyId: 3349374271488
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   description: Xmas celebration
+  localizedDescription:
+    m_TableReference:
+      m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
+    m_TableEntryReference:
+      m_KeyId: 3472829415424
+      m_Key: 
+    m_FallbackState: 0
+    m_WaitForCompletion: 0
+    m_LocalVariables: []
   icon: {fileID: 0}
   color: {r: 1, g: 0, b: 0, a: 1}
   textColor: {r: 1, g: 1, b: 1, a: 1}
@@ -22,5 +40,15 @@ MonoBehaviour:
   dayOfMonth: 25
   month: 12
   year: 1984
+  eventActive: 1
+  hasEndDate: 0
+  haspassed: 0
+  hasPassedicon: {fileID: 0}
+  hasPassedcolor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+  hasPassedtextColor: {r: 0, g: 0, b: 0, a: 1}
   dayOfWeek: 0
   intervalDays: 1
+  playerHasTakenPart: 0
+  references:
+    version: 2
+    RefIds: []

@@ -326,7 +326,8 @@ MonoBehaviour:
     m_Localized: "You have fallen into debt with the Irish Mob\nThey won't forget
       and if owe more than {0} something \nbad may happpen..."
     m_Metadata:
-      m_Items: []
+      m_Items:
+      - rid: 7162749194343809147
   references:
     version: 2
     RefIds:
@@ -341,3 +342,4 @@ MonoBehaviour:
         - id: 6753277134757888
         - id: 6760545930698752
         - id: 6760822691848192
+        - id: 11833506513543168

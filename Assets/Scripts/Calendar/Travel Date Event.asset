@@ -10,36 +10,36 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 44df0415477b43f4eb256cb46b584f7b, type: 3}
-  m_Name: Valentine's Day
+  m_Name: Travel Date Event
   m_EditorClassIdentifier: 
-  eventName: Valentine's Day
+  eventName: Travel Date
   localizedEventName:
     m_TableReference:
       m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
     m_TableEntryReference:
-      m_KeyId: 4379130429440
+      m_KeyId: 4225883144192
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  description: Day of love
+  description: 'I''m leaving on this day no matter what '
   localizedDescription:
     m_TableReference:
       m_TableCollectionName: GUID:42e76dd0e663ebf4590c9beca8ff6879
     m_TableEntryReference:
-      m_KeyId: 4439641653248
+      m_KeyId: 4297622519808
       m_Key: 
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
   icon: {fileID: 0}
-  color: {r: 1, g: 0, b: 0.42988586, a: 1}
-  textColor: {r: 1, g: 1, b: 1, a: 1}
-  OccasionType: 0
-  recurrenceType: 4
-  dayOfMonth: 14
-  month: 2
-  year: 1981
+  color: {r: 0.94509804, g: 0.0754263, b: 0, a: 1}
+  textColor: {r: 0.990566, g: 0.990566, b: 0.990566, a: 1}
+  OccasionType: 6
+  recurrenceType: 0
+  dayOfMonth: 30
+  month: 3
+  year: 2008
   eventActive: 1
   hasEndDate: 0
   haspassed: 0

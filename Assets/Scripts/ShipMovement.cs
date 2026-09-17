@@ -26,6 +26,7 @@ public class ShipMovement : MonoBehaviour
     private bool isShoutBoosting = false;
     
     [Header("Ui Elements")]
+    public GameObject shipPositionUi;
     public TMPro.TMP_Text shipPositionText;
     
     
@@ -94,6 +95,11 @@ public class ShipMovement : MonoBehaviour
     
     public void SetShipPositionText(int position)
     {
+        if(shipPositionUi != null)
+        {
+            shipPositionUi.SetActive(true);
+        }
+        
         if(shipPositionText != null)
         {
             shipPositionText.text = position.ToString();

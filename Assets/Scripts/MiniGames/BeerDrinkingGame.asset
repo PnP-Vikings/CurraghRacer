@@ -25,13 +25,14 @@ MonoBehaviour:
   returnSceneName: Garage
   returnDelay: 2
   baseEarnings: 50
+  maxEarnings: 110
   baseGain: 0
   difficultyMultiplier: 1
   enablePerfectBonus: 1
   perfectBonus: 1.5
   minimumPerformanceForReward: 0.3
   isTimed: 0
-  timeLimit: 60
+  timeLimit: 300
   hasTimeBonus: 1
   timeBonusMultiplier: 1
   isScoreBased: 0

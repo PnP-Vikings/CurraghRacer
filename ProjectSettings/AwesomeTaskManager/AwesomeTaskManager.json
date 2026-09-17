@@ -9,41 +9,6 @@
                     "title": "📋 To Do",
                     "cards": [
                         {
-                            "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
-                            "title": "Add 90 day idea ",
-                            "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-06-03 22:56",
-                            "dueDate": "2026-09-07",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add Calendar event",
-                                "Add Processing final day of player money",
-                                "For now just add place holder text or image"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": [
-                                "8910e6f1-befc-4526-8924-25f6df0bd590"
-                            ]
-                        },
-                        {
                             "id": "dd77139c-c06b-4042-97e8-20b28c995737",
                             "title": "Add More Bouys to race scene",
                             "description": "Place a boy ever 100 meters ",
@@ -69,43 +34,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": false,
-                            "completed": false,
-                            "assigneeIds": []
-                        },
-                        {
-                            "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
-                            "title": "Add Max amount of currency a player can get for a minigame ",
-                            "description": "Currently you can get like m 3k from one session of the beer game",
-                            "category": "Bug",
-                            "colorLabel": 16,
-                            "priority": 0,
-                            "createdDate": "2026-07-08 23:25",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Create new variable",
-                                "Set this variable for each game",
-                                "Do check before paying out currency",
-                                "Test"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
                         },
@@ -181,13 +110,114 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
+                        },
+                        {
+                            "id": "0202d3eb-d573-44f0-8d6c-dfc0cb6e389c",
+                            "title": "May be an issue loading older saves check this ",
+                            "description": "I have saves from a week ago that won't load ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-16 15:21",
+                            "dueDate": "2026-09-23",
+                            "archived": false,
+                            "checklistItems": [],
+                            "checklistStates": [],
+                            "checklistLinkedCardIds": [],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "cb182da6-209f-4705-bc96-3ad1ecb0d539",
+                            "title": "Fix Completed Calendar after reloading save",
+                            "description": "Fix Completed Calendar after reloading save",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-17 19:30",
+                            "dueDate": "2026-10-01",
+                            "archived": false,
+                            "checklistItems": [
+                                "fix mistmatch on calendarevents object",
+                                "read in saved details"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "454b31a26fe91c0479401781f8a35026",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         }
                     ]
                 },
                 {
                     "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
                     "title": "🔨 In Progress",
-                    "cards": []
+                    "cards": [
+                        {
+                            "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
+                            "title": "Add 90 day idea ",
+                            "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-06-03 22:56",
+                            "dueDate": "2026-09-24",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Calendar event",
+                                "Add Processing final day of player money",
+                                "For now just add place holder text or image"
+                            ],
+                            "checklistStates": [
+                                true,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ]
+                        }
+                    ]
                 },
                 {
                     "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
@@ -219,7 +249,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -328,7 +358,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
@@ -422,7 +452,7 @@
                                 }
                             ],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260428_215615_20260428_221916.png",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
@@ -454,7 +484,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -475,7 +505,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-06-03 003259.png",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -502,7 +532,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": [
                                 "8910e6f1-befc-4526-8924-25f6df0bd590"
@@ -543,7 +573,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -609,7 +639,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -639,7 +669,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -669,7 +699,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -739,7 +769,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -772,7 +802,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -874,7 +904,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -904,7 +934,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -1168,7 +1198,7 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         },
@@ -1228,6 +1258,75 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
+                            "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "72262f05-438b-46d9-b0a0-6395ce6a9be1",
+                            "title": "Localize Calendar event ",
+                            "description": "",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-09 22:33",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add localization for name",
+                                "Add localization for description",
+                                "Localize all the text at the bottom of the completedRaces class"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
+                            "title": "Add Max amount of currency a player can get for a minigame ",
+                            "description": "Currently you can get like m 3k from one session of the beer game",
+                            "category": "Bug",
+                            "colorLabel": 16,
+                            "priority": 0,
+                            "createdDate": "2026-07-08 23:25",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Create new variable",
+                                "Set this variable for each game",
+                                "Do check before paying out currency",
+                                "Test"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
                             "showChecklist": true,
                             "completed": true,
                             "assigneeIds": []
@@ -1255,7 +1354,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": false,
                             "assigneeIds": []
                         }

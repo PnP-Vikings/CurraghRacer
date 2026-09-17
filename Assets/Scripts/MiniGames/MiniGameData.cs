@@ -42,6 +42,9 @@ namespace MiniGames
         [Header("Rewards")]
         [Tooltip("Base earnings for this minigame (applies to work activities)")]
         public int baseEarnings; // Money for work activities
+        [Tooltip("Maximum earnings for this minigame (applies to work activities)")]
+        public int maxEarnings; // Money for work activities
+        
         [Tooltip("Base gain for this minigame (applies to training activities)")]
         public int baseGain; // Stamina/strength for training
         [Tooltip("Global multiplier applied to all rewards")]
@@ -192,6 +195,18 @@ namespace MiniGames
                 if (performancePercentage >= 1f && enablePerfectBonus)
                 {
                     earnings *= perfectBonus;
+                }
+                
+                // Clamp earnings to maxEarnings
+                if (maxEarnings > 0)
+                {
+                    int maxEarn = maxEarnings;
+                    if(TimeManager.Instance != null)
+                    {
+                        maxEarn = Mathf.RoundToInt(maxEarnings + (TimeManager.Instance.DaysPassed *3)); // Increase max earnings by 3 for each day passed
+                    }
+                    
+                    earnings = Mathf.Min(earnings, maxEarn);
                 }
             }
             else if (category == ActivityCategory.Training)
