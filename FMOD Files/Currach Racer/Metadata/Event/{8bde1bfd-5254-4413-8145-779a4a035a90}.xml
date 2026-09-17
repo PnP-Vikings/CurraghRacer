@@ -100,7 +100,7 @@
 			<value>31.927505668934241</value>
 		</property>
 		<property name="volume">
-			<value>-5</value>
+			<value>-22</value>
 		</property>
 		<relationship name="audioFile">
 			<destination>{a3f61660-c8db-47e3-8c34-059dbdec3934}</destination>
@@ -108,7 +108,7 @@
 	</object>
 	<object class="EventMixerGroup" id="{550976dd-0016-461c-b83c-bde010d14c9a}">
 		<property name="volume">
-			<value>-16.5</value>
+			<value>-1</value>
 		</property>
 		<property name="name">
 			<value>Audio 1</value>
@@ -147,6 +147,7 @@
 	<object class="MixerBusFader" id="{4eb0c0f6-318f-43d0-b1a6-1583dc1c37c9}" />
 	<object class="MixerBusEffectChain" id="{d2054a5a-f63d-432b-b8b5-cc6e0cab0ec5}">
 		<relationship name="effects">
+			<destination>{2a6c228f-5a0e-4b53-b5ae-42954d4bac62}</destination>
 			<destination>{f27727ba-8be0-40f8-a24a-0dcc4d6c1121}</destination>
 			<destination>{af2f7767-fad3-4047-ab2c-b67c7a0b2c7f}</destination>
 		</relationship>
@@ -158,6 +159,11 @@
 		</property>
 	</object>
 	<object class="MixerBusFader" id="{28ae3cac-0fcd-43d3-a5c5-9d1d86b62fa8}" />
+	<object class="GainEffect" id="{2a6c228f-5a0e-4b53-b5ae-42954d4bac62}">
+		<property name="gain">
+			<value>-1</value>
+		</property>
+	</object>
 	<object class="MultibandEqEffect" id="{f27727ba-8be0-40f8-a24a-0dcc4d6c1121}" />
 	<object class="MixerBusFader" id="{af2f7767-fad3-4047-ab2c-b67c7a0b2c7f}" />
 </objects>
