@@ -131,6 +131,50 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
+                        },
+                        {
+                            "id": "cb182da6-209f-4705-bc96-3ad1ecb0d539",
+                            "title": "Fix Completed Calendar after reloading save",
+                            "description": "Fix Completed Calendar after reloading save",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-17 19:30",
+                            "dueDate": "2026-10-01",
+                            "archived": false,
+                            "checklistItems": [
+                                "fix mistmatch on calendarevents object",
+                                "read in saved details"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": false,
+                                    "isUrl": false,
+                                    "guid": "454b31a26fe91c0479401781f8a35026",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         }
                     ]
                 },
