@@ -27,6 +27,11 @@ public class TrainingMenu : MonoBehaviour
     //FMOD.Studio.EventInstance Dumbbell;
     //FMOD.Studio.EventInstance UIClick2;
 
+    [Tooltip("The amount of energy required to train is overridden in PlayerManager")]
+    [SerializeField] private int energyCostForTraining = 30;
+    [Tooltip("The amount of currency required to train is overridden in PlayerManager")]
+    [SerializeField] private int currencyCostForTraining = 50;
+    
     
     [Header("Localization")]
     LocalizedString localizedTooLateToTrain = new LocalizedString { TableReference = "TrainingMenu", TableEntryReference = "TrainingMenu.TooLateToTrain" };
@@ -51,6 +56,12 @@ public class TrainingMenu : MonoBehaviour
          _trainSelectedMemberButton.interactable = false;
          
          CheckIfOpenTrainingMenuTaskIsCompleted();
+         
+         if(PlayerManager.Instance != null)
+         {
+            energyCostForTraining = PlayerManager.Instance.GetEnergyCostForTraining();
+            currencyCostForTraining = PlayerManager.Instance.GetCurrencyCostForTraining();
+         }
     }
     
     public void SetSelectedTeamMember(TeamMember member, TrainingSelectionUi uiHandler)
@@ -81,7 +92,7 @@ public class TrainingMenu : MonoBehaviour
             return;
         }
         
-        if (CanTrain(30, 50))
+        if (CanTrain(energyCostForTraining, currencyCostForTraining))
         {
             //if (AudioManager.instance != null)
             //{
@@ -231,7 +242,7 @@ public class TrainingMenu : MonoBehaviour
     {
         if(GameManager.Instance != null && GameManager.Instance.IsTutorialModeActive() && GameManager.Instance.IsTutorialTaskActive(TutorialTaskType.TrainTeamMemberTask))
         {
-            if(PlayerManager.Instance != null && PlayerManager.Instance.GetPlayerCoins() >=50)
+            if(PlayerManager.Instance != null && PlayerManager.Instance.GetPlayerCoins() >=currencyCost)
             {
                 PlayerManager.Instance.PurchaseItem(currencyCost);
             }

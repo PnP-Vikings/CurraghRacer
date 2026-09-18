@@ -284,6 +284,7 @@ public class GameManager : MonoBehaviour
             workedMessage = localizedYouHaveWorked.GetLocalizedString();
         }
         PlayerStatsView.Instance.DisplayInfo(workedMessage, 3);
+        TimeManager.Instance.PlayerWorkedPassTime(); // Advance time by 4 hours after working
         TimeManager.Instance.UpdateTime(); // Update the time after working
     }
 
@@ -334,6 +335,7 @@ public class GameManager : MonoBehaviour
             SaveSystem.Instance.UpdateCachedSaveData();
         }
 
+        TimeManager.Instance.PlayerTrainedPassTime(); // Advance time by 3 hours after training
         TimeManager.Instance.UpdateTime();
     }
 
