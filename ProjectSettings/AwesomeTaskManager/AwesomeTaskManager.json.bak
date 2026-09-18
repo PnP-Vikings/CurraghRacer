@@ -196,15 +196,18 @@
                                 "Make them lose stats on the daily so they can not bank it ",
                                 "Change clock style to black alarm clock",
                                 "Center game around time and clock and calendar and sceduling",
-                                "make random team members lose stats daily"
+                                "make random team members lose stats daily",
+                                "Add Time Skip for races also"
                             ],
                             "checklistStates": [
+                                false,
                                 false,
                                 false,
                                 false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
+                                "",
                                 "",
                                 "",
                                 "",
@@ -2443,15 +2446,18 @@
         {
             "id": "2adc1098-55e3-4fea-a22e-abf0ee6661d7",
             "title": "Design Doc Game Lopp ",
-            "content": "Make them lose stats on the daily -> This is important because it creates value for the training as they can no longer just train them for a full day or two and then bank the skill levels\nMaybe add some more events around food and maybe have the moral of the team members affect how much stats they lose per day also limit stats loss as this would suck too lose too much \nIt may be okay to just have some jobs or training be just a image or animation that has has a bar at the bottom that shows when its ready \n\nTime is important and calandar should be what the game is based around add bill payment dates to calendar if possible ",
+            "content": "CENTER EVERYTHING AROUND THE CLOCK \n\nCurrent system works like this \n\n             ┌───────────────┐\r\n             │  UPCOMING RACE │\r\n             └───────┬───────┘\r\n                     ↓\r\n              \"We're not ready\"\r\n                     ↓\r\n             ┌───────────────┐\r\n             │    TRAIN      │\r\n             └───────┬───────┘\r\n                     ↓\r\n              Improve crew\r\n                     ↓\r\n             ┌───────────────┐\r\n             │   NEED MONEY  │\r\n             └───────┬───────┘\r\n                     ↓\r\n             ┌───────────────┐\r\n             │     WORK      │\r\n             └───────┬───────┘\r\n                     ↓\r\n               Earn €€\r\n                     ↓\r\n             ┌───────────────┐\r\n             │ PAY BILLS     │\r\n             └───────┬───────┘\r\n                     ↓\r\n             ┌───────────────┐\r\n             │   RACE DAY    │\r\n             └───────┬───────┘\r\n                     ↓\r\n             WIN / LOSE\r\n                ↙       ↘\r\n             Win         Lose\r\n              ↓            ↓\r\n          Prize money   Need better\r\n              ↓          preparation\r\n        Hire/upgrade       ↓\r\n              ↓             │\r\n              └──────┬──────┘\r\n                     ↓\r\n                NEXT RACE\n\nBut feels like its missing somethign no real objective on day start \nshould be more like this \n\n              TIME\n             /    \\\n            /      \\\n        TRAIN      WORK\n          ↓          ↓\n       ENERGY      MONEY\n          ↓          ↓\n          └────┬─────┘\n               ↓\n             RACE\n               ↓\n        PRIZE / POINTS\n               ↓\n         BETTER TEAM\n               ↓\n          HARDER RACES\n               ↓\n             TIME\n\n\n\n\nMake them lose stats on the daily -> This is important because it creates value for the training as they can no longer just train them for a full day or two and then bank the skill levels\nMaybe add some more events around food and maybe have the moral of the team members affect how much stats they lose per day also limit stats loss as this would suck too lose too much \nIt may be okay to just have some jobs or training be just a image or animation that has has a bar at the bottom that shows when its ready \n\nTime is important and calandar should be what the game is based around add bill payment dates to calendar if possible \n\nAnother useful feature to apply pressure is if we make certain race weeks have a prefrence towards certain attributes so player has to focus on those team members or hire someone \n\nLoop needs to be something like this \nChoose activity → spend time + energy → gain something → make the next decision → eventually reach race day.\n\nThen:\n\nRace → get result/reward → reassess team → begin preparing for the next race.\n\nWe must focus on making sure time, energy, money and team strength are constantly pulling the player in different directions.\n\n![[pasted_20260918_005821.png]]     \n            \n\n\nCENTER EVERYTHING AROUND THE CLOCK \n\n\n\n\n\nDon't copy below just an example from gpt but somethig simliar would be good \n\n![[pasted_20260918_005604.png]]",
             "createdDate": "2026-09-18 00:40",
-            "modifiedDate": "2026-09-18 00:45",
+            "modifiedDate": "2026-09-18 01:08",
             "colorIndex": 2,
             "pinned": true,
             "folderId": "079e1e57-e1c4-4d84-8980-24343ef2cbaa",
             "tags": [],
             "imagePath": "",
-            "imagePaths": []
+            "imagePaths": [
+                "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260918_005604.png",
+                "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260918_005821.png"
+            ]
         }
     ],
     "noteFolders": [
