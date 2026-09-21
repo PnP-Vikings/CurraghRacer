@@ -50,6 +50,8 @@ public class GarageSceneManager : MonoBehaviour
                     DOVirtual.DelayedCall(showIntroDelay, () =>
                     {
 
+                        if (welcomeCardUi == null)
+                            return;
                         welcomeCardUi.gameObject.SetActive(true);
                         GameManager.Instance.SetHasBeenShownIntro(true);
                     });
@@ -143,6 +145,7 @@ public class GarageSceneManager : MonoBehaviour
                 }
             }
             
+            if (DebtWarningScreen == null) return;
             DebtWarningScreen.SetActive(true);
             GameManager.Instance.SetHasBeenShownWarningAboutDebt(true);
         }

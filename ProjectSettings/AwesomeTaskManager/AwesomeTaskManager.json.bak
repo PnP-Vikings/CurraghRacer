@@ -131,6 +131,110 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
+                        }
+                    ]
+                },
+                {
+                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
+                    "title": "🔨 In Progress",
+                    "cards": [
+                        {
+                            "id": "d061c1eb-5bd4-43fb-b097-962b81cb8107",
+                            "title": "Add Daily Events Card",
+                            "description": "This card should popup everyday that shows the changes to any team memeber stats \nand any upcoming races,bills or events",
+                            "category": "UI",
+                            "colorLabel": 14,
+                            "priority": 0,
+                            "createdDate": "2026-09-21 14:36",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add Card that pops up everyday",
+                                "Show upcoming league race",
+                                "show upcoming bills",
+                                "show any events today",
+                                "show team member stat loses"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "067df00a-a94c-436d-842a-e718edfb5688",
+                            "title": "Overall Thoughts and Lessons from Punch Club Play session ",
+                            "description": "Trying to nail down the loop of the game \n\nTime and calandar most important features of the game ",
+                            "category": "Design",
+                            "colorLabel": 10,
+                            "priority": 0,
+                            "createdDate": "2026-09-18 00:39",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Make them lose stats on the daily so they can not bank it ",
+                                "Change clock style to black alarm clock",
+                                "Center game around time and clock and calendar and sceduling",
+                                "make random team members lose stats daily",
+                                "Add Time Skip for races also",
+                                "Add New Day card that shows up at the start of each day",
+                                "Fix issue with saving completed races maybe rework whole system"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "d061c1eb-5bd4-43fb-b097-962b81cb8107",
+                                "cb182da6-209f-4705-bc96-3ad1ecb0d539"
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [
+                                {
+                                    "isSceneObject": false,
+                                    "isNote": true,
+                                    "isUrl": false,
+                                    "guid": "2adc1098-55e3-4fea-a22e-abf0ee6661d7",
+                                    "sceneObject": {
+                                        "scenePath": "",
+                                        "globalObjectId": "",
+                                        "name": ""
+                                    },
+                                    "url": "",
+                                    "displayName": ""
+                                }
+                            ],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260918_155025_20260918_155947.png",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         },
                         {
                             "id": "cb182da6-209f-4705-bc96-3ad1ecb0d539",
@@ -172,71 +276,6 @@
                                 }
                             ],
                             "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": []
-                        }
-                    ]
-                },
-                {
-                    "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
-                    "title": "🔨 In Progress",
-                    "cards": [
-                        {
-                            "id": "067df00a-a94c-436d-842a-e718edfb5688",
-                            "title": "Overall Thoughts and Lessons from Punch Club Play session ",
-                            "description": "Trying to nail down the loop of the game \n\nTime and calandar most important features of the game ",
-                            "category": "Design",
-                            "colorLabel": 10,
-                            "priority": 0,
-                            "createdDate": "2026-09-18 00:39",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Make them lose stats on the daily so they can not bank it ",
-                                "Change clock style to black alarm clock",
-                                "Center game around time and clock and calendar and sceduling",
-                                "make random team members lose stats daily",
-                                "Add Time Skip for races also",
-                                "Add New Day card that shows up at the start of each day",
-                                "Fix issue with saving completed races maybe rework whole system"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "",
-                                "cb182da6-209f-4705-bc96-3ad1ecb0d539"
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [
-                                {
-                                    "isSceneObject": false,
-                                    "isNote": true,
-                                    "isUrl": false,
-                                    "guid": "2adc1098-55e3-4fea-a22e-abf0ee6661d7",
-                                    "sceneObject": {
-                                        "scenePath": "",
-                                        "globalObjectId": "",
-                                        "name": ""
-                                    },
-                                    "url": "",
-                                    "displayName": ""
-                                }
-                            ],
-                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260918_155025_20260918_155947.png",
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
@@ -577,7 +616,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-18 00:22",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Place stuff from fbs"
                             ],
@@ -606,7 +645,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-04 23:26",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Add Tutorial ui that shows when active",
                                 "Show create prefab that populates with data",
@@ -645,7 +684,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-04 22:36",
                             "dueDate": "2026-07-16",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Add Task to open Calendar",
                                 "Add Task to open Bulletin Board",
@@ -711,7 +750,7 @@
                             "priority": 0,
                             "createdDate": "2026-07-07 00:42",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Add Extra pop to ask player if theri sure",
                                 "test make sure it works"
@@ -741,7 +780,7 @@
                             "priority": 0,
                             "createdDate": "2026-07-27 21:03",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Update on scritable object",
                                 "Verify it works"
@@ -771,7 +810,7 @@
                             "priority": 0,
                             "createdDate": "2026-08-06 14:37",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Match up the logic with the start new game button",
                                 "Verify its working"
@@ -841,7 +880,7 @@
                             "priority": 0,
                             "createdDate": "2026-07-09 19:49",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Change format",
                                 "Test",
@@ -874,7 +913,7 @@
                             "priority": 0,
                             "createdDate": "2026-07-08 23:33",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Create league",
                                 "Add 3 Teams",
@@ -976,7 +1015,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-30 22:12",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Make text show on a delay ",
                                 "Figure out easiest way to keep track of text in game for easy transaction"
@@ -1006,7 +1045,7 @@
                             "priority": 0,
                             "createdDate": "2026-06-03 23:00",
                             "dueDate": "2026-07-03",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Verify the player can complete a task",
                                 "Once player has completed all tasks in list set tutorial completed",
@@ -1098,7 +1137,7 @@
                             "priority": 0,
                             "createdDate": "2026-09-01 21:09",
                             "dueDate": "2026-09-08",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Beer Pouring Minigame",
                                 "Minigame canvas ui",
@@ -1270,7 +1309,7 @@
                             "priority": 0,
                             "createdDate": "2026-08-07 16:25",
                             "dueDate": "2026-09-08",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "League Invitaition card",
                                 "All the tutorial tasks",
@@ -1330,7 +1369,7 @@
                             "priority": 0,
                             "createdDate": "2026-09-09 22:33",
                             "dueDate": "",
-                            "archived": false,
+                            "archived": true,
                             "checklistItems": [
                                 "Add localization for name",
                                 "Add localization for description",
@@ -1386,7 +1425,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         }
@@ -2451,10 +2490,10 @@
     "notes": [
         {
             "id": "2adc1098-55e3-4fea-a22e-abf0ee6661d7",
-            "title": "Design Doc Game Lopp ",
+            "title": "Design Doc Game Loop ",
             "content": "CENTER EVERYTHING AROUND THE CLOCK \n\nCurrent system works like this \n\n             ┌───────────────┐\r\n             │  UPCOMING RACE │\r\n             └───────┬───────┘\r\n                     ↓\r\n              \"We're not ready\"\r\n                     ↓\r\n             ┌───────────────┐\r\n             │    TRAIN      │\r\n             └───────┬───────┘\r\n                     ↓\r\n              Improve crew\r\n                     ↓\r\n             ┌───────────────┐\r\n             │   NEED MONEY  │\r\n             └───────┬───────┘\r\n                     ↓\r\n             ┌───────────────┐\r\n             │     WORK      │\r\n             └───────┬───────┘\r\n                     ↓\r\n               Earn €€\r\n                     ↓\r\n             ┌───────────────┐\r\n             │ PAY BILLS     │\r\n             └───────┬───────┘\r\n                     ↓\r\n             ┌───────────────┐\r\n             │   RACE DAY    │\r\n             └───────┬───────┘\r\n                     ↓\r\n             WIN / LOSE\r\n                ↙       ↘\r\n             Win         Lose\r\n              ↓            ↓\r\n          Prize money   Need better\r\n              ↓          preparation\r\n        Hire/upgrade       ↓\r\n              ↓             │\r\n              └──────┬──────┘\r\n                     ↓\r\n                NEXT RACE\n\nBut feels like its missing somethign no real objective on day start \nshould be more like this \n\n              TIME\n             /    \\\n            /      \\\n        TRAIN      WORK\n          ↓          ↓\n       ENERGY      MONEY\n          ↓          ↓\n          └────┬─────┘\n               ↓\n             RACE\n               ↓\n        PRIZE / POINTS\n               ↓\n         BETTER TEAM\n               ↓\n          HARDER RACES\n               ↓\n             TIME\n\n\n\n\nMake them lose stats on the daily -> This is important because it creates value for the training as they can no longer just train them for a full day or two and then bank the skill levels\nMaybe add some more events around food and maybe have the moral of the team members affect how much stats they lose per day also limit stats loss as this would suck too lose too much \nIt may be okay to just have some jobs or training be just a image or animation that has has a bar at the bottom that shows when its ready \n\nTime is important and calandar should be what the game is based around add bill payment dates to calendar if possible \n\nAnother useful feature to apply pressure is if we make certain race weeks have a prefrence towards certain attributes so player has to focus on those team members or hire someone \n\nLoop needs to be something like this \nChoose activity → spend time + energy → gain something → make the next decision → eventually reach race day.\n\nThen:\n\nRace → get result/reward → reassess team → begin preparing for the next race.\n\nWe must focus on making sure time, energy, money and team strength are constantly pulling the player in different directions.\n\n![[pasted_20260918_005821.png]]     \n            \n\nCENTER EVERYTHING AROUND THE CLOCK \n\n\nAlso to give the player an objective we can have a screen like this popup\nat the start of each day \n\n![[pasted_20260918_155025.png]]\n\n\nDon't copy below just an example from gpt but somethig simliar would be good \n\n![[pasted_20260918_005604.png]]\n\n\nExample of screen from punch club\n\n\n![[pasted_20260918_011605.png]]\n\n\n![[pasted_20260918_154457.png]]\n\n\n![[pasted_20260918_154525.png]]\n\n\n![[pasted_20260918_154825.png]]",
             "createdDate": "2026-09-18 00:40",
-            "modifiedDate": "2026-09-18 15:50",
+            "modifiedDate": "2026-09-18 16:13",
             "colorIndex": 2,
             "pinned": true,
             "folderId": "079e1e57-e1c4-4d84-8980-24343ef2cbaa",

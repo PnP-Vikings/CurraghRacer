@@ -39,7 +39,7 @@ public class ClockUI : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (SceneManager.GetActiveScene().name == "Main Menu")
+        if (SceneManager.GetActiveScene().name != "Garage")
         {
             uiDoc.rootVisualElement.style.display = DisplayStyle.None;
         }
