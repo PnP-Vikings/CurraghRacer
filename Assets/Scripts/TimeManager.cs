@@ -50,7 +50,7 @@ public class TimeManager : MonoBehaviour
     // Time variables
     [Tooltip("Current time of day in hours (0-24). 0 = midnight, 12 = noon, 24 = midnight.")]
     [SerializeField, Range(0, 24)] private float timeOfDay;
-    [Tooltip("Multiplier for how fast time passes in the game. 1 = normal speed, 2 = double speed, etc.")]
+    [Tooltip("Multiplier for how fast time passes in the game. 1 = normal speed, 2 = double speed, etc. // 1 is 15 minutes real time = 24 hours game time")]
     [SerializeField, Range(0f, 10f)] private float timeMultiplier = 1f;
     private int daysPassed = 0;
     private bool newItemSpawned = false;
@@ -164,7 +164,7 @@ public class TimeManager : MonoBehaviour
         if (hours < 0) throw new ArgumentException("Hours to advance must be non-negative");
         
         float previousTimeOfDay = timeOfDay;
-        timeOfDay += hours * timeMultiplier;
+        timeOfDay += hours;
         timeOfDay %= 24f; // Clamp to 0-24
 
         // Check if a new day has started
@@ -476,7 +476,7 @@ public class TimeManager : MonoBehaviour
         // 15 minutes = 900 seconds
         // 24 hours = 86400 seconds in-game
         // Multiplier = 86400 / 900 = 96
-        float calculatedMultiplier = (24f * 60f * 60f) / (dayDurationInMinutes * 60f);
+        float calculatedMultiplier = ((24f * 60f * 60f) / (dayDurationInMinutes * 60f)) * timeMultiplier;
     
         timeOfDay += (deltaTime / 3600f) * calculatedMultiplier;
     

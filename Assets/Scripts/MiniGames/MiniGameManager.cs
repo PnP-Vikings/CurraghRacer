@@ -499,6 +499,10 @@ namespace MiniGames
                     }
                 }
             }  
+            
+            selectedTeamMember = null;
+            playerHasFailedMinigame = false;
+            
         }
         
         private IEnumerator ReturnToMainSceneAfterDelay(float delay)

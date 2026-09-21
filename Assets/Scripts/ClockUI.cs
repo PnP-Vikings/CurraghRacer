@@ -11,7 +11,9 @@ public class ClockUI : MonoBehaviour
     private Label _dayOfWeekText;
     private VisualElement _minuteHand,
         _hourHand;
+    private VisualElement _clockContainer;
 
+    [SerializeField] private bool showClockInGarage = false;
     
     
     private void OnEnable()
@@ -24,6 +26,8 @@ public class ClockUI : MonoBehaviour
         _minuteHand = root.Q<VisualElement>("MinuteHand");
         _hourHand = root.Q<VisualElement>("HourHand");
         _dayOfWeekText = root.Q<Label>("DayOfWeekText");
+        _clockContainer = root.Q<VisualElement>("ClockMajor");
+        
         UpdateClock();
         if (TimeManager.Instance == null) {Debug.Log("TimeManger Instance is null");return;}
         TimeManager.Instance.onNewDay.AddListener(UpdateClock);
@@ -31,6 +35,16 @@ public class ClockUI : MonoBehaviour
         
         SceneManager.sceneLoaded += OnSceneLoaded;
         
+        
+        
+        if (SceneManager.GetActiveScene().name != "Garage" || !showClockInGarage)
+        {
+            _clockContainer.style.display = DisplayStyle.None;
+        }
+        else
+        {
+            _clockContainer.style.display = DisplayStyle.Flex;
+        }
       
     }
     private void OnDisable()
@@ -39,13 +53,13 @@ public class ClockUI : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
-        if (SceneManager.GetActiveScene().name != "Garage")
+        if (SceneManager.GetActiveScene().name != "Garage" || !showClockInGarage)
         {
-            uiDoc.rootVisualElement.style.display = DisplayStyle.None;
+            _clockContainer.style.display = DisplayStyle.None;
         }
         else
         {
-            uiDoc.rootVisualElement.style.display = DisplayStyle.Flex;
+            _clockContainer.style.display = DisplayStyle.Flex;
         }
     }
     

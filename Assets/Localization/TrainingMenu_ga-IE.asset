@@ -20,8 +20,7 @@ MonoBehaviour:
     - rid: 7162749194343809130
   m_TableData:
   - m_Id: 622370742272
-    m_Localized: "Caithfidh \u20AC{0} ar a laghad a bheith agat chun oili\xFAint
-      a dh\xE9anamh."
+    m_Localized: "N\xED m\xF3r duit \u20AC{0} ar a laghad a bheith agat le hoili\xFAint"
     m_Metadata:
       m_Items:
       - rid: 7162749194343809130
