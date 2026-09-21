@@ -194,7 +194,8 @@
                                 "make random team members lose stats daily",
                                 "Add Time Skip for races also",
                                 "Add New Day card that shows up at the start of each day",
-                                "Fix issue with saving completed races maybe rework whole system"
+                                "Fix issue with saving completed races maybe rework whole system",
+                                "Added Tranistion when player sleeps"
                             ],
                             "checklistStates": [
                                 false,
@@ -203,7 +204,8 @@
                                 false,
                                 false,
                                 false,
-                                false
+                                false,
+                                true
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -212,7 +214,8 @@
                                 "",
                                 "",
                                 "d061c1eb-5bd4-43fb-b097-962b81cb8107",
-                                "cb182da6-209f-4705-bc96-3ad1ecb0d539"
+                                "cb182da6-209f-4705-bc96-3ad1ecb0d539",
+                                ""
                             ],
                             "linkedAssetGuids": [],
                             "linkedSceneObjects": [],

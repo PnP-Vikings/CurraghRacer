@@ -28,6 +28,10 @@ public class StartMenu : MonoBehaviour
     [Tooltip("The amount of currency required to sleep is overridden in PlayerManager")]
     [SerializeField] private int currencyCostForSleep = 30;
     
+    [Header("Sleep Ui")]
+    [SerializeField] private SleepTransition sleepTransition;
+    
+    
     [Header("Localization")]
     [SerializeField] private string startRaceText="Start Race";
     [SerializeField] private string practiceRaceText="Practice";
@@ -389,7 +393,8 @@ public class StartMenu : MonoBehaviour
             }
             else
             {
-                GameManager.Instance.Sleep(currencyCostForSleep);
+               bool sleepSuccessful = GameManager.Instance.Sleep(currencyCostForSleep);
+           
             }
           
         }

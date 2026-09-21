@@ -35,6 +35,10 @@ public class ClockUI : MonoBehaviour
         
         SceneManager.sceneLoaded += OnSceneLoaded;
         
+        if (TimeManager.Instance != null)
+        {
+            showClockInGarage = TimeManager.Instance.GetShowClockInGarage();
+        }
         
         
         if (SceneManager.GetActiveScene().name != "Garage" || !showClockInGarage)
@@ -53,6 +57,11 @@ public class ClockUI : MonoBehaviour
     }
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
+        if (TimeManager.Instance != null)
+        {
+            showClockInGarage = TimeManager.Instance.GetShowClockInGarage();
+        }
+        
         if (SceneManager.GetActiveScene().name != "Garage" || !showClockInGarage)
         {
             _clockContainer.style.display = DisplayStyle.None;

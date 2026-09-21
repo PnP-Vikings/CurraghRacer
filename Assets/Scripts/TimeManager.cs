@@ -92,6 +92,9 @@ public class TimeManager : MonoBehaviour
     [Tooltip("Time cost in hours for training activities")]
     [SerializeField] private float timeCostForTraining = 3f; // 3 hours for training
     
+    [Header("Universal Clock Ui Settings")]
+    [SerializeField] private bool showClockInGarage = false;
+    
     [Header("Localization")]
     internal LocalizedString[] _localizedDays = {new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Sunday" },
         new LocalizedString { TableReference = "TimeManager", TableEntryReference = "TimeManager.Monday" },
@@ -677,6 +680,11 @@ public class TimeManager : MonoBehaviour
         if(!allowTimeCostForActivities) return;
         
         AdjustTimeOfDay(timeCostForTraining);
+    }
+    
+    public bool GetShowClockInGarage()
+    {
+        return showClockInGarage;
     }
     
     /// <summary>
