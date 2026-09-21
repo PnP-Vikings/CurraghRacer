@@ -1,6 +1,6 @@
 .LabelStyle {
     align-self: center;
-    -unity-font-definition: url("project://database/Assets/UI/Fonts/ChelaOne-Regular.ttf?fileID=12800000&guid=8c2226f5768e49f4ca5f58858a57cb7a&type=3#ChelaOne-Regular");
+    -unity-font-definition: url("project://database/Assets/Art/UI/Fonts/ChelaOne-Regular.ttf");
     font-size: 119px;
 }
 
