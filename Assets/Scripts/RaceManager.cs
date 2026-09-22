@@ -986,6 +986,11 @@ public class RaceManager : MonoBehaviour
         {
             AudioManager.instance.raceWon.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
+        
+        if(TimeManager.Instance != null)
+        {
+            TimeManager.Instance.AdvanceTimeForRace();
+        }
     }
     
     IEnumerator ShowAd()

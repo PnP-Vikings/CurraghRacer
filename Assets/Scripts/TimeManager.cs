@@ -91,6 +91,8 @@ public class TimeManager : MonoBehaviour
     [SerializeField] private float timeCostForWork = 4f; // 4 hours for work
     [Tooltip("Time cost in hours for training activities")]
     [SerializeField] private float timeCostForTraining = 3f; // 3 hours for training
+    [Tooltip("Time cost in hours for races")]
+    [SerializeField] private float timeCostForRaces = 2f; // 2 hours for races
     
     [Header("Universal Clock Ui Settings")]
     [SerializeField] private bool showClockInGarage = false;
@@ -685,6 +687,13 @@ public class TimeManager : MonoBehaviour
     public bool GetShowClockInGarage()
     {
         return showClockInGarage;
+    }
+    
+    public void AdvanceTimeForRace()
+    {
+        if(!allowTimeCostForActivities) return;
+        
+        AdjustTimeOfDay(timeCostForRaces);
     }
     
     /// <summary>
