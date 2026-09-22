@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{998a0860-a1a3-4316-bcf9-193b805eadf0}">
+		<property name="name">
+			<value>Main Theme Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{ddd19fe7-0f68-4855-b269-e40240d43434}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{ddd19fe7-0f68-4855-b269-e40240d43434}">
+		<property name="initialValue">
+			<value>1</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.91999995708465576</value>
+		</property>
+	</object>
+</objects>
