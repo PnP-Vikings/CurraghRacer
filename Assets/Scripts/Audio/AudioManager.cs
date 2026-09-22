@@ -129,6 +129,8 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance tutorialGuy;
 
+    public EventInstance mainTheme;
+
     private Scene activeScene;
     void Awake()
     {
@@ -287,6 +289,8 @@ public class AudioManager : MonoBehaviour
                             // Tutorial //
         tutorialGuy = RuntimeManager.CreateInstance("event:/Tutorial/Tutorial Guy");
 
+
+        mainTheme = RuntimeManager.CreateInstance("event:/Soundtrack/Main Theme");
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
         //PowerMeter = RuntimeManager.CreateInstance("event:/Weight Lifting/Power Meter");
