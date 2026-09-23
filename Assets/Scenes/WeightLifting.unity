@@ -3375,7 +3375,7 @@ MonoBehaviour:
       Data2: 1338182616
       Data3: 1968909203
       Data4: 296153252
-    Path: event:/Soundtrack/Loading Screen Song
+    Path: event:/Soundtrack/Dance Track
   Event: 
   EventPlayTrigger: 1
   EventStopTrigger: 2
@@ -3384,11 +3384,9 @@ MonoBehaviour:
   Preload: 0
   NonRigidbodyVelocity: 0
   Params:
-  - Name: Radioify
+  - Name: Radioify Dance Track
     Value: 1
   - Name: Dance Track Volume
-    Value: 1
-  - Name: Radioify Dance Track
     Value: 1
   OverrideAttenuation: 0
   OverrideMinDistance: 1
