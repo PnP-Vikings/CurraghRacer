@@ -131,6 +131,45 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
+                        },
+                        {
+                            "id": "ff274282-35ee-4952-8a82-da46ff564259",
+                            "title": "Add a way to regain energy ",
+                            "description": "Currently the system is missing one really important aspect the ability to be able to \ntrade time and money to get energy so they can get extra energy ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-23 01:30",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add a door to the garage scene",
+                                "Make the door clickable",
+                                "show a ui that allows player to purchase food",
+                                "add a fridge or something that allows them to click on and consume",
+                                "also add a expiration date to the food so they can't just bank them"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
                         }
                     ]
                 },
@@ -195,17 +234,19 @@
                                 "Add Time Skip for races also",
                                 "Add New Day card that shows up at the start of each day",
                                 "Fix issue with saving completed races maybe rework whole system",
-                                "Added Tranistion when player sleeps"
+                                "Added Tranistion when player sleeps",
+                                "Add Food to regain engery"
                             ],
                             "checklistStates": [
                                 false,
                                 true,
                                 false,
                                 false,
+                                true,
                                 false,
                                 false,
-                                false,
-                                true
+                                true,
+                                false
                             ],
                             "checklistLinkedCardIds": [
                                 "",
@@ -215,6 +256,7 @@
                                 "",
                                 "d061c1eb-5bd4-43fb-b097-962b81cb8107",
                                 "cb182da6-209f-4705-bc96-3ad1ecb0d539",
+                                "",
                                 ""
                             ],
                             "linkedAssetGuids": [],
