@@ -671,8 +671,8 @@ public class RaceManager : MonoBehaviour
             if (!isRaceDay)
             {
                 AudioManager.instance.raceAmbience.setParameterByName("Crowd Volume", 0f);
-                AudioManager.instance.mainTheme.start();
-                AudioManager.instance.mainTheme.setParameterByName("Main Theme Volume", 0f);
+                //AudioManager.instance.mainTheme.start();
+                //AudioManager.instance.mainTheme.setParameterByName("Main Theme Volume", 0f);
             }
         }
 

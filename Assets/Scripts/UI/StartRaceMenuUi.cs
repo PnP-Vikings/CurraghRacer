@@ -24,9 +24,25 @@ public class StartRaceMenuUi : MonoBehaviour
 
                 if (AudioManager.instance != null)
                 {
-                    RadioManager.instance.StopAllRadioSongs();
                     AudioManager.instance.miniGameProgression.stop(STOP_MODE.ALLOWFADEOUT);
-                    AudioManager.instance.loadingScreenSong.start();
+                    if (RaceManager.Instance != null)
+                    {
+                        if (RaceManager.Instance.isRaceDay == true)
+                        {
+                            AudioManager.instance.danceTrack.start();
+                        }
+                        else
+                        {
+                            AudioManager.instance.mainTheme.start();
+                            AudioManager.instance.mainTheme.setParameterByName("Main Theme Volume", 0f);
+
+                        }
+                    }
+                }
+
+                if (RadioManager.instance != null)
+                {
+                    RadioManager.instance.StopAllRadioSongs();
                 }
             }
         }
@@ -59,7 +75,7 @@ public class StartRaceMenuUi : MonoBehaviour
 
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.loadingScreenSong.stop(STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.danceTrack.stop(STOP_MODE.ALLOWFADEOUT);
         }
     }
 
