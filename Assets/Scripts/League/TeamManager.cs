@@ -260,48 +260,6 @@ public class TeamManager : MonoBehaviour
         Debug.LogWarning($"Team member with name {memberName} not found.");
         return null;
     }
-
-    public void ModifyTeamMemberStat(TeamMember selectedTeamMember, TeamMember.StatType selectedStatType, int amountChanged)
-    {
-        // Apply stat changes immediately BEFORE scene transition to prevent cache overwrite
-        Debug.Log($"Training {selectedTeamMember.memberName} in {selectedStatType} for {amountChanged} points.");
-
-
-        switch (selectedStatType)
-        {
-            case TeamMember.StatType.Strength:
-                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Strength, amountChanged);
-                break;
-            case TeamMember.StatType.Technique:
-                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Technique, amountChanged);
-                break;
-            case TeamMember.StatType.Stamina:
-                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.Stamina, amountChanged);
-                break;
-            case TeamMember.StatType.TeamWork:
-                PlayerManager.Instance.ModifyTeamMemberStat(selectedTeamMember, TeamMember.StatType.TeamWork, amountChanged);
-                break;
-            default:
-                Debug.LogError("Invalid stat type selected for training.");
-                /*if (PlayerStatsView.Instance != null)
-                {
-                    string invalidStatTypeMessage = "Invalid stat type selected for training.";
-                    if(localizedInvalidStatType != null && !localizedInvalidStatType.IsEmpty)
-                    {
-                        localizedInvalidStatType.RefreshString();
-                        invalidStatTypeMessage = localizedInvalidStatType.GetLocalizedString();
-                    }
-                    PlayerStatsView.Instance.DisplayInfo(invalidStatTypeMessage, 3);
-                }*/
-                break;
-        }
-
-        // Update the cached save data to include the new stats
-        if (SaveSystem.Instance != null)
-        {
-            SaveSystem.Instance.UpdateCachedSaveData();
-        }
-
-    }
+    
 
 }

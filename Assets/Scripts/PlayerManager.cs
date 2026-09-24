@@ -210,12 +210,34 @@ public class PlayerManager : MonoBehaviour
 
     public void ReduceTeamMemberStat()
     {
-        TeamMember member = GetRandomTeamMember();
-        TeamMember.StatType statType = GetRandomStatType();
-        int amount = Random.Range(1, 4); // Random amount between 1 and 3
-        ModifyTeamMemberStat(member, statType, -amount);
+        int numberOfMembersToDecrease = 1;
+        int randomChance = Random.Range(0, 100);
         
-        Debug.Log($"{member.memberName}'s {statType} reduced by {amount}. New value: {member.GetTeamMemberStat(statType)}");
+        if (randomChance < 5) // 5% chance to decrease stats for 2 members
+        {
+            numberOfMembersToDecrease = 2;
+        }
+        
+        for (int i = 0; i < numberOfMembersToDecrease; i++)
+        {
+            TeamMember member = GetRandomTeamMember();
+            int numberOfStatsToDecrease = 1;
+            
+            int statDecreaseChance = Random.Range(0, 100);
+            
+            if (statDecreaseChance < 5) // 5% chance to decrease 2 stats
+            {
+                numberOfStatsToDecrease = 2;
+            }
+                
+            for (int j = 0; j < numberOfStatsToDecrease; j++)
+            {
+                TeamMember.StatType statType = GetRandomStatType();
+                int amount = Random.Range(1, 4); // Random amount between 1 and 3
+                ModifyTeamMemberStat(member, statType, -amount);
+                Debug.Log($"{member.memberName}'s {statType} reduced by {amount}. New value: {member.GetTeamMemberStat(statType)}");
+            }
+        }
     }
     
     
@@ -274,7 +296,7 @@ public class PlayerManager : MonoBehaviour
                 }
                 DOVirtual.DelayedCall(3f, () =>
                 {
-                    PlayerStatsView.Instance.ClearInfo();
+                    //PlayerStatsView.Instance.ClearInfo();
                     PlayerStatsView.Instance.DisplayInfo(statLostMessage, 3);
                 });
                 
@@ -296,7 +318,7 @@ public class PlayerManager : MonoBehaviour
                 
                 DOVirtual.DelayedCall(3f, () =>
                 {
-                    PlayerStatsView.Instance.ClearInfo();
+                   // PlayerStatsView.Instance.ClearInfo();
                     PlayerStatsView.Instance.DisplayInfo(statGainedMessage, 3);
                 });
               
