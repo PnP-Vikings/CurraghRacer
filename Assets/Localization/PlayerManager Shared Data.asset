@@ -27,6 +27,10 @@ MonoBehaviour:
     m_Key: PlayerManager.DebtWarning.ReachedMaximumDebtLimit
     m_Metadata:
       m_Items: []
+  - m_Id: 12131121314652160
+    m_Key: PlayerManager.TeamMemberStatLost
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

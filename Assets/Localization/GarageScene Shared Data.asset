@@ -307,6 +307,14 @@ MonoBehaviour:
     m_Key: Garage.DebtWarning.DescriptionText
     m_Metadata:
       m_Items: []
+  - m_Id: 23944938281492480
+    m_Key: Garage.Clock
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23945610922024960
+    m_Key: Garage.Door
+    m_Metadata:
+      m_Items: []
   m_Metadata:
     m_Items: []
   m_KeyGenerator:

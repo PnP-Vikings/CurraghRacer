@@ -331,6 +331,14 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7162749194343809148
+  - m_Id: 23944938281492480
+    m_Localized: Clog
+    m_Metadata:
+      m_Items: []
+  - m_Id: 23945610922024960
+    m_Localized: Doras
+    m_Metadata:
+      m_Items: []
   references:
     version: 2
     RefIds:

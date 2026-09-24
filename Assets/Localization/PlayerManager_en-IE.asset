@@ -32,6 +32,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items:
       - rid: 7162749194343809132
+  - m_Id: 12131121314652160
+    m_Localized: '{0} lost {1} {2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809132
   references:
     version: 2
     RefIds:
@@ -41,3 +46,4 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 353146757120
+        - id: 12131121314652160
