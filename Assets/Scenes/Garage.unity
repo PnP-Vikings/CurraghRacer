@@ -12679,6 +12679,18 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 550402161}
+    - target: {fileID: 352278169176559784, guid: 1d3e7d7cb74a1f64bb523777a9e34e37, type: 3}
+      propertyPath: m_text
+      value: "D\xE9 Domhnaigh"
+      objectReference: {fileID: 0}
+    - target: {fileID: 352278169176559784, guid: 1d3e7d7cb74a1f64bb523777a9e34e37, type: 3}
+      propertyPath: m_overflowMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 352278169176559784, guid: 1d3e7d7cb74a1f64bb523777a9e34e37, type: 3}
+      propertyPath: m_characterSpacing
+      value: -2.95
+      objectReference: {fileID: 0}
     - target: {fileID: 373952505683965291, guid: 1d3e7d7cb74a1f64bb523777a9e34e37, type: 3}
       propertyPath: m_LocalPosition.x
       value: 2.9000015
