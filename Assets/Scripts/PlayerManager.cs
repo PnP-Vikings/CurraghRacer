@@ -250,6 +250,11 @@ public class PlayerManager : MonoBehaviour
               }
             }
         }
+        // Update the cached save data to include the new stats
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.UpdateCachedSaveData();
+        }
     }
 
     public bool ProcessChosenStat(TeamMember member)
@@ -349,7 +354,6 @@ public class PlayerManager : MonoBehaviour
     public void ModifyTeamMemberStat(TeamMember member, TeamMember.StatType statType, int amount)
     {
         List<TeamMember> tempList = new List<TeamMember>();
-        
         tempList.AddRange(playerTeam.teamMembers);
         tempList.AddRange(TeamManager.Instance.benchTeamMembers);
         
