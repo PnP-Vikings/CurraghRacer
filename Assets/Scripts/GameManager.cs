@@ -33,6 +33,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private bool tutorialModeCompleted = false;
     public UnityEvent onTaskModified;
     public UnityEvent onTutorialModeCompleted;
+    public UnityEvent onSleep;
     [SerializeField] TutorialAudio TutorialAudio;
 
     [Header("Localization")]
@@ -162,7 +163,7 @@ public class GameManager : MonoBehaviour
         return false; // Do not allow ad to be shown
     }
 
-    public void Sleep(int sleepCost)
+    public bool Sleep(int sleepCost)
     {
         if (RaceManager.Instance != null && (RaceManager.Instance.isRaceDay && !RaceManager.Instance.hasPlayerCompletedRace))
         {
@@ -173,7 +174,7 @@ public class GameManager : MonoBehaviour
                 cantSleepMessage = localizedCantSleepBeforeRace.GetLocalizedString();
             }
             PlayerStatsView.Instance.DisplayInfo(cantSleepMessage, 3);
-            return; // Player cannot sleep before completing the race
+            return false; // Player cannot sleep before completing the race
         }
 
         if (PlayerManager.Instance.PlayerHasEnoughEnergy(100) && !tutorialModeActive)
@@ -185,7 +186,7 @@ public class GameManager : MonoBehaviour
                 notTiredMessage = localizedNotTired.GetLocalizedString();
             }
             PlayerStatsView.Instance.DisplayInfo(notTiredMessage, 3);
-            return; // Not enough energy to sleep
+            return false; // Not enough energy to sleep
         }
         
         if (tutorialModeActive && !tutorialModeCompleted && !IsTutorialTaskActive(TutorialTaskType.SleepTask))
@@ -198,7 +199,7 @@ public class GameManager : MonoBehaviour
                 cantSleepTutorialMessage = localizedCantSleepTutorial.GetLocalizedString();
             }
             PlayerStatsView.Instance.DisplayInfo(cantSleepTutorialMessage, 1.5f);
-            return; // Not enough energy to sleep
+            return false; // Not enough energy to sleep
         }
         
         if(tutorialModeActive && !tutorialModeCompleted && IsTutorialTaskActive(TutorialTaskType.SleepTask))
@@ -208,6 +209,7 @@ public class GameManager : MonoBehaviour
 
         if (PlayerManager.Instance.PurchaseItem(sleepCost))
         {
+            onSleep?.Invoke();
             int energyRegained = 100;
             PlayerManager.Instance.ModifyPlayerEnergy(energyRegained);
             string spentMessage = $"You Spent {sleepCost} on a place to sleep";
@@ -230,6 +232,7 @@ public class GameManager : MonoBehaviour
         }
         else
         {
+            onSleep?.Invoke();
             int energyRegained = 25;
             string CouldntAffordPlaceToSleepMessage = "You could not afford a place to sleep so slept on street";
             string energyRegainedMessage = $"You Have Regained {energyRegained} Energy";
@@ -263,6 +266,7 @@ public class GameManager : MonoBehaviour
             GameManager.Instance.CompleteTutorialTask(TutorialTaskType.SleepTask);
         }
         StartCoroutine(SleepAudioChanges());
+        return true;
     }
 
     public void PlayerWorked(int rewardedCoins = 50, int energyCost = -25)

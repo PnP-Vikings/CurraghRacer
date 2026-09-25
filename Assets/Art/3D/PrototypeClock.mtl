@@ -1,0 +1,8 @@
+# Created by Kenney (www.kenney.nl)
+
+newmtl steel(Clone)
+Kd 0.431 0.407 0.821
+
+newmtl custom2(Clone)
+Kd 0 0 0
+

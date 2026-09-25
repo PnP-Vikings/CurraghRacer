@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using DG.Tweening;
 using League;
 using UnityEngine;
 using UnityEngine.Events;
@@ -33,6 +34,7 @@ public class PlayerManager : MonoBehaviour
     
     [Header("Localization")]
     [SerializeField] private LocalizedString localizedStatGainedText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.TeamMemberStatGained" };
+    [SerializeField] private LocalizedString localizedStatLostText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.TeamMemberStatLost" };
     [SerializeField] private LocalizedString localizedDebtWarningEarnMoneyText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.DebtWarning.EarnMoney" };
     [SerializeField] private LocalizedString localizedDebtWarningReachedMaximumDebtLimitText = new LocalizedString { TableReference = "PlayerManager", TableEntryReference = "PlayerManager.DebtWarning.ReachedMaximumDebtLimit" };
     
@@ -72,6 +74,9 @@ public class PlayerManager : MonoBehaviour
                TeamManager.Instance.SetBenchTeamMembers(playerTeam.bench);
            }
        }
+       
+       if(TimeManager.Instance != null)
+           TimeManager.Instance.onNewDay.AddListener(ReduceTeamMemberStat);
 
     }
 
@@ -201,29 +206,202 @@ public class PlayerManager : MonoBehaviour
     {
         return energy >= energyCost;
     }
-    // Method to update player stats
+
+
+    public void ReduceTeamMemberStat()
+    {
+        int numberOfMembersToDecrease = 1;
+        int randomChance = Random.Range(0, 100);
+        
+        if (randomChance < 5) // 5% chance to decrease stats for 2 members
+        {
+            numberOfMembersToDecrease = 2;
+        }
+        
+        for (int i = 0; i < numberOfMembersToDecrease; i++)
+        {
+            TeamMember member = GetRandomTeamMember();
+            int numberOfStatsToDecrease = 1;
+            
+            int statDecreaseChance = Random.Range(0, 100);
+            
+            if (statDecreaseChance < 5) // 5% chance to decrease 2 stats
+            {
+                numberOfStatsToDecrease = 2;
+            }
+            int tryDifferentMemberCount = 0;
+            for (int j = 0; j < numberOfStatsToDecrease; j++)
+            {
+              bool statWasDecreased = ProcessChosenStat(member);
+
+              if (!statWasDecreased)
+              { 
+                  member = GetRandomTeamMember();
+                  tryDifferentMemberCount++;
+                  if(tryDifferentMemberCount >3)
+                  {
+                      Debug.LogWarning("Could not find a team member with stats that can be decreased after 3 tries.");
+                      break;
+                  }
+                  else
+                  {
+                      j--; // Retry the same stat decrease for the new member
+                  }
+              }
+            }
+        }
+        // Update the cached save data to include the new stats
+        if (SaveSystem.Instance != null)
+        {
+            SaveSystem.Instance.UpdateCachedSaveData();
+        }
+    }
+
+    public bool ProcessChosenStat(TeamMember member)
+    {
+        TeamMember.StatType statType = GetRandomStatType();
+        bool statCanBeDecreased = false;
+        int amount = 1; // Random amount between 1 and 3
+        
+        int randomChance = Random.Range(0, 100);
+        
+        if(randomChance > 20) // 50% chance to decrease stats by 1
+        {
+            amount = 1;
+        }
+        else if (randomChance < 5) // 5% chance to decrease stats by 3 
+        {
+            amount = 3;
+        }
+        else if (randomChance < 20) // 20% chance to decrease stats by 2
+        {
+            amount = 2;
+        }
+        
+        
+        if(member.GetTeamMemberStat(statType)-amount <= 0)
+        {
+            statType = GetRandomStatType();
+        }
+        else
+        {
+            statCanBeDecreased = true;
+        }
+        
+        if(member.GetTeamMemberStat(statType)-amount > 0)
+        {
+            statCanBeDecreased = true;
+        }
+        
+        
+        if (!statCanBeDecreased && member.GetTeamMemberStat(statType)-amount <= 0)
+        {
+           for (int i = 0; i < 5; i++) // Try 5 times to find a stat that can be decreased
+           {
+               statType = GetRandomStatType();
+               if(member.GetTeamMemberStat(statType)-amount > 0)
+               {
+                   statCanBeDecreased = true;
+                   break;
+               }
+           }
+        }
+        
+        if(statCanBeDecreased)
+        {
+            ModifyTeamMemberStat(member, statType, -amount);
+            Debug.Log($"{member.memberName}'s {statType} reduced by {amount}. New value: {member.GetTeamMemberStat(statType)}");
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"Could not decrease any stat for {member.memberName} as all stats are at minimum.");
+            return false;
+        }
+    }
+    
+    public TeamMember.StatType GetRandomStatType()
+    {
+        TeamMember.StatType[] statTypes = (TeamMember.StatType[])System.Enum.GetValues(typeof(TeamMember.StatType));
+        int randomIndex = Random.Range(0, statTypes.Length);
+        return statTypes[randomIndex];
+    }
+    
+    public TeamMember GetRandomTeamMember()
+    {
+        List<TeamMember> teamMembers = new List<TeamMember>(playerTeam.teamMembers);
+        teamMembers.AddRange(TeamManager.Instance.benchTeamMembers);
+
+        // Remove team members with racesAvailableFor less than 100 which should only be hireable team members 
+        for (int i = teamMembers.Count - 1; i >= 0; i--)
+        {
+            if (teamMembers[i].racesAvailableFor < 100)
+            {
+                teamMembers.RemoveAt(i);
+            }
+        }
+        
+        if (teamMembers.Count > 0)
+        {
+            int randomIndex = Random.Range(0, teamMembers.Count);
+            return teamMembers[randomIndex];
+        }
+        Debug.LogWarning("No team members found.");
+        return null;
+    }
+    
+    
     public void ModifyTeamMemberStat(TeamMember member, TeamMember.StatType statType, int amount)
     {
         List<TeamMember> tempList = new List<TeamMember>();
-        
         tempList.AddRange(playerTeam.teamMembers);
         tempList.AddRange(TeamManager.Instance.benchTeamMembers);
         
         if (tempList.Contains(member))
         {
-            member.ImproveStat(statType, amount);
-            PlayerStatsView.Instance.ClearInfo();
-            string statGainedMessage = $"{member.memberName} gained {amount} {member.GetLocalizedStatName(statType)}";
-            if (localizedStatGainedText != null && !localizedStatGainedText.IsEmpty)
+            if (amount < 0)
             {
-             localizedStatGainedText.Arguments = new object[] { member.memberName, amount, member.GetLocalizedStatName(statType) };
-             localizedStatGainedText.Arguments[0] = member.memberName;
-             localizedStatGainedText.Arguments[1] = amount;
-             localizedStatGainedText.Arguments[2] = member.GetLocalizedStatName(statType);
-             localizedStatGainedText.RefreshString();
-             statGainedMessage = localizedStatGainedText.GetLocalizedString();
+                member.DecreaseStat(statType, -amount);
+                string statLostMessage = $"{member.memberName} lost {amount} {member.GetLocalizedStatName(statType)}";
+                if (localizedStatLostText != null && !localizedStatLostText.IsEmpty)
+                {
+                    localizedStatLostText.Arguments = new object[] { member.memberName, amount, member.GetLocalizedStatName(statType) };
+                    localizedStatLostText.Arguments[0] = member.memberName;
+                    localizedStatLostText.Arguments[1] = amount;
+                    localizedStatLostText.Arguments[2] = member.GetLocalizedStatName(statType);
+                    localizedStatLostText.RefreshString();
+                    statLostMessage = localizedStatLostText.GetLocalizedString();
+                }
+                DOVirtual.DelayedCall(3f, () =>
+                {
+                    //PlayerStatsView.Instance.ClearInfo();
+                    PlayerStatsView.Instance.DisplayInfo(statLostMessage, 3);
+                });
+                
             }
-            PlayerStatsView.Instance.DisplayInfo(statGainedMessage, 3);
+            else
+            {
+                member.ImproveStat(statType, amount);
+                PlayerStatsView.Instance.ClearInfo();
+                string statGainedMessage = $"{member.memberName} gained {amount} {member.GetLocalizedStatName(statType)}";
+                if (localizedStatGainedText != null && !localizedStatGainedText.IsEmpty)
+                {
+                    localizedStatGainedText.Arguments = new object[] { member.memberName, amount, member.GetLocalizedStatName(statType) };
+                    localizedStatGainedText.Arguments[0] = member.memberName;
+                    localizedStatGainedText.Arguments[1] = amount;
+                    localizedStatGainedText.Arguments[2] = member.GetLocalizedStatName(statType);
+                    localizedStatGainedText.RefreshString();
+                    statGainedMessage = localizedStatGainedText.GetLocalizedString();
+                }
+                
+                DOVirtual.DelayedCall(3f, () =>
+                {
+                   // PlayerStatsView.Instance.ClearInfo();
+                    PlayerStatsView.Instance.DisplayInfo(statGainedMessage, 3);
+                });
+              
+            }
+            
             Debug.Log($"{member.memberName}'s {statType} modified: " + member.GetTeamMemberStat(statType));
         }
         else

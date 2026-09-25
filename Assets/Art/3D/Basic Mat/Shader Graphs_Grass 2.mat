@@ -22,7 +22,11 @@ Material:
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
-    m_TexEnvs: []
+    m_TexEnvs:
+    - _ParallaxMapping_0c9b913f8a824da79b5682d20ebfb8e0_Heightmap_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: ffa6759596e3d4742a71aa7ef78d43a5, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     m_Ints: []
     m_Floats:
     - _BUILTIN_QueueControl: 0

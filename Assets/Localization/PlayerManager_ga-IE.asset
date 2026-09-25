@@ -33,6 +33,11 @@ MonoBehaviour:
     m_Localized: "T\xE1 an teorainn uasta fiachais bainte amach agat! Cluiche thart."
     m_Metadata:
       m_Items: []
+  - m_Id: 12131121314652160
+    m_Localized: '{0} caillte {1} {2}'
+    m_Metadata:
+      m_Items:
+      - rid: 7162749194343809133
   references:
     version: 2
     RefIds:
@@ -42,3 +47,4 @@ MonoBehaviour:
         m_Entries: 
         m_SharedEntries:
         - id: 353146757120
+        - id: 12131121314652160

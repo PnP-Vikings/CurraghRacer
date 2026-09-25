@@ -94,6 +94,16 @@ public class TeamManager : MonoBehaviour
             SetActiveCrewMembers(playerTeam.teamMembers);
             SetBenchTeamMembers(playerTeam.bench);
             onTeamMembersUpdated?.Invoke();
+            
+            // Update the cached save data to include the new stats
+            if (SaveSystem.Instance != null)
+            {
+                SaveSystem.Instance.UpdateCachedSaveData();
+            }
+            else
+            {
+                Debug.LogWarning("SaveSystem.Instance is null. Cannot update cached save data.");
+            }
         }
         else
         {
@@ -261,6 +271,5 @@ public class TeamManager : MonoBehaviour
         return null;
     }
     
-    
-    
+
 }

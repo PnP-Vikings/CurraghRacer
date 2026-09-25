@@ -12024,6 +12024,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5925614133511598973, guid: ae207ed792dae004996b867015b8dc50, type: 3}
+      propertyPath: showClockInGarage
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5925614133511598973, guid: ae207ed792dae004996b867015b8dc50, type: 3}
       propertyPath: dayDurationInMinutes
       value: 15
       objectReference: {fileID: 0}

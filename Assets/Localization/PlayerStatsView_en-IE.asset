@@ -20,7 +20,7 @@ MonoBehaviour:
     - rid: 1884926288220127368
   m_TableData:
   - m_Id: 14951636992
-    m_Localized: 'Player Energy: {0}'
+    m_Localized: 'Energy: {0}'
     m_Metadata:
       m_Items:
       - rid: 1884926288220127368

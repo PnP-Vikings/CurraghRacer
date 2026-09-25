@@ -38,7 +38,7 @@ MonoBehaviour:
       m_Items:
       - rid: 7162749194343809129
   - m_Id: 622370742272
-    m_Localized: "You must have at least \u20AC{0} Currency to train"
+    m_Localized: "You must have at least \u20AC{0} to train"
     m_Metadata:
       m_Items:
       - rid: 7162749194343809129

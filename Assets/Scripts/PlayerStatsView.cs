@@ -10,7 +10,6 @@ public class PlayerStatsView : MonoBehaviour
     private VisualElement _displayInfoBackground;
     [SerializeField] private LocalizedString _localizedPlayerEnergyText;
     [SerializeField] private LocalizedString _localizedPlayerCurrencyText;
-    
     public static PlayerStatsView Instance { get; private set; }
     
     private void Awake()
