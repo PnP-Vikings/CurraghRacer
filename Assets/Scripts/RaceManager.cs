@@ -671,6 +671,8 @@ public class RaceManager : MonoBehaviour
             if (!isRaceDay)
             {
                 AudioManager.instance.raceAmbience.setParameterByName("Crowd Volume", 0f);
+                //AudioManager.instance.mainTheme.start();
+                //AudioManager.instance.mainTheme.setParameterByName("Main Theme Volume", 0f);
             }
         }
 
@@ -985,6 +987,7 @@ public class RaceManager : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.raceWon.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.mainTheme.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
         
         if(TimeManager.Instance != null)

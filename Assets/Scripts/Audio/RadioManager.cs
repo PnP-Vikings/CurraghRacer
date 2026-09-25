@@ -53,8 +53,8 @@ public class RadioManager : MonoBehaviour
     {
         PlayRadioSong();                                                    // A random song plays
 
-        //float randomNumber = Random.Range(5f, 6f);                          // A random number between the given numbers is assigned to the float 'randomNumber' (For Testing)
-        float randomNumber = Random.Range(85f, 190f);                     // A random number between the given numbers is assigned to the float 'randomNumber' (For actual Build)
+        float randomNumber = Random.Range(5f, 6f);                          // A random number between the given numbers is assigned to the float 'randomNumber' (For Testing)
+        //float randomNumber = Random.Range(85f, 190f);                     // A random number between the given numbers is assigned to the float 'randomNumber' (For actual Build)
         //Debug.Log("Song playing for " +  randomNumber + " Seconds - RadioDebug");
 
         yield return new WaitForSeconds(randomNumber);                      // Waits randomNumber seconds
@@ -253,7 +253,9 @@ public class RadioManager : MonoBehaviour
 
     private void PlayRadioAdOrNews()
     {
-        int newRandomNumberAd = Random.Range(1, 8);
+        int newRandomNumberAd = Random.Range(1, 8);               // Use For actual build
+        //int newRandomNumberAd = 7;                                  // Use to force Bogland radio Jingle
+
         //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
 
         while (newRandomNumberAd == previousRandomNumberAd)

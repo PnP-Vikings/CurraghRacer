@@ -41,7 +41,6 @@ public class AudioManager : MonoBehaviour
     public EventInstance angelus;
     public EventInstance boglandRadioJingle;
 
-    public EventInstance loadingScreenSong;
     public EventInstance tvButtonPushOut;
     public EventInstance tvButtonPushIn;
     public EventInstance showInviteAudio;
@@ -129,6 +128,9 @@ public class AudioManager : MonoBehaviour
 
     public EventInstance tutorialGuy;
 
+    public EventInstance danceTrack;
+    public EventInstance mainTheme;
+
     private Scene activeScene;
     void Awake()
     {
@@ -191,8 +193,9 @@ public class AudioManager : MonoBehaviour
         boglandRadioJingle = RuntimeManager.CreateInstance("event:/Radio/Bogland Radio Jingle");
 
                             // OST //
-        loadingScreenSong = RuntimeManager.CreateInstance("event:/Soundtrack/Loading Screen Song");
+        danceTrack = RuntimeManager.CreateInstance("event:/Soundtrack/Dance Track");
         bodhran = RuntimeManager.CreateInstance("event:/Soundtrack/Bodhrán");
+        mainTheme = RuntimeManager.CreateInstance("event:/Soundtrack/Main Theme");
 
                             // GARAGE //
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
