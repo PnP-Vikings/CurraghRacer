@@ -212,7 +212,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": false,
                             "assigneeIds": []
                         },
@@ -277,6 +277,36 @@
                                 }
                             ],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260918_155025_20260918_155947.png",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "2fbcccbe-1db8-4fd3-b89a-cb4e320ae8be",
+                            "title": "Investigating Caching with Members",
+                            "description": "",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-09-25 02:21",
+                            "dueDate": "2026-10-02",
+                            "archived": false,
+                            "checklistItems": [
+                                "When moving the team members around seems to break with the caching",
+                                "By moving them back and forth you can replicate all team member details"
+                            ],
+                            "checklistStates": [
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260925_022139.png",
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []

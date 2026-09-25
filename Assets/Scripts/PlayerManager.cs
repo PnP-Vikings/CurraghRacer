@@ -229,17 +229,91 @@ public class PlayerManager : MonoBehaviour
             {
                 numberOfStatsToDecrease = 2;
             }
-                
+            int tryDifferentMemberCount = 0;
             for (int j = 0; j < numberOfStatsToDecrease; j++)
             {
-                TeamMember.StatType statType = GetRandomStatType();
-                int amount = Random.Range(1, 4); // Random amount between 1 and 3
-                ModifyTeamMemberStat(member, statType, -amount);
-                Debug.Log($"{member.memberName}'s {statType} reduced by {amount}. New value: {member.GetTeamMemberStat(statType)}");
+              bool statWasDecreased = ProcessChosenStat(member);
+
+              if (!statWasDecreased)
+              { 
+                  member = GetRandomTeamMember();
+                  tryDifferentMemberCount++;
+                  if(tryDifferentMemberCount >3)
+                  {
+                      Debug.LogWarning("Could not find a team member with stats that can be decreased after 3 tries.");
+                      break;
+                  }
+                  else
+                  {
+                      j--; // Retry the same stat decrease for the new member
+                  }
+              }
             }
         }
     }
-    
+
+    public bool ProcessChosenStat(TeamMember member)
+    {
+        TeamMember.StatType statType = GetRandomStatType();
+        bool statCanBeDecreased = false;
+        int amount = 1; // Random amount between 1 and 3
+        
+        int randomChance = Random.Range(0, 100);
+        
+        if(randomChance > 20) // 50% chance to decrease stats by 1
+        {
+            amount = 1;
+        }
+        else if (randomChance < 5) // 5% chance to decrease stats by 3 
+        {
+            amount = 3;
+        }
+        else if (randomChance < 20) // 20% chance to decrease stats by 2
+        {
+            amount = 2;
+        }
+        
+        
+        if(member.GetTeamMemberStat(statType)-amount <= 0)
+        {
+            statType = GetRandomStatType();
+        }
+        else
+        {
+            statCanBeDecreased = true;
+        }
+        
+        if(member.GetTeamMemberStat(statType)-amount > 0)
+        {
+            statCanBeDecreased = true;
+        }
+        
+        
+        if (!statCanBeDecreased && member.GetTeamMemberStat(statType)-amount <= 0)
+        {
+           for (int i = 0; i < 5; i++) // Try 5 times to find a stat that can be decreased
+           {
+               statType = GetRandomStatType();
+               if(member.GetTeamMemberStat(statType)-amount > 0)
+               {
+                   statCanBeDecreased = true;
+                   break;
+               }
+           }
+        }
+        
+        if(statCanBeDecreased)
+        {
+            ModifyTeamMemberStat(member, statType, -amount);
+            Debug.Log($"{member.memberName}'s {statType} reduced by {amount}. New value: {member.GetTeamMemberStat(statType)}");
+            return true;
+        }
+        else
+        {
+            Debug.LogWarning($"Could not decrease any stat for {member.memberName} as all stats are at minimum.");
+            return false;
+        }
+    }
     
     public TeamMember.StatType GetRandomStatType()
     {
