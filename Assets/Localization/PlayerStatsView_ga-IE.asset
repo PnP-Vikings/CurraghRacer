@@ -25,7 +25,7 @@ MonoBehaviour:
       m_Items:
       - rid: 1884926288220127369
   - m_Id: 14951636992
-    m_Localized: 'Fuinneamh an Imreora: {0}'
+    m_Localized: 'Fuinneamh: {0}'
     m_Metadata:
       m_Items:
       - rid: 1884926288220127369

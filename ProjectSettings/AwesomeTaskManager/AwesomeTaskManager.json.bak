@@ -282,36 +282,6 @@
                             "assigneeIds": []
                         },
                         {
-                            "id": "2fbcccbe-1db8-4fd3-b89a-cb4e320ae8be",
-                            "title": "Investigating Caching with Members",
-                            "description": "I this seems to be fixed now thing it was caused because when I moved the members and updated the list we were missing a call to update the lists in the save cache ",
-                            "category": "Feature",
-                            "colorLabel": 2,
-                            "priority": 0,
-                            "createdDate": "2026-09-25 02:21",
-                            "dueDate": "2026-10-02",
-                            "archived": false,
-                            "checklistItems": [
-                                "When moving the team members around seems to break with the caching",
-                                "By moving them back and forth you can replicate all team member details"
-                            ],
-                            "checklistStates": [
-                                true,
-                                true
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260925_022139.png",
-                            "showChecklist": true,
-                            "completed": true,
-                            "assigneeIds": []
-                        },
-                        {
                             "id": "cb182da6-209f-4705-bc96-3ad1ecb0d539",
                             "title": "Fix Completed Calendar after reloading save",
                             "description": "Fix Completed Calendar after reloading save",
@@ -1501,6 +1471,36 @@
                             "linkedItems": [],
                             "imagePath": "",
                             "showChecklist": false,
+                            "completed": true,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "2fbcccbe-1db8-4fd3-b89a-cb4e320ae8be",
+                            "title": "Investigating Caching with Members",
+                            "description": "I this seems to be fixed now thing it was caused because when I moved the members and updated the list we were missing a call to update the lists in the save cache ",
+                            "category": "Feature",
+                            "colorLabel": 2,
+                            "priority": 0,
+                            "createdDate": "2026-09-25 02:21",
+                            "dueDate": "2026-10-02",
+                            "archived": false,
+                            "checklistItems": [
+                                "When moving the team members around seems to break with the caching",
+                                "By moving them back and forth you can replicate all team member details"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260925_022139.png",
+                            "showChecklist": true,
                             "completed": true,
                             "assigneeIds": []
                         }
