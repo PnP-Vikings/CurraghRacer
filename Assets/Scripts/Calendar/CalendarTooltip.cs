@@ -87,7 +87,11 @@ namespace Calendar
             // Put content and base styles
             tooltipText.text = currentTooltipContent;
             tooltipText.color = textColor;
+#if UNITY_6000_0_OR_NEWER
+            tooltipText.textWrappingMode = TextWrappingModes.Normal;
+#else
             tooltipText.enableWordWrapping = true;
+#endif
             tooltipText.overflowMode = TextOverflowModes.Overflow;
 
             // Convert mouse to canvas local space

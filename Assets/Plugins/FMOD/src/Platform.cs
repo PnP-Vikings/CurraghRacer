@@ -13,10 +13,18 @@ namespace FMOD
 {
     public partial class VERSION
     {
+#if UNITY_6000_0_OR_NEWER
+#if DEBUG
+        public const string dllSuffix = "L";
+#else
+        public const string dllSuffix = "";
+#endif
+#else
 #if DEVELOPMENT_BUILD
         public const string dllSuffix = "L";
 #else
         public const string dllSuffix = "";
+#endif
 #endif
     }
 }
@@ -25,10 +33,18 @@ namespace FMOD.Studio
 {
     public partial class STUDIO_VERSION
     {
+#if UNITY_6000_0_OR_NEWER
+#if DEBUG
+        public const string dllSuffix = "L";
+#else
+        public const string dllSuffix = "";
+#endif
+#else
 #if DEVELOPMENT_BUILD
         public const string dllSuffix = "L";
 #else
         public const string dllSuffix = "";
+#endif
 #endif
     }
 }
@@ -539,7 +555,17 @@ namespace FMODUnity
 
                 FMOD.RESULT result = coreSystem.loadPlugin(pluginPath, out handle);
 
-#if UNITY_64 || UNITY_EDITOR_64
+#if UNITY_6000_0_OR_NEWER
+                if (IntPtr.Size == 8)
+                {
+                    // Add a "64" suffix and try again
+                    if (result == FMOD.RESULT.ERR_FILE_BAD || result == FMOD.RESULT.ERR_FILE_NOTFOUND)
+                    {
+                        string pluginPath64 = GetPluginPath(pluginName + "64");
+                        result = coreSystem.loadPlugin(pluginPath64, out handle);
+                    }
+                }
+#elif UNITY_64 || UNITY_EDITOR_64
                 // Add a "64" suffix and try again
                 if (result == FMOD.RESULT.ERR_FILE_BAD || result == FMOD.RESULT.ERR_FILE_NOTFOUND)
                 {
@@ -669,7 +695,16 @@ namespace FMODUnity
         {
             get
             {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_6000_0_OR_NEWER
+                if (Debug.isDebugBuild || Application.isEditor)
+                {
+                    return LiveUpdate != TriStateBool.Disabled;
+                }
+                else
+                {
+                    return LiveUpdate == TriStateBool.Enabled;
+                }
+#elif DEVELOPMENT_BUILD || UNITY_EDITOR
                 return LiveUpdate != TriStateBool.Disabled;
 #else
                 return LiveUpdate == TriStateBool.Enabled;
@@ -681,7 +716,16 @@ namespace FMODUnity
         {
             get
             {
-#if DEVELOPMENT_BUILD || UNITY_EDITOR
+#if UNITY_6000_0_OR_NEWER
+                if (Debug.isDebugBuild || Application.isEditor)
+                {
+                    return Overlay != TriStateBool.Disabled;
+                }
+                else
+                {
+                    return Overlay == TriStateBool.Enabled;
+                }
+#elif DEVELOPMENT_BUILD || UNITY_EDITOR
                 return Overlay != TriStateBool.Disabled;
 #else
                 return Overlay == TriStateBool.Enabled;
@@ -690,6 +734,7 @@ namespace FMODUnity
         }
 
         // A property value that can be inherited from the parent or overridden.
+        [Serializable]
         public class Property<T>
         {
             public T Value;

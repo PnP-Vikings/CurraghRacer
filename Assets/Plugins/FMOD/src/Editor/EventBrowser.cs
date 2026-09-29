@@ -7,6 +7,14 @@ using UnityEditor.IMGUI.Controls;
 using UnityEngine;
 using System.IO;
 
+#if UNITY_6000_0_OR_NEWER
+using TreeViewControl = UnityEditor.IMGUI.Controls.TreeView<int>;
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState<int>;
+using TreeViewItem = UnityEditor.IMGUI.Controls.TreeViewItem<int>;
+#else
+using TreeViewControl = UnityEditor.IMGUI.Controls.TreeView;
+#endif
+
 namespace FMODUnity
 {
     public class EventBrowser : EditorWindow, ISerializationCallbackReceiver
@@ -99,7 +107,7 @@ namespace FMODUnity
             treeView.Reload();
         }
 
-        private class TreeView : UnityEditor.IMGUI.Controls.TreeView
+        private class TreeView : TreeViewControl
         {
             private static readonly Texture2D folderOpenIcon = EditorUtils.LoadImage("FolderIconOpen.png");
             private static readonly Texture2D folderClosedIcon = EditorUtils.LoadImage("FolderIconClosed.png");
@@ -1628,7 +1636,11 @@ namespace FMODUnity
 
                 SceneView.duringSceneGui += SceneUpdate;
 
+#if UNITY_6000_0_OR_NEWER
+                EditorApplication.hierarchyWindowItemByEntityIdOnGUI += HierarchyUpdate;
+#else
                 EditorApplication.hierarchyWindowItemOnGUI += HierarchyUpdate;
+#endif
 
                 if (isStandaloneWindow)
                 {
@@ -1667,6 +1679,17 @@ namespace FMODUnity
         }
 
         // This is an event handler on the hierachy view to handle dragging our objects from the browser
+#if UNITY_6000_0_OR_NEWER
+        private void HierarchyUpdate(UnityEngine.EntityId instance, Rect rect)
+        {
+            if (Event.current.type == EventType.DragPerform && rect.Contains(Event.current.mousePosition))
+            {
+                if (IsDroppable(DragAndDrop.objectReferences))
+                {
+                    UnityEngine.Object data = DragAndDrop.objectReferences[0];
+
+                    GameObject target = EditorUtility.EntityIdToObject(instance) as GameObject;
+#else
         private void HierarchyUpdate(int instance, Rect rect)
         {
             if (Event.current.type == EventType.DragPerform && rect.Contains(Event.current.mousePosition))
@@ -1676,6 +1699,7 @@ namespace FMODUnity
                     UnityEngine.Object data = DragAndDrop.objectReferences[0];
 
                     GameObject target = EditorUtility.InstanceIDToObject(instance) as GameObject;
+#endif
 
                     if (data is EditorEventRef)
                     {

@@ -305,6 +305,20 @@ namespace FMODUnity
 
             currentPlatform.PreSystemCreate(CheckInitResult);
 
+            #if UNITY_6000_0_OR_NEWER
+            #if UNITY_EDITOR || DEBUG
+            debugCallback = new FMOD.DEBUG_CALLBACK(DEBUG_CALLBACK);
+            result = FMOD.Debug.Initialize(fmodSettings.LoggingLevel, FMOD.DEBUG_MODE.CALLBACK, debugCallback, null);
+            if(result == FMOD.RESULT.ERR_UNSUPPORTED)
+            {
+                RuntimeUtils.DebugLogWarning("[FMOD] Unable to initialize debug logging: Logging will be disabled.\nCheck the Import Settings of the FMOD libs to enable the logging library.");
+            }
+            else
+            {
+                CheckInitResult(result, "FMOD.Debug.Initialize");
+            }
+            #endif
+            #else
             #if UNITY_EDITOR || DEVELOPMENT_BUILD
             debugCallback = new FMOD.DEBUG_CALLBACK(DEBUG_CALLBACK);
             result = FMOD.Debug.Initialize(fmodSettings.LoggingLevel, FMOD.DEBUG_MODE.CALLBACK, debugCallback, null);
@@ -316,6 +330,7 @@ namespace FMODUnity
             {
                 CheckInitResult(result, "FMOD.Debug.Initialize");
             }
+            #endif
             #endif
 
             FMOD.Studio.INITFLAGS studioInitFlags = FMOD.Studio.INITFLAGS.NORMAL | FMOD.Studio.INITFLAGS.DEFERRED_CALLBACKS;
@@ -660,7 +675,11 @@ retry:
                 debugStyle.fontSize = currentPlatform.OverlayFontSize;
                 if (studioSystem.isValid() && isOverlayEnabled)
                 {
+#if UNITY_6000_0_OR_NEWER
+                    windowRect = GUI.Window(GetEntityId().GetHashCode(), windowRect, DrawDebugOverlay, "FMOD Studio Debug", debugStyle);
+#else
                     windowRect = GUI.Window(GetInstanceID(), windowRect, DrawDebugOverlay, "FMOD Studio Debug", debugStyle);
+#endif
                 }
             }
             else
