@@ -1,6 +1,6 @@
 /* ======================================================================================== */
 /* FMOD Studio API - C# wrapper.                                                            */
-/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2025.                               */
+/* Copyright (c), Firelight Technologies Pty, Ltd. 2004-2026.                               */
 /*                                                                                          */
 /* For more detail visit:                                                                   */
 /* https://fmod.com/docs/2.02/api/studio-api.html                                           */
@@ -153,6 +153,7 @@ namespace FMOD.Studio
         LABELED       = 0x00000010,
     }
 
+    [Serializable]
     [StructLayout(LayoutKind.Sequential)]
     public struct PARAMETER_ID
     {

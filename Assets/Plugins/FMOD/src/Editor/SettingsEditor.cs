@@ -9,6 +9,12 @@ using System;
 using System.Linq;
 using System.Text.RegularExpressions;
 
+#if UNITY_6000_0_OR_NEWER
+using TreeView = UnityEditor.IMGUI.Controls.TreeView<int>;
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState<int>;
+using TreeViewItem = UnityEditor.IMGUI.Controls.TreeViewItem<int>;
+#endif
+
 namespace FMODUnity
 {
     [CustomEditor(typeof(Settings))]

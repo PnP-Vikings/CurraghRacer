@@ -1,18 +1,34 @@
 fileFormatVersion: 2
 guid: 4abc247d0f34143ec95396c7b6bec6a8
 PluginImporter:
-  serializedVersion: 1
+  externalObjects: {}
+  serializedVersion: 2
   iconMap: {}
   executionOrder: {}
+  defineConstraints: []
   isPreloaded: 0
+  isOverridable: 0
+  isExplicitlyReferenced: 0
+  validateReferences: 1
   platformData:
-    tvOS:
-      enabled: 1
+  - first:
+      Any: 
+    second:
+      enabled: 0
       settings: {}
-    Editor:
+  - first:
+      Editor: Editor
+    second:
       enabled: 0
       settings:
         DefaultValueInitialized: true
+  - first:
+      tvOS: tvOS
+    second:
+      enabled: 1
+      settings:
+        CompileFlags: 
+        FrameworkDependencies:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
@@ -20,6 +36,6 @@ AssetOrigin:
   serializedVersion: 1
   productId: 161631
   packageName: FMOD for Unity (2.02)
-  packageVersion: 2.02.28
+  packageVersion: 2.02.34
   assetPath: Assets/Plugins/FMOD/platforms/tvos/lib/libfmodstudiounityplugin.a
-  uploadId: 745941
+  uploadId: 931624

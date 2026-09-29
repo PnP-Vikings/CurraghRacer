@@ -7,6 +7,12 @@ using UnityEditor.SceneManagement;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+#if UNITY_6000_0_OR_NEWER
+using TreeView = UnityEditor.IMGUI.Controls.TreeView<int>;
+using TreeViewState = UnityEditor.IMGUI.Controls.TreeViewState<int>;
+using TreeViewItem = UnityEditor.IMGUI.Controls.TreeViewItem<int>;
+#endif
+
 namespace FMODUnity
 {
     public class SetupWizardWindow : EditorWindow
@@ -38,8 +44,8 @@ namespace FMODUnity
             UpdateTask.Create(
                 type: UpdateTaskType.UpdateEventReferences,
                 name: "Update Event References",
-                description: "Find event references that use the obsolete [EventRef] attribute " +
-                    "and update them to use the EventReference type.",
+                description: "Find event references that use the obsolete [FMODUnity.EventRef] attribute " +
+                    "and update them to use the FMODUnity.EventReference type.",
                 execute: EventReferenceUpdater.ShowWindow,
                 checkComplete: EventReferenceUpdater.IsUpToDate
             ),
