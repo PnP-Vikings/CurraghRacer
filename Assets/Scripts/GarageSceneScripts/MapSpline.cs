@@ -6,20 +6,66 @@ using UnityEngine;
 public class MapSpline : MonoBehaviour
 {
     [SerializeField] Transform playerIconTransform;
+    [SerializeField] private GameObject splineToHome;
+    [SerializeField] private GameObject splineToShop;
     [SerializeField] private List<Spline> splineFromHomeToShop;
     [SerializeField] private List<Spline> splineFromShopToHome;
     
     [SerializeField] private Spline previousSplineTo;
     [SerializeField] private Spline previousSplineFrom;
     
+    [SerializeField] private bool isMovingPlayerIcon = false;
     [SerializeField] private bool hasCompletedSpline = false;
     
+    [SerializeField] private List<Spline> ActiveSpline;
     Coroutine MovePlayerIconCoroutine;
 
     [SerializeField] private float playerMoveSpeed = 2f;
     
    
     private void Start()
+    {
+       ResetSpines();
+    }
+
+    public void StartMovingPlayerTowardsShop()
+    {
+        if (isMovingPlayerIcon)
+        {
+            return;
+        }
+        ResetSpines();
+        
+        if(splineToShop != null)
+        {
+            splineToShop.gameObject.SetActive(true);
+        }
+        ActiveSpline = splineFromHomeToShop;
+        isMovingPlayerIcon = true;
+        previousSplineTo = ActiveSpline[0];
+        previousSplineFrom = ActiveSpline[0];
+        MovePlayerIconCoroutine = StartCoroutine(MovePlayerIconAlongSpline(ActiveSpline[0], ActiveSpline[1]));
+    }
+    
+    public void StartMovingPlayerTowardsHome()
+    {
+        if (isMovingPlayerIcon)
+        {
+            return;
+        }
+        ResetSpines();
+        if(splineToHome != null)
+        {
+            splineToHome.gameObject.SetActive(true);
+        }
+        ActiveSpline = splineFromShopToHome;
+        isMovingPlayerIcon = true;
+        previousSplineTo = ActiveSpline[0];
+        previousSplineFrom = ActiveSpline[0];
+        MovePlayerIconCoroutine = StartCoroutine(MovePlayerIconAlongSpline(ActiveSpline[0], ActiveSpline[1]));
+    }
+    
+    private void ResetSpines()
     {
         for(int i = 0; i < splineFromHomeToShop.Count; i++)
         {
@@ -30,41 +76,47 @@ public class MapSpline : MonoBehaviour
             splineFromShopToHome[i].ResetSpline();
         }
         
-        /*
-        previousSplineTo = splineFromHomeToShop[1];
-        previousSplineFrom = splineFromHomeToShop[0];
-        */
+        if(splineToHome != null)
+        {
+            splineToHome.gameObject.SetActive(false);
+        }
+        if(splineToShop != null)
+        {
+            splineToShop.gameObject.SetActive(false);
+        }
         
-        MovePlayerIconCoroutine = StartCoroutine(MovePlayerIconAlongSpline(splineFromHomeToShop[0], splineFromHomeToShop[1]));
-       
-        
-       
+        previousSplineTo = null;
+        previousSplineFrom = null;
+        hasCompletedSpline = false;
+        ActiveSpline = null;
+        isMovingPlayerIcon = false;
     }
-
+    
     private void StartMovingPlayerIcon()
     {
-       
+   
         print("StartMovingPlayerIcon called");
-        Spline currentSplineFrom = splineFromHomeToShop[0];
-        Spline currentSplineTo = splineFromHomeToShop[1];
+        Spline currentSplineFrom = ActiveSpline[0];
+        Spline currentSplineTo = ActiveSpline[1];
 
        
         if (previousSplineTo.HasPlayerPassedSpline() && previousSplineFrom.HasPlayerPassedSpline())
         {
-            for (int i = 0; i < splineFromHomeToShop.Count - 1; i++)
+            for (int i = 0; i < ActiveSpline.Count - 1; i++)
             {
-                if (splineFromHomeToShop[i].HasPlayerPassedSpline())
+                if (ActiveSpline[i].HasPlayerPassedSpline())
                 {
-                    currentSplineFrom = splineFromHomeToShop[i];
-                    currentSplineTo = splineFromHomeToShop[i +1];
+                    currentSplineFrom = ActiveSpline[i];
+                    currentSplineTo = ActiveSpline[i +1];
                 }
                 
                
 
 
-                if (splineFromHomeToShop[i] == null || currentSplineTo == null )
+                if (ActiveSpline[i] == null || currentSplineTo == null )
                 {
                     hasCompletedSpline = true;
+                    isMovingPlayerIcon = false;
                     break;
                 }
             }
@@ -77,6 +129,8 @@ public class MapSpline : MonoBehaviour
             {
                 playerIconTransform.position = previousSplineTo.GetTransformPosition();
             }
+            isMovingPlayerIcon = false;
+            ActiveSpline = null;
         }
         else
         {
@@ -92,6 +146,7 @@ public class MapSpline : MonoBehaviour
     
     IEnumerator MovePlayerIconAlongSpline(Spline splineFrom,Spline splineTo)
     {
+        isMovingPlayerIcon = true;
         Vector3 startPosition = playerIconTransform.position;
         float t = 0f;
         while (t < 1.5f)
@@ -112,19 +167,7 @@ public class MapSpline : MonoBehaviour
     }
     private void OnEnable()
     {
-        for(int i = 0; i < splineFromHomeToShop.Count; i++)
-        {
-            splineFromHomeToShop[i].ResetSpline();
-        }
-        for(int i = 0; i < splineFromShopToHome.Count; i++)
-        {
-            splineFromShopToHome[i].ResetSpline();
-        }
-        
-        previousSplineTo = null;
-        previousSplineFrom = null;
-        hasCompletedSpline = false;
-        
+        ResetSpines();
 
     }
 

@@ -85,6 +85,11 @@ public class PlayerStatsView : MonoBehaviour
     
     public void UpdatePlayerStats()
     {
+        if (PlayerManager.Instance == null)
+        {
+            Debug.LogWarning("PlayerManager instance is null. Cannot update player stats.");
+            return;
+        }
         _localizedPlayerEnergyText.Arguments[0] = PlayerManager.Instance.GetPlayerEnergy();
                 _localizedPlayerCurrencyText.Arguments[0] = Math.Round(PlayerManager.Instance.GetPlayerCurrency(), 2);
         _localizedPlayerEnergyText.RefreshString();

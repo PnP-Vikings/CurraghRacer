@@ -196,7 +196,8 @@
                                 "Add Popup on hover describing location",
                                 "Show map on door click",
                                 "Add Spline in both directions",
-                                "Add Popup on click on locations"
+                                "Add Popup on click on locations",
+                                "Spline Working both directions"
                             ],
                             "checklistStates": [
                                 true,
@@ -207,9 +208,11 @@
                                 true,
                                 true,
                                 true,
-                                false
+                                true,
+                                true
                             ],
                             "checklistLinkedCardIds": [
+                                "",
                                 "",
                                 "",
                                 "",
