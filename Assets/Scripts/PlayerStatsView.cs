@@ -40,14 +40,18 @@ public class PlayerStatsView : MonoBehaviour
         _displayInfo  = root.Q<Label>("DisplayInfo");
         _displayInfoBackground = root.Q<VisualElement>("DisplayInfoBackground");
         
-        _localizedPlayerEnergyText.Arguments = new object[] { PlayerManager.Instance.GetPlayerEnergy() };
-        _localizedPlayerCurrencyText.Arguments = new object[] { Math.Round(PlayerManager.Instance.GetPlayerCurrency(), 2) };
-        _localizedPlayerEnergyText.RefreshString();
-        _playerEnergyLabel.text =_localizedPlayerEnergyText.GetLocalizedString();
-        _localizedPlayerCurrencyText.RefreshString();
-        _playerCurrencyLabel.text = _localizedPlayerCurrencyText.GetLocalizedString();
+        if(PlayerManager.Instance != null)
+        {
+            _localizedPlayerEnergyText.Arguments = new object[] { PlayerManager.Instance.GetPlayerEnergy() };
+            _localizedPlayerCurrencyText.Arguments = new object[] { Math.Round(PlayerManager.Instance.GetPlayerCurrency(), 2) };
+            _localizedPlayerEnergyText.RefreshString();
+            _playerEnergyLabel.text =_localizedPlayerEnergyText.GetLocalizedString();
+            _localizedPlayerCurrencyText.RefreshString();
+            _playerCurrencyLabel.text = _localizedPlayerCurrencyText.GetLocalizedString();
+            PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
+        }
         
-        PlayerManager.Instance.playerStatsView = this; // Set the reference to PlayerStatsView in PlayerManager
+        
         UpdatePlayerStats();
         
         if(LocalizationManager.Instance != null)

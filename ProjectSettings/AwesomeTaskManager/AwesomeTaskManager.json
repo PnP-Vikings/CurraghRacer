@@ -131,45 +131,6 @@
                             "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
-                        },
-                        {
-                            "id": "ff274282-35ee-4952-8a82-da46ff564259",
-                            "title": "Add a way to regain energy ",
-                            "description": "Currently the system is missing one really important aspect the ability to be able to \ntrade time and money to get energy so they can get extra energy ",
-                            "category": "Gameplay",
-                            "colorLabel": 1,
-                            "priority": 0,
-                            "createdDate": "2026-09-23 01:30",
-                            "dueDate": "",
-                            "archived": false,
-                            "checklistItems": [
-                                "Add a door to the garage scene",
-                                "Make the door clickable",
-                                "show a ui that allows player to purchase food",
-                                "add a fridge or something that allows them to click on and consume",
-                                "also add a expiration date to the food so they can't just bank them"
-                            ],
-                            "checklistStates": [
-                                false,
-                                false,
-                                false,
-                                false,
-                                false
-                            ],
-                            "checklistLinkedCardIds": [
-                                "",
-                                "",
-                                "",
-                                "",
-                                ""
-                            ],
-                            "linkedAssetGuids": [],
-                            "linkedSceneObjects": [],
-                            "linkedItems": [],
-                            "imagePath": "",
-                            "showChecklist": true,
-                            "completed": false,
-                            "assigneeIds": []
                         }
                     ]
                 },
@@ -213,6 +174,57 @@
                             "linkedItems": [],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-09-29 231710.png",
                             "showChecklist": false,
+                            "completed": false,
+                            "assigneeIds": []
+                        },
+                        {
+                            "id": "ff274282-35ee-4952-8a82-da46ff564259",
+                            "title": "Add a way to regain energy ",
+                            "description": "Currently the system is missing one really important aspect the ability to be able to \ntrade time and money to get energy so they can get extra energy ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-09-23 01:30",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add a door to the garage scene",
+                                "Make the door clickable",
+                                "show a ui that allows player to purchase food",
+                                "add a fridge or something that allows them to click on and consume",
+                                "also add a expiration date to the food so they can't just bank them",
+                                "Add Popup on hover describing location",
+                                "Show map on door click",
+                                "Add Spline in both directions",
+                                "Add Popup on click on locations"
+                            ],
+                            "checklistStates": [
+                                true,
+                                true,
+                                false,
+                                false,
+                                false,
+                                true,
+                                true,
+                                true,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Game Map.gif",
+                            "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
                         },
