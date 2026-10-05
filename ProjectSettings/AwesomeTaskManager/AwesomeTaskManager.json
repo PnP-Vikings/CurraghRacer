@@ -197,7 +197,8 @@
                                 "Show map on door click",
                                 "Add Spline in both directions",
                                 "Add Popup on click on locations",
-                                "Spline Working both directions"
+                                "Spline Working both directions",
+                                "Add simple shop ui"
                             ],
                             "checklistStates": [
                                 true,
@@ -209,9 +210,11 @@
                                 true,
                                 true,
                                 true,
-                                true
+                                true,
+                                false
                             ],
                             "checklistLinkedCardIds": [
+                                "",
                                 "",
                                 "",
                                 "",

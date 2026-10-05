@@ -9,14 +9,39 @@ public class TravelPanel : MonoBehaviour
     [SerializeField] private MapController mapController;
     [SerializeField] private bool isTravelingToShop = false;
     [SerializeField] private TMP_Text travelingToText;
+   
     
     public void TravelingToShop()
     {
         isTravelingToShop = true;
+        CheckIfPlayerIsMoving();
+
+
+
+
     }
     public void NotTravelingToShop()
     {
+        
         isTravelingToShop = false;
+        CheckIfPlayerIsMoving();    
+    }
+    
+    public void CheckIfPlayerIsMoving()
+    {
+        if (mapController != null)
+        {
+            if (!mapController.IsPlayerMoving())
+            {
+                mapController.SetAlreadyMovingTextActive(false);
+                this.gameObject.SetActive(true);
+            }
+            else
+            {
+                mapController.SetAlreadyMovingTextActive(true);
+                this.gameObject.SetActive(false);
+            }
+        }
     }
 
     private void OnEnable()

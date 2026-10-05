@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class MapSpline : MonoBehaviour
-{
+{   
+    [SerializeField] private MapController mapController;
     [SerializeField] Transform playerIconTransform;
     [SerializeField] private GameObject splineToHome;
     [SerializeField] private GameObject splineToShop;
@@ -45,6 +46,7 @@ public class MapSpline : MonoBehaviour
         previousSplineTo = ActiveSpline[0];
         previousSplineFrom = ActiveSpline[0];
         MovePlayerIconCoroutine = StartCoroutine(MovePlayerIconAlongSpline(ActiveSpline[0], ActiveSpline[1]));
+        mapController.UpdatePlayerLocation(MapController.PlayerLocation.Shop);
     }
     
     public void StartMovingPlayerTowardsHome()
@@ -63,6 +65,7 @@ public class MapSpline : MonoBehaviour
         previousSplineTo = ActiveSpline[0];
         previousSplineFrom = ActiveSpline[0];
         MovePlayerIconCoroutine = StartCoroutine(MovePlayerIconAlongSpline(ActiveSpline[0], ActiveSpline[1]));
+        mapController.UpdatePlayerLocation(MapController.PlayerLocation.Home);
     }
     
     private void ResetSpines()
@@ -173,9 +176,13 @@ public class MapSpline : MonoBehaviour
             }
             yield return null;
         }
-       
-       
     }
+    
+    public bool IsPlayerMoving()
+    {
+        return isMovingPlayerIcon;
+    }
+    
     private void OnEnable()
     {
         ResetSpines();
