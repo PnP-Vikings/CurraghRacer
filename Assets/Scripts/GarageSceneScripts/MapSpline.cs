@@ -19,9 +19,9 @@ public class MapSpline : MonoBehaviour
     
     [SerializeField] private List<Spline> ActiveSpline;
     Coroutine MovePlayerIconCoroutine;
-
+    [Tooltip("The speed at which the player icon moves along the spline. Lower values result in faster movement.")]
     [SerializeField] private float playerMoveSpeed = 2f;
-    
+    private float startTime;
    
     private void Start()
     {
@@ -96,6 +96,11 @@ public class MapSpline : MonoBehaviour
     {
    
         print("StartMovingPlayerIcon called");
+        if (ActiveSpline == null || ActiveSpline.Count < 2)
+        {
+            print("ActiveSpline is null or has less than 2 splines");
+            return;
+        }
         Spline currentSplineFrom = ActiveSpline[0];
         Spline currentSplineTo = ActiveSpline[1];
 
@@ -146,13 +151,19 @@ public class MapSpline : MonoBehaviour
     
     IEnumerator MovePlayerIconAlongSpline(Spline splineFrom,Spline splineTo)
     {
+       
         isMovingPlayerIcon = true;
         Vector3 startPosition = playerIconTransform.position;
+        startTime = Time.time;
+        float completion = Mathf.Clamp01((Time.time - startTime) / playerMoveSpeed); // Adjust the duration of the movement here
+        print($"Completion: {completion}");
         float t = 0f;
-        while (t < 1.5f)
+        while (completion <1)
         {
+            completion = Mathf.Clamp01((Time.time - startTime) / playerMoveSpeed); // Adjust the duration of the movement here
+            print($"Completion: {completion}");
             t += Time.deltaTime * playerMoveSpeed; // Adjust the speed of movement here
-            playerIconTransform.position = Vector3.Lerp(startPosition, splineTo.GetTransformPosition(), t);
+            playerIconTransform.position = Vector3.Lerp(startPosition, splineTo.GetTransformPosition(), completion);
             if (splineFrom.HasPlayerPassedSpline() && splineTo.HasPlayerPassedSpline())
             {
                 previousSplineFrom = splineFrom;
