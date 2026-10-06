@@ -138,6 +138,13 @@ public class MapSpline : MonoBehaviour
                 playerIconTransform.position = previousSplineTo.GetTransformPosition();
             }
             isMovingPlayerIcon = false;
+            
+            if(ActiveSpline != null && ActiveSpline[ActiveSpline.Count - 1] == splineFromHomeToShop[splineFromHomeToShop.Count - 1])
+            {
+                mapController.SetShopPanelActive(true);
+            }
+            
+            
             ActiveSpline = null;
         }
         else

@@ -3,6 +3,7 @@ using System;
 using System.Collections;
 using TMPro;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class MapController : MonoBehaviour
 {
@@ -11,6 +12,7 @@ public class MapController : MonoBehaviour
     
     [Header("UI Elements")]
     [SerializeField] private GameObject mapPanel;
+    [SerializeField] private Button exitMapButton;
     [SerializeField] private TMP_Text returnHomeText;
     [SerializeField] private TMP_Text alreadyMovingText;
     [SerializeField] private TMP_Text alreadyHereText;
@@ -18,6 +20,9 @@ public class MapController : MonoBehaviour
     Coroutine alreadyHereCoroutine;
     Coroutine returnHomeCoroutine;
     [SerializeField] private float textShowDuration = 2f; // Duration to show the text
+    [SerializeField] private GameObject shopPanel;
+
+    
  
     public void StartMovingPlayerTowardsShop()
     {
@@ -105,6 +110,32 @@ public class MapController : MonoBehaviour
             }
         }
     }
+    
+    public void SetShopPanelActive(bool isActive)
+    {
+        if (shopPanel != null)
+        {
+            shopPanel.SetActive(isActive);
+            SetExitMapButtonActive(!isActive);
+        }
+    }
+    
+    public void ShowExitMapButton()
+    {
+        if (exitMapButton != null)
+        {
+            SetExitMapButtonActive(true);
+        }
+    }
+    
+    public void SetExitMapButtonActive(bool isActive)
+    {
+        if (exitMapButton != null)
+        {
+            exitMapButton.gameObject.SetActive(isActive);
+        }
+    }
+    
     
     public void HideAllTexts()
     {
