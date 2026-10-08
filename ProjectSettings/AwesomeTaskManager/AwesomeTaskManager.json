@@ -198,7 +198,10 @@
                                 "Add Spline in both directions",
                                 "Add Popup on click on locations",
                                 "Spline Working both directions",
-                                "Add simple shop ui"
+                                "Add simple shop ui",
+                                "Add Popup for price",
+                                "Add Popup on click on item",
+                                "Add Fridge"
                             ],
                             "checklistStates": [
                                 true,
@@ -211,9 +214,15 @@
                                 true,
                                 true,
                                 true,
-                                false
+                                true,
+                                true,
+                                false,
+                                true
                             ],
                             "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
                                 "",
                                 "",
                                 "",
