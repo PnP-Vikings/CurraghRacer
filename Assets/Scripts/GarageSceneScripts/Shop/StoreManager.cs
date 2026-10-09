@@ -12,6 +12,7 @@ public class StoreManager : MonoBehaviour
     [SerializeField] private List<ShopItem> spawnedItems;
     [SerializeField] private SpawnedItemsParent spawnedItemsParent;
     [SerializeField] private StoreTooltip storeTooltip;
+    [SerializeField] private StoreBuyPanel storeBuyPanel;
     
     [Header("Store Settings")]
     [Tooltip("Minimum number of items to spawn in the store")]
@@ -74,17 +75,19 @@ public class StoreManager : MonoBehaviour
             }
             ShopItem spawnedItem=Instantiate(itemPrefab, spawnLocation.position, spawnLocation.rotation);
             spawnedItem.transform.SetParent(spawnedItemsParent.transform);
-            spawnedItem.InitializeShopItem(itemData);
+            spawnedItem.InitializeShopItem(itemData,i);
             spawnedItem.SetStoreManager(this);
+            if(storeBuyPanel != null)
+                spawnedItem.SetShopBuyPanel(storeBuyPanel);
             spawnedItems.Add(spawnedItem);
         }
     }
     
-    public void UpdateToolTip(string itemName, int itemPrice, string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,Transform itemTransform,bool showToolTip = true)
+    public void UpdateToolTip(string itemName, int itemPrice, string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,int itemId,Transform itemTransform,bool showToolTip = true)
     { 
         if(storeTooltip != null)
         {
-            storeTooltip.UpdateText(itemName, itemPrice, itemDescription,itemEnergyRegainAmount,amountOfDaysBeforeExpiry,itemData,showToolTip);
+            storeTooltip.UpdateText(itemName, itemPrice, itemDescription,itemEnergyRegainAmount,amountOfDaysBeforeExpiry,itemData,itemId,showToolTip);
         }
     }
     

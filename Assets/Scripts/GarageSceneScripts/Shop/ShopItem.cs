@@ -5,15 +5,18 @@ using UnityEngine.UI;
 
 public class ShopItem : MonoBehaviour
 {
-  [SerializeField] string itemNameText;
+  [SerializeField] private string itemNameText;
   [SerializeField] private Image itemIconImage;
-  [SerializeField] int itemPrice=0;
-  [SerializeField] int itemEnergyRegainAmount=0;
-  [SerializeField] int amountOfDaysBeforeExpiry=0;
-  [SerializeField] string itemDescriptionText;
-  [SerializeField] ShopItemData itemData;
-  [SerializeField] EventTrigger itemEventTrigger;
-  [SerializeField] StoreManager storeManager;
+  [SerializeField] private int itemPrice=0;
+  [SerializeField] private int itemEnergyRegainAmount=0;
+  [SerializeField] private int amountOfDaysBeforeExpiry=0;
+  [SerializeField] private int spawnedItemId=0;
+  [SerializeField] private string itemDescriptionText;
+  [SerializeField] private ShopItemData itemData;
+  [SerializeField] private EventTrigger itemEventTrigger;
+  [SerializeField] private StoreManager storeManager;
+  [SerializeField] private StoreBuyPanel storeBuyPanel;
+  [SerializeField] private Button shopItemButton;
   
   public void Start()
   {
@@ -39,7 +42,7 @@ public class ShopItem : MonoBehaviour
 
   public void UpdateTooltip(BaseEventData eventData)
   {
-    storeManager.UpdateToolTip(itemNameText, itemPrice, itemDescriptionText, itemEnergyRegainAmount, amountOfDaysBeforeExpiry,itemData, this.transform);
+    storeManager.UpdateToolTip(itemNameText, itemPrice, itemDescriptionText, itemEnergyRegainAmount, amountOfDaysBeforeExpiry,itemData,spawnedItemId, this.transform);
   }
   
   public void HideTooltip()
@@ -47,7 +50,7 @@ public class ShopItem : MonoBehaviour
     storeManager.HideToolTip();
   }
 
-  public void InitializeShopItem(ShopItemData injectedItemData)
+  public void InitializeShopItem(ShopItemData injectedItemData,int injectedSpawnedItemId)
   {
     itemNameText = injectedItemData.itemName;
     itemIconImage.sprite = injectedItemData.itemIcon;
@@ -56,6 +59,12 @@ public class ShopItem : MonoBehaviour
     amountOfDaysBeforeExpiry = injectedItemData.itemDaysBeforeExpiry;
     itemDescriptionText = injectedItemData.itemDescription;
     itemData = injectedItemData;
+    spawnedItemId = injectedSpawnedItemId;
+    
+    /*if(storeBuyPanel != null && shopItemButton != null)
+    {
+      shopItemButton.onClick.AddListener(OnShopItemButtonClicked);
+    }*/
   }
   
   public ShopItemData GetItemData()
@@ -63,8 +72,31 @@ public class ShopItem : MonoBehaviour
     return itemData;
   }
   
+  public int GetSpawnedItemId()
+  {
+    return spawnedItemId;
+  }
+
+  public ShopItemData GetShopItemData()
+  {
+    return itemData;
+  }
+
   public void SetStoreManager(StoreManager injectedStoreManager)
   {
     storeManager = injectedStoreManager;
+  }
+  public void SetShopBuyPanel(StoreBuyPanel injectedShopBuyPanel)
+  {
+    storeBuyPanel = injectedShopBuyPanel;
+  }
+
+  public void OnShopItemButtonClicked()
+  {
+    Debug.Log("ShopItemButtonClicked");
+    if (storeBuyPanel != null)
+    {
+      storeBuyPanel.UpdateBuyPanel(itemNameText,itemPrice,itemDescriptionText,itemEnergyRegainAmount,amountOfDaysBeforeExpiry,spawnedItemId,itemData);
+    }
   }
 }

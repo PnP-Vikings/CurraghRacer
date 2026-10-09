@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Banana
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
   itemName: Banana
-  itemIcon: {fileID: 21300000, guid: 695c09059af45c2418c5e60842002d91, type: 3}
+  itemIcon: {fileID: 7381965769198725172, guid: 6925b1db5982e6643aa57785b2d83c26, type: 3}
   itemPrice: 5
   itemDescription: Yellow Energy Booster
   itemEnergyRegainAmount: 20

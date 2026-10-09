@@ -1,102 +1,99 @@
 using TMPro;
 using UnityEngine;
-using UnityEngine.Serialization;
 using UnityEngine.UI;
 
-public class StoreTooltip : MonoBehaviour
+public class StoreBuyPanel : MonoBehaviour
 {
-  [Header("Current Hover Item")]
-  private int currentItemPrice;
-  private int currentItemEnergyRegainAmount;
-  private int currentItemAmount;
-  private int currentItemId;
-  private ShopItemData currentItemData;
-  private ItemTypes currentItemItemType;
-  [Header("Tooltip UI")]
-  [SerializeField] private TMP_Text itemNameText;
-  [SerializeField] private TMP_Text itemPriceText;
-  [SerializeField] private TMP_Text itemDescriptionText;
-  [SerializeField] private TMP_Text energyRegainAmountText;
-  [SerializeField] private TMP_Text itemDaysBeforeExpiryText;
-  public GameObject tooltipPanel;          // Root object with an Image (background)
-  public Image tooltipBackground;          // Background image
-  public Canvas parentCanvas;              // Canvas that contains this tooltip
-  public StoreBuyPanel storeBuyPanel;
-  [Header("Tooltip Styling")]
-  public Color backgroundColor = new Color(0.15f, 0.15f, 0.2f, 0.95f);
-  public Color borderColor = new Color(0.4f, 0.6f, 0.8f, 1f);  // (not used here but kept for future)
-  public Color textColor = new Color(0.9f, 0.95f, 1f, 1f);
+    [Header("Current Clicked Item")]
+    private int currentItemPrice;
+    private int currentItemEnergyRegainAmount;
+    private int currentItemAmount;
+    private int currentItemId;
+    private ShopItemData currentItemData;
+    private ItemTypes currentItemItemType;
+ 
+    [SerializeField] private StoreTooltip storeTooltip;
+    
+    [Header("Tooltip UI")]
+    [SerializeField] private TMP_Text itemNameText;
+    [SerializeField] private TMP_Text itemPriceText;
+    [SerializeField] private TMP_Text itemDescriptionText;
+    [SerializeField] private TMP_Text energyRegainAmountText;
+    [SerializeField] private TMP_Text itemDaysBeforeExpiryText;
+    [SerializeField] private Button buyButton;
+    
+    public GameObject storeBuyPanel;          // Root object with an Image (background)
+    public Image storeBuyPanelBackground;          // Background image
+    public Canvas parentCanvas;              // Canvas that contains this tooltip
   
-  [Header("Settings")]
-  public float showDelay = 0.3f;
-  public Vector2 offset = new Vector2(15, 10);
-  public float maxTooltipWidth = 400f;
-  public float minTooltipWidth = 250f;
-  public float paddingHorizontal = 12f;
-  public float paddingVertical = 8f;
-  public float spacing = 4f;
+    [Header("Tooltip Styling")]
+    public Color backgroundColor = new Color(0.15f, 0.15f, 0.2f, 0.95f);
+    public Color borderColor = new Color(0.4f, 0.6f, 0.8f, 1f);  // (not used here but kept for future)
+    public Color textColor = new Color(0.9f, 0.95f, 1f, 1f);
   
-  // Internal state
-  private bool isHovering = false;
-  
-  public void UpdateText(string itemName, int itemPrice, string itemDescription, int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,int itemId,bool showToolTip = true)
-  {
-      if (storeBuyPanel !=null && storeBuyPanel.GetSelectedShopItemData() == itemData && storeBuyPanel.GetSelectedShopItemId() == itemId)
-      {
-          return;
-      }
-      
-      if (itemNameText == null || itemPriceText == null || itemDescriptionText == null || energyRegainAmountText == null || itemDaysBeforeExpiryText == null || itemData == null)
-      {
-          Debug.Log("One or more UI elements are null. Tooltip update aborted.");
-          return;
-      }
-      
-    this.itemNameText.text = itemName;
-    this.itemPriceText.text = $"€ {itemPrice}";
-    this.itemDescriptionText.text = itemDescription;
-    this.currentItemData = itemData;
-    this.currentItemItemType = itemData.itemType;
-    if (currentItemItemType == ItemTypes.Food)
+    [Header("Settings")]
+    public float showDelay = 0.1f;
+    public Vector2 offset = new Vector2(15, 10);
+    public float maxTooltipWidth = 400f;
+    public float minTooltipWidth = 250f;
+    public float paddingHorizontal = 12f;
+    public float paddingVertical = 8f;
+    public float spacing = 4f;
+    
+    
+    public void UpdateBuyPanel(string itemName, int itemPrice, string itemDescription, int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,int itemId,ShopItemData itemData,bool showBuyPanel = true)
     {
-        this.energyRegainAmountText.text = $"Energy Regain: {itemEnergyRegainAmount}";
-        this.itemDaysBeforeExpiryText.text = $"Days Before Expiry: {amountOfDaysBeforeExpiry}";
-    }
+        if(storeTooltip != null && storeTooltip.gameObject.activeSelf)
+        {
+           storeTooltip.gameObject.SetActive(false);
+        }
+        
+        if (itemNameText == null || itemPriceText == null || itemDescriptionText == null || energyRegainAmountText == null || itemDaysBeforeExpiryText == null || itemData == null)
+        {
+            Debug.Log("One or more UI elements are null. Tooltip update aborted.");
+            return;
+        }
+      
+        this.itemNameText.text = itemName;
+        this.itemPriceText.text = $"€ {itemPrice}";
+        this.itemDescriptionText.text = itemDescription;
+        this.currentItemData = itemData;
+        this.currentItemItemType = itemData.itemType;
+        this.currentItemId = itemId;
+        if (currentItemItemType == ItemTypes.Food)
+        {
+            this.energyRegainAmountText.text = $"Energy Regain: {itemEnergyRegainAmount}";
+            this.itemDaysBeforeExpiryText.text = $"Days Before Expiry: {amountOfDaysBeforeExpiry}";
+        }
 
  
     
+        if (showBuyPanel)
+        {
+            Invoke(nameof(DisplayStoreBuyPanel), showDelay);
+        }
+        
+    }
     
-    if(showToolTip)
-    {
-        isHovering = true;
-        Invoke(nameof(DisplayTooltip), showDelay);
-    }
-    else
-    {
-        HideTooltip();
-    }
-  }
-  
-  public void HideTooltip()
+    public void HideBuyPanel()
   {
-      isHovering = false;
-      CancelInvoke(nameof(DisplayTooltip));
+      CancelInvoke(nameof(DisplayStoreBuyPanel));
 
-      if (tooltipPanel != null)
-          tooltipPanel.SetActive(false);
+      if (storeBuyPanel != null)
+          storeBuyPanel.SetActive(false);
   }
   
-   private void DisplayTooltip()
+   private void DisplayStoreBuyPanel()
     {
-        if (!isHovering || string.IsNullOrEmpty(itemNameText.text)) return;
+        if (string.IsNullOrEmpty(itemNameText.text)) return;
         
         // Setup references
         if (parentCanvas == null) parentCanvas = this.GetComponentInParent<Canvas>();
         if (parentCanvas == null) return;
 
         RectTransform canvasRect = parentCanvas.GetComponent<RectTransform>();
-        RectTransform tooltipRect = tooltipPanel.GetComponent<RectTransform>();
-        if (canvasRect == null || tooltipRect == null) return;
+        RectTransform buyPanelRect = storeBuyPanel.GetComponent<RectTransform>();
+        if (canvasRect == null || buyPanelRect == null) return;
 
        
         // Convert mouse to canvas local space
@@ -121,6 +118,8 @@ public class StoreTooltip : MonoBehaviour
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, energyRegainAmountText.preferredWidth);
         if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text))
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDaysBeforeExpiryText.preferredWidth);
+        if(buyButton != null)
+            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, buyButton.GetComponent<RectTransform>().rect.width);
 
         float optimalWidth = Mathf.Max(
             minTooltipWidth,
@@ -155,6 +154,8 @@ public class StoreTooltip : MonoBehaviour
             itemDaysBeforeExpiryText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
             itemDaysBeforeExpiryText.ForceMeshUpdate(true, true);
         }
+      
+        
         
         Canvas.ForceUpdateCanvases();
 
@@ -226,32 +227,49 @@ public class StoreTooltip : MonoBehaviour
             textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
             currentYOffset += h;
         }
+        
+        if (buyButton != null )
+        {
+            if (currentYOffset > paddingVertical) currentYOffset += spacing;
+            var textRect = buyButton.GetComponent<RectTransform>();
+            textRect.anchorMin = new Vector2(0f, 1f);
+            textRect.anchorMax = new Vector2(1f, 1f);
+            textRect.pivot     = new Vector2(0.5f, 1f);
+            float h = buyButton.GetComponent<RectTransform>().rect.height;
+            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
+            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
+            currentYOffset += h;
+        }
 
         float maxHeight = canvasSize.y * 0.9f;                       // allow up to 90% of canvas height
         float totalHeight = Mathf.Clamp(currentYOffset + paddingVertical, 50f, maxHeight);
 
         // Apply final tooltip size
         Vector2 tooltipSize = new Vector2(optimalWidth, totalHeight);
-        tooltipRect.sizeDelta = tooltipSize;
+        buyPanelRect.sizeDelta = tooltipSize;
         
         
         // Background look & make sure it doesn't eat raycasts
-        if (tooltipBackground != null)
+        if (storeBuyPanelBackground != null)
         {
-            tooltipBackground.color = backgroundColor;
-            tooltipBackground.raycastTarget = false;
+            storeBuyPanelBackground.color = backgroundColor;
+            storeBuyPanelBackground.raycastTarget = false;
         }
 
         // ---------- Position ----------
-        Vector2 pos = CalculateSmartPosition(mouseLocal, tooltipSize, canvasSize, tooltipRect);
-        tooltipRect.localPosition = pos;
+        Vector2 pos = CalculateSmartPosition(mouseLocal, tooltipSize, canvasSize, buyPanelRect);
+        buyPanelRect.localPosition = pos;
 
         // Ensure the panel never blocks input
-        var cg = tooltipPanel.GetComponent<CanvasGroup>();
-        if (cg == null) cg = tooltipPanel.AddComponent<CanvasGroup>();
+        var cg = storeBuyPanel.GetComponent<CanvasGroup>();
+        if (cg == null) cg = storeBuyPanel.AddComponent<CanvasGroup>();
         cg.blocksRaycasts = false;
 
-        tooltipPanel.SetActive(true);
+        storeBuyPanel.SetActive(true);
+        if(storeTooltip != null && storeTooltip.gameObject.activeSelf)
+        {
+            storeTooltip.gameObject.SetActive(false);
+        }
     }
 
     private Vector2 CalculateSmartPosition(
@@ -291,5 +309,15 @@ public class StoreTooltip : MonoBehaviour
         pos.y = Mathf.Clamp(pos.y, minY, maxY);
 
         return pos;
+    }
+
+    public ShopItemData GetSelectedShopItemData()
+    {
+        return currentItemData;
+    }
+    
+    public int GetSelectedShopItemId()
+    {
+        return currentItemId;
     }
 }

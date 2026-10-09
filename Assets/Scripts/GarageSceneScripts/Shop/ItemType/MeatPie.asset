@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: MeatPie
   m_EditorClassIdentifier: Assembly-CSharp::ShopItemData
   itemName: Meat Pie
-  itemIcon: {fileID: -6868999079863673600, guid: 96b93db24f9dd974986a6e5d40c63073, type: 3}
+  itemIcon: {fileID: -665852563597582618, guid: fc57cb4651b1ef446a7842c228c9673c, type: 3}
   itemPrice: 30
   itemDescription: Meaty and Yummy
   itemEnergyRegainAmount: 30
