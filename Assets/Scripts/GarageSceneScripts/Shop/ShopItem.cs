@@ -7,7 +7,9 @@ public class ShopItem : MonoBehaviour
 {
   [SerializeField] string itemNameText;
   [SerializeField] private Image itemIconImage;
-  [SerializeField] int itemPrice;
+  [SerializeField] int itemPrice=0;
+  [SerializeField] int itemEnergyRegainAmount=0;
+  [SerializeField] int amountOfDaysBeforeExpiry=0;
   [SerializeField] string itemDescriptionText;
   [SerializeField] ShopItemData itemData;
   [SerializeField] EventTrigger itemEventTrigger;
@@ -37,7 +39,7 @@ public class ShopItem : MonoBehaviour
 
   public void UpdateTooltip(BaseEventData eventData)
   {
-    storeManager.UpdateToolTip(itemNameText,itemPrice.ToString(),itemDescriptionText,this.transform);
+    storeManager.UpdateToolTip(itemNameText, itemPrice, itemDescriptionText, itemEnergyRegainAmount, amountOfDaysBeforeExpiry,itemData, this.transform);
   }
   
   public void HideTooltip()
@@ -50,8 +52,15 @@ public class ShopItem : MonoBehaviour
     itemNameText = injectedItemData.itemName;
     itemIconImage.sprite = injectedItemData.itemIcon;
     itemPrice = injectedItemData.itemPrice;
+    itemEnergyRegainAmount = injectedItemData.itemEnergyRegainAmount;
+    amountOfDaysBeforeExpiry = injectedItemData.itemDaysBeforeExpiry;
     itemDescriptionText = injectedItemData.itemDescription;
     itemData = injectedItemData;
+  }
+  
+  public ShopItemData GetItemData()
+  {
+    return itemData;
   }
   
   public void SetStoreManager(StoreManager injectedStoreManager)

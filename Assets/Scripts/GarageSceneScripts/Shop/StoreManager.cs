@@ -5,15 +5,24 @@ using Random = UnityEngine.Random;
 
 public class StoreManager : MonoBehaviour
 {
-    public List<Transform> itemSpawnLocations;
-    public List<Transform> locationsCurrentlyInUse;
-    public List<ShopItemData> typesOfItemsWeCanSpawn;
-    public ShopItem itemPrefab;
-    [SerializeField] List<ShopItem> spawnedItems;
-    public SpawnedItemsParent spawnedItemsParent;
-    public int maxItemsToSpawn = 5;
-    public bool hasSpawnedItems = false;
+    [SerializeField] private List<Transform> itemSpawnLocations;
+    [SerializeField] private List<Transform> locationsCurrentlyInUse;
+    [SerializeField] private ShopItem itemPrefab;
+    [SerializeField] private List<ShopItemData> typesOfItemsWeCanSpawn;
+    [SerializeField] private List<ShopItem> spawnedItems;
+    [SerializeField] private SpawnedItemsParent spawnedItemsParent;
     [SerializeField] private StoreTooltip storeTooltip;
+    
+    [Header("Store Settings")]
+    [Tooltip("Minimum number of items to spawn in the store")]
+    [SerializeField]private int minItemsToSpawn = 2;
+    [Tooltip("Maximum number of items to spawn in the store")]
+    [SerializeField] private int maxItemsToSpawn = 5;
+    [Tooltip("Maximum number of items of the same type to spawn in the store")]
+    [SerializeField] private int maxToSpawnForEachItem = 2;
+    [Tooltip("Number of items to spawn in the store in store today// This gets randomized based on the min and max values")]
+    [SerializeField] private int maxItemsToSpawnToday;
+    [SerializeField] private bool hasSpawnedItems = false;
 
     private void OnEnable()
     {
@@ -33,10 +42,24 @@ public class StoreManager : MonoBehaviour
         spawnedItems.Clear();
         locationsCurrentlyInUse.Clear();
         
+        
+        maxItemsToSpawnToday = Random.Range(minItemsToSpawn, maxItemsToSpawn);
 
-        for (int i = 0; i < maxItemsToSpawn; i++)
+        for (int i = 0; i < maxItemsToSpawnToday; i++)
         {
             ShopItemData itemData = typesOfItemsWeCanSpawn[Random.Range(0, typesOfItemsWeCanSpawn.Count)];
+            int counterOfThisItemSpawnedToday =0;
+            foreach (ShopItem item in spawnedItems)
+            {
+                if(item.GetItemData()==itemData)
+                {
+                    counterOfThisItemSpawnedToday++;
+                }
+            }
+            if(counterOfThisItemSpawnedToday>=maxToSpawnForEachItem)
+            {
+                continue;
+            }
             Transform spawnLocation = itemSpawnLocations[Random.Range(0, itemSpawnLocations.Count)];
             if (locationsCurrentlyInUse.Contains(spawnLocation))
             {
@@ -57,13 +80,11 @@ public class StoreManager : MonoBehaviour
         }
     }
     
-    public void UpdateToolTip(string itemName, string itemPrice, string itemDescription,Transform itemTransform,bool showToolTip = true)
+    public void UpdateToolTip(string itemName, int itemPrice, string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,Transform itemTransform,bool showToolTip = true)
     { 
         if(storeTooltip != null)
         {
-          //  storeTooltip.gameObject.SetActive(showToolTip);
-           // storeTooltip.transform.position = itemTransform.position + Vector3.up * 1.5f;
-            storeTooltip.UpdateText(itemName, itemPrice, itemDescription,showToolTip);
+            storeTooltip.UpdateText(itemName, itemPrice, itemDescription,itemEnergyRegainAmount,amountOfDaysBeforeExpiry,itemData,showToolTip);
         }
     }
     

@@ -1,14 +1,22 @@
 using TMPro;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 
 public class StoreTooltip : MonoBehaviour
 {
-  [SerializeField] private TMP_Text itemName;
-  [SerializeField] private TMP_Text itemPrice;
-  [SerializeField] private TMP_Text itemDescription;
- 
+  [Header("Current Hover Item")]
+  private int currentItemPrice;
+  private int currentItemEnergyRegainAmount;
+  private int currentItemAmount;
+  private ShopItemData currentItemData;
+  private ItemTypes currentItemItemType;
   [Header("Tooltip UI")]
+  [SerializeField] private TMP_Text itemNameText;
+  [SerializeField] private TMP_Text itemPriceText;
+  [SerializeField] private TMP_Text itemDescriptionText;
+  [SerializeField] private TMP_Text energyRegainAmountText;
+  [SerializeField] private TMP_Text itemDaysBeforeExpiryText;
   public GameObject tooltipPanel;          // Root object with an Image (background)
   public Image tooltipBackground;          // Background image
   public Canvas parentCanvas;              // Canvas that contains this tooltip
@@ -30,11 +38,27 @@ public class StoreTooltip : MonoBehaviour
   // Internal state
   private bool isHovering = false;
   
-  public void UpdateText(string itemName, string itemPrice, string itemDescription,bool showToolTip = true)
+  public void UpdateText(string itemName, int itemPrice, string itemDescription, int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,bool showToolTip = true)
   {
-    this.itemName.text = itemName;
-    this.itemPrice.text = $"€ {itemPrice}";
-    this.itemDescription.text = itemDescription;
+      if (itemNameText == null || itemPriceText == null || itemDescriptionText == null || energyRegainAmountText == null || itemDaysBeforeExpiryText == null || itemData == null)
+      {
+          Debug.Log("One or more UI elements are null. Tooltip update aborted.");
+          return;
+      }
+      
+    this.itemNameText.text = itemName;
+    this.itemPriceText.text = $"€ {itemPrice}";
+    this.itemDescriptionText.text = itemDescription;
+    this.currentItemData = itemData;
+    this.currentItemItemType = itemData.itemType;
+    if (currentItemItemType == ItemTypes.Food)
+    {
+        this.energyRegainAmountText.text = $"Energy Regain: {itemEnergyRegainAmount}";
+        this.itemDaysBeforeExpiryText.text = $"Days Before Expiry: {amountOfDaysBeforeExpiry}";
+    }
+
+ 
+    
     
     if(showToolTip)
     {
@@ -58,7 +82,7 @@ public class StoreTooltip : MonoBehaviour
   
    private void DisplayTooltip()
     {
-        if (!isHovering || string.IsNullOrEmpty(itemName.text)) return;
+        if (!isHovering || string.IsNullOrEmpty(itemNameText.text)) return;
         
         // Setup references
         if (parentCanvas == null) parentCanvas = this.GetComponentInParent<Canvas>();
@@ -82,11 +106,15 @@ public class StoreTooltip : MonoBehaviour
         Vector2 canvasSize = canvasRect.sizeDelta;
 
         float availableWidth = Mathf.Min(maxTooltipWidth, canvasSize.x * 0.9f);
-        float maxTextPreferredWidth = itemName.preferredWidth;
-        if (itemPrice != null && !string.IsNullOrEmpty(itemPrice.text))
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemPrice.preferredWidth);
-        if (itemDescription != null && !string.IsNullOrEmpty(itemDescription.text))
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDescription.preferredWidth);
+        float maxTextPreferredWidth = itemNameText.preferredWidth;
+        if (itemPriceText != null && !string.IsNullOrEmpty(itemPriceText.text))
+            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemPriceText.preferredWidth);
+        if (itemDescriptionText != null && !string.IsNullOrEmpty(itemDescriptionText.text))
+            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDescriptionText.preferredWidth);
+        if(energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text))
+            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, energyRegainAmountText.preferredWidth);
+        if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text))
+            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDaysBeforeExpiryText.preferredWidth);
 
         float optimalWidth = Mathf.Max(
             minTooltipWidth,
@@ -96,61 +124,98 @@ public class StoreTooltip : MonoBehaviour
         float textWidth = optimalWidth - paddingHorizontal * 2f;
 
         // Constrain text width to compute preferred height
-        if (itemName != null)
+        if (itemNameText != null)
         {
-            itemName.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            itemName.ForceMeshUpdate(true, true);
+            itemNameText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
+            itemNameText.ForceMeshUpdate(true, true);
         }
-        if (itemPrice != null)
+        if (itemPriceText != null)
         {
-            itemPrice.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            itemPrice.ForceMeshUpdate(true, true);
+            itemPriceText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
+            itemPriceText.ForceMeshUpdate(true, true);
         }
-        if (itemDescription != null)
+        if (itemDescriptionText != null)
         {
-            itemDescription.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            itemDescription.ForceMeshUpdate(true, true);
+            itemDescriptionText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
+            itemDescriptionText.ForceMeshUpdate(true, true);
         }
+        if(energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text) && currentItemItemType == ItemTypes.Food)
+        {
+            energyRegainAmountText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
+            energyRegainAmountText.ForceMeshUpdate(true, true);
+        }
+        if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text) && currentItemItemType == ItemTypes.Food)
+        {
+            itemDaysBeforeExpiryText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
+            itemDaysBeforeExpiryText.ForceMeshUpdate(true, true);
+        }
+        
         Canvas.ForceUpdateCanvases();
 
         float currentYOffset = paddingVertical;
 
-        // Layout itemName inside (top anchored so it grows downward)
-        if (itemName != null && !string.IsNullOrEmpty(itemName.text))
+        // Layout itemNameText inside (top anchored so it grows downward)
+        if (itemNameText != null && !string.IsNullOrEmpty(itemNameText.text))
         {
-            var textRect = itemName.rectTransform;
+            var textRect = itemNameText.rectTransform;
             textRect.anchorMin = new Vector2(0f, 1f);
             textRect.anchorMax = new Vector2(1f, 1f);
             textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemName.preferredHeight;
+            float h = itemNameText.preferredHeight;
             textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
             textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
             currentYOffset += h;
         }
 
-        // Layout itemPrice inside
-        if (itemPrice != null && !string.IsNullOrEmpty(itemPrice.text))
+        // Layout itemPriceText inside
+        if (itemPriceText != null && !string.IsNullOrEmpty(itemPriceText.text))
         {
             if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = itemPrice.rectTransform;
+            var textRect = itemPriceText.rectTransform;
             textRect.anchorMin = new Vector2(0f, 1f);
             textRect.anchorMax = new Vector2(1f, 1f);
             textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemPrice.preferredHeight;
+            float h = itemPriceText.preferredHeight;
             textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
             textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
             currentYOffset += h;
         }
 
-        // Layout itemDescription inside
-        if (itemDescription != null && !string.IsNullOrEmpty(itemDescription.text))
+        // Layout itemDescriptionText inside
+        if (itemDescriptionText != null && !string.IsNullOrEmpty(itemDescriptionText.text))
         {
             if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = itemDescription.rectTransform;
+            var textRect = itemDescriptionText.rectTransform;
             textRect.anchorMin = new Vector2(0f, 1f);
             textRect.anchorMax = new Vector2(1f, 1f);
             textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemDescription.preferredHeight;
+            float h = itemDescriptionText.preferredHeight;
+            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
+            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
+            currentYOffset += h;
+        }
+        
+        if (energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text))
+        {
+            if (currentYOffset > paddingVertical) currentYOffset += spacing;
+            var textRect = energyRegainAmountText.rectTransform;
+            textRect.anchorMin = new Vector2(0f, 1f);
+            textRect.anchorMax = new Vector2(1f, 1f);
+            textRect.pivot     = new Vector2(0.5f, 1f);
+            float h = energyRegainAmountText.preferredHeight;
+            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
+            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
+            currentYOffset += h;
+        }
+        
+        if (itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text))
+        {
+            if (currentYOffset > paddingVertical) currentYOffset += spacing;
+            var textRect = itemDaysBeforeExpiryText.rectTransform;
+            textRect.anchorMin = new Vector2(0f, 1f);
+            textRect.anchorMax = new Vector2(1f, 1f);
+            textRect.pivot     = new Vector2(0.5f, 1f);
+            float h = itemDaysBeforeExpiryText.preferredHeight;
             textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
             textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
             currentYOffset += h;

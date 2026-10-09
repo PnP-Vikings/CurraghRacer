@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class MapController : MonoBehaviour
 {
     [SerializeField] private MapSpline mapSpline;
-    PlayerLocation currentPlayerLocation = PlayerLocation.Home;
+    [SerializeField] private PlayerLocation currentPlayerLocation = PlayerLocation.Home;
     
     [Header("UI Elements")]
     [SerializeField] private GameObject mapPanel;
@@ -189,6 +189,11 @@ public class MapController : MonoBehaviour
     {
         yield return new WaitForSeconds(textShowDuration);
         SetAlreadyMovingTextActive(false);
+    }
+    
+    public PlayerLocation GetCurrentPlayerLocation()
+    {
+        return currentPlayerLocation;
     }
     
     public enum PlayerLocation
