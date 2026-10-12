@@ -83,13 +83,43 @@ public class StoreManager : MonoBehaviour
         }
     }
     
-    public void UpdateToolTip(string itemName, int itemPrice, string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,int itemId,Transform itemTransform,bool showToolTip = true)
+    public void UpdateToolTip(string itemName, int itemPrice, string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ShopItemData itemData,int itemId,bool showToolTip = true)
     { 
         if(storeTooltip != null)
         {
             storeTooltip.UpdateText(itemName, itemPrice, itemDescription,itemEnergyRegainAmount,amountOfDaysBeforeExpiry,itemData,itemId,showToolTip);
         }
     }
+    
+    public void BuyItem(int itemId)
+    {
+        ShopItem selectedItem = spawnedItems.Find(x => x.GetSpawnedItemId() == itemId);
+        if (selectedItem != null)
+        {
+            if(PlayerManager.Instance != null)
+            {
+                if (!PlayerManager.Instance.IsFridgeFull())
+                {
+                    bool wasPurchased = PlayerManager.Instance.PurchaseItem(selectedItem.GetItemCost(), PurchaseType.Shop);
+
+                    if (wasPurchased)
+                    {
+                        PlayerManager.Instance.AddItemToFridge(selectedItem.GetItemData());
+                        selectedItem.HasBeenPurchased(true);
+                        if(PlayerStatsView.Instance != null)
+                            PlayerStatsView.Instance.DisplayInfo($"{selectedItem.name} has been added to your fridge");
+
+                    }
+                }
+                else
+                {
+                    if(PlayerStatsView.Instance != null)
+                        PlayerStatsView.Instance.DisplayInfo("Fridge is full");
+                }
+            }
+        }
+    }
+    
     
     public void HideToolTip()
     {

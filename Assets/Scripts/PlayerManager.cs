@@ -29,6 +29,9 @@ public class PlayerManager : MonoBehaviour
     [Tooltip("The amount of currency required for training")]
     [SerializeField] private int currencyCostForTraining = 50;
     
+    [Header("Shop")]
+    [SerializeField] private List<FridgeItem> playerItems = new List<FridgeItem>();
+    [SerializeField] private int maxSlotsInFridge = 2;
     
     
     
@@ -194,6 +197,21 @@ public class PlayerManager : MonoBehaviour
             Debug.LogWarning("Not enough coins to make this purchase.");
             return false;
         }
+        else if(CanAffordPurchase(cost) && purchaseType == PurchaseType.Shop)
+        {
+            Debug.Log($"Purchased {purchaseType}.");
+            if(playerItems.Count < maxSlotsInFridge)
+            {
+                ModifyPlayerCoins(-cost);
+                return true;
+            }
+            else
+            {
+                Debug.LogWarning("Not enough slots in fridge.");
+                playerStatsView.DisplayInfo("Not enough slots in fridge.");
+                return false;
+            }
+        }
         else if (CanAffordPurchase(cost))
         {
             ModifyPlayerCoins(-cost);
@@ -207,6 +225,27 @@ public class PlayerManager : MonoBehaviour
         return energy >= energyCost;
     }
 
+
+    public bool AddItemToFridge(ShopItemData shopItem)
+    {
+        if (playerItems.Count < maxSlotsInFridge)
+        {
+            FridgeItem fridgeItem = new FridgeItem();
+            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry);
+            
+            playerItems.Add(fridgeItem);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    
+    public bool IsFridgeFull()
+    {
+        return playerItems.Count >= maxSlotsInFridge;
+    }
 
     public void ReduceTeamMemberStat()
     {
@@ -486,5 +525,27 @@ public enum PurchaseType
         Cards,
         Sleep,
         Training,
-        Item
+        Item,
+        Shop
+}
+[System.Serializable]
+public class FridgeItem
+{
+    public int itemId;
+    public int amount=1;
+    public string itemName;
+    public string itemDescription;
+    public int itemEnergyRegainAmount;
+    public int amountOfDaysBeforeExpiry;
+    
+    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry)
+    {
+        this.itemId = itemId;
+        this.amount = amount;
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.itemEnergyRegainAmount = itemEnergyRegainAmount;
+        this.amountOfDaysBeforeExpiry = amountOfDaysBeforeExpiry;
+    }
+    
 }

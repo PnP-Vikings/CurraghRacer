@@ -17,11 +17,19 @@ public class ShopItem : MonoBehaviour
   [SerializeField] private StoreManager storeManager;
   [SerializeField] private StoreBuyPanel storeBuyPanel;
   [SerializeField] private Button shopItemButton;
+  [SerializeField] private bool hasBeenPurchased = false;
   
   public void Start()
   {
     itemEventTrigger = GetComponent<EventTrigger>();
     SetupItemEventTrigger();
+  }
+  public void OnEnable()
+  {
+    if (hasBeenPurchased)
+    {
+      this.gameObject.SetActive(false);
+    } 
   }
 
   public void SetupItemEventTrigger()
@@ -42,7 +50,7 @@ public class ShopItem : MonoBehaviour
 
   public void UpdateTooltip(BaseEventData eventData)
   {
-    storeManager.UpdateToolTip(itemNameText, itemPrice, itemDescriptionText, itemEnergyRegainAmount, amountOfDaysBeforeExpiry,itemData,spawnedItemId, this.transform);
+    storeManager.UpdateToolTip(itemNameText, itemPrice, itemDescriptionText, itemEnergyRegainAmount, amountOfDaysBeforeExpiry,itemData,spawnedItemId);
   }
   
   public void HideTooltip()
@@ -91,6 +99,19 @@ public class ShopItem : MonoBehaviour
     storeBuyPanel = injectedShopBuyPanel;
   }
 
+  public int GetItemCost()
+  {
+    return itemData.itemPrice;
+  }
+
+  public void HasBeenPurchased(bool purchaseStatus)
+  {
+    hasBeenPurchased = purchaseStatus;
+    if (hasBeenPurchased)
+    {
+      this.gameObject.SetActive(false);
+    }
+  }
   public void OnShopItemButtonClicked()
   {
     Debug.Log("ShopItemButtonClicked");

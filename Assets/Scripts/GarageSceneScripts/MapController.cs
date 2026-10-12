@@ -162,6 +162,8 @@ public class MapController : MonoBehaviour
     }
     
     
+    
+    
     public void UpdatePlayerLocation(MapController.PlayerLocation newLocation)
     {
         currentPlayerLocation = newLocation;

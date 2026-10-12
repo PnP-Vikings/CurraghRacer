@@ -1,3 +1,4 @@
+using System;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,6 +14,7 @@ public class StoreBuyPanel : MonoBehaviour
     private ItemTypes currentItemItemType;
  
     [SerializeField] private StoreTooltip storeTooltip;
+    [SerializeField] private StoreManager storeManager;
     
     [Header("Tooltip UI")]
     [SerializeField] private TMP_Text itemNameText;
@@ -21,6 +23,10 @@ public class StoreBuyPanel : MonoBehaviour
     [SerializeField] private TMP_Text energyRegainAmountText;
     [SerializeField] private TMP_Text itemDaysBeforeExpiryText;
     [SerializeField] private Button buyButton;
+    [SerializeField] private Button exitButton;
+    [SerializeField] private TMP_Text exitButtonText;
+    [SerializeField] private float buttonSize = 50f; // Adjust size as desired
+    
     
     public GameObject storeBuyPanel;          // Root object with an Image (background)
     public Image storeBuyPanelBackground;          // Background image
@@ -39,8 +45,23 @@ public class StoreBuyPanel : MonoBehaviour
     public float paddingHorizontal = 12f;
     public float paddingVertical = 8f;
     public float spacing = 4f;
+
+    private void OnEnable()
+    {
+        if(buyButton != null)
+        {
+            buyButton.onClick.AddListener(BuySelectedItem);
+        }
+    }
     
-    
+    private void OnDisable()
+    {
+        if(buyButton != null)
+        {
+            buyButton.onClick.RemoveListener(BuySelectedItem);
+        }
+    }
+
     public void UpdateBuyPanel(string itemName, int itemPrice, string itemDescription, int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,int itemId,ShopItemData itemData,bool showBuyPanel = true)
     {
         if(storeTooltip != null && storeTooltip.gameObject.activeSelf)
@@ -109,7 +130,7 @@ public class StoreBuyPanel : MonoBehaviour
         Vector2 canvasSize = canvasRect.sizeDelta;
 
         float availableWidth = Mathf.Min(maxTooltipWidth, canvasSize.x * 0.9f);
-        float maxTextPreferredWidth = itemNameText.preferredWidth;
+        float maxTextPreferredWidth = itemNameText.preferredWidth + buttonSize * 3f;
         if (itemPriceText != null && !string.IsNullOrEmpty(itemPriceText.text))
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemPriceText.preferredWidth);
         if (itemDescriptionText != null && !string.IsNullOrEmpty(itemDescriptionText.text))
@@ -120,6 +141,8 @@ public class StoreBuyPanel : MonoBehaviour
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDaysBeforeExpiryText.preferredWidth);
         if(buyButton != null)
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, buyButton.GetComponent<RectTransform>().rect.width);
+        if(exitButton != null)
+            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, exitButton.GetComponent<RectTransform>().rect.width);
 
         float optimalWidth = Mathf.Max(
             minTooltipWidth,
@@ -127,11 +150,11 @@ public class StoreBuyPanel : MonoBehaviour
         );
 
         float textWidth = optimalWidth - paddingHorizontal * 2f;
-
+        float headerTextWidth = optimalWidth - paddingHorizontal * 2f - buttonSize; // Extra room for the close button
         // Constrain text width to compute preferred height
         if (itemNameText != null)
         {
-            itemNameText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
+            itemNameText.rectTransform.sizeDelta = new Vector2(headerTextWidth, 0f);
             itemNameText.ForceMeshUpdate(true, true);
         }
         if (itemPriceText != null)
@@ -162,6 +185,27 @@ public class StoreBuyPanel : MonoBehaviour
         float currentYOffset = paddingVertical;
 
         // Layout itemNameText inside (top anchored so it grows downward)
+        
+          
+        if (exitButton != null )
+        {
+            if (currentYOffset > paddingVertical) currentYOffset += spacing;
+            var buttonRect = exitButton.GetComponent<RectTransform>();
+            buttonRect.anchorMin = new Vector2(1f, 1f);
+            buttonRect.anchorMax = new Vector2(1f, 1f);
+            buttonRect.pivot     = new Vector2(1f, 1f);
+            
+           
+            buttonRect.sizeDelta = new Vector2(buttonSize, buttonSize);
+            exitButtonText.fontSize = buttonSize;
+            float h = exitButton.GetComponent<RectTransform>().rect.height;
+            /*buttonRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
+            buttonRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));*/
+            buttonRect.anchoredPosition = new Vector2(-paddingHorizontal, -paddingVertical);
+
+         //   currentYOffset += h;
+        }
+        
         if (itemNameText != null && !string.IsNullOrEmpty(itemNameText.text))
         {
             var textRect = itemNameText.rectTransform;
@@ -231,13 +275,13 @@ public class StoreBuyPanel : MonoBehaviour
         if (buyButton != null )
         {
             if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = buyButton.GetComponent<RectTransform>();
-            textRect.anchorMin = new Vector2(0f, 1f);
-            textRect.anchorMax = new Vector2(1f, 1f);
-            textRect.pivot     = new Vector2(0.5f, 1f);
+            var buttonRect = buyButton.GetComponent<RectTransform>();
+            buttonRect.anchorMin = new Vector2(0f, 1f);
+            buttonRect.anchorMax = new Vector2(1f, 1f);
+            buttonRect.pivot     = new Vector2(0.5f, 1f);
             float h = buyButton.GetComponent<RectTransform>().rect.height;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
+            buttonRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
+            buttonRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
             currentYOffset += h;
         }
 
@@ -260,10 +304,10 @@ public class StoreBuyPanel : MonoBehaviour
         Vector2 pos = CalculateSmartPosition(mouseLocal, tooltipSize, canvasSize, buyPanelRect);
         buyPanelRect.localPosition = pos;
 
-        // Ensure the panel never blocks input
+        // Ensure the panel blocks input
         var cg = storeBuyPanel.GetComponent<CanvasGroup>();
         if (cg == null) cg = storeBuyPanel.AddComponent<CanvasGroup>();
-        cg.blocksRaycasts = false;
+        cg.blocksRaycasts = true;
 
         storeBuyPanel.SetActive(true);
         if(storeTooltip != null && storeTooltip.gameObject.activeSelf)
@@ -311,10 +355,22 @@ public class StoreBuyPanel : MonoBehaviour
         return pos;
     }
 
+    
+    private void BuySelectedItem()
+    {
+        if (storeManager != null)
+        {
+            storeManager.BuyItem(GetSelectedShopItemId());
+            HideBuyPanel();
+            
+        }
+    }
+    
     public ShopItemData GetSelectedShopItemData()
     {
         return currentItemData;
     }
+    
     
     public int GetSelectedShopItemId()
     {
