@@ -1,5 +1,6 @@
 using System;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.UI;
 using UnityEngine;
 using UnityEngine.UI;
@@ -14,7 +15,24 @@ public class TravelPanel : MonoBehaviour
     [SerializeField] private GameObject alreadyHerePanel;
     [SerializeField] private TMP_Text alreadyHereBtnText;
     [SerializeField] private Button alreadyHereBtn;
-    
+    [SerializeField] private TravelButton byFootBtn;
+    [SerializeField] private TravelButton byTaxiBtn;
+
+
+    private void OnEnable()
+    {
+        travelingToText.text = isTravelingToShop ? "Traveling to Shop" : "Traveling to Home";
+
+        if (byFootBtn != null)
+        {
+            byFootBtn.SetTravelPanel(this);
+        }
+        
+        if (byTaxiBtn != null)
+        {
+            byTaxiBtn.SetTravelPanel(this);
+        }
+    }
     
     public void TravelingToShop()
     {
@@ -38,6 +56,7 @@ public class TravelPanel : MonoBehaviour
         }
         else
         {    
+            UpdateTravelButtons(MapController.PlayerLocation.Shop, mapController.GetCurrentPlayerLocation());
             isTravelingToShop = true;
             CheckIfPlayerIsMoving();
            
@@ -62,13 +81,32 @@ public class TravelPanel : MonoBehaviour
         }
         else
         {
-            
+            UpdateTravelButtons(MapController.PlayerLocation.Home, mapController.GetCurrentPlayerLocation());
             isTravelingToShop = false;
             CheckIfPlayerIsMoving();    
 
         }
     }
 
+    public void UpdateTravelButtons(MapController.PlayerLocation clickedOnLocation, MapController.PlayerLocation currentLocation)
+    {
+
+        if (byFootBtn != null)
+        {
+          TravelCosts byFootTravelCosts = mapController.GetTravelCost(clickedOnLocation,currentLocation,TravelCosts.TravelType.Walking);
+          if(byFootTravelCosts !=null)  
+              PassDataToTravelButtons(byFootBtn, byFootTravelCosts);
+        }
+        
+        if (byTaxiBtn != null)
+        {
+            TravelCosts byTaxiTravelCosts = mapController.GetTravelCost(clickedOnLocation,currentLocation,TravelCosts.TravelType.Taxi);
+            if(byTaxiTravelCosts !=null)  
+                PassDataToTravelButtons(byTaxiBtn, byTaxiTravelCosts);
+        }
+    }
+    
+    
     public void EnableStorePanel()
     {
         
@@ -104,21 +142,43 @@ public class TravelPanel : MonoBehaviour
             }
         }
     }
-
-    private void OnEnable()
+    
+    public void Travel(TravelCosts currentCosts)
     {
-        travelingToText.text = isTravelingToShop ? "Traveling to Shop" : "Traveling to Home";
-    }
-
-    public void Travel()
-    {
-        if (isTravelingToShop)
+        if (PlayerManager.Instance != null && TimeManager.Instance != null)
         {
-            TravelToShop();
+            bool wasPurchased = false;
+            if (currentCosts.MoneyCost ==0)
+            {
+                wasPurchased = true;
+            }
+            else
+            {
+                wasPurchased = PlayerManager.Instance.PurchaseItem(currentCosts.MoneyCost, PurchaseType.Travel);
+            }
+            if (wasPurchased)
+           {
+               TimeManager.Instance.AdvanceTimeByHours(currentCosts.TimeCost);
+               if (isTravelingToShop)
+               {
+                   TravelToShop();
+               }
+               else
+               {
+                   TravelToHome();
+               }
+           }
         }
         else
         {
-            TravelToHome();
+            if (isTravelingToShop)
+            {
+                TravelToShop();
+            }
+            else
+            {
+                TravelToHome();
+            }
         }
     }
     
@@ -144,6 +204,14 @@ public class TravelPanel : MonoBehaviour
         mapController.StartMovingPlayerTowardsHome();
     }
 
+    private void PassDataToTravelButtons(TravelButton travelButton,TravelCosts injectedtravelCosts)
+    {
+        if (travelButton != null)
+        {
+            travelButton.UpdateUi(injectedtravelCosts.MoneyCost,injectedtravelCosts.TimeCost,injectedtravelCosts);
+        }
+    }
+    
     public void OnDisable()
     {
         this.gameObject.SetActive(false);

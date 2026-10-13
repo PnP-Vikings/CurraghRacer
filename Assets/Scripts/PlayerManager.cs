@@ -212,6 +212,11 @@ public class PlayerManager : MonoBehaviour
                 return false;
             }
         }
+        else if(CanAffordPurchase(cost) && purchaseType == PurchaseType.Travel)
+        {
+            ModifyPlayerCoins(-cost);
+            return true;
+        }
         else if (CanAffordPurchase(cost))
         {
             ModifyPlayerCoins(-cost);
@@ -526,7 +531,8 @@ public enum PurchaseType
         Sleep,
         Training,
         Item,
-        Shop
+        Shop,
+        Travel
 }
 [System.Serializable]
 public class FridgeItem
