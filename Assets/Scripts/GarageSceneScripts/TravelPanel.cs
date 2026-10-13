@@ -204,11 +204,11 @@ public class TravelPanel : MonoBehaviour
         mapController.StartMovingPlayerTowardsHome();
     }
 
-    private void PassDataToTravelButtons(TravelButton travelButton,TravelCosts injectedtravelCosts)
+    private void PassDataToTravelButtons(TravelButton travelButton,TravelCosts injectedTravelCosts)
     {
         if (travelButton != null)
         {
-            travelButton.UpdateUi(injectedtravelCosts.MoneyCost,injectedtravelCosts.TimeCost,injectedtravelCosts);
+            travelButton.UpdateUi(injectedTravelCosts.MoneyCost,injectedTravelCosts.TimeCost,injectedTravelCosts);
         }
     }
     
