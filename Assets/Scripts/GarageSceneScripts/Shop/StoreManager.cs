@@ -110,6 +110,12 @@ public class StoreManager : MonoBehaviour
                             PlayerStatsView.Instance.DisplayInfo($"{selectedItem.GetItemName()} has been added to your fridge");
 
                     }
+                    else
+                    {
+                        if(PlayerStatsView.Instance != null)
+                            PlayerStatsView.Instance.DisplayInfo($"Can't afford to purchase {selectedItem.GetItemName()}");
+
+                    }
                 }
                 else
                 {

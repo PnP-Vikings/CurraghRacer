@@ -192,11 +192,6 @@ public class PlayerManager : MonoBehaviour
             ModifyPlayerCoins(cost);
             return true; 
         }
-        else if (!CanAffordPurchase(cost) && purchaseType != PurchaseType.RaceEntry)
-        {
-            Debug.LogWarning("Not enough coins to make this purchase.");
-            return false;
-        }
         else if(CanAffordPurchase(cost) && purchaseType == PurchaseType.Shop)
         {
             Debug.Log($"Purchased {purchaseType}.");
@@ -212,10 +207,20 @@ public class PlayerManager : MonoBehaviour
                 return false;
             }
         }
+        else if(!CanAffordPurchase(cost) && purchaseType == PurchaseType.Travel)
+        {
+            playerStatsView.DisplayInfo("Could Not Afford Taxi Fare");
+            return false;
+        }
         else if(CanAffordPurchase(cost) && purchaseType == PurchaseType.Travel)
         {
             ModifyPlayerCoins(-cost);
             return true;
+        }
+        else if (!CanAffordPurchase(cost) && purchaseType != PurchaseType.RaceEntry)
+        {
+            Debug.LogWarning("Not enough coins to make this purchase.");
+            return false;
         }
         else if (CanAffordPurchase(cost))
         {

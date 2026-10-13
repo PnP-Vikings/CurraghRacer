@@ -7,6 +7,7 @@ public class MapCurrency : MonoBehaviour
    [SerializeField] private TMP_Text energyText;
    [SerializeField] private TMP_Text currencyText;
    [SerializeField] private TMP_Text timeText;
+   [SerializeField] private TMP_Text amPmText;
 
 
 
@@ -36,18 +37,31 @@ public class MapCurrency : MonoBehaviour
       if (TimeManager.Instance != null)
       {
          float totalHours = TimeManager.Instance.TimeOfDay;
+
+         string amOrPmText = "";
+
+         if (totalHours < 12)
+         {
+            amOrPmText = "AM";
+         }
+         else
+         {
+            amOrPmText = "PM";
+         }
+         
          float hours = totalHours % 12f; // Convert to 12-hour format (includes fractional minutes)
          float minutes = (totalHours % 1f) * 60f; // Extract minutes from decimal portion
          if (hours >=0&& hours<=1 || hours >=12&& hours<=13)
          {
             timeText.text =  $"12:{Mathf.FloorToInt(minutes):00}";
+
          }
          else
          {
             timeText.text =  $"{Mathf.FloorToInt(hours)}:{Mathf.FloorToInt(minutes):00}";
          }
 
-       
+         amPmText.text =  $"{amOrPmText}";
       }
 
    }
