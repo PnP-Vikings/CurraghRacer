@@ -104,6 +104,10 @@ public class ShopItem : MonoBehaviour
     return itemData.itemPrice;
   }
 
+  public string GetItemName()
+  {
+    return itemNameText;
+  }
   public void HasBeenPurchased(bool purchaseStatus)
   {
     hasBeenPurchased = purchaseStatus;

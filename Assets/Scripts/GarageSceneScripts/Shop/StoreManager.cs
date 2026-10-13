@@ -107,7 +107,7 @@ public class StoreManager : MonoBehaviour
                         PlayerManager.Instance.AddItemToFridge(selectedItem.GetItemData());
                         selectedItem.HasBeenPurchased(true);
                         if(PlayerStatsView.Instance != null)
-                            PlayerStatsView.Instance.DisplayInfo($"{selectedItem.name} has been added to your fridge");
+                            PlayerStatsView.Instance.DisplayInfo($"{selectedItem.GetItemName()} has been added to your fridge");
 
                     }
                 }

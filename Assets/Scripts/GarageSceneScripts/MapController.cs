@@ -22,8 +22,24 @@ public class MapController : MonoBehaviour
     [SerializeField] private float textShowDuration = 2f; // Duration to show the text
     [SerializeField] private GameObject shopPanel;
 
-    
- 
+
+
+    private void OnEnable()
+    {
+        if (PlayerStatsView.Instance != null)
+        {
+            PlayerStatsView.Instance.HideStatsView();
+        }
+    }
+
+    private void OnDisable()
+    {
+        if (PlayerStatsView.Instance != null)
+        {
+            PlayerStatsView.Instance.ShowStatsView();
+        } 
+    }
+
     public void StartMovingPlayerTowardsShop()
     {
         HideAllTexts();
