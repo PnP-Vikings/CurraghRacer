@@ -6148,6 +6148,16 @@ MonoBehaviour:
     travelType: 1
     timeCost: 3
     moneyCost: 0
+  - locationClickedName: 0
+    locationFromName: 1
+    travelType: 1
+    timeCost: 3
+    moneyCost: 0
+  - locationClickedName: 0
+    locationFromName: 1
+    travelType: 1
+    timeCost: 3
+    moneyCost: 0
   mapPanel: {fileID: 521633744}
   exitMapButton: {fileID: 1345966049}
   returnHomeText: {fileID: 1602850977}
