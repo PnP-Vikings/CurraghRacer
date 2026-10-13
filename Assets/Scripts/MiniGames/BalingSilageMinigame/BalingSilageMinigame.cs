@@ -2,6 +2,7 @@ using UnityEngine;
 using MiniGames;
 using UnityEngine.UI;
 using TMPro;
+using Unity.VisualScripting;
 
 namespace MiniGames.BalingSilageMinigame
 {
@@ -11,6 +12,7 @@ namespace MiniGames.BalingSilageMinigame
         private MiniGameData gameData;
         public Tractor tractorPrefab;
         public GameObject Collector;
+        public GameObject balePrefab;
         private float score;
         public float grassCounter;
         public float gameTimer;
@@ -57,6 +59,7 @@ namespace MiniGames.BalingSilageMinigame
                 grassCounter = 0;
                 score++;
                 scoreText.text = score.ToString();
+                Instantiate(balePrefab, FindAnyObjectByType<Tractor>().collectorPrefab.transform.position, Quaternion.Euler(0, 90, 0));
             }
 
             gameTimer-= Time.deltaTime;
@@ -66,7 +69,7 @@ namespace MiniGames.BalingSilageMinigame
                 grassText.text = "Hurry and collect the grass";
             }
 
-            if (FindFirstObjectByType<Tractor>().wallHit == true)
+            if (FindAnyObjectByType<Tractor>().wallHit == true)
             {
                 gameTimer = 0;
                 grassText.text = "Tractor crashed into fence. Game Over";
@@ -79,7 +82,7 @@ namespace MiniGames.BalingSilageMinigame
                 EndGame();
             }
 
-            if (gameTimer <= 0 && FindFirstObjectByType<Tractor>().wallHit == false)
+            if (gameTimer <= 0 && FindAnyObjectByType<Tractor>().wallHit == false)
             {
                 gameTimer = 0;
                 grassText.text = "Game completed";

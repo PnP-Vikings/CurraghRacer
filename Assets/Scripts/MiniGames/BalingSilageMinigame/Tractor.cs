@@ -33,7 +33,7 @@ public class Tractor : MonoBehaviour
         
         //transform.position += transform.forward * moveSpeed;
         
-        if (movement == true)
+        if (Keyboard.current.wKey.isPressed && movement == true)
         {
             transform.position += transform.forward * moveSpeed;
         }
@@ -43,7 +43,7 @@ public class Tractor : MonoBehaviour
             moveSpeed = 0;
         }
 
-        if (FindFirstObjectByType<BalingSilageMinigame>().gameTimer <= 0)
+        if (FindAnyObjectByType<BalingSilageMinigame>().gameTimer <= 0)
         {
             movement = false;
         }
@@ -66,11 +66,11 @@ public class Tractor : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (FindFirstObjectByType<BalingSilageMinigame>().Collector == other.gameObject)
+        if (FindAnyObjectByType<BalingSilageMinigame>().Collector == other.gameObject)
         {
-            Destroy(FindFirstObjectByType<BalingSilageMinigame>().Collector);
-            FindFirstObjectByType<BalingSilageMinigame>().collecting = true;
-            FindFirstObjectByType<BalingSilageMinigame>().cutting = false;
+            Destroy(FindAnyObjectByType<BalingSilageMinigame>().Collector);
+            FindAnyObjectByType<BalingSilageMinigame>().collecting = true;
+            FindAnyObjectByType<BalingSilageMinigame>().cutting = false;
             collectorPrefab.SetActive(true);
         }
 

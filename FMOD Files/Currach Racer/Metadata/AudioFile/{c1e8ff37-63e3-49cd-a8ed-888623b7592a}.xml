@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <objects serializationModel="Studio.02.02.00">
-	<object class="AudioFile" id="{728f2e80-28fa-4aa0-ae99-8d0f624212b4}">
+	<object class="AudioFile" id="{c1e8ff37-63e3-49cd-a8ed-888623b7592a}">
 		<property name="assetPath">
-			<value>Bogland Radio Jingle 2 V2.wav</value>
+			<value>Bogland Radio Jingle 2 V8.wav</value>
 		</property>
 		<property name="isStreaming">
 			<value>true</value>
@@ -14,7 +14,7 @@
 			<value>2</value>
 		</property>
 		<property name="length">
-			<value>17.272743764172336</value>
+			<value>18.095238095238095</value>
 		</property>
 		<relationship name="masterAssetFolder">
 			<destination>{29fe2d1b-bed0-4178-ab38-476d0a028a05}</destination>
