@@ -1,6 +1,5 @@
-
-using System;
 using System.Collections;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -9,6 +8,7 @@ public class MapController : MonoBehaviour
 {
     [SerializeField] private MapSpline mapSpline;
     [SerializeField] private PlayerLocation currentPlayerLocation = PlayerLocation.Home;
+    [SerializeField] private List<TravelCosts> travelCostsList;
     
     [Header("UI Elements")]
     [SerializeField] private GameObject mapPanel;
@@ -219,4 +219,47 @@ public class MapController : MonoBehaviour
         Home,
         Shop
     }
+
+    public TravelCosts GetTravelCost(MapController.PlayerLocation clickedOnLocation, MapController.PlayerLocation currentLocation, TravelCosts.TravelType travelType)
+    {
+
+        foreach (TravelCosts tc in travelCostsList)
+        {
+            if (tc.CurrentLocation == currentLocation && tc.LocationClickedName == clickedOnLocation && tc.Type == travelType)
+            {
+                return tc;
+            }
+        }
+        
+        Debug.Log("Couldn't find any matching travel costs returning first element in list");
+        return travelCostsList[0];
+    }
+}
+
+[System.Serializable]
+public class TravelCosts
+{
+    [Tooltip("Name of the location they are trying to go to")]
+    [SerializeField] private MapController.PlayerLocation locationClickedName;
+    [Tooltip("Name of the location they are currently at")]
+    [SerializeField] private MapController.PlayerLocation locationFromName;
+    [Tooltip("Type of Travel")]
+    [SerializeField] private TravelType travelType;
+    [Tooltip("Time cost for this option")]
+    [SerializeField] private int timeCost = 3;
+    [Tooltip("Money cost for this option")]
+    [SerializeField] private int moneyCost = 40;
+
+    public enum TravelType
+    {
+        Taxi,
+        Walking
+    }
+
+    // Optional: Public getters/properties to access the values from other scripts
+    public MapController.PlayerLocation LocationClickedName => locationClickedName;
+    public MapController.PlayerLocation CurrentLocation => locationFromName;
+    public TravelType Type => travelType;
+    public int TimeCost => timeCost;
+    public int MoneyCost => moneyCost;
 }
