@@ -6,7 +6,7 @@ using UnityEngine.UIElements;
 
 public class ClockUI : MonoBehaviour
 {
-    [SerializeField] private UIDocument uiDoc;
+    [SerializeField] private PanelRenderer uiDoc;
     
     private Label _dayOfWeekText;
     private VisualElement _minuteHand,
@@ -15,46 +15,71 @@ public class ClockUI : MonoBehaviour
 
     [SerializeField] private bool showClockInGarage = false;
     
-    
     private void OnEnable()
     {
+        if (uiDoc == null)
+        {
+            uiDoc = GetComponent<PanelRenderer>();
+        }
+
+        if (uiDoc != null)
+        {
+            uiDoc.RegisterUIReloadCallback(OnUIReload);
+        }
+
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.onNewDay.AddListener(UpdateClock);
+            TimeManager.Instance.timeChangedEvent.AddListener(UpdateClock);
+            showClockInGarage = TimeManager.Instance.GetShowClockInGarage();
+        }
+        else
+        {
+            Debug.Log("TimeManager Instance is null");
+        }
         
-        uiDoc = GetComponent<UIDocument>();
-        
-       
-        var root = uiDoc.rootVisualElement;
+        SceneManager.sceneLoaded += OnSceneLoaded;
+        UpdateClockVisibility();
+    }
+
+    private void OnDisable()
+    {
+        SceneManager.sceneLoaded -= OnSceneLoaded;
+
+        if (uiDoc != null)
+        {
+            uiDoc.UnregisterUIReloadCallback(OnUIReload);
+        }
+
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.onNewDay.RemoveListener(UpdateClock);
+            TimeManager.Instance.timeChangedEvent.RemoveListener(UpdateClock);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        if (TimeManager.Instance != null)
+        {
+            TimeManager.Instance.onNewDay.RemoveListener(UpdateClock);
+            TimeManager.Instance.timeChangedEvent.RemoveListener(UpdateClock);
+        }
+    }
+
+    private void OnUIReload(PanelRenderer renderer, VisualElement root)
+    {
+        if (root == null) return;
+
         _minuteHand = root.Q<VisualElement>("MinuteHand");
         _hourHand = root.Q<VisualElement>("HourHand");
         _dayOfWeekText = root.Q<Label>("DayOfWeekText");
         _clockContainer = root.Q<VisualElement>("ClockMajor");
-        
+
         UpdateClock();
-        if (TimeManager.Instance == null) {Debug.Log("TimeManger Instance is null");return;}
-        TimeManager.Instance.onNewDay.AddListener(UpdateClock);
-        TimeManager.Instance.timeChangedEvent.AddListener(UpdateClock);
-        
-        SceneManager.sceneLoaded += OnSceneLoaded;
-        
-        if (TimeManager.Instance != null)
-        {
-            showClockInGarage = TimeManager.Instance.GetShowClockInGarage();
-        }
-        
-        
-        if (SceneManager.GetActiveScene().name != "Garage" || !showClockInGarage)
-        {
-            _clockContainer.style.display = DisplayStyle.None;
-        }
-        else
-        {
-            _clockContainer.style.display = DisplayStyle.Flex;
-        }
-      
+        UpdateClockVisibility();
     }
-    private void OnDisable()
-    {
-        SceneManager.sceneLoaded -= OnSceneLoaded;
-    }
+
     public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
     {
         if (TimeManager.Instance != null)
@@ -62,6 +87,13 @@ public class ClockUI : MonoBehaviour
             showClockInGarage = TimeManager.Instance.GetShowClockInGarage();
         }
         
+        UpdateClockVisibility();
+    }
+
+    private void UpdateClockVisibility()
+    {
+        if (_clockContainer == null) return;
+
         if (SceneManager.GetActiveScene().name != "Garage" || !showClockInGarage)
         {
             _clockContainer.style.display = DisplayStyle.None;
@@ -71,13 +103,6 @@ public class ClockUI : MonoBehaviour
             _clockContainer.style.display = DisplayStyle.Flex;
         }
     }
-    
-    private void OnDestroy()
-    {
-     TimeManager.Instance.onNewDay.RemoveListener(UpdateClock);
-        TimeManager.Instance.timeChangedEvent.RemoveListener(UpdateClock);
-    }
-    
     
     public void UpdateClock()
     {
@@ -106,11 +131,8 @@ public class ClockUI : MonoBehaviour
         int dayNumber = TimeManager.Instance.DaysPassed;
         // Calculate the day of the week using the modulo operator
         string dayOfWeek = TimeManager.Instance.GetCurrentDayOfWeekString();
-        // Update the day number text
-        //dayNumberText.text = $"Day {dayNumber + 1}";
         // Update the day of the week text
-        _dayOfWeekText.text = dayOfWeek;
+        if (_dayOfWeekText != null)
+            _dayOfWeekText.text = dayOfWeek;
     }
-    
-
 }

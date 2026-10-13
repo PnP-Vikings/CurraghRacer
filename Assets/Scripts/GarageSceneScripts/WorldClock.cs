@@ -43,7 +43,15 @@ public class WorldClock : MonoBehaviour
             
             float hours = totalHours % 12f; // Convert to 12-hour format (includes fractional minutes)
             float minutes = (totalHours % 1f) * 60f; // Extract minutes from decimal portion
-            worldClockTimeText.text = $"{Mathf.FloorToInt(hours)}:{Mathf.FloorToInt(minutes):00}";
+
+            if (hours >=0&& hours<=1 || hours >=12&& hours<=13)
+            {
+                worldClockTimeText.text =  $"12:{Mathf.FloorToInt(minutes):00}";
+            }
+            else
+            {
+                worldClockTimeText.text =  $"{Mathf.FloorToInt(hours)}:{Mathf.FloorToInt(minutes):00}";
+            }
         }
     }
 }
