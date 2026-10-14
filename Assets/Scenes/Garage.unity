@@ -14235,6 +14235,51 @@ MonoBehaviour:
   references:
     version: 2
     RefIds: []
+--- !u!1 &1160375970
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1160375972}
+  - component: {fileID: 1160375971}
+  m_Layer: 0
+  m_Name: MapAudio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1160375971
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160375970}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6408b2c462380484297498a337d1993f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapAudio
+  garageAmbienceEmitter: {fileID: 2093723886}
+--- !u!4 &1160375972
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1160375970}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -107.48857, y: 61.4272, z: 230.99997}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1165356523
 GameObject:
   m_ObjectHideFlags: 0
@@ -16187,6 +16232,18 @@ MonoBehaviour:
       - m_Target: {fileID: 521633750}
         m_TargetAssemblyTypeName: MapController, Assembly-CSharp
         m_MethodName: LeaveMapPanel
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1160375971}
+        m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
+        m_MethodName: UnmuteGarageAudio
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -24960,7 +25017,12 @@ MonoBehaviour:
   TriggerOnce: 0
   Preload: 0
   NonRigidbodyVelocity: 0
-  Params: []
+  Params:
+  - Name: Mute Garage Ambience
+    Value: 1
+    ID:
+      data1: 0
+      data2: 0
   OverrideAttenuation: 0
   OverrideMinDistance: 1
   OverrideMaxDistance: 20
@@ -28189,7 +28251,7 @@ PrefabInstance:
       objectReference: {fileID: 550402161}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.size
-      value: 4
+      value: 5
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode
@@ -28202,6 +28264,10 @@ PrefabInstance:
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Mode
       value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_Mode
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
@@ -28220,7 +28286,15 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 521633744}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_Target
+      value: 
+      objectReference: {fileID: 1160375971}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_CallState
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_CallState
       value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
@@ -28236,6 +28310,10 @@ PrefabInstance:
       value: SetActive
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_MethodName
+      value: MuteGarageAudio
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
       value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
@@ -28248,7 +28326,15 @@ PrefabInstance:
       value: UnityEngine.GameObject, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_TargetAssemblyTypeName
+      value: MapAudio, Assembly-CSharp
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_BoolArgument
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_Arguments.m_BoolArgument
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
@@ -28257,6 +28343,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[3].m_Arguments.m_ObjectArgumentAssemblyTypeName
+      value: UnityEngine.Object, UnityEngine
+      objectReference: {fileID: 0}
+    - target: {fileID: 5276966517126150011, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[4].m_Arguments.m_ObjectArgumentAssemblyTypeName
       value: UnityEngine.Object, UnityEngine
       objectReference: {fileID: 0}
     - target: {fileID: 6175407700593553955, guid: 64927981c3210ac47b30f56413f74f68, type: 3}
@@ -28439,3 +28529,4 @@ SceneRoots:
   - {fileID: 2093723885}
   - {fileID: 996599402}
   - {fileID: 772153880}
+  - {fileID: 1160375972}
