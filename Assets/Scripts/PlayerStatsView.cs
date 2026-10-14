@@ -11,6 +11,8 @@ public class PlayerStatsView : MonoBehaviour
     private VisualElement _displayInfoBackground;
     [SerializeField] private LocalizedString _localizedPlayerEnergyText;
     [SerializeField] private LocalizedString _localizedPlayerCurrencyText;
+
+    [SerializeField] private bool showCurrencyTexts = false;
     public static PlayerStatsView Instance { get; private set; }
 
     private void Awake()
@@ -48,6 +50,8 @@ public class PlayerStatsView : MonoBehaviour
             LocalizationManager.Instance.OnLanguageChanged.AddListener(UpdatePlayerStats);
         }
 
+        if (!showCurrencyTexts)
+            HideStatsView();
         SceneManager.sceneLoaded += OnSceneLoaded;
     }
 
@@ -96,6 +100,8 @@ public class PlayerStatsView : MonoBehaviour
         if (uiDoc != null)
         {
             uiDoc.enabled = scene.name != "Main Menu";
+            if (!showCurrencyTexts)
+                HideStatsView();
         }
     }
 
@@ -110,6 +116,11 @@ public class PlayerStatsView : MonoBehaviour
         if (_localizedPlayerEnergyText == null || _localizedPlayerCurrencyText == null)
             return;
 
+        if (!showCurrencyTexts)
+        {
+            HideStatsView();
+            return;
+        }
         if (_localizedPlayerEnergyText.Arguments != null && _localizedPlayerEnergyText.Arguments.Count > 0)
         {
             _localizedPlayerEnergyText.Arguments[0] = PlayerManager.Instance.GetPlayerEnergy();
@@ -202,6 +213,11 @@ public class PlayerStatsView : MonoBehaviour
 
     public void ShowStatsView()
     {
+        if (!showCurrencyTexts)
+        {
+            HideStatsView();
+            return;
+        }
         if (_playerEnergyLabel != null)
             _playerEnergyLabel.style.display = DisplayStyle.Flex;
         if (_playerCurrencyLabel != null)
