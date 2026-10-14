@@ -8,128 +8,128 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     private Bus masterBus;
-        // UI
-    public EventInstance UIClick1; // Confirm selection 
-    public EventInstance UIClick2; // Return
-    public EventInstance UIClick3; // Hover
+    // UI
+    [System.NonSerialized] public EventInstance UIClick1; // Confirm selection 
+    [System.NonSerialized] public EventInstance UIClick2; // Return
+    [System.NonSerialized] public EventInstance UIClick3; // Hover
         // Main Menu
-    public EventInstance deleteSave;
+    [System.NonSerialized] public EventInstance deleteSave;
         // Race
-    public EventInstance raceAmbience;
-    public EventInstance raceWon;
-    public EventInstance raceLost;
-    public EventInstance shout;
+    [System.NonSerialized] public EventInstance raceAmbience;
+    [System.NonSerialized] public EventInstance raceWon;
+    [System.NonSerialized] public EventInstance raceLost;
+    [System.NonSerialized] public EventInstance shout;
         // Garage
 
-    public EventInstance storyUpdateIntro; // FKA storyUpdate1
-    public EventInstance storyUpdateFirstRaceWon;   // FKA storyUpdate2
-    public EventInstance storyUpdateFirstRaceLost;  // FKA storyUpdate3
-    public EventInstance storyUpdateSecondRaceWon;  // FKA storyUpdate3
+    [System.NonSerialized] public EventInstance storyUpdateIntro; // FKA storyUpdate1
+    [System.NonSerialized] public EventInstance storyUpdateFirstRaceWon;   // FKA storyUpdate2
+    [System.NonSerialized] public EventInstance storyUpdateFirstRaceLost;  // FKA storyUpdate3
+    [System.NonSerialized] public EventInstance storyUpdateSecondRaceWon;  // FKA storyUpdate3
 
-    public EventInstance radioSong1;
-    public EventInstance radioSong2;
-    public EventInstance radioSong3;
-    public EventInstance radioSong4;
-    public EventInstance radioSong5;
+    [System.NonSerialized] public EventInstance radioSong1;
+    [System.NonSerialized] public EventInstance radioSong2;
+    [System.NonSerialized] public EventInstance radioSong3;
+    [System.NonSerialized] public EventInstance radioSong4;
+    [System.NonSerialized] public EventInstance radioSong5;
 
-    public EventInstance radioAdOrNews1;
-    public EventInstance radioAdOrNews2;
-    public EventInstance radioAdOrNews3;
-    public EventInstance radioAdOrNews4;
-    public EventInstance radioAdOrNews5;
+    [System.NonSerialized] public EventInstance radioAdOrNews1;
+    [System.NonSerialized] public EventInstance radioAdOrNews2;
+    [System.NonSerialized] public EventInstance radioAdOrNews3;
+    [System.NonSerialized] public EventInstance radioAdOrNews4;
+    [System.NonSerialized] public EventInstance radioAdOrNews5;
 
-    public EventInstance angelus;
-    public EventInstance boglandRadioJingle;
+    [System.NonSerialized] public EventInstance angelus;
+    [System.NonSerialized] public EventInstance boglandRadioJingle;
 
-    public EventInstance tvButtonPushOut;
-    public EventInstance tvButtonPushIn;
-    public EventInstance showInviteAudio;
+    [System.NonSerialized] public EventInstance tvButtonPushOut;
+    [System.NonSerialized] public EventInstance tvButtonPushIn;
+    [System.NonSerialized] public EventInstance showInviteAudio;
         // Bulletin Board
-    public EventInstance sleepAudio;
-    public EventInstance sleepOutsideAudio;
-    public EventInstance rooster;
-    public EventInstance payBill;
-    public EventInstance payBillWhilePoorDialogue;
-    public EventInstance card;
+    [System.NonSerialized] public EventInstance sleepAudio;
+    [System.NonSerialized] public EventInstance sleepOutsideAudio;
+    [System.NonSerialized] public EventInstance rooster;
+    [System.NonSerialized] public EventInstance payBill;
+    [System.NonSerialized] public EventInstance payBillWhilePoorDialogue;
+    [System.NonSerialized] public EventInstance card;
         // Training
-    public EventInstance gymBagZipUp;
-    public EventInstance dumbbell;
+    [System.NonSerialized] public EventInstance gymBagZipUp;
+    [System.NonSerialized] public EventInstance dumbbell;
 
-    public EventInstance rowing;
-    public EventInstance rowingGameSuccess;
-    public EventInstance rowingGameSuccessDialogue;
-    public EventInstance rowingGameFail;
-    public EventInstance rowingGameFailDialogue;
-    public EventInstance rowingGameSuccessAfterFail;
+    [System.NonSerialized] public EventInstance rowing;
+    [System.NonSerialized] public EventInstance rowingGameSuccess;
+    [System.NonSerialized] public EventInstance rowingGameSuccessDialogue;
+    [System.NonSerialized] public EventInstance rowingGameFail;
+    [System.NonSerialized] public EventInstance rowingGameFailDialogue;
+    [System.NonSerialized] public EventInstance rowingGameSuccessAfterFail;
     // Jobs
 
-    public EventInstance spawnPlates;
-    public EventInstance movePlate;
-    public EventInstance dunkPlate;
-    public EventInstance spongeAudio;
+    [System.NonSerialized] public EventInstance spawnPlates;
+    [System.NonSerialized] public EventInstance movePlate;
+    [System.NonSerialized] public EventInstance dunkPlate;
+    [System.NonSerialized] public EventInstance spongeAudio;
 
-    public EventInstance barAmbience;
-    public EventInstance pouringPint;
-    public EventInstance acceptablePour;
-    public EventInstance poorPour;
-    public EventInstance setDownPint;
+    [System.NonSerialized] public EventInstance barAmbience;
+    [System.NonSerialized] public EventInstance pouringPint;
+    [System.NonSerialized] public EventInstance acceptablePour;
+    [System.NonSerialized] public EventInstance poorPour;
+    [System.NonSerialized] public EventInstance setDownPint;
 
-    public EventInstance punchBagAudio;
+    [System.NonSerialized] public EventInstance punchBagAudio;
 
-    public EventInstance miniGame_lifeLost;
-    public EventInstance miniGameProgression;
-    public EventInstance miniGame_Win;
-    public EventInstance miniGame_Over;
-    public EventInstance miniGameCompleteDialogue;
+    [System.NonSerialized] public EventInstance miniGame_lifeLost;
+    [System.NonSerialized] public EventInstance miniGameProgression;
+    [System.NonSerialized] public EventInstance miniGame_Win;
+    [System.NonSerialized] public EventInstance miniGame_Over;
+    [System.NonSerialized] public EventInstance miniGameCompleteDialogue;
 
-    public EventInstance placeTurf;
+    [System.NonSerialized] public EventInstance placeTurf;
 
-    public EventInstance weightSelectionResponse;
-    public EventInstance dumbbellSlide;
-    public EventInstance grunt;
-    public EventInstance barGrip;
-    public EventInstance barPlacedOnStand;
-    public EventInstance weightliftingPhaseFailedDialogue;
-    public EventInstance inTheGreenDialogue;
-    public EventInstance cementBag;
-    public EventInstance weightliftingRoundEndDialogue;
-    public EventInstance aWarmUp;
-    public EventInstance liftPhaseEncouragement;
-    public EventInstance holdPhaseEncouragement;
+    [System.NonSerialized] public EventInstance weightSelectionResponse;
+    [System.NonSerialized] public EventInstance dumbbellSlide;
+    [System.NonSerialized] public EventInstance grunt;
+    [System.NonSerialized] public EventInstance barGrip;
+    [System.NonSerialized] public EventInstance barPlacedOnStand;
+    [System.NonSerialized] public EventInstance weightliftingPhaseFailedDialogue;
+    [System.NonSerialized] public EventInstance inTheGreenDialogue;
+    [System.NonSerialized] public EventInstance cementBag;
+    [System.NonSerialized] public EventInstance weightliftingRoundEndDialogue;
+    [System.NonSerialized] public EventInstance aWarmUp;
+    [System.NonSerialized] public EventInstance liftPhaseEncouragement;
+    [System.NonSerialized] public EventInstance holdPhaseEncouragement;
 
-    public EventInstance running;
-    public EventInstance jump;
-    public EventInstance footRaceEncouragement;
-    public EventInstance slide;
-    public EventInstance crashIntoFence;
+    [System.NonSerialized] public EventInstance running;
+    [System.NonSerialized] public EventInstance jump;
+    [System.NonSerialized] public EventInstance footRaceEncouragement;
+    [System.NonSerialized] public EventInstance slide;
+    [System.NonSerialized] public EventInstance crashIntoFence;
 
-    public EventInstance rockSelect;
-    public EventInstance closeRockCase;
-    public EventInstance rockSkip;
-    public EventInstance rockThrow;
-    public EventInstance rockBounceOnWood;
-    public EventInstance rockSink;
+    [System.NonSerialized] public EventInstance rockSelect;
+    [System.NonSerialized] public EventInstance closeRockCase;
+    [System.NonSerialized] public EventInstance rockSkip;
+    [System.NonSerialized] public EventInstance rockThrow;
+    [System.NonSerialized] public EventInstance rockBounceOnWood;
+    [System.NonSerialized] public EventInstance rockSink;
 
-    public EventInstance tractor;
+    [System.NonSerialized] public EventInstance tractor;
 
-    public EventInstance carCrash;
-    public EventInstance rain;
-    public EventInstance roadworks;
+    [System.NonSerialized] public EventInstance carCrash;
+    [System.NonSerialized] public EventInstance rain;
+    [System.NonSerialized] public EventInstance roadworks;
 
-    public EventInstance strikeRemoved;
-    public EventInstance scribble;
+    [System.NonSerialized] public EventInstance strikeRemoved;
+    [System.NonSerialized] public EventInstance scribble;
 
-    public EventInstance PowerMeter;
+    [System.NonSerialized] public EventInstance PowerMeter;
 
-    public EventInstance boxingEncouragementOnLastLife;
-    public EventInstance boxingSuccessAfterFail;
+    [System.NonSerialized] public EventInstance boxingEncouragementOnLastLife;
+    [System.NonSerialized] public EventInstance boxingSuccessAfterFail;
 
-    public EventInstance bodhran;
+    [System.NonSerialized] public EventInstance bodhran;
 
-    public EventInstance tutorialGuy;
+    [System.NonSerialized] public EventInstance tutorialGuy;
 
-    public EventInstance danceTrack;
-    public EventInstance mainTheme;
+    [System.NonSerialized] public EventInstance danceTrack;
+    [System.NonSerialized] public EventInstance mainTheme;
 
     private Scene activeScene;
     void Awake()
