@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -12,6 +13,15 @@ public class MapCurrency : MonoBehaviour
    [SerializeField] private TMP_Text timeText;
    [SerializeField] private TMP_Text amPmText;
 
+   [Header("Currency Popup Stuff")]
+   [SerializeField] private Vector3 defaultPoolSpawnPosition;
+   [SerializeField] private Transform currencyPopupParent;
+   [SerializeField] private int currencyPoolSize = 10;
+   [SerializeField] private CurrencyChangePopup currencyPopupPrefab;
+   [SerializeField] private List<CurrencyChangePopup> spawnedCurrencyPopupList;
+   
+   
+   
    public static MapCurrency Instance { get; private set; }
 
    private void OnEnable()
@@ -37,6 +47,7 @@ public class MapCurrency : MonoBehaviour
       }
       
       SceneManager.sceneLoaded += OnSceneLoaded;
+      SpawnCurrencyPopupPool();
    }
 
    private void OnDisable()
@@ -102,6 +113,39 @@ public class MapCurrency : MonoBehaviour
      
       ToggleAllUi(scene.name != "Main Menu");
      
+   }
+
+   public void SpawnCurrencyPopupPool()
+   {
+      if(currencyPopupParent == null ||currencyPopupPrefab ==null)
+         return;
+      for (int i = 0; i < currencyPoolSize; i++)
+      {
+        CurrencyChangePopup spawnedPopUp =Instantiate(currencyPopupPrefab, currencyPopupParent);
+        spawnedCurrencyPopupList.Add(spawnedPopUp);
+        spawnedPopUp.gameObject.SetActive(false);
+      }
+   }
+
+   public void OnCurrencyChange(CurrencyTypes injectedCurrencyType,int amount)
+   {
+      CurrencyChangePopup chosenPopup = new CurrencyChangePopup();
+
+      foreach (CurrencyChangePopup popup in spawnedCurrencyPopupList)
+      {
+         if (!popup.gameObject.activeSelf)
+         {
+            chosenPopup = popup;
+            break;
+         }
+      }
+
+      if (chosenPopup != null)
+      {
+         chosenPopup.gameObject.transform.localPosition = defaultPoolSpawnPosition;
+         chosenPopup.UpdateUi(injectedCurrencyType, amount);
+         chosenPopup.gameObject.SetActive(true);
+      }
    }
 
 

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using DG.Tweening;
 using League;
@@ -5,6 +6,7 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Localization;
 using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -142,6 +144,10 @@ public class PlayerManager : MonoBehaviour
         energy += amount;
         if (energy < 0) energy = 0; // Prevent negative energy
         if (energy > 100) energy = 100; // Cap energy at 100
+        if (MapCurrency.Instance != null)
+        {
+            MapCurrency.Instance.OnCurrencyChange(CurrencyTypes.Energy, (int)Math.Round(amount));
+        }
         playerStatsView.UpdatePlayerStats();
     }
   
@@ -155,6 +161,11 @@ public class PlayerManager : MonoBehaviour
         coins += amount;
       //  if (coins < 0) coins = 0; // Prevent negative coins
         playerStatsView.UpdatePlayerStats();
+
+        if (MapCurrency.Instance != null)
+        {
+            MapCurrency.Instance.OnCurrencyChange(CurrencyTypes.Euro, (int)Math.Round(amount));
+        }
         CheckForDebtWarnings();
     }
     
