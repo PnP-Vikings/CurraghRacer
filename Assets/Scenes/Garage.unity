@@ -26952,6 +26952,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1391121596369286803, guid: 2a9157db2a4477b44a37755eb50c3f1d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1544036904560277616, guid: 2a9157db2a4477b44a37755eb50c3f1d, type: 3}
       propertyPath: m_Name
       value: CurrencyPanel

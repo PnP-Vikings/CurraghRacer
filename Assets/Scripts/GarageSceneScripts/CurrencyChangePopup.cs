@@ -22,16 +22,19 @@ public class CurrencyChangePopup : MonoBehaviour
     [SerializeField] private float currencyChangeTextOpacity;
     private void OnEnable()
     {
-        
+        float randomStartScale = Random.Range(1, 2); 
+        float randomScale = Random.Range(0.4f, 1);
         float heightToMove = Random.Range(150, 800);
         float horizontalToMove = Random.Range(-700, 700);
         RectTransform rectTransform = GetComponent<RectTransform>();
 
+        rectTransform.localScale = new Vector3(randomStartScale, randomStartScale, randomStartScale);
         _currentTween?.Kill();
         _currentTween = DOTween.Sequence()
             .Append(rectTransform.DOAnchorPos(new Vector2(horizontalToMove, heightToMove), lifeTime)
                 .SetRelative(true)
                 .SetEase(Ease.InOutSine)).Join(currencyBackground.DOFade(0,fadeTime))
+            .Join(rectTransform.DOScale(new Vector3(randomScale,randomScale,randomScale),fadeTime))
             .Join(currencyImage.DOFade(0,fadeTime))
             .Join(currencyChangeText.DOFade(0,fadeTime))
             .SetUpdate(true).SetEase(Ease.OutQuad);
@@ -57,6 +60,7 @@ public class CurrencyChangePopup : MonoBehaviour
 
     public void UpdateUi(CurrencyTypes injectedCurrencyType,int amount)
     {
+        
         foreach (CurrencyChangeTypes cC in currencyChangeTypes)
         {
             if (cC.GetCurrencyType() == injectedCurrencyType)
@@ -73,6 +77,20 @@ public class CurrencyChangePopup : MonoBehaviour
         amountTxt = $"{amountTxt}{amount}";
 
         currencyChangeText.text = amountTxt;
+
+        switch (injectedCurrencyType)
+        {
+            case CurrencyTypes.Energy:
+                //PlaySound for Energy change
+                break;
+            case CurrencyTypes.Euro:
+                //PlaySound for Euro change
+                break;
+            case CurrencyTypes.Time:
+                //PlaySound for Time change
+                break;
+        }
+        
     }
 
 }
