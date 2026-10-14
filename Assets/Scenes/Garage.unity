@@ -10961,6 +10961,7 @@ GameObject:
   - component: {fileID: 821398405}
   - component: {fileID: 821398404}
   - component: {fileID: 821398403}
+  - component: {fileID: 821398406}
   m_Layer: 0
   m_Name: CurrencyPanel
   m_TagString: Untagged
@@ -10981,7 +10982,7 @@ RectTransform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1937414142}
-  m_Father: {fileID: 1292426932}
+  m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -11052,6 +11053,24 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 15
   m_TargetDisplay: 0
+--- !u!114 &821398406
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 821398401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4bf000d9851f0d24280dbce994541ab8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::MapCurrency
+  mapCurrencyPanel: {fileID: 821398401}
+  mapBackgroundImage: {fileID: 1937414141}
+  energyText: {fileID: 828528481}
+  currencyText: {fileID: 762148991}
+  timeText: {fileID: 1446341378}
+  amPmText: {fileID: 491567096}
 --- !u!114 &822880966
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16210,7 +16229,6 @@ Transform:
   - {fileID: 543450651880216430}
   - {fileID: 2539829699123970009}
   - {fileID: 2108673242}
-  - {fileID: 821398402}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1316579855
@@ -23426,7 +23444,6 @@ GameObject:
   - component: {fileID: 1937414142}
   - component: {fileID: 1937414144}
   - component: {fileID: 1937414143}
-  - component: {fileID: 1937414145}
   m_Layer: 5
   m_Name: MapCurrencyPanel
   m_TagString: Untagged
@@ -23495,22 +23512,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1937414141}
   m_CullTransparentMesh: 1
---- !u!114 &1937414145
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1937414141}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4bf000d9851f0d24280dbce994541ab8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::MapCurrency
-  energyText: {fileID: 828528481}
-  currencyText: {fileID: 762148991}
-  timeText: {fileID: 1446341378}
-  amPmText: {fileID: 491567096}
 --- !u!114 &1940653787
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -29066,6 +29067,7 @@ SceneRoots:
   m_Roots:
   - {fileID: 1133315093}
   - {fileID: 550402162}
+  - {fileID: 821398402}
   - {fileID: 573368632}
   - {fileID: 1292426932}
   - {fileID: 3717283681518318833}

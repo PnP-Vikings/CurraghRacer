@@ -100,6 +100,8 @@ public class PlayerStatsView : MonoBehaviour
         if (uiDoc != null)
         {
             uiDoc.enabled = scene.name != "Main Menu";
+            if (!showCurrencyTexts)
+                HideStatsView();
         }
     }
 
@@ -114,6 +116,11 @@ public class PlayerStatsView : MonoBehaviour
         if (_localizedPlayerEnergyText == null || _localizedPlayerCurrencyText == null)
             return;
 
+        if (!showCurrencyTexts)
+        {
+            HideStatsView();
+            return;
+        }
         if (_localizedPlayerEnergyText.Arguments != null && _localizedPlayerEnergyText.Arguments.Count > 0)
         {
             _localizedPlayerEnergyText.Arguments[0] = PlayerManager.Instance.GetPlayerEnergy();

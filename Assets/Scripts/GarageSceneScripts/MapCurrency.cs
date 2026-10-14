@@ -1,23 +1,42 @@
 using System;
 using TMPro;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class MapCurrency : MonoBehaviour
 {
+   [SerializeField] private GameObject mapCurrencyPanel;
+   [SerializeField] private GameObject mapBackgroundImage;
    [SerializeField] private TMP_Text energyText;
    [SerializeField] private TMP_Text currencyText;
    [SerializeField] private TMP_Text timeText;
    [SerializeField] private TMP_Text amPmText;
 
-
+   public static MapCurrency Instance { get; private set; }
 
    private void OnEnable()
    {
+      if (Instance == null)
+      {
+         Instance = this;
+         DontDestroyOnLoad(gameObject);
+      }
+      else
+      {
+         Destroy(gameObject);
+      }
+      if (mapCurrencyPanel == null)
+      {
+         mapCurrencyPanel = this.gameObject;
+      }
+      
       UpdateUi();
       if (TimeManager.Instance != null)
       {
          TimeManager.Instance.timeChangedEvent.AddListener(UpdateUi);
       }
+      
+      SceneManager.sceneLoaded += OnSceneLoaded;
    }
 
    private void OnDisable()
@@ -29,6 +48,10 @@ public class MapCurrency : MonoBehaviour
    }
    private void UpdateUi()
    {
+      if(!mapBackgroundImage.gameObject.activeSelf)
+         return;
+      
+      
       if (PlayerManager.Instance != null)
       {
          energyText.text = PlayerManager.Instance.GetPlayerEnergy().ToString();
@@ -64,6 +87,21 @@ public class MapCurrency : MonoBehaviour
          amPmText.text =  $"{amOrPmText}";
       }
 
+   }
+
+   private void ToggleAllUi(bool isActive)
+   {
+      if (mapBackgroundImage != null)
+      {
+         mapBackgroundImage.SetActive(isActive);
+      }
+   }
+   
+   public void OnSceneLoaded(Scene scene, LoadSceneMode mode)
+   {
+     
+      ToggleAllUi(scene.name != "Main Menu");
+     
    }
 
 
