@@ -135,6 +135,7 @@ public class AudioManager : MonoBehaviour
     
     [System.NonSerialized] public EventInstance walking;
     [System.NonSerialized] public EventInstance taxi;
+    [System.NonSerialized] public EventInstance coins;
 
     private Scene activeScene;
     void Awake()
@@ -299,6 +300,7 @@ public class AudioManager : MonoBehaviour
                             // Map //
         walking = RuntimeManager.CreateInstance("event:/Maps/Walking");
         taxi = RuntimeManager.CreateInstance("event:/Maps/Taxi");
+        coins = RuntimeManager.CreateInstance("event:/Maps/Coins");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

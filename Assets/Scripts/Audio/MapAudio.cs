@@ -5,6 +5,7 @@ public class MapAudio : MonoBehaviour
 {
     //[SerializeField] RadioManager radioManager;
     [SerializeField] StudioEventEmitter garageAmbienceEmitter;
+    //[SerializeField] MapSpline mapSpline;
     public void MuteGarageAudio()
     {
         Debug.Log("Garage Ambience was muted because the map was opened - AudioDebug");
@@ -51,6 +52,24 @@ public class MapAudio : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        }
+    }
+
+    public void PlayTaxiSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.coins.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+            AudioManager.instance.taxi.start();
+            //AudioManager.instance.taxi.setParameterByName("Banknote Volume", 0f);
+        }
+    }
+
+    public void PlayWalkingSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.walking.start();
         }
     }
 }
