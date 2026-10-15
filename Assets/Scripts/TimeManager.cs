@@ -193,6 +193,10 @@ public class TimeManager : MonoBehaviour
             onNightStart.Invoke(); // Raise the OnNightStart event
         }
         
+        if (MapCurrency.Instance != null)
+        {
+            MapCurrency.Instance.OnCurrencyChange(CurrencyTypes.Time, (int)Math.Round(hours));
+        }
         timeChangedEvent.Invoke();
     }
     
@@ -647,6 +651,10 @@ public class TimeManager : MonoBehaviour
         
         timeOfDay += adjustment;
         timeOfDay = Mathf.Clamp(timeOfDay, 0f, 23.99f);
+        if (MapCurrency.Instance != null)
+        {
+            MapCurrency.Instance.OnCurrencyChange(CurrencyTypes.Time, (int)Math.Round(adjustment));
+        }
         timeChangedEvent.Invoke();
     }
     
