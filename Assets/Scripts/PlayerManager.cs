@@ -34,6 +34,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Shop")]
     [SerializeField] private List<FridgeItem> playerItems = new List<FridgeItem>();
     [SerializeField] private int maxSlotsInFridge = 2;
+    [SerializeField] private int fridgeLevel = 1;
     
     
     
@@ -252,7 +253,7 @@ public class PlayerManager : MonoBehaviour
         if (playerItems.Count < maxSlotsInFridge)
         {
             FridgeItem fridgeItem = new FridgeItem();
-            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry);
+            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry,shopItem.itemType,shopItem.foodPrefab);
             
             playerItems.Add(fridgeItem);
             return true;
@@ -261,6 +262,21 @@ public class PlayerManager : MonoBehaviour
         {
             return false;
         }
+    }
+
+    public FridgeItem GetItemFromFridge(int itemId)
+    {
+        if (playerItems[itemId] != null)
+        {
+            return playerItems[itemId];
+        }
+        
+        return null;
+    }
+
+    public int GetFridgeMaxSlots()
+    {
+        return maxSlotsInFridge;
     }
     
     public bool IsFridgeFull()
@@ -559,8 +575,10 @@ public class FridgeItem
     public string itemDescription;
     public int itemEnergyRegainAmount;
     public int amountOfDaysBeforeExpiry;
+    public ItemTypes itemType = ItemTypes.Food;
+    public FoodConsumable foodPrefab;
     
-    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry)
+    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ItemTypes injectedItemType,FoodConsumable injectedFoodPrefab)
     {
         this.itemId = itemId;
         this.amount = amount;
@@ -568,6 +586,8 @@ public class FridgeItem
         this.itemDescription = itemDescription;
         this.itemEnergyRegainAmount = itemEnergyRegainAmount;
         this.amountOfDaysBeforeExpiry = amountOfDaysBeforeExpiry;
+        this.itemType = injectedItemType;
+        this.foodPrefab = injectedFoodPrefab;
     }
     
 }

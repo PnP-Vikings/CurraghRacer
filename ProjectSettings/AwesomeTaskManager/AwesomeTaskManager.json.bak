@@ -178,6 +178,59 @@
                             "assigneeIds": []
                         },
                         {
+                            "id": "cbc8fcb5-dabf-453c-97c2-2285fd28ea93",
+                            "title": "Add Items to fridge",
+                            "description": "What needs to be done to get items showing in the fridge ",
+                            "category": "Gameplay",
+                            "colorLabel": 1,
+                            "priority": 0,
+                            "createdDate": "2026-10-15 14:47",
+                            "dueDate": "",
+                            "archived": false,
+                            "checklistItems": [
+                                "Add place to assign model in itemdata",
+                                "Add Fridge Script and make a prefab",
+                                "Create Model for bannana",
+                                "Create Model for Meat Pie",
+                                "Import Models",
+                                "Create Fridge script that listens to items changes in player items and loads items",
+                                "Show items in fridges",
+                                "Get tooltip that shows on hover",
+                                "Add on click menu that shows info and a consume button"
+                            ],
+                            "checklistStates": [
+                                true,
+                                false,
+                                true,
+                                true,
+                                true,
+                                false,
+                                false,
+                                false,
+                                false
+                            ],
+                            "checklistLinkedCardIds": [
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                "",
+                                ""
+                            ],
+                            "linkedAssetGuids": [],
+                            "linkedSceneObjects": [],
+                            "linkedItems": [],
+                            "imagePath": "",
+                            "showChecklist": true,
+                            "completed": false,
+                            "assigneeIds": [
+                                "8910e6f1-befc-4526-8924-25f6df0bd590"
+                            ]
+                        },
+                        {
                             "id": "ff274282-35ee-4952-8a82-da46ff564259",
                             "title": "Add a way to regain energy ",
                             "description": "Currently the system is missing one really important aspect the ability to be able to \ntrade time and money to get energy so they can get extra energy ",
