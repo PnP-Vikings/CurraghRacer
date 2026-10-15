@@ -22,6 +22,12 @@ public class MapAudio : MonoBehaviour
             //RadioManager.instance.MuteRadio();
             garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 0f, false);
         }
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.countrysideAmbience.start();
+        }
+
     }
 
     public void UnmuteGarageAudio()
@@ -40,6 +46,11 @@ public class MapAudio : MonoBehaviour
             //Debug.Log("RadioManager found - AudioDebug");
             //RadioManager.instance.UnMuteRadio();
             garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 1f, false);
+        }
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
 }
