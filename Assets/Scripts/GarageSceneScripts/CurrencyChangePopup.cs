@@ -81,10 +81,13 @@ public class CurrencyChangePopup : MonoBehaviour
         switch (injectedCurrencyType)
         {
             case CurrencyTypes.Energy:
-                //PlaySound for Energy change
+                //PlaySound for Time energy
                 break;
             case CurrencyTypes.Euro:
-                //PlaySound for Euro change
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.coins.start();
+                }
                 break;
             case CurrencyTypes.Time:
                 //PlaySound for Time change

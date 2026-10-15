@@ -8,7 +8,7 @@ public class TutorialAudio : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
             yield return new WaitForSeconds(1.2f);
             AudioManager.instance.miniGame_Win.start();
         }

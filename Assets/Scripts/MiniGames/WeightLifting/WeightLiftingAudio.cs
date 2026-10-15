@@ -125,7 +125,7 @@ public class WeightLiftingAudio : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            AudioManager.instance.miniGameProgression.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
 
             if (weightliftingController != null)
             {
