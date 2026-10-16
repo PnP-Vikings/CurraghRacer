@@ -10,4 +10,12 @@ public class FoodConsumable : MonoBehaviour
     [Tooltip("The amount of days before this item leaves the fridge.")]
     public int itemDaysBeforeExpiry =0;
     
+    
+    public void InitializeFood(string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry)
+    {
+        this.itemName = itemName;
+        this.itemDescription = itemDescription;
+        this.itemEnergyRegainAmount = itemEnergyRegainAmount;
+        this.itemDaysBeforeExpiry = amountOfDaysBeforeExpiry;
+    }
 }

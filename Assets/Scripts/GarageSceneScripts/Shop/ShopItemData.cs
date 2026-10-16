@@ -18,7 +18,7 @@ public class ShopItemData : ScriptableObject
     
     public ItemTypes itemType = ItemTypes.Food;
 
-    public FoodConsumable foodPrefab;
+    public GameObject itemPrefab;
 
 }
 

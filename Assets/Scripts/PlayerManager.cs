@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     public float maxAmountOfDebt = -400f; // Maximum debt allowed
     public PlayerStatsView playerStatsView;
     public UnityEvent onDebtWarning;
+    public UnityEvent onFoodListUpdated;
     
     [Header("Energy and Currency Costs")]
     [Tooltip("The amount of energy required to participate in a race")]
@@ -253,9 +254,10 @@ public class PlayerManager : MonoBehaviour
         if (playerItems.Count < maxSlotsInFridge)
         {
             FridgeItem fridgeItem = new FridgeItem();
-            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry,shopItem.itemType,shopItem.foodPrefab);
+            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry,shopItem.itemType,shopItem.itemPrefab);
             
             playerItems.Add(fridgeItem);
+            onFoodListUpdated.Invoke();
             return true;
         }
         else
@@ -266,6 +268,7 @@ public class PlayerManager : MonoBehaviour
 
     public FridgeItem GetItemFromFridge(int itemId)
     {
+        print($"Item Id Search to get fridge item {itemId}");
         if (playerItems[itemId] != null)
         {
             return playerItems[itemId];
@@ -274,6 +277,22 @@ public class PlayerManager : MonoBehaviour
         return null;
     }
 
+    public bool IsFridgeEmpty()
+    {
+        if (playerItems.Count == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public int GetAmountOfItemsInFridge()
+    {
+        return playerItems.Count;
+    }
     public int GetFridgeMaxSlots()
     {
         return maxSlotsInFridge;
@@ -576,9 +595,9 @@ public class FridgeItem
     public int itemEnergyRegainAmount;
     public int amountOfDaysBeforeExpiry;
     public ItemTypes itemType = ItemTypes.Food;
-    public FoodConsumable foodPrefab;
+    public GameObject foodPrefab;
     
-    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ItemTypes injectedItemType,FoodConsumable injectedFoodPrefab)
+    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ItemTypes injectedItemType,GameObject injectedFoodPrefab)
     {
         this.itemId = itemId;
         this.amount = amount;
@@ -588,6 +607,7 @@ public class FridgeItem
         this.amountOfDaysBeforeExpiry = amountOfDaysBeforeExpiry;
         this.itemType = injectedItemType;
         this.foodPrefab = injectedFoodPrefab;
+     
     }
     
 }

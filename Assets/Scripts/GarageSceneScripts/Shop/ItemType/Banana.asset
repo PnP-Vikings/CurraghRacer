@@ -19,4 +19,4 @@ MonoBehaviour:
   itemEnergyRegainAmount: 20
   itemDaysBeforeExpiry: 4
   itemType: 0
-  foodPrefab: {fileID: 5850900848705091660, guid: b2a4613c598d1274bba9f4a8339470d6, type: 3}
+  itemPrefab: {fileID: 2120799158932232559, guid: b2a4613c598d1274bba9f4a8339470d6, type: 3}

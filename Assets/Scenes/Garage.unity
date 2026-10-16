@@ -25687,6 +25687,8 @@ MonoBehaviour:
   - {fileID: 371080416}
   - {fileID: 983385792}
   numberOfSlotsInFridge: 0
+  spawnedFood: []
+  spawnedParent: {fileID: 1188385015}
 --- !u!1 &2115756922
 GameObject:
   m_ObjectHideFlags: 0
