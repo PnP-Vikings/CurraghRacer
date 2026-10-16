@@ -53,14 +53,39 @@ public class MapAudio : MonoBehaviour
         {
             AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
+
+        if (LeagueInviteCardsUi.Instance != null)
+        {
+            if(LeagueInviteCardsUi.Instance.LeagueInviteReceivedWhileInMap == true)
+            {
+                if (AudioManager.instance != null)
+                {
+                    AudioManager.instance.showInviteAudio.start();
+                    LeagueInviteCardsUi.Instance.LeagueInviteReceivedWhileInMap = false;
+                }
+            }
+        }
     }
 
     public void PlayTaxiSound()
     {
         if (AudioManager.instance != null)
         {
-            AudioManager.instance.coins.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-            AudioManager.instance.taxi.start();
+            //AudioManager.instance.coins.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
+
+            if (PlayerManager.Instance != null)
+            {
+                float coins = PlayerManager.Instance.GetPlayerCoins();
+                if (coins >= 40)
+                {
+                    Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
+                    AudioManager.instance.taxi.start();
+                }
+                else
+                {
+                    Debug.Log($"Player has {coins} and can't afford a taxi - AudioDebug");
+                }
+            }
             //AudioManager.instance.taxi.setParameterByName("Banknote Volume", 0f);
         }
     }

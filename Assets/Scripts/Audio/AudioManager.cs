@@ -298,9 +298,9 @@ public class AudioManager : MonoBehaviour
         tutorialGuy = RuntimeManager.CreateInstance("event:/Tutorial/Tutorial Guy");
 
                             // Map //
-        walking = RuntimeManager.CreateInstance("event:/Maps/Walking");
-        taxi = RuntimeManager.CreateInstance("event:/Maps/Taxi");
-        coins = RuntimeManager.CreateInstance("event:/Maps/Coins");
+        walking = RuntimeManager.CreateInstance("event:/Map/Walking");
+        taxi = RuntimeManager.CreateInstance("event:/Map/Taxi");
+        coins = RuntimeManager.CreateInstance("event:/Map/Coins");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

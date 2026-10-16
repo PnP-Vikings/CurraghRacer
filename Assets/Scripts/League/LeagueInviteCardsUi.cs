@@ -13,7 +13,9 @@ public class LeagueInviteCardsUi : MonoBehaviour
   public GameObject leagueInvitePanel;
   public LocalizedString leagueInviteLocalizedText = new LocalizedString("League"," LeagueInviteLocalizedText");
   private string inviteText;
-  
+  private GameObject shopCanvas;
+  public bool LeagueInviteReceivedWhileInMap = false;
+
   public static LeagueInviteCardsUi Instance { get; private set; }
 
   private void Awake()
@@ -34,11 +36,24 @@ public class LeagueInviteCardsUi : MonoBehaviour
     }
   }
 
+    private void OnEnable()
+    {
+        shopCanvas = GameObject.Find("ShopCanvas");
+    }
+
     private void Start()
     {
-        if (AudioManager.instance != null) 
+        if (shopCanvas != null)
         {
-            AudioManager.instance.showInviteAudio.start();
+            //Debug.Log("Player is not in the garage therefore the invite audio wasn't called - AudioDebug");
+            LeagueInviteReceivedWhileInMap = true;
+        }
+        else
+        {
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.showInviteAudio.start();
+            }
         }
     }
     public void SetLeagueData(League.League league)
