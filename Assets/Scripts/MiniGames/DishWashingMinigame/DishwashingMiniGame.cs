@@ -15,7 +15,7 @@ namespace MiniGames.DishWashingMinigame
         {
             gameManager = manager;
             gameData = data;
-            controller = FindFirstObjectByType<DishwashingController>();
+            controller = FindAnyObjectByType<DishwashingController>();
             
             if (controller == null)
             {

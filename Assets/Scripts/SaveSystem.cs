@@ -101,11 +101,12 @@ public class CardHistoryEntry
 [System.Serializable]
 public class TeamManagerSaveData 
 {
-  public Team playerTeam;
-  public TeamMember teamManager;
+  [System.NonSerialized] public Team playerTeam;
+  [System.NonSerialized] public TeamMember teamManager;
   public TeamMemberSaveData[] activeCrewMembers;
   public TeamMemberSaveData[] benchTeamMembers;
-  public List<HireableTeamMembers> racersForHire;
+  [System.NonSerialized] public List<HireableTeamMembers> racersForHire;
+  public List<string> racersForHireNames = new List<string>();
   public bool isAllActiveTeamMembersHealthy = false;
 
   public TeamManagerSaveData() {}
@@ -150,6 +151,14 @@ public class TeamManagerSaveData
       }
       
       racersForHire = manager.racersForHire != null ? new List<HireableTeamMembers>(manager.racersForHire) : new List<HireableTeamMembers>();
+      if (manager.racersForHire != null)
+      {
+          racersForHireNames = manager.racersForHire.Where(r => r != null).Select(r => r.memberName).ToList();
+      }
+      else
+      {
+          racersForHireNames = new List<string>();
+      }
       isAllActiveTeamMembersHealthy = manager.isAllActiveTeamMembersHealthy;
   }
  
@@ -244,7 +253,7 @@ public class LeagueSaveData
 {
     public string currentLeagueName;
     public bool playerHasJoined;
-    public League.League[] leagues;
+    [System.NonSerialized] public League.League[] leagues;
     public LeagueInfoSaveData[] allLeagues;
     public TeamSaveData[] allTeams;
     public int currentRaceIndex;
@@ -282,10 +291,25 @@ public class TeamStandingSaveData
 }
 
 [System.Serializable]
+public class RaceEntrySaveData
+{
+    public string[] teamNames;
+    public int[] positions;
+    public bool processed = false;
+}
+
+[System.Serializable]
 public class RaceDayFormationSaveData
 {
-    public List<Race> races;
+    [System.NonSerialized] public List<Race> races;
+    public List<RaceEntrySaveData> raceEntries = new List<RaceEntrySaveData>();
     public bool processed = false;
+
+    public RaceDayFormationSaveData()
+    {
+        races = new List<Race>();
+        raceEntries = new List<RaceEntrySaveData>();
+    }
 }
 
 [System.Serializable]
@@ -373,7 +397,7 @@ public class GameProgressData
     public float difficulty = 1f;
     public bool loadedRaceScene;
     public bool playerIsBusy;
-    public Dictionary<string, bool> unlockedFeatures;
+    [System.NonSerialized] public Dictionary<string, bool> unlockedFeatures;
     public bool playerHasBeenShownIntro = false;
     public bool playerHasBeenShownWarningAboutDebt = false;
     
@@ -855,12 +879,28 @@ public class SaveSystem : MonoBehaviour
                         leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
                         for (int i = 0; i < league.raceDays.Length; i++)
                         {
-                            leagueInfo.raceSchedule[i] = new RaceDayFormationSaveData
+                            var formationSave = new RaceDayFormationSaveData
                             {
                                 races = new List<Race>(league.raceDays[i].races),
-                                processed = league.raceDays[i].processed
+                                processed = league.raceDays[i].processed,
+                                raceEntries = new List<RaceEntrySaveData>()
                             };
-
+                            if (league.raceDays[i].races != null)
+                            {
+                                foreach (var race in league.raceDays[i].races)
+                                {
+                                    if (race != null)
+                                    {
+                                        formationSave.raceEntries.Add(new RaceEntrySaveData
+                                        {
+                                            teamNames = race.teams != null ? race.teams.Where(t => t != null).Select(t => t.teamName).ToArray() : new string[0],
+                                            positions = race.positions,
+                                            processed = race.processed
+                                        });
+                                    }
+                                }
+                            }
+                            leagueInfo.raceSchedule[i] = formationSave;
                         }
                     }
 
@@ -978,8 +1018,15 @@ public class SaveSystem : MonoBehaviour
         // Apply league data
         if (LeagueController.Instance != null && saveData.leagueData != null)
         {
-           
-             LeagueController.Instance.leagues=saveData.leagueData.leagues; // Ensure leagues are set before restoring data
+            if (saveData.leagueData.leagues != null && saveData.leagueData.leagues.Length > 0)
+            {
+                LeagueController.Instance.leagues = saveData.leagueData.leagues;
+            }
+            else if (LeagueController.Instance.leagues == null || LeagueController.Instance.leagues.Length == 0)
+            {
+                LeagueController.Instance.leagues = LeagueController.Instance.defaultLeagues;
+            }
+
             // IMPORTANT: Restore teams FIRST so their stats are available when restoring league standings
             if (saveData.leagueData.allTeams != null)
             {
@@ -1075,8 +1122,19 @@ public class SaveSystem : MonoBehaviour
         // Apply Team Manager Data
         if (TeamManager.Instance != null && saveData.teamManagerData != null)
         {
-            TeamManager.Instance.playerTeam = saveData.teamManagerData.playerTeam;
-            TeamManager.Instance.teamManager = saveData.teamManagerData.teamManager;
+            if (saveData.teamManagerData.playerTeam != null)
+            {
+                TeamManager.Instance.playerTeam = saveData.teamManagerData.playerTeam;
+            }
+            else if (TeamManager.Instance.playerTeam == null)
+            {
+                TeamManager.Instance.playerTeam = PlayerManager.Instance?.playerTeam ?? LeagueController.Instance?.currentLeague?.GetPlayerTeam();
+            }
+
+            if (saveData.teamManagerData.teamManager != null)
+            {
+                TeamManager.Instance.teamManager = saveData.teamManagerData.teamManager;
+            }
             
             // Restore active crew members
             if (saveData.teamManagerData.activeCrewMembers != null && saveData.teamManagerData.activeCrewMembers.Length > 0)
@@ -1116,7 +1174,19 @@ public class SaveSystem : MonoBehaviour
                 TeamManager.Instance.benchTeamMembers = new List<TeamMember>();
             }
             
-            TeamManager.Instance.racersForHire = saveData.teamManagerData.racersForHire != null ? new List<HireableTeamMembers>(saveData.teamManagerData.racersForHire) : new List<HireableTeamMembers>();
+            if (saveData.teamManagerData.racersForHireNames != null && saveData.teamManagerData.racersForHireNames.Count > 0)
+            {
+                if (TeamManager.Instance.startingHireableRacers != null)
+                {
+                    TeamManager.Instance.racersForHire = TeamManager.Instance.startingHireableRacers
+                        .Where(r => r != null && saveData.teamManagerData.racersForHireNames.Contains(r.memberName))
+                        .ToList();
+                }
+            }
+            else if (saveData.teamManagerData.racersForHire != null && saveData.teamManagerData.racersForHire.Count > 0)
+            {
+                TeamManager.Instance.racersForHire = new List<HireableTeamMembers>(saveData.teamManagerData.racersForHire);
+            }
             TeamManager.Instance.isAllActiveTeamMembersHealthy = saveData.teamManagerData.isAllActiveTeamMembersHealthy;
             
             // Update the playerTeam lists to reference the same restored instances
@@ -1496,8 +1566,37 @@ public class SaveSystem : MonoBehaviour
                 {
                     for (int i = 0; i < Mathf.Min(leagueSave.raceSchedule.Length, foundLeague.raceDays.Length); i++)
                     {
-                        foundLeague.raceDays[i].races = new List<Race>(leagueSave.raceSchedule[i].races);
-                        foundLeague.raceDays[i].processed = leagueSave.raceSchedule[i].processed;
+                        var scheduleSave = leagueSave.raceSchedule[i];
+                        if (scheduleSave != null)
+                        {
+                            foundLeague.raceDays[i].processed = scheduleSave.processed;
+                            if (scheduleSave.raceEntries != null && scheduleSave.raceEntries.Count > 0)
+                            {
+                                foundLeague.raceDays[i].races = new List<Race>();
+                                foreach (var entry in scheduleSave.raceEntries)
+                                {
+                                    List<Team> matchedTeams = new List<Team>();
+                                    if (entry.teamNames != null && foundLeague.teams != null)
+                                    {
+                                        foreach (var tName in entry.teamNames)
+                                        {
+                                            var matchedTeam = Array.Find(foundLeague.teams, t => t != null && t.teamName == tName);
+                                            if (matchedTeam != null) matchedTeams.Add(matchedTeam);
+                                        }
+                                    }
+                                    foundLeague.raceDays[i].races.Add(new Race
+                                    {
+                                        teams = matchedTeams.ToArray(),
+                                        positions = entry.positions,
+                                        processed = entry.processed
+                                    });
+                                }
+                            }
+                            else if (scheduleSave.races != null)
+                            {
+                                foundLeague.raceDays[i].races = new List<Race>(scheduleSave.races);
+                            }
+                        }
                     }
 
                 }
@@ -1637,7 +1736,17 @@ public class SaveSystem : MonoBehaviour
         Debug.Log($"[RestoreTeamManagerData] Restoring TeamManager data");
         
         // Restore racersForHire - this is critical to prevent the list from breaking
-        if (saveData.racersForHire != null)
+        if (saveData.racersForHireNames != null && saveData.racersForHireNames.Count > 0)
+        {
+            if (TeamManager.Instance.startingHireableRacers != null)
+            {
+                TeamManager.Instance.racersForHire = TeamManager.Instance.startingHireableRacers
+                    .Where(r => r != null && saveData.racersForHireNames.Contains(r.memberName))
+                    .ToList();
+                Debug.Log($"[RestoreTeamManagerData] Restored {TeamManager.Instance.racersForHire.Count} racers for hire from names");
+            }
+        }
+        else if (saveData.racersForHire != null && saveData.racersForHire.Count > 0)
         {
             TeamManager.Instance.racersForHire = new List<HireableTeamMembers>(saveData.racersForHire);
             Debug.Log($"[RestoreTeamManagerData] Restored {TeamManager.Instance.racersForHire.Count} racers for hire");
@@ -2114,11 +2223,28 @@ public class SaveSystem : MonoBehaviour
                         leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
                         for (int i = 0; i < league.raceDays.Length; i++)
                         {
-                            leagueInfo.raceSchedule[i] = new RaceDayFormationSaveData
+                            var formationSave = new RaceDayFormationSaveData
                             {
                                 races = new List<Race>(league.raceDays[i].races),
-                                processed = league.raceDays[i].processed
+                                processed = league.raceDays[i].processed,
+                                raceEntries = new List<RaceEntrySaveData>()
                             };
+                            if (league.raceDays[i].races != null)
+                            {
+                                foreach (var race in league.raceDays[i].races)
+                                {
+                                    if (race != null)
+                                    {
+                                        formationSave.raceEntries.Add(new RaceEntrySaveData
+                                        {
+                                            teamNames = race.teams != null ? race.teams.Where(t => t != null).Select(t => t.teamName).ToArray() : new string[0],
+                                            positions = race.positions,
+                                            processed = race.processed
+                                        });
+                                    }
+                                }
+                            }
+                            leagueInfo.raceSchedule[i] = formationSave;
                         }
                     }
 

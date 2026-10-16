@@ -15,7 +15,7 @@ public class TrafficWardenMinigameController : MonoBehaviour
 {
     public static TrafficWardenMinigameController Instance;
 
-    public PlayerInputs playerInputs;
+    private PlayerInputs playerInputs;
 
     [Header("Timing")]
     public float minStopTime = 1.5f;

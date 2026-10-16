@@ -16,7 +16,7 @@ namespace MiniGames.BeerMinigame
         {
             gameManager = manager;
             gameData = data;
-            controller = FindFirstObjectByType<BeerGameController>();
+            controller = FindAnyObjectByType<BeerGameController>();
             
             if (controller == null)
             {

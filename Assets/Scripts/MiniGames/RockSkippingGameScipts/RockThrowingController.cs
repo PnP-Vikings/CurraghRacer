@@ -160,7 +160,7 @@ public class RockThrowingController : MonoBehaviour
         // Try to find throwing UI if not assigned
         if (throwingUI == null)
         {
-            throwingUI = FindFirstObjectByType<RockThrowingUI>();
+            throwingUI = FindAnyObjectByType<RockThrowingUI>();
             if (throwingUI != null)
             {
                 Debug.Log("Found RockThrowingUI in scene");

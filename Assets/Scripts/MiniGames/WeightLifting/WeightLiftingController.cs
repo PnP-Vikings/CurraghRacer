@@ -81,6 +81,7 @@ public class WeightLiftingController : MonoBehaviour
     }
     public List<GameObject> weightModels; // Visual representations of weights
     
+    [System.Serializable]
     public class WeightSelectionChangedEvent : UnityEngine.Events.UnityEvent<int>{};
     public WeightSelectionChangedEvent onWeightSelectionChanged = new WeightSelectionChangedEvent();
     

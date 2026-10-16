@@ -66,7 +66,7 @@ namespace MiniGames
             playerManager = PlayerManager.Instance;
             if (playerManager == null)
             {
-                playerManager = FindFirstObjectByType<PlayerManager>();
+                playerManager = FindAnyObjectByType<PlayerManager>();
             }
         }
         

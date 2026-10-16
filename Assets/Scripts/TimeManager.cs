@@ -72,6 +72,7 @@ public class TimeManager : MonoBehaviour
     
     public DateChangedEvent onDateChanged;
     
+    [Serializable]
     public class TodaysEvents : UnityEvent<List<DayEventType>> { } // List of events for today
     [SerializeField] public TodaysEvents todaysEvents = new TodaysEvents();
     
