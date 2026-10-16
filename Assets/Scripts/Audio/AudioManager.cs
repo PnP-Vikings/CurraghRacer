@@ -131,6 +131,12 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance danceTrack;
     [System.NonSerialized] public EventInstance mainTheme;
 
+    [System.NonSerialized] public EventInstance countrysideAmbience;
+    
+    [System.NonSerialized] public EventInstance walking;
+    [System.NonSerialized] public EventInstance taxi;
+    [System.NonSerialized] public EventInstance coins;
+
     private Scene activeScene;
     void Awake()
     {
@@ -164,6 +170,7 @@ public class AudioManager : MonoBehaviour
 
                             // MAIN MENU //
         deleteSave = RuntimeManager.CreateInstance("event:/UI/Delete Save");
+        countrysideAmbience = RuntimeManager.CreateInstance("event:/Ambiences/Countryside");
 
                             // RACE //
         raceAmbience = RuntimeManager.CreateInstance("event:/Race/Race Ambience");
@@ -289,6 +296,11 @@ public class AudioManager : MonoBehaviour
 
                             // Tutorial //
         tutorialGuy = RuntimeManager.CreateInstance("event:/Tutorial/Tutorial Guy");
+
+                            // Map //
+        walking = RuntimeManager.CreateInstance("event:/Map/Walking");
+        taxi = RuntimeManager.CreateInstance("event:/Map/Taxi");
+        coins = RuntimeManager.CreateInstance("event:/Map/Coins");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");

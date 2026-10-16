@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{8929ec54-87a1-4dd9-a913-b045c6b485f7}">
+		<property name="name">
+			<value>Banknote Volume</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{4467427b-9a49-4833-b9ed-47c70f4ae576}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{4467427b-9a49-4833-b9ed-47c70f4ae576}">
+		<property name="initialValue">
+			<value>0</value>
+		</property>
+	</object>
+</objects>

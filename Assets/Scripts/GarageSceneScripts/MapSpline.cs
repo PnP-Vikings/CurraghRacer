@@ -23,7 +23,7 @@ public class MapSpline : MonoBehaviour
     [Tooltip("The speed at which the player icon moves along the spline. Lower values result in faster movement.")]
     [SerializeField] private float playerMoveSpeed = 2f;
     private float startTime;
-   
+
     private void Start()
     {
        ResetSpines();
@@ -182,6 +182,11 @@ public class MapSpline : MonoBehaviour
                 StartMovingPlayerIcon();
             }
             yield return null;
+        }
+
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.walking.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
     
