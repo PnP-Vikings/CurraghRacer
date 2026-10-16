@@ -17,7 +17,9 @@ public class ShopItemData : ScriptableObject
     public int itemDaysBeforeExpiry =0;
     
     public ItemTypes itemType = ItemTypes.Food;
-    
+
+    public GameObject itemPrefab;
+
 }
 
 public enum ItemTypes

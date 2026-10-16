@@ -149,7 +149,6 @@ public class StopLine : MonoBehaviour
                 return localizedRightOrientation?.IsEmpty! ==false? localizedRightOrientation.GetLocalizedString() : "Right";
           case LaneOrientation.Top:
                 return localizedTopOrientation?.IsEmpty! ==false? localizedTopOrientation.GetLocalizedString() : "Top";
-              break;
           case LaneOrientation.Bottom:
                 return localizedBottomOrientation?.IsEmpty! ==false? localizedBottomOrientation.GetLocalizedString() : "Bottom";
       }

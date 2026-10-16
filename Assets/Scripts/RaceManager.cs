@@ -783,7 +783,7 @@ public class RaceManager : MonoBehaviour
         {
             if(finishMenu == null)
             {
-                finishMenu = FindFirstObjectByType<FinishLine>().finishMenu;
+                finishMenu = FindAnyObjectByType<FinishLine>().finishMenu;
             }
             string firstPlaceShip = "";
             string secondPlaceShip = "";

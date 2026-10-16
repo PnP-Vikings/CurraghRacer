@@ -5,7 +5,7 @@ public class BoxingTarget : MonoBehaviour
 {
     private Button button;
     [HideInInspector] public int spawnPointIndex = -1; // Track which spawn point this target is using
-    [HideInInspector] public Coroutine fadeCoroutine; // Track the fade coroutine so we can stop it when hit
+    [System.NonSerialized] public Coroutine fadeCoroutine; // Track the fade coroutine so we can stop it when hit
     public int pointValue = 1; // Points awarded for hitting this target
     private void Awake()
     {

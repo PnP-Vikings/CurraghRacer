@@ -20,7 +20,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
     public RockVisual currentSelectedRock;
     public Rock currentRock;
     public Transform rockSpawnPoint;
-    public Dictionary<int, (Rock rock, int score)> rockScores = new Dictionary<int, (Rock, int)>();
+    [System.NonSerialized] public Dictionary<int, (Rock rock, int score)> rockScores = new Dictionary<int, (Rock, int)>();
     public RockCase rockCase;
     
     
@@ -157,7 +157,7 @@ public class RockSkippingGameController : MonoBehaviour,MiniGame
            // Auto-find throwingUI if not assigned
            if (throwingUI == null)
            {
-               throwingUI = FindFirstObjectByType<RockThrowingUI>();
+               throwingUI = FindAnyObjectByType<RockThrowingUI>();
            }
            
            throwingController.throwingUI = throwingUI;

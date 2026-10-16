@@ -61,7 +61,7 @@ public class TutorialTaskUiManager : MonoBehaviour
         bool hasBeenProcessed = false;
         foreach (TutorialTask tutorialTask in tutorialTasks)
         {
-            TutorialTaskPrefab taskUi = null;
+            /*TutorialTaskPrefab taskUi = null;*/
             if (count == 0 && tutorialTask.isTaskActive)
             {
                 processedTasks.Add(tutorialTask);

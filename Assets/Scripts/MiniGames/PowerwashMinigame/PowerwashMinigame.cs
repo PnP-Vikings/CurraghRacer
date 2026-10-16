@@ -15,7 +15,7 @@ namespace MiniGames.PowerwashMinigame
         {
             gameManager = manager;
             gameData = data;
-            controller = FindFirstObjectByType<PowerwashController>();
+            controller = FindAnyObjectByType<PowerwashController>();
             
             if (controller == null)
             {

@@ -18,6 +18,7 @@ public class PlayerManager : MonoBehaviour
     public float maxAmountOfDebt = -400f; // Maximum debt allowed
     public PlayerStatsView playerStatsView;
     public UnityEvent onDebtWarning;
+    public UnityEvent onFoodListUpdated;
     
     [Header("Energy and Currency Costs")]
     [Tooltip("The amount of energy required to participate in a race")]
@@ -34,6 +35,7 @@ public class PlayerManager : MonoBehaviour
     [Header("Shop")]
     [SerializeField] private List<FridgeItem> playerItems = new List<FridgeItem>();
     [SerializeField] private int maxSlotsInFridge = 2;
+    [SerializeField] private int fridgeLevel = 1;
     
     
     
@@ -252,15 +254,48 @@ public class PlayerManager : MonoBehaviour
         if (playerItems.Count < maxSlotsInFridge)
         {
             FridgeItem fridgeItem = new FridgeItem();
-            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry);
+            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry,shopItem.itemType,shopItem.itemPrefab);
             
             playerItems.Add(fridgeItem);
+            onFoodListUpdated.Invoke();
             return true;
         }
         else
         {
             return false;
         }
+    }
+
+    public FridgeItem GetItemFromFridge(int itemId)
+    {
+        print($"Item Id Search to get fridge item {itemId}");
+        if (playerItems[itemId] != null)
+        {
+            return playerItems[itemId];
+        }
+        
+        return null;
+    }
+
+    public bool IsFridgeEmpty()
+    {
+        if (playerItems.Count == 0)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
+    public int GetAmountOfItemsInFridge()
+    {
+        return playerItems.Count;
+    }
+    public int GetFridgeMaxSlots()
+    {
+        return maxSlotsInFridge;
     }
     
     public bool IsFridgeFull()
@@ -559,8 +594,10 @@ public class FridgeItem
     public string itemDescription;
     public int itemEnergyRegainAmount;
     public int amountOfDaysBeforeExpiry;
+    public ItemTypes itemType = ItemTypes.Food;
+    public GameObject foodPrefab;
     
-    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry)
+    public void InitializeItem(int itemId,int amount,string itemName,string itemDescription,int itemEnergyRegainAmount,int amountOfDaysBeforeExpiry,ItemTypes injectedItemType,GameObject injectedFoodPrefab)
     {
         this.itemId = itemId;
         this.amount = amount;
@@ -568,6 +605,9 @@ public class FridgeItem
         this.itemDescription = itemDescription;
         this.itemEnergyRegainAmount = itemEnergyRegainAmount;
         this.amountOfDaysBeforeExpiry = amountOfDaysBeforeExpiry;
+        this.itemType = injectedItemType;
+        this.foodPrefab = injectedFoodPrefab;
+     
     }
     
 }

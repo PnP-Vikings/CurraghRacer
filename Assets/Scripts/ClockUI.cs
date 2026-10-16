@@ -67,7 +67,7 @@ public class ClockUI : MonoBehaviour
         }
     }
 
-    private void OnUIReload(PanelRenderer renderer, VisualElement root)
+    private void OnUIReload(PanelRenderer renderer, VisualElement root, int version)
     {
         if (root == null) return;
 
@@ -121,11 +121,11 @@ public class ClockUI : MonoBehaviour
 
         // Apply rotations (negative for clockwise)
         if (_hourHand != null)
-            _hourHand.transform.rotation = Quaternion.Euler(0, 0, hourAngle);
+            _hourHand.style.rotate = new Rotate(Angle.Degrees(hourAngle));
     
         // Rotate the minute hand based on the minutes 
         if (_minuteHand != null)
-            _minuteHand.transform.rotation = Quaternion.Euler(0, 0, minuteAngle);
+            _minuteHand.style.rotate = new Rotate(Angle.Degrees(minuteAngle));
         
         // Get the current day number from the TimeManager
         int dayNumber = TimeManager.Instance.DaysPassed;

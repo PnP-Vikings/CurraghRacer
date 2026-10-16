@@ -16,12 +16,6 @@ public class TutorialTaskPrefab : MonoBehaviour
     
     public void SetTutorialTask(TutorialTaskType tutorialTaskType)
     {
-        if(tutorialTaskType == null)
-        {
-            Debug.LogError("TutorialTaskType is None. Please set a valid TutorialTaskType.");
-            return;
-        }
-        
         this.tutorialTaskType = tutorialTaskType;
         taskName.text = tutorialTaskType.ToString();
         

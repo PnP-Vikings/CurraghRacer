@@ -70,7 +70,7 @@ public class PlayerStatsView : MonoBehaviour
         }
     }
 
-    private void OnUIReload(PanelRenderer renderer, VisualElement root)
+    private void OnUIReload(PanelRenderer renderer, VisualElement root, int version)
     {
         if (root == null) return;
 

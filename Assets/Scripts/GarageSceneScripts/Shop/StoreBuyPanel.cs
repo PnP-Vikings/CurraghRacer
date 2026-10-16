@@ -129,20 +129,23 @@ public class StoreBuyPanel : MonoBehaviour
         // ---------- Auto-size ----------
         Vector2 canvasSize = canvasRect.sizeDelta;
 
+        bool hasExitButton = exitButton != null && exitButton.gameObject.activeSelf;
         float availableWidth = Mathf.Min(maxTooltipWidth, canvasSize.x * 0.9f);
-        float maxTextPreferredWidth = itemNameText.preferredWidth + buttonSize * 3f;
+        float maxTextPreferredWidth = itemNameText != null ? itemNameText.preferredWidth : 0f;
+        if (hasExitButton)
+        {
+            maxTextPreferredWidth += buttonSize + spacing;
+        }
         if (itemPriceText != null && !string.IsNullOrEmpty(itemPriceText.text))
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemPriceText.preferredWidth);
         if (itemDescriptionText != null && !string.IsNullOrEmpty(itemDescriptionText.text))
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDescriptionText.preferredWidth);
-        if(energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text))
+        if(energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text) && currentItemItemType == ItemTypes.Food)
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, energyRegainAmountText.preferredWidth);
-        if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text))
+        if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text) && currentItemItemType == ItemTypes.Food)
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDaysBeforeExpiryText.preferredWidth);
-        if(buyButton != null)
+        if(buyButton != null && buyButton.gameObject.activeSelf)
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, buyButton.GetComponent<RectTransform>().rect.width);
-        if(exitButton != null)
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, exitButton.GetComponent<RectTransform>().rect.width);
 
         float optimalWidth = Mathf.Max(
             minTooltipWidth,
@@ -150,7 +153,8 @@ public class StoreBuyPanel : MonoBehaviour
         );
 
         float textWidth = optimalWidth - paddingHorizontal * 2f;
-        float headerTextWidth = optimalWidth - paddingHorizontal * 2f - buttonSize; // Extra room for the close button
+        float headerTextWidth = optimalWidth - paddingHorizontal * 2f - (hasExitButton ? (buttonSize + spacing) : 0f);
+        
         // Constrain text width to compute preferred height
         if (itemNameText != null)
         {
@@ -178,45 +182,43 @@ public class StoreBuyPanel : MonoBehaviour
             itemDaysBeforeExpiryText.ForceMeshUpdate(true, true);
         }
       
-        
-        
         Canvas.ForceUpdateCanvases();
 
         float currentYOffset = paddingVertical;
 
-        // Layout itemNameText inside (top anchored so it grows downward)
-        
-          
-        if (exitButton != null )
+        // Layout header: exitButton and itemNameText on the same line
+        float buttonHeight = hasExitButton ? buttonSize : 0f;
+        float titleRightPadding = paddingHorizontal + (hasExitButton ? (buttonSize + spacing) : 0f);
+
+        if (hasExitButton)
         {
-            if (currentYOffset > paddingVertical) currentYOffset += spacing;
             var buttonRect = exitButton.GetComponent<RectTransform>();
             buttonRect.anchorMin = new Vector2(1f, 1f);
             buttonRect.anchorMax = new Vector2(1f, 1f);
             buttonRect.pivot     = new Vector2(1f, 1f);
-            
-           
             buttonRect.sizeDelta = new Vector2(buttonSize, buttonSize);
-            exitButtonText.fontSize = buttonSize;
-            float h = exitButton.GetComponent<RectTransform>().rect.height;
-            /*buttonRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            buttonRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));*/
-            buttonRect.anchoredPosition = new Vector2(-paddingHorizontal, -paddingVertical);
+            buttonRect.anchoredPosition = new Vector2(-paddingHorizontal, -currentYOffset);
 
-         //   currentYOffset += h;
+            if (exitButtonText != null)
+            {
+                exitButtonText.fontSize = buttonSize;
+            }
         }
         
+        float titleHeight = 0f;
         if (itemNameText != null && !string.IsNullOrEmpty(itemNameText.text))
         {
             var textRect = itemNameText.rectTransform;
             textRect.anchorMin = new Vector2(0f, 1f);
             textRect.anchorMax = new Vector2(1f, 1f);
             textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemNameText.preferredHeight;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
-            currentYOffset += h;
+            titleHeight = itemNameText.preferredHeight;
+            textRect.offsetMax = new Vector2(-titleRightPadding, -currentYOffset);
+            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + titleHeight));
         }
+
+        float headerRowHeight = Mathf.Max(titleHeight, buttonHeight);
+        currentYOffset += headerRowHeight;
 
         // Layout itemPriceText inside
         if (itemPriceText != null && !string.IsNullOrEmpty(itemPriceText.text))

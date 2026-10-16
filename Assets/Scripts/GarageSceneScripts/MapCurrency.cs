@@ -129,7 +129,7 @@ public class MapCurrency : MonoBehaviour
 
    public void OnCurrencyChange(CurrencyTypes injectedCurrencyType,int amount)
    {
-      CurrencyChangePopup chosenPopup = new CurrencyChangePopup();
+      CurrencyChangePopup chosenPopup = null;
 
       foreach (CurrencyChangePopup popup in spawnedCurrencyPopupList)
       {

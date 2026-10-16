@@ -502,6 +502,7 @@ public class TeamMember : ScriptableObject
 }
 
 
+[System.Serializable]
 public class TeamMemberFitness
 {
     public float currentFitness;
@@ -584,6 +585,7 @@ public class TeamMemberFitness
    
 }
 
+[System.Serializable]
 public class Happiness
 {
     public float currentHappiness;
