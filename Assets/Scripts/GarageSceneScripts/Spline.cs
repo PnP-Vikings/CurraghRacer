@@ -3,12 +3,12 @@ using UnityEngine;
 
 public class Spline : MonoBehaviour
 {
-   [SerializeField] private Transform transform;
+   [SerializeField] private Transform splineTransform;
    [SerializeField] private bool playerHasPassed = false;
 
    void OnEnable()
    {
-      transform = GetComponent<Transform>();
+      splineTransform = GetComponent<Transform>();
    }
    
    public void PlayerHasPassedSpline()

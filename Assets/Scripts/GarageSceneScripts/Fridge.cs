@@ -50,7 +50,7 @@ public class Fridge : MonoBehaviour
                         spawnedFridgeItem.transform.position = new Vector3(listOfPossibleItemsTransforms[i].transform.position.x,spawnedFridgeItem.transform.position.y,listOfPossibleItemsTransforms[i].transform.position.z) ;
                         if (spawnedFridgeItem.TryGetComponent<FoodConsumable>(out FoodConsumable component))
                         {
-                            component.InitializeFood(selectedFridgeItem.itemName, selectedFridgeItem.itemDescription, selectedFridgeItem.itemEnergyRegainAmount, selectedFridgeItem.amountOfDaysBeforeExpiry);
+                            component.InitializeFood(selectedFridgeItem.itemName, selectedFridgeItem.itemDescription, selectedFridgeItem.itemEnergyRegainAmount, selectedFridgeItem.amountOfDaysBeforeExpiry,selectedFridgeItem);
                         }
                         spawnedFood.Add(spawnedFridgeItem);
                     }
