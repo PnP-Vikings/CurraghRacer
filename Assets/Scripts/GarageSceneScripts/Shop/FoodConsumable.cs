@@ -1,7 +1,8 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class FoodConsumable : MonoBehaviour
+public class FoodConsumable : MonoBehaviour, IPointerEnterHandler, IPointerExitHandler,IPointerClickHandler
 {
     public string itemName;
     [Tooltip("The description of the item.")]
@@ -22,24 +23,27 @@ public class FoodConsumable : MonoBehaviour
         this.itemEnergyRegainAmount = injectedItemEnergyRegainAmount;
         this.itemDaysBeforeExpiry = amountOfDaysBeforeExpiry;
         fridgeItem = injectedFridgeItem;
-        SetupItemEventTrigger();
+      
     }
     
-    public void SetupItemEventTrigger()
+    public void OnPointerEnter(PointerEventData eventData)
     {
-        if (itemEventTrigger != null)
+        Debug.Log("Pointer Enter Consumbale");
+        if (TooltipManager.Instance != null && fridgeItem != null)
         {
-            EventTrigger.Entry entry = new EventTrigger.Entry();
-            entry.eventID = EventTriggerType.PointerEnter;
-            entry.callback.AddListener((data) => { UpdateTooltip((PointerEventData)data); });
-            itemEventTrigger.triggers.Add(entry);
-      
-            EventTrigger.Entry entry2 = new EventTrigger.Entry();
-            entry2.eventID = EventTriggerType.PointerExit;
-            entry2.callback.AddListener((data) => { HideTooltip(); });
-            itemEventTrigger.triggers.Add(entry2);
+            TooltipManager.Instance.UpdateFridgeToolTip(itemName, itemDescription, itemEnergyRegainAmount, itemDaysBeforeExpiry, fridgeItem, fridgeItem.itemId);
         }
     }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        if (TooltipManager.Instance != null)
+        {
+            TooltipManager.Instance.HideFridgeTooltip();
+        }
+    }
+
+    
     
     public void UpdateTooltip(BaseEventData eventData)
     {
@@ -54,6 +58,13 @@ public class FoodConsumable : MonoBehaviour
         if (TooltipManager.Instance != null)
         {
             TooltipManager.Instance.HideFridgeTooltip();
+        }
+    }
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        if (TooltipManager.Instance != null)
+        {
+            TooltipManager.Instance.UpdateConsumeToolTip(itemName, itemDescription, itemEnergyRegainAmount, itemDaysBeforeExpiry, fridgeItem, fridgeItem.itemId);
         }
     }
 }

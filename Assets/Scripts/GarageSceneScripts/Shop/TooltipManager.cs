@@ -29,11 +29,12 @@ public class TooltipManager : MonoBehaviour
     { 
         if(fridgeToolTip != null)
         {
+            Debug.Log("Updating Tooltip");
             List<string> listOfStringsToBePassed = new List<string>();
             
             listOfStringsToBePassed.Add(itemDescription);
-            listOfStringsToBePassed.Add(itemEnergyRegainAmount.ToString());
-            listOfStringsToBePassed.Add(amountOfDaysBeforeExpiry.ToString());
+            listOfStringsToBePassed.Add($"Energy Regain Amount: {itemEnergyRegainAmount.ToString()}");
+            listOfStringsToBePassed.Add($"Days Before Expiry: {amountOfDaysBeforeExpiry.ToString()}");
             
             fridgeToolTip.UpdateFridgePanel(itemName, listOfStringsToBePassed,itemData,itemId,showToolTip);
         }
@@ -45,8 +46,8 @@ public class TooltipManager : MonoBehaviour
             List<string> listOfStringsToBePassed = new List<string>();
             
             listOfStringsToBePassed.Add(itemDescription);
-            listOfStringsToBePassed.Add(itemEnergyRegainAmount.ToString());
-            listOfStringsToBePassed.Add(amountOfDaysBeforeExpiry.ToString());
+            listOfStringsToBePassed.Add($"Energy Regain Amount: {itemEnergyRegainAmount.ToString()}");
+            listOfStringsToBePassed.Add($"Days Before Expiry: {amountOfDaysBeforeExpiry.ToString()}");
             
             consumePanel.UpdateFridgePanel(itemName, listOfStringsToBePassed,itemData,itemId,showToolTip);
         }

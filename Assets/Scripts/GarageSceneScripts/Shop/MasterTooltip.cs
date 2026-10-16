@@ -116,6 +116,7 @@ public class MasterTooltip : MonoBehaviour
         }
       
         this.titleText.text = popUpTopText;
+        titleText.gameObject.SetActive(true);
         if(isItemTooltip)
         {
             this.currentFridgeItemData = itemData;
@@ -127,6 +128,15 @@ public class MasterTooltip : MonoBehaviour
             if (listOfStringsBeingUpdated[i] != null || listOfTextsToBeShown[i] != null)
             {
                 listOfTextsToBeShown[i].text = listOfStringsBeingUpdated[i];
+                listOfTextsToBeShown[i].gameObject.SetActive(true);
+            }
+        }
+     
+        for (int i=0; i < listOfTextsToBeShown.Count; i++)
+        {
+            if (listOfTextsToBeShown[i] != null && string.IsNullOrEmpty(listOfTextsToBeShown[i].text))
+            {
+                listOfTextsToBeShown[i].gameObject.SetActive(false);
             }
         }
         
@@ -171,23 +181,23 @@ public class MasterTooltip : MonoBehaviour
         // ---------- Auto-size ----------
         Vector2 canvasSize = canvasRect.sizeDelta;
 
+        bool hasExitButton = exitButton != null && exitButton.gameObject.activeSelf;
         float availableWidth = Mathf.Min(maxTooltipWidth, canvasSize.x * 0.9f);
-        float maxTextPreferredWidth = titleText.preferredWidth + buttonSize * 3f;
-        if (titleText != null && !string.IsNullOrEmpty(titleText.text))
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, titleText.preferredWidth);
+        float maxTextPreferredWidth = titleText != null ? titleText.preferredWidth : 0f;
+        if (hasExitButton)
+        {
+            maxTextPreferredWidth += buttonSize + spacing;
+        }
         
-        
-        
-        /*if (itemDescriptionText != null && !string.IsNullOrEmpty(itemDescriptionText.text))
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDescriptionText.preferredWidth);
-        if(energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text))
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, energyRegainAmountText.preferredWidth);
-        if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text))
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, itemDaysBeforeExpiryText.preferredWidth);*/
-        if(interactionButton != null)
+        for (int i=0; i < listOfTextsToBeShown.Count; i++)
+        {
+            if (listOfTextsToBeShown[i] != null && !string.IsNullOrEmpty(listOfTextsToBeShown[i].text) && listOfTextsToBeShown[i].gameObject.activeSelf)
+            {
+                maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, listOfTextsToBeShown[i].preferredWidth);
+            }
+        }
+        if(interactionButton != null && interactionButton.gameObject.activeSelf)
             maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, interactionButton.GetComponent<RectTransform>().rect.width);
-        if(exitButton != null)
-            maxTextPreferredWidth = Mathf.Max(maxTextPreferredWidth, exitButton.GetComponent<RectTransform>().rect.width);
 
         float optimalWidth = Mathf.Max(
             minTooltipWidth,
@@ -195,7 +205,8 @@ public class MasterTooltip : MonoBehaviour
         );
 
         float textWidth = optimalWidth - paddingHorizontal * 2f;
-        float headerTextWidth = optimalWidth - paddingHorizontal * 2f - buttonSize; // Extra room for the close button
+        float headerTextWidth = optimalWidth - paddingHorizontal * 2f - (hasExitButton ? (buttonSize + spacing) : 0f);
+        
         // Constrain text width to compute preferred height
         if (titleText != null)
         {
@@ -207,78 +218,54 @@ public class MasterTooltip : MonoBehaviour
         {
             if (listOfTextsToBeShown[i] != null)
             {
-                listOfTextsToBeShown[i].rectTransform.sizeDelta = new Vector2(headerTextWidth, 0f);
+                listOfTextsToBeShown[i].rectTransform.sizeDelta = new Vector2(textWidth, 0f);
                 listOfTextsToBeShown[i].ForceMeshUpdate(true, true);
             }
         }
-        /*
-        if (itemPriceText != null)
-        {
-            itemPriceText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            itemPriceText.ForceMeshUpdate(true, true);
-        }
-        if (itemDescriptionText != null)
-        {
-            itemDescriptionText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            itemDescriptionText.ForceMeshUpdate(true, true);
-        }
-        if(energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text) && currentItemItemType == ItemTypes.Food)
-        {
-            energyRegainAmountText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            energyRegainAmountText.ForceMeshUpdate(true, true);
-        }
-        if(itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text) && currentItemItemType == ItemTypes.Food)
-        {
-            itemDaysBeforeExpiryText.rectTransform.sizeDelta = new Vector2(textWidth, 0f);
-            itemDaysBeforeExpiryText.ForceMeshUpdate(true, true);
-        }
-        */
-      
-        
         
         Canvas.ForceUpdateCanvases();
 
         float currentYOffset = paddingVertical;
 
-        // Layout itemNameText inside (top anchored so it grows downward)
-        
-          
-        if (exitButton != null )
+        // Layout header: exitButton and titleText on the same line
+        float buttonHeight = hasExitButton ? buttonSize : 0f;
+        float titleRightPadding = paddingHorizontal + (hasExitButton ? (buttonSize + spacing) : 0f);
+
+        if (hasExitButton)
         {
-            if (currentYOffset > paddingVertical) currentYOffset += spacing;
             var buttonRect = exitButton.GetComponent<RectTransform>();
             buttonRect.anchorMin = new Vector2(1f, 1f);
             buttonRect.anchorMax = new Vector2(1f, 1f);
             buttonRect.pivot     = new Vector2(1f, 1f);
-            
-           
             buttonRect.sizeDelta = new Vector2(buttonSize, buttonSize);
-            exitButtonText.fontSize = buttonSize;
-            float h = exitButton.GetComponent<RectTransform>().rect.height;
-            /*buttonRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            buttonRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));*/
-            buttonRect.anchoredPosition = new Vector2(-paddingHorizontal, -paddingVertical);
+            buttonRect.anchoredPosition = new Vector2(-paddingHorizontal, -currentYOffset);
 
-         //   currentYOffset += h;
+            if (exitButtonText != null)
+            {
+                exitButtonText.fontSize = buttonSize;
+            }
         }
         
+        float titleHeight = 0f;
         if (titleText != null && !string.IsNullOrEmpty(titleText.text))
         {
             var textRect = titleText.rectTransform;
             textRect.anchorMin = new Vector2(0f, 1f);
             textRect.anchorMax = new Vector2(1f, 1f);
             textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = titleText.preferredHeight;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
-            currentYOffset += h;
+            titleHeight = titleText.preferredHeight;
+            textRect.offsetMax = new Vector2(-titleRightPadding, -currentYOffset);
+            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + titleHeight));
         }
-        
+
+        float headerRowHeight = Mathf.Max(titleHeight, buttonHeight);
+        currentYOffset += headerRowHeight;
         
         for (int i = 0; i < listOfTextsToBeShown.Count; i++)
         {
-            if (listOfTextsToBeShown[i] != null)
+            if (listOfTextsToBeShown[i] != null && listOfTextsToBeShown[i].gameObject.activeSelf && !string.IsNullOrEmpty(listOfTextsToBeShown[i].text))
             {
+                if (currentYOffset > paddingVertical) currentYOffset += spacing;
                 var textRect = listOfTextsToBeShown[i].rectTransform;
                 textRect.anchorMin = new Vector2(0f, 1f);
                 textRect.anchorMax = new Vector2(1f, 1f);
@@ -289,64 +276,8 @@ public class MasterTooltip : MonoBehaviour
                 currentYOffset += h;
             }
         }
-
-        /*
-        // Layout itemPriceText inside
-        if (itemPriceText != null && !string.IsNullOrEmpty(itemPriceText.text))
-        {
-            if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = itemPriceText.rectTransform;
-            textRect.anchorMin = new Vector2(0f, 1f);
-            textRect.anchorMax = new Vector2(1f, 1f);
-            textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemPriceText.preferredHeight;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
-            currentYOffset += h;
-        }
-
-        // Layout itemDescriptionText inside
-        if (itemDescriptionText != null && !string.IsNullOrEmpty(itemDescriptionText.text))
-        {
-            if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = itemDescriptionText.rectTransform;
-            textRect.anchorMin = new Vector2(0f, 1f);
-            textRect.anchorMax = new Vector2(1f, 1f);
-            textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemDescriptionText.preferredHeight;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
-            currentYOffset += h;
-        }
         
-        if (energyRegainAmountText != null && !string.IsNullOrEmpty(energyRegainAmountText.text))
-        {
-            if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = energyRegainAmountText.rectTransform;
-            textRect.anchorMin = new Vector2(0f, 1f);
-            textRect.anchorMax = new Vector2(1f, 1f);
-            textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = energyRegainAmountText.preferredHeight;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
-            currentYOffset += h;
-        }
-        
-        if (itemDaysBeforeExpiryText != null && !string.IsNullOrEmpty(itemDaysBeforeExpiryText.text))
-        {
-            if (currentYOffset > paddingVertical) currentYOffset += spacing;
-            var textRect = itemDaysBeforeExpiryText.rectTransform;
-            textRect.anchorMin = new Vector2(0f, 1f);
-            textRect.anchorMax = new Vector2(1f, 1f);
-            textRect.pivot     = new Vector2(0.5f, 1f);
-            float h = itemDaysBeforeExpiryText.preferredHeight;
-            textRect.offsetMax = new Vector2(-paddingHorizontal, -currentYOffset);
-            textRect.offsetMin = new Vector2( paddingHorizontal, -(currentYOffset + h));
-            currentYOffset += h;
-        }
-        */
-        
-        if (interactionButton != null )
+        if (interactionButton != null && interactionButton.gameObject.activeSelf)
         {
             if (currentYOffset > paddingVertical) currentYOffset += spacing;
             var buttonRect = interactionButton.GetComponent<RectTransform>();
@@ -448,6 +379,16 @@ public class MasterTooltip : MonoBehaviour
         {
             //Add in stuff for cosuming here
             
+        }
+    }
+
+    public void CloseConsumePanel()
+    {
+        if (isConsumablePopup)
+        {
+            currentFridgeItemData = null;
+            currentItemId = 99999999;
+           this.gameObject.SetActive(false);
         }
     }
     

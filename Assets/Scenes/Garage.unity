@@ -510,7 +510,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 48450221}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &56472121
 GameObject:
@@ -1989,7 +1989,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 179436883}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &181131130
 GameObject:
@@ -2590,7 +2590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 192988560}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &200682403
 GameObject:
@@ -3295,7 +3295,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 283645668}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &285149971
 GameObject:
@@ -3514,6 +3514,7 @@ GameObject:
   - component: {fileID: 315464917}
   - component: {fileID: 315464916}
   - component: {fileID: 315464915}
+  - component: {fileID: 315464918}
   m_Layer: 0
   m_Name: Fridge Camera
   m_TagString: MainCamera
@@ -3646,6 +3647,22 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: 0.022
+--- !u!114 &315464918
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 315464913}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c49b4cc203aa6414fae5c798d1d0e7d6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.PhysicsRaycaster
+  m_EventMask:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_MaxRayIntersections: 0
 --- !u!1 &334337275
 GameObject:
   m_ObjectHideFlags: 0
@@ -6411,7 +6428,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 540285264}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1001 &543745550
 PrefabInstance:
@@ -7830,7 +7847,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 620060239}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!224 &620060239
 RectTransform:
@@ -9594,7 +9611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 701778502}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &723144254
 GameObject:
@@ -11117,7 +11134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 832770047}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!224 &832770047
 RectTransform:
@@ -12819,7 +12836,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 973905830}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!114 &978932185
 MonoBehaviour:
@@ -13145,7 +13162,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1002152616}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!114 &1002152614
 MonoBehaviour:
@@ -17102,7 +17119,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1411849871}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &1443861095
 GameObject:
@@ -17633,7 +17650,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1490613194}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!224 &1490613194
 RectTransform:
@@ -18160,7 +18177,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1503527548}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &1505216938
 GameObject:
@@ -18297,7 +18314,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1505216939}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &1514929147 stripped
 GameObject:
@@ -20492,7 +20509,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1639535786}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &1642921532
 GameObject:
@@ -21117,7 +21134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1712805070}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!224 &1712805070
 RectTransform:
@@ -22224,7 +22241,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1888720190}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!114 &1908473101
 MonoBehaviour:
@@ -22401,7 +22418,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1915442005}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &1916171752
 GameObject:
@@ -23106,7 +23123,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 1936599706}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!4 &1936812971 stripped
 Transform:
@@ -24257,7 +24274,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 2012572463}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &2020616388
 GameObject:
@@ -24348,7 +24365,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 2020616389}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!61 &2020616393
 BoxCollider2D:
@@ -25249,7 +25266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a002dce5449f2349a1da7d1f1b0d476, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Spline
-  transform: {fileID: 2092848063}
+  splineTransform: {fileID: 0}
   playerHasPassed: 0
 --- !u!1 &2093723884
 GameObject:
