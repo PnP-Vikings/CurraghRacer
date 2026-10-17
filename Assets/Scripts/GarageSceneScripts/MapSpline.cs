@@ -23,6 +23,7 @@ public class MapSpline : MonoBehaviour
     [Tooltip("The speed at which the player icon moves along the spline. Lower values result in faster movement.")]
     [SerializeField] private float playerMoveSpeed = 2f;
     private float startTime;
+    [SerializeField] private MapAudio mapAudio;
 
     private void Start()
     {
@@ -184,9 +185,20 @@ public class MapSpline : MonoBehaviour
             yield return null;
         }
 
-        if (AudioManager.instance != null)
+        if (mapAudio != null & AudioManager.instance != null)
         {
-            AudioManager.instance.walking.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //Debug.Log("mapAudio & AudioManager found - AudioDebug");
+            if (mapAudio.hasJustTravelledByTaxi == true)
+            {
+                AudioManager.instance.payBill.start();
+                //Debug.Log("Player arrived at destination by taxi - AudioDebug");
+                mapAudio.hasJustTravelledByTaxi = false;
+            }
+            else
+            {
+                AudioManager.instance.walking.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                //Debug.Log("Player arrived at destination by foot - AudioDebug");
+            }
         }
     }
     

@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     private Bus masterBus;
-    // UI
+        // UI
     [System.NonSerialized] public EventInstance UIClick1; // Confirm selection 
     [System.NonSerialized] public EventInstance UIClick2; // Return
     [System.NonSerialized] public EventInstance UIClick3; // Hover
@@ -61,7 +61,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance rowingGameFail;
     [System.NonSerialized] public EventInstance rowingGameFailDialogue;
     [System.NonSerialized] public EventInstance rowingGameSuccessAfterFail;
-    // Jobs
+        // Jobs
 
     [System.NonSerialized] public EventInstance spawnPlates;
     [System.NonSerialized] public EventInstance movePlate;
