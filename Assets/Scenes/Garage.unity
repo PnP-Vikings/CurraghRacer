@@ -6251,6 +6251,7 @@ MonoBehaviour:
   hasCompletedSpline: 0
   ActiveSpline: []
   playerMoveSpeed: 0.8
+  mapAudio: {fileID: 1160375971}
 --- !u!114 &521633750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -14566,6 +14567,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapAudio
   garageAmbienceEmitter: {fileID: 2093723886}
+  hasJustTravelledByTaxi: 0
 --- !u!4 &1160375972
 Transform:
   m_ObjectHideFlags: 0

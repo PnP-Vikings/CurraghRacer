@@ -6,6 +6,7 @@ public class MapAudio : MonoBehaviour
     //[SerializeField] RadioManager radioManager;
     [SerializeField] StudioEventEmitter garageAmbienceEmitter;
     //[SerializeField] MapSpline mapSpline;
+    public bool hasJustTravelledByTaxi = false;
     public void MuteGarageAudio()
     {
         Debug.Log("Garage Ambience was muted because the map was opened - AudioDebug");
@@ -80,6 +81,8 @@ public class MapAudio : MonoBehaviour
                 {
                     Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
                     AudioManager.instance.taxi.start();
+                    hasJustTravelledByTaxi = true;
+
                 }
                 else
                 {
