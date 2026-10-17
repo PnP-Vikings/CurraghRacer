@@ -44,6 +44,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance tvButtonPushOut;
     [System.NonSerialized] public EventInstance tvButtonPushIn;
     [System.NonSerialized] public EventInstance showInviteAudio;
+    [System.NonSerialized] public EventInstance openDoor;
         // Bulletin Board
     [System.NonSerialized] public EventInstance sleepAudio;
     [System.NonSerialized] public EventInstance sleepOutsideAudio;
@@ -136,6 +137,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance walking;
     [System.NonSerialized] public EventInstance taxi;
     [System.NonSerialized] public EventInstance coins;
+    [System.NonSerialized] public EventInstance payTaxi;
 
     private Scene activeScene;
     void Awake()
@@ -208,6 +210,7 @@ public class AudioManager : MonoBehaviour
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
+        openDoor = RuntimeManager.CreateInstance("event:/Garage/Open Door");
 
                            // BULLETIN BOARD //
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
@@ -301,6 +304,7 @@ public class AudioManager : MonoBehaviour
         walking = RuntimeManager.CreateInstance("event:/Map/Walking");
         taxi = RuntimeManager.CreateInstance("event:/Map/Taxi");
         coins = RuntimeManager.CreateInstance("event:/Map/Coins");
+        payTaxi = RuntimeManager.CreateInstance("event:/Map/Pay Taxi");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
