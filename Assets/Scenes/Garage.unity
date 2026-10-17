@@ -10077,7 +10077,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1160375971}
         m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
-        m_MethodName: PlayTaxiSound
+        m_MethodName: CallPlayTaxiSoundIEnum
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

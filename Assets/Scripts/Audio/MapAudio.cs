@@ -1,11 +1,11 @@
 using FMODUnity;
+using System.Collections;
 using UnityEngine;
 
 public class MapAudio : MonoBehaviour
 {
     //[SerializeField] RadioManager radioManager;
     [SerializeField] StudioEventEmitter garageAmbienceEmitter;
-    //[SerializeField] MapSpline mapSpline;
     public bool hasJustTravelledByTaxi = false;
     public void MuteGarageAudio()
     {
@@ -68,30 +68,38 @@ public class MapAudio : MonoBehaviour
         }
     }
 
-    public void PlayTaxiSound()
+    public void CallPlayTaxiSoundIEnum()
+    {
+        StartCoroutine(PlayTaxiSound());
+    }
+
+    private IEnumerator PlayTaxiSound()
     {
         if (AudioManager.instance != null)
         {
-            //AudioManager.instance.coins.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
-
             if (PlayerManager.Instance != null)
             {
                 float coins = PlayerManager.Instance.GetPlayerCoins();
                 if (coins >= 40)
                 {
-                    Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
+                    //Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
                     AudioManager.instance.taxi.start();
                     hasJustTravelledByTaxi = true;
 
                 }
                 else
                 {
-                    Debug.Log($"Player has {coins} and can't afford a taxi - AudioDebug");
+                    //Debug.Log($"Player has {coins} and can't afford a taxi - AudioDebug");
                 }
             }
-            //AudioManager.instance.taxi.setParameterByName("Banknote Volume", 0f);
+
+            yield return null;
+
+            AudioManager.instance.coins.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
     }
+
+
 
     public void PlayWalkingSound()
     {
