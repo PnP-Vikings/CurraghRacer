@@ -10,8 +10,7 @@ public class MapAudio : MonoBehaviour
     public bool hasJustTravelledByTaxi = false;
     private GameObject shopCanvas;
     private MapSpline mapSplineScript;
-    //private MapController mapControllerScript;
-    //private PlayerLocation currentPlayerLocation;
+    private MapController mapControllerScript;
 
     // Below are for return variables from MapSpline 
     private float startTime;
@@ -26,14 +25,24 @@ public class MapAudio : MonoBehaviour
 
         if (shopCanvas != null)
         {
-            //Debug.Log("shopCanvas found - AudioDebug");
+            Debug.Log("shopCanvas found - AudioDebug");
             FindMapSplineScriptAndGetData();
+            FindMapControllerScript();
         }
         else
         {
             //Debug.Log("shopCanvas not found - AudioDebug");
         }
 
+    }
+
+    void FindMapControllerScript()
+    {
+        mapControllerScript = shopCanvas.GetComponent<MapController>();
+        if (mapControllerScript != null)
+        {
+            Debug.Log("mapControllerScript found - AudioDebug");
+        }
     }
 
     private void FindMapSplineScriptAndGetData()
@@ -79,7 +88,7 @@ public class MapAudio : MonoBehaviour
         {
             //Debug.Log("RadioManager found - AudioDebug");
             //RadioManager.instance.MuteRadio();
-            garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 0f, false);
+            garageAmbienceEmitter.SetParameter("Garage Ambience Volume", 0f, false);
         }
 
         if (AudioManager.instance != null)
@@ -99,12 +108,12 @@ public class MapAudio : MonoBehaviour
         //    garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 0f, false);
         //}
 
-        if (RadioManager.instance != null)
-        {
-            //Debug.Log("RadioManager found - AudioDebug");
-            //RadioManager.instance.UnMuteRadio();
-            garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 1f, false);
-        }
+        //if (RadioManager.instance != null)
+        //{
+        //    //Debug.Log("RadioManager found - AudioDebug");
+        //    //RadioManager.instance.UnMuteRadio();
+        //    garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 1f, false);
+        //}
 
         if (AudioManager.instance != null)
         {
@@ -119,6 +128,20 @@ public class MapAudio : MonoBehaviour
                 {
                     AudioManager.instance.showInviteAudio.start();
                     LeagueInviteCardsUi.Instance.LeagueInviteReceivedWhileInMap = false;
+                }
+            }
+        }
+
+        if(mapControllerScript != null)
+        {
+            if (mapControllerScript.GetCurrentPlayerLocation() == MapController.PlayerLocation.Home)
+            {
+                if (RadioManager.instance != null)
+                {
+                    //Debug.Log("RadioManager found - AudioDebug");
+                    //RadioManager.instance.UnMuteRadio();
+                    Debug.Log("Player is Home, Unmuting Garage Ambience - AudioDebug");
+                    garageAmbienceEmitter.SetParameter("Garage Ambience Volume", 1f, false);
                 }
             }
         }
