@@ -1,6 +1,7 @@
 using FMODUnity;
 using System.Collections;
 using UnityEngine;
+using static MapController;
 
 public class MapAudio : MonoBehaviour
 {
@@ -9,6 +10,10 @@ public class MapAudio : MonoBehaviour
     public bool hasJustTravelledByTaxi = false;
     private GameObject shopCanvas;
     private MapSpline mapSplineScript;
+    //private MapController mapControllerScript;
+    //private PlayerLocation currentPlayerLocation;
+
+    // Below are for return variables from MapSpline 
     private float startTime;
     private float playerMoveSpeed;
     private float completion;
@@ -17,13 +22,16 @@ public class MapAudio : MonoBehaviour
 
     private void Update()
     {
-        //float completion = Mathf.Clamp01((Time.time - mapSplineScript.startTime) / mapSplineScript.playerMoveSpeed);
         shopCanvas = GameObject.Find("ShopCanvas");
 
         if (shopCanvas != null)
         {
             //Debug.Log("shopCanvas found - AudioDebug");
             FindMapSplineScriptAndGetData();
+        }
+        else
+        {
+            //Debug.Log("shopCanvas not found - AudioDebug");
         }
 
     }
@@ -46,21 +54,19 @@ public class MapAudio : MonoBehaviour
         completion = Mathf.Clamp01((Time.time - startTime) / playerMoveSpeed);
         //Debug.Log($"{completion} - AudioDebug"); 
 
-        if(completion > 0.77 && completion < 0.99 && isPlayerMoving == true) 
+        if(completion > 0.77 && completion < 0.99 && isPlayerMoving == true && hasJustTravelledByTaxi == true)
         {
             if (AudioManager.instance != null)
             {
                 //Debug.Log("Taxi Journey completion is between 0.77 & 0.99 - AudioDebug");
-                AudioManager.instance.payTaxi.start();
+                AudioManager.instance.payAndExitTaxi.start();
             }
         }
     }
 
-
-
     public void MuteGarageAudio()
     {
-        Debug.Log("Garage Ambience was muted because the map was opened - AudioDebug");
+        //Debug.Log("Garage Ambience was muted because the map was opened - AudioDebug");
 
         //if (radioManager != null)
         //{
@@ -80,12 +86,11 @@ public class MapAudio : MonoBehaviour
         {
             AudioManager.instance.countrysideAmbience.start();
         }
-
     }
 
     public void UnmuteGarageAudio()
     {
-        Debug.Log("Garage Ambience was unmuted because the map was closed - AudioDebug");
+        //Debug.Log("Garage Ambience was unmuted because the map was closed - AudioDebug");
 
         //if (radioManager != null)
         //{
@@ -119,12 +124,12 @@ public class MapAudio : MonoBehaviour
         }
     }
 
-    public void CallPlayTaxiSoundIEnum()
+    public void CallPlayEnterTaxiSoundIEnum()
     {
-        StartCoroutine(PlayTaxiSound());
+        StartCoroutine(PlayEnterTaxiSound());
     }
 
-    private IEnumerator PlayTaxiSound()
+    private IEnumerator PlayEnterTaxiSound()
     {
         if (AudioManager.instance != null)
         {
@@ -134,7 +139,7 @@ public class MapAudio : MonoBehaviour
                 if (coins >= 40)
                 {
                     //Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
-                    AudioManager.instance.taxi.start();
+                    AudioManager.instance.enterTaxi.start();
                     hasJustTravelledByTaxi = true;
 
                 }

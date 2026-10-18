@@ -213,7 +213,7 @@ public class MapController : MonoBehaviour
     {
         return currentPlayerLocation;
     }
-    
+
     public enum PlayerLocation
     { 
         Home,
