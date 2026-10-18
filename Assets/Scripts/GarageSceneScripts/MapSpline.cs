@@ -190,7 +190,6 @@ public class MapSpline : MonoBehaviour
             //Debug.Log("mapAudio & AudioManager found - AudioDebug");
             if (mapAudio.hasJustTravelledByTaxi == true)
             {
-                AudioManager.instance.payTaxi.start();
                 //Debug.Log("Player arrived at destination by taxi - AudioDebug");
                 mapAudio.hasJustTravelledByTaxi = false;
             }
@@ -202,12 +201,24 @@ public class MapSpline : MonoBehaviour
             }
         }
     }
-    
+
     public bool IsPlayerMoving()
     {
         return isMovingPlayerIcon;
     }
     
+    public float ReturnPlayerMoveSpeed()
+    {
+        //Debug.Log("Returning playerMoveSpeed - AudioDebug");
+        return playerMoveSpeed;
+    }
+
+    public float ReturnStartTime()
+    {
+        //Debug.Log("Returning startTime - AudioDebug");
+        return startTime;
+    }
+
     private void OnEnable()
     {
         ResetSpines();

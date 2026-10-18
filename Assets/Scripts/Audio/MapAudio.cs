@@ -7,6 +7,57 @@ public class MapAudio : MonoBehaviour
     //[SerializeField] RadioManager radioManager;
     [SerializeField] StudioEventEmitter garageAmbienceEmitter;
     public bool hasJustTravelledByTaxi = false;
+    private GameObject shopCanvas;
+    private MapSpline mapSplineScript;
+    private float startTime;
+    private float playerMoveSpeed;
+    private float completion;
+    private bool isPlayerMoving;
+
+
+    private void Update()
+    {
+        //float completion = Mathf.Clamp01((Time.time - mapSplineScript.startTime) / mapSplineScript.playerMoveSpeed);
+        shopCanvas = GameObject.Find("ShopCanvas");
+
+        if (shopCanvas != null)
+        {
+            //Debug.Log("shopCanvas found - AudioDebug");
+            FindMapSplineScriptAndGetData();
+        }
+
+    }
+
+    private void FindMapSplineScriptAndGetData()
+    {
+        mapSplineScript = shopCanvas.GetComponent<MapSpline>();
+        if (mapSplineScript != null)
+        {
+            //Debug.Log("mapSplineScript found - AudioDebug");
+            startTime = mapSplineScript.ReturnStartTime();
+            playerMoveSpeed = mapSplineScript.ReturnPlayerMoveSpeed();
+            isPlayerMoving = mapSplineScript.IsPlayerMoving();
+            CheckIfTaxiJourneyIsEnding();
+        }
+    }
+
+    private void CheckIfTaxiJourneyIsEnding()
+    {
+        completion = Mathf.Clamp01((Time.time - startTime) / playerMoveSpeed);
+        //Debug.Log($"{completion} - AudioDebug"); 
+
+        if(completion > 0.77 && completion < 0.99 && isPlayerMoving == true) 
+        {
+            if (AudioManager.instance != null)
+            {
+                //Debug.Log("Taxi Journey completion is between 0.77 & 0.99 - AudioDebug");
+                AudioManager.instance.payTaxi.start();
+            }
+        }
+    }
+
+
+
     public void MuteGarageAudio()
     {
         Debug.Log("Garage Ambience was muted because the map was opened - AudioDebug");
@@ -98,8 +149,6 @@ public class MapAudio : MonoBehaviour
             AudioManager.instance.coins.stop(FMOD.Studio.STOP_MODE.IMMEDIATE);
         }
     }
-
-
 
     public void PlayWalkingSound()
     {
