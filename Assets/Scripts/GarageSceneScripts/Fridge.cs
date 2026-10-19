@@ -57,8 +57,17 @@ public class Fridge : MonoBehaviour
                 }
                 else
                 {
-                    Debug.Log("Food Item seached was not avaiable");
+                    Debug.Log("Food Item seached was not available");
                 }
+            }
+        }
+
+
+        if (PlayerManager.Instance != null && PlayerManager.Instance.IsFridgeEmpty() && spawnedFood.Count>0)
+        {
+            for (int i = 0; i < spawnedFood.Count; i++)
+            {
+                Destroy(spawnedFood[i]);
             }
         }
     }

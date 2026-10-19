@@ -10984,9 +10984,12 @@ MonoBehaviour:
   offset: {x: 15, y: 10}
   maxTooltipWidth: 400
   minTooltipWidth: 250
+  maxTooltipHeight: 600
+  minTooltipHeight: 50
   paddingHorizontal: 12
   paddingVertical: 8
   spacing: 4
+  minDistanceFromBottom: 20
 --- !u!1 &828798286
 GameObject:
   m_ObjectHideFlags: 0
@@ -27218,12 +27221,32 @@ PrefabInstance:
       propertyPath: storeBuyPanel
       value: 
       objectReference: {fileID: 825408516}
+    - target: {fileID: 1359946110856438118, guid: 67419183353218a4cb321ae100c9b519, type: 3}
+      propertyPath: maxTooltipHeight
+      value: 460
+      objectReference: {fileID: 0}
+    - target: {fileID: 1663310157908045814, guid: 67419183353218a4cb321ae100c9b519, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2286544507752752878, guid: 67419183353218a4cb321ae100c9b519, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4448546240727721423, guid: 67419183353218a4cb321ae100c9b519, type: 3}
+      propertyPath: m_TextWrappingMode
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6521762776798269806, guid: 67419183353218a4cb321ae100c9b519, type: 3}
       propertyPath: m_Name
       value: Store Tooltip
       objectReference: {fileID: 0}
     - target: {fileID: 6521762776798269806, guid: 67419183353218a4cb321ae100c9b519, type: 3}
       propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7289199136070179903, guid: 67419183353218a4cb321ae100c9b519, type: 3}
+      propertyPath: m_TextWrappingMode
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8155794152023085582, guid: 67419183353218a4cb321ae100c9b519, type: 3}
@@ -27304,6 +27327,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8155794152023085582, guid: 67419183353218a4cb321ae100c9b519, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 8603733163197044118, guid: 67419183353218a4cb321ae100c9b519, type: 3}
+      propertyPath: m_TextWrappingMode
       value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
