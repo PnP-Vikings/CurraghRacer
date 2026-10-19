@@ -391,6 +391,12 @@ public class MasterTooltip : MonoBehaviour
            this.gameObject.SetActive(false);
         }
     }
+
+    public void ConsumeItem()
+    {
+      PlayerManager.Instance.ConsumeFridgeItem(currentItemId);
+      CloseConsumePanel();
+    }
     
     public FridgeItem GetSelectedShopFridgeItemData()
     {

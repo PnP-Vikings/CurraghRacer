@@ -17056,7 +17056,7 @@ GameObject:
   - component: {fileID: 750269164}
   - component: {fileID: 750269163}
   m_Layer: 5
-  m_Name: Close Buy Panel Btn
+  m_Name: Consume Panel Btn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -45489,7 +45489,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: X
+  m_text: Consume
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: b3a36dbc8b7dfd24bad5a518e760ca5c, type: 2}
   m_sharedMaterial: {fileID: 7704723192327905380, guid: b3a36dbc8b7dfd24bad5a518e760ca5c, type: 2}
