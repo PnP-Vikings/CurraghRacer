@@ -21820,6 +21820,7 @@ MonoBehaviour:
   paddingVertical: 8
   spacing: 4
   minDistanceFromBottom: 20
+  minDistanceFromTop: 20
   blockRaycast: 0
   isItemTooltip: 1
   isFridgeTooltip: 1
@@ -48321,7 +48322,7 @@ MonoBehaviour:
   borderColor: {r: 0.5294118, g: 0.5294118, b: 0.5294118, a: 0.80784315}
   textColor: {r: 0.9, g: 0.95, b: 1, a: 1}
   showDelay: 0.05
-  offset: {x: 15, y: 330}
+  offset: {x: 15, y: 100}
   maxTooltipWidth: 400
   minTooltipWidth: 250
   maxTooltipHeight: 460
@@ -48330,6 +48331,7 @@ MonoBehaviour:
   paddingVertical: 8
   spacing: 4
   minDistanceFromBottom: 20
+  minDistanceFromTop: 136
   blockRaycast: 1
   isItemTooltip: 1
   isFridgeTooltip: 0
