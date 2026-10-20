@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 3404675248887921730}
   - component: {fileID: 3959669531318245615}
   - component: {fileID: 1162369070664721622}
+  - component: {fileID: 8379664184713613618}
   m_Layer: 5
   m_Name: StoreItemPrefab
   m_TagString: Untagged
@@ -58,12 +59,14 @@ MonoBehaviour:
   itemPrice: 0
   itemEnergyRegainAmount: 0
   amountOfDaysBeforeExpiry: 0
+  spawnedItemId: 0
   itemDescriptionText: 
   itemData: {fileID: 0}
   itemEventTrigger: {fileID: 0}
   storeManager: {fileID: 0}
   storeBuyPanel: {fileID: 0}
   shopItemButton: {fileID: 3404675248887921730}
+  hasBeenPurchased: 0
 --- !u!114 &3404675248887921730
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -120,6 +123,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 8379664184713613618}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &3959669531318245615
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -145,6 +160,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.UI::UnityEngine.EventSystems.EventTrigger
   m_Delegates: []
+--- !u!114 &8379664184713613618
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1880139118352126914}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIAudio
+  Event:
+    Guid:
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
 --- !u!1 &2850079625266790297
 GameObject:
   m_ObjectHideFlags: 0

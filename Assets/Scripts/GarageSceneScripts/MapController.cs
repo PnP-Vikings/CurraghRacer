@@ -22,7 +22,7 @@ public class MapController : MonoBehaviour
     [SerializeField] private float textShowDuration = 2f; // Duration to show the text
     [SerializeField] private GameObject shopPanel;
 
-
+    
 
     private void OnEnable()
     {
@@ -213,7 +213,7 @@ public class MapController : MonoBehaviour
     {
         return currentPlayerLocation;
     }
-    
+
     public enum PlayerLocation
     { 
         Home,

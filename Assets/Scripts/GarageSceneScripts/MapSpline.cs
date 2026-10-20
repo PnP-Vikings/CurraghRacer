@@ -23,6 +23,7 @@ public class MapSpline : MonoBehaviour
     [Tooltip("The speed at which the player icon moves along the spline. Lower values result in faster movement.")]
     [SerializeField] private float playerMoveSpeed = 2f;
     private float startTime;
+    [SerializeField] private MapAudio mapAudio;
 
     private void Start()
     {
@@ -184,17 +185,45 @@ public class MapSpline : MonoBehaviour
             yield return null;
         }
 
-        if (AudioManager.instance != null)
+        if (mapAudio != null & AudioManager.instance != null)
         {
-            AudioManager.instance.walking.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+            //Debug.Log("mapAudio & AudioManager found - AudioDebug");
+            if (mapAudio.hasJustTravelledByTaxi == true)
+            {
+                //Debug.Log("Player arrived at destination by taxi, muting countryside ambience - AudioDebug");
+                mapAudio.hasJustTravelledByTaxi = false;
+                mapAudio.OutsideToShopAudioTransition();
+            }
+            else
+            {
+                //Debug.Log("Player arrived at destination by foot, muting countryside ambience, calling openDoor if destination is shop - AudioDebug");
+                AudioManager.instance.walking.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                mapAudio.OutsideToShopAudioTransition();
+                if (mapAudio.shopPanel != null)
+                {
+                    AudioManager.instance.openDoor.start();
+                }
+            }
         }
     }
-    
+
     public bool IsPlayerMoving()
     {
         return isMovingPlayerIcon;
     }
     
+    public float ReturnPlayerMoveSpeed()
+    {
+        //Debug.Log("Returning playerMoveSpeed - AudioDebug");
+        return playerMoveSpeed;
+    }
+
+    public float ReturnStartTime()
+    {
+        //Debug.Log("Returning startTime - AudioDebug");
+        return startTime;
+    }
+
     private void OnEnable()
     {
         ResetSpines();

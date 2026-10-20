@@ -1038,11 +1038,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: -1317472434
+      Data2: 1101457481
+      Data3: -2036835701
+      Data4: -530268499
+    Path: event:/UI/Click 2
 --- !u!114 &99380207
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1091,6 +1091,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 99380206}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -1655,11 +1667,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: -1317472434
+      Data2: 1101457481
+      Data3: -2036835701
+      Data4: -530268499
+    Path: event:/UI/Click 2
 --- !u!114 &163641669
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1708,6 +1720,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 163641668}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -3915,6 +3939,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 342762589}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &342762583
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4092,11 +4128,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
 --- !u!1 &343366105
 GameObject:
   m_ObjectHideFlags: 0
@@ -6251,6 +6287,7 @@ MonoBehaviour:
   hasCompletedSpline: 0
   ActiveSpline: []
   playerMoveSpeed: 0.8
+  mapAudio: {fileID: 1160375971}
 --- !u!114 &521633750
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -10076,7 +10113,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1160375971}
         m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
-        m_MethodName: PlayTaxiSound
+        m_MethodName: CallPlayEnterTaxiSoundIEnum
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -13514,11 +13551,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
 --- !u!114 &1060378458
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13563,9 +13600,45 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: TravelPanel, Assembly-CSharp
-        m_MethodName: Travel
+      - m_Target: {fileID: 1160375971}
+        m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
+        m_MethodName: UnmuteGarageAudio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1060378457}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1160375971}
+        m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
+        m_MethodName: OutsideToShopAudioTransition
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1160375971}
+        m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
+        m_MethodName: PlayOpenDoorSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -14569,6 +14642,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MapAudio
   garageAmbienceEmitter: {fileID: 2093723886}
+  hasJustTravelledByTaxi: 0
+  shopPanel: {fileID: 0}
 --- !u!4 &1160375972
 Transform:
   m_ObjectHideFlags: 0
@@ -16517,11 +16592,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: -1317472434
+      Data2: 1101457481
+      Data3: -2036835701
+      Data4: -530268499
+    Path: event:/UI/Click 2
 --- !u!114 &1345966049
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -16581,6 +16656,18 @@ MonoBehaviour:
       - m_Target: {fileID: 1160375971}
         m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
         m_MethodName: UnmuteGarageAudio
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1345966048}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -17352,11 +17439,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: -1317472434
+      Data2: 1101457481
+      Data3: -2036835701
+      Data4: -530268499
+    Path: event:/UI/Click 2
 --- !u!114 &1461586232
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17416,6 +17503,30 @@ MonoBehaviour:
       - m_Target: {fileID: 521633750}
         m_TargetAssemblyTypeName: MapController, Assembly-CSharp
         m_MethodName: ShowExitMapButton
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1461586231}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 1160375971}
+        m_TargetAssemblyTypeName: MapAudio, Assembly-CSharp
+        m_MethodName: ShopToOutsideAudioTransition
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -24008,11 +24119,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: -1317472434
+      Data2: 1101457481
+      Data3: -2036835701
+      Data4: -530268499
+    Path: event:/UI/Click 2
 --- !u!114 &2011831825
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24061,6 +24172,18 @@ MonoBehaviour:
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine
         m_MethodName: SetActive
         m_Mode: 6
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2011831824}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
@@ -24762,11 +24885,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Event:
     Guid:
-      Data1: 1499201385
-      Data2: 1138229223
-      Data3: -667997514
-      Data4: 2050445109
-    Path: event:/UI/TV Button Push In
+      Data1: 1315056477
+      Data2: 1232490856
+      Data3: -2004657985
+      Data4: 1167525165
+    Path: event:/UI/Click 1
 --- !u!114 &2042843790
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -24826,6 +24949,18 @@ MonoBehaviour:
       - m_Target: {fileID: 56472125}
         m_TargetAssemblyTypeName: TravelPanel, Assembly-CSharp
         m_MethodName: TravelingToShop
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+      - m_Target: {fileID: 2042843789}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

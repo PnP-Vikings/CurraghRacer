@@ -2,7 +2,7 @@
 <objects serializationModel="Studio.02.02.00">
 	<object class="ParameterPreset" id="{0cdd7086-90e1-4da7-a995-601434c1074b}">
 		<property name="name">
-			<value>Mute Garage Ambience</value>
+			<value>Garage Ambience Volume</value>
 		</property>
 		<relationship name="folder">
 			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>

@@ -8,7 +8,7 @@ public class AudioManager : MonoBehaviour
 {
     public static AudioManager instance;
     private Bus masterBus;
-    // UI
+        // UI
     [System.NonSerialized] public EventInstance UIClick1; // Confirm selection 
     [System.NonSerialized] public EventInstance UIClick2; // Return
     [System.NonSerialized] public EventInstance UIClick3; // Hover
@@ -44,6 +44,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance tvButtonPushOut;
     [System.NonSerialized] public EventInstance tvButtonPushIn;
     [System.NonSerialized] public EventInstance showInviteAudio;
+    [System.NonSerialized] public EventInstance openDoor;
         // Bulletin Board
     [System.NonSerialized] public EventInstance sleepAudio;
     [System.NonSerialized] public EventInstance sleepOutsideAudio;
@@ -61,7 +62,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance rowingGameFail;
     [System.NonSerialized] public EventInstance rowingGameFailDialogue;
     [System.NonSerialized] public EventInstance rowingGameSuccessAfterFail;
-    // Jobs
+        // Jobs
 
     [System.NonSerialized] public EventInstance spawnPlates;
     [System.NonSerialized] public EventInstance movePlate;
@@ -134,8 +135,10 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance countrysideAmbience;
     
     [System.NonSerialized] public EventInstance walking;
-    [System.NonSerialized] public EventInstance taxi;
+    [System.NonSerialized] public EventInstance enterTaxi;
     [System.NonSerialized] public EventInstance coins;
+    [System.NonSerialized] public EventInstance payAndExitTaxi;
+    [System.NonSerialized] public EventInstance shopRoomTone;
 
     private Scene activeScene;
     void Awake()
@@ -208,6 +211,7 @@ public class AudioManager : MonoBehaviour
         tvButtonPushOut = RuntimeManager.CreateInstance("event:/UI/TV Button Push Out");
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
+        openDoor = RuntimeManager.CreateInstance("event:/Garage/Open Door");
 
                            // BULLETIN BOARD //
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
@@ -299,8 +303,10 @@ public class AudioManager : MonoBehaviour
 
                             // Map //
         walking = RuntimeManager.CreateInstance("event:/Map/Walking");
-        taxi = RuntimeManager.CreateInstance("event:/Map/Taxi");
+        enterTaxi = RuntimeManager.CreateInstance("event:/Map/Enter Taxi");
         coins = RuntimeManager.CreateInstance("event:/Map/Coins");
+        payAndExitTaxi = RuntimeManager.CreateInstance("event:/Map/Pay & Exit Taxi");
+        shopRoomTone = RuntimeManager.CreateInstance("event:/Map/Shop Room Tone");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
