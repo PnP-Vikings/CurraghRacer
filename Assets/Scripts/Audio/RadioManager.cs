@@ -348,7 +348,7 @@ public class RadioManager : MonoBehaviour
     {
         if (AudioManager.instance != null)
         {
-            Debug.Log("RadioManager->MuteRadio was called - AudioDebug");
+            //Debug.Log("RadioManager->MuteRadio was called - AudioDebug");
             AudioManager.instance.angelus.setParameterByName("Angelus Volume", 0f);
             AudioManager.instance.boglandRadioJingle.setParameterByName("Bogland Radio Jingle Volume", 0f);
             AudioManager.instance.storyUpdateIntro.setParameterByName("Story Update - Intro - Volume", 0f);
