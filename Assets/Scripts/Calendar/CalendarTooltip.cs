@@ -27,8 +27,12 @@ namespace Calendar
         public Vector2 offset = new Vector2(15, 10);
         public float maxTooltipWidth = 400f;
         public float minTooltipWidth = 250f;
+        public float maxTooltipHeight = 600f;
+        public float minTooltipHeight = 50f;
         public float paddingHorizontal = 12f;
         public float paddingVertical = 8f;
+        public float minDistanceFromBottom = 20f;
+        public float minDistanceFromTop = 20f;
 
         // Internal state
         private bool isHovering = false;
@@ -47,6 +51,16 @@ namespace Calendar
 
             if (tooltipPanel != null)
                 tooltipPanel.SetActive(false);
+
+            if (tooltipText != null)
+            {
+#if UNITY_6000_0_OR_NEWER
+                tooltipText.textWrappingMode = TextWrappingModes.NoWrap;
+#else
+                tooltipText.enableWordWrapping = false;
+#endif
+                tooltipText.overflowMode = TextOverflowModes.Overflow;
+            }
         }
 
         /// <summary>Request to show a tooltip for given content (HTML-style TMP rich text allowed).</summary>
@@ -88,9 +102,9 @@ namespace Calendar
             tooltipText.text = currentTooltipContent;
             tooltipText.color = textColor;
 #if UNITY_6000_0_OR_NEWER
-            tooltipText.textWrappingMode = TextWrappingModes.Normal;
+            tooltipText.textWrappingMode = TextWrappingModes.NoWrap;
 #else
-            tooltipText.enableWordWrapping = true;
+            tooltipText.enableWordWrapping = false;
 #endif
             tooltipText.overflowMode = TextOverflowModes.Overflow;
 
@@ -120,8 +134,9 @@ namespace Calendar
             Canvas.ForceUpdateCanvases();
 
             float contentHeight = tooltipText.preferredHeight;
-            float maxHeight = canvasSize.y * 0.9f;                       // allow up to 90% of canvas height
-            float totalHeight = Mathf.Clamp(contentHeight + paddingVertical * 2f, 50f, maxHeight);
+            float maxHeight = maxTooltipHeight > 0f ? Mathf.Min(maxTooltipHeight, canvasSize.y * 0.9f) : (canvasSize.y * 0.9f);
+            float minHeight = minTooltipHeight > 0f ? minTooltipHeight : 50f;
+            float totalHeight = Mathf.Clamp(contentHeight + paddingVertical * 2f, minHeight, maxHeight);
 
             // Apply final tooltip size
             Vector2 tooltipSize = new Vector2(optimalWidth, totalHeight);
@@ -170,33 +185,52 @@ namespace Calendar
         {
             Vector2 half = canvasSize * 0.5f;
             const float pad = 8f;
+            float bottomPad = Mathf.Max(pad, minDistanceFromBottom);
+            float topPad = Mathf.Max(pad, minDistanceFromTop);
 
             float rightRoom  =  half.x - mouseLocal.x;
             float leftRoom   =  half.x + mouseLocal.x;
             float topRoom    =  half.y - mouseLocal.y;
             float bottomRoom =  half.y + mouseLocal.y;
 
-            bool placeRight = rightRoom >= tooltipSize.x + offset.x + pad;
-            bool placeAbove = topRoom   >= tooltipSize.y + offset.y + pad;
+            bool placeRight;
+            if (rightRoom >= tooltipSize.x + offset.x + pad)
+                placeRight = true;
+            else if (leftRoom >= tooltipSize.x + offset.x + pad)
+                placeRight = false;
+            else
+                placeRight = rightRoom >= leftRoom;
+
+            bool placeAbove;
+            if (topRoom >= tooltipSize.y + offset.y + topPad)
+                placeAbove = true;
+            else if (bottomRoom >= tooltipSize.y + offset.y + bottomPad)
+                placeAbove = false;
+            else
+                placeAbove = topRoom >= bottomRoom;
 
             // pivot matches the corner "touching" the cursor
-            tooltipRect.pivot = new Vector2(placeRight ? 0f : 1f, placeAbove ? 1f : 0f);
+            tooltipRect.pivot = new Vector2(placeRight ? 0f : 1f, placeAbove ? 0f : 1f);
 
             Vector2 pos = mouseLocal;
             pos.x += placeRight ?  offset.x : -offset.x;
             pos.y += placeAbove ?  offset.y : -offset.y;
 
-            if (!placeRight) pos.x -= tooltipSize.x;
-            if (!placeAbove) pos.y -= tooltipSize.y;
-
             // clamp fully inside canvas
-            float minX = -half.x + pad;
-            float maxX =  half.x - tooltipSize.x - pad;
-            float minY = -half.y + pad;
-            float maxY =  half.y - tooltipSize.y - pad;
+            float minX = -half.x + pad + tooltipRect.pivot.x * tooltipSize.x;
+            float maxX =  half.x - pad - (1f - tooltipRect.pivot.x) * tooltipSize.x;
+            float minY = -half.y + bottomPad + tooltipRect.pivot.y * tooltipSize.y;
+            float maxY =  half.y - topPad - (1f - tooltipRect.pivot.y) * tooltipSize.y;
 
-            pos.x = Mathf.Clamp(pos.x, minX, maxX);
-            pos.y = Mathf.Clamp(pos.y, minY, maxY);
+            if (minX <= maxX)
+                pos.x = Mathf.Clamp(pos.x, minX, maxX);
+            else
+                pos.x = -half.x + pad + tooltipRect.pivot.x * (canvasSize.x - 2f * pad);
+
+            if (minY <= maxY)
+                pos.y = Mathf.Clamp(pos.y, minY, maxY);
+            else
+                pos.y = -half.y + bottomPad + tooltipRect.pivot.y * (canvasSize.y - bottomPad - topPad);
 
             return pos;
         }
@@ -255,9 +289,17 @@ namespace Calendar
                 {
                     Vector2 canvasSize = canvasRect.sizeDelta;
                     Vector2 size = tooltipRect.sizeDelta;
+                    Vector2 oldPivot = tooltipRect.pivot;
                     Vector2 target = CalculateSmartPosition(mouseLocal, size, canvasSize, tooltipRect);
 
-                    tooltipRect.localPosition = Vector2.Lerp(tooltipRect.localPosition, target, Time.deltaTime * 10f);
+                    if (tooltipRect.pivot != oldPivot)
+                    {
+                        tooltipRect.localPosition = target;
+                    }
+                    else
+                    {
+                        tooltipRect.localPosition = Vector2.Lerp(tooltipRect.localPosition, target, Time.deltaTime * 10f);
+                    }
                 }
             }
         }

@@ -276,6 +276,30 @@ public class PlayerManager : MonoBehaviour
         
         return null;
     }
+    
+    public bool ConsumeFridgeItem(int itemId)
+    {
+        print($"Item Id Search to get fridge item {itemId}");
+        if (playerItems[itemId] != null)
+        {
+            FridgeItem selectedItem = playerItems[itemId];
+            if (GetPlayerEnergy() >= 100)
+            {
+                if (playerStatsView != null)
+                {
+                    playerStatsView.DisplayInfo("You are already max energy");
+                }
+                return false;
+            }
+            ModifyPlayerEnergy(selectedItem.itemEnergyRegainAmount);
+            playerStatsView.DisplayInfo($"Consumed {selectedItem.itemName}");
+            playerItems.Remove(selectedItem);
+            onFoodListUpdated.Invoke();
+            return true;
+        }
+        
+        return false;
+    }
 
     public bool IsFridgeEmpty()
     {
