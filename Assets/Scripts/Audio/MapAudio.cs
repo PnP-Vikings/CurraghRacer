@@ -9,10 +9,11 @@ public class MapAudio : MonoBehaviour
     [SerializeField] StudioEventEmitter garageAmbienceEmitter;
     public bool hasJustTravelledByTaxi = false;
     private GameObject shopCanvas;
+    public GameObject shopPanel;
     private MapSpline mapSplineScript;
     private MapController mapControllerScript;
 
-    // Below are for return variables from MapSpline 
+    // Below are for returned variables from MapSpline 
     private float startTime;
     private float playerMoveSpeed;
     private float completion;
@@ -22,18 +23,29 @@ public class MapAudio : MonoBehaviour
     private void Update()
     {
         shopCanvas = GameObject.Find("ShopCanvas");
+        shopPanel = GameObject.Find("ShopPanel");
 
-        if (shopCanvas != null)
+        // Mutes radio if the map is open & the shoppanel is not, unmutes radio if shoppanel is open
+        if (shopCanvas != null && shopPanel == null)
         {
-            Debug.Log("shopCanvas found - AudioDebug");
+            //Debug.Log("shopCanvas found - AudioDebug");
             FindMapSplineScriptAndGetData();
             FindMapControllerScript();
+
+            if (RadioManager.instance != null)
+            {
+                RadioManager.instance.MuteRadio();
+            }
         }
         else
         {
-            //Debug.Log("shopCanvas not found - AudioDebug");
+            if (RadioManager.instance != null)
+            {
+                RadioManager.instance.UnMuteRadio();
+            }
         }
 
+        
     }
 
     void FindMapControllerScript()
@@ -41,7 +53,7 @@ public class MapAudio : MonoBehaviour
         mapControllerScript = shopCanvas.GetComponent<MapController>();
         if (mapControllerScript != null)
         {
-            Debug.Log("mapControllerScript found - AudioDebug");
+            //Debug.Log("mapControllerScript found - AudioDebug");
         }
     }
 
@@ -114,11 +126,7 @@ public class MapAudio : MonoBehaviour
         //    //RadioManager.instance.UnMuteRadio();
         //    garageAmbienceEmitter.SetParameter("Mute Garage Ambience", 1f, false);
         //}
-
-        if (AudioManager.instance != null)
-        {
-            AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-        }
+        
 
         if (LeagueInviteCardsUi.Instance != null)
         {
@@ -142,8 +150,40 @@ public class MapAudio : MonoBehaviour
                     //RadioManager.instance.UnMuteRadio();
                     Debug.Log("Player is Home, Unmuting Garage Ambience - AudioDebug");
                     garageAmbienceEmitter.SetParameter("Garage Ambience Volume", 1f, false);
+                    if (AudioManager.instance != null)
+                    {
+                        AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                    }
                 }
             }
+            else
+            {
+                Debug.Log("Player is not Home, Cannot unmute Garage Ambience - AudioDebug");
+            }
+        }
+    }
+
+    // Called by the Already Here Btn
+    public void OutsideToShopAudioTransition()
+    {
+        if (shopPanel != null)
+        {
+            if (AudioManager.instance != null)
+            {
+                //Debug.Log("Muting countryside Ambience because the player is at the shop - AudioDebug");
+                AudioManager.instance.shopRoomTone.start();
+                AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+                
+            }
+        }
+    }
+    // Called by the Exit Shop Btn
+    public void ShopToOutsideAudioTransition()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.countrysideAmbience.start();
+            AudioManager.instance.shopRoomTone.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         }
     }
 
@@ -183,6 +223,14 @@ public class MapAudio : MonoBehaviour
         if (AudioManager.instance != null)
         {
             AudioManager.instance.walking.start();
+        }
+    }
+
+    public void PlayOpenDoorSound()
+    {
+        if (AudioManager.instance != null)
+        {
+            AudioManager.instance.openDoor.start();
         }
     }
 }

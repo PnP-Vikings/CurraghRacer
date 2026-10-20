@@ -190,14 +190,19 @@ public class MapSpline : MonoBehaviour
             //Debug.Log("mapAudio & AudioManager found - AudioDebug");
             if (mapAudio.hasJustTravelledByTaxi == true)
             {
-                //Debug.Log("Player arrived at destination by taxi - AudioDebug");
+                //Debug.Log("Player arrived at destination by taxi, muting countryside ambience - AudioDebug");
                 mapAudio.hasJustTravelledByTaxi = false;
+                mapAudio.OutsideToShopAudioTransition();
             }
             else
             {
+                //Debug.Log("Player arrived at destination by foot, muting countryside ambience, calling openDoor if destination is shop - AudioDebug");
                 AudioManager.instance.walking.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
-                AudioManager.instance.openDoor.start();
-                //Debug.Log("Player arrived at destination by foot - AudioDebug");
+                mapAudio.OutsideToShopAudioTransition();
+                if (mapAudio.shopPanel != null)
+                {
+                    AudioManager.instance.openDoor.start();
+                }
             }
         }
     }
