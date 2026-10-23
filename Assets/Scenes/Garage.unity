@@ -11027,6 +11027,7 @@ MonoBehaviour:
   paddingVertical: 8
   spacing: 4
   minDistanceFromBottom: 20
+  minDistanceFromTop: 20
 --- !u!1 &828798286
 GameObject:
   m_ObjectHideFlags: 0
@@ -15769,6 +15770,18 @@ MonoBehaviour:
           m_FloatArgument: 0
           m_StringArgument: 
           m_BoolArgument: 1
+        m_CallState: 2
+      - m_Target: {fileID: 2108673247}
+        m_TargetAssemblyTypeName: Fridge, Assembly-CSharp
+        m_MethodName: HidePopups
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
         m_CallState: 2
       - m_Target: {fileID: 1259863722}
         m_TargetAssemblyTypeName: UnityEngine.GameObject, UnityEngine

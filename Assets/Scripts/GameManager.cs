@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     public UnityEvent OnGameStarted;
     [SerializeField] private float totalPlayTime = 0; // Total playtime in minutes
     [HideInInspector] public bool SleepAudioChangesCoroutineIsActive = false;
+   
     [Header("Tutorial")]
     [SerializeField] private List<TutorialTask> defaultTutorialTasks = new List<TutorialTask>();
     [SerializeField] private List<TutorialTask> tutorialTasks = new List<TutorialTask>();
@@ -35,6 +36,11 @@ public class GameManager : MonoBehaviour
     public UnityEvent onTutorialModeCompleted;
     public UnityEvent onSleep;
     [SerializeField] TutorialAudio TutorialAudio;
+    
+    [Header("Store Variables")]
+    [SerializeField] private bool hasSpawnedItemsToday = false;
+    [SerializeField] private List<SavedStoreItem> spawnedItemsForToday = new List<SavedStoreItem>();
+    
 
     [Header("Localization")]
     LocalizedString localizedAutoSaveName = new LocalizedString { TableReference = "GameManager", TableEntryReference = "GameManager.AutoSave" };
@@ -71,6 +77,16 @@ public class GameManager : MonoBehaviour
         localizedAmountOfEnergyRegained.Arguments = new object[] { 0 }; // Placeholder for energy regained
         localizedYouHaveWorked.Arguments = new object[] { 0 }; // Placeholder for rewarded coins
       
+    }
+
+
+    private void OnEnable()
+    {
+        if (TimeManager.Instance != null)
+        {
+            Debug.Log("Tried setting listener for gamemanager");
+            TimeManager.Instance.onNewDay.AddListener(ResetHasSpawnedStoreItemsToday);
+        }
     }
 
 
@@ -679,7 +695,51 @@ public class GameManager : MonoBehaviour
         }
         Debug.LogWarning($"Tutorial task of type {taskToMark.taskType} not found.");
     }
+
+    public void SetSpawnedItemsToday(List<ShopItem> itemsSpawned)
+    {
+        if (spawnedItemsForToday == null)
+        {
+            spawnedItemsForToday = new List<SavedStoreItem>();
+        }
+        spawnedItemsForToday.Clear();
+        foreach (ShopItem spawnedItem in itemsSpawned)
+        {
+            SavedStoreItem newStoreItem = new SavedStoreItem();
+            newStoreItem.InitializeShopItem(spawnedItem);
+            spawnedItemsForToday.Add(newStoreItem);
+        }
+        hasSpawnedItemsToday = true;
+    }
+
+    public void SetSpawnedItemsToday(List<SavedStoreItem> savedItems)
+    {
+        spawnedItemsForToday = savedItems != null ? savedItems : new List<SavedStoreItem>();
+    }
+
+    public void SetHasSpawnedShopItemsToday(bool hasSpawned)
+    {
+        hasSpawnedItemsToday = hasSpawned;
+    }
+
+    public void ResetHasSpawnedStoreItemsToday()
+    {
+        hasSpawnedItemsToday = false;
+        if (spawnedItemsForToday != null)
+        {
+            spawnedItemsForToday.Clear();
+        }
+    }
     
+    public List<SavedStoreItem> GetSpawnedItemsToday()
+    {
+        return spawnedItemsForToday;
+    }
+    
+    public bool GetHasSpawnedShopItemsToday()
+    {
+        return hasSpawnedItemsToday;
+    }
     public void ResetForNewGame()
     {
        SetHasBeenShownIntro(false); // Reset intro flag for new game

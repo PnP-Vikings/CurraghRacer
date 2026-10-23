@@ -18,14 +18,12 @@ public class ShopItem : MonoBehaviour
   [SerializeField] private StoreBuyPanel storeBuyPanel;
   [SerializeField] private Button shopItemButton;
   [SerializeField] private bool hasBeenPurchased = false;
+  [SerializeField] private Transform spawnedTransformInStore;
   
-  public void Start()
-  {
-    itemEventTrigger = GetComponent<EventTrigger>();
-    SetupItemEventTrigger();
-  }
+  
   public void OnEnable()
   {
+    itemEventTrigger = GetComponent<EventTrigger>();
     if (hasBeenPurchased)
     {
       this.gameObject.SetActive(false);
@@ -69,12 +67,48 @@ public class ShopItem : MonoBehaviour
     itemData = injectedItemData;
     spawnedItemId = injectedSpawnedItemId;
     
-    /*if(storeBuyPanel != null && shopItemButton != null)
-    {
-      shopItemButton.onClick.AddListener(OnShopItemButtonClicked);
-    }*/
   }
   
+  public void InitializeShopItem(SavedStoreItem injectedSavedItem,int injectedSpawnedItemId)
+  {
+    itemData = injectedSavedItem.GetShopItemData();
+    if (itemData != null)
+    {
+      itemNameText = itemData.itemName;
+      itemIconImage.sprite = itemData.itemIcon;
+      itemPrice = itemData.itemPrice;
+      itemEnergyRegainAmount = itemData.itemEnergyRegainAmount;
+      amountOfDaysBeforeExpiry = itemData.itemDaysBeforeExpiry;
+      itemDescriptionText = itemData.itemDescription;
+      spawnedItemId = injectedSpawnedItemId;
+      hasBeenPurchased = injectedSavedItem.GetHasBeenPurchased();
+    }
+  }
+  public void SetTransform(Transform injectedTransform)
+  {
+    spawnedTransformInStore = injectedTransform;
+  }
+
+  public Transform GetTransform()
+  {
+    return transform;
+  }
+
+  public bool GetHasBeenPurchased()
+  {
+    return hasBeenPurchased;
+  }
+  
+  public Vector3 GetSavedTransformPosition()
+  {
+    return spawnedTransformInStore.position;
+  }
+  
+  public Quaternion GetSavedRotation()
+  {
+    return spawnedTransformInStore.rotation;
+  }
+ 
   public ShopItemData GetItemData()
   {
     return itemData;

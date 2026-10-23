@@ -157,6 +157,8 @@ public class TimeManager : MonoBehaviour
         {
             onNewDay.AddListener(BillsController.Instance.HandleNewDay);
         }
+
+     
     }
     
     public void RecheckIfRaceDay()

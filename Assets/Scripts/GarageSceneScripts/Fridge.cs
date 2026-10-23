@@ -25,6 +25,11 @@ public class Fridge : MonoBehaviour
         {
             PlayerManager.Instance.onFoodListUpdated.RemoveListener(UpdateFoodConsumables);
         }
+
+        if (TooltipManager.Instance != null)
+        {
+            TooltipManager.Instance.HideBothFridgePopups();
+        }
     }
 
 
@@ -70,6 +75,11 @@ public class Fridge : MonoBehaviour
                 Destroy(spawnedFood[i]);
             }
         }
+    }
+
+    public void HidePopups()
+    {
+        TooltipManager.Instance.HideBothFridgePopups();
     }
 
 }
