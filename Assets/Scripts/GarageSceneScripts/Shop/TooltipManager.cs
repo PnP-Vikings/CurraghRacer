@@ -57,4 +57,12 @@ public class TooltipManager : MonoBehaviour
     {
         fridgeToolTip.gameObject.SetActive(false);
     }
+
+    public void HideBothFridgePopups()
+    {
+        fridgeToolTip.gameObject.SetActive(false);
+        consumePanel.gameObject.SetActive(false);
+        fridgeToolTip.ResetFridgePopups();
+        consumePanel.ResetFridgePopups();
+    }
 }

@@ -421,16 +421,14 @@ public class MasterTooltip : MonoBehaviour
         return pos;
     }
 
-    
-    /*private void BuySelectedItem()
+    public void HideFoodPanels()
     {
-        if (storeManager != null)
+        if (this.isFridgeTooltip || this.isConsumablePopup)
         {
-            storeManager.BuyItem(GetSelectedShopItemId());
-            HideBuyPanel();
-            
+            this.gameObject.SetActive(false);
         }
-    }*/
+    }
+
 
     private void ConsumeSelectedItem()
     {
@@ -467,4 +465,11 @@ public class MasterTooltip : MonoBehaviour
     {
         return currentItemId;
     }
+
+    public void ResetFridgePopups()
+    {
+        currentFridgeItemData=null;
+        currentItemId=-1;
+    }
+    
 }

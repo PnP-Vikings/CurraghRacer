@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using DG.Tweening;
 using League;
 using UnityEngine;
@@ -33,7 +34,7 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private int currencyCostForTraining = 50;
     
     [Header("Shop")]
-    [SerializeField] private List<FridgeItem> playerItems = new List<FridgeItem>();
+    [SerializeField] private List<FridgeItem> playerFridgeItems = new List<FridgeItem>();
     [SerializeField] private int maxSlotsInFridge = 2;
     [SerializeField] private int fridgeLevel = 1;
     
@@ -56,9 +57,12 @@ public class PlayerManager : MonoBehaviour
         {
             Destroy(gameObject);
         }
-        
-        if(TimeManager.Instance != null)
+
+        if (TimeManager.Instance != null)
+        {
             TimeManager.Instance.onNewDay.AddListener(CheckForMaxDebt);
+            TimeManager.Instance.onNewDay.AddListener(ProcessExpiryOfFood);
+        }
     }
     void Start()
     {
@@ -208,7 +212,7 @@ public class PlayerManager : MonoBehaviour
         else if(CanAffordPurchase(cost) && purchaseType == PurchaseType.Shop)
         {
             Debug.Log($"Purchased {purchaseType}.");
-            if(playerItems.Count < maxSlotsInFridge)
+            if(playerFridgeItems.Count < maxSlotsInFridge)
             {
                 ModifyPlayerCoins(-cost);
                 return true;
@@ -251,12 +255,12 @@ public class PlayerManager : MonoBehaviour
 
     public bool AddItemToFridge(ShopItemData shopItem)
     {
-        if (playerItems.Count < maxSlotsInFridge)
+        if (playerFridgeItems.Count < maxSlotsInFridge)
         {
             FridgeItem fridgeItem = new FridgeItem();
-            fridgeItem.InitializeItem(playerItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry,shopItem.itemType,shopItem.itemPrefab);
+            fridgeItem.InitializeItem(playerFridgeItems.Count,1,shopItem.itemName,shopItem.itemDescription,shopItem.itemEnergyRegainAmount,shopItem.itemDaysBeforeExpiry,shopItem.itemType,shopItem.itemPrefab);
             
-            playerItems.Add(fridgeItem);
+            playerFridgeItems.Add(fridgeItem);
             onFoodListUpdated.Invoke();
             return true;
         }
@@ -269,9 +273,9 @@ public class PlayerManager : MonoBehaviour
     public FridgeItem GetItemFromFridge(int itemId)
     {
         print($"Item Id Search to get fridge item {itemId}");
-        if (playerItems[itemId] != null)
+        if (playerFridgeItems[itemId] != null)
         {
-            return playerItems[itemId];
+            return playerFridgeItems[itemId];
         }
         
         return null;
@@ -280,9 +284,9 @@ public class PlayerManager : MonoBehaviour
     public bool ConsumeFridgeItem(int itemId)
     {
         print($"Item Id Search to get fridge item {itemId}");
-        if (playerItems[itemId] != null)
+        if (playerFridgeItems[itemId] != null)
         {
-            FridgeItem selectedItem = playerItems[itemId];
+            FridgeItem selectedItem = playerFridgeItems[itemId];
             if (GetPlayerEnergy() >= 100)
             {
                 if (playerStatsView != null)
@@ -293,7 +297,7 @@ public class PlayerManager : MonoBehaviour
             }
             ModifyPlayerEnergy(selectedItem.itemEnergyRegainAmount);
             playerStatsView.DisplayInfo($"Consumed {selectedItem.itemName}");
-            playerItems.Remove(selectedItem);
+            playerFridgeItems.Remove(selectedItem);
             onFoodListUpdated.Invoke();
             return true;
         }
@@ -303,7 +307,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool IsFridgeEmpty()
     {
-        if (playerItems.Count == 0)
+        if (playerFridgeItems.Count == 0)
         {
             return true;
         }
@@ -315,7 +319,7 @@ public class PlayerManager : MonoBehaviour
 
     public int GetAmountOfItemsInFridge()
     {
-        return playerItems.Count;
+        return playerFridgeItems.Count;
     }
     public int GetFridgeMaxSlots()
     {
@@ -324,9 +328,33 @@ public class PlayerManager : MonoBehaviour
     
     public bool IsFridgeFull()
     {
-        return playerItems.Count >= maxSlotsInFridge;
+        return playerFridgeItems.Count >= maxSlotsInFridge;
     }
 
+    public void ProcessExpiryOfFood()
+    {
+        if (playerFridgeItems.Count == 0)
+        {
+            return;
+        }
+
+        List<FridgeItem> tempFridgeItemsToBeRemoved = new List<FridgeItem>();
+        foreach (FridgeItem fridgeItem in playerFridgeItems)
+        {
+            fridgeItem.amountOfDaysBeforeExpiry -= 1;
+            if (fridgeItem.amountOfDaysBeforeExpiry < 0)
+            {
+                tempFridgeItemsToBeRemoved.Add(fridgeItem);
+            }
+        }
+        
+        foreach (FridgeItem fridgeItem in  tempFridgeItemsToBeRemoved)
+        {
+            playerFridgeItems.Remove(fridgeItem);
+        }
+        onFoodListUpdated.Invoke();
+    }
+    
     public void ReduceTeamMemberStat()
     {
         int numberOfMembersToDecrease = 1;

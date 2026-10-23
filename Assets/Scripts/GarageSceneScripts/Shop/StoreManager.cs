@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
 public class StoreManager : MonoBehaviour
@@ -29,7 +30,16 @@ public class StoreManager : MonoBehaviour
     {
         if(spawnedItemsParent != null)
             spawnedItemsParent.SetStoreManager(this);
-        SpawnItemsInStore();
+        if (GameManager.Instance != null)
+        {
+            hasSpawnedItems = GameManager.Instance.GetHasSpawnedShopItemsToday();
+        }
+        if(!hasSpawnedItems)
+            SpawnItemsInStore();
+        else
+        {
+            RespawnItemsAlreadyGenerated();
+        }
     }
     public void SpawnItemsInStore()
     {
@@ -76,10 +86,51 @@ public class StoreManager : MonoBehaviour
             ShopItem spawnedItem=Instantiate(itemPrefab, spawnLocation.position, spawnLocation.rotation);
             spawnedItem.transform.SetParent(spawnedItemsParent.transform);
             spawnedItem.InitializeShopItem(itemData,i);
+            spawnedItem.SetupItemEventTrigger();
             spawnedItem.SetStoreManager(this);
             if(storeBuyPanel != null)
                 spawnedItem.SetShopBuyPanel(storeBuyPanel);
+            spawnedItem.SetTransform(spawnedItemsParent.transform);
             spawnedItems.Add(spawnedItem);
+        }
+
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetSpawnedItemsToday(spawnedItems);
+        }
+    }
+
+    public void RespawnItemsAlreadyGenerated()
+    {
+        if (GameManager.Instance != null)
+        {
+            for(int i = 0; i < spawnedItems.Count; i++)
+            {
+                Destroy(spawnedItems[i].gameObject);
+            }
+            List<SavedStoreItem> savedItems=GameManager.Instance.GetSpawnedItemsToday();
+            List<ShopItem> tempSpawnItems = new List<ShopItem>(); 
+            for (int i = 0; i < savedItems.Count; i++)
+            {
+                ShopItem spawnedItem=Instantiate(itemPrefab, savedItems[i].GetSavedTransformPosition(), savedItems[i].GetSavedRotation());
+                spawnedItem.transform.SetParent(spawnedItemsParent.transform);
+                spawnedItem.InitializeShopItem(savedItems[i],i);
+                spawnedItem.SetStoreManager(this);
+                spawnedItem.SetTransform(spawnedItemsParent.transform);
+                spawnedItem.SetupItemEventTrigger();
+                spawnedItem.SetStoreManager(this);
+                if(storeBuyPanel != null)
+                    spawnedItem.SetShopBuyPanel(storeBuyPanel);
+                tempSpawnItems.Add(spawnedItem);
+            }
+            
+            
+            spawnedItems = tempSpawnItems;
+            
+            if (GameManager.Instance != null)
+            {
+                GameManager.Instance.SetSpawnedItemsToday(spawnedItems);
+            }
         }
     }
     
@@ -124,6 +175,10 @@ public class StoreManager : MonoBehaviour
                 }
             }
         }
+        if (GameManager.Instance != null)
+        {
+            GameManager.Instance.SetSpawnedItemsToday(spawnedItems);
+        }
     }
     
     
@@ -136,5 +191,48 @@ public class StoreManager : MonoBehaviour
     public StoreTooltip GetStoreTooltip()
     {
         return storeTooltip;
+    }
+}
+
+[System.Serializable]
+public class SavedStoreItem
+{
+    
+    [SerializeField] private ShopItemData itemData;
+    [SerializeField] private bool hasBeenPurchased = false;
+    [SerializeField] private Vector3 spawnedTransformInStorePosition;
+    [SerializeField] private Quaternion spawnedTransformInStoreRotation;
+
+    public void InitializeShopItem(ShopItem injectedStoreItem)
+    {
+        itemData = injectedStoreItem.GetItemData();
+        if (itemData != null)
+        {
+            hasBeenPurchased = injectedStoreItem.GetHasBeenPurchased();
+            spawnedTransformInStorePosition = injectedStoreItem.GetTransform().position;
+            spawnedTransformInStoreRotation = injectedStoreItem.GetTransform().rotation;
+        }
+    }
+    
+    
+    public ShopItemData GetShopItemData()
+    {
+        return itemData;
+    }
+
+
+    public Vector3 GetSavedTransformPosition()
+    {
+        return spawnedTransformInStorePosition;
+    }
+  
+    public bool GetHasBeenPurchased()
+    {
+        return hasBeenPurchased;
+    }
+
+    public Quaternion GetSavedRotation()
+    {
+        return spawnedTransformInStoreRotation;
     }
 }
