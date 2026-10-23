@@ -63,6 +63,8 @@ public class PlayerSaveData
     public float coins = 50f;
     public TeamMemberSaveData[] teamMembers;
     public string currentTeamName;
+    public List<FridgeItem> playerFridgeItems = new List<FridgeItem>();
+    public int fridgeLevel = 1;
 }
 
 [System.Serializable]
@@ -408,9 +410,15 @@ public class GameProgressData
     public bool isTutorialCompleted = false;
     public List<TutorialTask> tutorialTasks = new List<TutorialTask>();
     
+    // Store Variables
+    public bool hasSpawnedItemsToday = false;
+    public List<SavedStoreItem> spawnedItemsForToday = new List<SavedStoreItem>();
+    
     public GameProgressData()
     {
         unlockedFeatures = new Dictionary<string, bool>();
+        tutorialTasks = new List<TutorialTask>();
+        spawnedItemsForToday = new List<SavedStoreItem>();
     }
 }
 
@@ -804,6 +812,10 @@ public class SaveSystem : MonoBehaviour
         {
             saveData.playerData.energy = PlayerManager.Instance.energy;
             saveData.playerData.coins = PlayerManager.Instance.coins;
+            saveData.playerData.fridgeLevel = PlayerManager.Instance.GetFridgeLevel();
+            saveData.playerData.playerFridgeItems = PlayerManager.Instance.GetFridgeItems() != null
+                ? new List<FridgeItem>(PlayerManager.Instance.GetFridgeItems())
+                : new List<FridgeItem>();
 
             if (PlayerManager.Instance.team != null)
             {
@@ -932,6 +944,10 @@ public class SaveSystem : MonoBehaviour
             saveData.gameProgress.showTutorial = GameManager.Instance.IsTutorialModeActive();
             saveData.gameProgress.isTutorialCompleted = GameManager.Instance.IsTutorialModeCompleted();
             saveData.gameProgress.tutorialTasks = GameManager.Instance.GetTutorialTasks();
+            saveData.gameProgress.hasSpawnedItemsToday = GameManager.Instance.GetHasSpawnedShopItemsToday();
+            saveData.gameProgress.spawnedItemsForToday = GameManager.Instance.GetSpawnedItemsToday() != null
+                ? new List<SavedStoreItem>(GameManager.Instance.GetSpawnedItemsToday())
+                : new List<SavedStoreItem>();
             Debug.Log($"Show Tutorial was saved as in create save data {saveData.gameProgress.showTutorial}");
         }
 
@@ -1004,6 +1020,10 @@ public class SaveSystem : MonoBehaviour
         {
             PlayerManager.Instance.energy = saveData.playerData.energy;
             PlayerManager.Instance.coins = saveData.playerData.coins;
+            PlayerManager.Instance.SetFridgeLevel(saveData.playerData.fridgeLevel);
+            PlayerManager.Instance.SetFridgeItems(saveData.playerData.playerFridgeItems != null
+                ? saveData.playerData.playerFridgeItems
+                : new List<FridgeItem>());
 
             // Restore team members
             if (saveData.playerData.teamMembers != null && PlayerManager.Instance.team != null)
@@ -1069,6 +1089,10 @@ public class SaveSystem : MonoBehaviour
                 GameManager.Instance.ActivateTutorialMode(saveData.gameProgress.showTutorial);
                 GameManager.Instance.SetTutorialModeCompleted(saveData.gameProgress.isTutorialCompleted);
                 GameManager.Instance.SetTutorialTasks(saveData.gameProgress.tutorialTasks);
+                GameManager.Instance.SetHasSpawnedShopItemsToday(saveData.gameProgress.hasSpawnedItemsToday);
+                GameManager.Instance.SetSpawnedItemsToday(saveData.gameProgress.spawnedItemsForToday != null
+                    ? saveData.gameProgress.spawnedItemsForToday
+                    : new List<SavedStoreItem>());
                 
                 Debug.Log($"Show Tutorial was Loaded as in apply save data {saveData.gameProgress.showTutorial}");
             }
@@ -1901,7 +1925,8 @@ public class SaveSystem : MonoBehaviour
         {
             PlayerManager.Instance.energy = 100f;
             PlayerManager.Instance.coins = 50f;
-            
+            PlayerManager.Instance.SetFridgeLevel(1);
+            PlayerManager.Instance.SetFridgeItems(new List<FridgeItem>());
         }
         
         // Reset GameManager to initial state
@@ -1909,6 +1934,8 @@ public class SaveSystem : MonoBehaviour
         {
             GameManager.Instance.SetGameStarted(true);
             GameManager.Instance.SetPlayerBusy(false);
+            GameManager.Instance.ResetHasSpawnedStoreItemsToday();
+            GameManager.Instance.SetSpawnedItemsToday(new List<SavedStoreItem>());
         }
         
         // Reset RaceManager to default settings
@@ -2049,6 +2076,8 @@ public class SaveSystem : MonoBehaviour
         // Set fresh player data
         saveData.playerData.energy = 100f;
         saveData.playerData.coins = 50f;
+        saveData.playerData.fridgeLevel = 1;
+        saveData.playerData.playerFridgeItems = new List<FridgeItem>();
         
         // Capture current team member data from PlayerManager (preserves attitudes and other ScriptableObject settings)
         if (PlayerManager.Instance != null && PlayerManager.Instance.team != null && PlayerManager.Instance.team.Count > 0)
@@ -2071,6 +2100,8 @@ public class SaveSystem : MonoBehaviour
         saveData.gameProgress.playerIsBusy = false;
         saveData.gameProgress.playerHasBeenShownIntro = false;
         saveData.gameProgress.playerHasBeenShownWarningAboutDebt = false;
+        saveData.gameProgress.hasSpawnedItemsToday = false;
+        saveData.gameProgress.spawnedItemsForToday = new List<SavedStoreItem>();
         if(GameManager.Instance != null)
         {
             saveData.gameProgress.showTutorial = GameManager.Instance.IsTutorialModeActive();

@@ -189,18 +189,15 @@
                             "archived": false,
                             "checklistItems": [
                                 "Add playerFridgeItem list",
-                                "Add hasItemGeneratedToday",
-                                "Add spawnedItems from storemanager",
-                                "add hasSpawnedItems"
+                                "Add hasSpawnedItemsToday",
+                                "Add spawnedItemsForToday"
                             ],
                             "checklistStates": [
-                                false,
                                 false,
                                 false,
                                 false
                             ],
                             "checklistLinkedCardIds": [
-                                "",
                                 "",
                                 "",
                                 ""

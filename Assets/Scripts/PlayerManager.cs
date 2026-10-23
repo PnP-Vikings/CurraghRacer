@@ -354,6 +354,27 @@ public class PlayerManager : MonoBehaviour
         }
         onFoodListUpdated.Invoke();
     }
+
+    public List<FridgeItem> GetFridgeItems()
+    {
+        return playerFridgeItems;
+    }
+
+    public void SetFridgeItems(List<FridgeItem> items)
+    {
+        playerFridgeItems = items != null ? items : new List<FridgeItem>();
+        onFoodListUpdated?.Invoke();
+    }
+
+    public int GetFridgeLevel()
+    {
+        return fridgeLevel;
+    }
+
+    public void SetFridgeLevel(int level)
+    {
+        fridgeLevel = level;
+    }
     
     public void ReduceTeamMemberStat()
     {

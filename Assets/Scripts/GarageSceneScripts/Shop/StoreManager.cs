@@ -112,6 +112,8 @@ public class StoreManager : MonoBehaviour
             List<ShopItem> tempSpawnItems = new List<ShopItem>(); 
             for (int i = 0; i < savedItems.Count; i++)
             {
+                if(savedItems[i].GetHasBeenPurchased())
+                    continue;
                 ShopItem spawnedItem=Instantiate(itemPrefab, savedItems[i].GetSavedTransformPosition(), savedItems[i].GetSavedRotation());
                 spawnedItem.transform.SetParent(spawnedItemsParent.transform);
                 spawnedItem.InitializeShopItem(savedItems[i],i);
@@ -121,6 +123,7 @@ public class StoreManager : MonoBehaviour
                 spawnedItem.SetStoreManager(this);
                 if(storeBuyPanel != null)
                     spawnedItem.SetShopBuyPanel(storeBuyPanel);
+               
                 tempSpawnItems.Add(spawnedItem);
             }
             

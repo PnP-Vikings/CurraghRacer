@@ -39,7 +39,7 @@ public class GameManager : MonoBehaviour
     
     [Header("Store Variables")]
     [SerializeField] private bool hasSpawnedItemsToday = false;
-    [SerializeField] private List<SavedStoreItem> spawnedItemsForToday;
+    [SerializeField] private List<SavedStoreItem> spawnedItemsForToday = new List<SavedStoreItem>();
     
 
     [Header("Localization")]
@@ -698,6 +698,10 @@ public class GameManager : MonoBehaviour
 
     public void SetSpawnedItemsToday(List<ShopItem> itemsSpawned)
     {
+        if (spawnedItemsForToday == null)
+        {
+            spawnedItemsForToday = new List<SavedStoreItem>();
+        }
         spawnedItemsForToday.Clear();
         foreach (ShopItem spawnedItem in itemsSpawned)
         {
@@ -708,10 +712,23 @@ public class GameManager : MonoBehaviour
         hasSpawnedItemsToday = true;
     }
 
+    public void SetSpawnedItemsToday(List<SavedStoreItem> savedItems)
+    {
+        spawnedItemsForToday = savedItems != null ? savedItems : new List<SavedStoreItem>();
+    }
+
+    public void SetHasSpawnedShopItemsToday(bool hasSpawned)
+    {
+        hasSpawnedItemsToday = hasSpawned;
+    }
 
     public void ResetHasSpawnedStoreItemsToday()
     {
         hasSpawnedItemsToday = false;
+        if (spawnedItemsForToday != null)
+        {
+            spawnedItemsForToday.Clear();
+        }
     }
     
     public List<SavedStoreItem> GetSpawnedItemsToday()
