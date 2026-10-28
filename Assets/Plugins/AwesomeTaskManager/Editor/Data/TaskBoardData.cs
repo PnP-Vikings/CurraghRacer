@@ -3617,18 +3617,31 @@ namespace AwesomeTaskManager.Data
 
         public int GetCategoryColor(string category)
         {
-            if (string.IsNullOrEmpty(category)) return 0;
+            if (string.IsNullOrWhiteSpace(category) || categoryColors == null) return 0;
+            category = category.Trim();
             foreach (var e in categoryColors)
-                if (e.category == category) return e.colorIndex;
+            {
+                if (e != null && string.Equals(e.category?.Trim(), category, StringComparison.OrdinalIgnoreCase))
+                    return e.colorIndex;
+            }
             return 0;
         }
 
         public void SetCategoryColor(string category, int colorIndex)
         {
+            if (string.IsNullOrWhiteSpace(category)) return;
+            category = category.Trim();
+            categories ??= new List<string>();
+            if (!categories.Any(c => string.Equals(c, category, StringComparison.OrdinalIgnoreCase)))
+            {
+                categories.Add(category);
+            }
+            categoryColors ??= new List<CategoryColorEntry>();
             for (int i = 0; i < categoryColors.Count; i++)
             {
-                if (categoryColors[i].category == category)
+                if (categoryColors[i] != null && string.Equals(categoryColors[i].category?.Trim(), category, StringComparison.OrdinalIgnoreCase))
                 {
+                    categoryColors[i].category = category;
                     categoryColors[i].colorIndex = colorIndex;
                     return;
                 }
@@ -3644,7 +3657,7 @@ namespace AwesomeTaskManager.Data
             if (oldName == newName) return true;
             if (categories.Contains(newName)) return false;
 
-            int idx = categories.IndexOf(oldName);
+            int idx = categories.FindIndex(c => string.Equals(c, oldName, StringComparison.OrdinalIgnoreCase));
             if (idx < 0) return false;
             categories[idx] = newName;
 
@@ -3652,14 +3665,17 @@ namespace AwesomeTaskManager.Data
             foreach (var column in board.columns)
             foreach (var card in column.cards)
             {
-                if (card.category == oldName)
+                if (string.Equals(card.category, oldName, StringComparison.OrdinalIgnoreCase))
                     card.category = newName;
             }
 
-            for (int i = 0; i < categoryColors.Count; i++)
+            if (categoryColors != null)
             {
-                if (categoryColors[i].category == oldName)
-                    categoryColors[i].category = newName;
+                for (int i = 0; i < categoryColors.Count; i++)
+                {
+                    if (categoryColors[i] != null && string.Equals(categoryColors[i].category, oldName, StringComparison.OrdinalIgnoreCase))
+                        categoryColors[i].category = newName;
+                }
             }
 
             return true;
@@ -3669,15 +3685,47 @@ namespace AwesomeTaskManager.Data
         {
             if (string.IsNullOrWhiteSpace(category)) return;
             category = category.Trim();
-            categories.Remove(category);
-            categoryColors.RemoveAll(x => x.category == category);
-
-            foreach (var board in boards)
-            foreach (var column in board.columns)
-            foreach (var card in column.cards)
+            if (categories != null)
             {
-                if (card.category == category)
-                    card.category = string.Empty;
+                categories.RemoveAll(x => string.Equals(x, category, StringComparison.OrdinalIgnoreCase) || x == category);
+            }
+            if (categoryColors != null)
+            {
+                categoryColors.RemoveAll(x => string.Equals(x.category, category, StringComparison.OrdinalIgnoreCase) || x.category == category);
+            }
+
+            if (boards != null)
+            {
+                foreach (var board in boards)
+                {
+                    if (board?.columns == null) continue;
+                    foreach (var column in board.columns)
+                    {
+                        if (column?.cards == null) continue;
+                        foreach (var card in column.cards)
+                        {
+                            if (card != null && (string.Equals(card.category, category, StringComparison.OrdinalIgnoreCase) || card.category == category))
+                                card.category = string.Empty;
+                        }
+                    }
+                }
+            }
+
+            if (templates != null)
+            {
+                foreach (var board in templates)
+                {
+                    if (board?.columns == null) continue;
+                    foreach (var column in board.columns)
+                    {
+                        if (column?.cards == null) continue;
+                        foreach (var card in column.cards)
+                        {
+                            if (card != null && (string.Equals(card.category, category, StringComparison.OrdinalIgnoreCase) || card.category == category))
+                                card.category = string.Empty;
+                        }
+                    }
+                }
             }
         }
 
@@ -3774,11 +3822,33 @@ namespace AwesomeTaskManager.Data
                 boards.Add(new TaskBoard("My First Board"));
             }
 
-            categories = categories
-                .Where(x => !string.IsNullOrWhiteSpace(x))
-                .Select(x => x.Trim())
-                .Distinct()
-                .ToList();
+            categories ??= new List<string>();
+            var canonicalCategories = new List<string>();
+            foreach (var cat in categories)
+            {
+                if (string.IsNullOrWhiteSpace(cat)) continue;
+                string trimmed = cat.Trim();
+                if (!canonicalCategories.Any(c => string.Equals(c, trimmed, StringComparison.OrdinalIgnoreCase)))
+                {
+                    canonicalCategories.Add(trimmed);
+                }
+            }
+            categories = canonicalCategories;
+
+            if (categoryColors != null)
+            {
+                foreach (var cc in categoryColors)
+                {
+                    if (cc != null && !string.IsNullOrWhiteSpace(cc.category))
+                    {
+                        string trimmed = cc.category.Trim();
+                        if (!categories.Any(c => string.Equals(c, trimmed, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            categories.Add(trimmed);
+                        }
+                    }
+                }
+            }
 
             foreach (var board in boards)
             {
@@ -3792,6 +3862,20 @@ namespace AwesomeTaskManager.Data
                     column.cards.RemoveAll(IsStrayBlankCard);
                     foreach (var card in column.cards)
                     {
+                        if (card != null && !string.IsNullOrWhiteSpace(card.category))
+                        {
+                            string trimmed = card.category.Trim();
+                            if (!categories.Any(c => string.Equals(c, trimmed, StringComparison.OrdinalIgnoreCase)))
+                            {
+                                categories.Add(trimmed);
+                            }
+                            else
+                            {
+                                string canon = categories.First(c => string.Equals(c, trimmed, StringComparison.OrdinalIgnoreCase));
+                                card.category = canon;
+                            }
+                        }
+
                         card.checklistItems ??= new List<string>();
                         card.checklistStates ??= new List<bool>();
                         card.checklistLinkedCardIds ??= new List<string>();
@@ -3864,10 +3948,16 @@ namespace AwesomeTaskManager.Data
                 })
                 .ToList();
 
-            categoryColors = categoryColors
-                .Where(x => x != null && !string.IsNullOrWhiteSpace(x.category) && categories.Contains(x.category))
-                .GroupBy(x => x.category)
-                .Select(x => x.Last())
+            categoryColors = (categoryColors ?? new List<CategoryColorEntry>())
+                .Where(x => x != null && !string.IsNullOrWhiteSpace(x.category))
+                .GroupBy(x => x.category.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(g =>
+                {
+                    var last = g.Last();
+                    string canonical = categories.FirstOrDefault(c => string.Equals(c, last.category.Trim(), StringComparison.OrdinalIgnoreCase)) ?? last.category.Trim();
+                    last.category = canonical;
+                    return last;
+                })
                 .ToList();
         }
 

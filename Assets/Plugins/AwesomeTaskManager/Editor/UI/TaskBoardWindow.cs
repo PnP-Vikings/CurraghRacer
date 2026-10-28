@@ -125,10 +125,20 @@ namespace AwesomeTaskManager.Editor
                     var latest = Persistence.Load();
                     if (latest == null) return;
 
+                    if (newCard != null && !string.IsNullOrEmpty(newCard.category))
+                    {
+                        latest.categories ??= new List<string>();
+                        if (!latest.categories.Any(c => string.Equals(c, newCard.category.Trim(), StringComparison.OrdinalIgnoreCase)))
+                        {
+                            latest.categories.Add(newCard.category.Trim());
+                        }
+                    }
+
                     var b = latest.boards.Find(x => x.id == board.id);
                     if (b != null && b.columns.Count > 0)
                     {
                         b.columns[0].cards.Add(newCard);
+                        latest.Normalize();
                         Persistence.Save(latest);
                         ReloadAllOpenWindows();
                     }
@@ -569,6 +579,12 @@ namespace AwesomeTaskManager.Editor
             if (freshData == null) return;
             _data = freshData;
 
+            if (_data.categories == null) _data.categories = new List<string>();
+            if (card != null && !string.IsNullOrEmpty(card.category) && !_data.categories.Any(c => string.Equals(c, card.category.Trim(), StringComparison.OrdinalIgnoreCase)))
+            {
+                _data.categories.Add(card.category.Trim());
+            }
+
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
             if (board != null)
             {
@@ -586,6 +602,7 @@ namespace AwesomeTaskManager.Editor
                 _data.lastBoardIndex = targetIdx;
             }
 
+            _data.Normalize();
             Save();
         }
 

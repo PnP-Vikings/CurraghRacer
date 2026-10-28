@@ -73,11 +73,19 @@ namespace AwesomeTaskManager.Editor
 
         private void OnDisable()
         {
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
 
         private void OnDestroy()
         {
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
 

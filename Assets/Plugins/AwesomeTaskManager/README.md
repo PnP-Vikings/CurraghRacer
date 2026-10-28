@@ -246,6 +246,13 @@ Assets/Plugins/AwesomeTaskManager/
 
 ## 📄 Changelog
 
+### v2.2 (URL Attachment, Input Focus & Category Management Fixes)
+- **Fixed** 🔗 **URL Attachment on Cards (`EditorInputDialog`)** — resolved a bug where clicking "OK" in the URL input dialog failed to attach the link to task cards because dialog lifecycle cleanup (`OnDisable` / `OnDestroy`) was prematurely clearing the return value upon window close.
+- **Improved** 🌐 **URL Input Sanitization** — automatically trims whitespace and prepends `https://` if the protocol prefix is omitted when adding external web links to cards.
+- **Fixed** 🏷 **Category Input & Auto-Commit (`CardDetailWindow`)** — resolved an issue where typed new categories were lost or reverted to the first list item when clicking off or closing. Typed categories and checklist items are now automatically committed on close, save, or field defocus, with Enter key submission support.
+- **Fixed** 🧹 **Input Field Focus Bleed & Leftover Text** — resolved an issue where Unity IMGUI's recycled text editor retained leftover text (such as deleted category names or previously typed inputs) and leaked them into the title field when creating a new card. All input fields across Card Detail, Category Editor, Assignee Manager, Note Popup, and Dialogs now use dynamic session-scoped control names with complete keyboard focus and text editing buffer resets.
+- **Fixed** 🗑 **Delete Category in Card Detail** — resolved an issue where clicking the delete category button in the Card Detail window failed to delete the category. It now prompts for confirmation, cleanses the category from global save data and all existing cards, persists changes immediately, and refreshes open board windows.
+
 ### v2.1 (Unity 6.6+ Compatibility Fix)
 - **Fixed** 🛠 **Unity 6.6+ Compatibility (CS0619 Obsolete GetInstanceID)** — resolved compilation errors (`error CS0619: 'Object.GetInstanceID()' is obsolete: 'Use GetEntityId instead.'`) in `ThemedTooltip.cs` when building on Unity 6.6+ (`UNITY_6000_3_OR_NEWER`) by safely resolving editor window identifiers using `GetEntityId()`, while maintaining backwards compatibility with `GetInstanceID()` on earlier Unity versions.
 

@@ -47,12 +47,20 @@ namespace AwesomeTaskManager.Editor
 
         private void OnDisable()
         {
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             _profileImageCache.Clear();
         }
 
         private void OnDestroy()
         {
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             _profileImageCache.Clear();
         }
@@ -340,6 +348,10 @@ namespace AwesomeTaskManager.Editor
                                         foreach (var card in col.cards)
                                             card.assigneeIds.Remove(assignee.id);
 
+                                GUIUtility.keyboardControl = 0;
+                                GUIUtility.hotControl = 0;
+                                GUI.FocusControl(null);
+                                EditorGUIUtility.editingTextField = false;
                                 NotifyChanged();
                                 shouldExitGUI = true;
                             }
