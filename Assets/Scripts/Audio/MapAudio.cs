@@ -90,10 +90,10 @@ public class MapAudio : MonoBehaviour
         Debug.Log("Arriving at Destination - AudioDebug");
         AudioManager.instance.payAndExitTaxi.start();
         yield return new WaitForSeconds(0.5f);
-        AudioManager.instance.enterTaxi.setParameterByName("Car Engine Pitch", 0f);
+        AudioManager.instance.taxiJourney.setParameterByName("Car Engine Pitch", 0f);
         yield return new WaitForSeconds(1.0f);
         Debug.Log("Muting Car Engine - AudioDebug");
-        AudioManager.instance.enterTaxi.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        AudioManager.instance.taxiJourney.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
 
     public void MuteGarageAudio()
@@ -213,8 +213,7 @@ public class MapAudio : MonoBehaviour
                 if (coins >= 40)
                 {
                     Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
-                    AudioManager.instance.enterTaxi.start();
-                    //AudioManager.instance.carEngine.start();
+                    AudioManager.instance.taxiJourney.start();
                     hasJustTravelledByTaxi = true;
 
                 }

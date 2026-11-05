@@ -135,7 +135,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance countrysideAmbience;
     
     [System.NonSerialized] public EventInstance walking;
-    [System.NonSerialized] public EventInstance enterTaxi;
+    [System.NonSerialized] public EventInstance taxiJourney;
     [System.NonSerialized] public EventInstance coins;
     [System.NonSerialized] public EventInstance payAndExitTaxi;
     [System.NonSerialized] public EventInstance shopRoomTone;
@@ -303,7 +303,7 @@ public class AudioManager : MonoBehaviour
 
                             // Map //
         walking = RuntimeManager.CreateInstance("event:/Map/Walking");
-        enterTaxi = RuntimeManager.CreateInstance("event:/Map/Enter Taxi");
+        taxiJourney = RuntimeManager.CreateInstance("event:/Map/Taxi Journey");
         coins = RuntimeManager.CreateInstance("event:/Map/Coins");
         payAndExitTaxi = RuntimeManager.CreateInstance("event:/Map/Pay & Exit Taxi");
         shopRoomTone = RuntimeManager.CreateInstance("event:/Map/Shop Room Tone");
