@@ -54,6 +54,7 @@ public class RadioManager : MonoBehaviour
         PlayRadioSong();                                                    // A random song plays
 
         float randomNumber = Random.Range(5f, 6f);                          // A random number between the given numbers is assigned to the float 'randomNumber' (For Testing)
+        //float randomNumber = Random.Range(16f, 20f);                          // A random number between the given numbers is assigned to the float 'randomNumber' (For Promo)
         //float randomNumber = Random.Range(85f, 190f);                     // A random number between the given numbers is assigned to the float 'randomNumber' (For actual Build)
         //Debug.Log("Song playing for " +  randomNumber + " Seconds - RadioDebug");
 
@@ -253,16 +254,18 @@ public class RadioManager : MonoBehaviour
 
     private void PlayRadioAdOrNews()
     {
-        int newRandomNumberAd = Random.Range(1, 8);               // Use For actual build
+        int newRandomNumberAd = Random.Range(1, 8);               // Use For actual build (CHANGE IN THE WHILE LOOP ALSO!!!)
+        //int newRandomNumberAd = Random.Range(1, 4);               // Use to prevent placeholder ads from playing
         //int newRandomNumberAd = 7;                                  // Use to force Bogland radio Jingle
 
-        //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
+        //Debug.Log("newRandomNumberAd is " + newRandomNumberAd + " - AudioDebug");
 
         while (newRandomNumberAd == previousRandomNumberAd)
         {
-            //Debug.Log("a newRandomNumberAd was chosen as it was equal to previousRandomNumberAd");
-            //newRandomNumberAd = Random.Range(1, 3);
-            newRandomNumberAd = Random.Range(1, 8);
+            //Debug.Log("a newRandomNumberAd was chosen as it was equal to previousRandomNumberAd - AudioDebug");
+            //newRandomNumberAd = Random.Range(1, 4);
+            newRandomNumberAd = Random.Range(1, 8);               // Use For actual build
+            //newRandomNumberAd = Random.Range(1, 4);               // Use to prevent placeholder ads from playing
             //Debug.Log("newRandomNumberAd is " + newRandomNumberAd);
         }
 
@@ -270,31 +273,31 @@ public class RadioManager : MonoBehaviour
         {
             if (newRandomNumberAd == 1)
             {
-                AudioManager.instance.angelus.start();
+                AudioManager.instance.boglandRadioJingle.start();
             }
             else if (newRandomNumberAd == 2)
             {
-                AudioManager.instance.radioAdOrNews1.start();
+                AudioManager.instance.angelus.start();
             }
             else if (newRandomNumberAd == 3)
             {
-                AudioManager.instance.radioAdOrNews2.start();
+                AudioManager.instance.radioAdOrNews1.start(); 
             }
             else if (newRandomNumberAd == 4)
             {
-                AudioManager.instance.radioAdOrNews3.start();
+                AudioManager.instance.radioAdOrNews2.start(); 
             }
             else if (newRandomNumberAd == 5)
             {
-                AudioManager.instance.radioAdOrNews4.start();
+                AudioManager.instance.radioAdOrNews3.start();
             }
             else if (newRandomNumberAd == 6)
             {
-                AudioManager.instance.radioAdOrNews5.start();
+                AudioManager.instance.radioAdOrNews4.start();
             }
             else if (newRandomNumberAd == 7)
             {
-                AudioManager.instance.boglandRadioJingle.start();
+                AudioManager.instance.radioAdOrNews5.start();
             }
         }
         previousRandomNumberAd = newRandomNumberAd;
