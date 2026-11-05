@@ -80,9 +80,20 @@ public class MapAudio : MonoBehaviour
             if (AudioManager.instance != null)
             {
                 //Debug.Log("Taxi Journey completion is between 0.77 & 0.99 - AudioDebug");
-                AudioManager.instance.payAndExitTaxi.start();
+                StartCoroutine(StopCarEngineIEnum());
             }
         }
+    }
+
+    private IEnumerator StopCarEngineIEnum()
+    {
+        Debug.Log("Arriving at Destination - AudioDebug");
+        AudioManager.instance.payAndExitTaxi.start();
+        yield return new WaitForSeconds(0.5f);
+        AudioManager.instance.enterTaxi.setParameterByName("Car Engine Pitch", 0f);
+        yield return new WaitForSeconds(1.0f);
+        Debug.Log("Muting Car Engine - AudioDebug");
+        AudioManager.instance.enterTaxi.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
     }
 
     public void MuteGarageAudio()
@@ -201,8 +212,9 @@ public class MapAudio : MonoBehaviour
                 float coins = PlayerManager.Instance.GetPlayerCoins();
                 if (coins >= 40)
                 {
-                    //Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
+                    Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
                     AudioManager.instance.enterTaxi.start();
+                    //AudioManager.instance.carEngine.start();
                     hasJustTravelledByTaxi = true;
 
                 }
