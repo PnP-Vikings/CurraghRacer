@@ -34,6 +34,23 @@ namespace AwesomeTaskManager.Editor
         private bool _shouldFocusChecklist;
         [SerializeField] private bool _showArchivedInPicker;
 
+        private static int _globalSessionCounter = 0;
+        [SerializeField] private int _windowSessionId = 0;
+
+        private string TitleControlName => $"CardTitleField_{_windowSessionId}";
+        private string NewCategoryControlName => $"NewCategoryField_{_windowSessionId}";
+        private string DescriptionControlName => $"CardDescField_{_windowSessionId}";
+        private string NewChecklistControlName => $"NewChecklistField_{_windowSessionId}";
+
+        public void InvalidateSessionControlNames()
+        {
+            _windowSessionId = ++_globalSessionCounter;
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
+        }
+
         private static CardDetailWindow _instance;
         public static CardDetailWindow Instance
         {
@@ -48,7 +65,51 @@ namespace AwesomeTaskManager.Editor
         public bool HasUnsavedChanges()
         {
             if (_card == null) return false;
+            if (!string.IsNullOrWhiteSpace(_newCategory)) return true;
+            if (!string.IsNullOrWhiteSpace(_newChecklistItem)) return true;
             return _isNewCard ? IsNewCardDirty() : _dirty;
+        }
+
+        public void CommitPendingInputs()
+        {
+            if (!string.IsNullOrWhiteSpace(_newCategory))
+            {
+                string nc = _newCategory.Trim();
+                var data = Persistence.Load() ?? _saveData;
+                if (data != null)
+                {
+                    data.categories ??= new List<string>();
+                    if (!data.categories.Any(c => string.Equals(c, nc, StringComparison.OrdinalIgnoreCase)))
+                        data.categories.Add(nc);
+                    data.Normalize();
+                    Persistence.Save(data);
+                    _saveData = data;
+                }
+                _categories = _saveData != null ? _saveData.categories : (_categories ?? new List<string>());
+                if (!_categories.Any(c => string.Equals(c, nc, StringComparison.OrdinalIgnoreCase)))
+                    _categories.Add(nc);
+
+                if (_card != null)
+                {
+                    _card.category = nc;
+                    int defaultColor = _saveData != null ? _saveData.GetCategoryColor(nc) : 0;
+                    if (defaultColor > 0) _card.colorLabel = defaultColor;
+                }
+                _newCategory = "";
+                MarkDirty();
+            }
+
+            if (!string.IsNullOrWhiteSpace(_newChecklistItem) && _card != null)
+            {
+                _card.checklistItems ??= new List<string>();
+                _card.checklistStates ??= new List<bool>();
+                _card.checklistLinkedCardIds ??= new List<string>();
+                _card.checklistItems.Add(_newChecklistItem.Trim());
+                _card.checklistStates.Add(false);
+                _card.checklistLinkedCardIds.Add(string.Empty);
+                _newChecklistItem = "";
+                MarkDirty();
+            }
         }
 
         // ── Open existing card ──
@@ -96,6 +157,7 @@ namespace AwesomeTaskManager.Editor
             win._scroll = Vector2.zero;
             win._newChecklistItem = "";
             win._newCategory = "";
+            win.InvalidateSessionControlNames();
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
             win._shouldFocusTitle = false;
@@ -141,6 +203,7 @@ namespace AwesomeTaskManager.Editor
             win._dirty = false;
             win._closedExplicitly = false;
             win._scroll = Vector2.zero;
+            win.InvalidateSessionControlNames();
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
             win._shouldFocusTitle = true;
@@ -164,8 +227,8 @@ namespace AwesomeTaskManager.Editor
             var freshData = Persistence.Load();
             if (freshData == null) return;
             _saveData = freshData;
-            _categories = _saveData.categories;
-            
+            _categories = _saveData.categories ?? new List<string>();
+
             // Update _originalCard reference in case it became stale after a global reload
             if (_card != null)
             {
@@ -181,6 +244,18 @@ namespace AwesomeTaskManager.Editor
                         }
                     }
                 }
+
+                // If original card's category was cleared or not in categories, clear in card as well if not dirtied
+                if (!_isNewCard && _originalCard != null && string.IsNullOrEmpty(_originalCard.category) && !_dirty)
+                {
+                    _card.category = string.Empty;
+                }
+            }
+
+            // Ensure card's current category is present in _categories
+            if (_card != null && !string.IsNullOrEmpty(_card.category) && !_categories.Contains(_card.category))
+            {
+                _categories.Add(_card.category);
             }
 
             RefreshVisualState();
@@ -190,6 +265,9 @@ namespace AwesomeTaskManager.Editor
         {
             Instance = this;
             wantsMouseMove = true;
+            _newChecklistItem = "";
+            _newCategory = "";
+            InvalidateSessionControlNames();
             LoadData();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
@@ -197,16 +275,19 @@ namespace AwesomeTaskManager.Editor
 
         private void OnDisable()
         {
+            InvalidateSessionControlNames();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             if (_instance == this) _instance = null;
         }
 
         private void OnDestroy()
         {
+            InvalidateSessionControlNames();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             if (_instance == this) _instance = null;
             if (_closedExplicitly) return;
 
+            CommitPendingInputs();
             bool hasChanges = HasUnsavedChanges();
             if (!hasChanges) return;
 
@@ -358,15 +439,15 @@ namespace AwesomeTaskManager.Editor
 
             // ── Title ──
             EditorGUILayout.LabelField(_isNewCard ? "Card Title" : "Title", EditorStyles.boldLabel);
-            GUI.SetNextControlName("CardTitleField");
-            string newTitle = EditorGUILayout.TextField(_card.title, TBStyles.GlassTextField, GUILayout.Height(22));
+            GUI.SetNextControlName(TitleControlName);
+            string newTitle = EditorGUILayout.TextField(_card.title ?? "", TBStyles.GlassTextField, GUILayout.Height(22));
             if (newTitle != _card.title) { _card.title = newTitle; MarkDirty(); }
 
             if (_shouldFocusTitle)
             {
                 _shouldFocusTitle = false;
-                GUI.FocusControl("CardTitleField");
-                EditorGUI.FocusTextInControl("CardTitleField");
+                GUI.FocusControl(TitleControlName);
+                EditorGUI.FocusTextInControl(TitleControlName);
             }
             GUILayout.Space(8);
 
@@ -375,69 +456,128 @@ namespace AwesomeTaskManager.Editor
             using (new EditorGUILayout.HorizontalScope())
             {
                 var catOptions = new List<string> { "None" };
-                catOptions.AddRange(_categories);
+                if (_categories != null)
+                {
+                    foreach (var c in _categories)
+                    {
+                        if (!string.IsNullOrEmpty(c) && !catOptions.Any(co => string.Equals(co, c, StringComparison.OrdinalIgnoreCase)))
+                            catOptions.Add(c);
+                    }
+                }
+                if (!string.IsNullOrEmpty(_card.category) && !catOptions.Any(co => string.Equals(co, _card.category, StringComparison.OrdinalIgnoreCase)))
+                {
+                    catOptions.Add(_card.category);
+                }
                 int currentIdx = 0;
                 if (!string.IsNullOrEmpty(_card.category))
                 {
-                    int found = catOptions.IndexOf(_card.category);
+                    int found = catOptions.FindIndex(co => string.Equals(co, _card.category, StringComparison.OrdinalIgnoreCase));
                     if (found >= 0) currentIdx = found;
                 }
                 TBStyles.DrawThemedDropdown(currentIdx, catOptions.ToArray(), (newIdx) =>
                 {
                     string picked = newIdx == 0 ? "" : catOptions[newIdx];
-                    if (picked != (_card.category ?? ""))
+                    _card.category = picked;
+                    // Auto-apply default color for this category
+                    if (!string.IsNullOrEmpty(picked))
                     {
-                        _card.category = picked;
-                        // Auto-apply default color for this category
-                        if (!string.IsNullOrEmpty(picked) && _saveData != null)
+                        var data = _saveData ?? Persistence.Load();
+                        if (data != null)
                         {
-                            int defaultColor = _saveData.GetCategoryColor(picked);
+                            int defaultColor = data.GetCategoryColor(picked);
                             if (defaultColor > 0)
                                 _card.colorLabel = defaultColor;
                         }
-                        MarkDirty();
-                        Repaint();
                     }
+                    MarkDirty();
+                    Repaint();
                 }, TBStyles.StandardDropdown, "Select task category", GUILayout.ExpandWidth(true), GUILayout.Height(20));
 
                 GUILayout.Space(4);
 
                 // Add new category
-                _newCategory = EditorGUILayout.TextField(_newCategory, TBStyles.GlassTextField, GUILayout.Width(75), GUILayout.Height(20));
-                if (ThemedTooltip.IconButton("+", "Add New Category", GUILayout.Width(20), GUILayout.Height(20)) && !string.IsNullOrWhiteSpace(_newCategory))
+                bool enterPressedInCat = Event.current.type == EventType.KeyDown &&
+                                         (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) &&
+                                         GUI.GetNameOfFocusedControl() == NewCategoryControlName;
+
+                GUI.SetNextControlName(NewCategoryControlName);
+                _newCategory = EditorGUILayout.TextField(_newCategory ?? "", TBStyles.GlassTextField, GUILayout.Width(75), GUILayout.Height(20));
+                if ((ThemedTooltip.IconButton("+", "Add New Category", GUILayout.Width(20), GUILayout.Height(20)) || enterPressedInCat) && !string.IsNullOrWhiteSpace(_newCategory))
                 {
                     string nc = _newCategory.Trim();
-                    if (!_categories.Contains(nc))
+                    var data = Persistence.Load() ?? _saveData;
+                    if (data != null)
+                    {
+                        data.categories ??= new List<string>();
+                        if (!data.categories.Any(c => string.Equals(c, nc, StringComparison.OrdinalIgnoreCase)))
+                            data.categories.Add(nc);
+                        data.Normalize();
+                        Persistence.Save(data);
+                        _saveData = data;
+                    }
+                    _categories = _saveData != null ? _saveData.categories : (_categories ?? new List<string>());
+                    if (!_categories.Any(c => string.Equals(c, nc, StringComparison.OrdinalIgnoreCase)))
                         _categories.Add(nc);
+
                     _card.category = nc;
                     int defaultColor = _saveData != null ? _saveData.GetCategoryColor(nc) : 0;
                     if (defaultColor > 0) _card.colorLabel = defaultColor;
                     _newCategory = "";
+                    TaskBoardWindow.ReloadAllOpenWindows();
                     MarkDirty();
-                    GUIUtility.ExitGUI();
+                    if (enterPressedInCat)
+                    {
+                        Event.current.Use();
+                    }
+                    InvalidateSessionControlNames();
+                    Repaint();
                 }
                 // Remove selected category from the global list
                 if (!string.IsNullOrEmpty(_card.category) && ThemedTooltip.DeleteIconButton(TBStyles.DeleteIcon, "Delete Category", GUILayout.Width(20), GUILayout.Height(20)))
                 {
-                    EditorApplication.delayCall += () =>
+                    string catToRemove = _card.category;
+                    if (ThemedDialog.Show("Delete Category",
+                        $"Delete category \"{catToRemove}\"?\nCards using it will be cleared to no category.",
+                        "Delete", "Cancel"))
                     {
-                        if (ThemedDialog.Show("Remove Category",
-                            $"Remove \"{_card.category}\" from the category list?\n(Cards already using it will keep it as text.)",
-                            "Remove", "Cancel"))
+                        var data = _saveData ?? Persistence.Load();
+                        if (data != null)
                         {
-                            _categories.Remove(_card.category);
-                            _card.category = "";
-                            MarkDirty();
-                            Repaint();
+                            data.DeleteCategory(catToRemove);
+                            data.Normalize();
+                            Persistence.Save(data);
+                            _saveData = data;
                         }
-                    };
+
+                        _categories?.RemoveAll(c => string.Equals(c, catToRemove, StringComparison.OrdinalIgnoreCase) || c == catToRemove);
+                        if (_card != null && (string.Equals(_card.category, catToRemove, StringComparison.OrdinalIgnoreCase) || _card.category == catToRemove))
+                        {
+                            _card.category = string.Empty;
+                        }
+                        if (_originalCard != null && (string.Equals(_originalCard.category, catToRemove, StringComparison.OrdinalIgnoreCase) || _originalCard.category == catToRemove))
+                        {
+                            _originalCard.category = string.Empty;
+                        }
+                        _newCategory = string.Empty;
+
+                        TaskBoardWindow.ReloadAllOpenWindows();
+                        _onChanged?.Invoke();
+                        if (!_isNewCard)
+                        {
+                            MarkDirty();
+                        }
+                        InvalidateSessionControlNames();
+                        Repaint();
+                        GUIUtility.ExitGUI();
+                    }
                 }
             }
             GUILayout.Space(8);
 
             // ── Description ──
             EditorGUILayout.LabelField("Description", EditorStyles.boldLabel);
-            string newDesc = EditorGUILayout.TextArea(_card.description, TBStyles.CardTextArea, GUILayout.MinHeight(70));
+            GUI.SetNextControlName(DescriptionControlName);
+            string newDesc = EditorGUILayout.TextArea(_card.description ?? "", TBStyles.CardTextArea, GUILayout.MinHeight(70));
             if (newDesc != _card.description) { _card.description = newDesc; MarkDirty(); }
             GUILayout.Space(8);
 
@@ -494,16 +634,38 @@ namespace AwesomeTaskManager.Editor
             GUILayout.Space(8);
 
             // ── Set as default color for this category ──
-            if (!string.IsNullOrEmpty(_card.category) && _saveData != null)
+            string activeCategory = !string.IsNullOrEmpty(_card.category) ? _card.category : (!string.IsNullOrWhiteSpace(_newCategory) ? _newCategory.Trim() : "");
+            if (!string.IsNullOrEmpty(activeCategory))
             {
-                int currentDefault = _saveData.GetCategoryColor(_card.category);
+                var data = _saveData ?? Persistence.Load();
+                int currentDefault = data != null ? data.GetCategoryColor(activeCategory) : 0;
+                int colorIdx = Mathf.Clamp(_card.colorLabel, 0, TBStyles.LabelNames.Length - 1);
+                string colorName = TBStyles.LabelNames[colorIdx];
                 string btnLabel = currentDefault == _card.colorLabel
-                    ? $"✔ \"{_card.category}\" default = {TBStyles.LabelNames[_card.colorLabel]}"
-                    : $"Set {TBStyles.LabelNames[_card.colorLabel]} as default for \"{_card.category}\"";
+                    ? $"✔ \"{activeCategory}\" default = {colorName}"
+                    : $"Set {colorName} as default for \"{activeCategory}\"";
                 if (GUILayout.Button(btnLabel, TBStyles.StandardButton, GUILayout.Height(20)))
                 {
-                    _saveData.SetCategoryColor(_card.category, _card.colorLabel);
+                    _card.category = activeCategory;
+                    _newCategory = "";
+                    data = Persistence.Load() ?? _saveData;
+                    if (data != null)
+                    {
+                        data.categories ??= new List<string>();
+                        if (!data.categories.Any(c => string.Equals(c, activeCategory, StringComparison.OrdinalIgnoreCase)))
+                        {
+                            data.categories.Add(activeCategory);
+                        }
+                        data.SetCategoryColor(activeCategory, _card.colorLabel);
+                        data.Normalize();
+                        Persistence.Save(data);
+                        _saveData = data;
+                    }
+                    _categories = _saveData != null ? _saveData.categories : _categories;
+                    TaskBoardWindow.ReloadAllOpenWindows();
+                    _onChanged?.Invoke();
                     MarkDirty();
+                    Repaint();
                 }
             }
             GUILayout.Space(8);
@@ -685,7 +847,8 @@ namespace AwesomeTaskManager.Editor
 
                     var style = new GUIStyle(TBStyles.GlassTextField);
                     if (done) style.fontStyle = FontStyle.Italic;
-                    string itemText = EditorGUILayout.TextField(_card.checklistItems[i], style, GUILayout.Height(20));
+                    GUI.SetNextControlName($"ChecklistItem_{_windowSessionId}_{i}");
+                    string itemText = EditorGUILayout.TextField(_card.checklistItems[i] ?? "", style, GUILayout.Height(20));
                     if (itemText != _card.checklistItems[i]) { _card.checklistItems[i] = itemText; MarkDirty(); }
 
                     // Linked card indicator/picker
@@ -768,16 +931,16 @@ namespace AwesomeTaskManager.Editor
 
                 bool enterPressed = Event.current.type == EventType.KeyDown && 
                                    (Event.current.keyCode == KeyCode.Return || Event.current.keyCode == KeyCode.KeypadEnter) &&
-                                   GUI.GetNameOfFocusedControl() == "NewChecklistItemField";
+                                   GUI.GetNameOfFocusedControl() == NewChecklistControlName;
 
-                GUI.SetNextControlName("NewChecklistItemField");
-                _newChecklistItem = EditorGUILayout.TextField(_newChecklistItem, TBStyles.GlassTextField, GUILayout.Height(20));
+                GUI.SetNextControlName(NewChecklistControlName);
+                _newChecklistItem = EditorGUILayout.TextField(_newChecklistItem ?? "", TBStyles.GlassTextField, GUILayout.Height(20));
 
                 if (_shouldFocusChecklist)
                 {
                     _shouldFocusChecklist = false;
-                    GUI.FocusControl("NewChecklistItemField");
-                    EditorGUI.FocusTextInControl("NewChecklistItemField");
+                    GUI.FocusControl(NewChecklistControlName);
+                    EditorGUI.FocusTextInControl(NewChecklistControlName);
                 }
 
                 if ((ThemedTooltip.IconButton("+", "Add Checklist Item", GUILayout.Width(22), GUILayout.Height(20)) || enterPressed) && !string.IsNullOrWhiteSpace(_newChecklistItem))
@@ -791,6 +954,7 @@ namespace AwesomeTaskManager.Editor
                     {
                         Event.current.Use();
                     }
+                    InvalidateSessionControlNames();
                     _shouldFocusChecklist = true;
                     Repaint();
                 }
@@ -864,15 +1028,34 @@ namespace AwesomeTaskManager.Editor
             {
                 if (GUILayout.Button($"{TBStyles.UrlIcon} Add URL", TBStyles.StandardButton, GUILayout.Height(24)))
                 {
+                    GUIUtility.keyboardControl = 0;
+                    GUIUtility.hotControl = 0;
+                    GUI.FocusControl(null);
                     EditorApplication.delayCall += () =>
                     {
                         string res = EditorInputDialog.Show("Add Link", "Paste URL here:", "https://");
-                        if (!string.IsNullOrEmpty(res) && res.StartsWith("http"))
+                        if (!string.IsNullOrWhiteSpace(res))
                         {
-                            _card.linkedItems.Add(LinkedItem.CreateUrl(res));
-                            MarkDirty();
-                            Repaint();
+                            res = res.Trim();
+                            if (res != "https://" && res != "http://")
+                            {
+                                if (!res.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                                    !res.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                                {
+                                    res = "https://" + res;
+                                }
+                                if (_card != null)
+                                {
+                                    _card.linkedItems ??= new List<LinkedItem>();
+                                    _card.linkedItems.Add(LinkedItem.CreateUrl(res));
+                                    MarkDirty();
+                                }
+                                Repaint();
+                            }
                         }
+                        GUIUtility.keyboardControl = 0;
+                        GUIUtility.hotControl = 0;
+                        GUI.FocusControl(null);
                     };
                 }
                 if (ThemedContextMenu.DropdownButton($"{TBStyles.NotesTabIcon} Link Note", TBStyles.StandardButton, out Rect linkNoteBtnRect, GUILayout.Height(24)))
@@ -1111,6 +1294,7 @@ namespace AwesomeTaskManager.Editor
             {
                 if (GUILayout.Button($"{TBStyles.NewCardIcon}  Create Card", TBStyles.AddCardButton, GUILayout.Height(32)))
                 {
+                    CommitPendingInputs();
                     if (string.IsNullOrWhiteSpace(_card.title))
                     {
                         ThemedDialog.Show("Title Required", "A card requires a title to be saved.", "OK");
@@ -1133,9 +1317,11 @@ namespace AwesomeTaskManager.Editor
             else
             {
                 // Save Changes button
-                GUI.enabled = _dirty;
-                if (GUILayout.Button(_dirty ? $"{TBStyles.SaveIcon}  Save Changes" : $"{TBStyles.CompletedIcon}  All Saved", _dirty ? TBStyles.AddCardButton : TBStyles.StandardButton, GUILayout.Height(30)))
+                bool canSave = HasUnsavedChanges();
+                GUI.enabled = canSave;
+                if (GUILayout.Button(canSave ? $"{TBStyles.SaveIcon}  Save Changes" : $"{TBStyles.CompletedIcon}  All Saved", canSave ? TBStyles.AddCardButton : TBStyles.StandardButton, GUILayout.Height(30)))
                 {
+                    CommitPendingInputs();
                     SaveChanges();
                 }
                 GUI.enabled = true;
@@ -1200,6 +1386,7 @@ namespace AwesomeTaskManager.Editor
 
         public void AttemptClose()
         {
+            CommitPendingInputs();
             bool hasChanges = HasUnsavedChanges();
             if (!hasChanges)
             {
@@ -1273,6 +1460,7 @@ namespace AwesomeTaskManager.Editor
 
         public override void SaveChanges()
         {
+            CommitPendingInputs();
             if (_isNewCard)
             {
                 if (!string.IsNullOrWhiteSpace(_card.title))
@@ -1299,6 +1487,16 @@ namespace AwesomeTaskManager.Editor
 
         private static void PerformCreateCard(TaskCard card, SaveData saveData, string boardId, string columnId, Action<TaskCard> onCreated)
         {
+            if (card != null && !string.IsNullOrEmpty(card.category))
+            {
+                if (saveData != null)
+                {
+                    saveData.categories ??= new List<string>();
+                    if (!saveData.categories.Any(c => string.Equals(c, card.category.Trim(), StringComparison.OrdinalIgnoreCase)))
+                        saveData.categories.Add(card.category.Trim());
+                }
+            }
+
             if (onCreated != null)
             {
                 onCreated.Invoke(card);
@@ -1312,6 +1510,27 @@ namespace AwesomeTaskManager.Editor
                 var data = Persistence.Load() ?? saveData;
                 if (data != null)
                 {
+                    data.categories ??= new List<string>();
+                    if (card != null && !string.IsNullOrEmpty(card.category) && !data.categories.Any(c => string.Equals(c, card.category.Trim(), StringComparison.OrdinalIgnoreCase)))
+                    {
+                        data.categories.Add(card.category.Trim());
+                    }
+                    if (saveData?.categories != null)
+                    {
+                        foreach (var cat in saveData.categories)
+                        {
+                            if (!string.IsNullOrEmpty(cat) && !data.categories.Any(c => string.Equals(c, cat.Trim(), StringComparison.OrdinalIgnoreCase)))
+                                data.categories.Add(cat.Trim());
+                        }
+                    }
+                    if (saveData?.categoryColors != null)
+                    {
+                        foreach (var cc in saveData.categoryColors)
+                        {
+                            if (cc != null && !string.IsNullOrWhiteSpace(cc.category))
+                                data.SetCategoryColor(cc.category, cc.colorIndex);
+                        }
+                    }
                     var board = data.boards.FirstOrDefault(b => b.id == boardId);
                     if (board != null)
                     {
@@ -1321,6 +1540,7 @@ namespace AwesomeTaskManager.Editor
                             col.cards.Add(card);
                             int bIdx = data.boards.IndexOf(board);
                             if (bIdx >= 0) data.lastBoardIndex = bIdx;
+                            data.Normalize();
                             Persistence.Save(data);
                             TaskBoardWindow.ReloadAllOpenWindows();
                         }
@@ -1334,6 +1554,29 @@ namespace AwesomeTaskManager.Editor
             var freshData = Persistence.Load() ?? saveData;
             if (freshData != null && card != null)
             {
+                freshData.categories ??= new List<string>();
+                if (!string.IsNullOrEmpty(card.category) && !freshData.categories.Any(c => string.Equals(c, card.category.Trim(), StringComparison.OrdinalIgnoreCase)))
+                {
+                    freshData.categories.Add(card.category.Trim());
+                }
+                if (saveData?.categories != null)
+                {
+                    foreach (var cat in saveData.categories)
+                    {
+                        if (!string.IsNullOrEmpty(cat) && !freshData.categories.Any(c => string.Equals(c, cat.Trim(), StringComparison.OrdinalIgnoreCase)))
+                            freshData.categories.Add(cat.Trim());
+                    }
+                }
+                if (saveData?.categoryColors != null)
+                {
+                    foreach (var cc in saveData.categoryColors)
+                    {
+                        if (cc != null && !string.IsNullOrWhiteSpace(cc.category))
+                            freshData.SetCategoryColor(cc.category, cc.colorIndex);
+                    }
+                }
+                freshData.Normalize();
+
                 TaskCard targetCard = null;
                 foreach (var b in freshData.boards)
                 {
@@ -1401,6 +1644,7 @@ namespace AwesomeTaskManager.Editor
             win._newChecklistItem = newChecklistItem;
             win._newCategory = newCategory;
             win._closedExplicitly = false;
+            win.InvalidateSessionControlNames();
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
             win._shouldFocusTitle = false;

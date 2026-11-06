@@ -483,6 +483,29 @@ namespace AwesomeTaskManager.UI
             }
         }
 
+        public static void LabelField(string label, string value, string tooltip = null, params GUILayoutOption[] options)
+        {
+            EditorGUILayout.LabelField(label, value, options);
+
+            if (!string.IsNullOrEmpty(tooltip))
+            {
+                SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+            }
+        }
+
+        public static void LabelField(string label, string value, float labelWidth, string tooltip = null, params GUILayoutOption[] options)
+        {
+            float oldWidth = EditorGUIUtility.labelWidth;
+            EditorGUIUtility.labelWidth = labelWidth;
+            EditorGUILayout.LabelField(label, value, options);
+            EditorGUIUtility.labelWidth = oldWidth;
+
+            if (!string.IsNullOrEmpty(tooltip))
+            {
+                SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+            }
+        }
+
         public static void TruncatedLabel(string fullText, int maxCharLength, GUIStyle style = null, params GUILayoutOption[] options)
         {
             string truncated = TBStyles.TruncateString(fullText, maxCharLength);

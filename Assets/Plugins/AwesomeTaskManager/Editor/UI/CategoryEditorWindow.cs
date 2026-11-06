@@ -1,4 +1,6 @@
+using System;
 using System.Collections.Generic;
+using System.Linq;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
@@ -14,12 +16,26 @@ namespace AwesomeTaskManager.Editor
         [SerializeField] private string _newCategoryName = "";
         [SerializeField] private int _newCategoryColor;
         private Dictionary<string, string> _renameBuffers = new Dictionary<string, string>();
+        private static int _globalCategorySessionCounter = 0;
+        [SerializeField] private int _categoryEditorSession = 0;
+
+        public void InvalidateSessionControlNames()
+        {
+            _categoryEditorSession = ++_globalCategorySessionCounter;
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
+        }
 
         public static void Open(SaveData data, System.Action onChanged)
         {
             var window = GetWindow<CategoryEditorWindow>(true, $"{TBStyles.CategoryIcon} Category Editor", true);
             window._data = data;
             window._onChanged = onChanged;
+            window._newCategoryName = "";
+            window._newCategoryColor = 0;
+            window.InvalidateSessionControlNames();
             window.minSize = new Vector2(420, 360);
             window.ShowUtility();
         }
@@ -35,6 +51,7 @@ namespace AwesomeTaskManager.Editor
         private void OnEnable()
         {
             wantsMouseMove = true;
+            InvalidateSessionControlNames();
             LoadData();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
@@ -42,11 +59,13 @@ namespace AwesomeTaskManager.Editor
 
         private void OnDisable()
         {
+            InvalidateSessionControlNames();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
 
         private void OnDestroy()
         {
+            InvalidateSessionControlNames();
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
         }
 
@@ -107,20 +126,25 @@ namespace AwesomeTaskManager.Editor
             EditorGUILayout.LabelField("Add Category", EditorStyles.boldLabel);
             using (new EditorGUILayout.HorizontalScope())
             {
-                _newCategoryName = TBStyles.DrawThemedTextField(_newCategoryName, GUILayout.Height(22));
+                GUI.SetNextControlName($"NewCategoryNameField_{_categoryEditorSession}");
+                _newCategoryName = TBStyles.DrawThemedTextField(_newCategoryName ?? "", GUILayout.Height(22));
                 TBStyles.DrawThemedDropdown(_newCategoryColor, TBStyles.LabelNames, (c) =>
                 {
                     _newCategoryColor = c;
                     Repaint();
                 }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Select default color for this category", GUILayout.Width(90));
-                GUI.enabled = !string.IsNullOrWhiteSpace(_newCategoryName) && !_data.categories.Contains(_newCategoryName.Trim());
+                GUI.enabled = !string.IsNullOrWhiteSpace(_newCategoryName) && !_data.categories.Any(c => string.Equals(c, _newCategoryName.Trim(), StringComparison.OrdinalIgnoreCase));
                 if (ThemedTooltip.Button("Add", "Add a new category", TBStyles.StandardButton, GUILayout.Width(54)))
                 {
                     string categoryName = _newCategoryName.Trim();
-                    _data.categories.Add(categoryName);
+                    if (!_data.categories.Any(c => string.Equals(c, categoryName, StringComparison.OrdinalIgnoreCase)))
+                    {
+                        _data.categories.Add(categoryName);
+                    }
                     _data.SetCategoryColor(categoryName, _newCategoryColor);
                     _newCategoryName = "";
                     _newCategoryColor = 0;
+                    InvalidateSessionControlNames();
                     NotifyChanged();
                     GUIUtility.ExitGUI();
                 }
@@ -157,7 +181,8 @@ namespace AwesomeTaskManager.Editor
                         Rect colorRect = GUILayoutUtility.GetRect(14, 18, GUILayout.Width(14));
                         EditorGUI.DrawRect(colorRect, TBStyles.GetLabelColor(_data.GetCategoryColor(category)));
 
-                        _renameBuffers[category] = TBStyles.DrawThemedTextField(_renameBuffers[category], GUILayout.Height(20));
+                        GUI.SetNextControlName($"RenameCategoryField_{_categoryEditorSession}_{category}");
+                        _renameBuffers[category] = TBStyles.DrawThemedTextField(_renameBuffers[category] ?? "", GUILayout.Height(20));
 
                         string currentCat = category;
                         TBStyles.DrawThemedDropdown(_data.GetCategoryColor(category), TBStyles.LabelNames, (newColor) =>
@@ -179,6 +204,7 @@ namespace AwesomeTaskManager.Editor
                             {
                                 _renameBuffers.Remove(category);
                                 _renameBuffers[renamed] = renamed;
+                                InvalidateSessionControlNames();
                                 NotifyChanged();
                                 shouldExitGUI = true;
                             }
@@ -193,6 +219,11 @@ namespace AwesomeTaskManager.Editor
                             {
                                 _data.DeleteCategory(category);
                                 _renameBuffers.Remove(category);
+                                if (!string.IsNullOrEmpty(_newCategoryName) && string.Equals(_newCategoryName.Trim(), category, System.StringComparison.OrdinalIgnoreCase))
+                                {
+                                    _newCategoryName = "";
+                                }
+                                InvalidateSessionControlNames();
                                 NotifyChanged();
                                 shouldExitGUI = true;
                             }

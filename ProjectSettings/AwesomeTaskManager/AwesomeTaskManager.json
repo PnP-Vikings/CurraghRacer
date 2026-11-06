@@ -173,7 +173,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-09-29 231710.png",
-                            "showChecklist": false,
+                            "showChecklist": true,
                             "completed": false,
                             "assigneeIds": []
                         },
@@ -1624,7 +1624,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Game Map.gif",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         }

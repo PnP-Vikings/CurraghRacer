@@ -118,7 +118,7 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 
 ### 🎨 Polish & UX
 - Clean, modern UI that fits both **Light** and **Dark** editor themes with complete custom theme support
-- Status bar with live card count, overdue alerts, and column count
+- Status bar with live card count, completion stats, due date notification intervals (due today, 1d, 2d, 3d, <1 week, >1 week, overdue), and column count
 - Tab interface: switch between **Board**, **Notes**, and **Style** customizer tabs instantly
 - Themed modal confirmation and alert dialogs (`ThemedDialog`) replacing native OS dialogs
 - Themed dropdown menus with real-time search filtering across all selectors
@@ -245,6 +245,25 @@ Assets/Plugins/AwesomeTaskManager/
 ---
 
 ## 📄 Changelog
+
+### v2.35 (Enhanced Due Date Status Bar Notifications)
+- **Added** ⏰ **Expanded Due Date Status Indicators** — bottom status bar now provides real-time counts and notifications for tasks due in **1 day**, **2 days**, **3 days**, **less than a week** (4–6 days), and **over a week** (7+ days), alongside completed, overdue, and due today counts.
+- **Improved** 📊 **Dynamic Status Bar Breakdown** — due date indicators automatically render with their corresponding theme-styled icons and accent colors whenever matching non-zero task counts exist.
+- **Added** 🧩 **`DueDateSummary` Model & Helper API** — added `DueDateSummary` struct in `TaskBoardData.cs` and `CalculateDueDateSummary` / `BuildStatusBarText` in `TaskBoardWindow.cs` for reliable programmatic due date aggregation and reporting.
+
+### v2.3 (Markdown Rich Text, Code Blocks & Syntax Highlighting)
+- **Added** ✨ **Full Markdown Inline Formatting (`MarkdownRenderer`)** — added rich text formatting for bold (`**text**` / `__text__`), italic (`*text*` / `_text_`), combined bold+italic (`***text***`), inline code (` `code` `), strikethrough (`~~text~~`), and markdown web links (`[text](url)`).
+- **Added** 💻 **Code Blocks with Syntax Highlighting** — multi-line code blocks (```` ```csharp ````, ```` ```json ````, ```` ```shader ````) now render in a container with syntax coloring and an interactive **"📋 Copy"** button that temporarily changes to **"✓ Copied!"**.
+- **Added** 💬 **Blockquotes Rendering** — added visual callout styling for Markdown blockquotes (`> text`).
+- **Added** 📊 **Markdown Tables** — added support for Markdown tables (`| Header 1 | Header 2 |`) with aligned columns and alternating row shading.
+- **Improved** 📝 **Rich Text Headers & Lists** — headers (`#`, `##`, `###`), checklists (`- [ ]`, `- [x]`), bullet points (`-`, `*`, `+`), and numbered lists (`1.`) now support inline rich text formatting.
+
+### v2.2 (URL Attachment, Input Focus & Category Management Fixes)
+- **Fixed** 🔗 **URL Attachment on Cards (`EditorInputDialog`)** — resolved a bug where clicking "OK" in the URL input dialog failed to attach the link to task cards because dialog lifecycle cleanup (`OnDisable` / `OnDestroy`) was prematurely clearing the return value upon window close.
+- **Improved** 🌐 **URL Input Sanitization** — automatically trims whitespace and prepends `https://` if the protocol prefix is omitted when adding external web links to cards.
+- **Fixed** 🏷 **Category Input & Auto-Commit (`CardDetailWindow`)** — resolved an issue where typed new categories were lost or reverted to the first list item when clicking off or closing. Typed categories and checklist items are now automatically committed on close, save, or field defocus, with Enter key submission support.
+- **Fixed** 🧹 **Input Field Focus Bleed & Leftover Text** — resolved an issue where Unity IMGUI's recycled text editor retained leftover text (such as deleted category names or previously typed inputs) and leaked them into the title field when creating a new card. All input fields across Card Detail, Category Editor, Assignee Manager, Note Popup, and Dialogs now use dynamic session-scoped control names with complete keyboard focus and text editing buffer resets.
+- **Fixed** 🗑 **Delete Category in Card Detail** — resolved an issue where clicking the delete category button in the Card Detail window failed to delete the category. It now prompts for confirmation, cleanses the category from global save data and all existing cards, persists changes immediately, and refreshes open board windows.
 
 ### v2.1 (Unity 6.6+ Compatibility Fix)
 - **Fixed** 🛠 **Unity 6.6+ Compatibility (CS0619 Obsolete GetInstanceID)** — resolved compilation errors (`error CS0619: 'Object.GetInstanceID()' is obsolete: 'Use GetEntityId instead.'`) in `ThemedTooltip.cs` when building on Unity 6.6+ (`UNITY_6000_3_OR_NEWER`) by safely resolving editor window identifiers using `GetEntityId()`, while maintaining backwards compatibility with `GetInstanceID()` on earlier Unity versions.
@@ -465,6 +484,17 @@ Assets/Plugins/AwesomeTaskManager/
 - 8 color labels, 4 priority levels, checklists
 - Light & Dark theme support
 - Status bar with live stats
+
+---
+
+## 🤖 AI Integration & Awesome Task Manager Next (Optional Upgrade)
+
+Awesome Task Manager can be upgraded with the optional **Awesome Task Manager Next** AI companion.
+
+- **For AI Agents & Coding Assistants** (Junie, Claude Code, Cursor, Windsurf, Rider AI, Unity AI Assistant):
+  - If **Awesome Task Manager Next** is installed in the project, **always use the registered ATM Next MCP tools (`atm_*`) or the C# API (`AwesomeTaskManager.Next.ATMNextService`)** when asked to view, create, rank, move, or manage tasks, notes, categories, and assignees.
+  - **DO NOT edit `ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json` directly**, as direct JSON file edits bypass validation and live UI synchronization.
+  - When available, access the AI Assistant via top menu: **`Tools → Awesome Task Manager Next (AI)`** or check `Assets/Plugins/AwesomeTaskManagerNext/README.md` for full MCP tool documentation and available commands.
 
 ---
 

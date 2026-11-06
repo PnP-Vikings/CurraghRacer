@@ -1,0 +1,30 @@
+{
+    "name": "AwesomeTaskManagerNext.Editor",
+    "rootNamespace": "AwesomeTaskManager.Next",
+    "references": [
+        "AwesomeTaskManager.Editor",
+        "Unity.AI.MCP.Editor"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [
+        {
+            "name": "com.unity.ai.assistant",
+            "expression": "",
+            "define": "ATM_NEXT_UNITYAI_MCP_PRESENT"
+        },
+        {
+            "name": "com.unity.ai.mcp",
+            "expression": "",
+            "define": "ATM_NEXT_MCP_PRESENT"
+        }
+    ],
+    "noEngineReferences": false
+}

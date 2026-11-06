@@ -5,23 +5,36 @@ namespace AwesomeTaskManager.UI
 {
     public class EditorInputDialog : EditorWindow
     {
+        private static int _dialogCounter = 0;
+        private int _dialogSessionId;
         private string _value;
         private string _label;
-        private static string _result;
+        private bool _confirmed;
         private bool _focused;
 
         public static string Show(string title, string label, string defaultValue = "")
         {
-            _result = null;
             var w = CreateInstance<EditorInputDialog>();
+            w._dialogSessionId = ++_dialogCounter;
             w.titleContent = new GUIContent(title);
             w._label = label;
-            w._value = defaultValue;
+            w._value = defaultValue ?? "";
             w.minSize = w.maxSize = new Vector2(340, 110);
+            w._confirmed = false;
+
+            try
+            {
+                var mainPos = EditorGUIUtility.GetMainWindowPosition();
+                var center = new Vector2(mainPos.x + mainPos.width * 0.5f, mainPos.y + mainPos.height * 0.5f);
+                w.position = new Rect(center.x - 170f, center.y - 55f, 340f, 110f);
+            }
+            catch
+            {
+                // Fallback to default positioning
+            }
+
             w.ShowModal();
-            string finalResult = _result;
-            _result = null;
-            return finalResult;
+            return w._confirmed ? w._value : null;
         }
 
         private void OnEnable()
@@ -31,12 +44,18 @@ namespace AwesomeTaskManager.UI
 
         private void OnDisable()
         {
-            _result = null;
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
         }
 
         private void OnDestroy()
         {
-            _result = null;
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorGUIUtility.editingTextField = false;
         }
 
         private void OnGUI()
@@ -59,13 +78,14 @@ namespace AwesomeTaskManager.UI
                     EditorGUILayout.LabelField(_label, labelStyle);
                     GUILayout.Space(4);
 
-                    GUI.SetNextControlName("InputDialogTextField");
+                    string controlName = $"InputDialogTextField_{_dialogSessionId}";
+                    GUI.SetNextControlName(controlName);
                     _value = TBStyles.DrawThemedTextField(_value, GUILayout.Height(22));
 
                     if (!_focused)
                     {
                         _focused = true;
-                        EditorGUI.FocusTextInControl("InputDialogTextField");
+                        EditorGUI.FocusTextInControl(controlName);
                     }
 
                     bool enterPressed = Event.current.type == EventType.KeyDown &&
@@ -74,9 +94,14 @@ namespace AwesomeTaskManager.UI
 
                     if (escapePressed)
                     {
-                        _result = null;
-                        Close();
+                        _confirmed = false;
+                        GUIUtility.keyboardControl = 0;
+                        GUIUtility.hotControl = 0;
+                        GUI.FocusControl(null);
+                        EditorGUIUtility.editingTextField = false;
                         Event.current.Use();
+                        Close();
+                        GUIUtility.ExitGUI();
                         return;
                     }
 
@@ -85,16 +110,26 @@ namespace AwesomeTaskManager.UI
                     {
                         if (ThemedTooltip.Button("OK", "Confirm", TBStyles.StandardButton, GUILayout.Height(24)) || enterPressed)
                         {
-                            _result = _value;
-                            Close();
+                            _confirmed = true;
+                            GUIUtility.keyboardControl = 0;
+                            GUIUtility.hotControl = 0;
+                            GUI.FocusControl(null);
+                            EditorGUIUtility.editingTextField = false;
                             if (enterPressed) Event.current.Use();
+                            Close();
+                            GUIUtility.ExitGUI();
                             return;
                         }
                         GUILayout.Space(6);
                         if (ThemedTooltip.Button("Cancel", "Cancel", TBStyles.StandardButton, GUILayout.Height(24)))
                         {
-                            _result = null;
+                            _confirmed = false;
+                            GUIUtility.keyboardControl = 0;
+                            GUIUtility.hotControl = 0;
+                            GUI.FocusControl(null);
+                            EditorGUIUtility.editingTextField = false;
                             Close();
+                            GUIUtility.ExitGUI();
                             return;
                         }
                     }

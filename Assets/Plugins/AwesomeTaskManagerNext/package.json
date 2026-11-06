@@ -1,0 +1,21 @@
+{
+  "name": "com.awesometaskmanager.next",
+  "displayName": "Awesome Task Manager Next – AI Kanban & Notes",
+  "version": "1.0.0",
+  "unity": "6000.0",
+  "description": "AI-compatible extension and standalone assistant for Awesome Task Manager. Adds Model Context Protocol (MCP) tool endpoints for Unity AI and IDE coding agents (Junie Pro, Cursor, Claude Code, Rider), in-editor AI task generation, checklist breakdown, devlog notes creation, and programmatic API.",
+  "keywords": [
+    "kanban",
+    "tasks",
+    "project management",
+    "ai",
+    "mcp",
+    "model context protocol",
+    "notes",
+    "productivity"
+  ],
+  "author": {
+    "name": "Vitor Makes Games"
+  },
+  "dependencies": {}
+}
