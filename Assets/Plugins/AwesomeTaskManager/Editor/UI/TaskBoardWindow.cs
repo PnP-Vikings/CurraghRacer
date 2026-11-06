@@ -22,7 +22,12 @@ namespace AwesomeTaskManager.Editor
         {
             get
             {
-                if (_instance == null) _instance = null;
+                if (_instance == null)
+                {
+                    var windows = Resources.FindObjectsOfTypeAll<TaskBoardWindow>();
+                    if (windows != null && windows.Length > 0)
+                        _instance = windows[0];
+                }
                 return _instance;
             }
             private set => _instance = value;
@@ -31,12 +36,40 @@ namespace AwesomeTaskManager.Editor
         private SaveData _data;
         [SerializeField] private int _tab;
         [SerializeField] private int _boardIndex;
-        public int BoardIndex => _boardIndex;
+        public int BoardIndex
+        {
+            get => _boardIndex;
+            set => SetActiveBoardIndex(value);
+        }
+
+        public string SearchFilter
+        {
+            get => _searchFilter;
+            set { _searchFilter = value ?? ""; Repaint(); }
+        }
+
+        public string CategoryFilter
+        {
+            get => _categoryFilter;
+            set { _categoryFilter = value ?? ""; Repaint(); }
+        }
+
+        public string AssigneeFilter
+        {
+            get => _assigneeFilter;
+            set { _assigneeFilter = value ?? ""; Repaint(); }
+        }
+
+        public int PriorityFilter
+        {
+            get => _priorityFilter;
+            set { _priorityFilter = Mathf.Max(0, value); Repaint(); }
+        }
 
         // GIF cache state
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
-        [SerializeField] private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll, _styleScroll;
+        [SerializeField] private Vector2 _boardScroll, _notesListScroll, _noteEditorScroll, _styleScroll, _tabScrollPos;
         [SerializeField] private string _searchFilter = "";
         [SerializeField] private string _categoryFilter = "";
         [SerializeField] private string _assigneeFilter = ""; // New filter
@@ -267,6 +300,7 @@ namespace AwesomeTaskManager.Editor
             }
 
             _data = freshData;
+            _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, Mathf.Max(0, _data.boards.Count - 1));
             ApplyPostLoadVisualState();
             
             // Also notify any open sub-windows to reload their data from disk
@@ -520,6 +554,42 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
+        public void SetActiveBoardIndex(int index)
+        {
+            if (_data == null) _data = Persistence.Load();
+            if (_data?.boards == null || _data.boards.Count == 0) return;
+            _boardIndex = Mathf.Clamp(index, 0, _data.boards.Count - 1);
+            _data.lastBoardIndex = _boardIndex;
+            Save();
+            Repaint();
+        }
+
+        public void SetFilters(string category, string assigneeId, int priority, string search)
+        {
+            if (category != null) _categoryFilter = string.Equals(category, "All", StringComparison.OrdinalIgnoreCase) ? "" : category;
+            if (assigneeId != null) _assigneeFilter = string.Equals(assigneeId, "All", StringComparison.OrdinalIgnoreCase) ? "" : assigneeId;
+            if (priority >= 0) _priorityFilter = priority;
+            if (search != null) _searchFilter = search;
+            Repaint();
+        }
+
+        public (string search, string category, string assigneeId, int priority) GetFilters()
+        {
+            return (_searchFilter, _categoryFilter, _assigneeFilter, _priorityFilter);
+        }
+
+        public static void ApplyFiltersToOpenWindows(string category, string assigneeId, int priority, string search)
+        {
+            var mainWindows = Resources.FindObjectsOfTypeAll<TaskBoardWindow>();
+            if (mainWindows != null && mainWindows.Length > 0)
+            {
+                foreach (var w in mainWindows)
+                {
+                    if (w != null) w.SetFilters(category, assigneeId, priority, search);
+                }
+            }
+        }
+
         private void ResetFilters()
         {
             _searchFilter = "";
@@ -543,6 +613,22 @@ namespace AwesomeTaskManager.Editor
 
             var noteWindows = Resources.FindObjectsOfTypeAll<NotePopupWindow>();
             foreach (var w in noteWindows) w.LoadData();
+
+            // Notify ATM Next Assistant Window if present (using reflection to avoid circular dependency)
+            try
+            {
+                var nextWindowType = System.Type.GetType("AwesomeTaskManager.Next.UI.ATMNextAssistantWindow, AwesomeTaskManagerNext.Editor");
+                if (nextWindowType != null)
+                {
+                    var nextWindows = Resources.FindObjectsOfTypeAll(nextWindowType);
+                    foreach (var w in nextWindows)
+                    {
+                        var method = nextWindowType.GetMethod("LoadData");
+                        if (method != null) method.Invoke(w, null);
+                    }
+                }
+            }
+            catch { }
         }
 
         public void Save()
@@ -774,14 +860,16 @@ namespace AwesomeTaskManager.Editor
 
         private void DrawTabs()
         {
-            using (var scope = new EditorGUILayout.HorizontalScope(GUILayout.Height(34)))
+            var tabScope = EditorGUILayout.BeginVertical(GUILayout.Height(34));
+            if (Event.current.type == EventType.Repaint)
             {
-                if (Event.current.type == EventType.Repaint)
-                {
-                    TBStyles.DrawGlassPanel(scope.rect, TBStyles.TopBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
-                    EditorGUI.DrawRect(new Rect(scope.rect.x, scope.rect.yMax - 1, scope.rect.width, 1), EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.35f) : new Color(0f, 0f, 0f, 0.12f));
-                }
+                TBStyles.DrawGlassPanel(tabScope, TBStyles.TopBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
+                EditorGUI.DrawRect(new Rect(tabScope.x, tabScope.yMax - 1, tabScope.width, 1), EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.35f) : new Color(0f, 0f, 0f, 0.12f));
+            }
 
+            _tabScrollPos = EditorGUILayout.BeginScrollView(_tabScrollPos, false, false, GUIStyle.none, GUIStyle.none, GUIStyle.none, GUILayout.Height(34));
+            using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
+            {
                 GUILayout.Space(8);
                 if (ThemedTooltip.Button($"{TBStyles.BoardTabIcon} Board", "Switch to Task Board view", _tab == 0 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
                 {
@@ -801,8 +889,10 @@ namespace AwesomeTaskManager.Editor
                     GUIUtility.ExitGUI();
                 }
 
-                GUILayout.FlexibleSpace();
+                GUILayout.Space(8);
             }
+            EditorGUILayout.EndScrollView();
+            EditorGUILayout.EndVertical();
         }
 
         // ════════════════════════════════════════════
@@ -1094,25 +1184,99 @@ namespace AwesomeTaskManager.Editor
 
             // ── Status bar ──
             var allCards = board.columns.SelectMany(c => c.cards).Where(c => _showArchived || !c.archived).ToList();
-            int totalCards = allCards.Count;
-            int completedCount = allCards.Count(c => c.completed);
-            int overdueCount = allCards.Count(c => !c.completed && !string.IsNullOrWhiteSpace(c.dueDate)
-                && DateTime.TryParse(c.dueDate, out var d) && d.Date < DateTime.Today);
-            int dueTodayCount = allCards.Count(c => !c.completed && !string.IsNullOrWhiteSpace(c.dueDate)
-                && DateTime.TryParse(c.dueDate, out var d) && d.Date == DateTime.Today);
-
             var statusRect = GUILayoutUtility.GetRect(0, 20, GUILayout.ExpandWidth(true));
             if (Event.current.type == EventType.Repaint)
             {
                 TBStyles.DrawGlassPanel(statusRect, TBStyles.StatusBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.06f) : new Color(1f, 1f, 1f, 0.30f), false);
             }
 
-            string statusText = $"  {totalCards} card(s)";
-            if (completedCount > 0) statusText += $"  •  {TBStyles.CompletedIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusCompletedColor)}>{completedCount} Completed</color>";
-            if (overdueCount > 0) statusText += $"  •  {TBStyles.OverdueIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusOverdueColor)}>{overdueCount} overdue</color>";
-            if (dueTodayCount > 0) statusText += $"  •  {TBStyles.DueTodayIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusDueTodayColor)}>{dueTodayCount} due today</color>";
-            statusText += $"  •  {board.columns.Count} column(s)";
+            string statusText = BuildStatusBarText(allCards, board.columns.Count);
             EditorGUI.LabelField(statusRect, statusText, TBStyles.StatusBar);
+        }
+
+        // ── Status bar helpers ──
+        public static DueDateSummary CalculateDueDateSummary(IEnumerable<TaskCard> cards, int columnCount = 0, DateTime? referenceDate = null)
+        {
+            var summary = new DueDateSummary { columnCount = columnCount };
+            if (cards == null) return summary;
+
+            var today = referenceDate?.Date ?? DateTime.Today;
+
+            foreach (var card in cards)
+            {
+                if (card == null) continue;
+                summary.totalCards++;
+
+                if (card.completed)
+                {
+                    summary.completedCount++;
+                    continue;
+                }
+
+                if (string.IsNullOrWhiteSpace(card.dueDate)) continue;
+                if (!DateTime.TryParse(card.dueDate, out var d)) continue;
+
+                int daysUntil = (d.Date - today).Days;
+                if (daysUntil < 0)
+                {
+                    summary.overdueCount++;
+                }
+                else if (daysUntil == 0)
+                {
+                    summary.dueTodayCount++;
+                }
+                else if (daysUntil == 1)
+                {
+                    summary.dueIn1DayCount++;
+                }
+                else if (daysUntil == 2)
+                {
+                    summary.dueIn2DaysCount++;
+                }
+                else if (daysUntil == 3)
+                {
+                    summary.dueIn3DaysCount++;
+                }
+                else if (daysUntil < 7)
+                {
+                    summary.dueLessThanWeekCount++;
+                }
+                else
+                {
+                    summary.dueOverWeekCount++;
+                }
+            }
+
+            return summary;
+        }
+
+        public static string BuildStatusBarText(DueDateSummary summary)
+        {
+            string statusText = $"  {summary.totalCards} card(s)";
+            if (summary.completedCount > 0)
+                statusText += $"  •  {TBStyles.CompletedIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusCompletedColor)}>{summary.completedCount} Completed</color>";
+            if (summary.overdueCount > 0)
+                statusText += $"  •  {TBStyles.OverdueIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusOverdueColor)}>{summary.overdueCount} overdue</color>";
+            if (summary.dueTodayCount > 0)
+                statusText += $"  •  {TBStyles.DueTodayIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusDueTodayColor)}>{summary.dueTodayCount} due today</color>";
+            if (summary.dueIn1DayCount > 0)
+                statusText += $"  •  {TBStyles.DueSoonIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusDueSoonColor)}>{summary.dueIn1DayCount} due in 1 day</color>";
+            if (summary.dueIn2DaysCount > 0)
+                statusText += $"  •  {TBStyles.DueSoonIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusDueSoonColor)}>{summary.dueIn2DaysCount} due in 2 days</color>";
+            if (summary.dueIn3DaysCount > 0)
+                statusText += $"  •  {TBStyles.DueSoonIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.StatusDueSoonColor)}>{summary.dueIn3DaysCount} due in 3 days</color>";
+            if (summary.dueLessThanWeekCount > 0)
+                statusText += $"  •  {TBStyles.DueDateIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.CardDetailsTextColor)}>{summary.dueLessThanWeekCount} due in less than a week</color>";
+            if (summary.dueOverWeekCount > 0)
+                statusText += $"  •  {TBStyles.DueDateIcon} <color=#{ColorUtility.ToHtmlStringRGBA(TBStyles.CardDetailsTextColor)}>{summary.dueOverWeekCount} due in over a week</color>";
+            statusText += $"  •  {summary.columnCount} column(s)";
+            return statusText;
+        }
+
+        public static string BuildStatusBarText(IEnumerable<TaskCard> cards, int columnCount, DateTime? referenceDate = null)
+        {
+            var summary = CalculateDueDateSummary(cards, columnCount, referenceDate);
+            return BuildStatusBarText(summary);
         }
 
         private void DrawColumn(TaskColumn col, int colIdx, TaskBoard board, float width)

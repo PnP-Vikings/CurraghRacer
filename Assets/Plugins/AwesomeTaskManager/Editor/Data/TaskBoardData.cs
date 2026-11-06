@@ -97,6 +97,29 @@ namespace AwesomeTaskManager.Data
         public List<TaskCard> cards = new List<TaskCard>();
         public TaskColumn() { id = Guid.NewGuid().ToString(); }
         public TaskColumn(string title) : this() { this.title = title; }
+
+        public TaskColumn Clone(bool resetIds = true, bool includeCards = true)
+        {
+            string json = JsonUtility.ToJson(this);
+            TaskColumn clone = JsonUtility.FromJson<TaskColumn>(json);
+            if (!includeCards && clone.cards != null)
+            {
+                clone.cards.Clear();
+            }
+            if (resetIds)
+            {
+                clone.id = Guid.NewGuid().ToString();
+                if (clone.cards != null)
+                {
+                    foreach (var card in clone.cards)
+                    {
+                        card.id = Guid.NewGuid().ToString();
+                        card.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                    }
+                }
+            }
+            return clone;
+        }
     }
 
     [Serializable]
@@ -223,6 +246,21 @@ namespace AwesomeTaskManager.Data
         }
 
         public int CharCount => string.IsNullOrEmpty(content) ? 0 : content.Length;
+    }
+
+    [Serializable]
+    public struct DueDateSummary
+    {
+        public int totalCards;
+        public int completedCount;
+        public int overdueCount;
+        public int dueTodayCount;
+        public int dueIn1DayCount;
+        public int dueIn2DaysCount;
+        public int dueIn3DaysCount;
+        public int dueLessThanWeekCount;
+        public int dueOverWeekCount;
+        public int columnCount;
     }
 
     public enum ChecklistTickStyle
@@ -3850,6 +3888,18 @@ namespace AwesomeTaskManager.Data
                 }
             }
 
+            categoryColors = (categoryColors ?? new List<CategoryColorEntry>())
+                .Where(x => x != null && !string.IsNullOrWhiteSpace(x.category))
+                .GroupBy(x => x.category.Trim(), StringComparer.OrdinalIgnoreCase)
+                .Select(g =>
+                {
+                    var last = g.Last();
+                    string canonical = categories.FirstOrDefault(c => string.Equals(c, last.category.Trim(), StringComparison.OrdinalIgnoreCase)) ?? last.category.Trim();
+                    last.category = canonical;
+                    return last;
+                })
+                .ToList();
+
             foreach (var board in boards)
             {
                 board.columns ??= new List<TaskColumn>();
@@ -3945,18 +3995,6 @@ namespace AwesomeTaskManager.Data
                 {
                     x.Normalize();
                     return x;
-                })
-                .ToList();
-
-            categoryColors = (categoryColors ?? new List<CategoryColorEntry>())
-                .Where(x => x != null && !string.IsNullOrWhiteSpace(x.category))
-                .GroupBy(x => x.category.Trim(), StringComparer.OrdinalIgnoreCase)
-                .Select(g =>
-                {
-                    var last = g.Last();
-                    string canonical = categories.FirstOrDefault(c => string.Equals(c, last.category.Trim(), StringComparison.OrdinalIgnoreCase)) ?? last.category.Trim();
-                    last.category = canonical;
-                    return last;
                 })
                 .ToList();
         }

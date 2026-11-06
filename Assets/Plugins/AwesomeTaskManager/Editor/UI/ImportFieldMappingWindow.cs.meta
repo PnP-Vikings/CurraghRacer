@@ -1,2 +1,9 @@
 fileFormatVersion: 2
 guid: 8fe0ed620c49b4129a245f729a9d2d8d
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371674
+  packageName: "Awesome Task Manager \u2013 Kanban & Notes for Unity"
+  packageVersion: 2.0
+  assetPath: Assets/Plugins/AwesomeTaskManager/Editor/UI/ImportFieldMappingWindow.cs
+  uploadId: 987546

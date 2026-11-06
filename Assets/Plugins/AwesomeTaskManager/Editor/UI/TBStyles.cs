@@ -958,7 +958,8 @@ namespace AwesomeTaskManager.UI
                                 _addButton, _addCardButton, _tabActive, _tabInactive, _noteBox, _noteBoxSelected, _noteTextArea,
                                 _noteTitle, _sectionLabel, _iconButton, _linkStyle, _assigneeCircle,
                                 _toolbarButton, _toolbarButtonActive, _toolbarPopup, _toolbarDeleteButton, _standardButton, _standardDropdown,
-                                _deleteButton, _deleteIconButton, _dropdownMenuItem, _themedTextField, _themedSearchField;
+                                _deleteButton, _deleteIconButton, _dropdownMenuItem, _themedTextField, _themedSearchField,
+                                _sliderThumb, _sliderTrack, _assistantHeader, _assistantSliderThumb, _assistantSliderTrack;
 
         public static GUIStyle AssigneeCircle => _assigneeCircle ??= new GUIStyle(EditorStyles.label)
         {
@@ -977,10 +978,10 @@ namespace AwesomeTaskManager.UI
             wordWrap = true
         };
 
-        public static GUIStyle BoardHeader => _boardHeader ??= new GUIStyle(EditorStyles.boldLabel)
+        public static GUIStyle BoardHeader => _boardHeader ??= new GUIStyle(GUIStyle.none)
         {
-            fontSize = 18, alignment = TextAnchor.MiddleLeft,
-            padding = new RectOffset(8, 8, 6, 6),
+            fontSize = 18, fontStyle = FontStyle.Bold, alignment = TextAnchor.MiddleLeft,
+            padding = new RectOffset(8, 8, 4, 4),
             normal = { textColor = EditorGUIUtility.isProSkin ? Pro_BoardHeader : Personal_BoardHeader }
         };
 
@@ -1497,8 +1498,8 @@ namespace AwesomeTaskManager.UI
                         margin = new RectOffset(1, 1, 1, 1),
                         padding = new RectOffset(6, 6, 2, 2)
                     };
-                    SetAllStateTextures(_themedTextField, GetColorTex(NoteInputBg));
-                    SetAllStateTextColors(_themedTextField, NoteInputText);
+                    SetAllStateTextures(_themedTextField, GetColorTex(DropdownBg));
+                    SetAllStateTextColors(_themedTextField, DropdownText);
                 }
                 return _themedTextField;
             }
@@ -1518,10 +1519,45 @@ namespace AwesomeTaskManager.UI
                         margin = new RectOffset(1, 1, 1, 1),
                         padding = new RectOffset(6, 6, 2, 2)
                     };
-                    SetAllStateTextures(_themedSearchField, GetColorTex(NoteInputBg));
-                    SetAllStateTextColors(_themedSearchField, NoteInputText);
+                    SetAllStateTextures(_themedSearchField, GetColorTex(DropdownBg));
+                    SetAllStateTextColors(_themedSearchField, DropdownText);
                 }
                 return _themedSearchField;
+            }
+        }
+
+        public static GUIStyle SliderTrack
+        {
+            get
+            {
+                if (_sliderTrack == null)
+                {
+                    _sliderTrack = new GUIStyle(GUIStyle.none)
+                    {
+                        fixedHeight = 6,
+                        margin = new RectOffset(0, 0, 8, 8)
+                    };
+                    SetAllStateTextures(_sliderTrack, GetColorTex(DropdownBg));
+                }
+                return _sliderTrack;
+            }
+        }
+
+        public static GUIStyle SliderThumb
+        {
+            get
+            {
+                if (_sliderThumb == null)
+                {
+                    _sliderThumb = new GUIStyle(GUIStyle.none)
+                    {
+                        fixedHeight = 14,
+                        fixedWidth = 14
+                    };
+                    var thumbColor = EditorGUIUtility.isProSkin ? Pro_CardHighlighted : Personal_CardHighlighted;
+                    SetAllStateTextures(_sliderThumb, GetColorTex(thumbColor));
+                }
+                return _sliderThumb;
             }
         }
 
@@ -1700,8 +1736,8 @@ namespace AwesomeTaskManager.UI
                         padding = new RectOffset(8, 8, 8, 8),
                         border = new RectOffset(0, 0, 0, 0)
                     };
-                    SetAllStateTextures(_cardTextArea, GetColorTex(NoteInputBg));
-                    SetAllStateTextColors(_cardTextArea, NoteInputText);
+                    SetAllStateTextures(_cardTextArea, GetColorTex(DropdownBg));
+                    SetAllStateTextColors(_cardTextArea, DropdownText);
                 }
                 return _cardTextArea;
             }
@@ -1811,6 +1847,88 @@ namespace AwesomeTaskManager.UI
         public static string DrawThemedSearchField(string text, params GUILayoutOption[] layoutOptions)
         {
             return DrawThemedTextField(text, ThemedSearchField, layoutOptions);
+        }
+
+        public static GUIStyle AssistantHeader => _assistantHeader ??= new GUIStyle(BoardHeader)
+        {
+            alignment = TextAnchor.MiddleLeft,
+            padding = new RectOffset(0, 0, 0, 0)
+        };
+
+        public static GUIStyle AssistantSliderTrack => _assistantSliderTrack ??= new GUIStyle(SliderTrack)
+        {
+            fixedHeight = 4,
+            margin = new RectOffset(0, 0, 0, 0)
+        };
+
+        public static GUIStyle AssistantSliderThumb => _assistantSliderThumb ??= new GUIStyle(GUIStyle.none)
+        {
+            fixedHeight = 14,
+            fixedWidth = 14
+        };
+
+        public static int DrawThemedIntSlider(GUIContent label, int value, int min, int max, string tooltip = null)
+        {
+            EditorGUILayout.BeginHorizontal();
+            
+            if (label != null && !string.IsNullOrEmpty(label.text))
+            {
+                ThemedTooltip.Label(label, null, GUILayout.Width(EditorGUIUtility.labelWidth), GUILayout.Height(20));
+            }
+            
+            Rect sliderRect = EditorGUILayout.GetControlRect(GUILayout.ExpandWidth(true), GUILayout.Height(20));
+            
+            // Track
+            Rect trackRect = new Rect(sliderRect.x, sliderRect.y + (sliderRect.height - 4f) * 0.5f, sliderRect.width, 4f);
+            DrawGlassPanel(trackRect, DropdownBg, new Color(1, 1, 1, 0.1f), false);
+            
+            // Interaction
+            value = Mathf.RoundToInt(GUI.HorizontalSlider(sliderRect, value, min, max, GUIStyle.none, AssistantSliderThumb));
+            
+            // Thumb - Manual Repaint for custom glassmorphism look
+            if (Event.current.type == EventType.Repaint)
+            {
+                float thumbSize = 12f;
+                float progress = (max == min) ? 0 : (float)(value - min) / (max - min);
+                float thumbX = sliderRect.x + progress * (sliderRect.width - thumbSize);
+                Rect thumbDrawRect = new Rect(thumbX, sliderRect.y + (sliderRect.height - thumbSize) * 0.5f, thumbSize, thumbSize);
+                
+                var thumbColor = EditorGUIUtility.isProSkin ? Pro_CardHighlighted : Personal_CardHighlighted;
+                DrawGlassPanel(thumbDrawRect, thumbColor, new Color(1, 1, 1, 0.2f), true);
+            }
+            
+            GUILayout.Space(8);
+            
+            // Value Box
+            GUIStyle valueBoxStyle = new GUIStyle(ThemedTextField)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                padding = new RectOffset(0, 0, 0, 0)
+            };
+            
+            string valStr = value.ToString();
+            Rect valRect = EditorGUILayout.GetControlRect(GUILayout.Width(35), GUILayout.Height(20));
+            string newValStr = EditorGUI.TextField(valRect, valStr, valueBoxStyle);
+            
+            if (Event.current.type == EventType.Repaint)
+            {
+                Color borderColor = EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.15f) : new Color(0f, 0f, 0f, 0.2f);
+                DrawBorderRect(valRect, borderColor, 1f);
+            }
+
+            if (int.TryParse(newValStr, out int parsed))
+            {
+                value = Mathf.Clamp(parsed, min, max);
+            }
+
+            EditorGUILayout.EndHorizontal();
+            
+            if (!string.IsNullOrEmpty(tooltip))
+            {
+                ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+            }
+            
+            return value;
         }
 
         private static GUIStyle _checkmarkStyle;

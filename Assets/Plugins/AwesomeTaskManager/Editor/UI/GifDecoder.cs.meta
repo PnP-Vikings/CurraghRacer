@@ -1,3 +1,10 @@
 fileFormatVersion: 2
 guid: 223d9b27af5841bbb70055018b6c66ef
 timeCreated: 1775257059
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371674
+  packageName: "Awesome Task Manager \u2013 Kanban & Notes for Unity"
+  packageVersion: 2.0
+  assetPath: Assets/Plugins/AwesomeTaskManager/Editor/UI/GifDecoder.cs
+  uploadId: 987546

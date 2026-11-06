@@ -1,3 +1,10 @@
 fileFormatVersion: 2
 guid: 05d1c9e0b07b446c8de3b4b563a7d524
 timeCreated: 1786750296
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371674
+  packageName: "Awesome Task Manager \u2013 Kanban & Notes for Unity"
+  packageVersion: 2.0
+  assetPath: Assets/Plugins/AwesomeTaskManager/Editor/UI/ThemedDropdownPopup.cs
+  uploadId: 987546

@@ -1624,7 +1624,7 @@
                             "linkedSceneObjects": [],
                             "linkedItems": [],
                             "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Game Map.gif",
-                            "showChecklist": true,
+                            "showChecklist": false,
                             "completed": true,
                             "assigneeIds": []
                         }

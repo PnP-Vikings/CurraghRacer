@@ -1,3 +1,10 @@
 fileFormatVersion: 2
 guid: ed845488c42742eda41f746219950dee
 timeCreated: 1776732972
+AssetOrigin:
+  serializedVersion: 1
+  productId: 371674
+  packageName: "Awesome Task Manager \u2013 Kanban & Notes for Unity"
+  packageVersion: 2.0
+  assetPath: Assets/Plugins/AwesomeTaskManager/Editor/UI/ImageLargePreviewWindow.cs
+  uploadId: 987546
