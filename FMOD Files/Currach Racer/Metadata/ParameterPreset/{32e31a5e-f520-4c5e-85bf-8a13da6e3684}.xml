@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<objects serializationModel="Studio.02.02.00">
+	<object class="ParameterPreset" id="{32e31a5e-f520-4c5e-85bf-8a13da6e3684}">
+		<property name="name">
+			<value>Car Engine Pitch</value>
+		</property>
+		<relationship name="folder">
+			<destination>{67caeeba-86eb-4276-93c7-e2d14c346673}</destination>
+		</relationship>
+		<relationship name="parameter">
+			<destination>{5998c8a4-f403-435c-933f-e3a8da928753}</destination>
+		</relationship>
+	</object>
+	<object class="GameParameter" id="{5998c8a4-f403-435c-933f-e3a8da928753}">
+		<property name="initialValue">
+			<value>0.5</value>
+		</property>
+		<property name="seekSpeed">
+			<value>0.25999999046325684</value>
+		</property>
+	</object>
+</objects>

@@ -222,18 +222,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6720211339173888
-    m_Localized: Who am I?
+    m_Localized: Letter from Pa Nolan
     m_Metadata:
       m_Items: []
   - m_Id: 6720839771742208
-    m_Localized: "You are Declan Kelly, a twenty-something living in rural Ireland
-      in 2008, right after the Celtic Tiger collapsed and took every decent job with
-      it.\n\nThere\u2019s no solid work around you, Dublin is too expensive, and
-      your only real chance is getting to Australia to earn proper money on the mines
-      or building sites.\n\nBut you need at least \u20AC5,000 before your working
-      visa window closes, so you have put together a rough crew of local currach
-      racers to win Sunday races. \n\nYou plan to take a cut from the betting money
-      and scrape together enough cash to escape."
+    m_Localized: "Declan, I wish I could\u2019ve been here to welcome you back after 5 years but Half Bottle started choking on a Peanut so we took him down to the CareDoc.\r\n\r\nSo since you\u2019ve been away up in Dublin things have changed in Toberduff. Myself, Tubs Devlin and Half Bottle lost it all during the crash there. We\u2019re getting just enough to stay alive off the Dole but it\u2019s tight enough. \r\n\r\nI\u2019ve put a Pay-As-You-Go electricity meter into the shed oh and by the way the bank took everything so we\u2019re set up in the shed, don\u2019t worry there's a mattress for you too.\r\n\r\nTo be honest with you your only real chance is getting to Australia to earn proper money on the mines or building sites.\r\n\r\nBut you need at least \u20AC5,000 before your working visa window closes, so you have put together a rough crew of local currach racers to win the big money Sunday races.\r\n\r\nWe can be that crew for you, just keep my palm greased and I\u2019m happy.\r\n\r\n-Pa"
     m_Metadata:
       m_Items: []
   - m_Id: 6721385467469824
@@ -323,8 +316,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11833506513543168
-    m_Localized: "You have fallen into debt with the Irish Mob\nThey won't forget
-      and if owe more than {0} something \nbad may happpen..."
+    m_Localized: "You have fallen into debt with the Kinnehans\nThey won't forget and if owe more than {0} something \nbad may happpen..."
     m_Metadata:
       m_Items:
       - rid: 7162749194343809147

@@ -23,29 +23,23 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 245848072192
-    m_Localized: "A dhuine uasail, d\u2019fh\xE1g do sheanathair an seid seo ina
-      dhiaidh nuair a theith s\xE9 as an t\xEDr."
+    m_Localized: "A Declan, t\xE1 br\xF3n orm n\xE1rbh fh\xE9idir liom f\xE1ilte a chur romhat ar ais abhaile tar \xE9is 5 bliana ach thosaigh Half Bottle ag tachtadh ar phis\xEDn\xED tal\xFAn agus mar sin b'\xE9igean d\xFAinn \xE9 a thabhairt chuig an CareDoc. D'fh\xE1g m\xE9 c\xFApla n\xF3ta timpeall mar t\xE1 an \xE1it beag\xE1in\xEDn difri\xFAil \xF3 bh\xED t\xFA imithe. Fuair \u200B\u200Bm\xE9 payment MICA as seant\xED a bh\xED ar c\xEDos agam i mBun Cranncha agus mar sin rinne m\xE9 athch\xF3iri\xFA ar an Shed. Ar aon n\xF3s, f\xE9ach thart. -Pa"
     m_Metadata:
       m_Items: []
   - m_Id: 331147632640
-    m_Localized: "Seo do phr\xEDomhionad oibr\xEDochta, \xE1it a dtarla\xEDonn gach
-      rud t\xE1bhachtach."
+    m_Localized: "Seo an \xE1it a nd\xE9anaimid bainist\xEDocht ar an bhfoireann, t\xE1 citeal againn agus gach rud. t\xE1 s\xE9 ar fheabhas!"
     m_Metadata:
       m_Items: []
   - m_Id: 340958109696
-    m_Localized: "T\xE1 na himeachta\xED t\xE1bhachtacha ar fad at\xE1 le teacht
-      marc\xE1ilte agam ar do fh\xE9ilire; clice\xE1il ar an bhf\xE9ilire chun breathn\xFA
-      orthu."
+    m_Localized: "Chuireamar na d\xE1ta\xED t\xE1bhachtacha go l\xE9ir \xF3n Teletext ar an bhf\xE9ilire. is den seanscoil m\xE9. Cha bhacaim leis na f\xF3in n\xE1 leis na r\xEDomhair\xED..."
     m_Metadata:
       m_Items: []
   - m_Id: 357454307328
-    m_Localized: "T\xE1 cnaip\xED ag an mbun a ligeann duit nasclean\xFAint a dh\xE9anamh
-      tr\xED na m\xEDonna."
+    m_Localized: "T\xE1 cnaip\xED ag an mbun a ligeann duit nasclean\xFAint a dh\xE9anamh tr\xED na m\xEDonna."
     m_Metadata:
       m_Items: []
   - m_Id: 989963739136
-    m_Localized: "D\xE9an beag\xE1n taisc\xE9ala\xEDochta agus ansin br\xFAigh 'Folaigh
-      an f\xE9ilire' chun an f\xE9ilire a dh\xFAnadh."
+    m_Localized: "Feic timcheall ansin br\xFAigh 'Folaigh an f\xE9ilire' chun an f\xE9ilire a dh\xFAnadh."
     m_Metadata:
       m_Items: []
   - m_Id: 899157057536
@@ -65,9 +59,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 1990221357056
-    m_Localized: "Anseo is f\xE9idir leat gach rud a bhainisti\xFA: r\xE1s a thos\xFA,
-      poist a aimsi\xFA, baill d\u2019fhoireann a oili\xFAint, bill\xED a \xEDoc
-      agus codladh."
+    m_Localized: "Anseo is f\xE9idir leat gach rud a bhainisti\xFA: r\xE1s a thos\xFA, poist a aimsi\xFA, baill d\u2019fhoireann a oili\xFAint, bill\xED a \xEDoc agus codladh."
     m_Metadata:
       m_Items: []
   - m_Id: 1907589373952
@@ -79,8 +71,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6064975110144
-    m_Localized: "Clice\xE1il ar an r\xE1s cleachtaidh chun eolas a chur ar chumas
-      reatha d'fhoirne."
+    m_Localized: "Clice\xE1il ar an r\xE1s cleachtaidh chun eolas a chur ar chumas reatha d'fhoirne."
     m_Metadata:
       m_Items: []
   - m_Id: 6400930471936
@@ -92,13 +83,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6566941024256
-    m_Localized: "Ba cheart duit clice\xE1il ar an teilif\xEDs chun a fheice\xE1il
-      cad at\xE1 ar si\xFAl."
+    m_Localized: "Ba cheart duit clice\xE1il ar an teilif\xEDs chun a fheice\xE1il cad at\xE1 ar si\xFAl."
     m_Metadata:
       m_Items: []
   - m_Id: 6606333927424
-    m_Localized: "Anseo is f\xE9idir leat socruithe eile a sh\xE1bh\xE1il agus a
-      bhainisti\xFA."
+    m_Localized: "Anseo is f\xE9idir leat socruithe eile a sh\xE1bh\xE1il agus a bhainisti\xFA."
     m_Metadata:
       m_Items: []
   - m_Id: 6928729104384
@@ -126,19 +115,15 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 7575671136256
-    m_Localized: "D\xE9antar na tr\xE9ithe uile a chomhcheangal chun c\xE1il\xEDocht
-      a chinnti\xFA."
+    m_Localized: "D\xE9antar na tr\xE9ithe uile a chomhcheangal chun c\xE1il\xEDocht a chinnti\xFA."
     m_Metadata:
       m_Items: []
   - m_Id: 7586299502592
-    m_Localized: "Coinnigh s\xFAil ar na r\xE9alta\xED; cuirfidh s\xE9 seo in i\xFAl
-      duit c\xE9n chaoi a gcuirtear i gcompar\xE1id iad le gach duine eile sa tsraith."
+    m_Localized: "Coinnigh s\xFAil ar na r\xE9alta\xED; cuirfidh s\xE9 seo in i\xFAl duit c\xE9n chaoi a gcuirtear i gcompar\xE1id iad le gach duine eile sa tsraith. Is cosuil le Fifa."
     m_Metadata:
       m_Items: []
   - m_Id: 7597456351232
-    m_Localized: "Is f\xE9idir leat baill na foirne a mhalart\xFA freisin m\xE1s
-      mian leat, tr\xED chlice\xE1il ar bhaill ghn\xEDomhacha den fhoireann agus
-      ar bhall at\xE1 ar an mbinse."
+    m_Localized: "Is f\xE9idir leat baill na foirne a mhalart\xFA freisin m\xE1s mian leat, tr\xED chlice\xE1il ar bhaill ghn\xEDomhacha den fhoireann agus ar bhall at\xE1 ar an mbinse."
     m_Metadata:
       m_Items: []
   - m_Id: 8027963908096
@@ -150,14 +135,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 8272705740800
-    m_Localized: "Is f\xE9idir leat r\xE1s\xE1laithe a fhost\xFA freisin m\xE1 t\xE1
-      roinnt boinn bhreise agat agus m\xE1 t\xE1 cabhair uait le haghaidh r\xE1sa."
+    m_Localized: "Is f\xE9idir leat r\xE1s\xE1laithe a fhost\xFA fosta m\xE1 t\xE1 roinnt boinn bhreise agat agus m\xE1 t\xE1 cabhair uait le haghaidh r\xE1sa."
     m_Metadata:
       m_Items: []
   - m_Id: 8319497396224
-    m_Localized: "N\xED f\xE9idir r\xE1s\xF3ir\xED ar c\xEDos a oili\xFAint agus
-      t\xE1 teorainn leis an l\xEDon r\xE1s\xF3ir\xED is f\xE9idir a bheith agat,
-      mar sin coinnigh sin i gcuimhne."
+    m_Localized: "N\xED f\xE9idir r\xE1s\xF3ir\xED ar c\xEDos a oili\xFAint agus t\xE1 teorainn leis an l\xEDon r\xE1s\xF3ir\xED is f\xE9idir a bheith agat, mar sin coinnigh sin i gcuimhne."
     m_Metadata:
       m_Items: []
   - m_Id: 28058928013312
@@ -169,8 +151,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 28617059852288
-    m_Localized: "Chun coinne\xE1il suas leis na c\xE9il\xED comhraic, n\xED m\xF3r
-      d\xFAinn \xE1r bhfoireann a oili\xFAint go lean\xFAnach."
+    m_Localized: "Chun coinne\xE1il suas leis na c\xE9il\xED comhraic, n\xED m\xF3r d\xFAinn \xE1r bhfoireann a oili\xFAint go lean\xFAnach."
     m_Metadata:
       m_Items: []
   - m_Id: 28656771522560
@@ -178,13 +159,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 28673494212608
-    m_Localized: "Anseo is f\xE9idir leat cnaipe a fheice\xE1il do gach tr\xE9ith;
-      cosn\xF3idh s\xE9 50 euro ort in aghaidh an chluiche oili\xFAna."
+    m_Localized: "Anseo is f\xE9idir leat cnaipe a fheice\xE1il do gach tr\xE9ith; cosn\xF3idh s\xE9 50 euro ort in aghaidh an chluiche oili\xFAna."
     m_Metadata:
       m_Items: []
   - m_Id: 28727877558272
-    m_Localized: "D\xE9an cinnte an oili\xFAint a roinnt agus scuad maith cothrom
-      a bheith agat."
+    m_Localized: "D\xE9an cinnte an oili\xFAint a roinnt agus scuad maith cothrom a bheith agat."
     m_Metadata:
       m_Items: []
   - m_Id: 38401192484864
@@ -192,8 +171,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 38442229555200
-    m_Localized: "Clice\xE1il ar ais ar an gcl\xE1r f\xF3gra\xED, t\xE9igh isteach
-      sa bhainisteoir bille agus \xEDoc bille."
+    m_Localized: "Clice\xE1il ar ais ar an gcl\xE1r f\xF3gra\xED, t\xE9igh isteach sa bhainisteoir bille agus \xEDoc bille."
     m_Metadata:
       m_Items: []
   - m_Id: 36514456133632
@@ -201,8 +179,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 36664897429504
-    m_Localized: "Clice\xE1il ar thr\xE9ith ar mhaith leat oili\xFAint a chur uirthi,
-      roghnaigh ball, agus ansin br\xFAigh 'oili\xFAint'."
+    m_Localized: "Clice\xE1il ar thr\xE9ith ar mhaith leat oili\xFAint a chur uirthi, roghnaigh ball, agus ansin br\xFAigh 'oili\xFAint'."
     m_Metadata:
       m_Items: []
   - m_Id: 36944187744256
@@ -210,8 +187,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 37122294669312
-    m_Localized: "\xD3, rinne dearmad agam a lua go bhfuil na bill\xED go l\xE9ir
-      i d\u2019ainmse anois."
+    m_Localized: "\xD3, rinne dearmad agam a lua go bhfuil na bill\xED go l\xE9ir i d\u2019ainmse anois. T\xE1 oifig an d\xF3il ag fiach orm."
     m_Metadata:
       m_Items: []
   - m_Id: 37166594908160
@@ -223,8 +199,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 37441443454976
-    m_Localized: "\xD3, n\xED hea, t\xE1 an chuma ar an sc\xE9al go bhfuil an t-airgead
-      imithe againn."
+    m_Localized: "\xD3, foc, t\xE1 an chuma ar an sc\xE9al go bhfuil an t-airgead imithe againn."
     m_Metadata:
       m_Items: []
   - m_Id: 37487731793920
@@ -252,14 +227,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 38734207639552
-    m_Localized: "Cuimhnigh nach g\xE1 duit an bille a \xEDoc in am, ach beidh ort
-      \xFAs a \xEDoc agus bainfear an t-airgead as do chuntas go huathoibr\xEDoch
-      sa deireadh."
+    m_Localized: "Cuimhnigh nach g\xE1 duit an bille a \xEDoc in am, ach beidh ort \xFAs a \xEDoc agus bainfear an t-airgead as do chuntas go huathoibr\xEDoch sa deireadh."
     m_Metadata:
       m_Items: []
   - m_Id: 38787655655424
-    m_Localized: "Is \xE9 sin le r\xE1 go bhf\xE9adf\xE1 dul i bhfiacha, agus creid
-      uaimse \xE9, n\xEDor mhaith leat \xE9 sin a dh\xE9anamh."
+    m_Localized: "Is \xE9 sin le r\xE1 go bhf\xE9adf\xE1 dul i bhfiacha, agus creid uaimse \xE9, n\xEDor mhaith leat \xE9 sin a dh\xE9anamh. Sin mar a chaill Rat Sweeny \xFAs\xE1id a ghl\xFAn."
     m_Metadata:
       m_Items: []
   - m_Id: 39012852031488
@@ -283,9 +255,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 39778950045696
-    m_Localized: "Cuimhnigh nach bhfuil an codladh saor in aisce, agus mura bhfuil
-      acmhainn agat \xE1it mhaith a fh\xE1il chun sc\xEDth a ligean, n\xED bheidh
-      t\xFA chomh haonmhaith sin an l\xE1 d\xE1r gcionn."
+    m_Localized: "Cuimhnigh air seo: mura mb\xEDonn go leor airgid againn don mh\xE9adar leictreachais, n\xED bheidh muid in ann an t\xE9itheoir a fh\xE1g\xE1il ar si\xFAl san o\xEDche, agus beidh codladh uaf\xE1sach agat sa seid seo."
     m_Metadata:
       m_Items: []
   - m_Id: 39936861396992
@@ -297,13 +267,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40074870775808
-    m_Localized: "Seo an r\xE1s m\xF3r, agus d\u2019fh\xE9adfadh duaiseanna m\xF3ra
-      a bheith mar thoradh ar \xE9 a bhuachan."
+    m_Localized: "Seo an r\xE1s m\xF3r, agus d\u2019fh\xE9adfadh duaiseanna m\xF3ra a bheith mar thoradh ar \xE9 a bhuachan."
     m_Metadata:
       m_Items: []
   - m_Id: 40090226122752
-    m_Localized: "T\xE1 cuireadh ar t\xED teacht chugat \u2014 glac leis agus d\xE9anaimis
-      r\xE1s!!!"
+    m_Localized: "T\xE1 cuireadh ar t\xED teacht chugat, glac leis agus d\xE9anaimis r\xE1s!!!"
     m_Metadata:
       m_Items: []
   - m_Id: 40500269670400
@@ -311,13 +279,11 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 40696508571648
-    m_Localized: "Ceart go leor, anois agus t\xFA tar \xE9is dul isteach sa tsraith,
-      is f\xE9idir leat clice\xE1il ar 'sraith' chun an t\xE1bla a fheice\xE1il."
+    m_Localized: "Ceart go leor, anois agus t\xFA tar \xE9is dul isteach sa tsraith, is f\xE9idir leat clice\xE1il ar 'sraith' chun an t\xE1bla a fheice\xE1il."
     m_Metadata:
       m_Items: []
   - m_Id: 40727919714304
-    m_Localized: "Sraith aon-r\xE1sa \xED seo, mar sin is ag an mbuaiteoir a bh\xEDonn
-      an bua ar fad."
+    m_Localized: "Sraith aon-r\xE1sa \xED seo, mar sin is ag an mbuaiteoir a bh\xEDonn an bua ar fad."
     m_Metadata:
       m_Items: []
   - m_Id: 40865815846912
@@ -329,8 +295,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 41102273929216
-    m_Localized: "T\xE1 t\xFA i do aonar anois; d\xE9an cinnte aire a thabhairt do
-      do chomhph\xE1irtithe foirne, agus \xE1dh m\xF3r ort."
+    m_Localized: "So sin \xE9, a Dheclan. T\xE1 s\xFAil agam gur f\xE9idir leat an fhoireann seo a ghlacadh ar l\xE1imh mar t\xE1 deacrachta\xED n\xE9ar\xF3gacha agam na laethanta seo agus cha f\xE9idir liom \xE9 a dh\xE9anamh n\xEDos m\xF3. N\xE1 d\xE9an dearmad cuid den duaischiste a sheoladh chugam, \xE1fach, mar is \xE9 mo sheid \xE9 tar \xE9is an tsaoil -Pa."
     m_Metadata:
       m_Items: []
   - m_Id: 5861182267392

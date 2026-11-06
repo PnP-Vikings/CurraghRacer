@@ -220,18 +220,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6720839771742208
-    m_Localized: "Is tusa Declan Kelly, fear sna fichid\xED at\xE1 ina ch\xF3na\xED
-      i gceantar tuaithe in \xC9irinn sa bhliain 2008, d\xEDreach tar \xE9is do \u2018Leabhar
-      an T\xEDogair Cheiltigh\u2019 titim as a ch\xE9ile agus gach post fi\xFAntach
-      a scuabadh leis.\n\nN\xEDl aon obair sheasmhach le f\xE1il i do cheantar f\xE9in,
-      t\xE1 Baile \xC1tha Cliath r\xF3-chostasach, agus is \xED an t-aon seans d\xE1ir\xEDre
-      at\xE1 agat n\xE1 dul go dt\xED an Astr\xE1il chun airgead maith a thuilleamh
-      ag obair sna mianaigh n\xF3 ar l\xE1ithre\xE1in t\xF3g\xE1la.\n\nAch teasta\xEDonn
-      \u20AC5,000 ar a laghad uait sula rachaidh an deis chun v\xEDosa oibre a fh\xE1il
-      in \xE9ag; mar sin, t\xE1 foireann gharbh de r\xE1s\xF3ir\xED curacha \xE1iti\xFAla
-      curtha le ch\xE9ile agat chun na r\xE1sa\xED D\xE9 Domhnaigh a bhuachan.\n\nT\xE1
-      s\xE9 i gceist agat sciar den airgead geallt\xF3ireachta a th\xF3g\xE1il agus
-      d\xF3thain airgid a bhaili\xFA le h\xE9al\xFA."
+    m_Localized: "A Dheicil\xEDn, ba mhaith liom d\xE1 mbeinn anseo chun f\xE1ilte a chur romhat ar ais tar \xE9is c\xFAig bliana, ach thosaigh Half Bottle ag pl\xFAchadh ar sh\xEDol peanut, mar sin thugamar s\xEDos go dt\xED an CareDoc \xE9.\n\n\xD3 d\u2019imigh t\xFA suas go Baile \xC1tha Cliath, t\xE1 ruda\xED athraithe i dTobar Dubh. Chaill mise, Tubs Devlin agus Half Bottle gach rud le linn an ch\xFAlaithe eacnama\xEDochta. N\xEDl againn ach an m\xE9id is g\xE1 chun maireacht\xE1il ar an li\xFAntas d\xEDfhosta\xEDochta, ach t\xE1 s\xE9 crua go leor.\n\nChuir m\xE9 m\xE9adar leictreachais \u2018\xEDoc-mar-a-\xFAs\xE1ideann-t\xFA\u2019 isteach sa sciob\xF3l \u2013 \xF3, agus d\xE1la an sc\xE9il, th\xF3g an banc gach rud uainn, mar sin t\xE1imid lonnaithe sa sciob\xF3l anois. N\xE1 b\xED buartha, t\xE1 tochta ann duitse freisin.\n\nLe f\xEDrinne, is \xED an t-aon seans cheart at\xE1 agat n\xE1 dul go dt\xED an Astr\xE1il chun airgead maith a thuilleamh sna mianaigh n\xF3 ar l\xE1ithre\xE1in t\xF3g\xE1la.\n\nAch beidh \u20AC5,000 ar a laghad ag teast\xE1il uait sula rachaidh an deis d\u2019v\xEDosa oibre in \xE9ag; mar sin, caithfidh t\xFA foireann \u2013 dream garbh, a bheag n\xF3 a mh\xF3r \u2013 a chur le ch\xE9ile de r\xE1s\xE1laithe curacha \xE1iti\xFAla chun na r\xE1sa\xED m\xF3ra airgid a bh\xEDonn ar si\xFAl D\xE9 Domhnaigh a bhuachan.\n\nIs f\xE9idir linn a bheith mar fhoireann sin duit; chomh fada is a choinn\xEDonn t\xFA ag \xEDoc m\xE9, beidh mise s\xE1sta.\n\n-Pa"
     m_Metadata:
       m_Items: []
   - m_Id: 6721570193006592
@@ -267,7 +256,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 6720211339173888
-    m_Localized: "C\xE9 mise?"
+    m_Localized: "Litir \xF3 Pa Nolan"
     m_Metadata:
       m_Items: []
   - m_Id: 6752875970551808
@@ -325,9 +314,7 @@ MonoBehaviour:
     m_Metadata:
       m_Items: []
   - m_Id: 11833506513543168
-    m_Localized: "T\xE1 fiacha ort leis an Irish Mob.\r\nN\xED dh\xE9anfaidh siad
-      dearmad air, agus m\xE1 t\xE1 n\xEDos m\xF3 n\xE1 {0} dlite agat,\r\nd\u2019fh\xE9adfadh
-      rud \xE9igin dona tarl\xFA..."
+    m_Localized: "T\xE1 fiacha ort leis na Kinnehans.\r\nN\xED dh\xE9anfaidh siad dearmad air, agus m\xE1 t\xE1 n\xEDos m\xF3 n\xE1 {0} dlite agat,\r\nd\u2019fh\xE9adfadh rud \xE9igin dona tarl\xFA..."
     m_Metadata:
       m_Items:
       - rid: 7162749194343809148
