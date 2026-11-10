@@ -125,7 +125,7 @@ If your environment cannot directly call MCP tools, you can invoke them via the 
 - `atm_delete_task`: Remove a task card (requires `confirm: true`).
 - `atm_bulk_delete_tasks`: Delete multiple task cards across columns or boards in a single atomic batch operation (requires `confirm: true`).
 - `atm_manage_checklist`: Add, toggle, or remove checklist items on a card.
-- `atm_search`: Search across all task titles, descriptions, categories, checklists, and notes.
+- `atm_search`: Search across all task titles, descriptions, categories, checklists, assignees, notes, boards, columns, and ATM tools. Supports filtering by board, column, category, assignee, and scope.
 
 ### 🏷 Categories & Assignees Management
 - `atm_create_category`: Create a new category tag and optionally assign its default color index.

@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
   m_Name: Team_4
   m_EditorClassIdentifier: 
-  teamName: Green Machines
+  teamName: Gorey Currach Club
   teamDescription: 
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: 1995226881371390029, guid: a29a745daad38544c9cfed66739583f0, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 2
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 23adb5481bcd38948bfd212335a9fa91, type: 2}
   bench:
   - {fileID: 11400000, guid: 17c8da914c6e7d5489700efcf6581017, type: 2}
+  defaultTeamMembers: []
+  defaultBench: []
   currentSeasonStats:
     finishes: 
   lifetimeStats:

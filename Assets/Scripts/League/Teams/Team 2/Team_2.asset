@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamName: Holycross Ballycahill
   teamDescription: 
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: 4055368843344485640, guid: 99a01e804394cf447b00065d36e72e79, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 2
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 47df1ada007d1854980f6216ed8eb98f, type: 2}
   bench:
   - {fileID: 11400000, guid: 543fbaf35214e3344ab0a459f13e4efc, type: 2}
+  defaultTeamMembers: []
+  defaultBench: []
   currentSeasonStats:
     finishes: 
   lifetimeStats:

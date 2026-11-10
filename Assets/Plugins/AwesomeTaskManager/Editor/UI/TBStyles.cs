@@ -1358,6 +1358,12 @@ namespace AwesomeTaskManager.UI
             _deleteButton = null;
             _deleteIconButton = null;
             _noteActionButton = null;
+            _cutButton = null;
+            _copyButton = null;
+            _pasteButton = null;
+            _clipboardSuccessButton = null;
+            _previewTextStyle = null;
+            _tableTextStyle = null;
             _addNoteButton = null;
             _importNoteButton = null;
             _cardTextArea = null;
@@ -1674,6 +1680,153 @@ namespace AwesomeTaskManager.UI
             }
         }
 
+        private static GUIStyle _cutButton;
+        public static GUIStyle CutButton
+        {
+            get
+            {
+                if (_cutButton == null)
+                {
+                    _cutButton = new GUIStyle(GUIStyle.none)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 11,
+                        fontStyle = FontStyle.Bold,
+                        border = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(1, 1, 1, 1),
+                        padding = new RectOffset(6, 6, 2, 2)
+                    };
+                    var normalBg = EditorGUIUtility.isProSkin ? new Color(0.25f, 0.22f, 0.24f, 0.95f) : new Color(0.88f, 0.84f, 0.86f, 0.95f);
+                    var hoverBg = EditorGUIUtility.isProSkin ? new Color(0.38f, 0.26f, 0.30f, 1f) : new Color(0.85f, 0.75f, 0.78f, 1f);
+                    var activeBg = EditorGUIUtility.isProSkin ? new Color(0.48f, 0.28f, 0.34f, 1f) : new Color(0.80f, 0.68f, 0.72f, 1f);
+                    SetAllStateTextures(_cutButton, GetColorTex(normalBg), GetColorTex(hoverBg), GetColorTex(activeBg));
+                    SetAllStateTextColors(_cutButton, ButtonText, ButtonHoverText, ButtonHoverText);
+                }
+                return _cutButton;
+            }
+        }
+
+        private static GUIStyle _copyButton;
+        public static GUIStyle CopyButton
+        {
+            get
+            {
+                if (_copyButton == null)
+                {
+                    _copyButton = new GUIStyle(GUIStyle.none)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 11,
+                        fontStyle = FontStyle.Bold,
+                        border = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(1, 1, 1, 1),
+                        padding = new RectOffset(6, 6, 2, 2)
+                    };
+                    var normalBg = EditorGUIUtility.isProSkin ? new Color(0.22f, 0.26f, 0.32f, 0.95f) : new Color(0.82f, 0.86f, 0.92f, 0.95f);
+                    var hoverBg = EditorGUIUtility.isProSkin ? new Color(0.28f, 0.36f, 0.46f, 1f) : new Color(0.74f, 0.82f, 0.92f, 1f);
+                    var activeBg = EditorGUIUtility.isProSkin ? new Color(0.20f, 0.30f, 0.42f, 1f) : new Color(0.68f, 0.78f, 0.88f, 1f);
+                    SetAllStateTextures(_copyButton, GetColorTex(normalBg), GetColorTex(hoverBg), GetColorTex(activeBg));
+                    SetAllStateTextColors(_copyButton, ButtonText, ButtonHoverText, ButtonHoverText);
+                }
+                return _copyButton;
+            }
+        }
+
+        private static GUIStyle _pasteButton;
+        public static GUIStyle PasteButton
+        {
+            get
+            {
+                if (_pasteButton == null)
+                {
+                    _pasteButton = new GUIStyle(GUIStyle.none)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 11,
+                        fontStyle = FontStyle.Bold,
+                        border = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(1, 1, 1, 1),
+                        padding = new RectOffset(6, 6, 2, 2)
+                    };
+                    var normalBg = EditorGUIUtility.isProSkin ? new Color(0.22f, 0.28f, 0.25f, 0.95f) : new Color(0.82f, 0.88f, 0.85f, 0.95f);
+                    var hoverBg = EditorGUIUtility.isProSkin ? new Color(0.26f, 0.38f, 0.32f, 1f) : new Color(0.74f, 0.86f, 0.78f, 1f);
+                    var activeBg = EditorGUIUtility.isProSkin ? new Color(0.20f, 0.32f, 0.26f, 1f) : new Color(0.68f, 0.80f, 0.72f, 1f);
+                    SetAllStateTextures(_pasteButton, GetColorTex(normalBg), GetColorTex(hoverBg), GetColorTex(activeBg));
+                    SetAllStateTextColors(_pasteButton, ButtonText, ButtonHoverText, ButtonHoverText);
+                }
+                return _pasteButton;
+            }
+        }
+
+        private static GUIStyle _clipboardSuccessButton;
+        public static GUIStyle ClipboardSuccessButton
+        {
+            get
+            {
+                if (_clipboardSuccessButton == null)
+                {
+                    _clipboardSuccessButton = new GUIStyle(GUIStyle.none)
+                    {
+                        alignment = TextAnchor.MiddleCenter,
+                        fontSize = 11,
+                        fontStyle = FontStyle.Bold,
+                        border = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(1, 1, 1, 1),
+                        padding = new RectOffset(6, 6, 2, 2)
+                    };
+                    var successBg = EditorGUIUtility.isProSkin ? new Color(0.18f, 0.44f, 0.26f, 1f) : new Color(0.32f, 0.72f, 0.42f, 1f);
+                    var successHover = EditorGUIUtility.isProSkin ? new Color(0.22f, 0.52f, 0.30f, 1f) : new Color(0.38f, 0.78f, 0.48f, 1f);
+                    SetAllStateTextures(_clipboardSuccessButton, GetColorTex(successBg), GetColorTex(successHover), GetColorTex(successBg));
+                    SetAllStateTextColors(_clipboardSuccessButton, Color.white, Color.white, Color.white);
+                }
+                return _clipboardSuccessButton;
+            }
+        }
+
+        private static GUIStyle _previewTextStyle;
+        public static GUIStyle PreviewTextStyle
+        {
+            get
+            {
+                if (_previewTextStyle == null)
+                {
+                    _previewTextStyle = new GUIStyle(EditorStyles.label)
+                    {
+                        wordWrap = true,
+                        richText = true,
+                        fontSize = 12,
+                        padding = new RectOffset(4, 4, 4, 4),
+                        margin = new RectOffset(0, 0, 2, 2)
+                    };
+                    SetAllStateTextColors(_previewTextStyle, EditorGUIUtility.isProSkin ? new Color(0.88f, 0.88f, 0.88f, 1f) : new Color(0.12f, 0.12f, 0.12f, 1f));
+                }
+                return _previewTextStyle;
+            }
+        }
+
+        private static GUIStyle _tableTextStyle;
+        public static GUIStyle TableTextStyle
+        {
+            get
+            {
+                if (_tableTextStyle == null)
+                {
+                    _tableTextStyle = new GUIStyle(PreviewTextStyle)
+                    {
+                        fontSize = 12,
+                        wordWrap = false,
+                        padding = new RectOffset(8, 8, 8, 8),
+                    };
+                    var consolas = Font.CreateDynamicFontFromOSFont("Consolas", 12);
+                    if (consolas != null) _tableTextStyle.font = consolas;
+                    
+                    SetAllStateTextures(_tableTextStyle, GetColorTex(NoteInputBg));
+                    SetAllStateTextColors(_tableTextStyle, NoteInputText);
+                }
+                return _tableTextStyle;
+            }
+        }
+
         private static GUIStyle _addNoteButton;
         public static GUIStyle AddNoteButton
         {
@@ -1742,6 +1895,27 @@ namespace AwesomeTaskManager.UI
                 return _cardTextArea;
             }
         }
+
+        public static GUIStyle ChecklistButtonStyle
+        {
+            get
+            {
+                if (_checklistButtonStyle == null)
+                {
+                    _checklistButtonStyle = new GUIStyle(EditorStyles.label)
+                    {
+                        fontSize = 14,
+                        alignment = TextAnchor.MiddleCenter,
+                        padding = new RectOffset(0, 0, 0, 0),
+                        margin = new RectOffset(0, 4, 0, 0)
+                    };
+                    SetAllStateTextColors(_checklistButtonStyle, EditorGUIUtility.isProSkin ? new Color(0.3f, 0.7f, 1f) : new Color(0.1f, 0.4f, 0.8f));
+                }
+                return _checklistButtonStyle;
+            }
+        }
+
+        private static GUIStyle _checklistButtonStyle;
 
         public static GUIStyle DropdownMenuItem => _dropdownMenuItem ??= new GUIStyle(EditorStyles.label)
         {

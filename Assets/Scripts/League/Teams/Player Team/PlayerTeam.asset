@@ -14,11 +14,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamName: PlayerTeam
   teamDescription: Player's Team
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: -7248956244804978335, guid: c3dec67aec6370646a9960430d96c344, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 1
-  teamExperience: 100
+  teamExperience: 0
   currentForm: 50
   recentResults: 
   teamManager: {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
@@ -27,7 +27,6 @@ MonoBehaviour:
   - {fileID: 0}
   - {fileID: 0}
   bench:
-  - {fileID: 0}
   - {fileID: 0}
   defaultTeamMembers:
   - {fileID: 11400000, guid: 09db92fe66966b14694b5f081a3c4907, type: 2}
@@ -38,4 +37,4 @@ MonoBehaviour:
   currentSeasonStats:
     finishes: 
   lifetimeStats:
-    finishes: 
+    finishes: 01000000i

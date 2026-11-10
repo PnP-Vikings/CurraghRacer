@@ -577,12 +577,30 @@ public class SaveSystem : MonoBehaviour
             Debug.Log($"[SaveSystem.OnSceneLoaded] Scene '{scene.name}' loaded - restoring data from cache");
             
             // Restore league team data from the cached save
-            if (LeagueController.Instance != null && _lastSaveData.leagueData?.allTeams != null)
+            if (_lastSaveData.leagueData?.allTeams != null)
             {
                 RestoreTeamsData(_lastSaveData.leagueData.allTeams);
                 Debug.Log($"[SaveSystem.OnSceneLoaded] Restored {_lastSaveData.leagueData.allTeams.Length} teams from cache");
             }
             
+            // Restore leagues data
+            if (_lastSaveData.leagueData?.allLeagues != null)
+            {
+                RestoreLeaguesData(_lastSaveData.leagueData.allLeagues);
+            }
+
+            // Restore current league selection
+            if (!string.IsNullOrEmpty(_lastSaveData.leagueData?.currentLeagueName))
+            {
+                var league = LeagueController.Instance.FindLeagueByName(_lastSaveData.leagueData.currentLeagueName);
+                if (league != null)
+                {
+                    LeagueController.Instance.SetCurrentLeague(league);
+                    league.playerHasJoined = _lastSaveData.leagueData.playerHasJoined;
+                    league.currentRace = _lastSaveData.leagueData.currentRaceIndex;
+                }
+            }
+
             // Restore TeamManager data (including racersForHire) from the cached save
             if (TeamManager.Instance != null && _lastSaveData.teamManagerData != null)
             {
@@ -835,6 +853,19 @@ public class SaveSystem : MonoBehaviour
         // Save league data
         if (LeagueController.Instance != null)
         {
+            // Ensure currentLeague is valid
+            if (LeagueController.Instance.currentLeague == null)
+            {
+                if (LeagueController.Instance.leagues != null && LeagueController.Instance.leagues.Length > 0 && LeagueController.Instance.leagues[0] != null)
+                {
+                    LeagueController.Instance.currentLeague = LeagueController.Instance.leagues[0];
+                }
+                else if (LeagueController.Instance.defaultLeagues != null && LeagueController.Instance.defaultLeagues.Length > 0 && LeagueController.Instance.defaultLeagues[0] != null)
+                {
+                    LeagueController.Instance.currentLeague = LeagueController.Instance.defaultLeagues[0];
+                }
+            }
+
             if (LeagueController.Instance.currentLeague != null)
             {
                 saveData.leagueData.currentLeagueName = LeagueController.Instance.currentLeague.leagueName;
@@ -843,17 +874,22 @@ public class SaveSystem : MonoBehaviour
             }
 
             // Save all leagues with comprehensive data
-            if (LeagueController.Instance.leagues != null)
+            List<League.League> leaguesToSave = LeagueController.Instance.GetAllLeagues();
+            if (leaguesToSave != null && leaguesToSave.Count > 0)
             {
                 List<LeagueInfoSaveData> allLeagues = new List<LeagueInfoSaveData>();
                 List<TeamSaveData> allTeams = new List<TeamSaveData>();
+                HashSet<string> savedTeamNames = new HashSet<string>();
 
-                foreach (var league in LeagueController.Instance.leagues)
+                foreach (var league in leaguesToSave)
                 {
+                    if (league == null) continue;
+
                     // Save league information
                     LeagueInfoSaveData leagueInfo = new LeagueInfoSaveData
                     {
                         leagueName = league.leagueName,
+                        description = league.description,
                         isActive = league.isActive,
                         playerHasJoined = league.playerHasJoined,
                         currentRace = league.currentRace,
@@ -885,15 +921,16 @@ public class SaveSystem : MonoBehaviour
                         }
                     }
                     
-                    //Save Race Schedule
+                    // Save Race Schedule
                     if (league.raceDays != null)
                     {
                         leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
                         for (int i = 0; i < league.raceDays.Length; i++)
                         {
+                            if (league.raceDays[i] == null) continue;
                             var formationSave = new RaceDayFormationSaveData
                             {
-                                races = new List<Race>(league.raceDays[i].races),
+                                races = league.raceDays[i].races != null ? new List<Race>(league.raceDays[i].races) : new List<Race>(),
                                 processed = league.raceDays[i].processed,
                                 raceEntries = new List<RaceEntrySaveData>()
                             };
@@ -923,7 +960,10 @@ public class SaveSystem : MonoBehaviour
                     {
                         foreach (var team in league.teams)
                         {
-                            allTeams.Add(CreateTeamSaveData(team));
+                            if (team != null && savedTeamNames.Add(team.teamName))
+                            {
+                                allTeams.Add(CreateTeamSaveData(team));
+                            }
                         }
                     }
                 }
@@ -1038,13 +1078,21 @@ public class SaveSystem : MonoBehaviour
         // Apply league data
         if (LeagueController.Instance != null && saveData.leagueData != null)
         {
-            if (saveData.leagueData.leagues != null && saveData.leagueData.leagues.Length > 0)
-            {
-                LeagueController.Instance.leagues = saveData.leagueData.leagues;
-            }
-            else if (LeagueController.Instance.leagues == null || LeagueController.Instance.leagues.Length == 0)
+            if (LeagueController.Instance.leagues == null || LeagueController.Instance.leagues.Length == 0)
             {
                 LeagueController.Instance.leagues = LeagueController.Instance.defaultLeagues;
+            }
+
+            // Check if saved current league or any saved league is the tutorial league
+            bool isTutorialLeagueSaved = (!string.IsNullOrEmpty(saveData.leagueData.currentLeagueName) &&
+                LeagueController.Instance.tutorialLeague != null &&
+                string.Equals(saveData.leagueData.currentLeagueName, LeagueController.Instance.tutorialLeague.leagueName, StringComparison.OrdinalIgnoreCase)) ||
+                (saveData.leagueData.allLeagues != null && LeagueController.Instance.tutorialLeague != null &&
+                saveData.leagueData.allLeagues.Any(l => l != null && string.Equals(l.leagueName, LeagueController.Instance.tutorialLeague.leagueName, StringComparison.OrdinalIgnoreCase)));
+
+            if (isTutorialLeagueSaved)
+            {
+                LeagueController.Instance.AddTutorialLeagueToList();
             }
 
             // IMPORTANT: Restore teams FIRST so their stats are available when restoring league standings
@@ -1062,15 +1110,24 @@ public class SaveSystem : MonoBehaviour
             // Find and set current league
             if (!string.IsNullOrEmpty(saveData.leagueData.currentLeagueName))
             {
-                var league = Array.Find(LeagueController.Instance.leagues,
-                    l => l.leagueName == saveData.leagueData.currentLeagueName);
+                var league = LeagueController.Instance.FindLeagueByName(saveData.leagueData.currentLeagueName);
                 if (league != null)
                 {
-                    LeagueController.Instance.currentLeague = league;
+                    LeagueController.Instance.SetCurrentLeague(league);
                     league.playerHasJoined = saveData.leagueData.playerHasJoined;
                     league.currentRace = saveData.leagueData.currentRaceIndex;
                     LeagueController.Instance.currentLeague.RecalculateStandings();
+                    Debug.Log($"[ApplySaveData] Restored current league '{league.leagueName}' (Joined: {league.playerHasJoined}, Race: {league.currentRace})");
                 }
+                else
+                {
+                    Debug.LogWarning($"[ApplySaveData] Could not find saved current league '{saveData.leagueData.currentLeagueName}'!");
+                }
+            }
+            else if (LeagueController.Instance.currentLeague != null)
+            {
+                LeagueController.Instance.currentLeague.playerHasJoined = saveData.leagueData.playerHasJoined;
+                LeagueController.Instance.currentLeague.currentRace = saveData.leagueData.currentRaceIndex;
             }
         }
 
@@ -1528,14 +1585,14 @@ public class SaveSystem : MonoBehaviour
 
     private void RestoreLeaguesData(LeagueInfoSaveData[] leaguesData)
     {
-     
-        
+        if (leaguesData == null || LeagueController.Instance == null) return;
 
         foreach (var leagueSave in leaguesData)
         {
-            // Find the corresponding league
-            var foundLeague = Array.Find(LeagueController.Instance.leagues,
-                l => l.leagueName == leagueSave.leagueName);
+            if (leagueSave == null) continue;
+
+            // Find the corresponding league across all known leagues
+            var foundLeague = LeagueController.Instance.FindLeagueByName(leagueSave.leagueName);
 
             if (foundLeague != null)
             {
@@ -1552,7 +1609,6 @@ public class SaveSystem : MonoBehaviour
                 foundLeague.maxNumberOfBoatsPerRace = leagueSave.maxNumberOfBoatsPerRace;
                 foundLeague.repeatCount = leagueSave.repeatCount;
                 foundLeague.maxExperienceGivenPerRace = leagueSave.maxExperienceGivenPerRace;
-                foundLeague.currentRace = leagueSave.currentRace;
 
                 // Restore tournament start date
                 if (DateTime.TryParse(leagueSave.tournamentStartDate, out DateTime startDate))
@@ -1561,12 +1617,19 @@ public class SaveSystem : MonoBehaviour
                 }
 
                 // Restore standings
-                if (leagueSave.standings != null && foundLeague.standings != null)
+                if (leagueSave.standings != null && leagueSave.standings.Length > 0)
                 {
-                    for (int i = 0; i < Mathf.Min(leagueSave.standings.Length, foundLeague.standings.Length); i++)
+                    if (foundLeague.standings == null || foundLeague.standings.Length != leagueSave.standings.Length)
                     {
+                        foundLeague.standings = new TeamStanding[leagueSave.standings.Length];
+                    }
+
+                    for (int i = 0; i < leagueSave.standings.Length; i++)
+                    {
+                        if (leagueSave.standings[i] == null) continue;
+
                         // Find the team reference by name
-                        var team = Array.Find(foundLeague.teams, t => t.teamName == leagueSave.standings[i].teamName);
+                        var team = foundLeague.teams != null ? Array.Find(foundLeague.teams, t => t != null && t.teamName == leagueSave.standings[i].teamName) : null;
                         if (team != null)
                         {
                             foundLeague.standings[i] = new TeamStanding
@@ -1580,25 +1643,38 @@ public class SaveSystem : MonoBehaviour
                             Debug.Log($"Restored standings for {team.teamName}: Position {leagueSave.standings[i].position}, Points {leagueSave.standings[i].points}, Wins {leagueSave.standings[i].wins}");
                         }
                     }
-                    
-                    // Don't recalculate standings here - we just loaded them from save!
-                    // RecalculateStandings() would overwrite the loaded data with values from team stats
                 }
 
-                //Restore Race Schedule
-                if (leagueSave.raceSchedule != null && foundLeague.raceDays != null)
+                // Restore Race Schedule
+                if (leagueSave.raceSchedule != null && leagueSave.raceSchedule.Length > 0)
                 {
+                    if (foundLeague.raceDays == null || foundLeague.raceDays.Length != leagueSave.raceSchedule.Length)
+                    {
+                        foundLeague.raceDays = new RaceDayFormation[leagueSave.raceSchedule.Length];
+                        for (int i = 0; i < foundLeague.raceDays.Length; i++)
+                        {
+                            foundLeague.raceDays[i] = new RaceDayFormation();
+                        }
+                    }
+
                     for (int i = 0; i < Mathf.Min(leagueSave.raceSchedule.Length, foundLeague.raceDays.Length); i++)
                     {
                         var scheduleSave = leagueSave.raceSchedule[i];
                         if (scheduleSave != null)
                         {
+                            if (foundLeague.raceDays[i] == null)
+                            {
+                                foundLeague.raceDays[i] = new RaceDayFormation();
+                            }
+
                             foundLeague.raceDays[i].processed = scheduleSave.processed;
                             if (scheduleSave.raceEntries != null && scheduleSave.raceEntries.Count > 0)
                             {
                                 foundLeague.raceDays[i].races = new List<Race>();
                                 foreach (var entry in scheduleSave.raceEntries)
                                 {
+                                    if (entry == null) continue;
+
                                     List<Team> matchedTeams = new List<Team>();
                                     if (entry.teamNames != null && foundLeague.teams != null)
                                     {
@@ -1622,26 +1698,32 @@ public class SaveSystem : MonoBehaviour
                             }
                         }
                     }
-
                 }
-                
-                
             }
         }
     }
 
     private void RestoreTeamsData(TeamSaveData[] teamsData)
     {
+        if (teamsData == null || LeagueController.Instance == null) return;
+
         Debug.Log($"Starting RestoreTeamsData with {teamsData.Length} teams");
         
+        var allLeagues = LeagueController.Instance.GetAllLeagues();
+
         foreach (var teamSave in teamsData)
         {
-            // Find the corresponding team in the leagues
+            if (teamSave == null) continue;
+
+            // Find the corresponding team across all known leagues
             Team foundTeam = null;
-            foreach (var league in LeagueController.Instance.leagues)
+            foreach (var league in allLeagues)
             {
-                foundTeam = Array.Find(league.teams, t => t.teamName == teamSave.teamName);
-                if (foundTeam != null) break;
+                if (league != null && league.teams != null)
+                {
+                    foundTeam = Array.Find(league.teams, t => t != null && t.teamName == teamSave.teamName);
+                    if (foundTeam != null) break;
+                }
             }
 
             if (foundTeam != null)
@@ -2189,22 +2271,37 @@ public class SaveSystem : MonoBehaviour
         // League initialization happens in InitializeNewGameState() instead.
         if (LeagueController.Instance != null)
         {
-            
+            if (LeagueController.Instance.currentLeague == null)
+            {
+                if (LeagueController.Instance.leagues != null && LeagueController.Instance.leagues.Length > 0 && LeagueController.Instance.leagues[0] != null)
+                {
+                    LeagueController.Instance.currentLeague = LeagueController.Instance.leagues[0];
+                }
+                else if (LeagueController.Instance.defaultLeagues != null && LeagueController.Instance.defaultLeagues.Length > 0 && LeagueController.Instance.defaultLeagues[0] != null)
+                {
+                    LeagueController.Instance.currentLeague = LeagueController.Instance.defaultLeagues[0];
+                }
+            }
+
             if (LeagueController.Instance.currentLeague != null)
             {
                 saveData.leagueData.currentLeagueName = LeagueController.Instance.currentLeague.leagueName;
-                saveData.leagueData.currentRaceIndex = LeagueController.Instance.currentLeague.currentRace;
-                saveData.leagueData.playerHasJoined = LeagueController.Instance.currentLeague.playerHasJoined;
+                saveData.leagueData.currentRaceIndex = 0;
+                saveData.leagueData.playerHasJoined = false;
             }
 
             // Save all leagues with comprehensive data
-            if (LeagueController.Instance.leagues != null)
+            List<League.League> leaguesToSave = LeagueController.Instance.GetAllLeagues();
+            if (leaguesToSave != null && leaguesToSave.Count > 0)
             {
                 List<LeagueInfoSaveData> allLeagues = new List<LeagueInfoSaveData>();
                 List<TeamSaveData> allTeams = new List<TeamSaveData>();
+                HashSet<string> savedTeamNames = new HashSet<string>();
 
-                foreach (var league in LeagueController.Instance.leagues)
+                foreach (var league in leaguesToSave)
                 {
+                    if (league == null) continue;
+
                     league.ResetLeagueForNewSeason();
                     league.currentSeason = 1;
                     league.currentRace = 0;
@@ -2254,9 +2351,10 @@ public class SaveSystem : MonoBehaviour
                         leagueInfo.raceSchedule = new RaceDayFormationSaveData[league.raceDays.Length];
                         for (int i = 0; i < league.raceDays.Length; i++)
                         {
+                            if (league.raceDays[i] == null) continue;
                             var formationSave = new RaceDayFormationSaveData
                             {
-                                races = new List<Race>(league.raceDays[i].races),
+                                races = league.raceDays[i].races != null ? new List<Race>(league.raceDays[i].races) : new List<Race>(),
                                 processed = league.raceDays[i].processed,
                                 raceEntries = new List<RaceEntrySaveData>()
                             };
@@ -2286,14 +2384,14 @@ public class SaveSystem : MonoBehaviour
                     {
                         foreach (var team in league.teams)
                         {
-                            if (team != null)
+                            if (team != null && savedTeamNames.Add(team.teamName))
                             {
                                 allTeams.Add(CreateTeamSaveData(team));
                             }
                         }
                     }
                 }
-                saveData.leagueData.leagues =LeagueController.Instance.defaultLeagues;
+                saveData.leagueData.leagues = LeagueController.Instance.defaultLeagues;
                 saveData.leagueData.allLeagues = allLeagues.ToArray();
                 saveData.leagueData.allTeams = allTeams.ToArray();
             }

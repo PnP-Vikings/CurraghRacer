@@ -65,7 +65,7 @@ namespace AwesomeTaskManager.Next.UI
                 ("atm_delete_task", "Remove task cards (requires confirm)"),
                 ("atm_bulk_delete_tasks", "Bulk delete task cards (requires confirm)"),
                 ("atm_manage_checklist", "Add, toggle, or remove checklist items"),
-                ("atm_search", "Search tasks, checklists, and notes")
+                ("atm_search", "Search tasks, checklists, notes, categories, assignees, boards, columns, and ATM tools")
             }),
             ("🏷 Categories & Assignees", new[]
             {
@@ -997,7 +997,7 @@ namespace AwesomeTaskManager.Next.UI
             }
 
             EditorGUILayout.Space(12);
-            GUILayout.Label("Available Tools (43 MCP & Bridge Endpoints):", EditorStyles.boldLabel);
+            GUILayout.Label($"Available Tools ({_availableToolCatalog.Sum(c => c.Tools.Length)} MCP & Bridge Endpoints):", EditorStyles.boldLabel);
             EditorGUILayout.Space(4);
 
             using (new EditorGUILayout.HorizontalScope())

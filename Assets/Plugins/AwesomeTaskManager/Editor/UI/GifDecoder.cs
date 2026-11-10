@@ -89,7 +89,7 @@ namespace AwesomeTaskManager.UI
             int screenWidth = BitConverter.ToUInt16(data, pos); pos += 2;
             int screenHeight = BitConverter.ToUInt16(data, pos); pos += 2;
             byte packed = data[pos++];
-            byte bgColor = data[pos++];
+            pos++; // background color index
             pos++; // pixel aspect ratio
 
             bool hasGlobalTable = (packed & 0x80) != 0;
@@ -110,12 +110,6 @@ namespace AwesomeTaskManager.UI
             // Canvas for compositing
             Color32[] canvas = new Color32[screenWidth * screenHeight];
             Color32[] prevCanvas = new Color32[screenWidth * screenHeight];
-
-            // Initialize with background
-            Color32 bgCol = (globalPalette != null && bgColor < globalPalette.Length)
-                ? globalPalette[bgColor]
-                : new Color32(0, 0, 0, 0);
-            for (int i = 0; i < canvas.Length; i++) canvas[i] = bgCol;
 
             while (pos < data.Length)
             {
@@ -182,10 +176,10 @@ namespace AwesomeTaskManager.UI
                         int[] rowOrder = GetRowOrder(imgHeight, interlaced);
                         for (int y = 0; y < imgHeight; y++)
                         {
-                            int srcRow = rowOrder != null ? rowOrder[y] : y;
+                            int destinationRow = rowOrder != null ? rowOrder[y] : y;
                             for (int x = 0; x < imgWidth; x++)
                             {
-                                int srcIdx = srcRow * imgWidth + x;
+                                int srcIdx = y * imgWidth + x;
                                 if (srcIdx >= indices.Length) continue;
                                 int palIdx = indices[srcIdx];
 
@@ -194,7 +188,7 @@ namespace AwesomeTaskManager.UI
 
                                 int cx = imgLeft + x;
                                 // Flip Y for Unity (GIF is top-down, Unity is bottom-up)
-                                int cy = (screenHeight - 1) - (imgTop + y);
+                                int cy = (screenHeight - 1) - (imgTop + destinationRow);
                                 if (cx >= 0 && cx < screenWidth && cy >= 0 && cy < screenHeight)
                                 {
                                     canvas[cy * screenWidth + cx] = palIdx < palette.Length
@@ -227,7 +221,7 @@ namespace AwesomeTaskManager.UI
                             for (int x = imgLeft; x < imgLeft + imgWidth && x < screenWidth; x++)
                             {
                                 int cy = (screenHeight - 1) - y;
-                                canvas[cy * screenWidth + x] = bgCol;
+                                canvas[cy * screenWidth + x] = new Color32(0, 0, 0, 0);
                             }
                             break;
                         case 3: // Restore to previous
@@ -296,11 +290,7 @@ namespace AwesomeTaskManager.UI
             // Pass 4: rows 1, 3, 5, ...
             for (int r = 1; r < height; r += 2) order[idx++] = r;
 
-            // Build inverse: for output row i, which source row?
-            // Actually we need: row[interlacedIndex] = sourceRow
-            // The order array maps output-index → actual-row
-            // We need inverse for SetPixels: for each actual-row, what's its position in the decompressed data
-            // Actually our `order` is correct: order[i] = the row number for the i-th row in the compressed data
+            // Each entry maps a decompressed row to its destination row.
             return order;
         }
 

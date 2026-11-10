@@ -193,6 +193,18 @@ namespace AwesomeTaskManager.Next.Mcp
         public class SearchParams
         {
             public string Query { get; set; }
+            public string Keyword { get; set; }
+            public string Search { get; set; }
+            public string Term { get; set; }
+            public string Text { get; set; }
+            public string Board { get; set; }
+            public string Column { get; set; }
+            public string Category { get; set; }
+            public string Assignee { get; set; }
+            public string Scope { get; set; } = "all";
+            public bool IncludeCompleted { get; set; } = true;
+            public bool IncludeArchived { get; set; } = false;
+            public int? Limit { get; set; }
         }
 
         public class CreateSubtaskParams
@@ -1102,20 +1114,24 @@ namespace AwesomeTaskManager.Next.Mcp
         }
 
 #if ATM_NEXT_UNITYAI_MCP_PRESENT || ATM_NEXT_MCP_PRESENT
-        [McpTool("atm_search", "Searches across all task cards, checklists, categories, and quick notes.", Groups = new[] { "Task Manager/Search" })]
+        [McpTool("atm_search", "Searches across all task cards, checklists, categories, assignees, boards, columns, quick notes, and ATM tools.", Groups = new[] { "Task Manager/Search" })]
 #endif
         public static object Search(SearchParams p)
         {
-            if (p == null || string.IsNullOrWhiteSpace(p.Query))
-                return new { matchedCards = new List<object>(), matchedNotes = new List<object>() };
+            p ??= new SearchParams();
+            string effectiveQuery = p.Query ?? p.Keyword ?? p.Search ?? p.Term ?? p.Text ?? "";
 
-            var (cards, notes) = ATMNextService.Search(p.Query);
-
-            return new
-            {
-                matchedCards = cards.Select(c => new { id = c.id, title = c.title, category = c.category, priority = c.priority, completed = c.completed }).ToList(),
-                matchedNotes = notes.Select(n => new { id = n.id, title = n.title, tags = n.tags }).ToList()
-            };
+            return ATMNextService.SearchDetailed(
+                query: effectiveQuery,
+                boardNameOrId: p.Board,
+                columnNameOrId: p.Column,
+                category: p.Category,
+                assignee: p.Assignee,
+                scope: p.Scope ?? "all",
+                includeCompleted: p.IncludeCompleted,
+                includeArchived: p.IncludeArchived,
+                limit: p.Limit
+            );
         }
 
 #if ATM_NEXT_UNITYAI_MCP_PRESENT || ATM_NEXT_MCP_PRESENT

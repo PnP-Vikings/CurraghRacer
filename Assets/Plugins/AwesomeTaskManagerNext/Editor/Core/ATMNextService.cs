@@ -41,6 +41,11 @@ namespace AwesomeTaskManager.Next
             {
                 data.Normalize();
                 Persistence.Save(data);
+
+                if (Persistence.SuppressReloadEvents || Persistence.InMemoryDataOverride != null || !string.IsNullOrEmpty(Persistence.SavePathOverride))
+                {
+                    return;
+                }
                 
                 try
                 {
@@ -227,7 +232,7 @@ namespace AwesomeTaskManager.Next
 
                 try
                 {
-                    if (TaskBoardWindow.Instance != null)
+                    if (!Persistence.SuppressReloadEvents && Persistence.InMemoryDataOverride == null && string.IsNullOrEmpty(Persistence.SavePathOverride) && TaskBoardWindow.Instance != null)
                     {
                         TaskBoardWindow.Instance.SetActiveBoardIndex(idx);
                     }
@@ -2964,8 +2969,555 @@ namespace AwesomeTaskManager.Next
 
         #region Search & Project Analytics
 
+        [Serializable]
+        public class MatchedCardDetail
+        {
+            public string id;
+            public string title;
+            public string board;
+            public string column;
+            public string category;
+            public int priority;
+            public string dueDate;
+            public int colorLabel;
+            public bool completed;
+            public bool archived;
+            public List<string> assignees = new List<string>();
+            public List<string> checklist = new List<string>();
+            public List<string> matchedChecklistItems = new List<string>();
+            public string description;
+            public int linksCount;
+        }
+
+        [Serializable]
+        public class MatchedNoteDetail
+        {
+            public string id;
+            public string title;
+            public string folder;
+            public List<string> tags = new List<string>();
+            public string content;
+            public bool pinned;
+            public int colorIndex;
+            public string modifiedDate;
+        }
+
+        [Serializable]
+        public class MatchedBoardDetail
+        {
+            public string id;
+            public string name;
+            public int columnCount;
+            public int cardCount;
+        }
+
+        [Serializable]
+        public class MatchedColumnDetail
+        {
+            public string id;
+            public string title;
+            public string board;
+            public int cardCount;
+        }
+
+        [Serializable]
+        public class MatchedCategoryDetail
+        {
+            public string name;
+            public int colorIndex;
+        }
+
+        [Serializable]
+        public class MatchedAssigneeDetail
+        {
+            public string id;
+            public string name;
+            public int colorIndex;
+        }
+
+        [Serializable]
+        public class MatchedToolDetail
+        {
+            public string name;
+            public string description;
+            public string category;
+        }
+
+        [Serializable]
+        public class DetailedSearchResult
+        {
+            public bool success = true;
+            public string query;
+            public string message;
+            public int totalMatches;
+            public List<MatchedCardDetail> matchedCards = new List<MatchedCardDetail>();
+            public List<MatchedNoteDetail> matchedNotes = new List<MatchedNoteDetail>();
+            public List<MatchedBoardDetail> matchedBoards = new List<MatchedBoardDetail>();
+            public List<MatchedColumnDetail> matchedColumns = new List<MatchedColumnDetail>();
+            public List<MatchedCategoryDetail> matchedCategories = new List<MatchedCategoryDetail>();
+            public List<MatchedAssigneeDetail> matchedAssignees = new List<MatchedAssigneeDetail>();
+            public List<MatchedToolDetail> matchedTools = new List<MatchedToolDetail>();
+        }
+
         /// <summary>
-        /// Searches across all cards (title, description, category, checklists) and notes (title, content, tags).
+        /// Returns the catalog of all available ATM Next MCP tools and Command Bridge endpoints.
+        /// </summary>
+        public static List<MatchedToolDetail> GetToolCatalog()
+        {
+            return new List<MatchedToolDetail>
+            {
+                // Boards & Columns
+                new MatchedToolDetail { name = "atm_get_boards", category = "Boards & Columns", description = "Inspect all boards, columns, and cards with completion stats" },
+                new MatchedToolDetail { name = "atm_create_board", category = "Boards & Columns", description = "Create new task boards" },
+                new MatchedToolDetail { name = "atm_delete_board", category = "Boards & Columns", description = "Delete boards (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_create_column", category = "Boards & Columns", description = "Create new columns in boards" },
+                new MatchedToolDetail { name = "atm_move_column", category = "Boards & Columns", description = "Move columns across boards or reorder" },
+                new MatchedToolDetail { name = "atm_clone_column", category = "Boards & Columns", description = "Clone/duplicate columns to boards" },
+                new MatchedToolDetail { name = "atm_reorder_column", category = "Boards & Columns", description = "Reorder columns left/right/first/last" },
+                new MatchedToolDetail { name = "atm_delete_column", category = "Boards & Columns", description = "Delete columns (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_set_active_board", category = "Boards & Columns", description = "Switch the active board in the editor" },
+                new MatchedToolDetail { name = "atm_set_filter", category = "Boards & Columns", description = "Filter tasks by category/assignee/priority/search" },
+                new MatchedToolDetail { name = "atm_get_filter", category = "Boards & Columns", description = "Inspect active filter settings on the board" },
+                new MatchedToolDetail { name = "atm_delete_all_tasks_in_column", category = "Boards & Columns", description = "Bulk clear columns (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_move_all_tasks_between_boards", category = "Boards & Columns", description = "Bulk move tasks (requires confirm: true)" },
+
+                // Tasks & Cards
+                new MatchedToolDetail { name = "atm_create_task", category = "Tasks & Cards", description = "Create new task cards with checklists" },
+                new MatchedToolDetail { name = "atm_bulk_create_tasks", category = "Tasks & Cards", description = "Import dozens of cards at once" },
+                new MatchedToolDetail { name = "atm_update_task", category = "Tasks & Cards", description = "Update task properties or mark complete" },
+                new MatchedToolDetail { name = "atm_bulk_update_tasks", category = "Tasks & Cards", description = "Bulk update multiple task properties/assignees" },
+                new MatchedToolDetail { name = "atm_move_task", category = "Tasks & Cards", description = "Move cards across columns/boards" },
+                new MatchedToolDetail { name = "atm_bulk_move_tasks", category = "Tasks & Cards", description = "Bulk move multiple cards at once" },
+                new MatchedToolDetail { name = "atm_clone_task", category = "Tasks & Cards", description = "Clone/duplicate a card to column/board" },
+                new MatchedToolDetail { name = "atm_bulk_clone_tasks", category = "Tasks & Cards", description = "Bulk duplicate cards across columns/boards" },
+                new MatchedToolDetail { name = "atm_reorder_task", category = "Tasks & Cards", description = "Reorder cards up/down in column" },
+                new MatchedToolDetail { name = "atm_delete_task", category = "Tasks & Cards", description = "Remove task cards (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_bulk_delete_tasks", category = "Tasks & Cards", description = "Bulk delete task cards (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_manage_checklist", category = "Tasks & Cards", description = "Add, toggle, or remove checklist items" },
+                new MatchedToolDetail { name = "atm_search", category = "Tasks & Cards", description = "Search tasks, checklists, notes, categories, assignees, boards, columns, and ATM tools" },
+
+                // Categories & Assignees
+                new MatchedToolDetail { name = "atm_create_category", category = "Categories & Assignees", description = "Create new category tags with colors" },
+                new MatchedToolDetail { name = "atm_get_categories", category = "Categories & Assignees", description = "List all categories and color indices" },
+                new MatchedToolDetail { name = "atm_delete_category", category = "Categories & Assignees", description = "Delete a category (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_create_assignee", category = "Categories & Assignees", description = "Create team members / assignees" },
+                new MatchedToolDetail { name = "atm_get_assignees", category = "Categories & Assignees", description = "List all assignees with IDs and styles" },
+                new MatchedToolDetail { name = "atm_delete_assignee", category = "Categories & Assignees", description = "Delete an assignee (requires confirm: true)" },
+
+                // Hierarchical Subtasks & Epics
+                new MatchedToolDetail { name = "atm_create_subtask", category = "Hierarchical Subtasks & Epics", description = "Create child tasks linked to a parent" },
+                new MatchedToolDetail { name = "atm_link_subtask", category = "Hierarchical Subtasks & Epics", description = "Link existing card as child to parent" },
+                new MatchedToolDetail { name = "atm_unlink_subtask", category = "Hierarchical Subtasks & Epics", description = "Remove parent-child link between cards" },
+                new MatchedToolDetail { name = "atm_convert_checklist_to_subtasks", category = "Hierarchical Subtasks & Epics", description = "Convert checklist items to cards" },
+                new MatchedToolDetail { name = "atm_get_subtasks", category = "Hierarchical Subtasks & Epics", description = "Query parent/child relationships" },
+                new MatchedToolDetail { name = "atm_create_epic_hierarchy", category = "Hierarchical Subtasks & Epics", description = "Create parent + multiple children at once" },
+
+                // Notes & Devlogs
+                new MatchedToolDetail { name = "atm_get_notes", category = "Notes & Devlogs", description = "List all Quick Notes and folders" },
+                new MatchedToolDetail { name = "atm_create_note", category = "Notes & Devlogs", description = "Write devlogs and architecture notes" },
+                new MatchedToolDetail { name = "atm_bulk_create_notes", category = "Notes & Devlogs", description = "Batch create notes across folders" },
+                new MatchedToolDetail { name = "atm_update_note", category = "Notes & Devlogs", description = "Edit existing Quick Notes" },
+                new MatchedToolDetail { name = "atm_bulk_update_notes", category = "Notes & Devlogs", description = "Bulk update content, folders, tags, colors" },
+                new MatchedToolDetail { name = "atm_bulk_move_notes", category = "Notes & Devlogs", description = "Bulk move notes to target folders" },
+                new MatchedToolDetail { name = "atm_delete_note", category = "Notes & Devlogs", description = "Delete notes (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_bulk_delete_notes", category = "Notes & Devlogs", description = "Bulk delete notes (requires confirm: true)" },
+                new MatchedToolDetail { name = "atm_generate_devlog", category = "Notes & Devlogs", description = "Auto-compile 'Done' tasks into a note" },
+                new MatchedToolDetail { name = "atm_link_item", category = "Notes & Devlogs", description = "Link notes, URLs, or assets to cards" },
+                new MatchedToolDetail { name = "atm_bulk_link_items", category = "Notes & Devlogs", description = "Bulk link multiple notes/URLs/assets to cards" },
+
+                // Sprint Analytics & Health
+                new MatchedToolDetail { name = "atm_get_project_summary", category = "Sprint Analytics & Health", description = "Get sprint completion analytics" }
+            };
+        }
+
+        /// <summary>
+        /// Performs rich, multi-criteria search across cards, notes, checklists, categories, assignees, boards, columns, and ATM tools.
+        /// </summary>
+        public static DetailedSearchResult SearchDetailed(
+            string query = null,
+            string boardNameOrId = null,
+            string columnNameOrId = null,
+            string category = null,
+            string assignee = null,
+            string scope = "all",
+            bool includeCompleted = true,
+            bool includeArchived = false,
+            int? limit = null)
+        {
+            var result = new DetailedSearchResult
+            {
+                query = query ?? "",
+                success = true
+            };
+
+            var data = GetData();
+            string q = (query ?? "").Trim();
+            bool hasQuery = !string.IsNullOrWhiteSpace(q);
+
+            string scopeNorm = (scope ?? "all").Trim().ToLowerInvariant();
+            bool searchAll = string.IsNullOrEmpty(scopeNorm) || scopeNorm == "all" || scopeNorm == "*";
+            bool searchCards = searchAll || scopeNorm.Contains("card") || scopeNorm.Contains("task");
+            bool searchNotes = searchAll || scopeNorm.Contains("note");
+            bool searchChecklists = searchAll || scopeNorm.Contains("checklist");
+            bool searchBoards = searchAll || scopeNorm.Contains("board");
+            bool searchColumns = searchAll || scopeNorm.Contains("column");
+            bool searchCategories = searchAll || scopeNorm.Contains("categor");
+            bool searchAssignees = searchAll || scopeNorm.Contains("assignee") || scopeNorm.Contains("member") || scopeNorm.Contains("user");
+            bool searchTools = searchAll || scopeNorm.Contains("tool") || scopeNorm.Contains("command") || scopeNorm.Contains("endpoint") || scopeNorm.Contains("api");
+
+            // Build assignee ID -> Name lookup
+            var assigneeMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (data?.assignees != null)
+            {
+                foreach (var a in data.assignees)
+                {
+                    if (a != null && !string.IsNullOrEmpty(a.id))
+                        assigneeMap[a.id] = a.name ?? "";
+                }
+            }
+
+            // Build note folder ID -> Name lookup
+            var folderMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            if (data?.noteFolders != null)
+            {
+                foreach (var f in data.noteFolders)
+                {
+                    if (f != null && !string.IsNullOrEmpty(f.id))
+                        folderMap[f.id] = f.name ?? "";
+                }
+            }
+
+            // 1. Search Cards
+            if ((searchCards || searchChecklists) && data?.boards != null)
+            {
+                foreach (var b in data.boards)
+                {
+                    if (b == null) continue;
+                    if (!string.IsNullOrWhiteSpace(boardNameOrId) &&
+                        b.id != boardNameOrId &&
+                        !string.Equals(b.name, boardNameOrId, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    if (b.columns == null) continue;
+                    foreach (var col in b.columns)
+                    {
+                        if (col == null) continue;
+                        if (!string.IsNullOrWhiteSpace(columnNameOrId) &&
+                            col.id != columnNameOrId &&
+                            !string.Equals(col.title, columnNameOrId, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        if (col.cards == null) continue;
+                        foreach (var card in col.cards)
+                        {
+                            if (card == null) continue;
+                            if (!includeCompleted && card.completed) continue;
+                            if (!includeArchived && card.archived) continue;
+
+                            if (!string.IsNullOrWhiteSpace(category) &&
+                                (card.category == null || card.category.IndexOf(category.Trim(), StringComparison.OrdinalIgnoreCase) < 0))
+                            {
+                                continue;
+                            }
+
+                            if (!string.IsNullOrWhiteSpace(assignee))
+                            {
+                                bool matchesAssignee = false;
+                                if (card.assigneeIds != null)
+                                {
+                                    foreach (var aid in card.assigneeIds)
+                                    {
+                                        if (string.Equals(aid, assignee, StringComparison.OrdinalIgnoreCase) ||
+                                            (assigneeMap.TryGetValue(aid, out var aName) && aName.IndexOf(assignee, StringComparison.OrdinalIgnoreCase) >= 0))
+                                        {
+                                            matchesAssignee = true;
+                                            break;
+                                        }
+                                    }
+                                }
+                                if (!matchesAssignee) continue;
+                            }
+
+                            // Match query
+                            bool isMatch = !hasQuery;
+                            var matchedChecklistItems = new List<string>();
+
+                            if (hasQuery)
+                            {
+                                bool titleMatch = card.title != null && card.title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                                bool descMatch = card.description != null && card.description.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                                bool catMatch = card.category != null && card.category.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                                bool idMatch = card.id != null && card.id.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                                bool checklistMatch = false;
+                                if (card.checklistItems != null)
+                                {
+                                    foreach (var item in card.checklistItems)
+                                    {
+                                        if (item != null && item.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)
+                                        {
+                                            checklistMatch = true;
+                                            matchedChecklistItems.Add(item);
+                                        }
+                                    }
+                                }
+
+                                bool assigneeMatch = false;
+                                if (card.assigneeIds != null)
+                                {
+                                    foreach (var aid in card.assigneeIds)
+                                    {
+                                        if (aid.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0 ||
+                                            (assigneeMap.TryGetValue(aid, out var aName) && aName.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
+                                        {
+                                            assigneeMatch = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                bool linkMatch = false;
+                                if (card.linkedItems != null)
+                                {
+                                    foreach (var li in card.linkedItems)
+                                    {
+                                        if (li == null) continue;
+                                        if ((li.displayName != null && li.displayName.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                            (li.url != null && li.url.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0))
+                                        {
+                                            linkMatch = true;
+                                            break;
+                                        }
+                                    }
+                                }
+
+                                if (scopeNorm.Contains("checklist") && !searchAll)
+                                {
+                                    isMatch = checklistMatch;
+                                }
+                                else
+                                {
+                                    isMatch = titleMatch || descMatch || catMatch || idMatch || checklistMatch || assigneeMatch || linkMatch;
+                                }
+                            }
+                            else if (card.checklistItems != null)
+                            {
+                                matchedChecklistItems.AddRange(card.checklistItems);
+                            }
+
+                            if (isMatch)
+                            {
+                                var assigneeNames = card.assigneeIds?.Select(id => assigneeMap.TryGetValue(id, out var name) && !string.IsNullOrEmpty(name) ? name : id).ToList() ?? new List<string>();
+                                int linksCount = (card.linkedItems?.Count ?? 0) + (card.linkedAssetGuids?.Count ?? 0) + (card.linkedSceneObjects?.Count ?? 0);
+
+                                result.matchedCards.Add(new MatchedCardDetail
+                                {
+                                    id = card.id,
+                                    title = card.title,
+                                    board = b.name,
+                                    column = col.title,
+                                    category = card.category,
+                                    priority = card.priority,
+                                    dueDate = card.dueDate,
+                                    colorLabel = card.colorLabel,
+                                    completed = card.completed,
+                                    archived = card.archived,
+                                    assignees = assigneeNames,
+                                    checklist = card.checklistItems != null ? new List<string>(card.checklistItems) : new List<string>(),
+                                    matchedChecklistItems = matchedChecklistItems,
+                                    description = card.description,
+                                    linksCount = linksCount
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+
+            // 2. Search Notes
+            if (searchNotes && data?.notes != null)
+            {
+                foreach (var note in data.notes)
+                {
+                    if (note == null) continue;
+                    string folderName = (note.folderId != null && folderMap.TryGetValue(note.folderId, out var fn)) ? fn : (note.folderId ?? "");
+
+                    bool isMatch = !hasQuery;
+                    if (hasQuery)
+                    {
+                        bool titleMatch = note.title != null && note.title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                        bool contentMatch = note.content != null && note.content.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                        bool tagsMatch = note.tags != null && note.tags.Any(t => t != null && t.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0);
+                        bool idMatch = note.id != null && note.id.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                        bool folderMatch = folderName.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+
+                        isMatch = titleMatch || contentMatch || tagsMatch || idMatch || folderMatch;
+                    }
+
+                    if (isMatch)
+                    {
+                        result.matchedNotes.Add(new MatchedNoteDetail
+                        {
+                            id = note.id,
+                            title = note.title,
+                            folder = folderName,
+                            tags = note.tags != null ? new List<string>(note.tags) : new List<string>(),
+                            content = note.content,
+                            pinned = note.pinned,
+                            colorIndex = note.colorIndex,
+                            modifiedDate = note.modifiedDate
+                        });
+                    }
+                }
+            }
+
+            // 3. Search Boards
+            if (searchBoards && data?.boards != null)
+            {
+                foreach (var b in data.boards)
+                {
+                    if (b == null) continue;
+                    bool isMatch = !hasQuery || (b.name != null && b.name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) || (b.id != null && b.id.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0);
+                    if (isMatch)
+                    {
+                        result.matchedBoards.Add(new MatchedBoardDetail
+                        {
+                            id = b.id,
+                            name = b.name,
+                            columnCount = b.columns?.Count ?? 0,
+                            cardCount = b.columns?.Sum(c => c?.cards?.Count ?? 0) ?? 0
+                        });
+                    }
+                }
+            }
+
+            // 4. Search Columns
+            if (searchColumns && data?.boards != null)
+            {
+                foreach (var b in data.boards)
+                {
+                    if (b?.columns == null) continue;
+                    foreach (var col in b.columns)
+                    {
+                        if (col == null) continue;
+                        bool isMatch = !hasQuery || (col.title != null && col.title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) || (col.id != null && col.id.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) || (b.name != null && b.name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0);
+                        if (isMatch)
+                        {
+                            result.matchedColumns.Add(new MatchedColumnDetail
+                            {
+                                id = col.id,
+                                title = col.title,
+                                board = b.name,
+                                cardCount = col.cards?.Count ?? 0
+                            });
+                        }
+                    }
+                }
+            }
+
+            // 5. Search Categories
+            if (searchCategories && data?.categories != null)
+            {
+                foreach (var cat in data.categories)
+                {
+                    if (string.IsNullOrWhiteSpace(cat)) continue;
+                    bool isMatch = !hasQuery || cat.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0;
+                    if (isMatch)
+                    {
+                        result.matchedCategories.Add(new MatchedCategoryDetail
+                        {
+                            name = cat,
+                            colorIndex = data.GetCategoryColor(cat)
+                        });
+                    }
+                }
+            }
+
+            // 6. Search Assignees
+            if (searchAssignees && data?.assignees != null)
+            {
+                foreach (var a in data.assignees)
+                {
+                    if (a == null) continue;
+                    bool isMatch = !hasQuery || (a.name != null && a.name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) || (a.id != null && a.id.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0);
+                    if (isMatch)
+                    {
+                        result.matchedAssignees.Add(new MatchedAssigneeDetail
+                        {
+                            id = a.id,
+                            name = a.name,
+                            colorIndex = a.colorIndex
+                        });
+                    }
+                }
+            }
+
+            // 7. Search Tools Catalog
+            if (searchTools)
+            {
+                var toolCatalog = GetToolCatalog();
+                foreach (var tool in toolCatalog)
+                {
+                    if (tool == null) continue;
+                    bool isMatch = !hasQuery || (tool.name != null && tool.name.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                  (tool.description != null && tool.description.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
+                                  (tool.category != null && tool.category.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0);
+                    if (isMatch)
+                    {
+                        result.matchedTools.Add(tool);
+                    }
+                }
+            }
+
+            // Apply limits if requested
+            if (limit.HasValue && limit.Value > 0)
+            {
+                int max = limit.Value;
+                if (result.matchedCards.Count > max) result.matchedCards = result.matchedCards.Take(max).ToList();
+                if (result.matchedNotes.Count > max) result.matchedNotes = result.matchedNotes.Take(max).ToList();
+                if (result.matchedBoards.Count > max) result.matchedBoards = result.matchedBoards.Take(max).ToList();
+                if (result.matchedColumns.Count > max) result.matchedColumns = result.matchedColumns.Take(max).ToList();
+                if (result.matchedCategories.Count > max) result.matchedCategories = result.matchedCategories.Take(max).ToList();
+                if (result.matchedAssignees.Count > max) result.matchedAssignees = result.matchedAssignees.Take(max).ToList();
+                if (result.matchedTools.Count > max) result.matchedTools = result.matchedTools.Take(max).ToList();
+            }
+
+            result.totalMatches = result.matchedCards.Count +
+                                  result.matchedNotes.Count +
+                                  result.matchedBoards.Count +
+                                  result.matchedColumns.Count +
+                                  result.matchedCategories.Count +
+                                  result.matchedAssignees.Count +
+                                  result.matchedTools.Count;
+
+            var parts = new List<string>();
+            if (result.matchedCards.Count > 0) parts.Add($"{result.matchedCards.Count} card(s)");
+            if (result.matchedNotes.Count > 0) parts.Add($"{result.matchedNotes.Count} note(s)");
+            if (result.matchedBoards.Count > 0) parts.Add($"{result.matchedBoards.Count} board(s)");
+            if (result.matchedColumns.Count > 0) parts.Add($"{result.matchedColumns.Count} column(s)");
+            if (result.matchedCategories.Count > 0) parts.Add($"{result.matchedCategories.Count} category(s)");
+            if (result.matchedAssignees.Count > 0) parts.Add($"{result.matchedAssignees.Count} assignee(s)");
+            if (result.matchedTools.Count > 0) parts.Add($"{result.matchedTools.Count} tool(s)");
+
+            if (result.totalMatches == 0)
+            {
+                result.message = hasQuery ? $"No items found matching '{q}'." : "No items found matching the specified search criteria.";
+            }
+            else
+            {
+                string breakdown = string.Join(", ", parts);
+                result.message = hasQuery ? $"Found {result.totalMatches} item(s) matching '{q}' ({breakdown})." : $"Found {result.totalMatches} item(s) ({breakdown}).";
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Searches across all cards (title, description, category, checklists, assignees, ID) and notes (title, content, tags, folder, ID).
         /// </summary>
         public static (List<TaskCard> matchedCards, List<QuickNote> matchedNotes) Search(string query)
         {
@@ -2975,32 +3527,40 @@ namespace AwesomeTaskManager.Next
             if (string.IsNullOrWhiteSpace(query))
                 return (matchedCards, matchedNotes);
 
-            var data = GetData();
-            string q = query.Trim();
+            var detailed = SearchDetailed(query: query, scope: "cards,notes");
 
-            foreach (var card in GetCards())
+            var allCards = GetCards();
+            var cardMap = new Dictionary<string, TaskCard>();
+            foreach (var c in allCards)
             {
-                if (card == null) continue;
-                if ((card.title != null && card.title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (card.description != null && card.description.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (card.category != null && card.category.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                    (card.checklistItems != null && card.checklistItems.Any(item => item != null && item.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)))
+                if (c != null && !string.IsNullOrEmpty(c.id))
+                    cardMap[c.id] = c;
+            }
+
+            foreach (var mc in detailed.matchedCards)
+            {
+                if (mc != null && cardMap.TryGetValue(mc.id, out var card))
                 {
                     matchedCards.Add(card);
                 }
             }
 
-            if (data.notes != null)
+            var data = GetData();
+            var noteMap = new Dictionary<string, QuickNote>();
+            if (data?.notes != null)
             {
-                foreach (var note in data.notes)
+                foreach (var n in data.notes)
                 {
-                    if (note == null) continue;
-                    if ((note.title != null && note.title.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                        (note.content != null && note.content.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                        (note.tags != null && note.tags.Any(t => t != null && t.IndexOf(q, StringComparison.OrdinalIgnoreCase) >= 0)))
-                    {
-                        matchedNotes.Add(note);
-                    }
+                    if (n != null && !string.IsNullOrEmpty(n.id))
+                        noteMap[n.id] = n;
+                }
+            }
+
+            foreach (var mn in detailed.matchedNotes)
+            {
+                if (mn != null && noteMap.TryGetValue(mn.id, out var note))
+                {
+                    matchedNotes.Add(note);
                 }
             }
 
@@ -3250,7 +3810,10 @@ namespace AwesomeTaskManager.Next
 
             try
             {
-                TaskBoardWindow.ApplyFiltersToOpenWindows(_savedFilterCategory, _savedFilterAssigneeId, _savedFilterPriority, _savedFilterSearch);
+                if (!Persistence.SuppressReloadEvents && Persistence.InMemoryDataOverride == null && string.IsNullOrEmpty(Persistence.SavePathOverride))
+                {
+                    TaskBoardWindow.ApplyFiltersToOpenWindows(_savedFilterCategory, _savedFilterAssigneeId, _savedFilterPriority, _savedFilterSearch);
+                }
             }
             catch { }
 

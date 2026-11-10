@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
   m_Name: Team_5
   m_EditorClassIdentifier: 
-  teamName: Purple Woeful
+  teamName: Royal Rowing Team
   teamDescription: 
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: -8955305404688577058, guid: a62cfad2de9e6774491bba5a44877442, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 2
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: ea6d5564c578ec340bf2d555aa39edbe, type: 2}
   bench:
   - {fileID: 11400000, guid: 67077346c1be4ab478c9226169df9913, type: 2}
+  defaultTeamMembers: []
+  defaultBench: []
   currentSeasonStats:
     finishes: 
   lifetimeStats:

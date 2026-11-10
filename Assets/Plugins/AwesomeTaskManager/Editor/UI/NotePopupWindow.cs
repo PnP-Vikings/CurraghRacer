@@ -22,6 +22,13 @@ namespace AwesomeTaskManager.Editor
         private bool _hasAnimatedGif;
         private double _lastGifRepaintTime;
 
+        private NoteClipboardController _clipboard;
+        private readonly List<string> _noteUndoStack = new List<string>();
+        private readonly List<string> _noteRedoStack = new List<string>();
+        private string _lastCommittedContent = null;
+        private float _lastUndoPushTime = 0;
+        private bool _needsUndoBaseline = false;
+
         public static NotePopupWindow Open(QuickNote note, SaveData saveData, Action onChanged)
         {
             // Allow multiple instances (one per note)
@@ -30,8 +37,24 @@ namespace AwesomeTaskManager.Editor
             win._note = note;
             win._saveData = saveData;
             win._onChanged = onChanged;
-            win.minSize = new Vector2(360, 300);
-            win.Show();
+            float startWidth = 360f;
+            float startHeight = 280f;
+            win.minSize = new Vector2(300f, 220f);
+            try
+            {
+                var mainPos = EditorGUIUtility.GetMainWindowPosition();
+                var center = new Vector2(mainPos.x + mainPos.width * 0.5f, mainPos.y + mainPos.height * 0.5f);
+                win.position = new Rect(center.x - startWidth * 0.5f, center.y - startHeight * 0.5f, startWidth, startHeight);
+            }
+            catch
+            {
+                try { win.position = new Rect(100f, 100f, startWidth, startHeight); } catch { }
+            }
+            try
+            {
+                win.Show();
+            }
+            catch { }
             return win;
         }
 
@@ -43,11 +66,26 @@ namespace AwesomeTaskManager.Editor
             win._note = note;
             win._saveData = saveData;
             win._onChanged = onChanged;
-            win.minSize = new Vector2(360, 300);
-            win.Show();
+            float startWidth = 360f;
+            float startHeight = 280f;
+            win.minSize = new Vector2(300f, 220f);
+            try
+            {
+                var mainPos = EditorGUIUtility.GetMainWindowPosition();
+                var center = new Vector2(mainPos.x + mainPos.width * 0.5f, mainPos.y + mainPos.height * 0.5f);
+                win.position = new Rect(center.x - startWidth * 0.5f, center.y - startHeight * 0.5f, startWidth, startHeight);
+            }
+            catch
+            {
+                try { win.position = new Rect(100f, 100f, startWidth, startHeight); } catch { }
+            }
+            try
+            {
+                win.Show();
+            }
+            catch { }
             win._isPreview = true;
             return win;
-            
         }
 
         public void LoadData()
@@ -106,6 +144,11 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
+            if (_note?.content != null && _note.content.Contains("\r"))
+            {
+                _note.content = _note.content.Replace("\r\n", "\n").Replace("\r", "\n");
+            }
+
             try
             {
                 if (_note == null) { Close(); return; }
@@ -118,14 +161,14 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 // Title bar
-                using (var tbScope = new EditorGUILayout.HorizontalScope(GUILayout.Height(24)))
+                using (var tbScope = new EditorGUILayout.HorizontalScope(GUILayout.Height(24), GUILayout.ExpandWidth(true)))
                 {
                     if (Event.current.type == EventType.Repaint)
                     {
                         TBStyles.DrawGlassPanel(tbScope.rect, TBStyles.TopBarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
                     }
 
-                    string newTitle = TBStyles.DrawThemedTextField(_note.title, TBStyles.NoteTitle, GUILayout.Height(24));
+                    string newTitle = TBStyles.DrawThemedTextField(_note.title, TBStyles.NoteTitle, GUILayout.Height(24), GUILayout.ExpandWidth(true));
                     if (newTitle != _note.title)
                     {
                         _note.title = newTitle;
@@ -137,6 +180,7 @@ namespace AwesomeTaskManager.Editor
                     if (ThemedTooltip.Button(_isPreview ? "✍ Edit" : "👁 Preview", _isPreview ? "Switch to Edit Note Mode" : "Switch to Preview Note Mode", TBStyles.ToolbarButton, GUILayout.Width(75)))
                     {
                         _isPreview = !_isPreview;
+                        Clipboard.Reset();
                         GUI.FocusControl(null);
                     }
 
@@ -194,73 +238,105 @@ namespace AwesomeTaskManager.Editor
                     EditorStyles.miniLabel);
                 GUILayout.Space(2);
 
-                using (var scope = new EditorGUILayout.ScrollViewScope(_scroll))
+                using (var scope = new EditorGUILayout.ScrollViewScope(_scroll, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
                 {
                     _scroll = scope.scrollPosition;
                     
+                    // ── Command events: Undo / Redo (from Unity Edit menu or Mac Cmd+Z) ──
+                    if (Event.current != null)
+                    {
+                        if (Event.current.type == EventType.ValidateCommand)
+                        {
+                            if (Event.current.commandName == "Undo" || Event.current.commandName == "Redo")
+                            {
+                                Event.current.Use();
+                            }
+                        }
+                        else if (Event.current.type == EventType.ExecuteCommand)
+                        {
+                            if (Event.current.commandName == "Undo")
+                            {
+                                PerformUndo();
+                                Event.current.Use();
+                            }
+                            else if (Event.current.commandName == "Redo")
+                            {
+                                PerformRedo();
+                                Event.current.Use();
+                            }
+                        }
+                    }
+
+                    // ── Keyboard shortcuts: Undo / Redo / Cut / Copy / Paste ──
+                    if (Event.current != null && Event.current.type == EventType.KeyDown && (Event.current.control || Event.current.command))
+                    {
+                        if (Event.current.keyCode == KeyCode.Z)
+                        {
+                            if (Event.current.shift) PerformRedo();
+                            else PerformUndo();
+                            Event.current.Use();
+                        }
+                        else if (Event.current.keyCode == KeyCode.Y)
+                        {
+                            PerformRedo();
+                            Event.current.Use();
+                        }
+                    }
+                    Clipboard.HandleKeyboardShortcuts(_note, !_isPreview);
+
                     if (!_isPreview)
                     {
-                        using (new EditorGUILayout.HorizontalScope())
+                        using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
                         {
                             EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
-                            if (ThemedTooltip.Button("📋 Paste", "Paste Image from Clipboard", TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(18)))
+                            if (ThemedTooltip.Button("📋 Paste", "Paste Image or Text from Clipboard", TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(18)))
                             {
-                                if (MarkdownRenderer.TryPasteImageFromClipboard(_note, _ => MarkModified(), Repaint))
-                                {
-                                    GUI.FocusControl(null);
-                                }
+                                Clipboard.SmartPaste(_note, Clipboard.Live);
                             }
-                            if (ThemedTooltip.Button("📎 Browse", "Browse for Image", TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(18)))
+                            if (ThemedTooltip.Button("📎 Browse", "Browse for Image or Video", TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(18)))
                             {
-                                EditorApplication.delayCall += () =>
-                                {
-                                    string imgPath = EditorUtility.OpenFilePanel("Attach Image", "", "png,jpg,jpeg,gif,bmp,tga,psd,tiff");
-                                    if (!string.IsNullOrEmpty(imgPath))
-                                    {
-                                        string assetPath = MarkdownRenderer.CopyImageToProject(imgPath);
-                                        if (!string.IsNullOrEmpty(assetPath))
-                                        {
-                                            if (_note.imagePaths == null) _note.imagePaths = new List<string>();
-                                            if (!_note.imagePaths.Contains(assetPath)) _note.imagePaths.Add(assetPath);
-                                            string fileName = Path.GetFileName(assetPath);
-                                            _note.content = (_note.content ?? "") + $"\n![[{fileName}]]";
-                                            MarkModified();
-                                            Repaint();
-                                        }
-                                    }
-                                };
+                                AttachImage(_note);
                             }
                             GUILayout.FlexibleSpace();
                         }
                         GUILayout.Space(2);
 
-                        // ── Ctrl+V / Cmd+V to paste images from clipboard ──
-                        if (Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.V && (Event.current.control || Event.current.command))
-                        {
-                            if (MarkdownRenderer.TryPasteImageFromClipboard(_note, _ => MarkModified(), Repaint))
-                            {
-                                GUI.FocusControl(null);
-                                Event.current.Use();
-                            }
-                        }
-
                         // ── Drag and Drop images ──
+                        if (Event.current.type == EventType.DragPerform) RecordUndo(true);
                         MarkdownRenderer.HandleNoteDragDropImages(_note, _ => MarkModified(), Repaint);
 
-                        string newContent = EditorGUILayout.TextArea(_note.content, TBStyles.NoteTextArea, GUILayout.ExpandHeight(true));
+                        Clipboard.BeginTextArea(_note);
+                        string newContent = EditorGUILayout.TextArea(_note.content, TBStyles.NoteTextArea, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
 
                         if (newContent != _note.content)
                         {
+                            newContent = newContent.Replace("\r\n", "\n").Replace("\r", "\n");
+
+                            bool isFirstEdit = _needsUndoBaseline || _lastCommittedContent == null || _noteUndoStack.Count == 0;
+                            bool isPause = (Time.realtimeSinceStartup - _lastUndoPushTime) > 0.8f;
+                            bool isMajorDelta = Math.Abs(newContent.Length - (_note.content ?? "").Length) > 5;
+                            bool isNewlineOrWordBreak = newContent.EndsWith("\n") || newContent.EndsWith(" ");
+
+                            if (isFirstEdit || isPause || isMajorDelta || isNewlineOrWordBreak)
+                            {
+                                RecordUndo(true);
+                            }
+                            _needsUndoBaseline = false;
                             _note.content = newContent;
                             MarkModified();
                         }
+
+                        Rect r = GUILayoutUtility.GetLastRect();
+                        Clipboard.EndTextArea(_note, r);
                     }
                     else
                     {
-                        if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified()))
+                        Clipboard.HandlePreviewContextClick(_note);
+                        if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified(), _ => RecordUndo(true)))
                         {
                             _hasAnimatedGif = true;
                         }
+                        Clipboard.TrackPreviewSelection(_note);
                     }
                 }
 
@@ -314,6 +390,158 @@ namespace AwesomeTaskManager.Editor
             
             Repaint();
         }
+
+        private NoteClipboardController Clipboard => _clipboard ??= new NoteClipboardController("NoteEditorPopout", TBStyles.NoteTextArea, new NoteClipboardController.Host
+        {
+            MarkModified = _ => MarkModified(),
+            RecordUndo = _ => RecordUndo(true),
+            Repaint = Repaint,
+            CanUndo = _ => _noteUndoStack.Count > 0,
+            CanRedo = _ => _noteRedoStack.Count > 0,
+            Undo = _ => PerformUndo(),
+            Redo = _ => PerformRedo(),
+            SetEditMode = editMode =>
+            {
+                _isPreview = !editMode;
+                GUI.FocusControl(null);
+            },
+            AttachImage = AttachImage,
+            PopoutNote = note =>
+            {
+                if (_isPreview)
+                    OpenInPreviewMode(note, _saveData, _onChanged);
+                else
+                    Open(note, _saveData, _onChanged);
+            },
+            ExportNote = note => { EditorApplication.delayCall += () => TaskBoardWindow.ExportSingleNote(note); },
+            SwitchToEditLabel = "✍ Switch to Edit Mode"
+        });
+
+        private void AttachImage(QuickNote note)
+        {
+            if (note == null) return;
+
+            int insertionIndex;
+            int replaceLength;
+            if (_isPreview)
+            {
+                insertionIndex = NoteClipboardController.NormalizeNewlines(note.content).Length;
+                replaceLength = 0;
+            }
+            else
+            {
+                Clipboard.GetInsertTarget(note, out insertionIndex, out replaceLength);
+            }
+
+            EditorApplication.delayCall += () =>
+            {
+                if (this == null || note == null) return;
+
+                string imagePath = EditorUtility.OpenFilePanelWithFilters("Attach Image or Video", "", MarkdownRenderer.NoteAttachmentFileFilters);
+                if (string.IsNullOrEmpty(imagePath)) return;
+
+                string assetPath = MarkdownRenderer.CopyImageToProject(imagePath);
+                if (string.IsNullOrEmpty(assetPath)) return;
+
+                if (note.imagePaths == null) note.imagePaths = new List<string>();
+                if (!note.imagePaths.Contains(assetPath)) note.imagePaths.Add(assetPath);
+
+                string content = NoteClipboardController.NormalizeNewlines(note.content);
+                int insertPosition = Mathf.Clamp(insertionIndex, 0, content.Length);
+                string prefix = insertPosition > 0 && !content.Substring(0, insertPosition).EndsWith("\n") ? "\n" : "";
+                string tag = $"![[{Path.GetFileName(assetPath)}]]";
+                RecordUndo(true);
+                note.content = NoteClipboardController.ReplaceRange(content, insertPosition, replaceLength, prefix + tag, out int caret);
+                Clipboard.SetCaret(caret);
+                MarkModified();
+                Repaint();
+            };
+        }
+
+        private void RecordUndo(bool force = false)
+        {
+            if (_note == null) return;
+            string content = (_note.content ?? "").Replace("\r\n", "\n").Replace("\r", "\n");
+            if (_noteUndoStack.Count > 0 && _noteUndoStack[_noteUndoStack.Count - 1] == content) return;
+
+            if (!force && _lastCommittedContent != null && _lastCommittedContent == content) return;
+
+            _noteUndoStack.Add(content);
+            if (_noteUndoStack.Count > 100) _noteUndoStack.RemoveAt(0);
+            _noteRedoStack.Clear();
+            _lastCommittedContent = content;
+            _lastUndoPushTime = Time.realtimeSinceStartup;
+            _needsUndoBaseline = false;
+        }
+
+        private void PerformUndo()
+        {
+            if (_note == null || _noteUndoStack.Count == 0) return;
+
+            string currentContent = (_note.content ?? "").Replace("\r\n", "\n").Replace("\r", "\n");
+            while (_noteUndoStack.Count > 0 && _noteUndoStack[_noteUndoStack.Count - 1] == currentContent)
+            {
+                _noteUndoStack.RemoveAt(_noteUndoStack.Count - 1);
+            }
+            if (_noteUndoStack.Count == 0) return;
+
+            _noteRedoStack.Add(currentContent);
+            if (_noteRedoStack.Count > 100) _noteRedoStack.RemoveAt(0);
+
+            string previousContent = _noteUndoStack[_noteUndoStack.Count - 1];
+            _noteUndoStack.RemoveAt(_noteUndoStack.Count - 1);
+
+            int caret = Clipboard.CaretIndex;
+            _note.content = previousContent;
+            _lastCommittedContent = previousContent;
+            _lastUndoPushTime = Time.realtimeSinceStartup;
+            _needsUndoBaseline = true;
+
+            NoteClipboardController.SyncTextEditors(previousContent, caret);
+            Clipboard.Reset();
+
+            GUI.FocusControl(null);
+            GUIUtility.keyboardControl = 0;
+
+            MarkModified();
+            GUI.changed = true;
+            Repaint();
+        }
+
+        private void PerformRedo()
+        {
+            if (_note == null || _noteRedoStack.Count == 0) return;
+
+            string currentContent = (_note.content ?? "").Replace("\r\n", "\n").Replace("\r", "\n");
+            while (_noteRedoStack.Count > 0 && _noteRedoStack[_noteRedoStack.Count - 1] == currentContent)
+            {
+                _noteRedoStack.RemoveAt(_noteRedoStack.Count - 1);
+            }
+            if (_noteRedoStack.Count == 0) return;
+
+            _noteUndoStack.Add(currentContent);
+            if (_noteUndoStack.Count > 100) _noteUndoStack.RemoveAt(0);
+
+            string nextContent = _noteRedoStack[_noteRedoStack.Count - 1];
+            _noteRedoStack.RemoveAt(_noteRedoStack.Count - 1);
+
+            int caret = Clipboard.CaretIndex;
+            _note.content = nextContent;
+            _lastCommittedContent = nextContent;
+            _lastUndoPushTime = Time.realtimeSinceStartup;
+            _needsUndoBaseline = true;
+
+            NoteClipboardController.SyncTextEditors(nextContent, caret);
+            Clipboard.Reset();
+
+            GUI.FocusControl(null);
+            GUIUtility.keyboardControl = 0;
+
+            MarkModified();
+            GUI.changed = true;
+            Repaint();
+        }
+
     }
 }
 

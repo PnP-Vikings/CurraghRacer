@@ -21,7 +21,7 @@ When asked to perform any task management, card inspection, note creation, backl
 
 ## Agent Responsibilities:
 1. **Hierarchical Task Structuring**: Avoid creating massive flat task lists. Structure complex features into a parent Epic task with linked child subtask cards (using `atm_create_subtask`, `atm_link_subtask`, or `atm_create_epic_hierarchy`).
-2. **Task Consultation**: When starting work on a feature or bug fix, check ATM tasks and subtasks to understand requirements.
+2. **Task Consultation & Search**: When starting work on a feature or bug fix, check ATM tasks and subtasks to understand requirements, or use `atm_search` to quickly find relevant cards, notes, checklists, categories, assignees, boards, columns, or ATM tool capabilities.
 3. **Checklist & Subtask Synchronization**: When implementing components, check off completed checklist items or mark child cards as completed.
 4. **Status Updates & Card Movement**: Move cards to `🔨 In Progress` when starting (or use `atm_bulk_move_tasks` / `atm_bulk_update_tasks` for batch updates), and `✅ Done` when verified and tested.
 5. **Card & Column Ordering & Navigation**: Use `atm_reorder_task` to position cards up/down in a column, `atm_clone_task` or `atm_bulk_clone_tasks` to duplicate cards across columns/boards, `atm_move_column` or `atm_clone_column` to move/clone columns across boards, `atm_reorder_column` to reorder columns, `atm_set_active_board` to switch boards, and `atm_set_filter` to apply category/assignee/priority/search filters.
