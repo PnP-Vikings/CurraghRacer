@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
   m_Name: Team_7
   m_EditorClassIdentifier: 
-  teamName: Number 9s
+  teamName: "D\xFAn Laoghaire Sailing Society"
   teamDescription: 
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: 7466271774385942387, guid: 8ad1e85c566775f4bae4f808d9bf32a4, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 2
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 0d15f72cc8ba84d4cbf3542379e1213a, type: 2}
   bench:
   - {fileID: 11400000, guid: 5d1b9059a14b20d48a5cb6d7538ed4a1, type: 2}
+  defaultTeamMembers: []
+  defaultBench: []
   currentSeasonStats:
     finishes: 
   lifetimeStats:

@@ -11,7 +11,7 @@ public class Team : ScriptableObject
     [Header("Team Details")]
     public string teamName;
     public string teamDescription;
-    public Image teamLogo;
+    public Sprite teamLogo;
     public Color teamColor;
     public int teamQuality;
     public TeamType teamType = TeamType.AI; // Type of team (Player, AI, Custom)

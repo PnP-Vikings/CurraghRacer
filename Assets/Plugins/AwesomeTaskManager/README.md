@@ -13,7 +13,7 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 3. **New Shortcuts**: Press `Alt+Shift+C` to quickly create a card on the active board or `Ctrl+Alt+N` for a new note from anywhere in Unity.
 4. Your first board is already created — start adding cards!
 5. Switch between **Board**, **Notes**, and **Style** tabs to manage tasks, write notes, or customize your workspace theme
-6. Switch to the **Notes** tab to start writing — use `![[image.png]]` to embed images inline
+6. Switch to the **Notes** tab to start writing — use `![[image.png]]` to embed images inline, `![[clip.mp4]]` for videos, or paste a YouTube link on its own line for a preview card
 
 ---
 
@@ -47,8 +47,9 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **🔍 Large Image Preview** — click any image or GIF in the card details or note preview to open a larger, dedicated viewer window
 - **🎞 Animated GIF playback** — GIFs animate live on the board and in card detail views
 - **🔗 Note & URL Linking** — link Quick Notes and web URLs directly to task cards for easy access
+- **🏷 Titled Links** — give card URLs an optional title when adding them, and edit the URL or title later with the ✎ button; YouTube links show the video title automatically when they have no custom title
 - **🔃 Unified Linked Items** — assets, scene objects, notes, and URLs are combined into a single list with ▲/▼ reordering
-- **🚀 Smart Navigation** — click a linked note to open it instantly, or a URL to open it in your browser (with confirmation)
+- **🚀 Smart Navigation** — click a linked note to open it instantly, or a URL to open it in your browser (the confirmation shows the link title along with the URL)
 - **✨ Auto-Link URLs** — pasted links in notes are automatically converted into clickable buttons in Preview mode
 - **🚀 Smart Scene Navigation** — clicking a linked scene object pings it in the Hierarchy and automatically switches scenes if needed (with confirmation)
 - **👤 Assignee Filtering** — filter the board to show only tasks assigned to specific members; hover over icons on a card to see full names
@@ -57,6 +58,9 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 ### 📝 Quick Notes System
 - **Markdown-powered notepad** with Edit / Preview toggle
 - **Inline image embeds** — use `![[image.png]]` syntax to embed images directly in your notes, just like Obsidian
+- **Remote image embeds** — `![](https://…/image.gif)` downloads the image once, caches it in `AttachedImages/`, and renders it inline (animated GIFs included)
+- **📺 YouTube preview cards** — a YouTube link on its own line (or `![](youtube-url)`) renders a card with the thumbnail, a ▶ overlay and the video title; click to open it in your browser (timestamps are kept)
+- **🎬 Inline video player** — `![[clip.mp4]]` or `![](https://…/clip.mp4)` plays inside the note with play/pause, stop, seek, time, mute and loop controls (`.mp4`, `.webm`, `.mov`, `.m4v`, `.ogv`)
 - **Markdown preview** renders:
   - `# H1`, `## H2`, `### H3` headers with sizing and underlines
   - `- [ ]` / `- [x]` interactive checkboxes (toggleable in preview!)
@@ -65,7 +69,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
   - `---` / `***` / `___` horizontal rules
   - `**bold**`, `*italic*`, `` `code` `` inline formatting
 - **Clipboard image paste** — screenshot or copy an image, then press **Ctrl+V** or click the Paste button to embed it instantly
-- **Drag & drop images** — drag image files from Explorer directly into notes
+- **Drag & drop images & videos** — drag image or video files from Explorer directly into notes
+- **Browser GIF paste** — copy a GIF in your browser (or copy a `.gif` URL) and press **Ctrl+V** to embed it as an animated GIF
 - **Folder organization** — create folders, drag notes between them, "Unfiled" for loose notes
 - **Pin** important notes to the top
 - **Color-code** notes with 17 label colors
@@ -80,6 +85,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **Animated playback** in both the board view and card detail panels
 - **Supports up to 200 frames** and files up to 50 MB
 - **One-time decode, session-cached** — zero ongoing performance cost
+- **Interlaced & transparent GIFs** — interlaced GIFs decode correctly and transparent frames/disposal behave like in web browsers
+- **Paste from the web** — GIFs copied from a browser, `.gif` URLs, and `data:image/gif` sources are downloaded and saved to `AttachedImages/`
 
 ### 🎨 Themes & Visual Customization
 - **Full Theme Engine & Style Tab** — complete visual customization hub to tailor the look and feel of Awesome Task Manager
@@ -188,8 +195,12 @@ Assets/Plugins/AwesomeTaskManager/
         ├── ThemedDropdownPopup.cs — Themed searchable dropdown popup menus
         ├── ImageLargePreviewWindow.cs — Large image / GIF viewer window
         ├── NotePopupWindow.cs    — Pop-out note editor window
+        ├── NoteClipboardController.cs — Shared note selection, right-click menu & clipboard logic
+        ├── ThemedContextMenu.cs  — Themed right-click context menu popup
         ├── MarkdownRenderer.cs   — Markdown parsing and rich text renderer
-        ├── EditorInputDialog.cs  — Shared modal text input dialog
+        ├── EditorInputDialog.cs  — Shared modal text input dialog (single or two-field)
+        ├── NoteVideoPlayer.cs    — Inline VideoPlayer widget for note video embeds
+        ├── NoteVideoImportSettings.cs — VP8/audio import settings for note videos
         └── GifDecoder.cs         — Built-in animated GIF parser & decoder
 ```
 
@@ -227,10 +238,15 @@ Assets/Plugins/AwesomeTaskManager/
 - **Export notes** — Click 📤 to export a note as Markdown, or use the folder ⋮ menu to export all notes in a folder
 - **Import notes** — Click 📥 to import .md, .txt, or other text files directly as notes
 - **Animated GIFs** — Attach a .gif to a card or note and it will animate live in the editor
+- **GIFs from the web** — Right-click a GIF in your browser → Copy Image (or copy its `.gif` URL), then press Ctrl+V in a note
+- **YouTube cards** — Put a YouTube link on its own line in a note; Preview shows a thumbnail card with the video title
+- **Videos in notes** — Drag an `.mp4`/`.mov`/`.webm` into a note, pick it with 📎 Browse, or type `![[clip.mp4]]`, then press ▶ Play video in Preview. Videos are transcoded once on import (this can take a moment for long clips); if a video added earlier is silent or logs decoder warnings, click **Convert for editor playback** under the player
+- **Link titles** — When adding a URL to a card, fill in "Title (optional)" so the card shows a readable name instead of the raw URL
 - **Category colors** — Set a default color per category in the Category Manager (🏷 button in the toolbar); new cards auto-inherit the color
 - **Scene Linking Navigation** — Click a linked scene object on a task card to find it instantly in the Hierarchy. If it's in a different scene, a confirmation dialog will help you switch and navigate to it automatically.
 - **Link Notes to Cards** — Drag a note from the Notes list onto a task card on the board to link them. Or use the "Link Note" button in the card detail editor.
-- **Auto-Link in Preview** — Paste any `http://` or `https://` URL into a note. In Preview mode, it will be rendered as a clickable blue link.
+- **Auto-Link in Preview** — Paste any `http://` or `https://` URL, or write `[label](url)`, into a note. In Preview mode, it will be rendered as a clickable link.
+- **Copy table cells** — In Preview mode, drag across table cells (or Shift+click) to select a range, then press Ctrl+C or right-click → Copy to copy it as tab-separated text.
 - **Background Shortcuts** — Use `Alt+Shift+C` or `Ctrl+Alt+N` to quickly capture ideas or tasks without having the main window open. They save to your most recent folder/primary board.
 - **Show/Hide checklists** — Use the **▾ Show All** / **▸ Hide All** toolbar buttons to expand or collapse all card checklists at once, or toggle individual cards with the **▾/▸** button on each card
 - **Large Image Previews** — Click on any image or GIF attachment in the card details or markdown preview to open a larger, dedicated preview window.
@@ -245,6 +261,46 @@ Assets/Plugins/AwesomeTaskManager/
 ---
 
 ## 📄 Changelog
+
+### v2.5 (Reliable Note Clipboard, Themed Context Menus, Clickable Links, Markdown Tables, GIFs, YouTube & Video Embeds)
+- **Added** 🎞 **GIF Paste from the Web** — GIFs copied in a browser (read from the clipboard's HTML `<img src>`), pasted `.gif` URLs, and `data:image/gif;base64` sources are downloaded, validated by file signature, saved to `AttachedImages/`, and embedded as animated GIFs. Downloads show a cancelable progress bar with a 20s timeout.
+- **Added** 🌐 **Remote Image Embeds** — `![](https://…)` images download asynchronously, are cached by URL (`remote_<hash>.<ext>`), show a "Loading image…" state, and display a warning if the download fails.
+- **Fixed** 🧩 **Interlaced & Transparent GIFs** — `GifDecoder` now maps interlaced rows correctly and starts frames transparent, with disposal-to-background restoring transparency like web browsers.
+- **Added** 📺 **YouTube Preview Cards** — standalone YouTube links (`watch?v=`, `youtu.be/`, `shorts/`, `embed/`, `live/`, mobile/music hosts) render a clickable card with the thumbnail, ▶ overlay and the oEmbed title; clicking opens the original link (timestamp included) in the browser.
+- **Added** 🎬 **Inline Video Player (`NoteVideoPlayer`)** — `![[clip.mp4]]` and direct video URLs (`.mp4`, `.webm`, `.mov`, `.m4v`, `.ogv`) play inside the note Preview without entering Play Mode, with play/pause, stop, seek, time, mute and loop controls. Players are cleaned up on cache clear and assembly reload; codec support depends on the platform.
+- **Fixed** 🔊 **Note Video Audio in Edit Mode** — the editor's audio engine never consumed `VideoPlayer` audio outside Play Mode (silent playback plus `AudioSampleProvider buffer overflow` warnings). `NoteVideoPlayer` now runs the `VideoPlayer` in `APIOnly` mode and streams the decoded samples into a looping streaming `AudioClip` on a hidden `AudioSource`, so `.mov` and `.mp4` notes play with sound; a hidden `AudioListener` is added when the open scene has none.
+- **Improved** 🎞 **Warning-Free Note Videos** — videos dropped, pasted or browsed into `AttachedImages/` are imported with VP8/Vorbis transcoding and audio import (`NoteVideoImportSettings` + `NoteVideoImportPostprocessor`), so playback uses Unity's built-in decoder instead of Windows Media Foundation and no longer logs the `Unexpected timestamp values` / `Color primaries ... unknown` messages. Videos imported earlier show a one-click **Convert for editor playback** button.
+- **Improved** 🖱 **Video Drag & Drop / File Paste** — video files can be dragged or pasted into notes just like images.
+- **Improved** 📎 **Browse for Videos** — the note 📎 Browse button (Notes tab and pop-out window) now accepts videos too, with "Images & Videos", "Images", "Videos" and "All files" filters.
+- **Added** 🏷 **Titled Card Links** — the Add Link dialog has an optional "Title" field, and a new ✎ Edit Link button changes the URL or title. Cards and tooltips show the title, with the URL in the tooltip.
+- **Improved** 🔗 **Open URL Confirmation** — the confirmation dialog shows the link title (or the fetched YouTube video title) along with the URL.
+- **Added** 🪟 **Two-Field Input Dialog** — `EditorInputDialog.ShowWithSecondField` for prompts that need a second value.
+- **Added** 🧠 **Shared Note Clipboard Controller** — the Notes tab and pop-out note windows now share one `NoteClipboardController` for selection tracking, right-click handling, and Cut / Copy / Paste / Smart Paste, so both views behave identically.
+- **Fixed** ✂ **Cut / Copy / Paste Reliability** — Cut and Copy now act on exactly the highlighted text, Copy and Cut stay enabled when right-clicking inside a selection, and stale selections are cleared when the caret moves via keyboard, typing, or clicking.
+- **Fixed** 📍 **Paste at the Cursor** — Paste, Smart Paste, and Ctrl+V image paste insert at the current caret or replace the current selection. Right-click hit-testing now uses the character under the pointer (multi-line, wrapped, padded, and scrolled text), fixing pastes landing one line below.
+- **Fixed** 🛡 **No More Accidental Note Wipes** — after a context-menu action the caret/selection is restored correctly instead of the whole note being selected, preventing a following paste from replacing the entire note.
+- **Improved** 🖍 **Selection Stays Visible** — the highlighted selection remains drawn while the right-click menu is open, and focus, caret, and selection are restored when the menu closes (item picked or dismissed) so typing and shortcuts work immediately.
+- **Fixed** 🖼 **Smart Paste Caret** — after Smart Paste inserts an image tag, the caret is placed right after the inserted tag rather than at the clipboard text length.
+- **Improved** 📋 **Toolbar Paste & Browse at Caret** — the toolbar 📋 Paste and 📎 Browse buttons now insert images at the current cursor position (or replace the selection), matching Smart Paste.
+- **Improved** 🎨 **Themed Right-Click Menus** — the note editor now always shows the styled `ThemedContextMenu` instead of Unity's plain default menu, with a new `OnClosed` callback and an opt-in fit-to-content mode (no scrollbar) for short menus.
+- **Improved** 👁 **Preview-Mode Context Menu** — right-clicking in Preview shows only Copy, Copy Entire Note, Switch to Edit Mode, Popout Note, and Export Note; Edit mode keeps the full action list. Preview Copy now reliably reads the highlighted passage and strips rich-text formatting tags.
+- **Improved** 🗒 **Simplified Quick Notes Row Menu** — removed "Cut Note Content" and "Smart Paste" from the note list right-click menu and removed its scrollbar.
+- **Improved** 📐 **Smooth Quick Notes Resizing** — note cards are laid out within the visible sidebar width (accounting for the vertical scrollbar, no horizontal overflow), titles wrap inside the card, and the ↗ popout button and date/word-count info line scale and fade smoothly instead of disappearing abruptly.
+- **Fixed** 📭 **Quick Notes List Visibility** — fixed a layout-pass issue that could make the note list appear empty.
+- **Added** 🔗 **Clickable Markdown Links** — `[label](url)` links and raw URLs in Preview are rendered as underlined, clickable links; trailing punctuation is kept outside raw URLs and unsafe href characters are escaped.
+- **Added** 📊 **Redesigned Markdown Tables** — tables render as a proper grid with a header row, accent header line, striped rows, borders, per-column alignment (`:--`, `:-:`, `--:`), escaped pipes (`\|`), word-wrapping, and responsive column widths. Fixed separator-row detection so valid tables are no longer shown as raw `| a | b |` text.
+- **Added** 🔲 **Multi-Cell Table Selection** — drag across cells or Shift+click to select a range of table cells, then Copy via right-click or Ctrl+C (copied as tab-separated text). Click outside the table or press Escape to clear.
+- **Improved** 🌈 **Themed Tables** — table backgrounds, stripes, grid lines, and selection colors follow the active Awesome Task Manager theme.
+- **Added** 🧪 **EditMode Tests** — NUnit coverage for clipboard range/insert helpers, rich-text stripping, context-menu composition, Quick Notes layout helpers, link formatting, table parsing, alignment, column fitting, and selection text, GIF URL/HTML source/image signature detection, interlaced GIF decoding, YouTube ID parsing, video path detection, oEmbed titles, and link title/confirmation messages.
+
+### v2.4 (Context Menu Selection, Smooth Sidebar & Responsive Layouts)
+- **Added** 📋 **Copy/Cut Selection for Notes** — added "Copy Selection" (Preview & Edit modes) and "Cut Selection" (Edit mode) to the right-click context menu in both the main window and pop-out note windows.
+- **Fixed** 📜 **Note Cut & Undo Reliability** — resolved a critical bug where "Cut Selection" could wipe note content and fixed an issue where "Undo" was immediately overwritten by stale UI state; added automatic focus clearing and strengthened safety checks for all content-modifying actions.
+- **Improved** 📏 **Smooth Sidebar Resizing & Animation** — implemented smooth width transitions for the Quick Notes sidebar with percentage-based layout thresholds (15% for ultra-narrow, 20% for tooltips) for better responsiveness across various window sizes.
+- **Added** 💡 **Automatic Tooltips for Sidebar Items** — headers, folders, and note titles now automatically show tooltips when the sidebar is narrowed (below 20% width) and text becomes clipped.
+- **Improved** 🔄 **Sidebar Reset & Persistence** — the Quick Notes sidebar now resets to a more compact default width (200px) when switching from the Board tab back to the Notes tab.
+- **Improved** ➕ **Dynamic "+ Note" Button** — the "+ Note" button automatically collapses to a simple "+" icon when the sidebar width drops below 100px to maintain a clean layout.
+- **Fixed** 📜 **Note Scrolling & Layout Exceptions** — resolved ArgumentException control group mismatches during sidebar animation and restored native scrolling in Note Edit mode by switching to auto-expanding text areas.
 
 ### v2.35 (Enhanced Due Date Status Bar Notifications)
 - **Added** ⏰ **Expanded Due Date Status Indicators** — bottom status bar now provides real-time counts and notifications for tasks due in **1 day**, **2 days**, **3 days**, **less than a week** (4–6 days), and **over a week** (7+ days), alongside completed, overdue, and due today counts.

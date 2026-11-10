@@ -31,18 +31,23 @@ namespace League
             else
             {
                 Destroy(gameObject);
+                return;
             }
 
-            if(leagues == null || leagues.Length == 0)
+            if ((leagues == null || leagues.Length == 0) && defaultLeagues != null && defaultLeagues.Length > 0)
             {
-                Debug.LogWarning("No leagues assigned! Please assign leagues in the inspector.");
+                leagues = defaultLeagues;
             }
-            else
+
+            if (currentLeague == null)
             {
-                // Automatically set the first league as current if none is set
-                if (currentLeague == null)
+                if (leagues != null && leagues.Length > 0 && leagues[0] != null)
                 {
                     currentLeague = leagues[0];
+                }
+                else if (defaultLeagues != null && defaultLeagues.Length > 0 && defaultLeagues[0] != null)
+                {
+                    currentLeague = defaultLeagues[0];
                 }
             }
             
@@ -833,7 +838,10 @@ namespace League
                 {
                     tempLeagueList.Remove(tutorialLeague);
                     leagues = tempLeagueList.ToArray();
-                    currentLeague = leagues.Length > 0 ? leagues[0] : null;
+                    if (currentLeague == tutorialLeague)
+                    {
+                        currentLeague = leagues.Length > 0 ? leagues[0] : (defaultLeagues != null && defaultLeagues.Length > 0 ? defaultLeagues[0] : null);
+                    }
                     nextLeague = leagues.Length > 1 ? leagues[1] : null;
                     Debug.Log("Tutorial league removed from leagues list.");
                 }
@@ -845,6 +853,96 @@ namespace League
             else
             {
                 Debug.LogWarning("Tutorial league or leagues array is null. Cannot remove tutorial league.");
+            }
+        }
+
+        /// <summary>
+        /// Retrieves all known leagues across leagues, defaultLeagues, tutorialLeague, currentLeague, and hierarchy.
+        /// </summary>
+        public List<League> GetAllLeagues()
+        {
+            List<League> result = new List<League>();
+
+            void AddLeagueWithHierarchy(League l)
+            {
+                if (l != null && !result.Contains(l))
+                {
+                    result.Add(l);
+                    if (l.leagueAbove != null) AddLeagueWithHierarchy(l.leagueAbove);
+                    if (l.leagueBelow != null) AddLeagueWithHierarchy(l.leagueBelow);
+                }
+            }
+
+            if (leagues != null)
+            {
+                foreach (var l in leagues) AddLeagueWithHierarchy(l);
+            }
+            if (defaultLeagues != null)
+            {
+                foreach (var l in defaultLeagues) AddLeagueWithHierarchy(l);
+            }
+            if (tutorialLeague != null)
+            {
+                AddLeagueWithHierarchy(tutorialLeague);
+            }
+            if (currentLeague != null)
+            {
+                AddLeagueWithHierarchy(currentLeague);
+            }
+            if (nextLeague != null)
+            {
+                AddLeagueWithHierarchy(nextLeague);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Finds a league by its name across all known leagues.
+        /// </summary>
+        public League FindLeagueByName(string leagueName)
+        {
+            if (string.IsNullOrEmpty(leagueName)) return null;
+
+            foreach (var l in GetAllLeagues())
+            {
+                if (l != null && string.Equals(l.leagueName, leagueName, System.StringComparison.OrdinalIgnoreCase))
+                {
+                    return l;
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Sets the current league and ensures it is included in the active leagues array.
+        /// </summary>
+        public void SetCurrentLeague(League league)
+        {
+            if (league == null)
+            {
+                Debug.LogWarning("Attempted to set null current league!");
+                return;
+            }
+
+            currentLeague = league;
+
+            if (tutorialLeague != null && league == tutorialLeague)
+            {
+                AddTutorialLeagueToList();
+            }
+            else if (leagues != null)
+            {
+                if (!leagues.Contains(league))
+                {
+                    List<League> list = new List<League>(leagues);
+                    list.Add(league);
+                    leagues = list.ToArray();
+                }
+            }
+            else
+            {
+                leagues = new[] { league };
             }
         }
     }

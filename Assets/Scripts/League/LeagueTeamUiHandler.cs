@@ -26,7 +26,7 @@ public class LeagueTeamUiHandler : MonoBehaviour
          
        if (team.teamLogo  != null)
        {
-           teamLogo.sprite = team.teamLogo.sprite;
+           teamLogo.sprite = team.teamLogo;
        }
         else
         {

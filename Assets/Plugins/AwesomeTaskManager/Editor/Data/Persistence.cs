@@ -8,8 +8,15 @@ namespace AwesomeTaskManager.Data
         private const string FileName = "AwesomeTaskManager.json";
         private const string ThemeFileName = "AwesomeTaskManagerTheme.json";
 
+        public static string SavePathOverride { get; set; } = null;
+        public static string ThemeSavePathOverride { get; set; } = null;
+        public static SaveData InMemoryDataOverride { get; set; } = null;
+        public static bool SuppressReloadEvents { get; set; } = false;
+
         public static string GetSavePath()
         {
+            if (!string.IsNullOrEmpty(SavePathOverride)) return SavePathOverride;
+
             string projectRoot = Path.GetDirectoryName(Application.dataPath);
             if (string.IsNullOrEmpty(projectRoot)) return string.Empty;
             string dir = Path.Combine(projectRoot, "ProjectSettings", "AwesomeTaskManager");
@@ -57,6 +64,14 @@ namespace AwesomeTaskManager.Data
 
         public static SaveData Load()
         {
+            if (InMemoryDataOverride != null)
+            {
+                string json = JsonUtility.ToJson(InMemoryDataOverride);
+                var clone = JsonUtility.FromJson<SaveData>(json);
+                clone.Normalize();
+                return clone;
+            }
+
             string path = GetSavePath();
             SaveData data = null;
 
@@ -131,6 +146,13 @@ namespace AwesomeTaskManager.Data
 
         public static ThemeSaveData LoadTheme(SaveData fallbackData = null)
         {
+            if (InMemoryDataOverride != null)
+            {
+                var fallbackTheme = fallbackData?.themeSettings ?? new ThemeSaveData();
+                fallbackTheme.Normalize();
+                return fallbackTheme;
+            }
+
             string themePath = GetThemeSavePath();
             ThemeSaveData themeData = null;
 
@@ -213,6 +235,15 @@ namespace AwesomeTaskManager.Data
         public static void Save(SaveData data)
         {
             if (data == null) return;
+
+            if (InMemoryDataOverride != null)
+            {
+                data.Normalize();
+                string inMemoryJson = JsonUtility.ToJson(data);
+                InMemoryDataOverride = JsonUtility.FromJson<SaveData>(inMemoryJson);
+                return;
+            }
+
             string path = GetSavePath();
             string tempPath = path + ".tmp";
             try
@@ -238,6 +269,13 @@ namespace AwesomeTaskManager.Data
         public static void SaveTheme(ThemeSaveData themeData)
         {
             if (themeData == null) return;
+
+            if (InMemoryDataOverride != null)
+            {
+                themeData.Normalize();
+                return;
+            }
+
             string path = GetThemeSavePath();
             string tempPath = path + ".tmp";
             try

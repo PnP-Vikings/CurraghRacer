@@ -63,12 +63,14 @@ public class TeamUi : MonoBehaviour
 
             TeamNameText.text = team.teamName;
 
+            
             // Clear existing team members
             foreach (Transform child in gridParent)
             {
                   Destroy(child.gameObject);
             }
 
+           
             // Populate team members
             foreach (var member in team.teamMembers)
             {
@@ -174,7 +176,12 @@ public class TeamUi : MonoBehaviour
                   }
             }
 
-
+            //Set Image
+            if (teamLogo != null)
+            {
+                  teamLogo.sprite = team.teamLogo;
+            }
+            
 
             TeamUiPanel.SetActive(true);
       }

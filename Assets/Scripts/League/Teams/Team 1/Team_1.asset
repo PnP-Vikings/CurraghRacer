@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamName: St Jude's Boherduff
   teamDescription: 
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: -4282022262986620826, guid: 334884fb0dc537b4985d50a564e1d044, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 2
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: af8ce4a8cb2011c44a2dc8df2f5a20ac, type: 2}
   bench:
   - {fileID: 11400000, guid: 7b2fcd8fdedff624e9ce92ed550a0914, type: 2}
+  defaultTeamMembers: []
+  defaultBench: []
   currentSeasonStats:
     finishes: 
   lifetimeStats:

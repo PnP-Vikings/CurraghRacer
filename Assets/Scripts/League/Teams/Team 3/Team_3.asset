@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   teamName: Portroe Rowing
   teamDescription: 
-  teamLogo: {fileID: 0}
+  teamLogo: {fileID: -566813606374580767, guid: 5ef614f58946f6b449661d07d7da9acb, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 2
@@ -28,6 +28,8 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 67f765fe3c21ca04ba3b070946b72294, type: 2}
   bench:
   - {fileID: 11400000, guid: 52868e0edf957c14abe5214338ecece8, type: 2}
+  defaultTeamMembers: []
+  defaultBench: []
   currentSeasonStats:
     finishes: 
   lifetimeStats:

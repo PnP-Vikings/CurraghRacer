@@ -211,15 +211,49 @@ namespace AwesomeTaskManager.Editor
             win.Focus();
         }
 
-        private void OpenURL(string url)
+        private void OpenURL(string url, string title = null)
         {
             EditorApplication.delayCall += () =>
             {
-                if (ThemedDialog.Show("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
+                if (ThemedDialog.Show("Open URL", MarkdownRenderer.BuildOpenUrlMessage(url, title), "Open", "Cancel"))
                 {
                     Application.OpenURL(url);
                 }
             };
+        }
+
+        private void EditUrl(LinkedItem item)
+        {
+            GUIUtility.keyboardControl = 0;
+            GUIUtility.hotControl = 0;
+            GUI.FocusControl(null);
+            EditorApplication.delayCall += () =>
+            {
+                string url = EditorInputDialog.ShowWithSecondField("Edit Link", "Paste URL here:", item.url,
+                    "Title (optional):", item.displayName, out string title);
+                string normalizedUrl = NormalizeLinkUrl(url);
+                if (normalizedUrl != null && item != null && _card?.linkedItems?.Contains(item) == true)
+                {
+                    item.url = normalizedUrl;
+                    item.displayName = string.IsNullOrWhiteSpace(title) ? "" : title.Trim();
+                    MarkDirty();
+                    Repaint();
+                }
+                GUIUtility.keyboardControl = 0;
+                GUIUtility.hotControl = 0;
+                GUI.FocusControl(null);
+            };
+        }
+
+        private static string NormalizeLinkUrl(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url)) return null;
+            url = url.Trim();
+            if (url == "https://" || url == "http://") return null;
+            if (!url.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
+                !url.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
+                url = "https://" + url;
+            return url;
         }
 
         public void LoadData()
@@ -1033,25 +1067,19 @@ namespace AwesomeTaskManager.Editor
                     GUI.FocusControl(null);
                     EditorApplication.delayCall += () =>
                     {
-                        string res = EditorInputDialog.Show("Add Link", "Paste URL here:", "https://");
-                        if (!string.IsNullOrWhiteSpace(res))
+                        string res = EditorInputDialog.ShowWithSecondField("Add Link", "Paste URL here:", "https://",
+                            "Title (optional):", "", out string linkTitle);
+                        string normalizedUrl = NormalizeLinkUrl(res);
+                        if (normalizedUrl != null)
                         {
-                            res = res.Trim();
-                            if (res != "https://" && res != "http://")
+                            if (_card != null)
                             {
-                                if (!res.StartsWith("http://", StringComparison.OrdinalIgnoreCase) &&
-                                    !res.StartsWith("https://", StringComparison.OrdinalIgnoreCase))
-                                {
-                                    res = "https://" + res;
-                                }
-                                if (_card != null)
-                                {
-                                    _card.linkedItems ??= new List<LinkedItem>();
-                                    _card.linkedItems.Add(LinkedItem.CreateUrl(res));
-                                    MarkDirty();
-                                }
-                                Repaint();
+                                _card.linkedItems ??= new List<LinkedItem>();
+                                _card.linkedItems.Add(LinkedItem.CreateUrl(normalizedUrl,
+                                    string.IsNullOrWhiteSpace(linkTitle) ? "" : linkTitle.Trim()));
+                                MarkDirty();
                             }
+                            Repaint();
                         }
                         GUIUtility.keyboardControl = 0;
                         GUIUtility.hotControl = 0;
@@ -1168,15 +1196,17 @@ namespace AwesomeTaskManager.Editor
                     else if (item.isUrl)
                     {
                         var urlIcon = EditorGUIUtility.IconContent("BuildSettings.Web.Small").image;
+                        string label = MarkdownRenderer.GetLinkDisplayTitle(item.displayName, item.url);
                         if (GUILayout.Button(urlIcon, GUILayout.Width(20), GUILayout.Height(20)))
                         {
-                            OpenURL(item.url);
+                            OpenURL(item.url, label);
                         }
-                        string label = string.IsNullOrEmpty(item.displayName) ? item.url : item.displayName;
-                        if (ThemedTooltip.Button(TBStyles.TruncateString(label, 50), label, EditorStyles.label))
+                        if (ThemedTooltip.Button(TBStyles.TruncateString(label, 50), item.url, EditorStyles.label))
                         {
-                            OpenURL(item.url);
+                            OpenURL(item.url, label);
                         }
+                        if (ThemedTooltip.IconButton("✎", "Edit Link", GUILayout.Width(24), GUILayout.Height(20)))
+                            EditUrl(item);
                     }
                     else
                     {

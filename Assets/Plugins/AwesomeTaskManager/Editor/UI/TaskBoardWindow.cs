@@ -103,6 +103,21 @@ namespace AwesomeTaskManager.Editor
         private string _selectedFolderId = "";  // "" = show all / root
         private string _newFolderName = "";
         private bool _showAddFolder;
+        [SerializeField] private bool _showNotesSidebar = true;
+        [SerializeField] private float _notesSidebarWidth = 200f;
+        private float _notesSidebarCurrentWidth = -1f;
+        private float _notesListViewWidth;
+        private float _notesListViewHeight;
+        private float _notesListContentHeight;
+        private bool _isResizingNotesSidebar;
+        private bool _resetNotesSidebarOnNextOpen;
+        private NoteClipboardController _clipboard;
+        private readonly Dictionary<string, List<string>> _noteUndoStacks = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, List<string>> _noteRedoStacks = new Dictionary<string, List<string>>();
+        private readonly Dictionary<string, string> _noteLastCommittedContent = new Dictionary<string, string>();
+        private readonly Dictionary<string, float> _noteLastUndoPushTimes = new Dictionary<string, float>();
+        private float _lastUndoPushTime = 0;
+        private bool _needsUndoBaseline = false;
 
         // Note drag state
         private int _noteDragIdx = -1;          // index into _data.notes being dragged
@@ -212,6 +227,7 @@ namespace AwesomeTaskManager.Editor
             if (_data == null) return;
 
             _tab = 0; // Switch to Board tab
+            _resetNotesSidebarOnNextOpen = true;
             _searchFilter = ""; // Clear filters to ensure the new card is visible
             _categoryFilter = "";
             _priorityFilter = 0;
@@ -672,11 +688,12 @@ namespace AwesomeTaskManager.Editor
             }
 
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
-            if (board != null)
+            if (board != null && board.columns != null)
             {
-                var col = board.columns.FirstOrDefault(c => c.id == columnId);
+                var col = board.columns.FirstOrDefault(c => c != null && c.id == columnId);
                 if (col != null)
                 {
+                    if (col.cards == null) col.cards = new List<TaskCard>();
                     col.cards.Add(card);
                     targetIdx = _data.boards.IndexOf(board);
                 }
@@ -710,13 +727,13 @@ namespace AwesomeTaskManager.Editor
             _data = freshData;
 
             var board = _data.boards.FirstOrDefault(b => b.id == boardId);
-            if (board != null)
+            if (board != null && board.columns != null)
             {
-                var col = board.columns.FirstOrDefault(c => c.id == columnId);
+                var col = board.columns.FirstOrDefault(c => c != null && c.id == columnId);
                 if (col != null)
                 {
                     _data.CleanupReferencesToCard(cardId);
-                    col.cards.RemoveAll(c => c.id == cardId);
+                    if (col.cards != null) col.cards.RemoveAll(c => c != null && c.id == cardId);
                     if (_linkHighlightCardId == cardId)
                     {
                         _linkHighlightCardId = null;
@@ -739,8 +756,16 @@ namespace AwesomeTaskManager.Editor
 
         private void ClampBoard()
         {
+            if (_data == null) return;
+            if (_data.boards == null) _data.boards = new List<TaskBoard>();
             if (_data.boards.Count == 0)
                 _data.boards.Add(new TaskBoard("My First Board"));
+            
+            foreach (var b in _data.boards)
+            {
+                if (b != null && b.columns == null) b.columns = new List<TaskColumn>();
+            }
+
             if (_data.categories == null || _data.categories.Count == 0)
                 _data.categories = new List<string> { "Audio", "Art", "Code", "Design", "UI", "Bug", "Feature" };
             if (_data.categoryColors == null)
@@ -791,16 +816,24 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
-        private TaskBoard Board => _data.boards[_boardIndex];
+        private TaskBoard Board
+        {
+            get
+            {
+                if (_data == null || _data.boards == null || _data.boards.Count == 0) return null;
+                _boardIndex = Mathf.Clamp(_boardIndex, 0, _data.boards.Count - 1);
+                return _data.boards[_boardIndex];
+            }
+        }
 
         // ════════════════════════════════════════════
         //  MAIN GUI
         // ════════════════════════════════════════════
-        private void OpenURL(string url)
+        private void OpenURL(string url, string title = null)
         {
             EditorApplication.delayCall += () =>
             {
-                if (ThemedDialog.Show("Open URL", $"Open this link in your browser?\n\n{url}", "Open", "Cancel"))
+                if (ThemedDialog.Show("Open URL", MarkdownRenderer.BuildOpenUrlMessage(url, title), "Open", "Cancel"))
                 {
                     Application.OpenURL(url);
                 }
@@ -873,6 +906,7 @@ namespace AwesomeTaskManager.Editor
                 GUILayout.Space(8);
                 if (ThemedTooltip.Button($"{TBStyles.BoardTabIcon} Board", "Switch to Task Board view", _tab == 0 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
                 {
+                    if (_tab != 0) _resetNotesSidebarOnNextOpen = true;
                     _tab = 0;
                     GUIUtility.ExitGUI();
                 }
@@ -901,6 +935,8 @@ namespace AwesomeTaskManager.Editor
         private void DrawBoardView()
         {
             var board = Board;
+            if (board == null || board.columns == null) return;
+
             _cardDropRects.Clear();
             _columnFullRects.Clear();
 
@@ -1183,7 +1219,21 @@ namespace AwesomeTaskManager.Editor
           
 
             // ── Status bar ──
-            var allCards = board.columns.SelectMany(c => c.cards).Where(c => _showArchived || !c.archived).ToList();
+            var allCards = new List<TaskCard>();
+            if (board != null && board.columns != null)
+            {
+                foreach (var col in board.columns)
+                {
+                    if (col != null && col.cards != null)
+                    {
+                        foreach (var card in col.cards)
+                        {
+                            if (card != null && (_showArchived || !card.archived))
+                                allCards.Add(card);
+                        }
+                    }
+                }
+            }
             var statusRect = GUILayoutUtility.GetRect(0, 20, GUILayout.ExpandWidth(true));
             if (Event.current.type == EventType.Repaint)
             {
@@ -1410,7 +1460,7 @@ namespace AwesomeTaskManager.Editor
                                           && !(card.description ?? "").ToLowerInvariant().Contains(filter)
                                           && !(card.category ?? "").ToLowerInvariant().Contains(filter))
                             continue;
-                        DrawCard(card, col, i);
+                        DrawCard(card, col, i, width);
                     }
 
                     GUILayout.Space(6);
@@ -1439,7 +1489,7 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
-        private void DrawCard(TaskCard card, TaskColumn col, int idx)
+        private void DrawCard(TaskCard card, TaskColumn col, int idx, float columnWidth = 260f)
         {
             var labelColor = TBStyles.GetLabelColor(card.colorLabel);
             
@@ -1489,7 +1539,9 @@ namespace AwesomeTaskManager.Editor
                         titleStyle.fontStyle = FontStyle.Italic;
                         titleStyle.normal = new GUIStyleState { textColor = TBStyles.StatusCompletedColor };
                     }
-                    EditorGUILayout.LabelField(card.title, titleStyle);
+                    float availCardTitleWidth = Mathf.Max(60f, columnWidth - 140f - (card.priority > 0 ? 22f : 0f));
+                    float cardTitleHeight = Mathf.Max(18f, titleStyle.CalcHeight(new GUIContent(card.title ?? ""), availCardTitleWidth));
+                    EditorGUILayout.LabelField(card.title, titleStyle, GUILayout.Height(cardTitleHeight), GUILayout.ExpandWidth(true));
                     Rect dragHandleRect = GUILayoutUtility.GetRect(new GUIContent("↕"), TBStyles.IconButton, GUILayout.Width(26), GUILayout.Height(24));
                     GUI.Box(dragHandleRect, new GUIContent("↕"), TBStyles.IconButton);
                     ThemedTooltip.SetTooltip(dragHandleRect, "Drag to reorder");
@@ -1745,10 +1797,10 @@ namespace AwesomeTaskManager.Editor
                         else if (item.isUrl)
                         {
                             var urlIcon = EditorGUIUtility.IconContent("BuildSettings.Web.Small").image;
-                            string label = string.IsNullOrEmpty(item.displayName) ? item.url : item.displayName;
-                            if (ThemedTooltip.Button(urlIcon, $"[Link] {label}", GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
+                            string label = MarkdownRenderer.GetLinkDisplayTitle(item.displayName, item.url);
+                            if (ThemedTooltip.Button(urlIcon, $"[Link] {label}\n{item.url}", GUIStyle.none, GUILayout.Width(20), GUILayout.Height(20)))
                             {
-                                OpenURL(item.url);
+                                OpenURL(item.url, label);
                             }
                             shown++;
                         }
@@ -2073,6 +2125,7 @@ namespace AwesomeTaskManager.Editor
         // Hit-test and state updates — called INSIDE the scroll view so mouse coords match column rects
         private void UpdateCardDragHitTest(TaskBoard board)
         {
+            if (board == null || board.columns == null) return;
             var evt = Event.current;
             if (_dragCard == null || _dragSourceCol == null) return;
 
@@ -2192,6 +2245,7 @@ namespace AwesomeTaskManager.Editor
 
         private void HandleDragDrop(TaskBoard board)
         {
+            if (board == null || board.columns == null) return;
             if ((_dragCard != null || _noteDragging) && Event.current.type == EventType.KeyDown && Event.current.keyCode == KeyCode.Escape)
             {
                 _dragCard = null; _dragSourceCol = null; _cardDragging = false; _hoveredColumnDropId = "";
@@ -2234,178 +2288,250 @@ namespace AwesomeTaskManager.Editor
         // ════════════════════════════════════════════
         private void DrawNotesView()
         {
+            if (_resetNotesSidebarOnNextOpen)
+            {
+                _notesSidebarWidth = 200f;
+                _notesSidebarCurrentWidth = 200f;
+                _resetNotesSidebarOnNextOpen = false;
+            }
+
+            if (Event.current.type == EventType.Layout)
+            {
+                if (_notesSidebarCurrentWidth < 0) _notesSidebarCurrentWidth = _showNotesSidebar ? _notesSidebarWidth : 0f;
+                float targetWidth = _showNotesSidebar ? _notesSidebarWidth : 0f;
+
+                if (_isResizingNotesSidebar)
+                {
+                    _notesSidebarCurrentWidth = targetWidth;
+                }
+                else if (Mathf.Abs(_notesSidebarCurrentWidth - targetWidth) > 0.5f)
+                {
+                    _notesSidebarCurrentWidth = Mathf.Lerp(_notesSidebarCurrentWidth, targetWidth, 0.15f);
+                    Repaint();
+                }
+                else
+                {
+                    _notesSidebarCurrentWidth = targetWidth;
+                }
+            }
+
+            _notesSidebarWidth = Mathf.Clamp(_notesSidebarWidth, 24f, position.width * 0.85f);
             GUILayout.Space(4);
-            using (new EditorGUILayout.HorizontalScope())
+            using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
             {
                 GUILayout.Space(4);
                 // ──────── LEFT PANEL: Folders + Note List ────────
-                using (var leftScope = new EditorGUILayout.VerticalScope(GUIStyle.none, GUILayout.Width(260), GUILayout.ExpandHeight(true)))
+                if (_notesSidebarCurrentWidth > 0.1f)
                 {
-                    if (Event.current.type == EventType.Repaint)
+                    using (var leftScope = new EditorGUILayout.VerticalScope(GUIStyle.none, GUILayout.Width(_notesSidebarCurrentWidth), GUILayout.MinWidth(_notesSidebarCurrentWidth), GUILayout.MaxWidth(_notesSidebarCurrentWidth), GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(true)))
                     {
-                        TBStyles.DrawGlassPanel(leftScope.rect, TBStyles.NoteSidebarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
-                    }
+                        if (Event.current.type == EventType.Repaint)
+                        {
+                            TBStyles.DrawGlassPanel(leftScope.rect, TBStyles.NoteSidebarBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
+                        }
 
                     GUILayout.Space(6);
                     // Header + search
-                    EditorGUILayout.LabelField($"{TBStyles.NotesHeaderIcon} Quick Notes", TBStyles.SectionLabel);
-                    GUILayout.Space(2);
-                    using (new EditorGUILayout.HorizontalScope())
-                    {
-                        EditorGUILayout.LabelField("🔍", GUILayout.Width(16));
-                        _noteSearchFilter = TBStyles.DrawThemedTextField(_noteSearchFilter, TBStyles.ThemedSearchField, GUILayout.Height(20));
-                    }
-                    GUILayout.Space(4);
+                    float sidebarPercent = position.width > 0f ? (_notesSidebarCurrentWidth / position.width) : 0.2f;
+                    bool isNarrow = _notesSidebarCurrentWidth < 220;
+                    bool isUltraNarrow = sidebarPercent < 0.15f;
+                    bool showTooltips = sidebarPercent < 0.20f;
+                    bool truncateText = ShouldTruncateQuickNotesText(_notesSidebarCurrentWidth, position.width);
 
-                    // Add note + Import
                     using (new EditorGUILayout.HorizontalScope())
                     {
-                        _newNoteTitle = TBStyles.DrawThemedTextField(_newNoteTitle, TBStyles.ThemedTextField, GUILayout.Height(22));
-                        if (ThemedTooltip.Button("+ Note", "Add a new Note", TBStyles.AddNoteButton, GUILayout.Width(54), GUILayout.Height(22)))
+                        EditorGUILayout.LabelField($"{TBStyles.NotesHeaderIcon} Quick Notes", TBStyles.SectionLabel, GUILayout.MinWidth(0));
+                        
+                        if (showTooltips) ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), "Quick Notes");
+                        
+                        GUILayout.FlexibleSpace();
+                        if (GUILayout.Button(new GUIContent(">", "Hide Quick Notes Sidebar"), TBStyles.NoteActionButton, GUILayout.Width(22), GUILayout.Height(20)))
                         {
-                            string fid = _selectedFolderId;
-                            if (fid == "__unfiled__") fid = "";
-                            string t = string.IsNullOrWhiteSpace(_newNoteTitle) ? "New Note" : _newNoteTitle.Trim();
-                            var n = new QuickNote { title = t, folderId = fid };
-                            _data.notes.Insert(0, n);
-                            _newNoteTitle = "";
-                            _selectedNote = 0;
-                            Save();
-                        }
-                        if (ThemedTooltip.Button("📥", "Import Note from File", TBStyles.ImportNoteButton, GUILayout.Width(28), GUILayout.Height(22)))
-                        {
-                            EditorApplication.delayCall += () => ImportNoteFromFile();
+                            _showNotesSidebar = false;
                         }
                     }
-                    GUILayout.Space(4);
+                    
+                    {
+                        GUILayout.Space(2);
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            EditorGUILayout.LabelField("🔍", GUILayout.Width(16));
+                            _noteSearchFilter = TBStyles.DrawThemedTextField(_noteSearchFilter, TBStyles.ThemedSearchField, GUILayout.Height(20), GUILayout.MinWidth(10), GUILayout.ExpandWidth(true));
+                        }
+                        GUILayout.Space(4);
+
+                        // Add note + Import
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                            if (_notesSidebarCurrentWidth > 160)
+                            {
+                                _newNoteTitle = TBStyles.DrawThemedTextField(_newNoteTitle, TBStyles.ThemedTextField, GUILayout.Height(22), GUILayout.MinWidth(20), GUILayout.ExpandWidth(true));
+                            }
+                            
+                            string addNoteLabel = _notesSidebarCurrentWidth > 100 ? "+ Note" : "+";
+                            if (ThemedTooltip.Button(addNoteLabel, "Add a new Note", TBStyles.AddNoteButton, GUILayout.MinWidth(22), GUILayout.Height(22)))
+                            {
+                                string fid = _selectedFolderId;
+                                if (fid == "__unfiled__") fid = "";
+                                string t = string.IsNullOrWhiteSpace(_newNoteTitle) ? "New Note" : _newNoteTitle.Trim();
+                                var n = new QuickNote { title = t, folderId = fid };
+                                _data.notes.Insert(0, n);
+                                _newNoteTitle = "";
+                                _selectedNote = 0;
+                                Save();
+                                Repaint();
+                            }
+                            if (ThemedTooltip.Button("📥", "Import Note from File", TBStyles.ImportNoteButton, GUILayout.Width(22), GUILayout.Height(22)))
+                            {
+                                EditorApplication.delayCall += () => ImportNoteFromFile();
+                            }
+                        }
+                        GUILayout.Space(4);
+                    }
 
                     // ── Folders section ──
                     DrawSeparator();
                     _folderDropRects.Clear();
 
-                    using (new EditorGUILayout.HorizontalScope())
                     {
-                        var folderHeaderStyle = new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = TBStyles.NoteFolderTextColor } };
-                        EditorGUILayout.LabelField("📁 Folders", folderHeaderStyle);
-                        if (_showAddFolder)
+                        using (new EditorGUILayout.HorizontalScope())
                         {
-                            _newFolderName = TBStyles.DrawThemedTextField(_newFolderName, TBStyles.ThemedTextField, GUILayout.Width(80), GUILayout.Height(20));
-                            if (ThemedTooltip.IconButton("✔", "Save Folder Name", GUILayout.Width(22), GUILayout.Height(20)) && !string.IsNullOrWhiteSpace(_newFolderName))
+                            var folderHeaderStyle = new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = TBStyles.NoteFolderTextColor }, clipping = TextClipping.Clip, wordWrap = false };
+                            EditorGUILayout.LabelField("📁 Folders", folderHeaderStyle, GUILayout.MinWidth(0));
+                            if (showTooltips) ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), "Folders");
+                            if (_showAddFolder)
                             {
-                                _data.noteFolders.Add(new NoteFolder(_newFolderName.Trim()));
-                                _newFolderName = ""; _showAddFolder = false; Save();
+                                _newFolderName = TBStyles.DrawThemedTextField(_newFolderName, TBStyles.ThemedTextField, GUILayout.Width(80), GUILayout.Height(20));
+                                if (ThemedTooltip.IconButton("✔", "Save Folder Name", GUILayout.Width(22), GUILayout.Height(20)) && !string.IsNullOrWhiteSpace(_newFolderName))
+                                {
+                                    _data.noteFolders.Add(new NoteFolder(_newFolderName.Trim()));
+                                    _newFolderName = ""; _showAddFolder = false; Save();
+                                }
+                                if (ThemedTooltip.IconButton("✕", "Cancel Adding Folder", GUILayout.Width(22), GUILayout.Height(20))) _showAddFolder = false;
                             }
-                            if (ThemedTooltip.IconButton("✕", "Cancel Adding Folder", GUILayout.Width(22), GUILayout.Height(20))) _showAddFolder = false;
-                        }
-                        else
-                        {
-                            if (ThemedTooltip.IconButton("+", "Add Folder", GUILayout.Width(22), GUILayout.Height(20))) _showAddFolder = true;
+                            else
+                            {
+                                if (ThemedTooltip.IconButton("+", "Add Folder", GUILayout.Width(22), GUILayout.Height(20))) _showAddFolder = true;
+                            }
                         }
                     }
 
                     // "All Notes"
-                    bool allSelected = string.IsNullOrEmpty(_selectedFolderId);
-                    int totalNotes = _data.notes.Count;
-                    var allNotesStyle = new GUIStyle(allSelected ? EditorStyles.boldLabel : EditorStyles.label)
                     {
-                        normal = { textColor = allSelected ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
-                        alignment = TextAnchor.MiddleLeft
-                    };
-                    if (GUILayout.Button(allSelected ? $"▸ All Notes ({totalNotes})" : $"   All Notes ({totalNotes})", allNotesStyle, GUILayout.Height(20)))
-                    {
-                        _selectedFolderId = "";
-                        _selectedNote = -1;
-                    }
-
-                    // "Unfiled" — also a drop target
-                    int unfiledCount = _data.notes.Count(n => string.IsNullOrEmpty(n.folderId));
-                    bool unfiledSel = _selectedFolderId == "__unfiled__";
-                    var unfiledStyle = new GUIStyle(unfiledSel ? EditorStyles.boldLabel : EditorStyles.label)
-                    {
-                        normal = { textColor = unfiledSel ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
-                        alignment = TextAnchor.MiddleLeft
-                    };
-                    if (GUILayout.Button(unfiledSel ? $"▸ Unfiled ({unfiledCount})" : $"   Unfiled ({unfiledCount})", unfiledStyle, GUILayout.Height(20)))
-                    {
-                        _selectedFolderId = "__unfiled__";
-                        _selectedNote = -1;
-                    }
-                    var unfiledRect = GUILayoutUtility.GetLastRect();
-                    _folderDropRects["__unfiled__"] = unfiledRect;
-
-                    // Highlight unfiled during drag
-                    if (_noteDragging && Event.current.type == EventType.Repaint)
-                    {
-                        string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
-                        bool isSource = string.IsNullOrEmpty(dragNoteFolderId); // note is currently unfiled
-                        if (_hoveredFolderDropId == "__unfiled__")
-                            EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDropHighlight);
-                        else if (isSource)
-                            EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragSourceHighlight);
-                        else
-                            EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragOtherHighlight);
-                    }
-
-                    // Each folder
-                    for (int fi = 0; fi < _data.noteFolders.Count; fi++)
-                    {
-                        var folder = _data.noteFolders[fi];
-                        int count = _data.notes.Count(n => n.folderId == folder.id);
-                        bool fsel = _selectedFolderId == folder.id;
-
-                        using (new EditorGUILayout.HorizontalScope())
+                        bool allSelected = string.IsNullOrEmpty(_selectedFolderId);
+                        int totalNotes = _data.notes.Count;
+                        var allNotesStyle = new GUIStyle(allSelected ? EditorStyles.boldLabel : EditorStyles.label)
                         {
-                            string fLabel = fsel ? $"▸ 📁 {folder.name} ({count})" : $"   📁 {folder.name} ({count})";
-                            var folderStyle = new GUIStyle(fsel ? EditorStyles.boldLabel : EditorStyles.label)
-                            {
-                                normal = { textColor = fsel ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
-                                alignment = TextAnchor.MiddleLeft
-                            };
+                            normal = { textColor = allSelected ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
+                            alignment = TextAnchor.MiddleLeft,
+                            clipping = TextClipping.Clip,
+                            wordWrap = false
+                        };
+                        string allNotesLabel = allSelected ? $"▸ All Notes ({totalNotes})" : $"   All Notes ({totalNotes})";
+                        if (GUILayout.Button(allNotesLabel, allNotesStyle, GUILayout.MinWidth(0), GUILayout.Height(20)))
+                        {
+                            _selectedFolderId = "";
+                            _selectedNote = -1;
+                        }
+                        if (showTooltips) ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), $"All Notes ({totalNotes})");
 
-                            if (GUILayout.Button(new GUIContent(fLabel), folderStyle, GUILayout.ExpandWidth(true), GUILayout.Height(20)))
-                            {
-                                _selectedFolderId = folder.id;
-                                _selectedNote = -1;
-                            }
-                            var folderBtnRect = GUILayoutUtility.GetLastRect();
-                            _folderDropRects[folder.id] = folderBtnRect;
+                        // "Unfiled" — also a drop target
+                        int unfiledCount = _data.notes.Count(n => string.IsNullOrEmpty(n.folderId));
+                        bool unfiledSel = _selectedFolderId == "__unfiled__";
+                        var unfiledStyle = new GUIStyle(unfiledSel ? EditorStyles.boldLabel : EditorStyles.label)
+                        {
+                            normal = { textColor = unfiledSel ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
+                            alignment = TextAnchor.MiddleLeft,
+                            clipping = TextClipping.Clip,
+                            wordWrap = false
+                        };
+                        string unfiledLabel = unfiledSel ? $"▸ Unfiled ({unfiledCount})" : $"   Unfiled ({unfiledCount})";
+                        if (GUILayout.Button(unfiledLabel, unfiledStyle, GUILayout.MinWidth(0), GUILayout.Height(20)))
+                        {
+                            _selectedFolderId = "__unfiled__";
+                            _selectedNote = -1;
+                        }
+                        var unfiledRect = GUILayoutUtility.GetLastRect();
+                        _folderDropRects["__unfiled__"] = unfiledRect;
+                        if (showTooltips) ThemedTooltip.SetTooltip(unfiledRect, $"Unfiled ({unfiledCount})");
 
-                            if (_noteDragging && Event.current.type == EventType.Repaint)
-                            {
-                                string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
-                                bool isSource = dragNoteFolderId == folder.id;
-                                if (_hoveredFolderDropId == folder.id)
-                                    EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDropHighlight);
-                                else if (isSource)
-                                    EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragSourceHighlight);
-                                else
-                                    EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragOtherHighlight);
-                            }
+                        // Highlight unfiled during drag
+                        if (_noteDragging && Event.current.type == EventType.Repaint)
+                        {
+                            string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
+                            bool isSource = string.IsNullOrEmpty(dragNoteFolderId); // note is currently unfiled
+                            if (_hoveredFolderDropId == "__unfiled__")
+                                EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDropHighlight);
+                            else if (isSource)
+                                EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragSourceHighlight);
+                            else
+                                EditorGUI.DrawRect(unfiledRect, TBStyles.FolderDragOtherHighlight);
+                        }
 
-                            if (ThemedContextMenu.DropdownButton("⋮", "Folder Options", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(16), GUILayout.Height(20)))
+                        // Each folder
+                        for (int fi = 0; fi < _data.noteFolders.Count; fi++)
+                        {
+                            var folder = _data.noteFolders[fi];
+                            int count = _data.notes.Count(n => n.folderId == folder.id);
+                            bool fsel = _selectedFolderId == folder.id;
+
+                            using (new EditorGUILayout.HorizontalScope())
                             {
-                                var menu = new ThemedContextMenu();
-                                int capturedFi = fi;
-                                menu.AddItem(new GUIContent("Rename"), false, () =>
+                                string fLabel = fsel ? $"▸ 📁 {folder.name} ({count})" : $"   📁 {folder.name} ({count})";
+                                var folderStyle = new GUIStyle(fsel ? EditorStyles.boldLabel : EditorStyles.label)
                                 {
-                                    string nn = EditorInputDialog.Show("Rename Folder", "Folder name:", folder.name);
-                                    if (!string.IsNullOrWhiteSpace(nn)) { folder.name = nn; Save(); Repaint(); }
-                                });
-                                menu.AddItem(new GUIContent("Beta (Export or Import)/Export Folder (.md)"), false, () => ExportFolder(folder));
-                                menu.AddSeparator("");
-                                menu.AddItem(new GUIContent("Delete Folder"), false, () =>
+                                    normal = { textColor = fsel ? TBStyles.NoteSelectedAccent : TBStyles.NoteFolderTextColor },
+                                    alignment = TextAnchor.MiddleLeft,
+                                    clipping = TextClipping.Clip,
+                                    wordWrap = false
+                                };
+
+                                if (GUILayout.Button(new GUIContent(fLabel), folderStyle, GUILayout.MinWidth(0), GUILayout.Height(20)))
                                 {
-                                    if (ThemedDialog.Show("Delete Folder",
-                                        $"Delete folder \"{folder.name}\"?\nNotes inside will become unfiled.", "Delete", "Cancel"))
+                                    _selectedFolderId = folder.id;
+                                    _selectedNote = -1;
+                                }
+                                var folderBtnRect = GUILayoutUtility.GetLastRect();
+                                _folderDropRects[folder.id] = folderBtnRect;
+                                if (showTooltips) ThemedTooltip.SetTooltip(folderBtnRect, $"{folder.name} ({count})");
+
+                                if (_noteDragging && Event.current.type == EventType.Repaint)
+                                {
+                                    string dragNoteFolderId = (_noteDragIdx >= 0 && _noteDragIdx < _data.notes.Count) ? (_data.notes[_noteDragIdx].folderId ?? "") : "";
+                                    bool isSource = dragNoteFolderId == folder.id;
+                                    if (_hoveredFolderDropId == folder.id)
+                                        EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDropHighlight);
+                                    else if (isSource)
+                                        EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragSourceHighlight);
+                                    else
+                                        EditorGUI.DrawRect(folderBtnRect, TBStyles.FolderDragOtherHighlight);
+                                }
+
+                                if (ThemedContextMenu.DropdownButton("⋮", "Folder Options", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(16), GUILayout.Height(20)))
+                                {
+                                    var menu = new ThemedContextMenu();
+                                    int capturedFi = fi;
+                                    menu.AddItem(new GUIContent("Rename"), false, () =>
                                     {
-                                        foreach (var n in _data.notes.Where(n => n.folderId == folder.id))
-                                            n.folderId = "";
-                                        _data.noteFolders.RemoveAt(capturedFi);
-                                        if (_selectedFolderId == folder.id) _selectedFolderId = "";
-                                        Save(); Repaint();
-                                    }
-                                });
-                                menu.Show(btnRect);
+                                        string nn = EditorInputDialog.Show("Rename Folder", "Folder name:", folder.name);
+                                        if (!string.IsNullOrWhiteSpace(nn)) { folder.name = nn; Save(); Repaint(); }
+                                    });
+                                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Folder (.md)"), false, () => ExportFolder(folder));
+                                    menu.AddSeparator("");
+                                    menu.AddItem(new GUIContent("Delete Folder"), false, () =>
+                                    {
+                                        if (ThemedDialog.Show("Delete Folder",
+                                            $"Delete folder \"{folder.name}\"?\nNotes inside will become unfiled.", "Delete", "Cancel"))
+                                        {
+                                            foreach (var n in _data.notes.Where(n => n.folderId == folder.id))
+                                                n.folderId = "";
+                                            _data.noteFolders.RemoveAt(capturedFi);
+                                            if (_selectedFolderId == folder.id) _selectedFolderId = "";
+                                            Save(); Repaint();
+                                        }
+                                    });
+                                    menu.Show(btnRect);
+                                }
                             }
                         }
                     }
@@ -2415,20 +2541,65 @@ namespace AwesomeTaskManager.Editor
                     GUILayout.Space(4);
 
                     // ── Note list ──
-                    using (var scrollScope = new EditorGUILayout.ScrollViewScope(_notesListScroll))
+                    Rect listViewport = GUILayoutUtility.GetRect(0f, 0f, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+                    // During the Layout event GetRect returns a dummy rect, so fall back to the last repainted size.
+                    if (Event.current.type == EventType.Layout || listViewport.width <= 1f)
                     {
-                        _notesListScroll = scrollScope.scrollPosition;
-
-                        var filteredNotes = GetFilteredNotes();
-
-                        foreach (var (note, origIdx) in filteredNotes)
-                        {
-                            DrawNoteListItem(note, origIdx);
-                        }
+                        listViewport.width = _notesListViewWidth > 1f ? _notesListViewWidth : Mathf.Max(1f, _notesSidebarCurrentWidth);
+                        listViewport.height = _notesListViewHeight;
                     }
+                    var filteredNotes = GetFilteredNotes();
+                    bool reserveScrollbar = _notesListContentHeight > _notesListViewHeight + 0.5f;
+                    float scrollbarWidth = reserveScrollbar ? Mathf.Max(12f, GUI.skin.verticalScrollbar.fixedWidth) : 0f;
+                    float listContentWidth = Mathf.Max(1f, listViewport.width - scrollbarWidth);
+                    float listContentHeight = Mathf.Max(listViewport.height, _notesListContentHeight);
+                    Rect listViewRect = new Rect(0f, 0f, listContentWidth, listContentHeight);
+                    _notesListScroll = GUI.BeginScrollView(listViewport, _notesListScroll, listViewRect,
+                        false, false, GUIStyle.none, GUI.skin.verticalScrollbar);
+                    float rowY = 0f;
+                    foreach (var (note, origIdx) in filteredNotes)
+                    {
+                        Rect rowRect = DrawNoteListItem(note, origIdx, isUltraNarrow, showTooltips, listContentWidth, rowY, truncateText);
+                        rowY = rowRect.yMax;
+                    }
+                    if (Event.current.type == EventType.Repaint)
+                    {
+                        _notesListViewWidth = listViewport.width;
+                        _notesListViewHeight = listViewport.height;
+                        _notesListContentHeight = rowY;
+                    }
+                    GUI.EndScrollView();
                 } // end left panel vertical scope
 
-                GUILayout.Space(4);
+                    // ── RESIZE HANDLE ──
+                    if (_showNotesSidebar)
+                    {
+                        Rect resizeRect = GUILayoutUtility.GetRect(6, 0, GUILayout.ExpandHeight(true), GUILayout.Width(6));
+                        EditorGUIUtility.AddCursorRect(resizeRect, MouseCursor.ResizeHorizontal);
+                        if (Event.current.type == EventType.MouseDown && resizeRect.Contains(Event.current.mousePosition))
+                        {
+                            _isResizingNotesSidebar = true;
+                            Event.current.Use();
+                        }
+                        if (_isResizingNotesSidebar)
+                        {
+                            if (Event.current.type == EventType.MouseDrag)
+                            {
+                                _notesSidebarWidth += Event.current.delta.x;
+                                _notesSidebarWidth = Mathf.Clamp(_notesSidebarWidth, 24f, position.width * 0.85f);
+                                Repaint();
+                                Event.current.Use();
+                            }
+                            else if (Event.current.type == EventType.MouseUp)
+                            {
+                                _isResizingNotesSidebar = false;
+                                Event.current.Use();
+                            }
+                        }
+                    }
+                }
+
+                GUILayout.Space(2);
 
                 // ──────── RIGHT PANEL: Note Editor ────────
                 DrawNoteEditor();
@@ -2450,40 +2621,118 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
-        // ── Draw a single note item in the list ──
-        private void DrawNoteListItem(QuickNote note, int origIdx)
+        public static bool ShouldTruncateQuickNotesText(float sidebarWidth, float viewportWidth)
         {
+            if (viewportWidth <= 0f) return false;
+            return (sidebarWidth / viewportWidth) < 0.10f;
+        }
+
+        public static bool ShouldShowQuickNotesPopoutButton(float sidebarWidth, float viewportWidth)
+        {
+            return GetQuickNotesPopoutReveal(sidebarWidth) > 0f;
+        }
+
+        public static float GetQuickNotesPopoutReveal(float sidebarWidth)
+        {
+            return Mathf.InverseLerp(60f, 100f, sidebarWidth);
+        }
+
+        public static float GetQuickNotesInfoReveal(float sidebarWidth)
+        {
+            return Mathf.InverseLerp(140f, 180f, sidebarWidth);
+        }
+
+        public static float GetQuickNotesTitleWidth(float cardInnerWidth, float popoutReveal)
+        {
+            float reservedWidth = Mathf.Clamp01(popoutReveal) * 28f;
+            return Mathf.Max(0f, cardInnerWidth - reservedWidth);
+        }
+
+        // ── Draw a single note item in the list ──
+        private Rect DrawNoteListItem(QuickNote note, int origIdx, bool isUltraNarrow, bool showTooltips, float contentWidth, float rowY, bool truncateText = false)
+        {
+            float popoutReveal = Mathf.Clamp01(GetQuickNotesPopoutReveal(_notesSidebarCurrentWidth));
+            bool showPopout = popoutReveal > 0f;
             bool selected = _selectedNote == origIdx;
             var noteColor = TBStyles.GetLabelColor(note.colorIndex);
 
             // Use selected style or normal style
             var boxStyle = selected ? TBStyles.NoteBoxSelected : TBStyles.NoteBox;
-            Rect itemRect;
-            using (var scope = new EditorGUILayout.HorizontalScope(boxStyle))
+
+            // In ultra-narrow mode, we reduce padding to keep it from looking broken
+            GUIStyle effectiveStyle = boxStyle;
+            if (isUltraNarrow)
             {
-                itemRect = scope.rect;
-                using (new EditorGUILayout.VerticalScope())
+                effectiveStyle = new GUIStyle(boxStyle);
+                effectiveStyle.padding = new RectOffset(6, 2, 4, 4);
+                effectiveStyle.margin = new RectOffset(1, 1, 1, 1);
+            }
+
+            string label = (note.pinned ? $"{TBStyles.PinnedNoteIcon} " : "") + note.title;
+            var titleStyle = selected
+                ? new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = TBStyles.NoteTitleColor }, fontSize = 12, wordWrap = !truncateText, clipping = TextClipping.Clip, margin = new RectOffset(0, 0, 0, 0), padding = new RectOffset(0, 0, 0, 0) }
+                : new GUIStyle(EditorStyles.label) { normal = { textColor = TBStyles.NoteTitleColor }, fontSize = 12, wordWrap = !truncateText, clipping = TextClipping.Clip, margin = new RectOffset(0, 0, 0, 0), padding = new RectOffset(0, 0, 0, 0) };
+
+            float cardWidth = Mathf.Max(1f, contentWidth - effectiveStyle.margin.horizontal);
+            float innerWidth = Mathf.Max(0f, cardWidth - effectiveStyle.padding.horizontal);
+            float titleWidth = GetQuickNotesTitleWidth(innerWidth, popoutReveal);
+            float titleHeight = truncateText
+                ? 16f
+                : Mathf.Max(16f, titleStyle.CalcHeight(new GUIContent(label), titleWidth));
+            float infoReveal = GetQuickNotesInfoReveal(_notesSidebarCurrentWidth);
+            bool showInfo = infoReveal > 0f && !truncateText;
+            float infoHeight = showInfo ? 14f * infoReveal : 0f;
+            float cardHeight = effectiveStyle.padding.vertical + titleHeight + infoHeight;
+            float rowHeight = cardHeight + effectiveStyle.margin.vertical + 2f;
+            Rect rowRect = new Rect(0f, rowY, contentWidth, rowHeight);
+            Rect itemRect = new Rect(rowRect.x + effectiveStyle.margin.left, rowRect.y + effectiveStyle.margin.top, cardWidth, cardHeight);
+            Rect innerRect = new Rect(itemRect.x + effectiveStyle.padding.left, itemRect.y + effectiveStyle.padding.top,
+                innerWidth, titleHeight + infoHeight);
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                bool hovered = itemRect.Contains(Event.current.mousePosition);
+                effectiveStyle.Draw(itemRect, hovered, false, selected, false);
+            }
+
+            Rect titleRect = new Rect(innerRect.x, innerRect.y, titleWidth, titleHeight);
+            EditorGUI.LabelField(titleRect, label, titleStyle);
+
+            if (showInfo)
+            {
+                var subColor = new Color(TBStyles.CardTextColor.r, TBStyles.CardTextColor.g, TBStyles.CardTextColor.b, 0.75f);
+                var infoStyle = new GUIStyle(EditorStyles.miniLabel)
                 {
-                    string label = (note.pinned ? $"{TBStyles.PinnedNoteIcon} " : "") + note.title;
-                    var titleStyle = selected
-                        ? new GUIStyle(EditorStyles.boldLabel) { normal = { textColor = TBStyles.NoteTitleColor }, fontSize = 12, wordWrap = true }
-                        : new GUIStyle(EditorStyles.label) { normal = { textColor = TBStyles.NoteTitleColor }, fontSize = 12, wordWrap = true };
-                    EditorGUILayout.LabelField(label, titleStyle);
+                    normal = { textColor = selected ? TBStyles.CardTextColor : subColor },
+                    wordWrap = false,
+                    clipping = TextClipping.Clip,
+                    margin = new RectOffset(0, 0, 0, 0),
+                    padding = new RectOffset(0, 0, 0, 0)
+                };
+                Color previousGuiColor = GUI.color;
+                GUI.color = new Color(previousGuiColor.r, previousGuiColor.g, previousGuiColor.b, previousGuiColor.a * infoReveal);
+                EditorGUI.LabelField(new Rect(innerRect.x, titleRect.yMax, innerRect.width, infoHeight),
+                    $"{note.modifiedDate}  •  {note.WordCount} words", infoStyle);
+                GUI.color = previousGuiColor;
+            }
 
-                    var subColor = new Color(TBStyles.CardTextColor.r, TBStyles.CardTextColor.g, TBStyles.CardTextColor.b, 0.75f);
-                    var infoStyle = new GUIStyle(EditorStyles.miniLabel)
-                    {
-                        normal = { textColor = selected ? TBStyles.CardTextColor : subColor }
-                    };
-                    EditorGUILayout.LabelField($"{note.modifiedDate}  •  {note.WordCount} words", infoStyle);
-                }
-
-                GUILayout.FlexibleSpace();
-                if (ThemedTooltip.IconButton("↗", "Popout Note", GUILayout.Width(24), GUILayout.Height(22)))
+            if (showPopout)
+            {
+                float buttonWidth = 24f * popoutReveal;
+                float buttonHeight = Mathf.Min(22f * popoutReveal, titleHeight);
+                float buttonY = innerRect.y + Mathf.Max(0f, (titleHeight - buttonHeight) * 0.5f);
+                Rect buttonRect = new Rect(innerRect.xMax - buttonWidth, buttonY, buttonWidth, buttonHeight);
+                Color previousGuiColor = GUI.color;
+                GUI.color = new Color(previousGuiColor.r, previousGuiColor.g, previousGuiColor.b, previousGuiColor.a * popoutReveal);
+                bool clicked = ThemedTooltip.Button(buttonRect, "↗", "Popout Note", TBStyles.IconButton);
+                GUI.color = previousGuiColor;
+                if (clicked)
                 {
                     NotePopupWindow.Open(note, _data, () => { LoadData(); });
                 }
             }
+
+            if (showTooltips) ThemedTooltip.SetTooltip(itemRect, note.title);
 
             // ── Drawn over the box during Repaint to save horizontal space ──
             if (Event.current.type == EventType.Repaint)
@@ -2520,24 +2769,70 @@ namespace AwesomeTaskManager.Editor
             var evt = Event.current;
             if (itemRect.width > 1 && itemRect.height > 1) // rect is valid
             {
-                if (evt.type == EventType.MouseDown && itemRect.Contains(evt.mousePosition) && evt.button == 0)
+                if (evt.type == EventType.MouseDown && itemRect.Contains(evt.mousePosition))
                 {
-                    if (_selectedNote != origIdx)
+                    if (evt.button == 0)
+                    {
+                        if (_selectedNote != origIdx)
+                        {
+                            _selectedNote = origIdx;
+                            _noteEditorScroll = Vector2.zero;
+                            _clipboard?.Reset();
+                            _needsUndoBaseline = true;
+                            GUI.FocusControl(null); // release TextArea so it picks up the new note's content
+                            GUIUtility.ExitGUI();
+                        }
+                        _noteDragIdx = origIdx;
+                        _noteDragStartPos = evt.mousePosition;
+                        _noteDragging = false;
+                        evt.Use();
+                        Repaint();
+                    }
+                    else if (evt.button == 1)
                     {
                         _selectedNote = origIdx;
-                        _noteEditorScroll = Vector2.zero;
-                        GUI.FocusControl(null); // release TextArea so it picks up the new note's content
-                        GUIUtility.ExitGUI();
+                        _clipboard?.Reset();
+                        var menu = new ThemedContextMenu { FitContent = true };
+                        menu.AddItem(new GUIContent("📋 Copy Note Content"), false, () =>
+                        {
+                            EditorGUIUtility.systemCopyBuffer = note.content ?? "";
+                            TriggerSuccessNotification("Note copied to clipboard");
+                            Repaint();
+                        });
+                        menu.AddSeparator("");
+                        menu.AddItem(new GUIContent("↗ Popout Note"), false, () =>
+                        {
+                            NotePopupWindow.Open(note, _data, () => { LoadData(); });
+                        });
+                        menu.AddItem(new GUIContent("📤 Export Note..."), false, () =>
+                        {
+                            EditorApplication.delayCall += () => ExportSingleNote(note);
+                        });
+                        menu.AddSeparator("");
+                        menu.AddItem(new GUIContent("🗑 Delete Note"), false, () =>
+                        {
+                            int targetIdx = origIdx;
+                            EditorApplication.delayCall += () =>
+                            {
+                                if (ThemedDialog.Show("Delete Note", $"Delete \"{note.title}\"?", "Delete", "Cancel"))
+                                {
+                                    if (targetIdx >= 0 && targetIdx < _data.notes.Count)
+                                    {
+                                        _data.notes.RemoveAt(targetIdx);
+                                        _selectedNote = -1;
+                                        Save();
+                                        Repaint();
+                                    }
+                                }
+                            };
+                        });
+                        menu.ShowAsContext();
+                        evt.Use();
                     }
-                    _noteDragIdx = origIdx;
-                    _noteDragStartPos = evt.mousePosition;
-                    _noteDragging = false;
-                    evt.Use();
-                    Repaint();
                 }
             }
 
-            GUILayout.Space(2);
+            return rowRect;
         }
 
         // ── Handle drag events globally ──
@@ -2655,6 +2950,70 @@ namespace AwesomeTaskManager.Editor
                 .ToList();
         }
 
+        private NoteClipboardController Clipboard => _clipboard ??= new NoteClipboardController("NoteEditor", TBStyles.NoteTextArea, new NoteClipboardController.Host
+        {
+            MarkModified = MarkNoteModified,
+            RecordUndo = note => RecordUndo(note, true),
+            Repaint = Repaint,
+            Notify = TriggerSuccessNotification,
+            CanUndo = note => GetUndoStack(note).Count > 0,
+            CanRedo = note => GetRedoStack(note).Count > 0,
+            Undo = PerformUndo,
+            Redo = PerformRedo,
+            SetEditMode = editMode => { _noteEditMode = editMode; },
+            AttachImage = AttachImage,
+            PopoutNote = note =>
+            {
+                if (_noteEditMode)
+                    NotePopupWindow.Open(note, _data, LoadData);
+                else
+                    NotePopupWindow.OpenInPreviewMode(note, _data, LoadData);
+            },
+            ExportNote = note => { EditorApplication.delayCall += () => ExportSingleNote(note); },
+            SwitchToEditLabel = "✏ Switch to Edit Mode"
+        });
+
+        private void AttachImage(QuickNote note)
+        {
+            if (note == null) return;
+
+            int insertionIndex;
+            int replaceLength;
+            if (_noteEditMode)
+            {
+                Clipboard.GetInsertTarget(note, out insertionIndex, out replaceLength);
+            }
+            else
+            {
+                insertionIndex = NoteClipboardController.NormalizeNewlines(note.content).Length;
+                replaceLength = 0;
+            }
+
+            EditorApplication.delayCall += () =>
+            {
+                if (this == null || note == null) return;
+
+                string imagePath = EditorUtility.OpenFilePanelWithFilters("Attach Image or Video", "", MarkdownRenderer.NoteAttachmentFileFilters);
+                if (string.IsNullOrEmpty(imagePath)) return;
+
+                string assetPath = MarkdownRenderer.CopyImageToProject(imagePath);
+                if (string.IsNullOrEmpty(assetPath)) return;
+
+                if (note.imagePaths == null) note.imagePaths = new List<string>();
+                if (!note.imagePaths.Contains(assetPath)) note.imagePaths.Add(assetPath);
+
+                string content = NoteClipboardController.NormalizeNewlines(note.content);
+                int insertPosition = Mathf.Clamp(insertionIndex, 0, content.Length);
+                string prefix = insertPosition > 0 && !content.Substring(0, insertPosition).EndsWith("\n") ? "\n" : "";
+                string tag = $"![[{Path.GetFileName(assetPath)}]]";
+                RecordUndo(note, true);
+                note.content = NoteClipboardController.ReplaceRange(content, insertPosition, replaceLength, prefix + tag, out int caret);
+                Clipboard.SetCaret(caret);
+                MarkNoteModified(note);
+                Repaint();
+            };
+        }
+
         private void DrawNoteEditor()
         {
             using (var rightScope = new EditorGUILayout.VerticalScope(GUIStyle.none, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
@@ -2676,12 +3035,16 @@ namespace AwesomeTaskManager.Editor
                 }
 
             var note = _data.notes[_selectedNote];
+            if (note?.content != null && note.content.Contains("\r"))
+            {
+                note.content = note.content.Replace("\r\n", "\n").Replace("\r", "\n");
+            }
 
             // ── Title bar ──
-            using (new EditorGUILayout.HorizontalScope())
+            using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
             {
                 GUILayout.Space(6);
-                string newTitle = TBStyles.DrawThemedTextField(note.title, TBStyles.NoteTitle, GUILayout.Height(24));
+                string newTitle = TBStyles.DrawThemedTextField(note.title, TBStyles.NoteTitle, GUILayout.Height(24), GUILayout.ExpandWidth(true));
                 if (newTitle != note.title) { note.title = newTitle; MarkNoteModified(note); }
 
                 // Pin
@@ -2749,10 +3112,10 @@ namespace AwesomeTaskManager.Editor
 
             // ── Metadata row ──
             GUILayout.Space(2);
-            using (new EditorGUILayout.HorizontalScope())
+            using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
             {
                 GUILayout.Space(6);
-                Rect metadataRect = EditorGUILayout.GetControlRect(false, 18);
+                Rect metadataRect = EditorGUILayout.GetControlRect(false, 18, GUILayout.ExpandWidth(true));
                 string folderName = "Unfiled";
                 if (!string.IsNullOrEmpty(note.folderId))
                 {
@@ -2792,42 +3155,48 @@ namespace AwesomeTaskManager.Editor
             using (new EditorGUILayout.HorizontalScope())
             {
                 GUILayout.Space(6);
-                EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
-                GUILayout.Space(4);
-                if (GUILayout.Button(new GUIContent("📋 Paste", "Paste Image from Clipboard"), TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(20)))
+
+                if (!_showNotesSidebar)
                 {
-                    PasteImageFromClipboard(note);
-                    GUI.FocusControl(null);
-                }
-                if (GUILayout.Button(new GUIContent("📎 Browse", "Browse for Image"), TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(20)))
-                {
-                    EditorApplication.delayCall += () =>
+                    if (GUILayout.Button(new GUIContent("▶ Sidebar", "Show Quick Notes Sidebar"), TBStyles.NoteActionButton, GUILayout.Width(76), GUILayout.Height(20)))
                     {
-                        string imgPath = EditorUtility.OpenFilePanel("Attach Image", "",
-                            "png,jpg,jpeg,gif,bmp,tga,psd,tiff");
-                        if (!string.IsNullOrEmpty(imgPath))
-                        {
-                            string assetPath = MarkdownRenderer.CopyImageToProject(imgPath);
-                            if (!string.IsNullOrEmpty(assetPath))
-                            {
-                                if (!note.imagePaths.Contains(assetPath))
-                                    note.imagePaths.Add(assetPath);
-                                string fileName = Path.GetFileName(assetPath);
-                                note.content = (note.content ?? "") + $"\n![[{fileName}]]";
-                                MarkNoteModified(note);
-                                Repaint();
-                            }
-                        }
-                    };
+                        _showNotesSidebar = true;
+                    }
+                    GUILayout.Space(8);
+                }
+
+                // Insert section
+                EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
+                if (ThemedTooltip.Button("📋 Paste", "Paste Image or Text from Clipboard", TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(20)))
+                {
+                    Clipboard.SmartPaste(note, Clipboard.Live);
+                }
+                if (ThemedTooltip.Button("📎 Browse", "Browse for Image or Video", TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(20)))
+                {
+                    AttachImage(note);
                 }
 
                 GUILayout.FlexibleSpace();
 
                 // Edit / Preview toggle
                 if (GUILayout.Button(new GUIContent("✏ Edit", "Edit Note Mode"), _noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(58), GUILayout.Height(20)))
-                    _noteEditMode = true;
+                {
+                    if (!_noteEditMode)
+                    {
+                        _noteEditMode = true;
+                        _clipboard?.Reset();
+                        GUI.FocusControl(null);
+                    }
+                }
                 if (GUILayout.Button(new GUIContent("👁 Preview", "Preview Note Mode"), !_noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(76), GUILayout.Height(20)))
-                    _noteEditMode = false;
+                {
+                    if (_noteEditMode)
+                    {
+                        _noteEditMode = false;
+                        _clipboard?.Reset();
+                        GUI.FocusControl(null);
+                    }
+                }
                 GUILayout.Space(6);
             }
             GUILayout.Space(3);
@@ -2835,42 +3204,98 @@ namespace AwesomeTaskManager.Editor
             // ── Content area ──
             HandleNoteDragDropImages(note);
 
-            // ── Ctrl+V / Cmd+V to paste images from clipboard ──
-            if (Event.current.type == EventType.KeyDown
-                && Event.current.keyCode == KeyCode.V
-                && (Event.current.control || Event.current.command))
+            // ── Command events: Undo / Redo (from Unity Edit menu or Mac Cmd+Z) ──
+            if (Event.current != null)
             {
-                if (TryPasteImageFromClipboard(note))
+                if (Event.current.type == EventType.ValidateCommand)
                 {
-                    Event.current.Use();
-                    GUI.FocusControl(null); // release TextArea so it picks up the updated content
-                    Repaint();
+                    if (Event.current.commandName == "Undo" || Event.current.commandName == "Redo")
+                    {
+                        Event.current.Use();
+                    }
+                }
+                else if (Event.current.type == EventType.ExecuteCommand)
+                {
+                    if (Event.current.commandName == "Undo")
+                    {
+                        PerformUndo(note);
+                        Event.current.Use();
+                    }
+                    else if (Event.current.commandName == "Redo")
+                    {
+                        PerformRedo(note);
+                        Event.current.Use();
+                    }
                 }
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            // ── Keyboard shortcuts: Undo / Redo / Cut / Copy / Paste ──
+            if (Event.current != null && Event.current.type == EventType.KeyDown
+                && (Event.current.control || Event.current.command))
+            {
+                if (Event.current.keyCode == KeyCode.Z)
+                {
+                    if (Event.current.shift) PerformRedo(note);
+                    else PerformUndo(note);
+                    Event.current.Use();
+                }
+                else if (Event.current.keyCode == KeyCode.Y)
+                {
+                    PerformRedo(note);
+                    Event.current.Use();
+                }
+            }
+            Clipboard.HandleKeyboardShortcuts(note, _noteEditMode);
+            using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
             {
                 GUILayout.Space(6);
                 if (_noteEditMode)
                 {
                     // ── Raw markdown editor ──
-                    using (var editorScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll))
+                    using (var editorScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
                     {
                         _noteEditorScroll = editorScope.scrollPosition;
-                        string newContent = EditorGUILayout.TextArea(note.content, TBStyles.NoteTextArea, GUILayout.ExpandHeight(true));
-                        if (newContent != note.content) { note.content = newContent; MarkNoteModified(note); }
+
+                        Clipboard.BeginTextArea(note);
+                        string newContent = EditorGUILayout.TextArea(note.content, TBStyles.NoteTextArea, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true));
+                        if (newContent != note.content) 
+                        { 
+                            newContent = newContent.Replace("\r\n", "\n").Replace("\r", "\n");
+
+                            string noteId = note.id ?? "default";
+                            float lastPushTime = _noteLastUndoPushTimes.TryGetValue(noteId, out float t) ? t : 0f;
+                            bool isFirstEdit = _needsUndoBaseline || !_noteLastCommittedContent.ContainsKey(noteId) || GetUndoStack(note).Count == 0;
+                            bool isPause = (Time.realtimeSinceStartup - lastPushTime) > 0.8f;
+                            bool isMajorDelta = Math.Abs(newContent.Length - (note.content ?? "").Length) > 5;
+                            bool isNewlineOrWordBreak = newContent.EndsWith("\n") || newContent.EndsWith(" ");
+
+                            if (isFirstEdit || isPause || isMajorDelta || isNewlineOrWordBreak)
+                            {
+                                RecordUndo(note, true);
+                            }
+                            _needsUndoBaseline = false;
+                            note.content = newContent; 
+                            MarkNoteModified(note); 
+                        }
+
+                        Rect r = GUILayoutUtility.GetLastRect();
+                        Clipboard.EndTextArea(note, r);
                     }
                 }
                 else
                 {
-                    // ── Rendered preview (Obsidian-style inline images) ──
-                    using (var previewScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll))
+                    // ── Rendered preview (Obsidian-style inline images & selectable copyable text) ──
+                    using (var previewScope = new EditorGUILayout.ScrollViewScope(_noteEditorScroll, GUILayout.ExpandWidth(true), GUILayout.ExpandHeight(true)))
                     {
                         _noteEditorScroll = previewScope.scrollPosition;
-                        if (MarkdownRenderer.DrawMarkdownPreview(note, (n) => MarkNoteModified(n)))
+
+                        Clipboard.HandlePreviewContextClick(note);
+
+                        if (MarkdownRenderer.DrawMarkdownPreview(note, (n) => MarkNoteModified(n), (n) => RecordUndo(n, true)))
                         {
                             _hasAnimatedGif = true;
                         }
+                        Clipboard.TrackPreviewSelection(note);
                     }
                 }
                 GUILayout.Space(6);
@@ -2879,8 +3304,127 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
+        private List<string> GetUndoStack(QuickNote note)
+        {
+            string noteId = note?.id ?? "default";
+            if (!_noteUndoStacks.TryGetValue(noteId, out var stack))
+            {
+                stack = new List<string>();
+                _noteUndoStacks[noteId] = stack;
+            }
+            return stack;
+        }
+
+        private List<string> GetRedoStack(QuickNote note)
+        {
+            string noteId = note?.id ?? "default";
+            if (!_noteRedoStacks.TryGetValue(noteId, out var stack))
+            {
+                stack = new List<string>();
+                _noteRedoStacks[noteId] = stack;
+            }
+            return stack;
+        }
+
+        private void RecordUndo(QuickNote note, bool force = false)
+        {
+            if (note == null) return;
+            string noteId = note.id ?? "default";
+            string content = (note.content ?? "").Replace("\r\n", "\n").Replace("\r", "\n");
+            var undoStack = GetUndoStack(note);
+            if (undoStack.Count > 0 && undoStack[undoStack.Count - 1] == content) return;
+
+            if (!force && _noteLastCommittedContent.TryGetValue(noteId, out string committed) && committed == content) return;
+
+            undoStack.Add(content);
+            if (undoStack.Count > 100) undoStack.RemoveAt(0);
+            GetRedoStack(note).Clear();
+            _noteLastCommittedContent[noteId] = content;
+            _noteLastUndoPushTimes[noteId] = Time.realtimeSinceStartup;
+            _lastUndoPushTime = Time.realtimeSinceStartup;
+            _needsUndoBaseline = false;
+        }
+
+        private void PerformUndo(QuickNote note)
+        {
+            if (note == null) return;
+            var undoStack = GetUndoStack(note);
+            if (undoStack.Count == 0) return;
+
+            string currentContent = (note.content ?? "").Replace("\r\n", "\n").Replace("\r", "\n");
+            while (undoStack.Count > 0 && undoStack[undoStack.Count - 1] == currentContent)
+            {
+                undoStack.RemoveAt(undoStack.Count - 1);
+            }
+            if (undoStack.Count == 0) return;
+
+            var redoStack = GetRedoStack(note);
+            redoStack.Add(currentContent);
+            if (redoStack.Count > 100) redoStack.RemoveAt(0);
+
+            string previousContent = undoStack[undoStack.Count - 1];
+            undoStack.RemoveAt(undoStack.Count - 1);
+
+            int caret = Clipboard.CaretIndex;
+            note.content = previousContent;
+            string noteId = note.id ?? "default";
+            _noteLastCommittedContent[noteId] = previousContent;
+            _noteLastUndoPushTimes[noteId] = Time.realtimeSinceStartup;
+            _lastUndoPushTime = Time.realtimeSinceStartup;
+            _needsUndoBaseline = true;
+
+            NoteClipboardController.SyncTextEditors(previousContent, caret);
+            Clipboard.Reset();
+
+            GUI.FocusControl(null);
+            GUIUtility.keyboardControl = 0;
+
+            MarkNoteModified(note);
+            GUI.changed = true;
+            Repaint();
+        }
+
+        private void PerformRedo(QuickNote note)
+        {
+            if (note == null) return;
+            var redoStack = GetRedoStack(note);
+            if (redoStack.Count == 0) return;
+
+            string currentContent = (note.content ?? "").Replace("\r\n", "\n").Replace("\r", "\n");
+            while (redoStack.Count > 0 && redoStack[redoStack.Count - 1] == currentContent)
+            {
+                redoStack.RemoveAt(redoStack.Count - 1);
+            }
+            if (redoStack.Count == 0) return;
+
+            var undoStack = GetUndoStack(note);
+            undoStack.Add(currentContent);
+            if (undoStack.Count > 100) undoStack.RemoveAt(0);
+
+            string nextContent = redoStack[redoStack.Count - 1];
+            redoStack.RemoveAt(redoStack.Count - 1);
+
+            int caret = Clipboard.CaretIndex;
+            note.content = nextContent;
+            string noteId = note.id ?? "default";
+            _noteLastCommittedContent[noteId] = nextContent;
+            _noteLastUndoPushTimes[noteId] = Time.realtimeSinceStartup;
+            _lastUndoPushTime = Time.realtimeSinceStartup;
+            _needsUndoBaseline = true;
+
+            NoteClipboardController.SyncTextEditors(nextContent, caret);
+            Clipboard.Reset();
+
+            GUI.FocusControl(null);
+            GUIUtility.keyboardControl = 0;
+
+            MarkNoteModified(note);
+            GUI.changed = true;
+            Repaint();
+        }
+
         // ── Export helpers ──
-        private void ExportSingleNote(QuickNote note)
+        internal static void ExportSingleNote(QuickNote note)
         {
             string defaultName = SanitizeFileName(note.title);
             string path = EditorUtility.SaveFilePanel("Export Note", "", defaultName, "md");
@@ -4905,17 +5449,20 @@ namespace AwesomeTaskManager.Editor
         // ── Clipboard paste ──
         private void PasteImageFromClipboard(QuickNote note)
         {
+            RecordUndo(note, true);
             MarkdownRenderer.PasteImageFromClipboard(note, n => MarkNoteModified(n), Repaint);
         }
 
         private bool TryPasteImageFromClipboard(QuickNote note)
         {
+            RecordUndo(note, true);
             return MarkdownRenderer.TryPasteImageFromClipboard(note, n => MarkNoteModified(n), Repaint);
         }
 
         /// <summary>Handle Unity editor drag-and-drop of image files onto note editor area.</summary>
         private void HandleNoteDragDropImages(QuickNote note)
         {
+            if (Event.current != null && Event.current.type == EventType.DragPerform) RecordUndo(note, true);
             MarkdownRenderer.HandleNoteDragDropImages(note, n => MarkNoteModified(n), Repaint);
         }
 
@@ -5027,11 +5574,14 @@ namespace AwesomeTaskManager.Editor
 
         private void SaveCurrentAsTemplate()
         {
-            string result = EditorInputDialog.Show("Save as Template", "Template Name:", Board.name);
+            var board = Board;
+            if (board == null) return;
+
+            string result = EditorInputDialog.Show("Save as Template", "Template Name:", board.name);
             if (!string.IsNullOrWhiteSpace(result))
             {
                 bool includeCards = true;
-                bool hasCards = Board.columns.Any(c => c.cards.Count > 0);
+                bool hasCards = board.columns != null && board.columns.Any(c => c != null && c.cards != null && c.cards.Count > 0);
 
                 if (hasCards)
                 {
@@ -5043,7 +5593,7 @@ namespace AwesomeTaskManager.Editor
                     includeCards = (choice == 0);
                 }
 
-                TaskBoard template = Board.Clone(true, includeCards);
+                TaskBoard template = board.Clone(true, includeCards);
                 template.name = result;
                 _data.templates.Add(template);
                 Save();
