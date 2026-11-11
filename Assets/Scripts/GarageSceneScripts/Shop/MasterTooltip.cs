@@ -435,7 +435,10 @@ public class MasterTooltip : MonoBehaviour
         if (PlayerManager.Instance != null)
         {
             //Add in stuff for cosuming here
-            
+            if (AudioManager.instance != null)
+            {
+                AudioManager.instance.consume.start();
+            }
         }
     }
 

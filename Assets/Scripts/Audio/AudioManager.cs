@@ -52,6 +52,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance payBill;
     [System.NonSerialized] public EventInstance payBillWhilePoorDialogue;
     [System.NonSerialized] public EventInstance card;
+    [System.NonSerialized] public EventInstance consume;
         // Training
     [System.NonSerialized] public EventInstance gymBagZipUp;
     [System.NonSerialized] public EventInstance dumbbell;
@@ -212,8 +213,9 @@ public class AudioManager : MonoBehaviour
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
         openDoor = RuntimeManager.CreateInstance("event:/Garage/Open Door");
+        consume = RuntimeManager.CreateInstance("event:/Garage/Consume");
 
-                           // BULLETIN BOARD //
+        // BULLETIN BOARD //
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
         rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");

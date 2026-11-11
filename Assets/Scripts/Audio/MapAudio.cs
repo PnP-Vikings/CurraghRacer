@@ -94,6 +94,7 @@ public class MapAudio : MonoBehaviour
         yield return new WaitForSeconds(1.0f);
         Debug.Log("Muting Car Engine - AudioDebug");
         AudioManager.instance.taxiJourney.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
+        //AudioManager.instance.countrysideAmbience.start();
     }
 
     public void MuteGarageAudio()
@@ -214,6 +215,7 @@ public class MapAudio : MonoBehaviour
                 {
                     Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
                     AudioManager.instance.taxiJourney.start();
+                    AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                     hasJustTravelledByTaxi = true;
 
                 }
