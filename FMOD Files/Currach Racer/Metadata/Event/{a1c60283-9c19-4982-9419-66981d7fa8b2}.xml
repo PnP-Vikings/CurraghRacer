@@ -308,6 +308,9 @@
 	</object>
 	<object class="MixerBusFader" id="{2d2e2d2b-8f11-4843-85ba-29391f377d8a}" />
 	<object class="GainEffect" id="{c9b7fbdb-5f32-4cc4-bf0a-5b80cfa7825f}">
+		<property name="gain">
+			<value>2</value>
+		</property>
 		<relationship name="modulators">
 			<destination>{659bdef1-5399-44d6-93b6-31641bb7718e}</destination>
 		</relationship>
