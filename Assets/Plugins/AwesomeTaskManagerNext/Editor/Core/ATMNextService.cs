@@ -557,7 +557,7 @@ namespace AwesomeTaskManager.Next
                     foreach (var col in b.columns)
                     {
                         if (col?.cards == null) continue;
-                        var c = col.cards.FirstOrDefault(x => x != null && (x.id == q || string.Equals(x.title, q, StringComparison.OrdinalIgnoreCase)));
+                        var c = col.cards.FirstOrDefault(x => x != null && (x.id == q || string.Equals(x.title, q, StringComparison.OrdinalIgnoreCase) || string.Equals(x.taskCode, q, StringComparison.OrdinalIgnoreCase)));
                         if (c != null)
                         {
                             outBoard = b;
@@ -576,7 +576,7 @@ namespace AwesomeTaskManager.Next
                 foreach (var col in activeBoard.columns)
                 {
                     if (col?.cards == null) continue;
-                    var c = col.cards.FirstOrDefault(x => x != null && (x.id == q || string.Equals(x.title, q, StringComparison.OrdinalIgnoreCase)));
+                    var c = col.cards.FirstOrDefault(x => x != null && (x.id == q || string.Equals(x.title, q, StringComparison.OrdinalIgnoreCase) || string.Equals(x.taskCode, q, StringComparison.OrdinalIgnoreCase)));
                     if (c != null)
                     {
                         outBoard = activeBoard;
@@ -594,7 +594,7 @@ namespace AwesomeTaskManager.Next
                 foreach (var col in b.columns)
                 {
                     if (col?.cards == null) continue;
-                    var c = col.cards.FirstOrDefault(x => x != null && (x.id == q || string.Equals(x.title, q, StringComparison.OrdinalIgnoreCase)));
+                    var c = col.cards.FirstOrDefault(x => x != null && (x.id == q || string.Equals(x.title, q, StringComparison.OrdinalIgnoreCase) || string.Equals(x.taskCode, q, StringComparison.OrdinalIgnoreCase)));
                     if (c != null)
                     {
                         outBoard = b;
@@ -652,7 +652,7 @@ namespace AwesomeTaskManager.Next
                 foreach (var col in b.columns)
                 {
                     if (col?.cards == null) continue;
-                    var card = col.cards.FirstOrDefault(c => c != null && (c.id == q || string.Equals(c.title, q, StringComparison.OrdinalIgnoreCase)));
+                    var card = col.cards.FirstOrDefault(c => c != null && (c.id == q || string.Equals(c.title, q, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, q, StringComparison.OrdinalIgnoreCase)));
                     if (card != null) return card;
                 }
             }
@@ -776,7 +776,7 @@ namespace AwesomeTaskManager.Next
                 foreach (var col in b.columns)
                 {
                     if (col?.cards == null) continue;
-                    card = col.cards.FirstOrDefault(c => c != null && (c.id == cardIdOrTitle || string.Equals(c.title, cardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
+                    card = col.cards.FirstOrDefault(c => c != null && (c.id == cardIdOrTitle || string.Equals(c.title, cardIdOrTitle, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, cardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
                     if (card != null) break;
                 }
                 if (card != null) break;
@@ -862,7 +862,7 @@ namespace AwesomeTaskManager.Next
                     foreach (var col in b.columns)
                     {
                         if (col?.cards == null) continue;
-                        card = col.cards.FirstOrDefault(c => c != null && (c.id == item.cardIdOrTitle || string.Equals(c.title, item.cardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
+                        card = col.cards.FirstOrDefault(c => c != null && (c.id == item.cardIdOrTitle || string.Equals(c.title, item.cardIdOrTitle, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, item.cardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
                         if (card != null) break;
                     }
                     if (card != null) break;
@@ -1430,7 +1430,7 @@ namespace AwesomeTaskManager.Next
                 {
                     if (col?.cards == null) continue;
                     int countBefore = col.cards.Count;
-                    col.cards.RemoveAll(c => c != null && (c.id == cardIdOrTitle || string.Equals(c.title, cardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
+                    col.cards.RemoveAll(c => c != null && (c.id == cardIdOrTitle || string.Equals(c.title, cardIdOrTitle, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, cardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
                     if (col.cards.Count < countBefore)
                     {
                         removed = true;
@@ -1489,7 +1489,7 @@ namespace AwesomeTaskManager.Next
                         foreach (var col in b.columns)
                         {
                             if (col?.cards == null) continue;
-                            var card = col.cards.FirstOrDefault(c => c != null && (c.id == q || string.Equals(c.title, q, StringComparison.OrdinalIgnoreCase)));
+                            var card = col.cards.FirstOrDefault(c => c != null && (c.id == q || string.Equals(c.title, q, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, q, StringComparison.OrdinalIgnoreCase)));
                             if (card != null)
                             {
                                 targetCard = card;
@@ -1753,7 +1753,7 @@ namespace AwesomeTaskManager.Next
                 foreach (var col in b.columns)
                 {
                     if (col?.cards == null) continue;
-                    var match = col.cards.FirstOrDefault(c => c != null && (c.id == parentCardIdOrTitle || string.Equals(c.title, parentCardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
+                    var match = col.cards.FirstOrDefault(c => c != null && (c.id == parentCardIdOrTitle || string.Equals(c.title, parentCardIdOrTitle, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, parentCardIdOrTitle, StringComparison.OrdinalIgnoreCase)));
                     if (match != null)
                     {
                         parentCard = match;
@@ -4076,7 +4076,7 @@ namespace AwesomeTaskManager.Next
                 foreach (var col in b.columns)
                 {
                     if (col?.cards == null) continue;
-                    var match = col.cards.FirstOrDefault(c => c != null && (c.id == q || string.Equals(c.title, q, StringComparison.OrdinalIgnoreCase)));
+                    var match = col.cards.FirstOrDefault(c => c != null && (c.id == q || string.Equals(c.title, q, StringComparison.OrdinalIgnoreCase) || string.Equals(c.taskCode, q, StringComparison.OrdinalIgnoreCase)));
                     if (match != null) return match;
                 }
             }

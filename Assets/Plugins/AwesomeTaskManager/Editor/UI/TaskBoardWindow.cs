@@ -134,6 +134,8 @@ namespace AwesomeTaskManager.Editor
         private string _errorNotificationMessage = "";
         private double _errorNotificationEndTime = 0;
         private bool _showArchived = false;
+        private bool _myTasksOnly = false;
+        private long _lastDiskTimestamp = 0;
         private string _linkHighlightCardId;
         private enum LinkHighlightMode { None, Children, Parents }
         private LinkHighlightMode _linkHighlightMode = LinkHighlightMode.None;
@@ -277,17 +279,21 @@ namespace AwesomeTaskManager.Editor
             wantsMouseMove = true;
             // Always refresh from disk on enable; EditorWindow serialized state can be stale.
             _data = Persistence.Load();
+            _lastDiskTimestamp = Persistence.GetDiskTimestamp();
             if (_data != null)
             {
                 ApplyPostLoadVisualState();
             }
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
             EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
+            Persistence.OnDiskDataChanged -= OnExternalDiskDataChanged;
+            Persistence.OnDiskDataChanged += OnExternalDiskDataChanged;
         }
 
         private void OnDisable() 
         { 
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            Persistence.OnDiskDataChanged -= OnExternalDiskDataChanged;
             if (_instance == this) _instance = null;
             Save(); 
         }
@@ -295,7 +301,35 @@ namespace AwesomeTaskManager.Editor
         private void OnDestroy()
         {
             EditorApplication.playModeStateChanged -= OnPlayModeStateChanged;
+            Persistence.OnDiskDataChanged -= OnExternalDiskDataChanged;
             if (_instance == this) _instance = null;
+        }
+
+        private void OnFocus()
+        {
+            CheckDiskSync();
+        }
+
+        private void OnInspectorUpdate()
+        {
+            CheckDiskSync();
+        }
+
+        private void OnExternalDiskDataChanged()
+        {
+            LoadData();
+        }
+
+        private void CheckDiskSync()
+        {
+            if (_data == null || _cardDragging) return;
+            if (Persistence.HasDiskChanged(_lastDiskTimestamp))
+            {
+                _lastDiskTimestamp = Persistence.GetDiskTimestamp();
+                LoadData();
+                TriggerSuccessNotification("Board refreshed from external changes (e.g. Git pull)");
+                Repaint();
+            }
         }
 
         private void OnPlayModeStateChanged(PlayModeStateChange state)
@@ -309,6 +343,7 @@ namespace AwesomeTaskManager.Editor
         public void LoadData()
         {
             var freshData = Persistence.Load();
+            _lastDiskTimestamp = Persistence.GetDiskTimestamp();
             if (freshData == null) 
             {
                 ThemedDialog.Show("Awesome Task Manager", "Failed to load data. The save file might be corrupted.", "OK");
@@ -317,6 +352,15 @@ namespace AwesomeTaskManager.Editor
 
             _data = freshData;
             _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, Mathf.Max(0, _data.boards.Count - 1));
+            if (_data.userSettings != null)
+            {
+                _showArchived = _data.userSettings.showArchived;
+                _myTasksOnly = _data.userSettings.myTasksOnly;
+                if (!string.IsNullOrEmpty(_data.userSettings.searchFilter)) _searchFilter = _data.userSettings.searchFilter;
+                if (!string.IsNullOrEmpty(_data.userSettings.categoryFilter)) _categoryFilter = _data.userSettings.categoryFilter;
+                if (!string.IsNullOrEmpty(_data.userSettings.assigneeFilter)) _assigneeFilter = _data.userSettings.assigneeFilter;
+                if (_data.userSettings.priorityFilter > 0) _priorityFilter = _data.userSettings.priorityFilter;
+            }
             ApplyPostLoadVisualState();
             
             // Also notify any open sub-windows to reload their data from disk
@@ -651,7 +695,21 @@ namespace AwesomeTaskManager.Editor
         {
             if (_data == null) return;
             _data.lastBoardIndex = _boardIndex;
+            _data.userSettings ??= new UserSaveData();
+            _data.userSettings.lastBoardIndex = _boardIndex;
+            _data.userSettings.showArchived = _showArchived;
+            _data.userSettings.myTasksOnly = _myTasksOnly;
+            _data.userSettings.searchFilter = _searchFilter;
+            _data.userSettings.categoryFilter = _categoryFilter;
+            _data.userSettings.assigneeFilter = _assigneeFilter;
+            _data.userSettings.priorityFilter = _priorityFilter;
+            _data.userSettings.currentThemeIndex = _data.currentThemeIndex;
+            if (_data.themes != null && _data.currentThemeIndex >= 0 && _data.currentThemeIndex < _data.themes.Count && _data.themes[_data.currentThemeIndex] != null)
+            {
+                _data.userSettings.selectedThemeName = _data.themes[_data.currentThemeIndex].name;
+            }
             Persistence.Save(_data);
+            _lastDiskTimestamp = Persistence.GetDiskTimestamp();
             ReloadAllOpenWindows();
         }
 
@@ -661,11 +719,20 @@ namespace AwesomeTaskManager.Editor
             _data.themeSettings ??= new ThemeSaveData();
             _data.themeSettings.themes = _data.themes;
             _data.themeSettings.currentThemeIndex = _data.currentThemeIndex;
-            if (_data.themes != null && _data.currentThemeIndex >= 0 && _data.currentThemeIndex < _data.themes.Count)
+            if (_data.themes != null && _data.currentThemeIndex >= 0 && _data.currentThemeIndex < _data.themes.Count && _data.themes[_data.currentThemeIndex] != null)
             {
                 _data.themeSettings.selectedThemeName = _data.themes[_data.currentThemeIndex].name;
             }
             Persistence.SaveTheme(_data.themeSettings);
+
+            _data.userSettings ??= new UserSaveData();
+            _data.userSettings.currentThemeIndex = _data.currentThemeIndex;
+            if (_data.themes != null && _data.currentThemeIndex >= 0 && _data.currentThemeIndex < _data.themes.Count && _data.themes[_data.currentThemeIndex] != null)
+            {
+                _data.userSettings.selectedThemeName = _data.themes[_data.currentThemeIndex].name;
+            }
+            Persistence.SaveUser(_data.userSettings);
+
             ReloadAllOpenWindows();
         }
 
@@ -1138,6 +1205,15 @@ namespace AwesomeTaskManager.Editor
                         _showArchived = newShowArchived;
                         Repaint();
                     }
+                    GUILayout.Space(2);
+                    // My Tasks toggle
+                    string currentUserName = VcsHelper.GetCurrentUserName();
+                    bool newMyTasks = ThemedTooltip.Toggle(_myTasksOnly, "👤", _myTasksOnly ? "Show All Tasks" : $"Show My Tasks ({currentUserName})", TBStyles.ToolbarButton, GUILayout.Width(28), GUILayout.Height(20));
+                    if (newMyTasks != _myTasksOnly)
+                    {
+                        _myTasksOnly = newMyTasks;
+                        Repaint();
+                    }
                     
                     GUILayout.FlexibleSpace();
                 }
@@ -1329,6 +1405,31 @@ namespace AwesomeTaskManager.Editor
             return BuildStatusBarText(summary);
         }
 
+        private bool IsCardAssignedToOrCreatedByCurrentUser(TaskCard card)
+        {
+            if (card == null) return false;
+            string currentUser = VcsHelper.GetCurrentUserName();
+            if (!string.IsNullOrEmpty(card.createdBy) && string.Equals(card.createdBy, currentUser, StringComparison.OrdinalIgnoreCase)) return true;
+            if (_data?.assignees != null && card.assigneeIds != null && card.assigneeIds.Count > 0)
+            {
+                foreach (var aid in card.assigneeIds)
+                {
+                    var ass = _data.assignees.FirstOrDefault(a => a != null && a.id == aid);
+                    if (ass != null && string.Equals(ass.name, currentUser, StringComparison.OrdinalIgnoreCase))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        private static string Slugify(string text)
+        {
+            if (string.IsNullOrWhiteSpace(text)) return "task";
+            string slug = Regex.Replace(text.ToLowerInvariant(), @"[^a-z0-9\s-]", "");
+            slug = Regex.Replace(slug, @"\s+", "-").Trim('-');
+            return slug.Length > 30 ? slug.Substring(0, 30).TrimEnd('-') : slug;
+        }
+
         private void DrawColumn(TaskColumn col, int colIdx, TaskBoard board, float width)
         {
             Color bg = colIdx % 2 == 0 ? TBStyles.ColumnBg : TBStyles.ColumnBgAlt;
@@ -1356,11 +1457,14 @@ namespace AwesomeTaskManager.Editor
 
                     using (new EditorGUILayout.HorizontalScope())
                     {
-                        int columnsCardCountWithFliter = col.cards.Count(c => (_showArchived || !c.archived) && (string.IsNullOrWhiteSpace(_categoryFilter) || (c.category ?? "") == _categoryFilter)
+                        int columnsCardCountWithFliter = col.cards.Count(c => (_showArchived || !c.archived)
+                            && (!_myTasksOnly || IsCardAssignedToOrCreatedByCurrentUser(c))
+                            && (string.IsNullOrWhiteSpace(_categoryFilter) || (c.category ?? "") == _categoryFilter)
                             && (string.IsNullOrEmpty(_assigneeFilter) || c.assigneeIds.Contains(_assigneeFilter))
                             && (_priorityFilter == 0 || c.priority == _priorityFilter - 1)
                             && (string.IsNullOrWhiteSpace(_searchFilter) || c.title.ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant())
                                 || (c.description ?? "").ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant())
+                                || (!string.IsNullOrEmpty(c.taskCode) && c.taskCode.ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant()))
                                 || (c.category ?? "").ToLowerInvariant().Contains(_searchFilter.ToLowerInvariant())));
                         
                         EditorGUILayout.LabelField($"{col.title}  ({columnsCardCountWithFliter})", TBStyles.ColumnHeader);
@@ -1453,11 +1557,13 @@ namespace AwesomeTaskManager.Editor
                     {
                         var card = col.cards[i];
                         if (!_showArchived && card.archived) continue;
+                        if (_myTasksOnly && !IsCardAssignedToOrCreatedByCurrentUser(card)) continue;
                         if (hasCatFilter && (card.category ?? "") != _categoryFilter) continue;
                         if (hasAssFilter && !card.assigneeIds.Contains(_assigneeFilter)) continue;
                         if (hasPriFilter && card.priority != _priorityFilter - 1) continue;
                         if (hasTextFilter && !card.title.ToLowerInvariant().Contains(filter)
                                           && !(card.description ?? "").ToLowerInvariant().Contains(filter)
+                                          && !(card.taskCode ?? "").ToLowerInvariant().Contains(filter)
                                           && !(card.category ?? "").ToLowerInvariant().Contains(filter))
                             continue;
                         DrawCard(card, col, i, width);
@@ -1578,6 +1684,21 @@ namespace AwesomeTaskManager.Editor
                         RefreshLinkCache();
                         Repaint();
                     });
+
+                    if (!string.IsNullOrEmpty(card.taskCode))
+                    {
+                        menu.AddItem(new GUIContent($"Copy Task Code ({card.taskCode})"), false, () =>
+                        {
+                            EditorGUIUtility.systemCopyBuffer = card.taskCode;
+                            TriggerSuccessNotification($"Copied: {card.taskCode}");
+                        });
+                        menu.AddItem(new GUIContent("Copy Git Branch Name"), false, () =>
+                        {
+                            string branch = $"feature/{card.taskCode.ToLower()}-{Slugify(card.title)}";
+                            EditorGUIUtility.systemCopyBuffer = branch;
+                            TriggerSuccessNotification($"Copied: {branch}");
+                        });
+                    }
 
                     menu.AddItem(new GUIContent("Beta (Export Card)/as CSV..."), false, () => ExportCardToCSV(card, col));
                     menu.AddItem(new GUIContent("Beta (Export Card)/as Excel..."), false, () => ExportCardToExcel(card, col));
@@ -2624,7 +2745,7 @@ namespace AwesomeTaskManager.Editor
         public static bool ShouldTruncateQuickNotesText(float sidebarWidth, float viewportWidth)
         {
             if (viewportWidth <= 0f) return false;
-            return (sidebarWidth / viewportWidth) < 0.10f;
+            return (sidebarWidth / viewportWidth) < 0.09999f;
         }
 
         public static bool ShouldShowQuickNotesPopoutButton(float sidebarWidth, float viewportWidth)

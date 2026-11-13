@@ -531,6 +531,7 @@ namespace AwesomeTaskManager.Editor
                 editor.position = position;
                 editor.style = style;
                 editor.isMultiline = true;
+                editor.scrollOffset = originalScrollOffset;
                 editor.MoveCursorToPosition(mousePosition);
                 return Mathf.Clamp(editor.cursorIndex, 0, (content ?? "").Length);
             }
