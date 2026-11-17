@@ -13324,6 +13324,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: GameManager
       objectReference: {fileID: 0}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: workActivities.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'workActivities.Array.data[4]'
+      value: 
+      objectReference: {fileID: 0}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: trainingActivities.Array.size
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2191016002663425716, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+      propertyPath: 'trainingActivities.Array.data[5]'
+      value: 
+      objectReference: {fileID: 11400000, guid: 8d9dc84a91c3cad4aba2b25dfef7e94f, type: 2}
     - target: {fileID: 3057036325611874231, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
       propertyPath: TutorialAudio
       value: 
