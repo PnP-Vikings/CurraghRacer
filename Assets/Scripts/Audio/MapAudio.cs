@@ -87,12 +87,12 @@ public class MapAudio : MonoBehaviour
 
     private IEnumerator StopCarEngineIEnum()
     {
-        Debug.Log("Arriving at Destination - AudioDebug");
+        //Debug.Log("Arriving at Destination - AudioDebug");
         AudioManager.instance.payAndExitTaxi.start();
         yield return new WaitForSeconds(0.5f);
         AudioManager.instance.taxiJourney.setParameterByName("Car Engine Pitch", 0f);
         yield return new WaitForSeconds(1.0f);
-        Debug.Log("Muting Car Engine - AudioDebug");
+        //Debug.Log("Muting Car Engine - AudioDebug");
         AudioManager.instance.taxiJourney.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
         //AudioManager.instance.countrysideAmbience.start();
     }
@@ -160,7 +160,7 @@ public class MapAudio : MonoBehaviour
                 {
                     //Debug.Log("RadioManager found - AudioDebug");
                     //RadioManager.instance.UnMuteRadio();
-                    Debug.Log("Player is Home, Unmuting Garage Ambience - AudioDebug");
+                    //Debug.Log("Player is Home, Unmuting Garage Ambience - AudioDebug");
                     garageAmbienceEmitter.SetParameter("Garage Ambience Volume", 1f, false);
                     if (AudioManager.instance != null)
                     {
@@ -170,7 +170,7 @@ public class MapAudio : MonoBehaviour
             }
             else
             {
-                Debug.Log("Player is not Home, Cannot unmute Garage Ambience - AudioDebug");
+                //Debug.Log("Player is not Home, Cannot unmute Garage Ambience - AudioDebug");
             }
         }
     }
@@ -213,7 +213,7 @@ public class MapAudio : MonoBehaviour
                 float coins = PlayerManager.Instance.GetPlayerCoins();
                 if (coins >= 40)
                 {
-                    Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
+                    //Debug.Log($"Player has {coins} and can afford a taxi - AudioDebug");
                     AudioManager.instance.taxiJourney.start();
                     AudioManager.instance.countrysideAmbience.stop(FMOD.Studio.STOP_MODE.ALLOWFADEOUT);
                     hasJustTravelledByTaxi = true;

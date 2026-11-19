@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -51,6 +52,10 @@ public class MasterTooltip : MonoBehaviour
     public bool isFridgeTooltip = false;
     public bool onClickHideOtherTooltip = false;
     public bool isConsumablePopup = false;
+
+    private GameObject fridgeAudioObject;
+    private FridgeAudio fridgeAudioScript;
+
 
     private void Awake()
     {
@@ -435,9 +440,23 @@ public class MasterTooltip : MonoBehaviour
         if (PlayerManager.Instance != null)
         {
             //Add in stuff for cosuming here
-            if (AudioManager.instance != null)
+            FindFridgeAudioScript();
+        }
+    }
+
+    private void FindFridgeAudioScript()
+    {
+        //Debug.Log("Finding fridge audio script - AudioDebug");
+        fridgeAudioObject = GameObject.Find("FridgeAudio");
+        if (fridgeAudioObject != null)
+        {
+            //Debug.Log("fridgeAudioObject found - AudioDebug");
+            fridgeAudioScript = fridgeAudioObject.GetComponent<FridgeAudio>();
+
+            if (fridgeAudioScript != null)
             {
-                AudioManager.instance.consume.start();
+                //Debug.Log("fridgeAudioScript found - AudioDebug");
+                fridgeAudioScript.FindPlayerManagerScript();
             }
         }
     }
