@@ -554,6 +554,7 @@ namespace AwesomeTaskManager.Editor
 
         private static float _lastMeasuredContainerWidth = 0f;
         private static readonly Dictionary<string, float> _containerWidths = new Dictionary<string, float>();
+        private static readonly Dictionary<string, Vector2> _preformattedScrollPositions = new Dictionary<string, Vector2>();
 
         /// <summary>
         /// Clears the cached preview container widths (useful when switching layouts or in unit tests).
@@ -624,7 +625,13 @@ namespace AwesomeTaskManager.Editor
                 }
                 else
                 {
-                    EditorGUILayout.SelectableLabel(text, safeStyle, GUILayout.Height(height), GUILayout.ExpandWidth(true));
+                    Rect rect = EditorGUILayout.GetControlRect(false, height, safeStyle, GUILayout.Height(height), GUILayout.ExpandWidth(true));
+                    if (Event.current.type != EventType.Layout && rect.width > 1f)
+                    {
+                        float contentHeight = safeStyle.CalcHeight(new GUIContent(text), rect.width) + 4f;
+                        rect.height = Mathf.Min(rect.height, Mathf.Max(safeStyle.lineHeight, contentHeight));
+                    }
+                    EditorGUI.SelectableLabel(rect, text, safeStyle);
                 }
             }
             catch { }
@@ -675,6 +682,7 @@ namespace AwesomeTaskManager.Editor
             bool hasAnimatedGif = false;
             string[] lines = note.content.Split('\n');
             var textBuffer = new StringBuilder();
+            int skipPreformattedDetectionUntil = 0;
 
             for (int i = 0; i < lines.Length; i++)
             {
@@ -766,6 +774,22 @@ namespace AwesomeTaskManager.Editor
                         }
                     }
                     continue;
+                }
+
+                if (i >= skipPreformattedDetectionUntil)
+                {
+                    if (IsPreformattedBlock(lines, i, out int blockEnd))
+                    {
+                        FlushTextBlock(note, textBuffer, markModified);
+                        var blockLines = new string[blockEnd - i];
+                        for (int lineIndex = i; lineIndex < blockEnd; lineIndex++)
+                            blockLines[lineIndex - i] = lines[lineIndex].TrimEnd('\r');
+                        DrawPreformattedBlock(note, string.Join("\n", blockLines));
+                        i = blockEnd - 1;
+                        continue;
+                    }
+
+                    skipPreformattedDetectionUntil = blockEnd;
                 }
 
                 // ── Horizontal rule (---, ***, ___) ──
@@ -877,13 +901,138 @@ namespace AwesomeTaskManager.Editor
                 }
                 else
                 {
-                    if (textBuffer.Length > 0 && !textBuffer.ToString().EndsWith("\n")) textBuffer.Append(" ");
+                    if (textBuffer.Length > 0 && !textBuffer.ToString().EndsWith("\n")) textBuffer.Append("\n");
                     textBuffer.Append(FormatInlineMarkdown(line));
                 }
             }
 
             FlushTextBlock(note, textBuffer);
             return hasAnimatedGif;
+        }
+
+        public static bool IsPreformattedBlock(IList<string> lines, int startIndex, out int endIndex)
+        {
+            endIndex = startIndex;
+            if (lines == null || startIndex < 0 || startIndex >= lines.Count) return false;
+
+            bool hasDiagramCharacter = false;
+            int candidateEnd = startIndex;
+            while (candidateEnd < lines.Count)
+            {
+                string line = (lines[candidateEnd] ?? "").TrimEnd('\r');
+                if (string.IsNullOrWhiteSpace(line)) break;
+
+                bool hasBoxDrawingCharacter = ContainsCharacterInRange(line, 0x2500, 0x259F);
+                bool isIndented = CountLeadingIndent(line) >= 4;
+                if (!hasBoxDrawingCharacter && (!isIndented || IsMarkdownStructureLine(line))) break;
+
+                if (hasBoxDrawingCharacter || ContainsCharacterInRange(line, 0x2190, 0x21FF))
+                    hasDiagramCharacter = true;
+                candidateEnd++;
+            }
+
+            endIndex = candidateEnd;
+            return candidateEnd > startIndex && hasDiagramCharacter;
+        }
+
+        private static bool IsMarkdownStructureLine(string line)
+        {
+            string trimmed = line.Trim();
+            if (trimmed.StartsWith("#") || trimmed.StartsWith(">") || IsTableRow(line) ||
+                trimmed.StartsWith("- [ ]") || trimmed.StartsWith("- [x]") || trimmed.StartsWith("- [X]"))
+                return true;
+
+            if ((trimmed.StartsWith("- ") || trimmed.StartsWith("* ") || trimmed.StartsWith("+ ")) && trimmed.Length > 2)
+                return true;
+
+            if (trimmed.Length >= 3 && (trimmed[0] == '-' || trimmed[0] == '*' || trimmed[0] == '_'))
+            {
+                string withoutRuleCharacters = trimmed.Replace("-", "").Replace("*", "").Replace("_", "").Trim();
+                if (withoutRuleCharacters.Length == 0) return true;
+            }
+
+            if (trimmed.Length >= 3 && char.IsDigit(trimmed[0]))
+            {
+                int dotIndex = trimmed.IndexOf(". ", StringComparison.Ordinal);
+                if (dotIndex > 0 && dotIndex <= 4) return true;
+            }
+
+            return false;
+        }
+
+        private static int CountLeadingIndent(string line)
+        {
+            int indent = 0;
+            foreach (char character in line)
+            {
+                if (character == ' ')
+                {
+                    indent++;
+                }
+                else if (character == '\t')
+                {
+                    indent += 4 - indent % 4;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            return indent;
+        }
+
+        private static bool ContainsCharacterInRange(string text, int minCharacter, int maxCharacter)
+        {
+            foreach (char character in text)
+            {
+                if (character >= minCharacter && character <= maxCharacter) return true;
+            }
+            return false;
+        }
+
+        private static void DrawPreformattedBlock(QuickNote note, string text)
+        {
+            if (string.IsNullOrEmpty(text) || Event.current == null) return;
+
+            text = ExpandTabs(text);
+            GUIStyle style = TBStyles.PreformattedTextStyle;
+            GUIContent content = new GUIContent(text);
+            float availableWidth = GetAvailablePreviewWidth(note);
+            float contentWidth = style.CalcSize(content).x + 2f;
+            if (contentWidth <= availableWidth)
+            {
+                DrawSelectableLabel(note, text, style);
+                return;
+            }
+
+            float height = Mathf.Max(style.lineHeight, style.CalcHeight(content, contentWidth) + 4f);
+            string noteId = string.IsNullOrEmpty(note?.id) ? "__preformatted_note__" : note.id;
+            _preformattedScrollPositions.TryGetValue(noteId, out Vector2 scrollPosition);
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition, false, false, GUILayout.Height(height));
+            DrawSelectableLabel(note, text, style, 0f, GUILayout.Width(contentWidth), GUILayout.Height(height));
+            EditorGUILayout.EndScrollView();
+            _preformattedScrollPositions[noteId] = scrollPosition;
+        }
+
+        private static string ExpandTabs(string text)
+        {
+            var expanded = new StringBuilder(text.Length);
+            int column = 0;
+            foreach (char character in text)
+            {
+                if (character == '\t')
+                {
+                    int spaces = 4 - column % 4;
+                    expanded.Append(' ', spaces);
+                    column += spaces;
+                }
+                else
+                {
+                    expanded.Append(character);
+                    column = character == '\n' ? 0 : column + 1;
+                }
+            }
+            return expanded.ToString();
         }
 
         private static void DrawCodeBlock(QuickNote note, string rawCode, string language)

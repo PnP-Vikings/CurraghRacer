@@ -88,6 +88,17 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **Interlaced & transparent GIFs** — interlaced GIFs decode correctly and transparent frames/disposal behave like in web browsers
 - **Paste from the web** — GIFs copied from a browser, `.gif` URLs, and `data:image/gif` sources are downloaded and saved to `AttachedImages/`
 
+### 👥 Team Collaboration & Version Control
+- **Modular Multi-File Storage** — boards (`Boards/{board_id}.json`) and notes (`Notes/{note_id}.json`) are saved into granular separate files, eliminating monolithic JSON merge conflicts when teammates work concurrently
+- **User State Isolation** — local filters, search queries, active board index, and view toggles are isolated into `UserSettings/AwesomeTaskManager/AwesomeTaskManagerUser.json` (ignored by Unity `.gitignore`), ensuring zero dirty Git diffs on board navigation
+- **Live Disk-Change Detection & VCS Sync** — automatically monitors data file timestamps and auto-reloads when teammate changes are pulled (`git pull`), branches are switched, or stashes are popped
+- **Human-Readable Task IDs (e.g., `ATM-42`)** — tasks receive sequential task numbers and short codes (`taskCode`) with a configurable prefix (`taskPrefix`) and 1-click badge copying
+- **Git Branch Naming Helper** — 1-click "Copy Git Branch Name" action in the card context menu and detail header (e.g., `feature/ATM-42-fix-pin-collision`) for easy branch/PR linking
+- **Git Author Auto-Detection** — automatically detects local author names via `git config user.name` with `Environment.UserName` fallback
+- **"My Tasks" View (👤)** — 1-click toolbar filter button to isolate tasks assigned to or created by the current developer
+- **Card Audit Metadata** — tracks `createdBy`, `lastModifiedBy`, and `lastModifiedDate` timestamps and authors on every card
+- **Transparent Legacy Migration** — automatically detects pre-existing monolithic `AwesomeTaskManager.json` or older `TheUltimateTaskBoard.json` files and migrates them safely
+
 ### 🎨 Themes & Visual Customization
 - **Full Theme Engine & Style Tab** — complete visual customization hub to tailor the look and feel of Awesome Task Manager
 - **13 Built-in Theme Presets** — choose from classic, retro, vintage console, and modern styles, including Fruit Company-inspired translucent glassmorphism:
@@ -138,14 +149,20 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 
 ## 📂 Data Storage
 
-Project board, note, category, and assignee data is saved as JSON at:
+Project board, note, category, and assignee data is saved in a modular, version-control-friendly structure:
 ```
-ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json
+ProjectSettings/AwesomeTaskManager/
+├── AwesomeTaskManager.json        # Shared manifest, categories, assignees, templates & task prefix
+├── AwesomeTaskManagerTheme.json   # Theme presets & custom visual styles
+├── Boards/
+│   └── {board_id}.json            # Granular modular board files
+└── Notes/
+    └── {note_id}.json             # Modular quick note files
 ```
 
-Theme preferences, active theme selection, and custom styles are stored in an independent dedicated file:
+Local developer session state (active filters, search query, selected board) is isolated in:
 ```
-ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json
+UserSettings/AwesomeTaskManager/AwesomeTaskManagerUser.json
 ```
 
 Attached images are stored in:
@@ -154,7 +171,8 @@ Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/
 ```
 
 - **Per-project** — each project has its own boards and notes
-- **Team & Version-control friendly** — commit `AwesomeTaskManager.json` and `AttachedImages/` to share tasks with your team. Theme preferences in `AwesomeTaskManagerTheme.json` can be kept personal (optionally added to `.gitignore`) without affecting shared board data.
+- **Team & Version-control friendly** — boards and notes are stored as separate modular JSON files, preventing monolithic Git merge conflicts. User session state is decoupled in `UserSettings/` (ignored by Unity `.gitignore`), ensuring zero dirty Git diffs when simply navigating or filtering.
+- **External Disk Sync** — automatically detects external changes from `git pull` or branch switching and reloads data cleanly.
 - Editor-only — zero impact on your game builds
 
 ---
@@ -193,6 +211,7 @@ Assets/Plugins/AwesomeTaskManager/
         ├── ImportFieldMappingWindow.cs — CSV/Excel import column mapping window
         ├── ThemedDialog.cs       — Themed modal confirmation and alert dialogs
         ├── ThemedDropdownPopup.cs — Themed searchable dropdown popup menus
+        ├── ThemedTooltip.cs      — Themed tooltips & truncated text hover popups
         ├── ImageLargePreviewWindow.cs — Large image / GIF viewer window
         ├── NotePopupWindow.cs    — Pop-out note editor window
         ├── NoteClipboardController.cs — Shared note selection, right-click menu & clipboard logic
@@ -257,10 +276,24 @@ Assets/Plugins/AwesomeTaskManager/
 - **Board Templates** — Use the "Board Options" dropdown to save your current board layout as a template. You can choose to include existing cards or just the column structure.
 - **Subtask Highlighting** — If a card is both a master and a subtask, it will show both 🌳 and 🌿 icons. Click 🌳 to see its children, or 🌿 to see its parents.
 - **Transfer Cards** — Use the ⋮ menu on a card to "Copy to Board >" and select any other board for an instant transfer.
+- **👤 "My Tasks" Quick Filter** — Click the 👤 button in the board toolbar to instantly isolate cards assigned to or created by you.
+- **🏷 Short Task IDs (`ATM-42`) & Git Branch Helper** — Every card receives a human-readable task code in its details footer (e.g., `ATM-42`). Click the task code badge to copy it to your clipboard, or right-click any card (or use the ⋮ menu) and choose **"Copy Git Branch Name"** (e.g., `feature/ATM-42-card-title`) for fast branch and PR naming.
+- **👥 Team Collaboration & Git Sync** — Boards and quick notes are automatically stored in separate granular files under `ProjectSettings/AwesomeTaskManager/Boards/` and `Notes/` to prevent merge conflicts. Navigating boards and changing filters is saved in `UserSettings/` to keep your Git working tree clean, and external changes from `git pull` auto-reload smoothly.
 
 ---
 
 ## 📄 Changelog
+
+### v2.6 (Team Collaboration, Modular Multi-File Persistence, Git Identity, Short Task IDs & Live VCS Sync)
+- **Added** 📂 **Modular Multi-File Persistence** — boards and quick notes are now persisted as individual granular files (`ProjectSettings/AwesomeTaskManager/Boards/{board_id}.json` and `ProjectSettings/AwesomeTaskManager/Notes/{note_id}.json`), allowing concurrent team edits without monolithic JSON merge conflicts.
+- **Added** 🔄 **Seamless Legacy Data Migration** — automatically detects pre-existing monolithic `AwesomeTaskManager.json` or legacy `TheUltimateTaskBoard.json` files and migrates them transparently without data loss.
+- **Added** 👤 **Decoupled User State Isolation** — local workspace preferences (`lastBoardIndex`, active filters, search query, my-tasks filter) are now isolated into `UserSettings/AwesomeTaskManager/AwesomeTaskManagerUser.json` (ignored by Unity `.gitignore`), completely eliminating dirty Git diffs when navigating boards or toggling filters.
+- **Added** 🔄 **Live Disk-Change Detection & VCS Sync** — automatically monitors data file timestamps on disk to detect changes from `git pull`, branch switching, or external edits, refreshing the board seamlessly without clobbering remote changes.
+- **Added** 🏷 **Human-Readable Task IDs (e.g., `ATM-42`)** — tasks receive sequential task numbers and short codes (`taskCode`) with a configurable prefix (`taskPrefix`), 1-click badge copying in the Card Details footer, and context menu actions across board and card detail views.
+- **Added** 🌿 **Git Branch Helper** — 1-click "Copy Git Branch Name" action in the card context menu and Card Details view (e.g., `feature/ATM-42-card-title`) for frictionless Git workflow linking.
+- **Added** 👤 **Git Author Auto-Detection & Audit Trail** — automatically detects local author identity via `git config user.name` (with `Environment.UserName` fallback) and records `createdBy`, `lastModifiedBy`, and `lastModifiedDate` audit metadata on cards.
+- **Added** 👤 **"My Tasks" View** — 1-click toolbar filter button (👤) to quickly isolate cards assigned to or created by the current developer.
+- **Improved** 📐 **Card Details & Linked Items Layout** — refined "Add URL" and "Link Note" button sizing to span the full container width with no layout overflow or gaps, and aligned task code and creator metadata cleanly in the footer.
 
 ### v2.5 (Reliable Note Clipboard, Themed Context Menus, Clickable Links, Markdown Tables, GIFs, YouTube & Video Embeds)
 - **Added** 🎞 **GIF Paste from the Web** — GIFs copied in a browser (read from the clipboard's HTML `<img src>`), pasted `.gif` URLs, and `data:image/gif;base64` sources are downloaded, validated by file signature, saved to `AttachedImages/`, and embedded as animated GIFs. Downloads show a cancelable progress bar with a 20s timeout.

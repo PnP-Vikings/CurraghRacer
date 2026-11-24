@@ -71,10 +71,31 @@ namespace AwesomeTaskManager.Data
         public bool showChecklist = true; // per-card toggle for showing checklist on board
         public bool completed; // manually mark card as completed (overrides overdue styling)
         public List<string> assigneeIds = new List<string>();
+        public int taskNumber;
+        public string taskCode;
+        public string createdBy;
+        public string lastModifiedBy;
+        public string lastModifiedDate;
 
-        public TaskCard() { id = Guid.NewGuid().ToString(); createdDate = Now(); category = ""; }
+        public TaskCard()
+        {
+            id = Guid.NewGuid().ToString();
+            createdDate = Now();
+            category = "";
+            taskCode = "";
+            createdBy = VcsHelper.GetCurrentUserName();
+            lastModifiedBy = createdBy;
+            lastModifiedDate = createdDate;
+        }
+
         public TaskCard(string title) : this() { this.title = title; description = ""; }
         static string Now() => DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+
+        public void Touch(string modifiedBy = null)
+        {
+            lastModifiedBy = !string.IsNullOrEmpty(modifiedBy) ? modifiedBy : VcsHelper.GetCurrentUserName();
+            lastModifiedDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+        }
 
         public TaskCard Clone(bool resetId = true)
         {
@@ -84,6 +105,11 @@ namespace AwesomeTaskManager.Data
             {
                 clone.id = Guid.NewGuid().ToString();
                 clone.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                clone.taskNumber = 0;
+                clone.taskCode = string.Empty;
+                clone.createdBy = VcsHelper.GetCurrentUserName();
+                clone.lastModifiedBy = clone.createdBy;
+                clone.lastModifiedDate = clone.createdDate;
             }
             return clone;
         }
@@ -3638,6 +3664,76 @@ namespace AwesomeTaskManager.Data
     }
 
     [Serializable]
+    public class UserSaveData
+    {
+        public int lastBoardIndex = 0;
+        public string activeBoardId = string.Empty;
+        public string searchFilter = string.Empty;
+        public string categoryFilter = string.Empty;
+        public string assigneeFilter = string.Empty;
+        public int priorityFilter = 0;
+        public bool showArchived = false;
+        public bool myTasksOnly = false;
+        public string localUserName = string.Empty;
+        public string selectedThemeName = string.Empty;
+        public int currentThemeIndex = 0;
+        public string version = "1.0";
+
+        public void Normalize()
+        {
+            activeBoardId ??= string.Empty;
+            searchFilter ??= string.Empty;
+            categoryFilter ??= string.Empty;
+            assigneeFilter ??= string.Empty;
+            localUserName ??= string.Empty;
+            selectedThemeName ??= string.Empty;
+        }
+    }
+
+    public static class VcsHelper
+    {
+        private static string _cachedUserName = null;
+
+        public static string GetCurrentUserName()
+        {
+            if (!string.IsNullOrEmpty(_cachedUserName)) return _cachedUserName;
+
+            try
+            {
+                var psi = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = "git",
+                    Arguments = "config user.name",
+                    RedirectStandardOutput = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true
+                };
+                using var process = System.Diagnostics.Process.Start(psi);
+                if (process != null)
+                {
+                    string name = process.StandardOutput.ReadToEnd()?.Trim();
+                    process.WaitForExit(300);
+                    if (!string.IsNullOrEmpty(name))
+                    {
+                        _cachedUserName = name;
+                        return _cachedUserName;
+                    }
+                }
+            }
+            catch { }
+
+            _cachedUserName = System.Environment.UserName;
+            if (string.IsNullOrEmpty(_cachedUserName)) _cachedUserName = "Developer";
+            return _cachedUserName;
+        }
+
+        public static void SetCachedUserName(string name)
+        {
+            _cachedUserName = name;
+        }
+    }
+
+    [Serializable]
     public class SaveData
     {
         public List<TaskBoard> boards = new List<TaskBoard>();
@@ -3648,10 +3744,13 @@ namespace AwesomeTaskManager.Data
         public List<CategoryColorEntry> categoryColors = new List<CategoryColorEntry>();
         public List<Assignee> assignees = new List<Assignee>();
         public List<ImportFieldMappingProfile> importMappingProfiles = new List<ImportFieldMappingProfile>();
+        public string taskPrefix = "ATM";
+        public int nextTaskNumber = 1;
         [NonSerialized] public List<ThemeData> themes = new List<ThemeData>();
         public int lastBoardIndex;
         [NonSerialized] public int currentThemeIndex;
         [NonSerialized] public ThemeSaveData themeSettings;
+        [NonSerialized] public UserSaveData userSettings;
 
         public int GetCategoryColor(string category)
         {
@@ -3997,6 +4096,47 @@ namespace AwesomeTaskManager.Data
                     return x;
                 })
                 .ToList();
+
+            if (string.IsNullOrWhiteSpace(taskPrefix)) taskPrefix = "ATM";
+            int maxTaskNum = 0;
+            foreach (var card in AllCards())
+            {
+                if (card == null) continue;
+                if (card.taskNumber > 0)
+                {
+                    if (card.taskNumber > maxTaskNum) maxTaskNum = card.taskNumber;
+                    if (string.IsNullOrEmpty(card.taskCode))
+                    {
+                        card.taskCode = $"{taskPrefix}-{card.taskNumber}";
+                    }
+                }
+            }
+            foreach (var card in AllCards())
+            {
+                if (card == null) continue;
+                if (card.taskNumber <= 0)
+                {
+                    maxTaskNum++;
+                    card.taskNumber = maxTaskNum;
+                    card.taskCode = $"{taskPrefix}-{card.taskNumber}";
+                }
+                if (string.IsNullOrEmpty(card.createdBy))
+                {
+                    card.createdBy = VcsHelper.GetCurrentUserName();
+                }
+                if (string.IsNullOrEmpty(card.lastModifiedBy))
+                {
+                    card.lastModifiedBy = card.createdBy;
+                }
+                if (string.IsNullOrEmpty(card.lastModifiedDate))
+                {
+                    card.lastModifiedDate = card.createdDate;
+                }
+            }
+            nextTaskNumber = Math.Max(nextTaskNumber, maxTaskNum + 1);
+
+            userSettings ??= new UserSaveData();
+            userSettings.Normalize();
         }
 
         private void AddDefaultTemplates()

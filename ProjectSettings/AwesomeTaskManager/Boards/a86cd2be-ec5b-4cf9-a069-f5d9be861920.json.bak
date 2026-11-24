@@ -1,0 +1,1820 @@
+{
+    "id": "a86cd2be-ec5b-4cf9-a069-f5d9be861920",
+    "name": "My First Board",
+    "columns": [
+        {
+            "id": "7f561ee4-2103-4748-acfc-55d744c48ddd",
+            "title": "📋 To Do",
+            "cards": [
+                {
+                    "id": "dd77139c-c06b-4042-97e8-20b28c995737",
+                    "title": "Add More Bouys to race scene",
+                    "description": "Place a boy ever 100 meters ",
+                    "category": "Art",
+                    "colorLabel": 2,
+                    "priority": 0,
+                    "createdDate": "2026-07-01 23:26",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add Bouys to every 100 metres",
+                        "Remove 3 other racers from  pratice race"
+                    ],
+                    "checklistStates": [
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 1,
+                    "taskCode": "ATM-1",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "ff84cc38-e6d4-4448-a94d-83096847c88e",
+                    "title": "Add Loading screen",
+                    "description": "Add The loading screen when switching from scene to scene ",
+                    "category": "Design",
+                    "colorLabel": 10,
+                    "priority": 0,
+                    "createdDate": "2026-07-14 20:44",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add loading screen when changing level"
+                    ],
+                    "checklistStates": [
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "72e1b0466acb12540b3284c04b38e303",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260818_215931.png",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 2,
+                    "taskCode": "ATM-2",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "c1614a4c-76a9-440b-9d67-e8fc58f50e45",
+                    "title": "Change the Ui in the rockskipping game to player instead of ai",
+                    "description": "Its a bit weird at the moment and teh numbers are different because of it which is not nice \nso would be a nice fix will have to localize the the player also",
+                    "category": "Design",
+                    "colorLabel": 10,
+                    "priority": 0,
+                    "createdDate": "2026-09-04 16:58",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Change AI to player",
+                        "localize player to work with Irish"
+                    ],
+                    "checklistStates": [
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 3,
+                    "taskCode": "ATM-3",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "0202d3eb-d573-44f0-8d6c-dfc0cb6e389c",
+                    "title": "May be an issue loading older saves check this ",
+                    "description": "I have saves from a week ago that won't load ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-09-16 15:21",
+                    "dueDate": "2026-09-23",
+                    "archived": false,
+                    "checklistItems": [],
+                    "checklistStates": [],
+                    "checklistLinkedCardIds": [],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 4,
+                    "taskCode": "ATM-4",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                }
+            ]
+        },
+        {
+            "id": "8b3ada38-716b-4a83-8452-533d4d1e2718",
+            "title": "🔨 In Progress",
+            "cards": [
+                {
+                    "id": "d061c1eb-5bd4-43fb-b097-962b81cb8107",
+                    "title": "Add Daily Events Card",
+                    "description": "This card should popup everyday that shows the changes to any team memeber stats \nand any upcoming races,bills or events",
+                    "category": "UI",
+                    "colorLabel": 14,
+                    "priority": 0,
+                    "createdDate": "2026-09-21 14:36",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add Card that pops up everyday",
+                        "Show upcoming league race",
+                        "show upcoming bills",
+                        "show any events today",
+                        "show team member stat loses"
+                    ],
+                    "checklistStates": [
+                        false,
+                        false,
+                        false,
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-09-29 231710.png",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 5,
+                    "taskCode": "ATM-5",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "2b7e9c3e-2213-46ae-8c68-f1ed8d1a6671",
+                    "title": "Sync up Fridge variables To save system",
+                    "description": "Fridge variables are not currently in save system please fix ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-10-23 14:54",
+                    "dueDate": "2026-11-06",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add playerFridgeItem list",
+                        "Add hasSpawnedItemsToday",
+                        "Add spawnedItemsForToday"
+                    ],
+                    "checklistStates": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 6,
+                    "taskCode": "ATM-6",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "067df00a-a94c-436d-842a-e718edfb5688",
+                    "title": "Overall Thoughts and Lessons from Punch Club Play session ",
+                    "description": "Trying to nail down the loop of the game \n\nTime and calandar most important features of the game ",
+                    "category": "Design",
+                    "colorLabel": 10,
+                    "priority": 0,
+                    "createdDate": "2026-09-18 00:39",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Make them lose stats on the daily so they can not bank it ",
+                        "Change clock style to black alarm clock",
+                        "Center game around time and clock and calendar and sceduling",
+                        "make random team members lose stats daily",
+                        "Add Time Skip for races also",
+                        "Add New Day card that shows up at the start of each day",
+                        "Fix issue with saving completed races maybe rework whole system",
+                        "Added Tranistion when player sleeps",
+                        "Add Food to regain engery"
+                    ],
+                    "checklistStates": [
+                        false,
+                        true,
+                        false,
+                        true,
+                        true,
+                        false,
+                        false,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "d061c1eb-5bd4-43fb-b097-962b81cb8107",
+                        "cb182da6-209f-4705-bc96-3ad1ecb0d539",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": true,
+                            "isUrl": false,
+                            "guid": "2adc1098-55e3-4fea-a22e-abf0ee6661d7",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260918_155025_20260918_155947.png",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 7,
+                    "taskCode": "ATM-7",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "cb182da6-209f-4705-bc96-3ad1ecb0d539",
+                    "title": "Fix Completed Calendar after reloading save",
+                    "description": "Fix Completed Calendar after reloading save",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-09-17 19:30",
+                    "dueDate": "2026-10-01",
+                    "archived": false,
+                    "checklistItems": [
+                        "fix mistmatch on calendarevents object",
+                        "read in saved details"
+                    ],
+                    "checklistStates": [
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "454b31a26fe91c0479401781f8a35026",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 8,
+                    "taskCode": "ATM-8",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "e68d4faf-1c54-4d9c-ac67-591d7425a7cd",
+                    "title": "Add 90 day idea ",
+                    "description": "Add a x from 90 days from the start and process the player run at 90 days\t\n\nDepending on how much player\nhas at the end that is the animation they will get ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-06-03 22:56",
+                    "dueDate": "2026-09-24",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add Calendar event",
+                        "Add Processing final day of player money",
+                        "For now just add place holder text or image"
+                    ],
+                    "checklistStates": [
+                        true,
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 9,
+                    "taskCode": "ATM-9",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                }
+            ]
+        },
+        {
+            "id": "30321bdf-bd38-4d6b-80ae-c7e1a3ac01d6",
+            "title": "✅ Done",
+            "cards": [
+                {
+                    "id": "8719b392-2845-4b10-83d5-fc77c45cbe10",
+                    "title": "Add Traffic Warden Game to list of jobs",
+                    "description": "",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-04-20 19:54",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Intregrate the games win conditon with the rest of the minigame menu",
+                        "Intregrate the games LOSS conditon with the rest of the minigame menu"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 10,
+                    "taskCode": "ATM-10",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "95a6f3c3-83fa-481d-9f69-4b503fefe7ed",
+                    "title": "Confirm That both traffic and turf game are allowing players to pass",
+                    "description": "I think that I have won the minigames before but it still showed a \nmanager is angry with you \n",
+                    "category": "Bug",
+                    "colorLabel": 16,
+                    "priority": 0,
+                    "createdDate": "2026-05-02 19:43",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Traffic is working",
+                        "Foot Turfing is working"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d9ea1e419eff46e4eb9d372bd978623e",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Scenes/Main Menu.unity",
+                                "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1539091530887075933-579750602",
+                                "name": "GameManager"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d808c0220f7366949a781e1bf202fc56",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "cb99f032137a27d40b80b3ad1ef51835",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 11,
+                    "taskCode": "ATM-11",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "bba55898-5c7d-40b5-a413-634175fe87a6",
+                    "title": "Fix FootTurfMinigame ",
+                    "description": "Finish foot turf mingame so we can add it to job list",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-04-28 22:17",
+                    "dueDate": "2026-05-05",
+                    "archived": true,
+                    "checklistItems": [
+                        "Add Timer",
+                        "Hide Stack btn when no btn selected or stack compeleted",
+                        "Add Scoring system",
+                        "Remove streak if player does not click on stack btn",
+                        "Add Character that goes towards selected turf"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1732423707-0",
+                                "name": "Canvas"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-629005217-0",
+                                "name": "StackBtn"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Scenes/FootingTurfMinigame.unity",
+                                "globalObjectId": "GlobalObjectId_V1-2-d9ea1e419eff46e4eb9d372bd978623e-1133713054-0",
+                                "name": "GameManager"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "0c9af5a3d507ce847b7b292e877e3ab8",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260428_215615_20260428_221916.png",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 12,
+                    "taskCode": "ATM-12",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "dfda87dd-461e-45db-ab6a-11ac57d552b9",
+                    "title": "Fix Blank White screen on new day",
+                    "description": "White screen was actually coming from the ad Functions \nI have now adding a toggle on adsmanger to stop this screen from happening ",
+                    "category": "Bug",
+                    "colorLabel": 16,
+                    "priority": 0,
+                    "createdDate": "2026-06-01 22:42",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "FIgure out what is causing it to appear",
+                        "fix and stop it from appearing"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 13,
+                    "taskCode": "ATM-13",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "bbe06ed3-24eb-4a23-b287-a4c55471e7e4",
+                    "title": "Fixed Bug with Tooltip always showing on sundays",
+                    "description": "Now only shows the tooltip for races after yu have joined the current league",
+                    "category": "Bug",
+                    "colorLabel": 16,
+                    "priority": 0,
+                    "createdDate": "2026-06-03 00:33",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [],
+                    "checklistStates": [],
+                    "checklistLinkedCardIds": [],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Screenshot 2026-06-03 003259.png",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 14,
+                    "taskCode": "ATM-14",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "d8193522-289b-43b8-a63a-7e980345594c",
+                    "title": "Replace Assets in Traffic Warden ",
+                    "description": "",
+                    "category": "Art",
+                    "colorLabel": 2,
+                    "priority": 0,
+                    "createdDate": "2026-06-18 00:22",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Place stuff from fbs"
+                    ],
+                    "checklistStates": [
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 15,
+                    "taskCode": "ATM-15",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "3bc4723e-533b-4361-bd07-e3b78861990a",
+                    "title": "Setup Tutorial Ui",
+                    "description": "\t\t\t",
+                    "category": "Design",
+                    "colorLabel": 10,
+                    "priority": 0,
+                    "createdDate": "2026-06-04 23:26",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Add Tutorial ui that shows when active",
+                        "Show create prefab that populates with data",
+                        "show 3 tasks at the time if possible with bottom task being active",
+                        "Tick of task as completed",
+                        "hide tasks 2 or more away from active task"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 16,
+                    "taskCode": "ATM-16",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                    "title": "Tasks for setup",
+                    "description": "List of different tasks that should be on tutorial",
+                    "category": "Feature",
+                    "colorLabel": 6,
+                    "priority": 0,
+                    "createdDate": "2026-06-04 22:36",
+                    "dueDate": "2026-07-16",
+                    "archived": true,
+                    "checklistItems": [
+                        "Add Task to open Calendar",
+                        "Add Task to open Bulletin Board",
+                        "Add Task to open Team manager ",
+                        "Add Task for player to practice race",
+                        "Add Task to Train a member of the squad",
+                        "Add Task to open bill (Make sure player does not have enough  to pay bill)",
+                        "Add Task to work job",
+                        "Add close team manger task",
+                        "Add task to click on hire racer",
+                        "Add Task to pay a bill",
+                        "Add Task to sleep",
+                        "Prompt player to join league after sleep but remove close button",
+                        "Add Task to do a Sunday Race",
+                        "Remove the stamina requirement for working a job when tutorial is active"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 17,
+                    "taskCode": "ATM-17",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "7195bd10-3a74-41b3-b46a-ad026c30563c",
+                    "title": "Add Confirmation to tv menu when user presses on back to main menu",
+                    "description": "",
+                    "category": "UI",
+                    "colorLabel": 2,
+                    "priority": 0,
+                    "createdDate": "2026-07-07 00:42",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Add Extra pop to ask player if theri sure",
+                        "test make sure it works"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 18,
+                    "taskCode": "ATM-18",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "c9f7cea9-355d-4289-a35b-f3533baaf03d",
+                    "title": "Import profile Pics",
+                    "description": "Add pictures for each main character ",
+                    "category": "Art",
+                    "colorLabel": 2,
+                    "priority": 0,
+                    "createdDate": "2026-07-27 21:03",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Update on scritable object",
+                        "Verify it works"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 19,
+                    "taskCode": "ATM-19",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "14ec67f2-9dde-438b-a5b5-2a5ae84e301a",
+                    "title": "Check Logic on new save button ",
+                    "description": "Doesn't prompt the player if they want tutorial and also doesn't seem to reset the bills ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-08-06 14:37",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Match up the logic with the start new game button",
+                        "Verify its working"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Prefabs/SaveSlotUiPrefab.prefab",
+                                "globalObjectId": "GlobalObjectId_V1-2-af9bbcbdeaf1b2f4ca0f14413a14d754-8598144522272698404-0",
+                                "name": "SaveSlotUiPrefab"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Scenes/Main Menu.unity",
+                                "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-86933480616807991-4362316326491213309",
+                                "name": "SaveMenus"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": true,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "",
+                            "sceneObject": {
+                                "scenePath": "Assets/Scenes/Main Menu.unity",
+                                "globalObjectId": "GlobalObjectId_V1-2-8f6b0b8aca0a87b48895cb97df90bb9e-1554382852392505832-4362316326491213309",
+                                "name": "StartBtn"
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 20,
+                    "taskCode": "ATM-20",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "47a20766-1f19-423d-a291-3c7a970aa0c0",
+                    "title": "Test Diifferent format for tutorial task list",
+                    "description": "I think maybe showing the next store may confuse some users so maybe lets try just always having the \nactive task at the bottom ",
+                    "category": "",
+                    "colorLabel": 0,
+                    "priority": 0,
+                    "createdDate": "2026-07-09 19:49",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Change format",
+                        "Test",
+                        "Confirm which is better"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 21,
+                    "taskCode": "ATM-21",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "280b78cb-0607-423e-aadf-65a35d376d2d",
+                    "title": "Setup Tutorial League ",
+                    "description": "Setup a league that the player can join and complete during \ntutorial only have one race",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-07-08 23:33",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Create league",
+                        "Add 3 Teams",
+                        "Add Check to make sure that team is not already in league before promoting for tutorial league",
+                        "Setup system that makes it so this league gets added to the list and set as the current league if tutorial is active"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "1f58684bef80a134bb2007666f61ca01",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "e7af4e1578bb16f42881e823255c1a23",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "b7da84d8b61ab9f40a06307c18a5c343",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "94a4f225c85cc4b46b71785fd5333abb",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "13249adb7be8417498cc228092a6b7d7",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 22,
+                    "taskCode": "ATM-22",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "100e6d20-b68e-49d6-b522-e339af988a06",
+                    "title": "Tutorial Dialogue",
+                    "description": "Tutorial Dialogue Little guy at the bottom of the screen \nwhen task starts ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-06-30 22:12",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Make text show on a delay ",
+                        "Figure out easiest way to keep track of text in game for easy transaction"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 23,
+                    "taskCode": "ATM-23",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "676c5301-ef79-42f2-820d-28d08c8a3f69",
+                    "title": "Add Tutorial that player can play through on new game",
+                    "description": "",
+                    "category": "Feature",
+                    "colorLabel": 6,
+                    "priority": 0,
+                    "createdDate": "2026-06-03 23:00",
+                    "dueDate": "2026-07-03",
+                    "archived": true,
+                    "checklistItems": [
+                        "Verify the player can complete a task",
+                        "Once player has completed all tasks in list set tutorial completed",
+                        "Setup task tracking for tutorial",
+                        "Setup Ui Task Tracking",
+                        "Test different layor for tasklist",
+                        "Setup Tutorial League",
+                        "Complete Dialogue text ui",
+                        "Add tutorial to save system",
+                        "also add the race completed today in race manager to save system",
+                        "Toggle not working then its been reset by the save system",
+                        "Need to make save system allow player to pick up half way through a tutorial",
+                        "Add no enery check for tutorial",
+                        "Show new league invite after tutorial complete"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "3eab7466-7153-4ba9-a2dd-31975ca1f3e1",
+                        "3bc4723e-533b-4361-bd07-e3b78861990a",
+                        "47a20766-1f19-423d-a291-3c7a970aa0c0",
+                        "280b78cb-0607-423e-aadf-65a35d376d2d",
+                        "100e6d20-b68e-49d6-b522-e339af988a06",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "80428de81aaf5474ea7d4c4ab7cbf45c",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "8f6b0b8aca0a87b48895cb97df90bb9e",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 24,
+                    "taskCode": "ATM-24",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
+                    "title": "Localize Minigames ",
+                    "description": "",
+                    "category": "UI",
+                    "colorLabel": 11,
+                    "priority": 0,
+                    "createdDate": "2026-09-01 21:09",
+                    "dueDate": "2026-09-08",
+                    "archived": true,
+                    "checklistItems": [
+                        "Beer Pouring Minigame",
+                        "Minigame canvas ui",
+                        "Dishwashing Minigame",
+                        "FootRacing Minigame",
+                        "RockSkipping Minigame",
+                        "RowingRythm Minigame",
+                        "WeightLifting Minigame",
+                        "Boxing Minigame",
+                        "FootTurfing Minigame",
+                        "Traffic Warden Minigame"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d656f11150715614ba5129183425e650",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "684d0156ce3b8224baf6a0a22d0d48e4",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d9ea1e419eff46e4eb9d372bd978623e",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d3dcb19df9baec645b45a4a5908530ef",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "6c511b683549518408e649958f1ef4c1",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "1ba54d77acab60d4b83df2747b441583",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "d3c1a1d7e47ecf042acfd456e97dc933",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "e3c55d46df2d7014e8389576297fd2cb",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        },
+                        {
+                            "isSceneObject": false,
+                            "isNote": false,
+                            "isUrl": false,
+                            "guid": "c00e22e7495bad0458852f21c9a8ba00",
+                            "sceneObject": {
+                                "scenePath": "",
+                                "globalObjectId": "",
+                                "name": ""
+                            },
+                            "url": "",
+                            "displayName": ""
+                        }
+                    ],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 25,
+                    "taskCode": "ATM-25",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "2905b918-85d7-4a97-a433-0df41ffa9720",
+                    "title": "What needs to Localized",
+                    "description": "What still needs to be Localized",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-08-07 16:25",
+                    "dueDate": "2026-09-08",
+                    "archived": true,
+                    "checklistItems": [
+                        "League Invitaition card",
+                        "All the tutorial tasks",
+                        "Minigames need to be Localized",
+                        "You are in dept popup",
+                        "No Race Available",
+                        "All DisplayInfos in GameManager",
+                        "BillController DisplayInfos",
+                        "PlayerStats DisplayInfos",
+                        "Training DisplayInfos",
+                        "TvSettingsUi DisplayInfos",
+                        "Minigame Manager DisplayInfos",
+                        "StartMenu DisplayInfos"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "083a85cb-2d2a-4040-ae64-a14d62fc35cd",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 26,
+                    "taskCode": "ATM-26",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "72262f05-438b-46d9-b0a0-6395ce6a9be1",
+                    "title": "Localize Calendar event ",
+                    "description": "",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-09-09 22:33",
+                    "dueDate": "",
+                    "archived": true,
+                    "checklistItems": [
+                        "Add localization for name",
+                        "Add localization for description",
+                        "Localize all the text at the bottom of the completedRaces class"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 27,
+                    "taskCode": "ATM-27",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "5b5953f2-0a6a-40d0-b204-daf31acf2724",
+                    "title": "Add Max amount of currency a player can get for a minigame ",
+                    "description": "Currently you can get like m 3k from one session of the beer game",
+                    "category": "Bug",
+                    "colorLabel": 16,
+                    "priority": 0,
+                    "createdDate": "2026-07-08 23:25",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Create new variable",
+                        "Set this variable for each game",
+                        "Do check before paying out currency",
+                        "Test"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 28,
+                    "taskCode": "ATM-28",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "2fbcccbe-1db8-4fd3-b89a-cb4e320ae8be",
+                    "title": "Investigating Caching with Members",
+                    "description": "I this seems to be fixed now thing it was caused because when I moved the members and updated the list we were missing a call to update the lists in the save cache ",
+                    "category": "Feature",
+                    "colorLabel": 2,
+                    "priority": 0,
+                    "createdDate": "2026-09-25 02:21",
+                    "dueDate": "2026-10-02",
+                    "archived": false,
+                    "checklistItems": [
+                        "When moving the team members around seems to break with the caching",
+                        "By moving them back and forth you can replicate all team member details"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20260925_022139.png",
+                    "showChecklist": true,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 29,
+                    "taskCode": "ATM-29",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "cbc8fcb5-dabf-453c-97c2-2285fd28ea93",
+                    "title": "Add Items to fridge",
+                    "description": "What needs to be done to get items showing in the fridge ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-10-15 14:47",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add place to assign model in itemdata",
+                        "Add Fridge Script and make a prefab",
+                        "Create Model for bannana",
+                        "Create Model for Meat Pie",
+                        "Import Models",
+                        "Create Fridge script that listens to items changes in player items and loads items",
+                        "Show items in fridges",
+                        "Get tooltip that shows on hover",
+                        "Add on click menu that shows info and a consume button"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": true,
+                    "completed": true,
+                    "assigneeIds": [
+                        "8910e6f1-befc-4526-8924-25f6df0bd590"
+                    ],
+                    "taskNumber": 30,
+                    "taskCode": "ATM-30",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                },
+                {
+                    "id": "ff274282-35ee-4952-8a82-da46ff564259",
+                    "title": "Add a way to regain energy ",
+                    "description": "Currently the system is missing one really important aspect the ability to be able to \ntrade time and money to get energy so they can get extra energy ",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-09-23 01:30",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add a door to the garage scene",
+                        "Make the door clickable",
+                        "show a ui that allows player to purchase food",
+                        "add a fridge or something that allows them to click on and consume",
+                        "also add a expiration date to the food so they can't just bank them",
+                        "Add Popup on hover describing location",
+                        "Show map on door click",
+                        "Add Spline in both directions",
+                        "Add Popup on click on locations",
+                        "Spline Working both directions",
+                        "Add simple shop ui",
+                        "Add Popup for price",
+                        "Add Popup on click on item",
+                        "Add Fridge",
+                        "Get Food Showing in fridge",
+                        "Add  Working traveel Costs Icon",
+                        "Add Pop little icons when currency is spent"
+                    ],
+                    "checklistStates": [
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true,
+                        true
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/Game Map.gif",
+                    "showChecklist": false,
+                    "completed": true,
+                    "assigneeIds": [],
+                    "taskNumber": 31,
+                    "taskCode": "ATM-31",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                }
+            ]
+        },
+        {
+            "id": "f33aae9a-eb35-4d85-873d-6607e6087c3b",
+            "title": "Would be nice",
+            "cards": [
+                {
+                    "id": "b4756212-036f-4e7e-a228-d764623da45f",
+                    "title": "Traffic Warden Game Add particles on crash ",
+                    "description": "",
+                    "category": "Art",
+                    "colorLabel": 2,
+                    "priority": 0,
+                    "createdDate": "2026-04-20 19:56",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [],
+                    "checklistStates": [],
+                    "checklistLinkedCardIds": [],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "",
+                    "showChecklist": false,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 32,
+                    "taskCode": "ATM-32",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-12 23:18"
+                }
+            ]
+        }
+    ],
+    "createdDate": "2026-04-04 01:25"
+}

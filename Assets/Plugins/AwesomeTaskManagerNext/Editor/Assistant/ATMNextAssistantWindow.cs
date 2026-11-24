@@ -395,7 +395,8 @@ namespace AwesomeTaskManager.Next.UI
                                         "   - Ensure you are using Unity 6 (6000.0) or later.\n" +
                                         "   - Install the Unity Pipeline package in your project.\n" +
                                         "2. Install Unity CLI:\n" +
-                                        "   - Open a terminal and run: curl -fsSL https://unity.com/install.sh | bash\n" +
+                                        "   - Windows (PowerShell): irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex\n" +
+                                        "   - macOS / Linux: curl -fsSL https://unity.com/install.sh | bash\n" +
                                         "3. Setup & Configure:\n" +
                                         "   - Install pipeline: unity pipeline install\n" +
                                         "   - Configure client: unity mcp configure <client>\n" +
@@ -955,8 +956,8 @@ namespace AwesomeTaskManager.Next.UI
 
                 EditorGUILayout.Space(2);
                 GUILayout.Label("2. Install Unity CLI", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("Open a terminal (PowerShell on Windows) and run:\n" +
-                                        "curl -fsSL https://unity.com/install.sh | bash", MessageType.None);
+                EditorGUILayout.HelpBox("• Windows (PowerShell):\n  irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex\n" +
+                                        "• macOS / Linux:\n  curl -fsSL https://unity.com/install.sh | bash", MessageType.None);
                 
                 EditorGUILayout.Space(2);
                 GUILayout.Label("3. Setup & Configure", EditorStyles.miniBoldLabel);

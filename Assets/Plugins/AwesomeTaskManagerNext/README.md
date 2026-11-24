@@ -74,7 +74,9 @@ Unity now recommends using the **Unity CLI** for MCP integration. It is free and
    - Ensure you are using **Unity 6 (6000.0)** or later.
    - Install the **Unity Pipeline** package in your project.
 2. **Install Unity CLI**:
-   - Open a terminal (PowerShell on Windows) and run:
+   - **Windows (PowerShell)**:
+     `irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex`
+   - **macOS / Linux (Bash)**:
      `curl -fsSL https://unity.com/install.sh | bash`
 3. **Setup & Configure**:
    - Install the pipeline: `unity pipeline install`

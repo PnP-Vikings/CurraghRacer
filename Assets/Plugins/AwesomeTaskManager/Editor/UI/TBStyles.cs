@@ -1364,6 +1364,7 @@ namespace AwesomeTaskManager.UI
             _clipboardSuccessButton = null;
             _previewTextStyle = null;
             _tableTextStyle = null;
+            _preformattedTextStyle = null;
             _addNoteButton = null;
             _importNoteButton = null;
             _cardTextArea = null;
@@ -1824,6 +1825,26 @@ namespace AwesomeTaskManager.UI
                     SetAllStateTextColors(_tableTextStyle, NoteInputText);
                 }
                 return _tableTextStyle;
+            }
+        }
+
+        private static GUIStyle _preformattedTextStyle;
+        public static GUIStyle PreformattedTextStyle
+        {
+            get
+            {
+                if (_preformattedTextStyle == null)
+                {
+                    _preformattedTextStyle = new GUIStyle(PreviewTextStyle)
+                    {
+                        wordWrap = false,
+                        richText = false,
+                        fontSize = 12
+                    };
+                    var consolas = Font.CreateDynamicFontFromOSFont("Consolas", 12);
+                    if (consolas != null) _preformattedTextStyle.font = consolas;
+                }
+                return _preformattedTextStyle;
             }
         }
 

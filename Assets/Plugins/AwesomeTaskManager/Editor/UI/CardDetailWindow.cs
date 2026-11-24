@@ -469,7 +469,7 @@ namespace AwesomeTaskManager.Editor
                 var barRect = GUILayoutUtility.GetRect(0, 6, GUILayout.ExpandWidth(true));
                 EditorGUI.DrawRect(barRect, labelColor);
             }
-            GUILayout.Space(10);
+            GUILayout.Space(6);
 
             // ── Title ──
             EditorGUILayout.LabelField(_isNewCard ? "Card Title" : "Title", EditorStyles.boldLabel);
@@ -1058,96 +1058,98 @@ namespace AwesomeTaskManager.Editor
                 }
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            var buttonRowRect = GUILayoutUtility.GetRect(0, 24, GUILayout.ExpandWidth(true));
+            float halfWidth = Mathf.Floor(buttonRowRect.width * 0.5f);
+            Rect addUrlRect = new Rect(buttonRowRect.x, buttonRowRect.y, halfWidth, buttonRowRect.height);
+            Rect linkNoteRect = new Rect(buttonRowRect.x + halfWidth, buttonRowRect.y, buttonRowRect.width - halfWidth, buttonRowRect.height);
+
+            if (GUI.Button(addUrlRect, new GUIContent($"{TBStyles.UrlIcon} Add URL"), TBStyles.StandardButton))
             {
-                if (GUILayout.Button($"{TBStyles.UrlIcon} Add URL", TBStyles.StandardButton, GUILayout.Height(24)))
+                GUIUtility.keyboardControl = 0;
+                GUIUtility.hotControl = 0;
+                GUI.FocusControl(null);
+                EditorApplication.delayCall += () =>
                 {
+                    string res = EditorInputDialog.ShowWithSecondField("Add Link", "Paste URL here:", "https://",
+                        "Title (optional):", "", out string linkTitle);
+                    string normalizedUrl = NormalizeLinkUrl(res);
+                    if (normalizedUrl != null)
+                    {
+                        if (_card != null)
+                        {
+                            _card.linkedItems ??= new List<LinkedItem>();
+                            _card.linkedItems.Add(LinkedItem.CreateUrl(normalizedUrl,
+                                string.IsNullOrWhiteSpace(linkTitle) ? "" : linkTitle.Trim()));
+                            MarkDirty();
+                        }
+                        Repaint();
+                    }
                     GUIUtility.keyboardControl = 0;
                     GUIUtility.hotControl = 0;
                     GUI.FocusControl(null);
-                    EditorApplication.delayCall += () =>
-                    {
-                        string res = EditorInputDialog.ShowWithSecondField("Add Link", "Paste URL here:", "https://",
-                            "Title (optional):", "", out string linkTitle);
-                        string normalizedUrl = NormalizeLinkUrl(res);
-                        if (normalizedUrl != null)
-                        {
-                            if (_card != null)
-                            {
-                                _card.linkedItems ??= new List<LinkedItem>();
-                                _card.linkedItems.Add(LinkedItem.CreateUrl(normalizedUrl,
-                                    string.IsNullOrWhiteSpace(linkTitle) ? "" : linkTitle.Trim()));
-                                MarkDirty();
-                            }
-                            Repaint();
-                        }
-                        GUIUtility.keyboardControl = 0;
-                        GUIUtility.hotControl = 0;
-                        GUI.FocusControl(null);
-                    };
-                }
-                if (ThemedContextMenu.DropdownButton($"{TBStyles.NotesTabIcon} Link Note", TBStyles.StandardButton, out Rect linkNoteBtnRect, GUILayout.Height(24)))
+                };
+            }
+            if (GUI.Button(linkNoteRect, new GUIContent($"{TBStyles.NotesTabIcon} Link Note"), TBStyles.StandardButton))
+            {
+                ThemedContextMenu menu = new ThemedContextMenu();
+                if (_saveData != null && _saveData.notes.Count > 0)
                 {
-                    ThemedContextMenu menu = new ThemedContextMenu();
-                    if (_saveData != null && _saveData.notes.Count > 0)
+                    var folders = _saveData.noteFolders;
+
+                    // 1. Notes in Folders
+                    foreach (var folder in folders)
                     {
-                        var folders = _saveData.noteFolders;
+                        var notesInFolder = _saveData.notes.Where(n => n.folderId == folder.id).OrderBy(n => n.title).ToList();
+                        if (notesInFolder.Count == 0) continue;
 
-                        // 1. Notes in Folders
-                        foreach (var folder in folders)
+                        foreach (var note in notesInFolder)
                         {
-                            var notesInFolder = _saveData.notes.Where(n => n.folderId == folder.id).OrderBy(n => n.title).ToList();
-                            if (notesInFolder.Count == 0) continue;
+                            string noteId = note.id;
+                            string noteTitle = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
+                            string fullPath = $"{folder.name}/{noteTitle}";
 
-                            foreach (var note in notesInFolder)
+                            menu.AddItem(new GUIContent(fullPath), false, () =>
                             {
-                                string noteId = note.id;
-                                string noteTitle = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
-                                string fullPath = $"{folder.name}/{noteTitle}";
-
-                                menu.AddItem(new GUIContent(fullPath), false, () =>
+                                if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
                                 {
-                                    if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
-                                    {
-                                        _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
-                                        MarkDirty();
-                                    }
-                                });
-                            }
-                        }
-
-                        // 2. Unfiled Notes
-                        var unfiledNotes = _saveData.notes
-                            .Where(n => string.IsNullOrEmpty(n.folderId) || !folders.Any(f => f.id == n.folderId))
-                            .OrderBy(n => n.title)
-                            .ToList();
-
-                        if (unfiledNotes.Count > 0)
-                        {
-                            if (folders.Count > 0) menu.AddSeparator("");
-
-                            foreach (var note in unfiledNotes)
-                            {
-                                string noteId = note.id;
-                                string noteTitle = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
-
-                                menu.AddItem(new GUIContent(noteTitle), false, () =>
-                                {
-                                    if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
-                                    {
-                                        _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
-                                        MarkDirty();
-                                    }
-                                });
-                            }
+                                    _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
+                                    MarkDirty();
+                                }
+                            });
                         }
                     }
-                    else
+
+                    // 2. Unfiled Notes
+                    var unfiledNotes = _saveData.notes
+                        .Where(n => string.IsNullOrEmpty(n.folderId) || !folders.Any(f => f.id == n.folderId))
+                        .OrderBy(n => n.title)
+                        .ToList();
+
+                    if (unfiledNotes.Count > 0)
                     {
-                        menu.AddDisabledItem(new GUIContent("No notes found"));
+                        if (folders.Count > 0) menu.AddSeparator("");
+
+                        foreach (var note in unfiledNotes)
+                        {
+                            string noteId = note.id;
+                            string noteTitle = string.IsNullOrEmpty(note.title) ? "Untitled" : note.title;
+
+                            menu.AddItem(new GUIContent(noteTitle), false, () =>
+                            {
+                                if (!_card.linkedItems.Any(li => li.isNote && li.guid == noteId))
+                                {
+                                    _card.linkedItems.Add(LinkedItem.CreateNote(noteId));
+                                    MarkDirty();
+                                }
+                            });
+                        }
                     }
-                    menu.Show(linkNoteBtnRect);
                 }
+                else
+                {
+                    menu.AddDisabledItem(new GUIContent("No notes found"));
+                }
+                menu.Show(linkNoteRect);
             }
             GUILayout.Space(4);
 
@@ -1398,6 +1400,50 @@ namespace AwesomeTaskManager.Editor
                 }
             }
 
+            // ── Footer: Task Code & Creator metadata ──
+            if (!string.IsNullOrEmpty(_card.taskCode) || !string.IsNullOrEmpty(_card.createdBy))
+            {
+                GUILayout.Space(14);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    if (!string.IsNullOrEmpty(_card.taskCode))
+                    {
+                        var codeStyle = new GUIStyle(EditorStyles.boldLabel)
+                        {
+                            normal = { textColor = EditorGUIUtility.isProSkin ? new Color(0.6f, 0.75f, 1f) : new Color(0.15f, 0.35f, 0.7f) }
+                        };
+                        if (GUILayout.Button($"🔖 {_card.taskCode}", codeStyle))
+                        {
+                            EditorGUIUtility.systemCopyBuffer = _card.taskCode;
+                            ShowNotification(new GUIContent($"Copied {_card.taskCode}"));
+                        }
+                        ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), "Click to copy Task Code for Git/Slack");
+                    }
+
+                    GUILayout.FlexibleSpace();
+
+                    string metaText = "";
+                    if (!string.IsNullOrEmpty(_card.createdBy))
+                    {
+                        metaText = $"Created by: {_card.createdBy}";
+                        if (!string.IsNullOrEmpty(_card.createdDate))
+                        {
+                            metaText += $" ({_card.createdDate})";
+                        }
+                    }
+                    if (!string.IsNullOrEmpty(metaText))
+                    {
+                        var metaContent = new GUIContent(metaText);
+                        var metaStyle = new GUIStyle(EditorStyles.miniLabel)
+                        {
+                            clipping = TextClipping.Overflow
+                        };
+                        float metaWidth = metaStyle.CalcSize(metaContent).x ;
+                        GUILayout.Label(metaContent, metaStyle, GUILayout.Width(metaWidth));
+                    }
+                }
+            }
+
             } // end scroll view scope
             }
             finally
@@ -1517,6 +1563,12 @@ namespace AwesomeTaskManager.Editor
 
         private static void PerformCreateCard(TaskCard card, SaveData saveData, string boardId, string columnId, Action<TaskCard> onCreated)
         {
+            if (card != null)
+            {
+                card.Touch();
+                if (string.IsNullOrEmpty(card.createdBy)) card.createdBy = VcsHelper.GetCurrentUserName();
+            }
+
             if (card != null && !string.IsNullOrEmpty(card.category))
             {
                 if (saveData != null)
@@ -1584,6 +1636,7 @@ namespace AwesomeTaskManager.Editor
             var freshData = Persistence.Load() ?? saveData;
             if (freshData != null && card != null)
             {
+                card.Touch();
                 freshData.categories ??= new List<string>();
                 if (!string.IsNullOrEmpty(card.category) && !freshData.categories.Any(c => string.Equals(c, card.category.Trim(), StringComparison.OrdinalIgnoreCase)))
                 {
