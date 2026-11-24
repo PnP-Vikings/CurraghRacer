@@ -22,6 +22,7 @@ public class PlayerObject : MonoBehaviour
     public float playerSpeed = 10f;
     public float rotationSpeed = 3f;
     private CharacterController characterController;
+    [SerializeField] LabourerAudio labourerAudio;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -61,6 +62,12 @@ public class PlayerObject : MonoBehaviour
             
             coroutine = StartCoroutine(PlayerMove(hit.point));
             newPosition = hit.point;
+
+            //if (labourerAudio != null)
+            //{
+            //    Debug.Log("labourerAudio found - AudioDebug");
+            //    labourerAudio.LabourerFootsteps();
+            //}
         }
     }
 
@@ -77,6 +84,12 @@ public class PlayerObject : MonoBehaviour
             characterController.Move(movement);
 
             transform.rotation = Quaternion.Slerp(transform.rotation, Quaternion.LookRotation(direction.normalized), rotationSpeed * Time.deltaTime);
+
+            if (labourerAudio != null)
+            {
+                Debug.Log("labourerAudio found - AudioDebug");
+                labourerAudio.LabourerFootsteps();
+            }
 
             yield return null;
         }

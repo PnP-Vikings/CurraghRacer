@@ -14596,6 +14596,51 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 939562009}
   m_CullTransparentMesh: 1
+--- !u!1 &941830334
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 941830335}
+  - component: {fileID: 941830336}
+  m_Layer: 0
+  m_Name: FridgeAudio
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &941830335
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941830334}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -205.22443, y: 21.898136, z: 231.7016}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 2093723885}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &941830336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 941830334}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a0cd0705d729e524b80597cbc8d7e081, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::FridgeAudio
+  playerManager: {fileID: 1749561627}
 --- !u!1 &958334231
 GameObject:
   m_ObjectHideFlags: 0
@@ -18389,6 +18434,7 @@ GameObject:
   - component: {fileID: 1259863725}
   - component: {fileID: 1259863724}
   - component: {fileID: 1259863727}
+  - component: {fileID: 1259863728}
   m_Layer: 0
   m_Name: CloseFridgeButton
   m_TagString: Untagged
@@ -18556,6 +18602,18 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
+      - m_Target: {fileID: 1259863728}
+        m_TargetAssemblyTypeName: UIAudio, Assembly-CSharp
+        m_MethodName: PlayOneShot
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1259863725
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -18606,6 +18664,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 863ad902c81425a43b253a8c98155006, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ButtonPop
+--- !u!114 &1259863728
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1259863722}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9317e0add30e4c409dbbc051420c55a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::UIAudio
+  Event:
+    Guid:
+      Data1: -1317472434
+      Data2: 1101457481
+      Data3: -2036835701
+      Data4: -530268499
+    Path: event:/UI/Click 2
 --- !u!1 &1274064999
 GameObject:
   m_ObjectHideFlags: 0
@@ -26245,6 +26322,17 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1670528342}
   m_SourcePrefab: {fileID: 100100000, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+--- !u!114 &1749561627 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6042894620679886366, guid: ccfb7cfd3c0dc294c87fbbefe622fae5, type: 3}
+  m_PrefabInstance: {fileID: 1749561626}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1670528341}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7b3ea6c83fd44964fbdb6a64f7dd3c80, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!114 &1754904288
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -30803,7 +30891,8 @@ Transform:
   m_LocalPosition: {x: 0.5768652, y: 0.22543335, z: -0.70160866}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 941830335}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2093723886

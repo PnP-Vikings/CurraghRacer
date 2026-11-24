@@ -52,6 +52,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance payBill;
     [System.NonSerialized] public EventInstance payBillWhilePoorDialogue;
     [System.NonSerialized] public EventInstance card;
+    [System.NonSerialized] public EventInstance consume;
         // Training
     [System.NonSerialized] public EventInstance gymBagZipUp;
     [System.NonSerialized] public EventInstance dumbbell;
@@ -139,6 +140,7 @@ public class AudioManager : MonoBehaviour
     [System.NonSerialized] public EventInstance coins;
     [System.NonSerialized] public EventInstance payAndExitTaxi;
     [System.NonSerialized] public EventInstance shopRoomTone;
+    //[System.NonSerialized] public EventInstance labourerFootsteps;
 
     private Scene activeScene;
     void Awake()
@@ -212,8 +214,9 @@ public class AudioManager : MonoBehaviour
         tvButtonPushIn = RuntimeManager.CreateInstance("event:/UI/TV Button Push In");
         showInviteAudio = RuntimeManager.CreateInstance("event:/Garage/Show Invite");
         openDoor = RuntimeManager.CreateInstance("event:/Garage/Open Door");
+        consume = RuntimeManager.CreateInstance("event:/Garage/Consume");
 
-                           // BULLETIN BOARD //
+                            // BULLETIN BOARD //
         sleepAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep");
         sleepOutsideAudio = RuntimeManager.CreateInstance("event:/Bulletin Board/Sleep Outside");
         rooster = RuntimeManager.CreateInstance("event:/Bulletin Board/Rooster");
@@ -307,6 +310,8 @@ public class AudioManager : MonoBehaviour
         coins = RuntimeManager.CreateInstance("event:/Map/Coins");
         payAndExitTaxi = RuntimeManager.CreateInstance("event:/Map/Pay & Exit Taxi");
         shopRoomTone = RuntimeManager.CreateInstance("event:/Map/Shop Room Tone");
+
+        //labourerFootsteps = RuntimeManager.CreateInstance("event:/Construction Site/Footsteps On Rubble");
 
                             // UNUSED //
         //dumbbell = RuntimeManager.CreateInstance("event:/Training/Dumbbell");
