@@ -1,0 +1,7 @@
+# BEGIN ATM NEXT MANAGED RULES
+ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json*
+ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json*
+ProjectSettings/AwesomeTaskManager/Boards/**
+ProjectSettings/AwesomeTaskManager/Notes/**
+ProjectSettings/AwesomeTaskManager/TheUltimateTaskBoard/**
+# END ATM NEXT MANAGED RULES

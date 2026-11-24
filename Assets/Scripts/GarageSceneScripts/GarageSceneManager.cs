@@ -14,7 +14,7 @@ public class GarageSceneManager : MonoBehaviour
     public TutorialTaskUiManager tutorialTaskUiManager;
     public GameObject tutorialUi;
     
-    
+    public DaySummaryPanel daySummaryPanel;
     
     [Header("Debt Warning")]
     public GameObject DebtWarningScreen;
@@ -83,6 +83,10 @@ public class GarageSceneManager : MonoBehaviour
             ShowDebtWarningScreen();
         });
       
+        if (daySummaryPanel != null && GameManager.Instance != null)
+        {
+            GameManager.Instance.onSleep.AddListener(ShowDaySummaryPanel);
+        }
     }
     
     void OnDisable()
@@ -90,6 +94,10 @@ public class GarageSceneManager : MonoBehaviour
         if (GameManager.Instance != null)
         {
             GameManager.Instance.onTaskModified.RemoveListener(UpdateTutorialTask);
+        }
+        if (daySummaryPanel != null && GameManager.Instance != null)
+        {
+            GameManager.Instance.onSleep.RemoveListener(ShowDaySummaryPanel);
         }
     }
 
@@ -153,6 +161,19 @@ public class GarageSceneManager : MonoBehaviour
        
     }
     
+    
+    public void ShowDaySummaryPanel()
+    {
+        if (daySummaryPanel != null)
+        {
+            DOVirtual.DelayedCall(0.5f, () =>
+            {
+                daySummaryPanel.gameObject.SetActive(true);
+            });
+        }
+    }
+
+
     public void UpdateTutorialTask()
     {
         if(tutorialTaskUiManager == null) return;

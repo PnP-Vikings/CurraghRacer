@@ -377,39 +377,6 @@ public class SaveSlotUI : MonoBehaviour
             moreSavesTutorialPrompt.SetPreferredSaveSlot(slotIndex+1);
             moreSavesTutorialPrompt.SetSaveName(saveNameInputField != null ? saveNameInputField.text : "");
         }
-        
-        /*if(saveNameInputField !=null && !string.IsNullOrEmpty(saveNameInputField.text))
-        {
-            if (SaveSystem.Instance.NewGame(saveNameInputField.text, slotIndex + 1))
-            {
-                GameManager.Instance.StartGame();
-
-                if (AudioManager.instance != null)
-                {
-                    AudioManager.instance.UIClick1.start();
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to start a new game in the selected slot.");
-            }
-        }
-        else
-        {
-            if (SaveSystem.Instance.NewGame("Game Save", slotIndex + 1))
-            {
-                GameManager.Instance.StartGame();
-
-                if (AudioManager.instance != null)
-                {
-                    AudioManager.instance.UIClick1.start();
-                }
-            }
-            else
-            {
-                Debug.LogError("Failed to start a new game in the selected slot.");
-            }
-        }*/
        
     }
     

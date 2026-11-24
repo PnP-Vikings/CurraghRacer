@@ -243,6 +243,7 @@ namespace AwesomeTaskManager.Next.UI
 
         private void OnGUI()
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             if (_data == null) LoadData();
 
             if (Event.current.type == EventType.Repaint)
@@ -390,18 +391,19 @@ namespace AwesomeTaskManager.Next.UI
             using (new EditorGUILayout.VerticalScope(TBStyles.CardBox))
             {
                 GUILayout.Label("🔌 Unity CLI & MCP Integration (Recommended)", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("Unity now recommends using the Unity CLI for MCP integration. It is free and does not require an AI tools subscription.\n\n" +
+                EditorGUILayout.HelpBox("Unity now recommends using the Unity CLI for MCP integration. It is free and does not require an AI tools subscription.\n" +
+                                        "Docs: https://docs.unity.com/en-us/unity-cli/replace-mcp-server-unity-cli\n\n" +
                                         "1. Prerequisites (Unity 6+):\n" +
-                                        "   - Ensure you are using Unity 6 (6000.0) or later.\n" +
-                                        "   - Install the Unity Pipeline package in your project.\n" +
+                                        "   - Unity 6 (6000.0) LTS or later, with the Editor open.\n" +
                                         "2. Install Unity CLI:\n" +
-                                        "   - Windows (PowerShell): irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex\n" +
-                                        "   - macOS / Linux: curl -fsSL https://unity.com/install.sh | bash\n" +
-                                        "3. Setup & Configure:\n" +
-                                        "   - Install pipeline: unity pipeline install\n" +
-                                        "   - Configure client: unity mcp configure <client>\n" +
+                                        "   - Recent Unity Hub versions install it automatically.\n" +
+                                        "   - Windows: winget install Unity.CLI\n" +
+                                        "   - macOS: brew install --cask unity-cli\n" +
+                                        "3. Setup & Configure (run in the project folder):\n" +
+                                        "   - Install pipeline: unity pipeline install (check with: unity status)\n" +
+                                        "   - Configure client: unity mcp configure <client> (e.g. claude, cursor, vscode, windsurf; list all: unity mcp configure --list)\n" +
                                         "   - (Optional) Install skills: unity skill install <agent-name>\n" +
-                                        "4. Direct Commands: If your agent can run shell commands, it can drive the Editor directly using 'unity command' or 'unity eval', which is faster and uses fewer tokens than MCP.\n" +
+                                        "4. Direct Commands: If your agent can run shell commands, it can drive the Editor directly with 'unity command' (lists available commands). Arbitrary C# runs via 'unity command script eval --code \"...\"' (Pipeline 0.9+). This is faster and uses fewer tokens than MCP.\n" +
                                         "5. Start Chatting: Once configured, simply ask your AI agent to manage your tasks or notes, and it will use the available 'atm_' MCP tools automatically.", MessageType.None);
             }
             
@@ -938,6 +940,19 @@ namespace AwesomeTaskManager.Next.UI
             }
         }
 
+        private void DrawAgentFileButton(string relativeFilePath)
+        {
+            string displayName = relativeFilePath.Replace('\\', '/');
+            if (ThemedTooltip.Button(new GUIContent($"Update {System.IO.Path.GetFileName(relativeFilePath)}", $"Update {displayName} in project root"), TBStyles.StandardButton, GUILayout.Height(24)))
+            {
+                var result = ATMNextAgentProfile.UpdateAgentFile(relativeFilePath);
+                string message = result == ATMNextAgentProfile.AgentFileUpdateResult.Updated ? $"{displayName} updated!"
+                    : result == ATMNextAgentProfile.AgentFileUpdateResult.Failed ? $"Failed to update {displayName}. See Console."
+                    : $"{displayName} up to date.";
+                ShowNotification(new GUIContent(message));
+            }
+        }
+
         private void DrawAgentSetupTab()
         {
             GUILayout.Label("🤖 AI Agent & MCP Integration", EditorStyles.boldLabel);
@@ -947,27 +962,28 @@ namespace AwesomeTaskManager.Next.UI
             using (new EditorGUILayout.VerticalScope(TBStyles.CardBox))
             {
                 GUILayout.Label("🔌 Unity CLI & MCP Integration (Recommended)", EditorStyles.boldLabel);
-                EditorGUILayout.HelpBox("Unity now recommends using the Unity CLI for MCP integration. It is free and does not require an AI tools subscription.", MessageType.None);
+                EditorGUILayout.HelpBox("Unity now recommends using the Unity CLI for MCP integration. It is free and does not require an AI tools subscription.\n" +
+                                        "Docs: https://docs.unity.com/en-us/unity-cli/replace-mcp-server-unity-cli", MessageType.None);
                 
                 EditorGUILayout.Space(2);
                 GUILayout.Label("1. Prerequisites (Unity 6+)", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("• Ensure you are using Unity 6 (6000.0) or later.\n" +
-                                        "• Install the Unity Pipeline package in your project.", MessageType.None);
+                EditorGUILayout.HelpBox("• Unity 6 (6000.0) LTS or later, with the Editor open.", MessageType.None);
 
                 EditorGUILayout.Space(2);
                 GUILayout.Label("2. Install Unity CLI", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("• Windows (PowerShell):\n  irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex\n" +
-                                        "• macOS / Linux:\n  curl -fsSL https://unity.com/install.sh | bash", MessageType.None);
+                EditorGUILayout.HelpBox("• Recent Unity Hub versions install it automatically.\n" +
+                                        "• Windows:\n  winget install Unity.CLI\n" +
+                                        "• macOS:\n  brew install --cask unity-cli", MessageType.None);
                 
                 EditorGUILayout.Space(2);
-                GUILayout.Label("3. Setup & Configure", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("• Install pipeline: unity pipeline install\n" +
-                                        "• Configure client: unity mcp configure <client>\n" +
+                GUILayout.Label("3. Setup & Configure (run in the project folder)", EditorStyles.miniBoldLabel);
+                EditorGUILayout.HelpBox("• Install pipeline: unity pipeline install\n  Check it with: unity status\n" +
+                                        "• Configure client: unity mcp configure <client>\n  e.g. claude, cursor, vscode, windsurf (list all: unity mcp configure --list)\n" +
                                         "• (Optional) Install skills: unity skill install <agent-name>", MessageType.None);
 
                 EditorGUILayout.Space(2);
                 GUILayout.Label("4. Direct Commands", EditorStyles.miniBoldLabel);
-                EditorGUILayout.HelpBox("If your agent can run shell commands, it can drive the Editor directly using 'unity command' or 'unity eval', which is faster and uses fewer tokens than MCP.", MessageType.None);
+                EditorGUILayout.HelpBox("If your agent can run shell commands, it can drive the Editor directly with 'unity command' (lists available commands). Arbitrary C# runs via 'unity command script eval --code \"...\"' (Pipeline 0.9+). This is faster and uses fewer tokens than MCP.", MessageType.None);
 
                 EditorGUILayout.Space(2);
                 GUILayout.Label("5. Start Chatting", EditorStyles.miniBoldLabel);
@@ -985,13 +1001,31 @@ namespace AwesomeTaskManager.Next.UI
             }
 
             EditorGUILayout.Space(8);
-            if (ThemedTooltip.Button(new GUIContent($"{TBStyles.NotesTabIcon} Append Guidelines to AGENTS.md", "Update the AGENTS.md file in your project root with the latest instructions for AI agents."), TBStyles.StandardButton, GUILayout.Height(30)))
+            if (ThemedTooltip.Button(new GUIContent($"{TBStyles.NotesTabIcon} Update All AI Instruction Files (AGENTS, CLAUDE, Cursor, Windsurf, Copilot)", "Generates and updates AGENTS.md, CLAUDE.md, .cursorrules, .windsurfrules, and .github/copilot-instructions.md in the project root."), TBStyles.StandardButton, GUILayout.Height(30)))
             {
-                bool updated = ATMNextAgentProfile.EnsureAgentsMdUpdated();
-                ShowNotification(new GUIContent(updated ? "AGENTS.md updated!" : "AGENTS.md already contains guidelines."));
+                int count = ATMNextAgentProfile.EnsureAllAgentFilesUpdated(out int failedCount);
+                int total = ATMNextAgentProfile.AgentFilePaths.Length;
+                string message = failedCount > 0
+                    ? $"Updated {count}, failed {failedCount} AI instruction file(s). See Console."
+                    : count > 0
+                        ? $"Updated {count} AI instruction file(s)! ({total - count} already up to date)"
+                        : $"All {total} AI instruction files are already up to date.";
+                ShowNotification(new GUIContent(message));
             }
 
-            if (ThemedTooltip.Button(new GUIContent($"{TBStyles.BoardTabIcon} Copy Agent Guidelines to Clipboard", "Copy the full AI integration guidelines to your clipboard for use in external LLM tools."), TBStyles.StandardButton, GUILayout.Height(30)))
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                DrawAgentFileButton("AGENTS.md");
+                DrawAgentFileButton("CLAUDE.md");
+                DrawAgentFileButton(".cursorrules");
+            }
+            using (new EditorGUILayout.HorizontalScope())
+            {
+                DrawAgentFileButton(".windsurfrules");
+                DrawAgentFileButton(System.IO.Path.Combine(".github", "copilot-instructions.md"));
+            }
+
+            if (ThemedTooltip.Button(new GUIContent($"{TBStyles.BoardTabIcon} Copy Agent Guidelines to Clipboard", "Copy the full AI integration guidelines to your clipboard for use in external LLM tools."), TBStyles.StandardButton, GUILayout.Height(26)))
             {
                 GUIUtility.systemCopyBuffer = ATMNextAgentProfile.AgentGuideline;
                 ShowNotification(new GUIContent("Agent guidelines copied!"));

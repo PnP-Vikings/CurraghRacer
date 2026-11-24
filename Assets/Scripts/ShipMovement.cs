@@ -17,8 +17,9 @@ public class ShipMovement : MonoBehaviour
     public string shipName;
     public bool isPlayerShip = false; // Flag to identify if this is the player's ship
     private CharacterStats playerStats; // Reference to player stats if needed
-    public bool shipIsFinsihed = false;
+    public bool shipIsFinished = false;
     public int starRating = 1;
+    public int teamHappinessModifier = 1;
     
     [Header("Shout Boost")]
     public float shoutSpeedBoost = 1f; // Multiplier applied to speed (1 = normal, >1 = boosted)
@@ -141,6 +142,13 @@ public class ShipMovement : MonoBehaviour
         // Apply shout boost multiplier if active
         desiredSpeed *= shoutSpeedBoost;
 
+        if(PlayerManager.Instance != null && PlayerManager.Instance.GetPlayerTeam() != null)
+        {
+            Debug.Log($"Raw Team Happiness    {PlayerManager.Instance.GetPlayerTeamHappiness()}");
+            Debug.Log($"Scaled Team Happiness {PlayerManager.Instance.GetPlayerTeamHappiness()/100}");
+            desiredSpeed *= PlayerManager.Instance.GetPlayerTeamHappiness() /100;
+        }
+        
         // Smooth the speed changes for realistic movement
         currentSpeed = Mathf.Lerp(currentSpeed, desiredSpeed,
             speedSmoothing * Time.deltaTime);
@@ -149,6 +157,17 @@ public class ShipMovement : MonoBehaviour
         transform.Translate(Vector3.forward * currentSpeed * Time.deltaTime);
     }
 
+    public float GetTeamHappiness()
+    {
+        if(PlayerManager.Instance != null && PlayerManager.Instance.GetPlayerTeam() != null)
+        {
+            return PlayerManager.Instance.GetPlayerTeamHappiness() /100;
+        }
+        else
+        {
+            return 0;
+        }
+    }
     
     /*public void HandlePlayerInput()
     {

@@ -144,6 +144,7 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             if (_note?.content != null && _note.content.Contains("\r"))
             {
                 _note.content = _note.content.Replace("\r\n", "\n").Replace("\r", "\n");
@@ -332,7 +333,7 @@ namespace AwesomeTaskManager.Editor
                     else
                     {
                         Clipboard.HandlePreviewContextClick(_note);
-                        if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified(), _ => RecordUndo(true)))
+                        if (MarkdownRenderer.DrawMarkdownPreview(_note, _ => MarkModified(), _ => RecordUndo(true), _saveData))
                         {
                             _hasAnimatedGif = true;
                         }

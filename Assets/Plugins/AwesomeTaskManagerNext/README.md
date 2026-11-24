@@ -23,6 +23,7 @@ The in-editor **AI Assistant Window** (`Tools → Awesome Task Manager Next (AI)
 ## 🚀 Quick Start Guide
 
 1. **Prerequisite**: Ensure **Awesome Task Manager** is installed in your project.
+   No MCP setup or terminal access is required for task management; the file command bridge below works directly with project files while Unity is open.
 2. **Open Assistant**: In the Unity top menu, open **`Tools → Awesome Task Manager Next (AI)`**.
 3. **Configure Agent Guidelines**: Switch to the **⚙ Setup** tab and click **"Update AGENTS.md"** to inject ATM Next instructions into your AI agent's profile.
 4. **Chat with your AI**: Open your IDE AI chat (Junie, Cursor, Claude, Rider) and ask it to inspect your boards or generate tasks!
@@ -67,35 +68,65 @@ To ensure cost-effective and efficient integration, AI agents should follow thes
 - **Token Efficiency**: Agents should minimize tool calls and file reads, grouping operations (like `atm_bulk_create_tasks`, `atm_bulk_update_tasks`, `atm_bulk_move_tasks`, `atm_bulk_clone_tasks`, and `atm_bulk_delete_tasks`) to conserve tokens.
 - **Minimalist Edits**: Apply the smallest possible changes to achieve the goal, avoiding unsolicited refactors.
 
-### 🌐 Unity CLI & MCP (Recommended)
-Unity now recommends using the **Unity CLI** for MCP integration. It is free and does not require an AI tools subscription.
+### 🌉 External AI Bridge (Junie, Rider, File-only agents)
+If your environment cannot directly call MCP tools, use the file command bridge while Unity is open. It works on any operating system and does not require terminal, PowerShell, Python, or `jq` access.
 
-1. **Prerequisites (Unity 6+)**:
-   - Ensure you are using **Unity 6 (6000.0)** or later.
-   - Install the **Unity Pipeline** package in your project.
+#### Option 1: Command file (no terminal needed)
+Generate a unique `requestId`, write one command to `ProjectSettings/AwesomeTaskManager/external_command.json`, then read `external_result.json` until its `requestId` matches. Unity consumes the command and writes the result; do not clear or delete an old result first.
+```json
+{
+  "requestId": "unique-id-for-this-request",
+  "tool": "atm_search",
+  "parameters": { "Query": "physics" }
+}
+```
+Accept a result only when its `requestId` matches the value you sent; otherwise re-read it rather than treating an old result as current. Object-valued responses keep their fields at the top level; array-valued responses are returned under `result`. If there is no matching result after about 30 seconds, stop and tell the user Unity may be closed, compiling, or busy. Do not delete the queued command or edit any other ATM data files.
+
+#### Option 2: Optional terminal helpers
+These helpers are one-step wrappers around the same file bridge. Use them only when terminal access is available.
+On macOS/Linux, use the POSIX shell helper:
+```sh
+sh ./atm.sh atm_get_boards
+sh ./atm.sh atm_search '{"Query":"physics"}'
+sh ./atm.sh atm_create_note --parameters-file ./atm-params.json
+sh ./atm.sh atm_help
+sh ./atm.sh atm_help '{"Tool":"atm_search"}'
+sh ./atm.sh atm_sync_agent_files
+```
+For piped parameters, run `printf '%s' '<json object>' | sh ./atm.sh <tool_name> -`. The script also accepts full-command JSON as its first argument and `--timeout <seconds>`.
+
+On Windows, use PowerShell:
+```powershell
+& .\atm.ps1 atm_get_boards
+& .\atm.ps1 atm_search '{"Query":"physics"}'
+& .\atm.ps1 atm_create_note -ParametersFile .\atm-params.json
+& .\atm.ps1 atm_help
+& .\atm.ps1 atm_help '{"Tool":"atm_search"}'
+```
+Both helpers are installed from `Assets/Plugins/AwesomeTaskManagerNext/Editor/Integration/` when Unity loads. They atomically queue one command, wait for the editor result, and remove their unconsumed command on timeout. Use `--parameters-file` with `atm.sh` and `-ParametersFile` with `atm.ps1` for complex input; nested JSON passed to `powershell -File` can lose quotes in Windows PowerShell.
+Run `atm_sync_agent_files` only if generated agent instructions or guard files appear stale; Unity normally refreshes them on editor load.
+
+### 🌐 Unity CLI & MCP (Optional native-tools route)
+If your agent supports native MCP tools, configure the Unity CLI integration and use the registered `atm_*` tools directly. Unity's CLI is free and does not require an AI tools subscription. Docs: https://docs.unity.com/en-us/unity-cli/replace-mcp-server-unity-cli
+
+1. **Prerequisites (Unity 6+)**: **Unity 6 (6000.0) LTS** or later, with the Editor open.
 2. **Install Unity CLI**:
-   - **Windows (PowerShell)**:
-     `irm https://public-cdn.cloud.unity3d.com/hub/prod/cli/install.ps1 | iex`
-   - **macOS / Linux (Bash)**:
-     `curl -fsSL https://unity.com/install.sh | bash`
-3. **Setup & Configure**:
-   - Install the pipeline: `unity pipeline install`
-   - Configure your client: `unity mcp configure <client>` (replace `<client>` with `claude`, `cursor`, `vscode`, or `windsurf`).
+   - Recent Unity Hub versions install it automatically.
+   - **Windows**: `winget install Unity.CLI`
+   - **macOS**: `brew install --cask unity-cli`
+3. **Setup & Configure** (run in the project folder):
+   - Install the pipeline: `unity pipeline install`, then check it with `unity status`.
+   - Configure your client: `unity mcp configure <client>` (e.g. `claude`, `cursor`, `vscode`, `windsurf`; `unity mcp configure --list` shows all).
    - (Optional) Install skills: `unity skill install <agent-name>`
-4. **Direct Commands**: If your agent can run shell commands, it can drive the Editor directly using `unity command` or `unity eval`, which is faster and uses fewer tokens than MCP.
-5. **Start Chatting**: Once configured, simply ask your AI agent to manage your tasks or notes, and it will use the available `atm_` MCP tools automatically.
+4. **Direct Commands**: If your agent can run shell commands, it can drive the Editor directly with `unity command` (lists available commands). Arbitrary C# runs via `unity command script eval --code "..."` (Pipeline 0.9+).
+5. **Start Chatting**: Once configured, ask your AI agent to manage tasks or notes using the available `atm_*` MCP tools.
 
 ---
 
-### 🌉 External AI Bridge (Junie, Rider, Fallback)
-If your environment cannot directly call MCP tools, you can invoke them via the **File-Based Command Bridge**:
-1. Write a JSON command to `ProjectSettings/AwesomeTaskManager/external_command.json`.
-   - Example: `{ "tool": "atm_create_task", "parameters": { "title": "New Task" } }`
-2. Unity will process it and write the result to `external_result.json`.
-3. The bridge is polled while the Unity Editor is open.
-
 ### ⚠️ Important AI Agent Directive
-> **AI Agents & Assistants**: If asked to inspect cards, rank tasks, create notes, move cards, or manage boards, **ALWAYS use the registered ATM Next MCP tools (`atm_*`), C# `ATMNextService`, or the external command bridge**. **DO NOT attempt to directly edit `AwesomeTaskManager.json`**. Direct file edits bypass normalization, cause data conflicts, and miss UI synchronization.
+> **AI Agents & Assistants**: For routine task management, use registered `atm_*` tools or the terminal-free command-file bridge (`external_command.json` and the matching `external_result.json`); terminal helpers are optional. Use `atm_help` to discover exact parameters. Do not search ATM Next source or open/edit raw ATM data JSON to learn tool details or inspect task data. If a call fails, correct it from the error hint or `atm_help`; if Unity is unavailable, stop and tell the user. Source inspection is appropriate when the user explicitly asks you to change or debug ATM Next itself.
+
+On editor load, ATM Next refreshes the managed ATM section in existing agent instruction files and installs `.aiignore`, `.cursorignore`, `.codeiumignore`, and Claude deny rules for ATM data. These are client-dependent best-effort guardrails; agents must still use the tools and never edit the data files directly.
 
 ### 📋 Available Tools List:
 
@@ -160,6 +191,7 @@ If your environment cannot directly call MCP tools, you can invoke them via the 
 
 ### 📊 Sprint Analytics & Health
 - `atm_get_project_summary`: Get high-level sprint metrics, completion rates, category stats, and overdue counts.
+- `atm_help`: List registered bridge tools or inspect one tool's parameter names, types, and defaults.
 
 ---
 

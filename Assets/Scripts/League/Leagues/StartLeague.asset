@@ -14,35 +14,35 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   standings:
   - team: {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-    points: 25
-    wins: 1
+    points: 0
+    wins: 0
     position: 1
-  - team: {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-    points: 25
-    wins: 1
-    position: 2
   - team: {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
-    points: 18
+    points: 0
+    wins: 0
+    position: 2
+  - team: {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
+    points: 0
     wins: 0
     position: 3
-  - team: {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-    points: 18
+  - team: {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
+    points: 0
     wins: 0
     position: 4
-  - team: {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-    points: 15
+  - team: {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
+    points: 0
     wins: 0
     position: 5
   - team: {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
-    points: 15
+    points: 0
     wins: 0
     position: 6
-  - team: {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
-    points: 12
+  - team: {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
+    points: 0
     wins: 0
     position: 7
   - team: {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-    points: 12
+    points: 0
     wins: 0
     position: 8
   leagueName: Local Racing League
@@ -55,16 +55,7 @@ MonoBehaviour:
     m_FallbackState: 0
     m_WaitForCompletion: 0
     m_LocalVariables: []
-  description: "The Local Racing League is the entry-level competition where new
-    captains and teams prove their skills on the water.\\n  Featuring 8 determined
-    crews, races are held over 8 Sunday race days with a maximum of 4 boats per heat.\\n 
-    Each race demands strategy, speed, and adaptability as teams compete for points,
-    currency, and experience.\\n \\n   The league is your chance to gain promotion.
-    \\nThe top 2 teams at the end of the season rise to higher leagues, while the
-    rest will be stuck behind.\\nThe league provides steady rewards \u2014 125 coins
-    per race to the winners and 500 coins per season for the Champion \u2014\\nmaking
-    it the perfect training ground for ambitious racers before moving on to more
-    prestigious competitions."
+  description: "The Local Racing League is the entry-level competition where new captains and teams prove their skills on the water.\\n  Featuring 8 determined crews, races are held over 8 Sunday race days with a maximum of 4 boats per heat.\\n  Each race demands strategy, speed, and adaptability as teams compete for points, currency, and experience.\\n \\n   The league is your chance to gain promotion. \\nThe top 2 teams at the end of the season rise to higher leagues, while the rest will be stuck behind.\\nThe league provides steady rewards \u2014 125 coins per race to the winners and 500 coins per season for the Champion \u2014\\nmaking it the perfect training ground for ambitious racers before moving on to more prestigious competitions."
   localizedDescription:
     m_TableReference:
       m_TableCollectionName: GUID:026f0686b2b93d7449c3a38bf24d7bb2
@@ -88,7 +79,7 @@ MonoBehaviour:
   leagueAbove: {fileID: 0}
   leagueBelow: {fileID: 0}
   maxRaceDays: 4
-  currentRace: 1
+  currentRace: 0
   currentSeason: 1
   isActive: 1
   playerHasJoined: 1
@@ -101,34 +92,34 @@ MonoBehaviour:
   raceDays:
   - races:
     - teams:
+      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
       - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
       - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
       - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
-      - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
-      positions: 02000000040000000300000001000000
-      processed: 1
+      positions: 00000000000000000000000000000000i
+      processed: 0
     - teams:
       - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
       - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
       - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
       - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 03000000020000000400000001000000
-      processed: 1
-    processed: 1
+      positions: 00000000000000000000000000000000i
+      processed: 0
+    processed: 0
   - races:
     - teams:
       - {fileID: 11400000, guid: aa0092b93a75f5d48af73571af7f482d, type: 2}
       - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
       - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
       - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      positions: 00000000000000000000000000000000
+      positions: 00000000000000000000000000000000i
       processed: 0
     - teams:
       - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
       - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
       - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
       - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
+      positions: 00000000000000000000000000000000i
       processed: 0
     processed: 0
   - races:
@@ -137,14 +128,14 @@ MonoBehaviour:
       - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
       - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
       - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
+      positions: 00000000000000000000000000000000i
       processed: 0
     - teams:
       - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
       - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
       - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
       - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
-      positions: 00000000000000000000000000000000
+      positions: 00000000000000000000000000000000i
       processed: 0
     processed: 0
   - races:
@@ -153,14 +144,14 @@ MonoBehaviour:
       - {fileID: 11400000, guid: a9bd7282715956d459817cb2d05d6387, type: 2}
       - {fileID: 11400000, guid: 22a1ec5fe6f6eaf45b86b1c982a386be, type: 2}
       - {fileID: 11400000, guid: 0f9b016f08e86364bace23fb9783f875, type: 2}
-      positions: 00000000000000000000000000000000
+      positions: 00000000000000000000000000000000i
       processed: 0
     - teams:
       - {fileID: 11400000, guid: 9088a7960928b054abeb14f67eb6b162, type: 2}
       - {fileID: 11400000, guid: f7a8d3ea387b53f4986d24fab5b99a03, type: 2}
       - {fileID: 11400000, guid: 45bbf67a71066c4438f10cc6145f8afe, type: 2}
       - {fileID: 11400000, guid: 1e4bf125894763347b8a5a9c55f23bd0, type: 2}
-      positions: 00000000000000000000000000000000
+      positions: 00000000000000000000000000000000i
       processed: 0
     processed: 0
   raceTracks:

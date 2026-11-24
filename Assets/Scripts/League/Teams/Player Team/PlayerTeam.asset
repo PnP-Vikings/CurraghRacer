@@ -12,15 +12,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 844b5688a7124a84fb47cda84e8dd654, type: 3}
   m_Name: PlayerTeam
   m_EditorClassIdentifier: 
-  teamName: PlayerTeam
+  teamName: Toberduff Rowing Club
   teamDescription: Player's Team
   teamLogo: {fileID: -7248956244804978335, guid: c3dec67aec6370646a9960430d96c344, type: 3}
   teamColor: {r: 0, g: 0, b: 0, a: 0}
   teamQuality: 1
   teamType: 1
   teamExperience: 0
-  currentForm: 50
-  recentResults: 
+  currentForm: 100
+  recentResults: 01000000i
   teamManager: {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
   teamMembers:
   - {fileID: 0}
@@ -35,6 +35,6 @@ MonoBehaviour:
   defaultBench:
   - {fileID: 11400000, guid: 1b83beda7e929214883201a385132a35, type: 2}
   currentSeasonStats:
-    finishes: 
+    finishes: 01000000i
   lifetimeStats:
     finishes: 01000000i

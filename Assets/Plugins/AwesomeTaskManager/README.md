@@ -33,9 +33,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
   - 🌳 **Subtask Hierarchy** — link cards directly to checklist items; completion status synchronizes automatically between parent and child tasks
 - 💡 **Interactive Highlighting** — click the 🌳 (Master) or 🌿 (Subtask) icons to instantly highlight all related cards across the board
   - 📦 Archive cards to declutter with visual markers and quick toggle
-- **📤 Beta (Export/Import) — CSV & Excel Support** — seamlessly move boards between projects, ClickUp, or Excel. Supports both industry-standard CSV and Excel (.xlsx/.xml) formats. ClickUp-compatible headers ensure your data maps perfectly.
-- **📦 Beta (Export/Import) — Advanced JSON Portability** — move boards and cards between projects or team members using standalone JSON files (.atb/.atc) for full structure preservation.
-- **📊 Detailed ClickUp & Excel Mapping** — supports Task Names, Content, Statuses, Priorities, Assignees, Tags, Due Dates, and Checklists during CSV and Excel operations.
+- **📤 Export & Import** — move boards between projects and popular Kanban tools using CSV, Excel (`.xlsx`), native JSON, or external Trello, ClickUp, Jira, and generic task JSON. Imports include a preview with merge or create-new options, field-mapping presets, and support for task details, checklists, assignees, and styling.
+- **📊 Round-Trip Spreadsheet Support** — CSV and Excel exports preserve task IDs, status, completion, labels, links, and checklist relationships; Excel exports use the modern `.xlsx` format. Trello-compatible JSON export is also available.
 - **Drag & drop** cards between columns with Trello-style ghost card visual
 - **Reorder** cards within columns (▲/▼)
 - **Card Duplication & Copy-Paste** — instantly duplicate cards or copy them across different boards to maintain consistency between workflows
@@ -68,6 +67,7 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
   - `1. item` numbered lists
   - `---` / `***` / `___` horizontal rules
   - `**bold**`, `*italic*`, `` `code` `` inline formatting
+- **🔗 Clickable script & task card references** — in Preview, a mentioned script (`PlayerController.cs` or `Assets/Scripts/PlayerController.cs`) is a link that selects and pings the script in the Project window, and a mentioned task card (its task code such as `ATM-42`, or its title written as `[[Card Title]]`, `"Card Title"`, `**Card Title**` or `` `Card Title` ``) is a link that opens the Card Details window
 - **Clipboard image paste** — screenshot or copy an image, then press **Ctrl+V** or click the Paste button to embed it instantly
 - **Drag & drop images & videos** — drag image or video files from Explorer directly into notes
 - **Browser GIF paste** — copy a GIF in your browser (or copy a `.gif` URL) and press **Ctrl+V** to embed it as an animated GIF
@@ -77,8 +77,8 @@ Stop alt-tabbing to Trello, Notion, or sticky notes. *Awesome Task Manager* keep
 - **Pop-out** any note into its own floating editor window 
 - **Search** notes by title or content
 - **Word & character count** — live stats in the editor
-- **Export** individual notes or entire folders as Markdown (.md) files via the **Beta (Export/Import)** menu.
-- **📥 Import** text files (.md, .txt, .rtf, .log, .csv, .json, .xml, .yaml, etc.) as notes using the **Beta (Export/Import)** button or menu.
+- **Export** individual notes or entire folders as Markdown (.md) files via the **Export or Import** menu.
+- **📥 Import** text files (.md, .txt, .rtf, .log, .csv, .json, .xml, .yaml, etc.) as notes using the **Export or Import** button or menu.
 
 ### 🎞 GIF Support
 - **Built-in GIF decoder** — no external dependencies, parses animated GIFs natively
@@ -200,8 +200,10 @@ Assets/Plugins/AwesomeTaskManager/
     ├── AwesomeTaskManager.Editor.asmdef
     ├── AttachedImages/           — Pasted/browsed images stored here
     ├── Data/
-    │   ├── TaskBoardData.cs      — All data models (boards, cards, notes, folders, themes)
-    │   └── Persistence.cs        — JSON save/load to ProjectSettings
+    │   ├── TaskBoardData.cs             — All data models (boards, cards, notes, folders, themes)
+    │   ├── BoardImportExport.cs         — CSV, Excel, and board import/export helpers
+    │   ├── ExternalJsonImportExport.cs  — Trello and external task JSON import/export
+    │   └── Persistence.cs               — JSON save/load to ProjectSettings
     └── UI/
         ├── TBStyles.cs           — Colors, dynamic GUIStyles, theme engine
         ├── TaskBoardWindow.cs    — Main editor window (board, notes, style views)
@@ -209,6 +211,7 @@ Assets/Plugins/AwesomeTaskManager/
         ├── CategoryEditorWindow.cs — Global category manager
         ├── AssigneeManagerWindow.cs — Global team member & assignee manager
         ├── ImportFieldMappingWindow.cs — CSV/Excel import column mapping window
+        ├── ImportPreviewWindow.cs — Import preview and merge/create choice
         ├── ThemedDialog.cs       — Themed modal confirmation and alert dialogs
         ├── ThemedDropdownPopup.cs — Themed searchable dropdown popup menus
         ├── ThemedTooltip.cs      — Themed tooltips & truncated text hover popups
@@ -217,6 +220,7 @@ Assets/Plugins/AwesomeTaskManager/
         ├── NoteClipboardController.cs — Shared note selection, right-click menu & clipboard logic
         ├── ThemedContextMenu.cs  — Themed right-click context menu popup
         ├── MarkdownRenderer.cs   — Markdown parsing and rich text renderer
+        ├── NotePreviewLinks.cs   — Clickable script & task card references in note Preview
         ├── EditorInputDialog.cs  — Shared modal text input dialog (single or two-field)
         ├── NoteVideoPlayer.cs    — Inline VideoPlayer widget for note video embeds
         ├── NoteVideoImportSettings.cs — VP8/audio import settings for note videos
@@ -265,6 +269,7 @@ Assets/Plugins/AwesomeTaskManager/
 - **Scene Linking Navigation** — Click a linked scene object on a task card to find it instantly in the Hierarchy. If it's in a different scene, a confirmation dialog will help you switch and navigate to it automatically.
 - **Link Notes to Cards** — Drag a note from the Notes list onto a task card on the board to link them. Or use the "Link Note" button in the card detail editor.
 - **Auto-Link in Preview** — Paste any `http://` or `https://` URL, or write `[label](url)`, into a note. In Preview mode, it will be rendered as a clickable link.
+- **Jump to scripts & cards from notes** — Mention a script (`PlayerController.cs`) or a task card (`ATM-42`, `[[Card Title]]`) in a note. In Preview mode, click the script name to select it in the Project window, or the card reference to open its Card Details window. Add part of the path (`Scripts/Player/PlayerController.cs`) when several scripts share the same file name.
 - **Copy table cells** — In Preview mode, drag across table cells (or Shift+click) to select a range, then press Ctrl+C or right-click → Copy to copy it as tab-separated text.
 - **Background Shortcuts** — Use `Alt+Shift+C` or `Ctrl+Alt+N` to quickly capture ideas or tasks without having the main window open. They save to your most recent folder/primary board.
 - **Show/Hide checklists** — Use the **▾ Show All** / **▸ Hide All** toolbar buttons to expand or collapse all card checklists at once, or toggle individual cards with the **▾/▸** button on each card
@@ -283,6 +288,40 @@ Assets/Plugins/AwesomeTaskManager/
 ---
 
 ## 📄 Changelog
+
+### v2.7 (Export & Import Out of Beta, Clickable Script & Card References in Notes, Themed Scrollbars, Responsive Layout & Board Improvements)
+
+#### 📤 Export & Import (Out of Beta)
+- **Improved** 🔄 **Reliable CSV and Spreadsheet Imports** — CSV parsing handles quoted fields, multiline text, escaped quotes, line endings, and byte-order marks; Excel `.xlsx` and XML Spreadsheet imports resolve worksheet data safely.
+- **Added** 📦 **Lossless Board Exports** — spreadsheet exports preserve task codes, parent/subtask relationships, completion and archive state, label styling, links, and checklist details while keeping the original ClickUp-compatible columns intact.
+- **Added** 📗 **Modern Excel Export** — board, column, and card exports can be written as real `.xlsx` files, with XML Spreadsheet output retained when `.xml` is selected.
+- **Added** 👀 **Import Preview & Conflict Choices** — preview imported boards, columns, and cards before applying changes; merge matching content or create a uniquely named copy.
+- **Added** 🔁 **Update Existing Cards** — spreadsheet imports can match existing cards by task ID or task code and update them rather than creating duplicates.
+- **Improved** 🧩 **Field Parsing & Styling** — priority and date parsing is stricter, checklist items preserve semicolons and completion state, assignee matching ignores case, and done/archive statuses support localized and custom names. Trello label colors can be imported as card and category styling.
+- **Added** 🧭 **Import Mapping Presets** — corrected Trello and ClickUp mappings and added presets for Jira, Asana, Monday.com, Notion, GitHub Projects, Linear, Wrike, Microsoft Planner, Azure DevOps, YouTrack, Basecamp, and Airtable. Changing a preset selects its matching saved or built-in profile, and mapping controls use themed dropdowns.
+- **Added** 🧾 **Import Reports, Undo & Notifications** — imports report skipped rows and warnings, and the last import can be undone after confirmation. Import and export operations show success or failure notifications.
+- **Added** 🌐 **External JSON Interoperability** — import Trello, ClickUp, Jira, and generic task JSON through the preview workflow, and export boards in Trello-compatible JSON format.
+- **Improved** 🆔 **Safe Import and Folder Export** — native imports generate fresh identities and task numbers while remapping internal links and assignees; folder Markdown exports choose unique filenames to avoid overwriting existing files.
+- **Added** 🧪 **Import/Export Test Coverage** — regression tests cover CSV and spreadsheet round trips, external JSON formats, mappings, conflict handling, and imported identity/link behavior.
+
+#### 🔗 Clickable Script & Task Card References in Notes
+- **Added** 📜 **Clickable Script References** — in note Preview, a script file name or path (`PlayerController.cs`, `Assets/Scripts/PlayerController.cs`, also inside `` `backticks` ``) is rendered as a link; clicking it selects and pings the script in the Project window. Names that don't match a script in the project stay plain text, and a partial path picks the right file when several scripts share a name.
+- **Added** 🗂 **Clickable Task Card References** — a card's task code (e.g. `ATM-42`) anywhere in a note, or its exact title written as `[[Card Title]]`, `"Card Title"`, `**Card Title**` or `` `Card Title` ``, is rendered as a link; clicking it opens the Card Details window for that card, even when the main board window is closed.
+- **Added** ↗ **Works in Pop-Out Notes** — the same links are available in the Preview of standalone note windows. Edit mode and fenced code blocks are left untouched.
+- **Improved** ⚡ **Lightweight Link Detection** — script lookups are cached and card references are matched without per-repaint regular expressions, so previews with links stay responsive.
+- **Improved** 🎨 **Theme-Matched Preview Links** — URL, script, and task-card references use the active theme's **Link / Reference Text** color.
+
+#### 🎨 Themed Scrollbars, Responsive Layout & Board Improvements
+- **Added** 🎨 **Theme-Matched Scrollbars** — ATM windows and popups now use scrollbar track and thumb colors that follow the active theme.
+- **Fixed** 🗂 **Board Dropdown Selection** — selecting a board now closes the dropdown and refreshes the board view so the selected board is shown correctly.
+- **Fixed** 🔔 **Board Switch Notification** — switching boards now shows "Changed to {Board Name}" instead of wrongly reporting "Board refreshed from external changes".
+- **Fixed** 🔔 **Notification Text Clipping** — success and error notifications now resize to fit their full message and stay centered in the window.
+- **Fixed** 🗂 **Long Board Names** — the board panel title now truncates to the available toolbar space and shows the full name on hover.
+- **Fixed** ✂ **Dropdown Text Over-Truncation** — themed dropdowns (including the board selector) no longer reserve padding and arrow space twice, so names use the full dropdown width and are only shortened when they genuinely don't fit.
+- **Improved** 📐 **Small-Window Layouts** — the main ATM window can shrink to 180px wide; board controls remain accessible, and the Style editor stacks and wraps its controls for narrow windows.
+- **Added** 📜 **Card Description Scrollbar** — the description field in the Card Details window now sits in a fixed-height (85px) scroll view and shows a vertical scrollbar once the text is taller than the box. This fixes the issue where it was difficult to write longer task descriptions.
+- **Fixed** 📜 **Card Description Scroll Follows the Cursor** — the description box in the Card Details window now scrolls with your cursor while you type, press Enter, or move with the arrow keys, so the text you're editing always stays in view. Previously it only scrolled to the end of the text.
+- **Improved** 📝 **Narrow Notes Controls** — the selected note's title and action options now scroll horizontally when they don't fit; the drag-to-move hint stays out of the metadata text and appears as a tooltip when hovering the row.
 
 ### v2.6 (Team Collaboration, Modular Multi-File Persistence, Git Identity, Short Task IDs & Live VCS Sync)
 - **Added** 📂 **Modular Multi-File Persistence** — boards and quick notes are now persisted as individual granular files (`ProjectSettings/AwesomeTaskManager/Boards/{board_id}.json` and `ProjectSettings/AwesomeTaskManager/Notes/{note_id}.json`), allowing concurrent team edits without monolithic JSON merge conflicts.

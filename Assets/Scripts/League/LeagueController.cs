@@ -146,8 +146,15 @@ namespace League
             {
                 StopCoroutine(showInviteCoroutine);
             }
-            
-            showInviteCoroutine=   StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
+
+            if (currentLeague != null && !currentLeague.playerHasJoined)
+            {
+                showInviteCoroutine = StartCoroutine(StartLeagueInviteMessageAfterDelay(delayBetweenInvites));
+            }
+            else
+            {
+                StopCoroutine(showInviteCoroutine);
+            }
         }
         
         public void ShowLeagueInviteAfterDelay(float delaySeconds)
@@ -156,8 +163,14 @@ namespace League
             {
                 StopCoroutine(showInviteCoroutine);
             }
-            
-            showInviteCoroutine=   StartCoroutine(StartLeagueInviteMessageAfterDelay(delaySeconds));
+            if (currentLeague != null && !currentLeague.playerHasJoined)
+            {
+                showInviteCoroutine = StartCoroutine(StartLeagueInviteMessageAfterDelay(delaySeconds));
+            }
+            else
+            {
+                StopCoroutine(showInviteCoroutine);
+            }
         }
 
 
@@ -528,7 +541,7 @@ namespace League
         [ContextMenu("Regenerate Race Schedule")]
         public void RegenerateRaceSchedule()
         {
-            if (currentLeague != null)
+            if (currentLeague != null && !currentLeague.playerHasJoined)
             {
                 GenerateRaceSchedule(); // Calls the race generation logic
                 Debug.Log($"Race schedule regenerated for '{currentLeague.leagueName}'!");
@@ -792,6 +805,18 @@ namespace League
                 GameManager.Instance.CompleteTutorialTask(TutorialTaskType.JoinLeagueTask);
             }
         }
+        
+        public string GetPlayerLeaguePosition()
+        {
+            string position = "";
+            
+            if (currentLeague != null && PlayerManager.Instance != null && PlayerManager.Instance.playerTeam != null)
+            {
+                position = currentLeague.GetTeamPosition(PlayerManager.Instance.playerTeam).ToString();
+            }
+            
+            return position;
+        }
 
 
         public void AddTutorialLeagueToList()
@@ -945,6 +970,8 @@ namespace League
                 leagues = new[] { league };
             }
         }
+
+      
     }
     
    

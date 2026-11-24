@@ -379,7 +379,7 @@ namespace AwesomeTaskManager.Editor
             if (string.IsNullOrEmpty(text)) return text ?? "";
 
             string codeColor = EditorGUIUtility.isProSkin ? "#E5C07B" : "#8A3B00";
-            string linkColor = EditorGUIUtility.isProSkin ? "#569CD6" : "#0066CC";
+            string linkColor = TBStyles.LinkColorHex;
 
             var tokens = new List<string>();
 
@@ -390,6 +390,7 @@ namespace AwesomeTaskManager.Editor
                 // Sanitize angle brackets inside code to avoid Unity IMGUI invalid tag warnings
                 rawCode = rawCode.Replace("<", "‹").Replace(">", "›");
                 string formattedCode = $"<color={codeColor}><b>{rawCode}</b></color>";
+                formattedCode = NotePreviewLinks.WrapInlineCode(m.Groups[1].Value, formattedCode);
                 int idx = tokens.Count;
                 tokens.Add(formattedCode);
                 return $"\u0001TOKEN_{idx}\u0002";
@@ -425,27 +426,30 @@ namespace AwesomeTaskManager.Editor
                 return $"\u0001TOKEN_{idx}\u0002";
             });
 
-            // 4. Sanitize raw angle brackets in user text so Unity IMGUI doesn't treat e.g. <GameObject> as invalid tags
+            // 4. Protect note-preview links before formatting/sanitizing the remaining text.
+            text = NotePreviewLinks.ProtectReferences(text, tokens, linkColor);
+
+            // 5. Sanitize raw angle brackets in user text so Unity IMGUI doesn't treat e.g. <GameObject> as invalid tags
             text = text.Replace("<", "‹").Replace(">", "›");
 
-            // 5. Bold + Italic: ***text*** or ___text___
+            // 6. Bold + Italic: ***text*** or ___text___
             text = Regex.Replace(text, @"\*\*\*([^\*\n]+?)\*\*\*", "<b><i>$1</i></b>");
             text = Regex.Replace(text, @"___([^_\n]+?)___", "<b><i>$1</i></b>");
 
-            // 6. Bold: **text** or __text__
+            // 7. Bold: **text** or __text__
             text = Regex.Replace(text, @"\*\*([^\*\n]+?)\*\*", "<b>$1</b>");
             text = Regex.Replace(text, @"__([^_\n]+?)__", "<b>$1</b>");
 
-            // 7. Italic: *text*
+            // 8. Italic: *text*
             text = Regex.Replace(text, @"(?<!\*)\*([^\*\n]+?)\*(?!\*)", "<i>$1</i>");
 
-            // 8. Italic: _text_ (require word boundary so snake_case_vars are unaffected)
+            // 9. Italic: _text_ (require word boundary so snake_case_vars are unaffected)
             text = Regex.Replace(text, @"(?<=^|[\s\p{P}])_([^_\n]+?)_(?=[\s\p{P}]|$)", "<i>$1</i>");
 
-            // 9. Strikethrough: ~~text~~
+            // 10. Strikethrough: ~~text~~
             text = Regex.Replace(text, @"~~([^~\n]+?)~~", "<color=#888888><s>$1</s></color>");
 
-            // 10. Restore protected tokens
+            // 11. Restore protected tokens
             for (int i = 0; i < tokens.Count; i++)
             {
                 text = text.Replace($"\u0001TOKEN_{i}\u0002", tokens[i]);
@@ -643,8 +647,11 @@ namespace AwesomeTaskManager.Editor
         /// Supports multi-line and whole-document text selection and copying throughout all rendered elements.
         /// Returns true while an animated or loading media preview needs repainting.
         /// </summary>
-        public static bool DrawMarkdownPreview(QuickNote note, Action<QuickNote> markModified, Action<QuickNote> recordUndo = null)
+        public static bool DrawMarkdownPreview(QuickNote note, Action<QuickNote> markModified, Action<QuickNote> recordUndo = null, SaveData linkData = null)
         {
+            NotePreviewLinks.BeginPreview(linkData);
+            try
+            {
             if (note == null || string.IsNullOrEmpty(note.content))
             {
                 if (Event.current != null)
@@ -908,6 +915,11 @@ namespace AwesomeTaskManager.Editor
 
             FlushTextBlock(note, textBuffer);
             return hasAnimatedGif;
+            }
+            finally
+            {
+                NotePreviewLinks.EndPreview();
+            }
         }
 
         public static bool IsPreformattedBlock(IList<string> lines, int startIndex, out int endIndex)
