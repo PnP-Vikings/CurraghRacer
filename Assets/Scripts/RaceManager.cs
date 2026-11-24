@@ -866,7 +866,7 @@ public class RaceManager : MonoBehaviour
                     if (PlayerManager.Instance != null)
                     {
                         PlayerManager.Instance.ModifyPlayerCoins(125f); // Reward player with coins
-
+                        PlayerManager.Instance.UpdatePlayerTeamHappinessOnRaceWin();
                         if (AudioManager.instance != null)
                         {
                             AudioManager.instance.raceAmbience.setParameterByName("Encouragement Volume", 0f);
@@ -901,6 +901,11 @@ public class RaceManager : MonoBehaviour
                     mes = betterLuckNextTimeText.GetLocalizedString();
                 }
                 finishMenu.UpdatePlayerMessage(false, mes);
+
+                if (isRaceDay && PlayerManager.Instance != null)
+                {
+                    PlayerManager.Instance.UpdatePlayerTeamHappinessOnRaceLost();
+                }
                 if(!isRaceDay) return; // No coins deducted
             }
         }

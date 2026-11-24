@@ -138,6 +138,7 @@ namespace AwesomeTaskManager.UI
 
         private void OnGUI()
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             try
             {
                 if (Event.current.type == EventType.Repaint)

@@ -48,6 +48,7 @@ namespace AwesomeTaskManager.UI
 
         public override void OnGUI(Rect rect)
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             try
             {
                 if (Event.current.type == EventType.Repaint)
@@ -123,8 +124,14 @@ namespace AwesomeTaskManager.UI
                         if (Event.current.type == EventType.MouseDown && Event.current.button == 0 && itemRect.Contains(Event.current.mousePosition))
                         {
                             int chosenIndex = i;
-                            _onSelect?.Invoke(chosenIndex);
-                            editorWindow?.Close();
+                            try
+                            {
+                                _onSelect?.Invoke(chosenIndex);
+                            }
+                            finally
+                            {
+                                editorWindow?.Close();
+                            }
                             Event.current.Use();
                         }
                     }

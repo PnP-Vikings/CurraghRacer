@@ -1,6 +1,8 @@
 using System;
+using Microsoft.Extensions.DependencyInjection;
 using UnityEngine;
 using UnityEngine.Localization;
+using UnityEngine.Serialization;
 using Random = UnityEngine.Random;
 
 public enum Attitude
@@ -64,9 +66,10 @@ public class TeamMember : ScriptableObject
     
     [Header("Happiness && Fitness")]
     public TeamMemberFitness fitness = new TeamMemberFitness();
+    [FormerlySerializedAs("Happiness")]
     [Tooltip("Happiness level of the team member (0-100).")]
-    public Happiness Happiness = new Happiness(); // Default happiness level
-    
+    public Happiness happiness = new Happiness(); // Default happiness level
+    [Header("Localized Strings")]
     [SerializeField] private LocalizedString _localizedAttitudePositive = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Positive" };
     [SerializeField] private LocalizedString _localizedAttitudeNegative = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Negative" };
     [SerializeField] private LocalizedString _localizedAttitudeNeutral = new LocalizedString { TableReference = "TeamMemberDetailCards", TableEntryReference = "TeamMemberAttitude.Neutral" };
@@ -107,7 +110,7 @@ public class TeamMember : ScriptableObject
         xpToNextLevel = 100;
         racesAvailableFor = 999999; // Reset to default
         fitness.ResetFitness();
-        Happiness = new Happiness(); // Reset to default happiness
+        happiness = new Happiness(); // Reset to default happiness
     }
     
     public virtual CharacterStats GetDefaultStatsBasedOnAttitude(int teamQuality = 1)
@@ -599,6 +602,34 @@ public class Happiness
     public void AdjustHappiness(float amount)
     {
         currentHappiness = Mathf.Clamp(currentHappiness + amount, 0, maxHappiness);
+        
+        if(currentHappiness>maxHappiness)
+        {
+            currentHappiness = maxHappiness;
+        }
+        
+        if(currentHappiness<0)
+        {
+            currentHappiness = 0;
+        }
+        
+        if (currentHappiness>=80)
+        {
+            currentMood = Mood.Happy;
+        }
+        else if (currentHappiness>=60)
+        {
+            currentMood = Mood.Neutral;
+        }
+        else if (currentHappiness>=20)
+        {
+            currentMood = Mood.Sad;
+        }
+        else 
+        {
+            currentMood = Mood.Angry;
+        }
+     
     }
     
     public enum Mood
@@ -606,8 +637,7 @@ public class Happiness
         Happy,
         Neutral,
         Sad,
-        Angry,
-        Excited
+        Angry
     }
     
     public Mood currentMood = Mood.Happy;

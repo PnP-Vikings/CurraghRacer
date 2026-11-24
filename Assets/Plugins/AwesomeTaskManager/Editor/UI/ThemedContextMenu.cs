@@ -356,6 +356,7 @@ namespace AwesomeTaskManager.UI
 
         public override void OnGUI(Rect rect)
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             try
             {
                 Color borderColor = EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.15f) : new Color(0f, 0f, 0f, 0.20f);

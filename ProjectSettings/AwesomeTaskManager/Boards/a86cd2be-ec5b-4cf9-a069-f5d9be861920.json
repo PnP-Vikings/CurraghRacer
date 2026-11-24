@@ -201,6 +201,44 @@
                     "lastModifiedDate": "2026-11-12 23:18"
                 },
                 {
+                    "id": "ed0e2fe1-f861-4d70-9a48-50537a6bf54c",
+                    "title": "Add Camera to end of race ",
+                    "description": "A close up facing the players in the boats",
+                    "category": "Gameplay",
+                    "colorLabel": 1,
+                    "priority": 0,
+                    "createdDate": "2026-11-24 20:56",
+                    "dueDate": "",
+                    "archived": false,
+                    "checklistItems": [
+                        "Add Camera",
+                        "Make switch when they cross the line",
+                        "Match Angle below"
+                    ],
+                    "checklistStates": [
+                        false,
+                        false,
+                        false
+                    ],
+                    "checklistLinkedCardIds": [
+                        "",
+                        "",
+                        ""
+                    ],
+                    "linkedAssetGuids": [],
+                    "linkedSceneObjects": [],
+                    "linkedItems": [],
+                    "imagePath": "Assets/Plugins/AwesomeTaskManager/Editor/AttachedImages/pasted_20261124_210028.png",
+                    "showChecklist": true,
+                    "completed": false,
+                    "assigneeIds": [],
+                    "taskNumber": 74,
+                    "taskCode": "ATM-74",
+                    "createdBy": "Vitor Barbosa",
+                    "lastModifiedBy": "Vitor Barbosa",
+                    "lastModifiedDate": "2026-11-24 21:00"
+                },
+                {
                     "id": "2b7e9c3e-2213-46ae-8c68-f1ed8d1a6671",
                     "title": "Sync up Fridge variables To save system",
                     "description": "Fridge variables are not currently in save system please fix ",

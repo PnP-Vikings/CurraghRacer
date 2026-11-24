@@ -116,6 +116,11 @@ public class GameManager : MonoBehaviour
         GameStarted = true;
         OnGameStarted?.Invoke();
         SceneManager.LoadScene(mainSceneName);
+        
+        if (PlayerManager.Instance != null)
+        {
+            PlayerManager.Instance.InitializeNewDailyCurrencyTracker();
+        }
       
     }
 

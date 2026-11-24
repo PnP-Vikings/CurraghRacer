@@ -86,6 +86,7 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             try
             {
                 if (_data == null)

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
@@ -19,6 +20,7 @@ namespace AwesomeTaskManager.Editor
         private Action _onDelete;
         private Action<TaskCard> _onCreated;
         [SerializeField] private Vector2 _scroll;
+        [SerializeField] private Vector2 _descriptionScroll;
         [SerializeField] private string _newChecklistItem = "";
         [SerializeField] private bool _isNewCard;
         [SerializeField] private List<string> _categories;
@@ -37,6 +39,14 @@ namespace AwesomeTaskManager.Editor
         private static int _globalSessionCounter = 0;
         [SerializeField] private int _windowSessionId = 0;
 
+        private int _lastDescCursorIndex = -1;
+        private int _lastDescSelectIndex = -1;
+        private string _lastDescText = null;
+        private Rect _lastDescriptionTextAreaRect;
+
+        private static FieldInfo[] s_RecycledEditorFields;
+        private static bool s_RecycledEditorFieldsResolved;
+
         private string TitleControlName => $"CardTitleField_{_windowSessionId}";
         private string NewCategoryControlName => $"NewCategoryField_{_windowSessionId}";
         private string DescriptionControlName => $"CardDescField_{_windowSessionId}";
@@ -45,6 +55,9 @@ namespace AwesomeTaskManager.Editor
         public void InvalidateSessionControlNames()
         {
             _windowSessionId = ++_globalSessionCounter;
+            _lastDescCursorIndex = -1;
+            _lastDescSelectIndex = -1;
+            _lastDescText = null;
             GUIUtility.keyboardControl = 0;
             GUIUtility.hotControl = 0;
             GUI.FocusControl(null);
@@ -155,6 +168,7 @@ namespace AwesomeTaskManager.Editor
             win._dirty = false;
             win._closedExplicitly = false;
             win._scroll = Vector2.zero;
+            win._descriptionScroll = Vector2.zero;
             win._newChecklistItem = "";
             win._newCategory = "";
             win.InvalidateSessionControlNames();
@@ -203,6 +217,7 @@ namespace AwesomeTaskManager.Editor
             win._dirty = false;
             win._closedExplicitly = false;
             win._scroll = Vector2.zero;
+            win._descriptionScroll = Vector2.zero;
             win.InvalidateSessionControlNames();
             win.minSize = new Vector2(440, 560);
             win.maxSize = new Vector2(640, 880);
@@ -338,6 +353,7 @@ namespace AwesomeTaskManager.Editor
             Action del = _onDelete;
             Action<TaskCard> created = _onCreated;
             Vector2 sc = _scroll;
+            Vector2 descSc = _descriptionScroll;
             string newCheck = _newChecklistItem;
             string newCat = _newCategory;
 
@@ -360,7 +376,7 @@ namespace AwesomeTaskManager.Editor
                         if (string.IsNullOrWhiteSpace(card.title))
                         {
                             ThemedDialog.Show("Title Required", "A card requires a title to be saved. Please enter a title before saving, or choose 'Discard' to exit without creating the card.", "OK");
-                            ReopenWindow(card, origCard, data, bId, cId, cats, changed, del, created, isNew, sc, newCheck, newCat);
+                            ReopenWindow(card, origCard, data, bId, cId, cats, changed, del, created, isNew, sc, descSc, newCheck, newCat);
                             return;
                         }
 
@@ -373,7 +389,7 @@ namespace AwesomeTaskManager.Editor
                 }
                 else if (choice == 1) // Cancel (Keep editing)
                 {
-                    ReopenWindow(card, origCard, data, bId, cId, cats, changed, del, created, isNew, sc, newCheck, newCat);
+                    ReopenWindow(card, origCard, data, bId, cId, cats, changed, del, created, isNew, sc, descSc, newCheck, newCat);
                 }
                 else if (choice == 2) // Discard
                 {
@@ -404,6 +420,7 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             try
             {
                 if (_card == null) { Close(); return; }
@@ -610,9 +627,20 @@ namespace AwesomeTaskManager.Editor
 
             // ── Description ──
             EditorGUILayout.LabelField("Description", EditorStyles.boldLabel);
-            GUI.SetNextControlName(DescriptionControlName);
-            string newDesc = EditorGUILayout.TextArea(_card.description ?? "", TBStyles.CardTextArea, GUILayout.MinHeight(70));
-            if (newDesc != _card.description) { _card.description = newDesc; MarkDirty(); }
+            using (var descScope = new EditorGUILayout.ScrollViewScope(_descriptionScroll, GUILayout.Height(85)))
+            {
+                _descriptionScroll = descScope.scrollPosition;
+                GUI.SetNextControlName(DescriptionControlName);
+                string newDesc = EditorGUILayout.TextArea(_card.description ?? "", TBStyles.CardTextArea, GUILayout.ExpandHeight(true));
+                if (newDesc != _card.description) { _card.description = newDesc; MarkDirty(); }
+                KeepDescriptionScrollWithCursor(newDesc);
+            }
+            if (Event.current.type == EventType.Repaint)
+            {
+                Rect descRect = GUILayoutUtility.GetLastRect();
+                Color borderColor = EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.12f) : new Color(0f, 0f, 0f, 0.15f);
+                TBStyles.DrawBorderRect(descRect, borderColor, 1f);
+            }
             GUILayout.Space(8);
 
             // ── Color Label & Priority ──
@@ -1709,7 +1737,7 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
-        private static void ReopenWindow(TaskCard card, TaskCard originalCard, SaveData data, string boardId, string columnId, List<string> categories, Action onChanged, Action onDelete, Action<TaskCard> onCreated, bool isNewCard, Vector2 scroll, string newChecklistItem, string newCategory)
+        private static void ReopenWindow(TaskCard card, TaskCard originalCard, SaveData data, string boardId, string columnId, List<string> categories, Action onChanged, Action onDelete, Action<TaskCard> onCreated, bool isNewCard, Vector2 scroll, Vector2 descriptionScroll, string newChecklistItem, string newCategory)
         {
             var win = GetWindow<CardDetailWindow>(true, isNewCard ? $"{TBStyles.NewCardIcon} New Card" : $"{TBStyles.CardDetailIcon} Card Details", true);
             win._originalCard = originalCard;
@@ -1724,6 +1752,7 @@ namespace AwesomeTaskManager.Editor
             win._isNewCard = isNewCard;
             win._dirty = !isNewCard;
             win._scroll = scroll;
+            win._descriptionScroll = descriptionScroll;
             win._newChecklistItem = newChecklistItem;
             win._newCategory = newCategory;
             win._closedExplicitly = false;
@@ -1737,6 +1766,221 @@ namespace AwesomeTaskManager.Editor
         private void MarkDirty()
         {
             _dirty = true;
+        }
+
+        private static TextEditor GetRecycledEditor()
+        {
+            try
+            {
+                if (!s_RecycledEditorFieldsResolved)
+                {
+                    var flags = BindingFlags.Static | BindingFlags.NonPublic | BindingFlags.Public;
+                    var list = new List<FieldInfo>();
+                    var recycledEditorField = typeof(EditorGUI).GetField("s_RecycledEditor", flags)
+                                              ?? typeof(EditorGUI).GetField("activeEditor", flags)
+                                              ?? typeof(EditorGUI).GetField("s_ActiveEditor", flags)
+                                              ?? typeof(GUI).GetField("s_RecycledEditor", flags)
+                                              ?? typeof(GUI).GetField("activeEditor", flags)
+                                              ?? typeof(GUI).GetField("s_ActiveEditor", flags)
+                                              ?? typeof(EditorGUIUtility).GetField("s_RecycledEditor", flags);
+                    if (recycledEditorField != null)
+                    {
+                        list.Add(recycledEditorField);
+                    }
+
+                    var types = new[] { typeof(EditorGUI), typeof(GUI), typeof(EditorGUIUtility), typeof(GUIUtility) };
+                    foreach (var t in types)
+                    {
+                        if (t == null) continue;
+                        foreach (var f in t.GetFields(flags))
+                        {
+                            if (typeof(TextEditor).IsAssignableFrom(f.FieldType) && !list.Contains(f))
+                            {
+                                list.Add(f);
+                            }
+                        }
+                    }
+                    s_RecycledEditorFields = list.ToArray();
+                    s_RecycledEditorFieldsResolved = true;
+                }
+
+                if (s_RecycledEditorFields != null)
+                {
+                    TextEditor fallbackEditor = null;
+                    foreach (var f in s_RecycledEditorFields)
+                    {
+                        if (f.GetValue(null) is TextEditor ed && ed != null)
+                        {
+                            if (ed.controlID == GUIUtility.keyboardControl && GUIUtility.keyboardControl != 0)
+                            {
+                                return ed;
+                            }
+
+                            fallbackEditor ??= ed;
+                        }
+                    }
+
+                    return fallbackEditor;
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        private TextEditor GetDescriptionTextEditor(string currentText)
+        {
+            try
+            {
+                var recycled = GetRecycledEditor();
+                if (recycled != null)
+                {
+                    if (recycled.controlID == GUIUtility.keyboardControl && GUIUtility.keyboardControl != 0)
+                    {
+                        return recycled;
+                    }
+                    if (!string.IsNullOrEmpty(recycled.text) && (recycled.text == (currentText ?? "") || recycled.text == (_card?.description ?? "")))
+                    {
+                        return recycled;
+                    }
+                }
+
+                int keyboardControl = GUIUtility.keyboardControl;
+                if (keyboardControl != 0)
+                {
+                    var editor = GUIUtility.GetStateObject(typeof(TextEditor), keyboardControl) as TextEditor;
+                    if (editor != null && (editor.controlID == keyboardControl || !string.IsNullOrEmpty(editor.text)))
+                    {
+                        return editor;
+                    }
+                }
+
+                if (recycled != null)
+                {
+                    return recycled;
+                }
+            }
+            catch { }
+            return null;
+        }
+
+        public static float CalculateCursorScrollY(float currentScrollY, float viewportHeight, Rect textAreaRect, string text, int cursorIndex, GUIStyle style, float verticalPadding = 4f)
+        {
+            if (style == null || viewportHeight <= 0) return currentScrollY;
+            text ??= "";
+            int clampedCursor = Mathf.Clamp(cursorIndex, 0, text.Length);
+
+            if (textAreaRect.width <= 0)
+            {
+                textAreaRect.width = 380f;
+            }
+            if (textAreaRect.height <= 0)
+            {
+                textAreaRect.height = 200f;
+            }
+
+            Vector2 cursorPos = style.GetCursorPixelPosition(textAreaRect, new GUIContent(text), clampedCursor);
+            float lineHeight = style.lineHeight;
+            if (lineHeight <= 0)
+            {
+                lineHeight = style.fontSize > 0 ? style.fontSize + 4f : 16f;
+            }
+
+            float cursorTop = cursorPos.y - textAreaRect.y;
+            float cursorBottom = cursorTop + lineHeight;
+
+            float newScrollY = currentScrollY;
+
+            if (cursorTop <= (style.padding?.top ?? 0) + verticalPadding)
+            {
+                newScrollY = 0f;
+            }
+            else if (cursorBottom + verticalPadding > currentScrollY + viewportHeight)
+            {
+                newScrollY = cursorBottom + verticalPadding - viewportHeight;
+            }
+            else if (cursorTop - verticalPadding < currentScrollY)
+            {
+                newScrollY = Mathf.Max(0f, cursorTop - verticalPadding);
+            }
+
+            return Mathf.Max(0f, newScrollY);
+        }
+
+        private void KeepDescriptionScrollWithCursor(string currentText)
+        {
+            if (Event.current == null) return;
+
+            Rect lastRect = GUILayoutUtility.GetLastRect();
+            if (lastRect.width > 1f && lastRect.height > 1f)
+            {
+                _lastDescriptionTextAreaRect = lastRect;
+            }
+
+            float defaultWidth = position.width > 50f ? position.width - 48f : 380f;
+            Rect effectiveRect = _lastDescriptionTextAreaRect.width > 1f
+                ? _lastDescriptionTextAreaRect
+                : new Rect(0, 0, defaultWidth, 200f);
+
+            string focusedControl = GUI.GetNameOfFocusedControl();
+            bool isOtherControlFocused = !string.IsNullOrEmpty(focusedControl) &&
+                (focusedControl == TitleControlName || focusedControl == NewCategoryControlName || focusedControl == NewChecklistControlName);
+
+            if (isOtherControlFocused)
+            {
+                _lastDescCursorIndex = -1;
+                _lastDescSelectIndex = -1;
+                _lastDescText = null;
+                return;
+            }
+
+            TextEditor editor = GetDescriptionTextEditor(currentText);
+            int cursorIndex = -1;
+            int selectIndex = -1;
+
+            if (editor != null)
+            {
+                cursorIndex = editor.cursorIndex;
+                selectIndex = editor.selectIndex;
+            }
+
+            bool isExplicitlyFocused = focusedControl == DescriptionControlName;
+            bool isTextFieldActive = GUIUtility.keyboardControl != 0 && EditorGUIUtility.editingTextField;
+            bool textMatches = editor != null && !string.IsNullOrEmpty(editor.text) && (editor.text == (currentText ?? "") || editor.text == (_card?.description ?? ""));
+
+            bool isFocused = isExplicitlyFocused || (isTextFieldActive && (textMatches || string.IsNullOrEmpty(focusedControl)));
+
+            if (!isFocused && cursorIndex < 0)
+            {
+                _lastDescCursorIndex = -1;
+                _lastDescSelectIndex = -1;
+                _lastDescText = null;
+                return;
+            }
+
+            if (cursorIndex < 0)
+            {
+                cursorIndex = (currentText ?? "").Length;
+            }
+
+            var evt = Event.current;
+            bool cursorChanged = cursorIndex != _lastDescCursorIndex || selectIndex != _lastDescSelectIndex;
+            bool textChanged = currentText != _lastDescText;
+            bool isKey = evt.isKey || evt.type == EventType.KeyDown || evt.type == EventType.KeyUp;
+            bool isMouseInTextArea = (evt.type == EventType.MouseDown || evt.type == EventType.MouseDrag) && effectiveRect.Contains(evt.mousePosition);
+
+            if (isFocused && (cursorChanged || textChanged || isKey || isMouseInTextArea))
+            {
+                float targetScrollY = CalculateCursorScrollY(_descriptionScroll.y, 85f, effectiveRect, currentText, cursorIndex, TBStyles.CardTextArea, 4f);
+                if (Mathf.Abs(targetScrollY - _descriptionScroll.y) > 0.01f)
+                {
+                    _descriptionScroll.y = targetScrollY;
+                    Repaint();
+                }
+            }
+
+            _lastDescCursorIndex = cursorIndex;
+            _lastDescSelectIndex = selectIndex;
+            _lastDescText = currentText;
         }
 
         private void DrawAssigneeCircle(Assignee assignee, bool clickable)
@@ -1929,6 +2173,7 @@ namespace AwesomeTaskManager.Editor
 
             public override void OnGUI(Rect rect)
             {
+                using var _scrollbarTheme = ThemedScrollbars.Begin();
                 if (Event.current.type == EventType.Repaint)
                 {
                     TBStyles.DrawCanvasBackground(rect, TBStyles.PopupBg, true);

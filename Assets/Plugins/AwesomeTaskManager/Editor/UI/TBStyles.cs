@@ -361,6 +361,25 @@ namespace AwesomeTaskManager.UI
         public static Color TabActiveColor = new Color(0.2f, 0.5f, 0.85f);
         public static Color NoteSelectedAccentColor = new Color(0.2f, 0.6f, 1f);
         public static Color LinkColor = new Color(0.2f, 0.55f, 0.95f);
+        private static Color _cachedLinkColor;
+        private static string _cachedLinkColorHex;
+        private static bool _hasCachedLinkColorHex;
+
+        public static string LinkColorHex
+        {
+            get
+            {
+                Color color = LinkColor;
+                if (!_hasCachedLinkColorHex || !_cachedLinkColor.Equals(color))
+                {
+                    _cachedLinkColor = color;
+                    _cachedLinkColorHex = "#" + ColorUtility.ToHtmlStringRGB(color);
+                    _hasCachedLinkColorHex = true;
+                }
+
+                return _cachedLinkColorHex;
+            }
+        }
 
         public static Color GetLabelColor(int index)
         {
@@ -1331,6 +1350,7 @@ namespace AwesomeTaskManager.UI
 
         public static void InvalidateCache()
         {
+            ThemedScrollbars.MarkDirty();
             _boardHeader = null;
             _columnHeader = null;
             _columnBox = null;
@@ -1908,6 +1928,7 @@ namespace AwesomeTaskManager.UI
                         wordWrap = true,
                         fontSize = 12,
                         padding = new RectOffset(8, 8, 8, 8),
+                        margin = new RectOffset(0, 0, 0, 0),
                         border = new RectOffset(0, 0, 0, 0)
                     };
                     SetAllStateTextures(_cardTextArea, GetColorTex(DropdownBg));
@@ -1993,6 +2014,16 @@ namespace AwesomeTaskManager.UI
             GUIContent content = new GUIContent(selectedText);
             GUIStyle effectiveStyle = style ?? StandardDropdown;
             Rect rect = GUILayoutUtility.GetRect(content, effectiveStyle, layoutOptions);
+
+            // CalcSize already includes the style padding; only reserve extra room if the right padding doesn't cover the ▾ arrow.
+            float textWidth = rect.width - Mathf.Max(0f, 15f - effectiveStyle.padding.right);
+            string fittedText = TruncateToWidth(selectedText, effectiveStyle, textWidth);
+            if (!string.Equals(fittedText, selectedText, StringComparison.Ordinal))
+            {
+                tooltip = string.IsNullOrEmpty(tooltip) ? selectedText : $"{tooltip}\n{selectedText}";
+                content.text = fittedText;
+                content.tooltip = selectedText;
+            }
             
             if (!string.IsNullOrEmpty(tooltip))
             {
@@ -2018,6 +2049,48 @@ namespace AwesomeTaskManager.UI
                 Rect arrowRect = new Rect(rect.xMax - 15, rect.y, 12, rect.height);
                 GUI.Label(arrowRect, "▾", arrowStyle);
             }
+        }
+
+        public static string TruncateToWidth(string text, GUIStyle style, float width)
+        {
+            if (string.IsNullOrEmpty(text) || style == null || width <= 0f)
+            {
+                return string.Empty;
+            }
+
+            if (style.CalcSize(new GUIContent(text)).x <= width)
+            {
+                return text;
+            }
+
+            const string ellipsis = "…";
+            if (style.CalcSize(new GUIContent(ellipsis)).x > width)
+            {
+                return string.Empty;
+            }
+
+            int low = 0;
+            int high = text.Length;
+            while (low < high)
+            {
+                int mid = (low + high + 1) / 2;
+                string candidate = text.Substring(0, mid) + ellipsis;
+                if (style.CalcSize(new GUIContent(candidate)).x <= width)
+                {
+                    low = mid;
+                }
+                else
+                {
+                    high = mid - 1;
+                }
+            }
+
+            if (low > 0 && low < text.Length && char.IsHighSurrogate(text[low - 1]) && char.IsLowSurrogate(text[low]))
+            {
+                low--;
+            }
+
+            return text.Substring(0, low) + ellipsis;
         }
 
         public static string DrawThemedTextField(string text, params GUILayoutOption[] layoutOptions)

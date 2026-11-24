@@ -20,7 +20,8 @@ public class PlayerManager : MonoBehaviour
     public PlayerStatsView playerStatsView;
     public UnityEvent onDebtWarning;
     public UnityEvent onFoodListUpdated;
-    
+    public List<DailyCurrencyTracker> dailyCurrencyTrackerList;
+    public DailyCurrencyTracker currentCurrencyTracker;
     [Header("Energy and Currency Costs")]
     [Tooltip("The amount of energy required to participate in a race")]
     [SerializeField] private int energyCostForRace = 25;
@@ -32,6 +33,11 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private int energyCostForTraining = 30;
     [Tooltip("The amount of currency required for training")]
     [SerializeField] private int currencyCostForTraining = 50;
+    
+    [Tooltip("The amount of happiness lost on lost race")]
+    [SerializeField] private int amountOfHappinessLostOnRaceLost = -10;
+    [Tooltip("The amount of happiness gained on race win")]
+    [SerializeField] private int amountOfHappinessGainedOnRaceWin = 10;
     
     [Header("Shop")]
     [SerializeField] private List<FridgeItem> playerFridgeItems = new List<FridgeItem>();
@@ -89,7 +95,22 @@ public class PlayerManager : MonoBehaviour
        if(TimeManager.Instance != null)
            TimeManager.Instance.onNewDay.AddListener(ReduceTeamMemberStat);
 
+       if (GameManager.Instance != null)
+       {
+           GameManager.Instance.onSleep.AddListener(UpdateDailyCurrencyTracker);
+       }
+       if (TimeManager.Instance != null)
+       {
+           TimeManager.Instance.onNewDay.AddListener(InitializeNewDailyCurrencyTracker);
+       }
+
+       if (dailyCurrencyTrackerList != null && dailyCurrencyTrackerList.Count > 0)
+       {
+           currentCurrencyTracker = dailyCurrencyTrackerList[0];
+       }
     }
+    
+    
 
     public CharacterStats GetPlayerStats()
     {
@@ -642,6 +663,71 @@ public class PlayerManager : MonoBehaviour
     {
         return currencyCostForTraining;
     }
+    
+    public Team GetPlayerTeam()
+    {
+        return playerTeam;
+    }
+    public DailyCurrencyTracker GetDailyCurrencyTracker()
+    {
+       if (dailyCurrencyTrackerList != null && dailyCurrencyTrackerList.Count > 0)
+       {
+         if(dailyCurrencyTrackerList.Count > 1)
+           return dailyCurrencyTrackerList[dailyCurrencyTrackerList.Count - 2];
+         else
+           return dailyCurrencyTrackerList[0];
+       }
+       return null;
+    }
+    
+    public void InitializeNewDailyCurrencyTracker()
+    {
+        Debug.Log("Initializing new daily currency tracker");
+      DailyCurrencyTracker tempTracker = new DailyCurrencyTracker();
+      tempTracker.euroAtStartOfDay = (int)coins;
+      tempTracker.teamHappinessStartOfDay = (int)GetPlayerTeamHappiness();
+      dailyCurrencyTrackerList.Add(tempTracker);
+      currentCurrencyTracker = dailyCurrencyTrackerList[dailyCurrencyTrackerList.Count - 1];
+    }
+    public void UpdateDailyCurrencyTracker()
+    {
+        Debug.Log("Updating daily currency tracker");
+        currentCurrencyTracker.euroAtEndOfDay = (int)coins;
+        currentCurrencyTracker.teamHappinessEndOfDay = (int)GetPlayerTeamHappiness();
+    }
+
+    public float GetPlayerTeamHappiness()
+    {
+        if(playerTeam == null)
+            return 0;
+        float happiness = 0;
+        foreach(TeamMember teamMember in playerTeam.teamMembers)
+        {
+            happiness += teamMember.happiness.currentHappiness;
+        }
+        happiness = happiness/playerTeam.teamMembers.Count;
+        
+        return happiness;
+    }
+    
+    public void UpdatePlayerTeamHappiness(int amount)
+    {
+        if(playerTeam == null)
+            return;
+        foreach(TeamMember teamMember in playerTeam.teamMembers)
+        {
+            teamMember.happiness.currentHappiness += amount;
+        }
+    }
+    public void UpdatePlayerTeamHappinessOnRaceWin()
+    {
+        UpdatePlayerTeamHappiness(amountOfHappinessGainedOnRaceWin);
+    }
+    public void UpdatePlayerTeamHappinessOnRaceLost()
+    {
+        UpdatePlayerTeamHappiness(-amountOfHappinessLostOnRaceLost);
+    }
+
 }
 
 

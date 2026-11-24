@@ -1,0 +1,20 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json)",
+      "Read(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json.bak)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManager.json.bak)",
+      "Read(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json)",
+      "Read(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json.bak)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/AwesomeTaskManagerTheme.json.bak)",
+      "Read(./ProjectSettings/AwesomeTaskManager/Boards/**)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/Boards/**)",
+      "Read(./ProjectSettings/AwesomeTaskManager/Notes/**)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/Notes/**)",
+      "Read(./ProjectSettings/AwesomeTaskManager/TheUltimateTaskBoard/**)",
+      "Edit(./ProjectSettings/AwesomeTaskManager/TheUltimateTaskBoard/**)"
+    ]
+  }
+}

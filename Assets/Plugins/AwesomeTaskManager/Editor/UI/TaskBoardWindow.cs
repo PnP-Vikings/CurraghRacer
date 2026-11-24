@@ -1,12 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.IO.Compression;
 using System.Linq;
-using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
-using System.Xml;
 using AwesomeTaskManager.Data;
 using AwesomeTaskManager.UI;
 using UnityEditor;
@@ -34,6 +31,18 @@ namespace AwesomeTaskManager.Editor
         }
 
         private SaveData _data;
+        private const string ImportUndoSessionKey = "AwesomeTaskManager.ImportUndoSnapshot";
+
+        [Serializable]
+        private sealed class ImportUndoSnapshot
+        {
+            public List<TaskBoard> boards;
+            public List<Assignee> assignees;
+            public List<string> categories;
+            public List<CategoryColorEntry> categoryColors;
+            public int nextTaskNumber;
+        }
+
         [SerializeField] private int _tab;
         [SerializeField] private int _boardIndex;
         public int BoardIndex
@@ -75,6 +84,16 @@ namespace AwesomeTaskManager.Editor
         [SerializeField] private string _assigneeFilter = ""; // New filter
         [SerializeField] private int _priorityFilter = 0; // 0 = All
         [SerializeField] private string _styleSearchFilter = "";
+        [SerializeField] private Vector2 _boardToolbarScroll;
+        [SerializeField] private Vector2 _styleToolbarScroll;
+        [SerializeField] private Vector2 _noteTitleBarScroll;
+        [SerializeField] private Vector2 _noteToolbarScroll;
+        private bool _styleNarrow;
+        private float _styleContentWidth;
+        private bool _boardToolbarOverflow;
+        private bool _styleToolbarOverflow;
+        private bool _noteTitleBarOverflow;
+        private bool _noteToolbarOverflow;
         private bool _styleSearchForceShowCurrentSection;
         private bool _styleSectionHasVisibleAttribute;
         private string _newColumnTitle = "";
@@ -131,8 +150,10 @@ namespace AwesomeTaskManager.Editor
         // Success Notification
         private string _successNotificationMessage = "";
         private double _successNotificationEndTime = 0;
+        private bool _successNotificationPending;
         private string _errorNotificationMessage = "";
         private double _errorNotificationEndTime = 0;
+        private bool _errorNotificationPending;
         private bool _showArchived = false;
         private bool _myTasksOnly = false;
         private long _lastDiskTimestamp = 0;
@@ -148,7 +169,7 @@ namespace AwesomeTaskManager.Editor
         public static void Open()
         {
             var w = GetWindow<TaskBoardWindow>("🎯 Awesome Task Manager");
-            w.minSize = new Vector2(750, 420);
+            w.minSize = new Vector2(180, 300);
         }
 
         [MenuItem("Tools/Awesome Task Manager/New Card &#c", false, 100)]
@@ -276,6 +297,7 @@ namespace AwesomeTaskManager.Editor
         private void OnEnable()
         {
             Instance = this;
+            minSize = new Vector2(180, 300);
             wantsMouseMove = true;
             // Always refresh from disk on enable; EditorWindow serialized state can be stale.
             _data = Persistence.Load();
@@ -342,6 +364,10 @@ namespace AwesomeTaskManager.Editor
 
         public void LoadData()
         {
+            string selectedNoteId = null;
+            if (_data?.notes != null && _selectedNote >= 0 && _selectedNote < _data.notes.Count)
+                selectedNoteId = _data.notes[_selectedNote]?.id;
+
             var freshData = Persistence.Load();
             _lastDiskTimestamp = Persistence.GetDiskTimestamp();
             if (freshData == null) 
@@ -351,6 +377,11 @@ namespace AwesomeTaskManager.Editor
             }
 
             _data = freshData;
+            if (!string.IsNullOrEmpty(selectedNoteId))
+                _selectedNote = _data.notes.FindIndex(note => note != null && note.id == selectedNoteId);
+            else if (_selectedNote < 0 || _selectedNote >= _data.notes.Count)
+                _selectedNote = -1;
+
             _boardIndex = Mathf.Clamp(_data.lastBoardIndex, 0, Mathf.Max(0, _data.boards.Count - 1));
             if (_data.userSettings != null)
             {
@@ -367,6 +398,59 @@ namespace AwesomeTaskManager.Editor
             NotifySubWindowsToReload();
 
             Repaint();
+        }
+
+        public static bool OpenCardDetails(string cardId)
+        {
+            var window = Instance;
+            var data = Persistence.Load() ?? window?._data;
+            if (data?.boards != null)
+            {
+                foreach (var board in data.boards)
+                {
+                    if (board?.columns == null) continue;
+                    foreach (var column in board.columns)
+                    {
+                        var card = column?.cards?.FirstOrDefault(candidate => candidate != null && candidate.id == cardId);
+                        if (card == null) continue;
+
+                        string boardId = board.id;
+                        string columnId = column.id;
+                        CardDetailWindow.Show(card, data, boardId, columnId,
+                            () =>
+                            {
+                                if (Instance != null) Instance.LoadData();
+                            },
+                            () =>
+                            {
+                                var currentWindow = Instance;
+                                if (currentWindow != null)
+                                {
+                                    currentWindow.DeleteCardFromDetail(boardId, columnId, card.id);
+                                    return;
+                                }
+
+                                var freshData = Persistence.Load();
+                                var freshBoard = freshData?.boards?.FirstOrDefault(candidate => candidate != null && candidate.id == boardId);
+                                var freshColumn = freshBoard?.columns?.FirstOrDefault(candidate => candidate != null && candidate.id == columnId);
+                                if (freshColumn?.cards != null)
+                                {
+                                    freshData.CleanupReferencesToCard(card.id);
+                                    freshColumn.cards.RemoveAll(candidate => candidate != null && candidate.id == card.id);
+                                    Persistence.Save(freshData);
+                                    ReloadAllOpenWindows();
+                                }
+                            });
+                        return true;
+                    }
+                }
+            }
+
+            if (window != null)
+                window.ShowNotification(new GUIContent("The linked task card could not be found"));
+            else
+                Debug.LogWarning("[AwesomeTaskManager] The linked task card could not be found.");
+            return false;
         }
 
         private void ApplyPostLoadVisualState()
@@ -691,6 +775,81 @@ namespace AwesomeTaskManager.Editor
             catch { }
         }
 
+        private void CaptureImportSnapshot()
+        {
+            if (_data == null) return;
+            var snapshot = new ImportUndoSnapshot
+            {
+                boards = _data.boards ?? new List<TaskBoard>(),
+                assignees = _data.assignees ?? new List<Assignee>(),
+                categories = _data.categories ?? new List<string>(),
+                categoryColors = _data.categoryColors ?? new List<CategoryColorEntry>(),
+                nextTaskNumber = _data.nextTaskNumber
+            };
+            SessionState.SetString(ImportUndoSessionKey, JsonUtility.ToJson(snapshot));
+        }
+
+        private void UndoLastImport()
+        {
+            string json = SessionState.GetString(ImportUndoSessionKey, string.Empty);
+            if (string.IsNullOrEmpty(json))
+            {
+                TriggerErrorNotification("There is no import to undo.");
+                return;
+            }
+
+            ImportUndoSnapshot snapshot = JsonUtility.FromJson<ImportUndoSnapshot>(json);
+            if (snapshot == null)
+            {
+                SessionState.EraseString(ImportUndoSessionKey);
+                TriggerErrorNotification("The last import snapshot could not be restored.");
+                return;
+            }
+
+            if (!ThemedDialog.Show("Undo Last Import",
+                    "Restore boards, assignees and categories to how they were before the last import?\n\n" +
+                    "Any board changes made since that import will also be lost. Notes and themes are not affected.",
+                    "Undo Import", "Cancel"))
+                return;
+
+            _data ??= Persistence.Load();
+            if (_data == null) return;
+            _data.boards = snapshot.boards ?? new List<TaskBoard>();
+            _data.assignees = snapshot.assignees ?? new List<Assignee>();
+            _data.categories = snapshot.categories ?? new List<string>();
+            _data.categoryColors = snapshot.categoryColors ?? new List<CategoryColorEntry>();
+            _data.nextTaskNumber = snapshot.nextTaskNumber;
+            SessionState.EraseString(ImportUndoSessionKey);
+            _data.Normalize();
+            _boardIndex = Mathf.Clamp(_boardIndex, 0, Mathf.Max(0, _data.boards.Count - 1));
+            Save();
+            RefreshAfterImport();
+            TriggerSuccessNotification("Last import undone");
+        }
+
+        private void ShowImportReport(BoardImportExport.ImportReport report, string successMessage)
+        {
+            report ??= new BoardImportExport.ImportReport();
+            string summary = report.Summary();
+            int importedCount = report.created + report.updated + report.placeholders + report.newColumns;
+            bool importedAnything = importedCount > 0;
+            bool hasDetails = report.skippedRows.Count > 0 || report.warnings.Count > 0;
+            if (importedAnything)
+                TriggerSuccessNotification(successMessage + (hasDetails ? " See import report for details." : " " + summary));
+            else
+                TriggerErrorNotification("Import did not create or update any items. See import report for details.");
+
+            if (hasDetails || !importedAnything)
+            {
+                var details = new StringBuilder(summary);
+                foreach (string skipped in report.skippedRows.Take(10)) details.AppendLine().Append("Skipped: ").Append(skipped);
+                foreach (string warning in report.warnings.Take(10)) details.AppendLine().Append("Warning: ").Append(warning);
+                if (report.skippedRows.Count + report.warnings.Count > 20) details.AppendLine().Append("Additional details are available in the Unity console.");
+                Debug.Log("[AwesomeTaskManager] Import report: " + details);
+                EditorUtility.DisplayDialog("Import Report", details.ToString(), "OK");
+            }
+        }
+
         public void Save()
         {
             if (_data == null) return;
@@ -909,6 +1068,7 @@ namespace AwesomeTaskManager.Editor
 
         private void OnGUI()
         {
+            using var _scrollbarTheme = ThemedScrollbars.Begin();
             try
             {
                 if (_data == null) 
@@ -970,21 +1130,23 @@ namespace AwesomeTaskManager.Editor
             _tabScrollPos = EditorGUILayout.BeginScrollView(_tabScrollPos, false, false, GUIStyle.none, GUIStyle.none, GUIStyle.none, GUILayout.Height(34));
             using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
             {
+                float tabWidth = Mathf.Clamp((position.width - 24f) / 3f, 40f, 100f);
+                bool iconsOnly = tabWidth < 80f;
                 GUILayout.Space(8);
-                if (ThemedTooltip.Button($"{TBStyles.BoardTabIcon} Board", "Switch to Task Board view", _tab == 0 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
+                if (ThemedTooltip.Button(iconsOnly ? TBStyles.BoardTabIcon : $"{TBStyles.BoardTabIcon} Board", "Switch to Task Board view", _tab == 0 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(tabWidth), GUILayout.Height(28)))
                 {
                     if (_tab != 0) _resetNotesSidebarOnNextOpen = true;
                     _tab = 0;
                     GUIUtility.ExitGUI();
                 }
                 GUILayout.Space(4);
-                if (ThemedTooltip.Button($"{TBStyles.NotesTabIcon} Notes", "Switch to Notes workspace", _tab == 1 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
+                if (ThemedTooltip.Button(iconsOnly ? TBStyles.NotesTabIcon : $"{TBStyles.NotesTabIcon} Notes", "Switch to Notes workspace", _tab == 1 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(tabWidth), GUILayout.Height(28)))
                 {
                     _tab = 1;
                     GUIUtility.ExitGUI();
                 }
                 GUILayout.Space(4);
-                if (ThemedTooltip.Button($"{TBStyles.StyleTabIcon} Style", "Switch to Theme & Style customization view", _tab == 2 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(100), GUILayout.Height(28)))
+                if (ThemedTooltip.Button(iconsOnly ? TBStyles.StyleTabIcon : $"{TBStyles.StyleTabIcon} Style", "Switch to Theme & Style customization view", _tab == 2 ? TBStyles.TabActive : TBStyles.TabInactive, GUILayout.Width(tabWidth), GUILayout.Height(28)))
                 {
                     _tab = 2;
                     GUIUtility.ExitGUI();
@@ -994,6 +1156,28 @@ namespace AwesomeTaskManager.Editor
             }
             EditorGUILayout.EndScrollView();
             EditorGUILayout.EndVertical();
+        }
+
+        private void DrawAddColumnControls(TaskBoard board, bool compact)
+        {
+            if (_showAddColumn)
+            {
+                float fieldWidth = compact ? Mathf.Clamp(position.width - 112f, 50f, 140f) : 140f;
+                _newColumnTitle = TBStyles.DrawThemedTextField(_newColumnTitle, TBStyles.ThemedTextField, GUILayout.Width(fieldWidth), GUILayout.Height(22));
+                if (ThemedTooltip.Button("Add", "Add a new Column", TBStyles.StandardButton, GUILayout.Width(42), GUILayout.Height(22)) && !string.IsNullOrWhiteSpace(_newColumnTitle))
+                {
+                    board.columns.Add(new TaskColumn(_newColumnTitle.Trim()));
+                    _newColumnTitle = "";
+                    _showAddColumn = false;
+                    Save();
+                    GUIUtility.ExitGUI();
+                }
+                if (ThemedTooltip.IconButton("✕", "Cancel Column Creation", GUILayout.Width(22), GUILayout.Height(22))) _showAddColumn = false;
+            }
+            else if (ThemedTooltip.Button("+ Column", "Add a new Column", TBStyles.StandardButton, GUILayout.Width(80), GUILayout.Height(24)))
+            {
+                _showAddColumn = true;
+            }
         }
 
         // ════════════════════════════════════════════
@@ -1011,7 +1195,9 @@ namespace AwesomeTaskManager.Editor
             bool showLabels = windowWidth > 1000;
             bool mediumWidth = windowWidth > 850;
 
-            using (var tbScope = new EditorGUILayout.VerticalScope(GUILayout.Height(26)))
+            float boardToolbarHeight = ToolbarScrollHeight(_boardToolbarOverflow);
+            float boardToolbarContentWidth = 0f;
+            using (var tbScope = new EditorGUILayout.VerticalScope(GUILayout.Height(boardToolbarHeight + 8f)))
             {
                 if (Event.current.type == EventType.Repaint)
                 {
@@ -1019,29 +1205,38 @@ namespace AwesomeTaskManager.Editor
                     EditorGUI.DrawRect(new Rect(tbScope.rect.x, tbScope.rect.yMax - 1, tbScope.rect.width, 1), EditorGUIUtility.isProSkin ? new Color(0f, 0f, 0f, 0.30f) : new Color(0f, 0f, 0f, 0.10f));
                 }
 
-                GUILayout.FlexibleSpace();
-
-                using (new EditorGUILayout.HorizontalScope())
+                using (var toolbarScroll = new EditorGUILayout.ScrollViewScope(_boardToolbarScroll, false, false, GUI.skin.horizontalScrollbar, GUIStyle.none, GUIStyle.none, GUILayout.Height(boardToolbarHeight)))
                 {
+                    _boardToolbarScroll = toolbarScroll.scrollPosition;
+                    GUILayout.FlexibleSpace();
+
+                    using (var toolbarRow = new EditorGUILayout.HorizontalScope())
+                    {
+                    boardToolbarContentWidth = toolbarRow.rect.width;
                     GUILayout.Space(8);
 
                     string[] names = _data.boards.Select(b => b.name).ToArray();
+                    float boardDropdownWidth = Mathf.Clamp(position.width - 100f, 44f, mediumWidth ? 150f : 120f);
                     TBStyles.DrawThemedDropdown(_boardIndex, names, (newIdx) =>
                     {
                         if (newIdx != _boardIndex)
                         {
                             _boardIndex = newIdx;
                             _data.lastBoardIndex = _boardIndex;
+                            _data.userSettings ??= new UserSaveData();
+                            _data.userSettings.lastBoardIndex = _boardIndex;
                             Persistence.Save(_data);
+                            _lastDiskTimestamp = Persistence.GetDiskTimestamp();
                             ResetFilters();
-                            GUIUtility.ExitGUI();
+                            TriggerSuccessNotification($"Switched to {_data.boards[_boardIndex].name}");
+                            Repaint();
                         }
-                    }, TBStyles.ToolbarPopup, "Select current board", GUILayout.Width(mediumWidth ? 150 : 120), GUILayout.Height(20));
+                    }, TBStyles.ToolbarPopup, "Select current board", GUILayout.Width(boardDropdownWidth), GUILayout.Height(20));
 
                     GUILayout.Space(2);
                     if (ThemedContextMenu.DropdownButton("+", "Board Options", TBStyles.ToolbarButton, out Rect btnRect, GUILayout.Width(22), GUILayout.Height(20)))
                     {
-                        var menu = new ThemedContextMenu();
+                        var menu = new ThemedContextMenu { FitContent = true };
                         menu.AddItem(new GUIContent("Create New Board/Blank Board"), false, () => CreateBoard(null));
                         menu.AddSeparator("Create New Board/");
                         foreach (var template in _data.templates)
@@ -1050,16 +1245,20 @@ namespace AwesomeTaskManager.Editor
                             menu.AddItem(new GUIContent("Create New Board/Template: " + t.name), false, () => CreateBoard(t));
                         }
                         menu.AddSeparator("");
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board (JSON - Native)..."), false, () => ExportBoard(board));
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board (JSON - Native)..."), false, ImportBoard);
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
-                        menu.AddSeparator("Beta (Export or Import)/");
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (CSV - External)"), false, () => ExportBoardToCSV(board));
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Export Board/Export Board... (Excel - External)"), false, () => ExportBoardToExcel(board));
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (CSV - External)"), false, ImportBoardFromCSV);
-                        menu.AddItem(new GUIContent("Beta (Export or Import)/Import Board/Import Board... (Excel - External)"), false, ImportBoardFromExcel);
+                        menu.AddItem(new GUIContent("Export or Import/Export Board/Export Board (JSON - Native)..."), false, () => ExportBoard(board));
+                        menu.AddItem(new GUIContent("Export or Import/Import Board/Import Board (JSON - Native)..."), false, ImportBoard);
+                        menu.AddItem(new GUIContent("Export or Import/Export Board/Export Board... (JSON - Trello format)"), false, () => ExportBoardToTrelloJson(board));
+                        menu.AddItem(new GUIContent("Export or Import/Import Board/Import Board... (JSON - External: Trello, ClickUp, Jira)"), false, ImportBoardFromExternalJson);
+                        if (!string.IsNullOrEmpty(SessionState.GetString(ImportUndoSessionKey, string.Empty)))
+                            menu.AddItem(new GUIContent("Export or Import/Undo Last Import"), false, UndoLastImport);
+                        menu.AddItem(new GUIContent("Export or Import/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
+                        menu.AddItem(new GUIContent("Export or Import/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
+                        menu.AddItem(new GUIContent("Export or Import/Import Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
+                        menu.AddSeparator("Export or Import/");
+                        menu.AddItem(new GUIContent("Export or Import/Export Board/Export Board... (CSV - External)"), false, () => ExportBoardToCSV(board));
+                        menu.AddItem(new GUIContent("Export or Import/Export Board/Export Board... (Excel - External)"), false, () => ExportBoardToExcel(board));
+                        menu.AddItem(new GUIContent("Export or Import/Import Board/Import Board... (CSV - External)"), false, ImportBoardFromCSV);
+                        menu.AddItem(new GUIContent("Export or Import/Import Board/Import Board... (Excel - External)"), false, ImportBoardFromExcel);
                         menu.AddSeparator("");
                         menu.AddItem(new GUIContent("Save Current as Template..."), false, SaveCurrentAsTemplate);
                         if (_data.templates.Count > 0)
@@ -1216,55 +1415,66 @@ namespace AwesomeTaskManager.Editor
                     }
                     
                     GUILayout.FlexibleSpace();
+                    }
                 }
 
+                UpdateToolbarOverflow(ref _boardToolbarOverflow, boardToolbarContentWidth, tbScope.rect.width);
                 GUILayout.Space(2);
             }
 
             GUILayout.Space(2);
 
             // Board title row
-            using (new EditorGUILayout.HorizontalScope())
+            bool narrowWindow = position.width < 500f;
+            using (new EditorGUILayout.VerticalScope())
             {
-                if (_renamingBoard)
+                using (new EditorGUILayout.HorizontalScope())
                 {
-                    _renameBoardName = TBStyles.DrawThemedTextField(_renameBoardName, TBStyles.ThemedTextField, GUILayout.Width(250), GUILayout.Height(26));
-                    if (ThemedTooltip.IconButton("✔", "Save Board Name", GUILayout.Width(26), GUILayout.Height(24)))
+                    float nameActionsWidth = narrowWindow ? 58f : (_showAddColumn ? 270f : 100f);
+                    float boardNameWidth = Mathf.Max(0f, position.width - nameActionsWidth - 20f);
+                    if (_renamingBoard)
                     {
-                        if (!string.IsNullOrWhiteSpace(_renameBoardName)) board.name = _renameBoardName.Trim();
-                        _renamingBoard = false; Save();
+                        _renameBoardName = TBStyles.DrawThemedTextField(_renameBoardName, TBStyles.ThemedTextField, GUILayout.Width(Mathf.Min(250f, boardNameWidth)), GUILayout.Height(26));
+                        if (ThemedTooltip.IconButton("✔", "Save Board Name", GUILayout.Width(26), GUILayout.Height(24)))
+                        {
+                            if (!string.IsNullOrWhiteSpace(_renameBoardName)) board.name = _renameBoardName.Trim();
+                            _renamingBoard = false; Save();
+                        }
+                        if (ThemedTooltip.IconButton("✕", "Cancel Renaming", GUILayout.Width(26), GUILayout.Height(24))) _renamingBoard = false;
                     }
-                    if (ThemedTooltip.IconButton("✕","Cancel Renaming", GUILayout.Width(26), GUILayout.Height(24))) _renamingBoard = false;
-                }
-                else
-                {
-                    string headerText = $"{TBStyles.BoardHeaderIcon} {TBStyles.TruncateString(board.name, 50)}";
-                    Vector2 headerSize = TBStyles.BoardHeader.CalcSize(new GUIContent(headerText));
-                    EditorGUILayout.LabelField(headerText, TBStyles.BoardHeader, GUILayout.Width(headerSize.x + 4), GUILayout.Height(30));
-                    
-                    if (ThemedTooltip.IconButton("✏", "Rename Board", GUILayout.Width(26), GUILayout.Height(24)))
+                    else
                     {
-                        _renamingBoard = true;
-                        _renameBoardName = board.name;
-                    }
-                }
-                GUILayout.FlexibleSpace();
+                        string headerText = $"{TBStyles.BoardHeaderIcon} {board.name}";
+                        var headerStyle = new GUIStyle(TBStyles.BoardHeader) { clipping = TextClipping.Clip, wordWrap = false };
+                        Rect headerRect = GUILayoutUtility.GetRect(new GUIContent(headerText), headerStyle, GUILayout.MinWidth(0f), GUILayout.ExpandWidth(true), GUILayout.Height(30));
+                        if (Event.current.type != EventType.Layout)
+                        {
+                            string visibleHeader = TBStyles.TruncateToWidth(headerText, headerStyle, headerRect.width);
+                            GUI.Label(headerRect, visibleHeader, headerStyle);
+                            if (visibleHeader != headerText) ThemedTooltip.SetTooltip(headerRect, board.name);
+                        }
 
-                if (_showAddColumn)
-                {
-                    _newColumnTitle = TBStyles.DrawThemedTextField(_newColumnTitle, TBStyles.ThemedTextField, GUILayout.Width(140), GUILayout.Height(22));
-                    if (ThemedTooltip.Button("Add", "Add a new Column", TBStyles.StandardButton, GUILayout.Width(42), GUILayout.Height(22)) && !string.IsNullOrWhiteSpace(_newColumnTitle))
-                    {
-                        board.columns.Add(new TaskColumn(_newColumnTitle.Trim()));
-                        _newColumnTitle = ""; _showAddColumn = false; Save();
-                        GUIUtility.ExitGUI();
+                        if (ThemedTooltip.IconButton("✏", "Rename Board", GUILayout.Width(26), GUILayout.Height(24)))
+                        {
+                            _renamingBoard = true;
+                            _renameBoardName = board.name;
+                        }
                     }
-                    if (ThemedTooltip.IconButton("✕", "Cancel Column Creation", GUILayout.Width(22), GUILayout.Height(22))) _showAddColumn = false;
+                    if (!narrowWindow && _renamingBoard) GUILayout.FlexibleSpace();
+
+                    if (!narrowWindow)
+                    {
+                        DrawAddColumnControls(board, false);
+                    }
                 }
-                else
+
+                if (narrowWindow)
                 {
-                    if (ThemedTooltip.Button("+ Column", "Add a new Column", TBStyles.StandardButton, GUILayout.Width(80), GUILayout.Height(24)))
-                        _showAddColumn = true;
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        GUILayout.FlexibleSpace();
+                        DrawAddColumnControls(board, true);
+                    }
                 }
             }
 
@@ -1484,7 +1694,7 @@ namespace AwesomeTaskManager.Editor
                         }
                         if (ThemedContextMenu.DropdownButton("⋮", "Show Column Options", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(22), GUILayout.Height(20)))
                         {
-                            var menu = new ThemedContextMenu();
+                            var menu = new ThemedContextMenu { FitContent = true };
                             int ci = colIdx;
                             menu.AddItem(new GUIContent("Rename Column"), false, () =>
                             {
@@ -1518,15 +1728,15 @@ namespace AwesomeTaskManager.Editor
                                 }
                             });
                             menu.AddSeparator("");
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Export Column to CSV..."), false, () => ExportColumnToCSV(col));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Export Column to Excel..."), false, () => ExportColumnToExcel(col));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Card/Import Card from CSV..."), false, () => ImportCardFromCSV(col));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Card/Import Card from Excel..."), false, () => ImportCardFromExcel(col));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Import Card/Import Card... (JSON)"), false, () => ImportCardIntoColumn(col));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Export Column (.atcl)..."), false, () => ExportColumn(col));
-                            menu.AddItem(new GUIContent("Beta (Export or Import)/Export Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
+                            menu.AddItem(new GUIContent("Export or Import/Export Column/Export Column to CSV..."), false, () => ExportColumnToCSV(col));
+                            menu.AddItem(new GUIContent("Export or Import/Export Column/Export Column to Excel..."), false, () => ExportColumnToExcel(col));
+                            menu.AddItem(new GUIContent("Export or Import/Import Column/Import Column from CSV..."), false, () => ImportColumnFromCSV(board));
+                            menu.AddItem(new GUIContent("Export or Import/Import Column/Import Column from Excel..."), false, () => ImportColumnFromExcel(board));
+                            menu.AddItem(new GUIContent("Export or Import/Import Card/Import Card from CSV..."), false, () => ImportCardFromCSV(col));
+                            menu.AddItem(new GUIContent("Export or Import/Import Card/Import Card from Excel..."), false, () => ImportCardFromExcel(col));
+                            menu.AddItem(new GUIContent("Export or Import/Import Card/Import Card... (JSON)"), false, () => ImportCardIntoColumn(col));
+                            menu.AddItem(new GUIContent("Export or Import/Export Column/Export Column (.atcl)..."), false, () => ExportColumn(col));
+                            menu.AddItem(new GUIContent("Export or Import/Import Column/Import Column (.atcl)..."), false, () => ImportColumnIntoBoard(board));
                             menu.AddSeparator("");
                             menu.AddItem(new GUIContent("Delete Column"), false, () =>
                             {
@@ -1700,10 +1910,10 @@ namespace AwesomeTaskManager.Editor
                         });
                     }
 
-                    menu.AddItem(new GUIContent("Beta (Export Card)/as CSV..."), false, () => ExportCardToCSV(card, col));
-                    menu.AddItem(new GUIContent("Beta (Export Card)/as Excel..."), false, () => ExportCardToExcel(card, col));
-                    menu.AddSeparator("Beta (Export Card)/");
-                    menu.AddItem(new GUIContent("Beta (Export Card)/as JSON (.atc)..."), false, () => ExportCard(card));
+                    menu.AddItem(new GUIContent("Export Card/as CSV..."), false, () => ExportCardToCSV(card, col));
+                    menu.AddItem(new GUIContent("Export Card/as Excel..."), false, () => ExportCardToExcel(card, col));
+                    menu.AddSeparator("Export Card/");
+                    menu.AddItem(new GUIContent("Export Card/as JSON (.atc)..."), false, () => ExportCard(card));
 
                     menu.AddItem(new GUIContent("Copy Card"), false, () =>
                     {
@@ -2499,6 +2709,10 @@ namespace AwesomeTaskManager.Editor
                                 _data.notes.Insert(0, n);
                                 _newNoteTitle = "";
                                 _selectedNote = 0;
+                                _noteEditorScroll = Vector2.zero;
+                                _clipboard?.Reset();
+                                _needsUndoBaseline = true;
+                                GUI.FocusControl(null);
                                 Save();
                                 Repaint();
                             }
@@ -2637,7 +2851,7 @@ namespace AwesomeTaskManager.Editor
                                         string nn = EditorInputDialog.Show("Rename Folder", "Folder name:", folder.name);
                                         if (!string.IsNullOrWhiteSpace(nn)) { folder.name = nn; Save(); Repaint(); }
                                     });
-                                    menu.AddItem(new GUIContent("Beta (Export or Import)/Export Folder (.md)"), false, () => ExportFolder(folder));
+                                    menu.AddItem(new GUIContent("Export or Import/Export Folder (.md)"), false, () => ExportFolder(folder));
                                     menu.AddSeparator("");
                                     menu.AddItem(new GUIContent("Delete Folder"), false, () =>
                                     {
@@ -3162,73 +3376,84 @@ namespace AwesomeTaskManager.Editor
             }
 
             // ── Title bar ──
-            using (new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
+            float titleBarHeight = ToolbarScrollHeight(_noteTitleBarOverflow, 24f);
+            float titleBarContentWidth = 0f;
+            using (var titleBarScope = new EditorGUILayout.VerticalScope(GUILayout.Height(titleBarHeight), GUILayout.ExpandWidth(true)))
             {
-                GUILayout.Space(6);
-                string newTitle = TBStyles.DrawThemedTextField(note.title, TBStyles.NoteTitle, GUILayout.Height(24), GUILayout.ExpandWidth(true));
-                if (newTitle != note.title) { note.title = newTitle; MarkNoteModified(note); }
-
-                // Pin
-                if (ThemedTooltip.Button(note.pinned ? TBStyles.PinnedNoteIcon : "Pin", note.pinned ? "Unpin Note" : "Pin Note", TBStyles.StandardButton, GUILayout.Width(36), GUILayout.Height(24)))
+                using (var titleBarScroll = new EditorGUILayout.ScrollViewScope(_noteTitleBarScroll, false, false, GUI.skin.horizontalScrollbar, GUIStyle.none, GUIStyle.none, GUILayout.Height(titleBarHeight)))
                 {
-                    note.pinned = !note.pinned; Save(); Repaint();
-                }
-
-                // Color
-                TBStyles.DrawThemedDropdown(note.colorIndex, TBStyles.LabelNames, (newCol) =>
-                {
-                    if (newCol != note.colorIndex) { note.colorIndex = newCol; Save(); Repaint(); }
-                }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Note color label", GUILayout.Width(70));
-
-                // Move to folder
-                if (ThemedContextMenu.DropdownButton("📁", "Move Note to Folder", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(28), GUILayout.Height(24)))
-                {
-                    var menu = new ThemedContextMenu();
-                    menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(note.folderId), () =>
+                    _noteTitleBarScroll = titleBarScroll.scrollPosition;
+                    using (var titleBarRow = new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
                     {
-                        note.folderId = ""; Save(); Repaint();
-                    });
-                    foreach (var folder in _data.noteFolders)
-                    {
-                        string fid = folder.id;
-                        menu.AddItem(new GUIContent(folder.name), note.folderId == fid, () =>
+                        titleBarContentWidth = titleBarRow.rect.width;
+                        GUILayout.Space(6);
+                        string newTitle = TBStyles.DrawThemedTextField(note.title, TBStyles.NoteTitle, GUILayout.MinWidth(80), GUILayout.Height(24), GUILayout.ExpandWidth(true));
+                        if (newTitle != note.title) { note.title = newTitle; MarkNoteModified(note); }
+
+                        // Pin
+                        if (ThemedTooltip.Button(note.pinned ? TBStyles.PinnedNoteIcon : "Pin", note.pinned ? "Unpin Note" : "Pin Note", TBStyles.StandardButton, GUILayout.Width(36), GUILayout.Height(24)))
                         {
-                            note.folderId = fid; Save(); Repaint();
-                        });
-                    }
-                    menu.Show(btnRect);
-                }
-
-                // Export single note
-                if (ThemedTooltip.IconButton("📤", "Export Note", GUILayout.Width(28), GUILayout.Height(24)))
-                {
-                    EditorApplication.delayCall += () => ExportSingleNote(note);
-                }
-
-                if (ThemedTooltip.IconButton("↗", "Popout Note", GUILayout.Width(28), GUILayout.Height(24)))
-                {
-                    NotePopupWindow.Open(note, _data, () => { LoadData(); });
-                }
-
-                // Delete
-                if (ThemedTooltip.DeleteIconButton(TBStyles.DeleteIcon, "Delete Note", GUILayout.Width(28), GUILayout.Height(24)))
-                {
-                    int idx = _selectedNote;
-                    EditorApplication.delayCall += () =>
-                    {
-                        if (ThemedDialog.Show("Delete Note", $"Delete \"{note.title}\"?", "Delete", "Cancel"))
-                        {
-                            if (idx >= 0 && idx < _data.notes.Count)
-                            {
-                                _data.notes.RemoveAt(idx);
-                                _selectedNote = -1;
-                                Save();
-                                Repaint();
-                            }
+                            note.pinned = !note.pinned; Save(); Repaint();
                         }
-                    };
+
+                        // Color
+                        TBStyles.DrawThemedDropdown(note.colorIndex, TBStyles.LabelNames, (newCol) =>
+                        {
+                            if (newCol != note.colorIndex) { note.colorIndex = newCol; Save(); Repaint(); }
+                        }, TBStyles.StandardDropdown, TBStyles.GetLabelColorsArray(), "Note color label", GUILayout.Width(70));
+
+                        // Move to folder
+                        if (ThemedContextMenu.DropdownButton("📁", "Move Note to Folder", TBStyles.IconButton, out Rect btnRect, GUILayout.Width(28), GUILayout.Height(24)))
+                        {
+                            var menu = new ThemedContextMenu();
+                            menu.AddItem(new GUIContent("Unfiled"), string.IsNullOrEmpty(note.folderId), () =>
+                            {
+                                note.folderId = ""; Save(); Repaint();
+                            });
+                            foreach (var folder in _data.noteFolders)
+                            {
+                                string fid = folder.id;
+                                menu.AddItem(new GUIContent(folder.name), note.folderId == fid, () =>
+                                {
+                                    note.folderId = fid; Save(); Repaint();
+                                });
+                            }
+                            menu.Show(btnRect);
+                        }
+
+                        // Export single note
+                        if (ThemedTooltip.IconButton("📤", "Export Note", GUILayout.Width(28), GUILayout.Height(24)))
+                        {
+                            EditorApplication.delayCall += () => ExportSingleNote(note);
+                        }
+
+                        if (ThemedTooltip.IconButton("↗", "Popout Note", GUILayout.Width(28), GUILayout.Height(24)))
+                        {
+                            NotePopupWindow.Open(note, _data, () => { LoadData(); });
+                        }
+
+                        // Delete
+                        if (ThemedTooltip.DeleteIconButton(TBStyles.DeleteIcon, "Delete Note", GUILayout.Width(28), GUILayout.Height(24)))
+                        {
+                            int idx = _selectedNote;
+                            EditorApplication.delayCall += () =>
+                            {
+                                if (ThemedDialog.Show("Delete Note", $"Delete \"{note.title}\"?", "Delete", "Cancel"))
+                                {
+                                    if (idx >= 0 && idx < _data.notes.Count)
+                                    {
+                                        _data.notes.RemoveAt(idx);
+                                        _selectedNote = -1;
+                                        Save();
+                                        Repaint();
+                                    }
+                                }
+                            };
+                        }
+                        GUILayout.Space(6);
+                    }
                 }
-                GUILayout.Space(6);
+                UpdateToolbarOverflow(ref _noteTitleBarOverflow, titleBarContentWidth, titleBarScope.rect.width);
             }
 
             // ── Metadata row ──
@@ -3251,9 +3476,9 @@ namespace AwesomeTaskManager.Editor
                     EditorGUIUtility.AddCursorRect(metadataRect, MouseCursor.Link);
                 }
 
-                EditorGUI.LabelField(metadataRect,
-                    $"📁 {folderName}  |  Created: {note.createdDate}  |  Modified: {note.modifiedDate}  |  {note.WordCount} words, {note.CharCount} chars",
-                    EditorStyles.miniLabel);
+                string metadataText = $"📁 {folderName}  |  Created: {note.createdDate}  |  Modified: {note.modifiedDate}  |  {note.WordCount} words, {note.CharCount} chars";
+                EditorGUI.LabelField(metadataRect, metadataText, EditorStyles.miniLabel);
+                ThemedTooltip.SetTooltip(metadataRect, "Drag to move");
 
                 // Drag handle for the open note
                 if (metadataRect.Contains(Event.current.mousePosition) && Event.current.type == EventType.MouseDown && Event.current.button == 0)
@@ -3263,7 +3488,11 @@ namespace AwesomeTaskManager.Editor
                     _noteDragging = false;
                     Event.current.Use();
                 }
-                EditorGUI.LabelField(new Rect(metadataRect.xMax - 80, metadataRect.y, 80, 18), "(Drag to move)", EditorStyles.centeredGreyMiniLabel);
+                float metadataTextWidth = EditorStyles.miniLabel.CalcSize(new GUIContent(metadataText)).x;
+                if (metadataTextWidth + 84f <= metadataRect.width)
+                {
+                    EditorGUI.LabelField(new Rect(metadataRect.xMax - 80, metadataRect.y, 80, 18), "(Drag to move)", EditorStyles.centeredGreyMiniLabel);
+                }
                 GUILayout.Space(6);
             }
 
@@ -3273,52 +3502,63 @@ namespace AwesomeTaskManager.Editor
             // ── Toolbar: image insert + edit/preview toggle ──
             note.imagePaths ??= new List<string>();
 
-            using (new EditorGUILayout.HorizontalScope())
+            float noteToolbarHeight = ToolbarScrollHeight(_noteToolbarOverflow, 20f);
+            float noteToolbarContentWidth = 0f;
+            using (var noteToolbarScope = new EditorGUILayout.VerticalScope(GUILayout.Height(noteToolbarHeight), GUILayout.ExpandWidth(true)))
             {
-                GUILayout.Space(6);
-
-                if (!_showNotesSidebar)
+                using (var noteToolbarScroll = new EditorGUILayout.ScrollViewScope(_noteToolbarScroll, false, false, GUI.skin.horizontalScrollbar, GUIStyle.none, GUIStyle.none, GUILayout.Height(noteToolbarHeight)))
                 {
-                    if (GUILayout.Button(new GUIContent("▶ Sidebar", "Show Quick Notes Sidebar"), TBStyles.NoteActionButton, GUILayout.Width(76), GUILayout.Height(20)))
+                    _noteToolbarScroll = noteToolbarScroll.scrollPosition;
+                    using (var noteToolbarRow = new EditorGUILayout.HorizontalScope(GUILayout.ExpandWidth(true)))
                     {
-                        _showNotesSidebar = true;
-                    }
-                    GUILayout.Space(8);
-                }
+                        noteToolbarContentWidth = noteToolbarRow.rect.width;
+                        GUILayout.Space(6);
 
-                // Insert section
-                EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
-                if (ThemedTooltip.Button("📋 Paste", "Paste Image or Text from Clipboard", TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(20)))
-                {
-                    Clipboard.SmartPaste(note, Clipboard.Live);
-                }
-                if (ThemedTooltip.Button("📎 Browse", "Browse for Image or Video", TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(20)))
-                {
-                    AttachImage(note);
-                }
+                        if (!_showNotesSidebar)
+                        {
+                            if (GUILayout.Button(new GUIContent("▶ Sidebar", "Show Quick Notes Sidebar"), TBStyles.NoteActionButton, GUILayout.Width(76), GUILayout.Height(20)))
+                            {
+                                _showNotesSidebar = true;
+                            }
+                            GUILayout.Space(8);
+                        }
 
-                GUILayout.FlexibleSpace();
+                        // Insert section
+                        EditorGUILayout.LabelField("🖼 Insert", EditorStyles.miniLabel, GUILayout.Width(46));
+                        if (ThemedTooltip.Button("📋 Paste", "Paste Image or Text from Clipboard", TBStyles.NoteActionButton, GUILayout.Width(64), GUILayout.Height(20)))
+                        {
+                            Clipboard.SmartPaste(note, Clipboard.Live);
+                        }
+                        if (ThemedTooltip.Button("📎 Browse", "Browse for Image or Video", TBStyles.NoteActionButton, GUILayout.Width(72), GUILayout.Height(20)))
+                        {
+                            AttachImage(note);
+                        }
 
-                // Edit / Preview toggle
-                if (GUILayout.Button(new GUIContent("✏ Edit", "Edit Note Mode"), _noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(58), GUILayout.Height(20)))
-                {
-                    if (!_noteEditMode)
-                    {
-                        _noteEditMode = true;
-                        _clipboard?.Reset();
-                        GUI.FocusControl(null);
+                        GUILayout.FlexibleSpace();
+
+                        // Edit / Preview toggle
+                        if (GUILayout.Button(new GUIContent("✏ Edit", "Edit Note Mode"), _noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(58), GUILayout.Height(20)))
+                        {
+                            if (!_noteEditMode)
+                            {
+                                _noteEditMode = true;
+                                _clipboard?.Reset();
+                                GUI.FocusControl(null);
+                            }
+                        }
+                        if (GUILayout.Button(new GUIContent("👁 Preview", "Preview Note Mode"), !_noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(76), GUILayout.Height(20)))
+                        {
+                            if (_noteEditMode)
+                            {
+                                _noteEditMode = false;
+                                _clipboard?.Reset();
+                                GUI.FocusControl(null);
+                            }
+                        }
+                        GUILayout.Space(6);
                     }
                 }
-                if (GUILayout.Button(new GUIContent("👁 Preview", "Preview Note Mode"), !_noteEditMode ? TBStyles.ToolbarButtonActive : TBStyles.ToolbarButton, GUILayout.Width(76), GUILayout.Height(20)))
-                {
-                    if (_noteEditMode)
-                    {
-                        _noteEditMode = false;
-                        _clipboard?.Reset();
-                        GUI.FocusControl(null);
-                    }
-                }
-                GUILayout.Space(6);
+                UpdateToolbarOverflow(ref _noteToolbarOverflow, noteToolbarContentWidth, noteToolbarScope.rect.width);
             }
             GUILayout.Space(3);
 
@@ -3412,7 +3652,7 @@ namespace AwesomeTaskManager.Editor
 
                         Clipboard.HandlePreviewContextClick(note);
 
-                        if (MarkdownRenderer.DrawMarkdownPreview(note, (n) => MarkNoteModified(n), (n) => RecordUndo(n, true)))
+                        if (MarkdownRenderer.DrawMarkdownPreview(note, (n) => MarkNoteModified(n), (n) => RecordUndo(n, true), _data))
                         {
                             _hasAnimatedGif = true;
                         }
@@ -3547,18 +3787,56 @@ namespace AwesomeTaskManager.Editor
         // ── Export helpers ──
         internal static void ExportSingleNote(QuickNote note)
         {
+            if (note == null) return;
             string defaultName = SanitizeFileName(note.title);
             string path = EditorUtility.SaveFilePanel("Export Note", "", defaultName, "md");
             if (string.IsNullOrEmpty(path)) return;
 
-            var sb = new StringBuilder();
-            sb.AppendLine($"# {note.title}");
-            sb.AppendLine();
-            sb.AppendLine($"*Created: {note.createdDate}  |  Modified: {note.modifiedDate}*");
-            sb.AppendLine();
-            sb.AppendLine(note.content);
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            ThemedDialog.Show("Exported", $"Note exported to:\n{path}", "OK");
+            try
+            {
+                var sb = new StringBuilder();
+                sb.AppendLine($"# {note.title}");
+                sb.AppendLine();
+                sb.AppendLine($"*Created: {note.createdDate}  |  Modified: {note.modifiedDate}*");
+                sb.AppendLine();
+                sb.AppendLine(note.content);
+                File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
+
+                TaskBoardWindow window = FindOpenTaskBoardWindow();
+                if (window != null)
+                    window.TriggerSuccessNotification("Note exported successfully: " + Path.GetFileName(path));
+                else
+                    ThemedDialog.Show("Exported", $"Note exported to:\n{path}", "OK");
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] Note export failed: " + e);
+                TaskBoardWindow window = FindOpenTaskBoardWindow();
+                if (window != null)
+                    window.TriggerErrorNotification("Note export failed. See console for details.");
+                else
+                    ThemedDialog.Show("Export Failed", "Note export failed. See the Unity console for details.", "OK");
+            }
+        }
+
+        private static TaskBoardWindow FindOpenTaskBoardWindow()
+        {
+            return Resources.FindObjectsOfTypeAll<TaskBoardWindow>()?.FirstOrDefault(window => window != null);
+        }
+
+        private void RunExport(string label, string path, Action write)
+        {
+            try
+            {
+                write();
+                string fileName = Path.GetFileName((path ?? string.Empty).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar));
+                TriggerSuccessNotification(label + " exported successfully: " + (string.IsNullOrWhiteSpace(fileName) ? path : fileName));
+            }
+            catch (Exception e)
+            {
+                Debug.LogError("[AwesomeTaskManager] " + label + " export failed: " + e);
+                TriggerErrorNotification(label + " export failed. See console for details.");
+            }
         }
 
         private void ExportBoard(TaskBoard board)
@@ -3568,161 +3846,46 @@ namespace AwesomeTaskManager.Editor
             string path = EditorUtility.SaveFilePanel("Export Board", "", defaultName, "atb");
             if (string.IsNullOrEmpty(path)) return;
 
-            var exportData = new ExportBoardData { board = board };
+            RunExport("Board", path, () =>
+            {
+                var exportData = new ExportBoardData { board = board };
 
-            // Gather assignees used in this board
-            var assigneeIds = new HashSet<string>();
-            foreach (var col in board.columns)
-                foreach (var card in col.cards)
-                    foreach (var aid in card.assigneeIds)
-                        if (!string.IsNullOrEmpty(aid)) assigneeIds.Add(aid);
+                var assigneeIds = new HashSet<string>();
+                foreach (var col in board.columns)
+                    foreach (var card in col.cards)
+                        foreach (var aid in card.assigneeIds)
+                            if (!string.IsNullOrEmpty(aid)) assigneeIds.Add(aid);
 
-            exportData.assignees = _data.assignees.Where(a => assigneeIds.Contains(a.id)).ToList();
+                exportData.assignees = _data.assignees.Where(a => assigneeIds.Contains(a.id)).ToList();
 
-            // Gather category colors used in this board
-            var categories = new HashSet<string>();
-            foreach (var col in board.columns)
-                foreach (var card in col.cards)
-                    if (!string.IsNullOrEmpty(card.category))
-                        categories.Add(card.category);
+                var categories = new HashSet<string>();
+                foreach (var col in board.columns)
+                    foreach (var card in col.cards)
+                        if (!string.IsNullOrEmpty(card.category))
+                            categories.Add(card.category);
 
-            exportData.categoryColors = _data.categoryColors.Where(cc => categories.Contains(cc.category)).ToList();
+                exportData.categoryColors = _data.categoryColors.Where(cc => categories.Contains(cc.category)).ToList();
+                File.WriteAllText(path, JsonUtility.ToJson(exportData, true), Encoding.UTF8);
+            });
+        }
 
-            string json = JsonUtility.ToJson(exportData, true);
-            File.WriteAllText(path, json, Encoding.UTF8);
-            TriggerSuccessNotification("Board exported successfully");
+        private void ExportBoardToTrelloJson(TaskBoard board)
+        {
+            if (board == null) return;
+            string defaultName = SanitizeFileName(board.name);
+            string path = EditorUtility.SaveFilePanel("Export Board as Trello JSON", "", defaultName, "json");
+            if (string.IsNullOrEmpty(path)) return;
+            RunExport("Board (Trello JSON)", path, () => File.WriteAllText(path,
+                ExternalJsonImportExport.BuildTrelloJson(board, _data?.assignees, _data?.categoryColors), Encoding.UTF8));
         }
 
         private void ExportBoardToExcel(TaskBoard board)
         {
             if (board == null) return;
             string defaultName = SanitizeFileName(board.name);
-            string path = EditorUtility.SaveFilePanel("Export Board to Excel", "", defaultName, "xml");
+            string path = EditorUtility.SaveFilePanel("Export Board to Excel", "", defaultName, "xlsx");
             if (string.IsNullOrEmpty(path)) return;
-
-            var sb = new StringBuilder();
-            sb.AppendLine("<?xml version=\"1.0\"?>");
-            sb.AppendLine("<?mso-application progid=\"Excel.Sheet\"?>");
-            sb.AppendLine("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"");
-            sb.AppendLine(" xmlns:o=\"urn:schemas-microsoft-com:office:office\"");
-            sb.AppendLine(" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"");
-            sb.AppendLine(" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"");
-            sb.AppendLine(" xmlns:html=\"http://www.w3.org/TR/REC-html40\">");
-            
-            sb.AppendLine(" <Styles>");
-            sb.AppendLine("  <Style ss:ID=\"sHeader\">");
-            sb.AppendLine("   <Font ss:Bold=\"1\"/>");
-            sb.AppendLine("   <Interior ss:Color=\"#C0C0C0\" ss:Pattern=\"Solid\"/>");
-            sb.AppendLine("  </Style>");
-            sb.AppendLine(" </Styles>");
-
-            sb.AppendLine($" <Worksheet ss:Name=\"{SecurityElement.Escape(board.name)}\">");
-            sb.AppendLine("  <Table>");
-
-            // Header
-            string[] headers = {
-                "Task ID", "Task Link", "Task Type", "Task Custom ID", "Task Name", "Task Content",
-                "Status", "Date created", "Date created Text", "Due date", "Due date Text",
-                "Start date", "Start date Text", "Parent ID", "Subtask IDs", "Attachments",
-                "Assignees", "Tags", "Priority", "List Name", "Space Name", "Time Estimated",
-                "Time Estimated Text", "Checklists", "Comments", "Assigned Comments",
-                "Time Spent", "Time Spent Text", "Rolled Up Time", "Rolled Up Time Text"
-            };
-
-            sb.AppendLine("   <Row ss:StyleID=\"sHeader\">");
-            foreach (var h in headers)
-            {
-                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(h)}</Data></Cell>");
-            }
-            sb.AppendLine("   </Row>");
-
-            foreach (var col in board.columns)
-            {
-                if (col.cards.Count == 0)
-                {
-                    // Export empty column
-                    string[] rowValues = new string[30];
-                    for (int j = 0; j < 30; j++) rowValues[j] = "";
-                    rowValues[2] = "status_placeholder";
-                    rowValues[6] = col.title; // Status
-                    rowValues[19] = board.name; // List Name
-                    rowValues[20] = "AwesomeTaskManager"; // Space Name
-                    rowValues[15] = "[]"; // Attachments
-                    rowValues[16] = "[]"; // Assignees
-                    rowValues[17] = "[]"; // Tags
-                    rowValues[25] = "0"; // Assigned Comments
-
-                    sb.AppendLine("   <Row>");
-                    foreach (var val in rowValues)
-                    {
-                        sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
-                    }
-                    sb.AppendLine("   </Row>");
-                }
-                else
-                {
-                    foreach (var card in col.cards)
-                    {
-                        string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
-                        string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
-                        string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
-                        
-                        List<string> checklistStrings = new List<string>();
-                        for (int i = 0; i < card.checklistItems.Count; i++)
-                        {
-                            string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
-                            checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
-                        }
-                        string checklists = string.Join("; ", checklistStrings);
-
-                        string[] rowValues = new string[30];
-                        rowValues[0] = card.id;
-                        rowValues[1] = ""; // Task Link
-                        rowValues[2] = "task"; // Task Type
-                        rowValues[3] = ""; // Custom ID
-                        rowValues[4] = card.title;
-                        rowValues[5] = card.description;
-                        rowValues[6] = col.title;
-                        rowValues[7] = card.createdDate;
-                        rowValues[8] = card.createdDate;
-                        rowValues[9] = card.dueDate;
-                        rowValues[10] = card.dueDate;
-                        rowValues[11] = ""; // Start date
-                        rowValues[12] = ""; // Start date Text
-                        rowValues[13] = ""; // Parent ID
-                        rowValues[14] = ""; // Subtask IDs
-                        rowValues[15] = "[]"; // Attachments
-                        rowValues[16] = assignees;
-                        rowValues[17] = tags;
-                        rowValues[18] = priority;
-                        rowValues[19] = board.name;
-                        rowValues[20] = "AwesomeTaskManager";
-                        rowValues[21] = ""; // Time Est
-                        rowValues[22] = ""; 
-                        rowValues[23] = checklists;
-                        rowValues[24] = ""; // Comments
-                        rowValues[25] = "0";
-                        rowValues[26] = "";
-                        rowValues[27] = "";
-                        rowValues[28] = "";
-                        rowValues[29] = "";
-
-                        sb.AppendLine("   <Row>");
-                        foreach (var val in rowValues)
-                        {
-                            sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
-                        }
-                        sb.AppendLine("   </Row>");
-                    }
-                }
-            }
-
-            sb.AppendLine("  </Table>");
-            sb.AppendLine(" </Worksheet>");
-            sb.AppendLine("</Workbook>");
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            TriggerSuccessNotification("Board exported to Excel (XML Spreadsheet) successfully");
+            RunExport("Board (Excel)", path, () => WriteExcelExport(path, board.name, BuildBoardExportRows(board)));
         }
 
         private void ImportBoardFromExcel()
@@ -3769,7 +3932,12 @@ namespace AwesomeTaskManager.Editor
                         }
 
                         ApplyImportMappingPreferences(result, ImportMappingScope.Board, path, headers);
-                        ImportBoardRowsWithMapping(rows, path, result.mapping, "Board imported from Excel successfully");
+                        OpenRowsImportPreview(rows, path, result.mapping, ImportMappingScope.Board, null, string.Empty, previewResult =>
+                        {
+                            result.mapping.updateExisting = previewResult.mode == BoardImportExport.ImportConflictMode.Merge;
+                            string boardName = previewResult.mode == BoardImportExport.ImportConflictMode.CreateNew ? previewResult.newName : null;
+                            ImportBoardRowsWithMapping(rows, path, result.mapping, "Board imported from Excel successfully", boardName);
+                        });
                     }
                     catch (ExitGUIException)
                     {
@@ -3780,7 +3948,7 @@ namespace AwesomeTaskManager.Editor
                         Debug.LogException(ex);
                         TriggerErrorNotification("Failed to import Excel: " + ex.Message);
                     }
-                });
+                }, rows, GetBoardImportKeys(rows, path, suggested));
             }
             catch (ExitGUIException)
             {
@@ -3796,121 +3964,84 @@ namespace AwesomeTaskManager.Editor
 
         private List<string[]> ParseXlsx(string path)
         {
-            List<string[]> rows = new List<string[]>();
-            using (ZipArchive archive = ZipFile.OpenRead(path))
-            {
-                // Load shared strings
-                List<string> sharedStrings = new List<string>();
-                var sharedStringsEntry = archive.GetEntry("xl/sharedStrings.xml");
-                if (sharedStringsEntry != null)
-                {
-                    using (Stream s = sharedStringsEntry.Open())
-                    {
-                        XmlDocument xml = new XmlDocument();
-                        xml.Load(s);
-                        XmlNodeList tNodes = xml.GetElementsByTagName("t");
-                        foreach (XmlNode t in tNodes)
-                        {
-                            sharedStrings.Add(t.InnerText);
-                        }
-                    }
-                }
-
-                // Load sheet1
-                var sheetEntry = archive.GetEntry("xl/worksheets/sheet1.xml");
-                if (sheetEntry != null)
-                {
-                    using (Stream s = sheetEntry.Open())
-                    {
-                        XmlDocument xml = new XmlDocument();
-                        xml.Load(s);
-                        XmlNodeList rowNodes = xml.GetElementsByTagName("row");
-                        foreach (XmlNode rowNode in rowNodes)
-                        {
-                            // Cells can be missing or in different order, but let's assume sequential for basic ClickUp exports
-                            // Real xlsx parsing needs to handle cell references (A1, B1 etc)
-                            List<string> rowValues = new List<string>();
-                            int lastCol = -1;
-                            foreach (XmlNode cNode in rowNode.ChildNodes)
-                            {
-                                if (cNode.Name != "c") continue;
-                                
-                                // Handle missing cells by looking at 'r' attribute (e.g. A1, C1 means B1 is missing)
-                                string r = cNode.Attributes["r"]?.Value;
-                                if (!string.IsNullOrEmpty(r))
-                                {
-                                    int colIdx = GetColumnIndex(r);
-                                    while (lastCol < colIdx - 1)
-                                    {
-                                        rowValues.Add("");
-                                        lastCol++;
-                                    }
-                                    lastCol = colIdx;
-                                }
-
-                                string t = cNode.Attributes["t"]?.Value;
-                                XmlNode vNode = cNode.SelectSingleNode("*[local-name()='v']");
-                                string val = vNode != null ? vNode.InnerText : "";
-
-                                if (t == "s")
-                                {
-                                    int sIdx = int.Parse(val);
-                                    rowValues.Add(sIdx < sharedStrings.Count ? sharedStrings[sIdx] : "");
-                                }
-                                else
-                                {
-                                    rowValues.Add(val);
-                                }
-                            }
-                            rows.Add(rowValues.ToArray());
-                        }
-                    }
-                }
-            }
-            return rows;
+            return BoardImportExport.ParseXlsx(path);
         }
 
         private int GetColumnIndex(string cellRef)
         {
-            string colPart = Regex.Replace(cellRef, @"[\d]", "");
-            int column = 0;
-            for (int i = 0; i < colPart.Length; i++)
-            {
-                column *= 26;
-                column += (colPart[i] - 'A' + 1);
-            }
-            return column - 1;
+            return BoardImportExport.GetColumnIndex(cellRef);
         }
 
         private List<string[]> ParseXmlSpreadsheet(string path)
         {
-            List<string[]> rows = new List<string[]>();
-            XmlDocument xml = new XmlDocument();
-            xml.Load(path);
-            
-            XmlNamespaceManager nsmgr = new XmlNamespaceManager(xml.NameTable);
-            nsmgr.AddNamespace("ss", "urn:schemas-microsoft-com:office:spreadsheet");
+            return BoardImportExport.ParseXmlSpreadsheet(path);
+        }
 
-            XmlNodeList rowNodes = xml.SelectNodes("//ss:Table/ss:Row", nsmgr);
-            foreach (XmlNode rowNode in rowNodes)
-            {
-                List<string> rowValues = new List<string>();
-                foreach (XmlNode cellNode in rowNode.SelectNodes("ss:Cell", nsmgr))
-                {
-                    // Handle ss:Index attribute if some cells are skipped
-                    var indexAttr = cellNode.Attributes["ss:Index"];
-                    if (indexAttr != null)
-                    {
-                        int index = int.Parse(indexAttr.Value) - 1;
-                        while (rowValues.Count < index) rowValues.Add("");
-                    }
-
-                    XmlNode dataNode = cellNode.SelectSingleNode("ss:Data", nsmgr);
-                    rowValues.Add(dataNode != null ? dataNode.InnerText : "");
-                }
-                rows.Add(rowValues.ToArray());
-            }
+        private List<string[]> BuildBoardExportRows(TaskBoard board)
+        {
+            var rows = new List<string[]> { BoardImportExport.FullExportHeaders };
+            if (board?.columns == null) return rows;
+            foreach (TaskColumn column in board.columns)
+                AddColumnExportRows(rows, column, board, board.name);
             return rows;
+        }
+
+        private List<string[]> BuildColumnExportRows(TaskColumn column, string boardName)
+        {
+            var rows = new List<string[]> { BoardImportExport.FullExportHeaders };
+            AddColumnExportRows(rows, column, Board, boardName);
+            return rows;
+        }
+
+        private void AddColumnExportRows(List<string[]> rows, TaskColumn column, TaskBoard board, string boardName)
+        {
+            if (column == null) return;
+            if (column.cards == null || column.cards.Count == 0)
+            {
+                rows.Add(BoardImportExport.BuildPlaceholderRow(column.title, boardName));
+                return;
+            }
+
+            foreach (TaskCard card in column.cards)
+            {
+                if (card != null)
+                    rows.Add(BoardImportExport.BuildCardRow(card, column.title, boardName, _data?.assignees, FindParentCardId(board, card)));
+            }
+        }
+
+        private static string FindParentCardId(TaskBoard board, TaskCard child)
+        {
+            if (board?.columns == null || child == null || string.IsNullOrEmpty(child.id)) return string.Empty;
+            return board.columns.Where(column => column?.cards != null)
+                .SelectMany(column => column.cards)
+                .FirstOrDefault(card => card?.checklistLinkedCardIds != null && card.checklistLinkedCardIds.Contains(child.id))?.id ?? string.Empty;
+        }
+
+        private static void WriteExcelExport(string path, string sheetName, IEnumerable<string[]> rows)
+        {
+            if (path.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                File.WriteAllText(path, BoardImportExport.BuildSpreadsheetXml(sheetName, rows), Encoding.UTF8);
+            else
+                File.WriteAllBytes(path, BoardImportExport.BuildXlsx(sheetName, rows));
+        }
+
+        private ISet<string> GetBoardImportKeys(IList<string[]> rows, string path, ImportFieldMapping mapping)
+        {
+            string boardName = rows != null && rows.Count > 1 ? GetMappedValue(rows[1], mapping?.listNameIndex ?? -1) : string.Empty;
+            if (string.IsNullOrWhiteSpace(boardName)) boardName = Path.GetFileNameWithoutExtension(path);
+            TaskBoard existingBoard = _data?.boards?.FirstOrDefault(board => board != null && string.Equals(board.name, boardName, StringComparison.OrdinalIgnoreCase));
+            return BoardImportExport.CollectCardKeys(GetCardsFromBoard(existingBoard));
+        }
+
+        private static IEnumerable<TaskCard> GetCardsFromBoard(TaskBoard board)
+        {
+            if (board?.columns == null) return Enumerable.Empty<TaskCard>();
+            return board.columns.Where(column => column?.cards != null).SelectMany(column => column.cards);
+        }
+
+        private ISet<string> GetCurrentBoardImportKeys()
+        {
+            return BoardImportExport.CollectCardKeys(GetCardsFromBoard(Board));
         }
 
         private void ExportBoardToCSV(TaskBoard board)
@@ -3919,165 +4050,7 @@ namespace AwesomeTaskManager.Editor
             string defaultName = SanitizeFileName(board.name);
             string path = EditorUtility.SaveFilePanel("Export Board to CSV", "", defaultName, "csv");
             if (string.IsNullOrEmpty(path)) return;
-
-            var sb = new StringBuilder();
-            // ClickUp compatible header
-            sb.AppendLine("Task ID,Task Link,Task Type,Task Custom ID,Task Name,Task Content,Status,Date created,Date created Text,Due date,Due date Text,Start date,Start date Text,Parent ID,Subtask IDs,Attachments,Assignees,Tags,Priority,List Name,Space Name,Time Estimated,Time Estimated Text,Checklists,Comments,Assigned Comments,Time Spent,Time Spent Text,Rolled Up Time,Rolled Up Time Text");
-
-            foreach (var col in board.columns)
-            {
-                if (col.cards.Count == 0)
-                {
-                    // Export empty column
-                    string taskId = "";
-                    string taskLink = "";
-                    string taskType = "status_placeholder";
-                    string customId = "";
-                    string taskName = ""; // Empty name indicates it's just a column placeholder
-                    string taskContent = "";
-                    string status = col.title;
-                    string dateCreated = "";
-                    string dateCreatedText = "";
-                    string dueDate = "";
-                    string dueDateText = "";
-                    string startDate = "";
-                    string startDateText = "";
-                    string parentId = "";
-                    string subtaskIds = "";
-                    string attachments = "[]";
-                    string listName = board.name;
-                    string spaceName = "AwesomeTaskManager";
-                    string timeEst = "";
-                    string timeEstText = "";
-                    string checklists = "";
-                    string comments = "";
-                    string assignedComments = "0";
-                    string timeSpent = "";
-                    string timeSpentText = "";
-                    string rolledUpTime = "";
-                    string rolledUpTimeText = "";
-                    string assignees = "[]";
-                    string tags = "[]";
-                    string priority = "";
-
-                    sb.Append($"\"{EscapeCSV(taskId)}\",");
-                    sb.Append($"\"{EscapeCSV(taskLink)}\",");
-                    sb.Append($"\"{EscapeCSV(taskType)}\",");
-                    sb.Append($"\"{EscapeCSV(customId)}\",");
-                    sb.Append($"\"{EscapeCSV(taskName)}\",");
-                    sb.Append($"\"{EscapeCSV(taskContent)}\",");
-                    sb.Append($"\"{EscapeCSV(status)}\",");
-                    sb.Append($"\"{EscapeCSV(dateCreated)}\",");
-                    sb.Append($"\"{EscapeCSV(dateCreatedText)}\",");
-                    sb.Append($"\"{EscapeCSV(dueDate)}\",");
-                    sb.Append($"\"{EscapeCSV(dueDateText)}\",");
-                    sb.Append($"\"{EscapeCSV(startDate)}\",");
-                    sb.Append($"\"{EscapeCSV(startDateText)}\",");
-                    sb.Append($"\"{EscapeCSV(parentId)}\",");
-                    sb.Append($"\"{EscapeCSV(subtaskIds)}\",");
-                    sb.Append($"\"{EscapeCSV(attachments)}\",");
-                    sb.Append($"\"{EscapeCSV(assignees)}\",");
-                    sb.Append($"\"{EscapeCSV(tags)}\",");
-                    sb.Append($"\"{EscapeCSV(priority)}\",");
-                    sb.Append($"\"{EscapeCSV(listName)}\",");
-                    sb.Append($"\"{EscapeCSV(spaceName)}\",");
-                    sb.Append($"\"{EscapeCSV(timeEst)}\",");
-                    sb.Append($"\"{EscapeCSV(timeEstText)}\",");
-                    sb.Append($"\"{EscapeCSV(checklists)}\",");
-                    sb.Append($"\"{EscapeCSV(comments)}\",");
-                    sb.Append($"\"{EscapeCSV(assignedComments)}\",");
-                    sb.Append($"\"{EscapeCSV(timeSpent)}\",");
-                    sb.Append($"\"{EscapeCSV(timeSpentText)}\",");
-                    sb.Append($"\"{EscapeCSV(rolledUpTime)}\",");
-                    sb.AppendLine($"\"{EscapeCSV(rolledUpTimeText)}\"");
-                }
-                else
-                {
-                    foreach (var card in col.cards)
-                    {
-                        string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
-                        string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
-                        string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
-                        
-                        // Format checklist: "Name (done); Name (todo)"
-                        List<string> checklistStrings = new List<string>();
-                        for (int i = 0; i < card.checklistItems.Count; i++)
-                        {
-                            string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
-                            checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
-                        }
-                        string checklists = string.Join("; ", checklistStrings);
-
-                        // Fields mapping
-                        string taskId = card.id;
-                        string taskLink = ""; // We don't have links
-                        string taskType = "task";
-                        string customId = "";
-                        string taskName = card.title;
-                        string taskContent = card.description;
-                        string status = col.title;
-                        string dateCreated = card.createdDate;
-                        string dateCreatedText = card.createdDate;
-                        string dueDate = card.dueDate;
-                        string dueDateText = card.dueDate;
-                        string startDate = "";
-                        string startDateText = "";
-                        string parentId = ""; // No parent/child in CSV yet
-                        string subtaskIds = "";
-                        string attachments = "[]"; 
-                        string listName = board.name;
-                        string spaceName = "AwesomeTaskManager";
-                        string timeEst = "";
-                        string timeEstText = "";
-                        string comments = "";
-                        string assignedComments = "0";
-                        string timeSpent = "";
-                        string timeSpentText = "";
-                        string rolledUpTime = "";
-                        string rolledUpTimeText = "";
-
-                        sb.Append($"\"{EscapeCSV(taskId)}\",");
-                        sb.Append($"\"{EscapeCSV(taskLink)}\",");
-                        sb.Append($"\"{EscapeCSV(taskType)}\",");
-                        sb.Append($"\"{EscapeCSV(customId)}\",");
-                        sb.Append($"\"{EscapeCSV(taskName)}\",");
-                        sb.Append($"\"{EscapeCSV(taskContent)}\",");
-                        sb.Append($"\"{EscapeCSV(status)}\",");
-                        sb.Append($"\"{EscapeCSV(dateCreated)}\",");
-                        sb.Append($"\"{EscapeCSV(dateCreatedText)}\",");
-                        sb.Append($"\"{EscapeCSV(dueDate)}\",");
-                        sb.Append($"\"{EscapeCSV(dueDateText)}\",");
-                        sb.Append($"\"{EscapeCSV(startDate)}\",");
-                        sb.Append($"\"{EscapeCSV(startDateText)}\",");
-                        sb.Append($"\"{EscapeCSV(parentId)}\",");
-                        sb.Append($"\"{EscapeCSV(subtaskIds)}\",");
-                        sb.Append($"\"{EscapeCSV(attachments)}\",");
-                        sb.Append($"\"{EscapeCSV(assignees)}\",");
-                        sb.Append($"\"{EscapeCSV(tags)}\",");
-                        sb.Append($"\"{EscapeCSV(priority)}\",");
-                        sb.Append($"\"{EscapeCSV(listName)}\",");
-                        sb.Append($"\"{EscapeCSV(spaceName)}\",");
-                        sb.Append($"\"{EscapeCSV(timeEst)}\",");
-                        sb.Append($"\"{EscapeCSV(timeEstText)}\",");
-                        sb.Append($"\"{EscapeCSV(checklists)}\",");
-                        sb.Append($"\"{EscapeCSV(comments)}\",");
-                        sb.Append($"\"{EscapeCSV(assignedComments)}\",");
-                        sb.Append($"\"{EscapeCSV(timeSpent)}\",");
-                        sb.Append($"\"{EscapeCSV(timeSpentText)}\",");
-                        sb.Append($"\"{EscapeCSV(rolledUpTime)}\",");
-                        sb.AppendLine($"\"{EscapeCSV(rolledUpTimeText)}\"");
-                    }
-                }
-            }
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            TriggerSuccessNotification("Board exported to CSV (ClickUp compatible) successfully");
-        }
-
-        private static string EscapeCSV(string text)
-        {
-            if (string.IsNullOrEmpty(text)) return "";
-            return text.Replace("\"", "\"\"");
+            RunExport("Board (CSV)", path, () => File.WriteAllText(path, BoardImportExport.BuildCsv(BuildBoardExportRows(board)), Encoding.UTF8));
         }
 
         private void ExportColumnToCSV(TaskColumn col)
@@ -4086,210 +4059,18 @@ namespace AwesomeTaskManager.Editor
             string defaultName = SanitizeFileName(col.title);
             string path = EditorUtility.SaveFilePanel("Export Column to CSV", "", defaultName, "csv");
             if (string.IsNullOrEmpty(path)) return;
-
-            var sb = new StringBuilder();
-            // ClickUp compatible header
-            sb.AppendLine("Task ID,Task Link,Task Type,Task Custom ID,Task Name,Task Content,Status,Date created,Date created Text,Due date,Due date Text,Start date,Start date Text,Parent ID,Subtask IDs,Attachments,Assignees,Tags,Priority,List Name,Space Name,Time Estimated,Time Estimated Text,Checklists,Comments,Assigned Comments,Time Spent,Time Spent Text,Rolled Up Time,Rolled Up Time Text");
-
             string boardName = Board != null ? Board.name : "Board";
-
-            if (col.cards.Count == 0)
-            {
-                // Export empty column placeholder
-                sb.Append($"\"\","); // Task ID
-                sb.Append($"\"\","); // Task Link
-                sb.Append($"\"status_placeholder\","); // Task Type
-                sb.Append($"\"\","); // Custom ID
-                sb.Append($"\"\","); // Task Name
-                sb.Append($"\"\","); // Task Content
-                sb.Append($"\"{EscapeCSV(col.title)}\",");
-                sb.Append($"\"\","); // Date created
-                sb.Append($"\"\","); // Date created Text
-                sb.Append($"\"\","); // Due date
-                sb.Append($"\"\","); // Due date Text
-                sb.Append($"\"\","); // Start date
-                sb.Append($"\"\","); // Start date Text
-                sb.Append($"\"\","); // Parent ID
-                sb.Append($"\"\","); // Subtask IDs
-                sb.Append($"\"[]\","); // Attachments
-                sb.Append($"\"[]\","); // Assignees
-                sb.Append($"\"[]\","); // Tags
-                sb.Append($"\"\","); // Priority
-                sb.Append($"\"{EscapeCSV(boardName)}\",");
-                sb.Append($"\"AwesomeTaskManager\",");
-                sb.Append($"\"\","); // Time Est
-                sb.Append($"\"\","); 
-                sb.Append($"\"\","); // Checklists
-                sb.Append($"\"\","); // Comments
-                sb.Append($"\"0\",");
-                sb.Append($"\"\",");
-                sb.Append($"\"\",");
-                sb.Append($"\"\",");
-                sb.AppendLine($"\"\"");
-            }
-            else
-            {
-                foreach (var card in col.cards)
-                {
-                    string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
-                    string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
-                    string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
-                    
-                    List<string> checklistStrings = new List<string>();
-                    for (int i = 0; i < card.checklistItems.Count; i++)
-                    {
-                        string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
-                        checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
-                    }
-                    string checklists = string.Join("; ", checklistStrings);
-
-                    sb.Append($"\"{EscapeCSV(card.id)}\",");
-                    sb.Append($"\"\","); // Task Link
-                    sb.Append($"\"task\","); // Task Type
-                    sb.Append($"\"\","); // Custom ID
-                    sb.Append($"\"{EscapeCSV(card.title)}\",");
-                    sb.Append($"\"{EscapeCSV(card.description)}\",");
-                    sb.Append($"\"{EscapeCSV(col.title)}\",");
-                    sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
-                    sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
-                    sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
-                    sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
-                    sb.Append($"\"\","); // Start date
-                    sb.Append($"\"\","); // Start date Text
-                    sb.Append($"\"\","); // Parent ID
-                    sb.Append($"\"\","); // Subtask IDs
-                    sb.Append($"\"[]\","); // Attachments
-                    sb.Append($"\"{EscapeCSV(assignees)}\",");
-                    sb.Append($"\"{EscapeCSV(tags)}\",");
-                    sb.Append($"\"{EscapeCSV(priority)}\",");
-                    sb.Append($"\"{EscapeCSV(boardName)}\",");
-                    sb.Append($"\"AwesomeTaskManager\",");
-                    sb.Append($"\"\","); // Time Est
-                    sb.Append($"\"\","); 
-                    sb.Append($"\"{EscapeCSV(checklists)}\",");
-                    sb.Append($"\"\","); // Comments
-                    sb.Append($"\"0\",");
-                    sb.Append($"\"\",");
-                    sb.Append($"\"\",");
-                    sb.Append($"\"\",");
-                    sb.AppendLine($"\"\"");
-                }
-            }
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            TriggerSuccessNotification("Column exported to CSV successfully");
+            RunExport("Column (CSV)", path, () => File.WriteAllText(path, BoardImportExport.BuildCsv(BuildColumnExportRows(col, boardName)), Encoding.UTF8));
         }
 
         private void ExportColumnToExcel(TaskColumn col)
         {
             if (col == null) return;
             string defaultName = SanitizeFileName(col.title);
-            string path = EditorUtility.SaveFilePanel("Export Column to Excel", "", defaultName, "xml");
+            string path = EditorUtility.SaveFilePanel("Export Column to Excel", "", defaultName, "xlsx");
             if (string.IsNullOrEmpty(path)) return;
-
-            var sb = new StringBuilder();
-            sb.AppendLine("<?xml version=\"1.0\"?>");
-            sb.AppendLine("<?mso-application progid=\"Excel.Sheet\"?>");
-            sb.AppendLine("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"");
-            sb.AppendLine(" xmlns:o=\"urn:schemas-microsoft-com:office:office\"");
-            sb.AppendLine(" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"");
-            sb.AppendLine(" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"");
-            sb.AppendLine(" xmlns:html=\"http://www.w3.org/TR/REC-html40\">");
-            
-            sb.AppendLine(" <Styles>");
-            sb.AppendLine("  <Style ss:ID=\"sHeader\">");
-            sb.AppendLine("   <Font ss:Bold=\"1\"/>");
-            sb.AppendLine("   <Interior ss:Color=\"#C0C0C0\" ss:Pattern=\"Solid\"/>");
-            sb.AppendLine("  </Style>");
-            sb.AppendLine(" </Styles>");
-
-            sb.AppendLine($" <Worksheet ss:Name=\"{SecurityElement.Escape(col.title)}\">");
-            sb.AppendLine("  <Table>");
-
-            string[] headers = {
-                "Task ID", "Task Link", "Task Type", "Task Custom ID", "Task Name", "Task Content",
-                "Status", "Date created", "Date created Text", "Due date", "Due date Text",
-                "Start date", "Start date Text", "Parent ID", "Subtask IDs", "Attachments",
-                "Assignees", "Tags", "Priority", "List Name", "Space Name", "Time Estimated",
-                "Time Estimated Text", "Checklists", "Comments", "Assigned Comments",
-                "Time Spent", "Time Spent Text", "Rolled Up Time", "Rolled Up Time Text"
-            };
-
-            sb.AppendLine("   <Row ss:StyleID=\"sHeader\">");
-            foreach (var h in headers)
-            {
-                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(h)}</Data></Cell>");
-            }
-            sb.AppendLine("   </Row>");
-
             string boardName = Board != null ? Board.name : "Board";
-
-            if (col.cards.Count == 0)
-            {
-                // Export empty column placeholder
-                string[] rowValues = new string[30];
-                for (int j = 0; j < 30; j++) rowValues[j] = "";
-                rowValues[2] = "status_placeholder";
-                rowValues[6] = col.title;
-                rowValues[19] = boardName;
-                rowValues[20] = "AwesomeTaskManager";
-                rowValues[25] = "0";
-
-                sb.AppendLine("   <Row>");
-                foreach (var val in rowValues)
-                {
-                    sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
-                }
-                sb.AppendLine("   </Row>");
-            }
-            else
-            {
-                foreach (var card in col.cards)
-                {
-                    string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
-                    string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
-                    string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
-                    
-                    List<string> checklistStrings = new List<string>();
-                    for (int i = 0; i < card.checklistItems.Count; i++)
-                    {
-                        string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
-                        checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
-                    }
-                    string checklists = string.Join("; ", checklistStrings);
-
-                    string[] rowValues = new string[30];
-                    rowValues[0] = card.id;
-                    rowValues[4] = card.title;
-                    rowValues[5] = card.description;
-                    rowValues[6] = col.title;
-                    rowValues[7] = card.createdDate;
-                    rowValues[8] = card.createdDate;
-                    rowValues[9] = card.dueDate;
-                    rowValues[10] = card.dueDate;
-                    rowValues[16] = assignees;
-                    rowValues[17] = tags;
-                    rowValues[18] = priority;
-                    rowValues[19] = boardName;
-                    rowValues[20] = "AwesomeTaskManager";
-                    rowValues[23] = checklists;
-                    rowValues[25] = "0";
-
-                    sb.AppendLine("   <Row>");
-                    foreach (var val in rowValues)
-                    {
-                        sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
-                    }
-                    sb.AppendLine("   </Row>");
-                }
-            }
-
-            sb.AppendLine("  </Table>");
-            sb.AppendLine(" </Worksheet>");
-            sb.AppendLine("</Workbook>");
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            TriggerSuccessNotification("Column exported to Excel successfully");
+            RunExport("Column (Excel)", path, () => WriteExcelExport(path, col.title, BuildColumnExportRows(col, boardName)));
         }
 
         private void ExportColumn(TaskColumn col)
@@ -4299,17 +4080,17 @@ namespace AwesomeTaskManager.Editor
             string path = EditorUtility.SaveFilePanel("Export Column", "", defaultName, "atcl");
             if (string.IsNullOrEmpty(path)) return;
 
-            var exportData = new ExportColumnData { column = col };
-            HashSet<string> assigneeIds = new HashSet<string>();
-            foreach (var card in col.cards)
-                foreach (var id in card.assigneeIds)
-                    assigneeIds.Add(id);
+            RunExport("Column", path, () =>
+            {
+                var exportData = new ExportColumnData { column = col };
+                HashSet<string> assigneeIds = new HashSet<string>();
+                foreach (var card in col.cards)
+                    foreach (var id in card.assigneeIds)
+                        assigneeIds.Add(id);
 
-            exportData.assignees = _data.assignees.Where(a => assigneeIds.Contains(a.id)).ToList();
-
-            string json = JsonUtility.ToJson(exportData, true);
-            File.WriteAllText(path, json, Encoding.UTF8);
-            TriggerSuccessNotification("Column exported successfully");
+                exportData.assignees = _data.assignees.Where(a => assigneeIds.Contains(a.id)).ToList();
+                File.WriteAllText(path, JsonUtility.ToJson(exportData, true), Encoding.UTF8);
+            });
         }
 
         private void ImportColumnIntoBoard(TaskBoard board)
@@ -4329,32 +4110,47 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 var col = importData.column;
-                
-                // Ensure unique IDs for all cards in the column
-                foreach (var card in col.cards)
+                BoardImportExport.ImportPlan plan = BoardImportExport.BuildColumnPlan(col, board, _data?.assignees);
+                ImportPreviewWindow.Open("Preview Column Import", plan, result =>
                 {
-                    card.id = Guid.NewGuid().ToString();
-                }
-
-                // Handle assignees
-                foreach (var a in importData.assignees)
-                {
-                    if (!_data.assignees.Any(existing => existing.id == a.id))
+                    try
                     {
-                        if (!_data.assignees.Any(existing => existing.name == a.name))
+                        _data.assignees ??= new List<Assignee>();
+                        _data.boards ??= new List<TaskBoard>();
+                        board.columns ??= new List<TaskColumn>();
+                        TaskColumn existing = BoardImportExport.FindExistingColumn(col.id, col.title, board.columns);
+                        bool merge = result.mode == BoardImportExport.ImportConflictMode.Merge && existing != null;
+                        CaptureImportSnapshot();
+                        var assigneeMap = BoardImportExport.MergeAssignees(_data.assignees, importData.assignees);
+                        var report = new BoardImportExport.ImportReport();
+                        if (merge)
                         {
-                            _data.assignees.Add(a);
+                            BoardImportExport.MergeImportedColumn(board, existing, col, assigneeMap, report);
                         }
-                    }
-                }
+                        else
+                        {
+                            BoardImportExport.PrepareImportedColumn(col, assigneeMap);
+                            col.title = BoardImportExport.GetUniqueName(result.newName, board.columns.Where(column => column != null).Select(column => column.title));
+                            board.columns.Add(col);
+                            report.created = (col.cards ?? new List<TaskCard>()).Count;
+                            report.newColumns = 1;
+                        }
 
-                board.columns.Add(col);
-                ResetFilters();
-                _data.Normalize();
-                Save();
-                RefreshAfterImport();
-                TriggerSuccessNotification("Column imported successfully");
-                GUIUtility.ExitGUI();
+                        _boardIndex = _data.boards.IndexOf(board);
+                        ResetFilters();
+                        _data.Normalize();
+                        Save();
+                        RefreshAfterImport();
+                        ShowImportReport(report, "Column imported successfully");
+                        GUIUtility.ExitGUI();
+                    }
+                    catch (ExitGUIException) { }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] Column Import failed: " + e.Message);
+                        TriggerErrorNotification("Column Import failed");
+                    }
+                });
             }
             catch (ExitGUIException)
             {
@@ -4374,157 +4170,34 @@ namespace AwesomeTaskManager.Editor
             string defaultName = SanitizeFileName(card.title);
             string path = EditorUtility.SaveFilePanel("Export Card to CSV", "", defaultName, "csv");
             if (string.IsNullOrEmpty(path)) return;
-
-            var sb = new StringBuilder();
-            // ClickUp compatible header
-            sb.AppendLine("Task ID,Task Link,Task Type,Task Custom ID,Task Name,Task Content,Status,Date created,Date created Text,Due date,Due date Text,Start date,Start date Text,Parent ID,Subtask IDs,Attachments,Assignees,Tags,Priority,List Name,Space Name,Time Estimated,Time Estimated Text,Checklists,Comments,Assigned Comments,Time Spent,Time Spent Text,Rolled Up Time,Rolled Up Time Text");
-
-            string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
-            string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
-            string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
-            
-            List<string> checklistStrings = new List<string>();
-            for (int i = 0; i < card.checklistItems.Count; i++)
+            string boardName = Board != null ? Board.name : "Board";
+            RunExport("Card (CSV)", path, () =>
             {
-                string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
-                checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
-            }
-            string checklists = string.Join("; ", checklistStrings);
-
-            sb.Append($"\"{EscapeCSV(card.id)}\",");
-            sb.Append($"\"\","); // Task Link
-            sb.Append($"\"task\",");
-            sb.Append($"\"\","); // Custom ID
-            sb.Append($"\"{EscapeCSV(card.title)}\",");
-            sb.Append($"\"{EscapeCSV(card.description)}\",");
-            sb.Append($"\"{EscapeCSV(col.title)}\",");
-            sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
-            sb.Append($"\"{EscapeCSV(card.createdDate)}\",");
-            sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
-            sb.Append($"\"{EscapeCSV(card.dueDate)}\",");
-            sb.Append($"\"\","); // Start date
-            sb.Append($"\"\",");
-            sb.Append($"\"\","); // Parent ID
-            sb.Append($"\"\",");
-            sb.Append($"\"[]\","); // Attachments
-            sb.Append($"\"{EscapeCSV(assignees)}\",");
-            sb.Append($"\"{EscapeCSV(tags)}\",");
-            sb.Append($"\"{EscapeCSV(priority)}\",");
-            sb.Append($"\"{EscapeCSV(Board.name)}\",");
-            sb.Append($"\"AwesomeTaskManager\",");
-            sb.Append($"\"\",");
-            sb.Append($"\"\",");
-            sb.Append($"\"{EscapeCSV(checklists)}\",");
-            sb.Append($"\"\",");
-            sb.Append($"\"0\",");
-            sb.Append($"\"\",");
-            sb.Append($"\"\",");
-            sb.Append($"\"\",");
-            sb.AppendLine($"\"\"");
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            TriggerSuccessNotification("Card exported to CSV successfully");
+                var rows = new List<string[]>
+                {
+                    BoardImportExport.FullExportHeaders,
+                    BoardImportExport.BuildCardRow(card, col.title, boardName, _data?.assignees, FindParentCardId(Board, card))
+                };
+                File.WriteAllText(path, BoardImportExport.BuildCsv(rows), Encoding.UTF8);
+            });
         }
 
         private void ExportCardToExcel(TaskCard card, TaskColumn col)
         {
             if (card == null || col == null) return;
             string defaultName = SanitizeFileName(card.title);
-            string path = EditorUtility.SaveFilePanel("Export Card to Excel", "", defaultName, "xml");
+            string path = EditorUtility.SaveFilePanel("Export Card to Excel", "", defaultName, "xlsx");
             if (string.IsNullOrEmpty(path)) return;
-
-            var sb = new StringBuilder();
-            sb.AppendLine("<?xml version=\"1.0\"?>");
-            sb.AppendLine("<?mso-application progid=\"Excel.Sheet\"?>");
-            sb.AppendLine("<Workbook xmlns=\"urn:schemas-microsoft-com:office:spreadsheet\"");
-            sb.AppendLine(" xmlns:o=\"urn:schemas-microsoft-com:office:office\"");
-            sb.AppendLine(" xmlns:x=\"urn:schemas-microsoft-com:office:excel\"");
-            sb.AppendLine(" xmlns:ss=\"urn:schemas-microsoft-com:office:spreadsheet\"");
-            sb.AppendLine(" xmlns:html=\"http://www.w3.org/TR/REC-html40\">");
-            
-            sb.AppendLine(" <Styles>");
-            sb.AppendLine("  <Style ss:ID=\"sHeader\">");
-            sb.AppendLine("   <Font ss:Bold=\"1\"/>");
-            sb.AppendLine("   <Interior ss:Color=\"#C0C0C0\" ss:Pattern=\"Solid\"/>");
-            sb.AppendLine("  </Style>");
-            sb.AppendLine(" </Styles>");
-
-            sb.AppendLine($" <Worksheet ss:Name=\"{SecurityElement.Escape(card.title)}\">");
-            sb.AppendLine("  <Table>");
-
-            string[] headers = {
-                "Task ID", "Task Link", "Task Type", "Task Custom ID", "Task Name", "Task Content",
-                "Status", "Date created", "Date created Text", "Due date", "Due date Text",
-                "Start date", "Start date Text", "Parent ID", "Subtask IDs", "Attachments",
-                "Assignees", "Tags", "Priority", "List Name", "Space Name", "Time Estimated",
-                "Time Estimated Text", "Checklists", "Comments", "Assigned Comments",
-                "Time Spent", "Time Spent Text", "Rolled Up Time", "Rolled Up Time Text"
-            };
-
-            sb.AppendLine("   <Row ss:StyleID=\"sHeader\">");
-            foreach (var h in headers)
+            string boardName = Board != null ? Board.name : "Board";
+            RunExport("Card (Excel)", path, () =>
             {
-                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(h)}</Data></Cell>");
-            }
-            sb.AppendLine("   </Row>");
-
-            string assignees = "[" + string.Join(",", _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).Select(a => a.name)) + "]";
-            string tags = string.IsNullOrEmpty(card.category) ? "[]" : "[" + card.category + "]";
-            string priority = card.priority == 0 ? "None" : card.priority == 1 ? "Low" : card.priority == 2 ? "Medium" : card.priority == 3 ? "High" : "Urgent";
-            
-            List<string> checklistStrings = new List<string>();
-            for (int i = 0; i < card.checklistItems.Count; i++)
-            {
-                string itemStatus = (i < card.checklistStates.Count && card.checklistStates[i]) ? "RESOLVED" : "UNRESOLVED";
-                checklistStrings.Add($"{card.checklistItems[i]} ({itemStatus})");
-            }
-            string checklists = string.Join("; ", checklistStrings);
-
-            string[] rowValues = new string[30];
-            rowValues[0] = card.id;
-            rowValues[1] = "";
-            rowValues[2] = "task";
-            rowValues[3] = "";
-            rowValues[4] = card.title;
-            rowValues[5] = card.description;
-            rowValues[6] = col.title;
-            rowValues[7] = card.createdDate;
-            rowValues[8] = card.createdDate;
-            rowValues[9] = card.dueDate;
-            rowValues[10] = card.dueDate;
-            rowValues[11] = "";
-            rowValues[12] = "";
-            rowValues[13] = "";
-            rowValues[14] = "";
-            rowValues[15] = "[]";
-            rowValues[16] = assignees;
-            rowValues[17] = tags;
-            rowValues[18] = priority;
-            rowValues[19] = Board.name;
-            rowValues[20] = "AwesomeTaskManager";
-            rowValues[21] = "";
-            rowValues[22] = "";
-            rowValues[23] = checklists;
-            rowValues[24] = "";
-            rowValues[25] = "0";
-            rowValues[26] = "";
-            rowValues[27] = "";
-            rowValues[28] = "";
-            rowValues[29] = "";
-
-            sb.AppendLine("   <Row>");
-            foreach (var val in rowValues)
-            {
-                sb.AppendLine($"    <Cell><Data ss:Type=\"String\">{SecurityElement.Escape(val ?? "")}</Data></Cell>");
-            }
-            sb.AppendLine("   </Row>");
-
-            sb.AppendLine("  </Table>");
-            sb.AppendLine(" </Worksheet>");
-            sb.AppendLine("</Workbook>");
-
-            File.WriteAllText(path, sb.ToString(), Encoding.UTF8);
-            TriggerSuccessNotification("Card exported to Excel successfully");
+                var rows = new List<string[]>
+                {
+                    BoardImportExport.FullExportHeaders,
+                    BoardImportExport.BuildCardRow(card, col.title, boardName, _data?.assignees, FindParentCardId(Board, card))
+                };
+                WriteExcelExport(path, card.title, rows);
+            });
         }
 
         private void ExportCard(TaskCard card)
@@ -4534,12 +4207,12 @@ namespace AwesomeTaskManager.Editor
             string path = EditorUtility.SaveFilePanel("Export Card", "", defaultName, "atc");
             if (string.IsNullOrEmpty(path)) return;
 
-            var exportData = new ExportCardData { card = card };
-            exportData.assignees = _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).ToList();
-
-            string json = JsonUtility.ToJson(exportData, true);
-            File.WriteAllText(path, json, Encoding.UTF8);
-            TriggerSuccessNotification("Card exported successfully");
+            RunExport("Card", path, () =>
+            {
+                var exportData = new ExportCardData { card = card };
+                exportData.assignees = _data.assignees.Where(a => card.assigneeIds.Contains(a.id)).ToList();
+                File.WriteAllText(path, JsonUtility.ToJson(exportData, true), Encoding.UTF8);
+            });
         }
 
         private void ExportFolder(NoteFolder folder)
@@ -4547,28 +4220,37 @@ namespace AwesomeTaskManager.Editor
             string path = EditorUtility.SaveFolderPanel("Export Folder", "", folder.name);
             if (string.IsNullOrEmpty(path)) return;
 
-            var folderNotes = _data.notes.Where(n => n.folderId == folder.id).ToList();
-            if (folderNotes.Count == 0)
+            try
             {
-                ThemedDialog.Show("Empty", "This folder has no notes to export.", "OK");
-                return;
-            }
+                var folderNotes = _data.notes.Where(n => n.folderId == folder.id).ToList();
+                if (folderNotes.Count == 0)
+                {
+                    TriggerErrorNotification("This folder has no notes to export.");
+                    return;
+                }
 
-            int count = 0;
-            foreach (var note in folderNotes)
+                RunExport("Folder", path, () =>
+                {
+                    foreach (var note in folderNotes)
+                    {
+                        var sb = new StringBuilder();
+                        sb.AppendLine($"# {note.title}");
+                        sb.AppendLine();
+                        sb.AppendLine($"*Created: {note.createdDate}  |  Modified: {note.modifiedDate}*");
+                        sb.AppendLine();
+                        sb.AppendLine(note.content);
+
+                        string fileName = SanitizeFileName(note.title);
+                        string uniquePath = BoardImportExport.GetUniqueFilePath(path, fileName, ".md");
+                        File.WriteAllText(uniquePath, sb.ToString(), Encoding.UTF8);
+                    }
+                });
+            }
+            catch (Exception e)
             {
-                var sb = new StringBuilder();
-                sb.AppendLine($"# {note.title}");
-                sb.AppendLine();
-                sb.AppendLine($"*Created: {note.createdDate}  |  Modified: {note.modifiedDate}*");
-                sb.AppendLine();
-                sb.AppendLine(note.content);
-
-                string fileName = SanitizeFileName(note.title) + ".md";
-                File.WriteAllText(Path.Combine(path, fileName), sb.ToString(), Encoding.UTF8);
-                count++;
+                Debug.LogError("[AwesomeTaskManager] Folder export failed: " + e);
+                TriggerErrorNotification("Folder export failed. See console for details.");
             }
-            ThemedDialog.Show("Exported", $"Exported {count} note(s) to:\n{path}", "OK");
         }
 
         private static string SanitizeFileName(string name)
@@ -4618,14 +4300,14 @@ namespace AwesomeTaskManager.Editor
 
             try
             {
-                string[] lines = File.ReadAllLines(path, Encoding.UTF8);
-                if (lines.Length < 2)
+                List<string[]> rows = BoardImportExport.ParseCsv(File.ReadAllText(path, Encoding.UTF8));
+                if (rows.Count < 2)
                 {
                     TriggerErrorNotification("CSV file is empty or missing header");
                     return;
                 }
 
-                string[] headers = ParseCSVLine(lines[0]);
+                string[] headers = rows[0];
                 string suggestedProfileId;
                 var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Column, out suggestedProfileId);
                 ImportFieldMappingWindow.Open("Import Column Mapping (CSV)", ImportMappingScope.Column, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
@@ -4639,12 +4321,13 @@ namespace AwesomeTaskManager.Editor
                             return;
                         }
 
-                        var rows = new List<string[]>(lines.Length);
-                        foreach (var line in lines)
-                            rows.Add(ParseCSVLine(line));
-
                         ApplyImportMappingPreferences(result, ImportMappingScope.Column, path, headers);
-                        ImportColumnRowsWithMapping(board, rows, path, result.mapping, "Column(s) imported from CSV successfully");
+                        OpenRowsImportPreview(rows, path, result.mapping, ImportMappingScope.Column, board, string.Empty, previewResult =>
+                        {
+                            result.mapping.updateExisting = previewResult.mode == BoardImportExport.ImportConflictMode.Merge;
+                            bool createVariants = previewResult.mode == BoardImportExport.ImportConflictMode.CreateNew;
+                            ImportColumnRowsWithMapping(board, rows, path, result.mapping, "Column(s) imported from CSV successfully", createVariants, previewResult.newName);
+                        });
                     }
                     catch (ExitGUIException)
                     {
@@ -4655,7 +4338,7 @@ namespace AwesomeTaskManager.Editor
                         Debug.LogError("[AwesomeTaskManager] CSV Column Import failed: " + e.Message);
                         TriggerErrorNotification("CSV Column Import failed. See console for details.");
                     }
-                });
+                }, rows, BoardImportExport.CollectCardKeys(GetCardsFromBoard(board)));
             }
             catch (ExitGUIException)
             {
@@ -4714,7 +4397,12 @@ namespace AwesomeTaskManager.Editor
                         }
 
                         ApplyImportMappingPreferences(result, ImportMappingScope.Column, path, headers);
-                        ImportColumnRowsWithMapping(board, rows, path, result.mapping, "Column(s) imported from Excel successfully");
+                        OpenRowsImportPreview(rows, path, result.mapping, ImportMappingScope.Column, board, string.Empty, previewResult =>
+                        {
+                            result.mapping.updateExisting = previewResult.mode == BoardImportExport.ImportConflictMode.Merge;
+                            bool createVariants = previewResult.mode == BoardImportExport.ImportConflictMode.CreateNew;
+                            ImportColumnRowsWithMapping(board, rows, path, result.mapping, "Column(s) imported from Excel successfully", createVariants, previewResult.newName);
+                        });
                     }
                     catch (ExitGUIException)
                     {
@@ -4725,7 +4413,7 @@ namespace AwesomeTaskManager.Editor
                         Debug.LogError("[AwesomeTaskManager] Excel Column Import failed: " + e.Message);
                         TriggerErrorNotification("Excel Column Import failed. See console for details.");
                     }
-                });
+                }, rows, BoardImportExport.CollectCardKeys(GetCardsFromBoard(board)));
             }
             catch (ExitGUIException)
             {
@@ -4752,14 +4440,14 @@ namespace AwesomeTaskManager.Editor
 
             try
             {
-                string[] lines = File.ReadAllLines(path, Encoding.UTF8);
-                if (lines.Length < 2)
+                List<string[]> rows = BoardImportExport.ParseCsv(File.ReadAllText(path, Encoding.UTF8));
+                if (rows.Count < 2)
                 {
                     TriggerErrorNotification("CSV file is empty or missing header");
                     return;
                 }
 
-                string[] headers = ParseCSVLine(lines[0]);
+                string[] headers = rows[0];
                 string suggestedProfileId;
                 var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Board, out suggestedProfileId);
                 ImportFieldMappingWindow.Open("Import Board Mapping (CSV)", ImportMappingScope.Board, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
@@ -4773,12 +4461,13 @@ namespace AwesomeTaskManager.Editor
                             return;
                         }
 
-                        var rows = new List<string[]>(lines.Length);
-                        foreach (var line in lines)
-                            rows.Add(ParseCSVLine(line));
-
                         ApplyImportMappingPreferences(result, ImportMappingScope.Board, path, headers);
-                        ImportBoardRowsWithMapping(rows, path, result.mapping, "Board imported from CSV successfully");
+                        OpenRowsImportPreview(rows, path, result.mapping, ImportMappingScope.Board, null, string.Empty, previewResult =>
+                        {
+                            result.mapping.updateExisting = previewResult.mode == BoardImportExport.ImportConflictMode.Merge;
+                            string boardName = previewResult.mode == BoardImportExport.ImportConflictMode.CreateNew ? previewResult.newName : null;
+                            ImportBoardRowsWithMapping(rows, path, result.mapping, "Board imported from CSV successfully", boardName);
+                        });
                     }
                     catch (ExitGUIException)
                     {
@@ -4789,7 +4478,7 @@ namespace AwesomeTaskManager.Editor
                         Debug.LogError("[AwesomeTaskManager] CSV Import failed: " + e.Message);
                         TriggerErrorNotification("CSV Import failed. See console for details.");
                     }
-                });
+                }, rows, GetBoardImportKeys(rows, path, suggested));
             }
             catch (ExitGUIException)
             {
@@ -4803,7 +4492,25 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
-        private void ImportBoardRowsWithMapping(List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage)
+        private void OpenRowsImportPreview(List<string[]> rows, string path, ImportFieldMapping mapping, ImportMappingScope scope, TaskBoard targetBoard, string defaultStatus, Action<ImportPreviewResult> onConfirm)
+        {
+            if (rows == null || rows.Count < 2 || mapping == null) return;
+            string sourceName = string.Empty;
+            if (scope == ImportMappingScope.Board)
+                sourceName = rows.Skip(1).Select(row => GetMappedValue(row, mapping.listNameIndex)).FirstOrDefault(name => !string.IsNullOrWhiteSpace(name));
+            else if (scope == ImportMappingScope.Card)
+                sourceName = rows.Skip(1).Select(row => GetMappedValue(row, mapping.nameIndex)).FirstOrDefault(name => !string.IsNullOrWhiteSpace(name));
+            if (string.IsNullOrWhiteSpace(sourceName)) sourceName = Path.GetFileNameWithoutExtension(path);
+            if (string.IsNullOrWhiteSpace(sourceName)) sourceName = defaultStatus;
+
+            if (scope == ImportMappingScope.Board)
+                targetBoard = BoardImportExport.FindExistingBoard(null, sourceName, _data?.boards);
+            BoardImportExport.ImportPlan plan = BoardImportExport.BuildRowsPlan(rows, mapping, scope, targetBoard, defaultStatus, sourceName);
+            string title = scope == ImportMappingScope.Board ? "Preview Board Import" : scope == ImportMappingScope.Column ? "Preview Column Import" : "Preview Card Import";
+            ImportPreviewWindow.Open(title, plan, onConfirm);
+        }
+
+        private void ImportBoardRowsWithMapping(List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage, string boardNameOverride = null)
         {
             if (rows == null || rows.Count < 2)
             {
@@ -4817,99 +4524,122 @@ namespace AwesomeTaskManager.Editor
                 return;
             }
 
-            TaskBoard board = null;
+            string sourceBoardName = rows.Skip(1).Select(row => GetMappedValue(row, mapping.listNameIndex)).FirstOrDefault(name => !string.IsNullOrWhiteSpace(name));
+            if (string.IsNullOrWhiteSpace(sourceBoardName)) sourceBoardName = Path.GetFileNameWithoutExtension(path);
+            string boardName = string.IsNullOrWhiteSpace(boardNameOverride) ? sourceBoardName : boardNameOverride.Trim();
+            _data.boards ??= new List<TaskBoard>();
+            TaskBoard board = mapping.updateExisting ? BoardImportExport.FindExistingBoard(null, sourceBoardName, _data.boards) : null;
+            bool updatingExistingBoard = board != null;
+            if (board == null)
+            {
+                boardName = BoardImportExport.GetUniqueName(boardName, _data.boards.Where(existing => existing != null).Select(existing => existing.name));
+                board = new TaskBoard(boardName);
+                board.columns.Clear();
+            }
+            board.columns ??= new List<TaskColumn>();
             var columnMap = new Dictionary<string, TaskColumn>(StringComparer.OrdinalIgnoreCase);
+            if (updatingExistingBoard)
+            {
+                foreach (TaskColumn existingColumn in board.columns.Where(column => column != null))
+                {
+                    existingColumn.cards ??= new List<TaskCard>();
+                    columnMap[existingColumn.title ?? string.Empty] = existingColumn;
+                }
+            }
 
+            CaptureImportSnapshot();
+            var report = new BoardImportExport.ImportReport();
+            var rowInfos = new List<BoardImportExport.ImportedRowInfo>();
+            var importedBySourceId = new Dictionary<string, TaskCard>(StringComparer.OrdinalIgnoreCase);
             for (int i = 1; i < rows.Count; i++)
             {
                 string[] values = rows[i] ?? Array.Empty<string>();
                 string taskName = GetMappedValue(values, mapping.nameIndex);
-
+                string status = GetMappedValue(values, mapping.statusIndex);
                 if (string.IsNullOrWhiteSpace(taskName))
                 {
-                    // Preserve empty-column placeholder rows (status_placeholder).
-                    // Create the column so round-tripping keeps all columns, even empty ones.
-                    if (mapping.statusIndex >= 0)
+                    if (mapping.statusIndex >= 0 && !string.IsNullOrWhiteSpace(status))
                     {
-                        string placeholderStatus = GetMappedValue(values, mapping.statusIndex);
-                        if (!string.IsNullOrWhiteSpace(placeholderStatus))
+                        if (!columnMap.ContainsKey(status))
                         {
-                            if (board == null)
-                            {
-                                string boardName = GetMappedValue(values, mapping.listNameIndex);
-                                if (string.IsNullOrWhiteSpace(boardName))
-                                    boardName = Path.GetFileNameWithoutExtension(path);
-                                board = new TaskBoard(boardName);
-                                board.columns.Clear();
-                            }
-
-                            if (!columnMap.ContainsKey(placeholderStatus))
-                            {
-                                var emptyCol = new TaskColumn(placeholderStatus);
-                                board.columns.Add(emptyCol);
-                                columnMap[placeholderStatus] = emptyCol;
-                            }
+                            var emptyColumn = new TaskColumn(status);
+                            board.columns.Add(emptyColumn);
+                            columnMap[status] = emptyColumn;
+                            report.newColumns++;
                         }
+                        report.placeholders++;
                     }
+                    else if (RowHasValues(values)) report.skippedRows.Add("Row " + (i + 1) + ": task name and status are empty.");
                     continue;
                 }
 
-                if (board == null)
-                {
-                    string boardName = GetMappedValue(values, mapping.listNameIndex);
-                    if (string.IsNullOrWhiteSpace(boardName))
-                        boardName = Path.GetFileNameWithoutExtension(path);
-
-                    board = new TaskBoard(boardName);
-                    board.columns.Clear();
-                }
-
-                string status = GetMappedValue(values, mapping.statusIndex);
                 if (string.IsNullOrWhiteSpace(status)) status = "To Do";
-
-                if (!columnMap.TryGetValue(status, out TaskColumn col))
+                if (!columnMap.TryGetValue(status, out TaskColumn targetColumn))
                 {
-                    col = new TaskColumn(status);
-                    board.columns.Add(col);
-                    columnMap[status] = col;
+                    targetColumn = new TaskColumn(status);
+                    board.columns.Add(targetColumn);
+                    columnMap[status] = targetColumn;
+                    report.newColumns++;
+                }
+                targetColumn.cards ??= new List<TaskCard>();
+
+                string sourceId = GetMappedValue(values, mapping.taskIdIndex);
+                string sourceCode = GetMappedValue(values, mapping.taskCodeIndex);
+                TaskCard card = BoardImportExport.GetOrCreateCard(GetCardsFromBoard(board), sourceId, sourceCode, mapping.updateExisting, taskName, out bool updatingCard);
+                if (updatingCard)
+                {
+                    foreach (TaskColumn oldColumn in board.columns)
+                        oldColumn?.cards?.Remove(card);
+                    card.title = taskName;
+                    targetColumn.cards.Add(card);
+                    report.updated++;
+                }
+                else
+                {
+                    card = new TaskCard(taskName);
+                    targetColumn.cards.Add(card);
+                    report.created++;
                 }
 
-                TaskCard card = new TaskCard(taskName);
-                MapValuesToCard(
-                    card,
-                    values,
-                    status,
-                    mapping.descriptionIndex,
-                    mapping.priorityIndex,
-                    mapping.assigneeIndex,
-                    mapping.tagsIndex,
-                    mapping.dueDateIndex,
-                    mapping.checklistIndex,
-                    mapping.customFieldsIndex,
-                    mapping.preset == ImportMappingPreset.Trello);
-                col.cards.Add(card);
+                BoardImportExport.MapRowToCard(card, values, status, mapping, _data, report);
+                if (!updatingCard && card.taskNumber <= 0)
+                    card.taskNumber = _data.nextTaskNumber++;
+
+                var rowInfo = new BoardImportExport.ImportedRowInfo
+                {
+                    sourceId = sourceId,
+                    taskCode = sourceCode,
+                    parentId = GetMappedValue(values, mapping.parentIdIndex),
+                    card = card
+                };
+                rowInfo.subtaskIds.AddRange(BoardImportExport.ParseList(GetMappedValue(values, mapping.subtaskIdsIndex)));
+                rowInfo.subtaskIds.AddRange(BoardImportExport.ParseList(GetMappedValue(values, mapping.checklistLinksIndex)));
+                rowInfo.subtaskIds = rowInfo.subtaskIds.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                rowInfos.Add(rowInfo);
+                AddImportedCardKey(importedBySourceId, sourceId, card);
+                AddImportedCardKey(importedBySourceId, sourceCode, card);
             }
 
-            if (board == null)
+            if (rowInfos.Count == 0 && report.placeholders == 0)
             {
                 TriggerErrorNotification("No columns or tasks found to import.");
                 return;
             }
 
-            if (mapping.preset == ImportMappingPreset.ClickUp)
-                SortColumnsLikeClickUp(board.columns);
+            BoardImportExport.ResolveSubtaskLinks(importedBySourceId, rowInfos);
+            if (mapping.preset == ImportMappingPreset.ClickUp) SortColumnsLikeClickUp(board.columns);
 
-            _data.boards.Add(board);
-            _boardIndex = _data.boards.Count - 1;
+            if (!updatingExistingBoard) _data.boards.Add(board);
+            _boardIndex = _data.boards.IndexOf(board);
             ResetFilters();
             _data.Normalize();
             Save();
             RefreshAfterImport();
-            TriggerSuccessNotification(successMessage);
+            ShowImportReport(report, successMessage);
             GUIUtility.ExitGUI();
         }
 
-        private void ImportColumnRowsWithMapping(TaskBoard board, List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage)
+        private void ImportColumnRowsWithMapping(TaskBoard board, List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage, bool createVariants = false, string variantName = null)
         {
             if (board == null || rows == null || rows.Count < 2)
             {
@@ -4923,72 +4653,94 @@ namespace AwesomeTaskManager.Editor
                 return;
             }
 
+            board.columns ??= new List<TaskColumn>();
             var columnMap = new Dictionary<string, TaskColumn>(StringComparer.OrdinalIgnoreCase);
+            foreach (TaskColumn existingColumn in board.columns.Where(column => column != null))
+            {
+                existingColumn.cards ??= new List<TaskCard>();
+                columnMap[existingColumn.title ?? string.Empty] = existingColumn;
+            }
 
+            CaptureImportSnapshot();
+            var report = new BoardImportExport.ImportReport();
+            var rowInfos = new List<BoardImportExport.ImportedRowInfo>();
+            var importedBySourceId = new Dictionary<string, TaskCard>(StringComparer.OrdinalIgnoreCase);
+            var variantStatusMap = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            bool usedVariantName = false;
             for (int i = 1; i < rows.Count; i++)
             {
                 string[] values = rows[i] ?? Array.Empty<string>();
                 string taskName = GetMappedValue(values, mapping.nameIndex);
-
+                string incomingStatus = GetMappedValue(values, mapping.statusIndex);
+                if (string.IsNullOrWhiteSpace(incomingStatus)) incomingStatus = Path.GetFileNameWithoutExtension(path);
+                if (string.IsNullOrWhiteSpace(incomingStatus)) incomingStatus = "Imported";
+                string status = ResolveImportColumnName(incomingStatus, columnMap, variantStatusMap, createVariants, variantName, ref usedVariantName);
                 if (string.IsNullOrWhiteSpace(taskName))
                 {
-                    // Preserve empty-column placeholder rows so round-tripping keeps all columns.
-                    if (mapping.statusIndex >= 0)
+                    if (mapping.statusIndex >= 0 && !string.IsNullOrWhiteSpace(status))
                     {
-                        string placeholderStatus = GetMappedValue(values, mapping.statusIndex);
-                        if (!string.IsNullOrWhiteSpace(placeholderStatus) && !columnMap.ContainsKey(placeholderStatus))
+                        if (!columnMap.ContainsKey(status))
                         {
-                            var existingCol = board.columns.FirstOrDefault(c => string.Equals(c.title, placeholderStatus, StringComparison.OrdinalIgnoreCase));
-                            if (existingCol == null)
-                            {
-                                existingCol = new TaskColumn(placeholderStatus);
-                                board.columns.Add(existingCol);
-                            }
-                            columnMap[placeholderStatus] = existingCol;
+                            var emptyColumn = new TaskColumn(status);
+                            board.columns.Add(emptyColumn);
+                            columnMap[status] = emptyColumn;
+                            report.newColumns++;
                         }
+                        report.placeholders++;
                     }
+                    else if (RowHasValues(values)) report.skippedRows.Add("Row " + (i + 1) + ": task name and status are empty.");
                     continue;
                 }
 
-                string status = GetMappedValue(values, mapping.statusIndex);
-                if (string.IsNullOrWhiteSpace(status)) status = Path.GetFileNameWithoutExtension(path);
-                if (string.IsNullOrWhiteSpace(status)) status = "Imported";
-
-                if (!columnMap.TryGetValue(status, out TaskColumn col))
+                if (!columnMap.TryGetValue(status, out TaskColumn targetColumn))
                 {
-                    col = board.columns.FirstOrDefault(c => string.Equals(c.title, status, StringComparison.OrdinalIgnoreCase));
-                    if (col == null)
-                    {
-                        col = new TaskColumn(status);
-                        board.columns.Add(col);
-                    }
-                    columnMap[status] = col;
+                    targetColumn = new TaskColumn(status);
+                    board.columns.Add(targetColumn);
+                    columnMap[status] = targetColumn;
+                    report.newColumns++;
+                }
+                targetColumn.cards ??= new List<TaskCard>();
+
+                string sourceId = GetMappedValue(values, mapping.taskIdIndex);
+                string sourceCode = GetMappedValue(values, mapping.taskCodeIndex);
+                TaskCard card = BoardImportExport.GetOrCreateCard(GetCardsFromBoard(board), sourceId, sourceCode, mapping.updateExisting, taskName, out bool updatingCard);
+                if (updatingCard)
+                {
+                    foreach (TaskColumn oldColumn in board.columns) oldColumn?.cards?.Remove(card);
+                    targetColumn.cards.Add(card);
+                    report.updated++;
+                }
+                else
+                {
+                    card = new TaskCard(taskName);
+                    targetColumn.cards.Add(card);
+                    report.created++;
                 }
 
-                TaskCard card = new TaskCard(taskName);
-                MapValuesToCard(
-                    card,
-                    values,
-                    status,
-                    mapping.descriptionIndex,
-                    mapping.priorityIndex,
-                    mapping.assigneeIndex,
-                    mapping.tagsIndex,
-                    mapping.dueDateIndex,
-                    mapping.checklistIndex,
-                    mapping.customFieldsIndex,
-                    mapping.preset == ImportMappingPreset.Trello);
-                col.cards.Add(card);
+                BoardImportExport.MapRowToCard(card, values, incomingStatus, mapping, _data, report);
+                if (!updatingCard && card.taskNumber <= 0) card.taskNumber = _data.nextTaskNumber++;
+                var rowInfo = new BoardImportExport.ImportedRowInfo
+                {
+                    sourceId = sourceId,
+                    taskCode = sourceCode,
+                    parentId = GetMappedValue(values, mapping.parentIdIndex),
+                    card = card
+                };
+                rowInfo.subtaskIds.AddRange(BoardImportExport.ParseList(GetMappedValue(values, mapping.subtaskIdsIndex)));
+                rowInfo.subtaskIds.AddRange(BoardImportExport.ParseList(GetMappedValue(values, mapping.checklistLinksIndex)));
+                rowInfo.subtaskIds = rowInfo.subtaskIds.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                rowInfos.Add(rowInfo);
+                AddImportedCardKey(importedBySourceId, sourceId, card);
+                AddImportedCardKey(importedBySourceId, sourceCode, card);
             }
 
+            BoardImportExport.ResolveSubtaskLinks(importedBySourceId, rowInfos);
             ResetFilters();
-            if (mapping.preset == ImportMappingPreset.ClickUp)
-                SortColumnsLikeClickUp(board.columns);
-
+            if (mapping.preset == ImportMappingPreset.ClickUp) SortColumnsLikeClickUp(board.columns);
             _data.Normalize();
             Save();
             RefreshAfterImport();
-            TriggerSuccessNotification(successMessage);
+            ShowImportReport(report, successMessage);
             GUIUtility.ExitGUI();
         }
 
@@ -4996,6 +4748,29 @@ namespace AwesomeTaskManager.Editor
         {
             if (values == null || idx < 0 || idx >= values.Length) return string.Empty;
             return values[idx]?.Trim() ?? string.Empty;
+        }
+
+        private static string ResolveImportColumnName(string incomingStatus, IDictionary<string, TaskColumn> columnMap, IDictionary<string, string> variantStatusMap, bool createVariants, string variantName, ref bool usedVariantName)
+        {
+            if (!createVariants || columnMap == null || !columnMap.ContainsKey(incomingStatus)) return incomingStatus;
+            if (variantStatusMap != null && variantStatusMap.TryGetValue(incomingStatus, out string mappedStatus)) return mappedStatus;
+
+            string baseName = !usedVariantName && !string.IsNullOrWhiteSpace(variantName) ? variantName : incomingStatus;
+            string uniqueName = BoardImportExport.GetUniqueName(baseName, columnMap.Keys);
+            usedVariantName = true;
+            if (variantStatusMap != null) variantStatusMap[incomingStatus] = uniqueName;
+            return uniqueName;
+        }
+
+        private static bool RowHasValues(string[] values)
+        {
+            return values != null && values.Any(value => !string.IsNullOrWhiteSpace(value));
+        }
+
+        private static void AddImportedCardKey(IDictionary<string, TaskCard> cards, string key, TaskCard card)
+        {
+            if (cards != null && card != null && !string.IsNullOrWhiteSpace(key) && !cards.ContainsKey(key.Trim()))
+                cards.Add(key.Trim(), card);
         }
 
         private static void SortColumnsLikeClickUp(List<TaskColumn> columns)
@@ -5020,41 +4795,6 @@ namespace AwesomeTaskManager.Editor
             });
         }
 
-        private string[] ParseCSVLine(string line)
-        {
-            List<string> result = new List<string>();
-            bool inQuotes = false;
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < line.Length; i++)
-            {
-                char c = line[i];
-                if (c == '\"')
-                {
-                    if (inQuotes && i + 1 < line.Length && line[i + 1] == '\"')
-                    {
-                        sb.Append('\"');
-                        i++;
-                    }
-                    else
-                    {
-                        inQuotes = !inQuotes;
-                    }
-                }
-                else if (c == ',' && !inQuotes)
-                {
-                    result.Add(sb.ToString());
-                    sb.Clear();
-                }
-                else
-                {
-                    sb.Append(c);
-                }
-            }
-            result.Add(sb.ToString());
-            return result.ToArray();
-        }
-
         private void MapValuesToCard(TaskCard card, string[] values, string status, int descIdx, int priorityIdx, int assigneeIdx, int tagIdx, int dueIdx, int checklistIdx, int customFieldsIdx = -1, bool parseAsTrello = false)
         {
             if (status != null)
@@ -5074,7 +4814,7 @@ namespace AwesomeTaskManager.Editor
             
             if (priorityIdx != -1 && priorityIdx < values.Length)
             {
-                string p = values[priorityIdx].ToLower();
+                string p = (values[priorityIdx] ?? string.Empty).ToLowerInvariant();
                 if (p.Contains("urgent")) card.priority = 4;
                 else if (p.Contains("high")) card.priority = 3;
                 else if (p.Contains("medium") || p.Contains("normal")) card.priority = 2;
@@ -5184,41 +4924,7 @@ namespace AwesomeTaskManager.Editor
                     TriggerErrorNotification("Invalid board file");
                     return;
                 }
-
-                var board = importData.board;
-
-                // Handle assignees
-                foreach (var a in importData.assignees)
-                {
-                    if (!_data.assignees.Any(existing => existing.id == a.id))
-                    {
-                        if (!_data.assignees.Any(existing => existing.name == a.name))
-                        {
-                            _data.assignees.Add(a);
-                        }
-                    }
-                }
-
-                // Handle categories
-                foreach (var cc in importData.categoryColors)
-                {
-                    if (!_data.categories.Contains(cc.category))
-                    {
-                        _data.categories.Add(cc.category);
-                        _data.SetCategoryColor(cc.category, cc.colorIndex);
-                    }
-                }
-
-                // Add board
-                board.name += " (Imported)";
-                _data.boards.Add(board);
-                _boardIndex = _data.boards.Count - 1;
-                ResetFilters();
-                _data.Normalize();
-                Save();
-                RefreshAfterImport();
-                TriggerSuccessNotification("Board imported successfully");
-                GUIUtility.ExitGUI();
+                ShowBoardImportPreview(importData, "Preview Board Import", null, false);
             }
             catch (ExitGUIException)
             {
@@ -5230,6 +4936,145 @@ namespace AwesomeTaskManager.Editor
                 Debug.LogError("[AwesomeTaskManager] Import failed: " + e.Message);
                 TriggerErrorNotification("Import failed");
             }
+        }
+
+        private void ImportBoardFromExternalJson()
+        {
+            if (_data == null)
+            {
+                _data = Persistence.Load();
+                if (_data == null) return;
+            }
+
+            string path = EditorUtility.OpenFilePanel("Import External JSON Board", "", "json");
+            if (string.IsNullOrEmpty(path)) return;
+
+            try
+            {
+                string json = File.ReadAllText(path, Encoding.UTF8);
+                string format = ExternalJsonImportExport.DetectFormat(json);
+                if (format == "Native")
+                {
+                    ExportBoardData nativeData = JsonUtility.FromJson<ExportBoardData>(json);
+                    if (nativeData?.board == null)
+                    {
+                        TriggerErrorNotification("Invalid board JSON file");
+                        return;
+                    }
+                    ShowBoardImportPreview(nativeData, "Preview Board Import", null, false);
+                    return;
+                }
+
+                var warnings = new List<string>();
+                if (!ExternalJsonImportExport.TryImport(json, out ExportBoardData importData, out format, warnings) || importData?.board == null)
+                {
+                    Debug.LogWarning("[AwesomeTaskManager] External JSON import failed: " + string.Join(" ", warnings));
+                    TriggerErrorNotification("JSON import failed. Check the file format and console details.");
+                    return;
+                }
+                ShowBoardImportPreview(importData, "Preview " + format + " Import", warnings, true);
+            }
+            catch (Exception exception)
+            {
+                Debug.LogError("[AwesomeTaskManager] External JSON import failed: " + exception);
+                TriggerErrorNotification("JSON import failed. See console for details.");
+            }
+        }
+
+        private void ShowBoardImportPreview(ExportBoardData importData, string previewTitle, IList<string> warnings, bool preserveExternalCardIds)
+        {
+            TaskBoard board = importData?.board;
+            if (board == null)
+            {
+                TriggerErrorNotification("Invalid board file");
+                return;
+            }
+
+            BoardImportExport.ImportPlan plan = BoardImportExport.BuildBoardPlan(board, _data?.boards ?? new List<TaskBoard>(), _data?.assignees);
+            ImportPreviewWindow.Open(previewTitle, plan, result =>
+            {
+                try
+                {
+                    _data.assignees ??= new List<Assignee>();
+                    _data.boards ??= new List<TaskBoard>();
+                    _data.categories ??= new List<string>();
+                    bool merge = result.mode == BoardImportExport.ImportConflictMode.Merge &&
+                                 BoardImportExport.FindExistingBoard(board.id, board.name, _data.boards) != null;
+                    CaptureImportSnapshot();
+                    var assigneeMap = BoardImportExport.MergeAssignees(_data.assignees, importData.assignees);
+                    var report = new BoardImportExport.ImportReport();
+                    if (warnings != null) report.warnings.AddRange(warnings);
+                    if (merge)
+                    {
+                        TaskBoard existing = BoardImportExport.FindExistingBoard(board.id, board.name, _data.boards);
+                        board = BoardImportExport.MergeImportedBoard(existing, board, assigneeMap, report);
+                    }
+                    else
+                    {
+                        Dictionary<TaskCard, (string id, string taskCode)> originalCardKeys = null;
+                        if (preserveExternalCardIds)
+                            originalCardKeys = (board.columns ?? new List<TaskColumn>())
+                                .Where(column => column?.cards != null)
+                                .SelectMany(column => column.cards)
+                                .Where(card => card != null)
+                                .ToDictionary(card => card, card => (card.id, card.taskCode));
+
+                        BoardImportExport.PrepareImportedBoard(board, assigneeMap);
+                        if (originalCardKeys != null)
+                        {
+                            var generatedToExternalId = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+                            foreach (KeyValuePair<TaskCard, (string id, string taskCode)> item in originalCardKeys)
+                            {
+                                if (!string.IsNullOrWhiteSpace(item.Key.id) && !string.IsNullOrWhiteSpace(item.Value.id))
+                                    generatedToExternalId[item.Key.id] = item.Value.id;
+                                item.Key.id = item.Value.id;
+                                item.Key.taskCode = item.Value.taskCode;
+                            }
+                            foreach (TaskCard card in (board.columns ?? new List<TaskColumn>()).Where(column => column?.cards != null).SelectMany(column => column.cards))
+                                for (int i = 0; i < (card.checklistLinkedCardIds ?? new List<string>()).Count; i++)
+                                    if (generatedToExternalId.TryGetValue(card.checklistLinkedCardIds[i], out string externalId))
+                                        card.checklistLinkedCardIds[i] = externalId;
+                        }
+
+                        board.name = BoardImportExport.GetUniqueName(result.newName, _data.boards.Where(existing => existing != null).Select(existing => existing.name));
+                        _data.boards.Add(board);
+                        report.created = (board.columns ?? new List<TaskColumn>()).Where(column => column?.cards != null).Sum(column => column.cards.Count);
+                        report.newColumns = (board.columns ?? new List<TaskColumn>()).Count;
+                    }
+
+                    foreach (TaskCard importedCard in (board.columns ?? new List<TaskColumn>()).Where(column => column?.cards != null).SelectMany(column => column.cards))
+                        if (!string.IsNullOrWhiteSpace(importedCard?.category) && !_data.categories.Contains(importedCard.category, StringComparer.OrdinalIgnoreCase))
+                        {
+                            _data.categories.Add(importedCard.category);
+                            report.newCategories++;
+                        }
+
+                    foreach (CategoryColorEntry colorEntry in importData.categoryColors ?? new List<CategoryColorEntry>())
+                    {
+                        if (colorEntry == null || string.IsNullOrWhiteSpace(colorEntry.category)) continue;
+                        if (!_data.categories.Contains(colorEntry.category, StringComparer.OrdinalIgnoreCase))
+                        {
+                            _data.categories.Add(colorEntry.category);
+                            report.newCategories++;
+                        }
+                        _data.SetCategoryColor(colorEntry.category, colorEntry.colorIndex);
+                    }
+
+                    _boardIndex = _data.boards.IndexOf(board);
+                    ResetFilters();
+                    _data.Normalize();
+                    Save();
+                    RefreshAfterImport();
+                    ShowImportReport(report, "Board imported successfully");
+                    GUIUtility.ExitGUI();
+                }
+                catch (ExitGUIException) { }
+                catch (Exception exception)
+                {
+                    Debug.LogError("[AwesomeTaskManager] Import failed: " + exception);
+                    TriggerErrorNotification("Import failed");
+                }
+            });
         }
 
         private void ImportCardIntoColumn(TaskColumn col)
@@ -5249,27 +5094,47 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 var card = importData.card;
-                card.id = Guid.NewGuid().ToString(); // Ensure unique ID for imported card
-                card.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
-
-                // Handle assignees
-                foreach (var a in importData.assignees)
+                BoardImportExport.ImportPlan plan = BoardImportExport.BuildCardPlan(card, Board, _data?.assignees, col.title);
+                ImportPreviewWindow.Open("Preview Card Import", plan, result =>
                 {
-                    if (!_data.assignees.Any(existing => existing.id == a.id))
+                    try
                     {
-                        if (!_data.assignees.Any(existing => existing.name == a.name))
+                        _data.assignees ??= new List<Assignee>();
+                        col.cards ??= new List<TaskCard>();
+                        TaskBoard board = Board;
+                        CaptureImportSnapshot();
+                        var assigneeMap = BoardImportExport.MergeAssignees(_data.assignees, importData.assignees);
+                        var report = new BoardImportExport.ImportReport();
+                        TaskCard existing = BoardImportExport.FindCardByKey(GetCardsFromBoard(board), card.id, card.taskCode);
+                        bool merge = result.mode == BoardImportExport.ImportConflictMode.Merge && existing != null;
+                        if (merge)
                         {
-                            _data.assignees.Add(a);
+                            BoardImportExport.MergeCardsIntoColumn(board, col, new[] { card }, assigneeMap, report);
                         }
-                    }
-                }
+                        else
+                        {
+                            BoardImportExport.PrepareImportedCards(new[] { card }, assigneeMap);
+                            if (existing != null)
+                                card.title = BoardImportExport.GetUniqueName(result.newName, GetCardsFromBoard(board).Select(existingCard => existingCard?.title));
+                            card.createdDate = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
+                            col.cards.Add(card);
+                            report.created++;
+                        }
 
-                col.cards.Add(card);
-                ResetFilters();
-                _data.Normalize();
-                Save();
-                TriggerSuccessNotification("Card imported successfully");
-                GUIUtility.ExitGUI();
+                        ResetFilters();
+                        _data.Normalize();
+                        Save();
+                        RefreshAfterImport();
+                        ShowImportReport(report, "Card imported successfully");
+                        GUIUtility.ExitGUI();
+                    }
+                    catch (ExitGUIException) { }
+                    catch (Exception e)
+                    {
+                        Debug.LogError("[AwesomeTaskManager] Import failed: " + e.Message);
+                        TriggerErrorNotification("Import failed");
+                    }
+                });
             }
             catch (ExitGUIException)
             {
@@ -5283,7 +5148,7 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
-        private void ImportCardRowsWithMapping(TaskColumn targetCol, List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage)
+        private void ImportCardRowsWithMapping(TaskColumn targetCol, List<string[]> rows, string path, ImportFieldMapping mapping, string successMessage, string variantName = null)
         {
             if (targetCol == null || rows == null || rows.Count < 2)
             {
@@ -5297,33 +5162,73 @@ namespace AwesomeTaskManager.Editor
                 return;
             }
 
+            TaskBoard board = Board;
+            if (board != null) board.columns ??= new List<TaskColumn>();
+            targetCol.cards ??= new List<TaskCard>();
+            CaptureImportSnapshot();
+            var report = new BoardImportExport.ImportReport();
+            var rowInfos = new List<BoardImportExport.ImportedRowInfo>();
+            var importedBySourceId = new Dictionary<string, TaskCard>(StringComparer.OrdinalIgnoreCase);
             for (int i = 1; i < rows.Count; i++)
             {
                 string[] values = rows[i] ?? Array.Empty<string>();
                 string taskName = GetMappedValue(values, mapping.nameIndex);
-                if (string.IsNullOrWhiteSpace(taskName)) continue;
+                if (string.IsNullOrWhiteSpace(taskName))
+                {
+                    if (RowHasValues(values)) report.skippedRows.Add("Row " + (i + 1) + ": task name is empty.");
+                    continue;
+                }
 
-                TaskCard card = new TaskCard(taskName);
-                MapValuesToCard(
-                    card,
-                    values,
-                    targetCol.title,
-                    mapping.descriptionIndex,
-                    mapping.priorityIndex,
-                    mapping.assigneeIndex,
-                    mapping.tagsIndex,
-                    mapping.dueDateIndex,
-                    mapping.checklistIndex,
-                    mapping.customFieldsIndex,
-                    mapping.preset == ImportMappingPreset.Trello);
+                string status = GetMappedValue(values, mapping.statusIndex);
+                if (string.IsNullOrWhiteSpace(status)) status = targetCol.title;
+                string sourceId = GetMappedValue(values, mapping.taskIdIndex);
+                string sourceCode = GetMappedValue(values, mapping.taskCodeIndex);
+                bool rowMatchesExisting = BoardImportExport.FindCardByKey(GetCardsFromBoard(board), sourceId, sourceCode) != null;
+                TaskColumn destination = BoardImportExport.ResolveCardImportDestination(board, targetCol, status, !mapping.updateExisting && rowMatchesExisting);
+                destination.cards ??= new List<TaskCard>();
+                if (!mapping.updateExisting && rowMatchesExisting)
+                {
+                    string baseVariant = string.IsNullOrWhiteSpace(variantName) ? taskName : variantName;
+                    taskName = BoardImportExport.GetUniqueName(baseVariant, GetCardsFromBoard(board).Select(card => card?.title));
+                    variantName = null;
+                }
+                TaskCard card = BoardImportExport.GetOrCreateCard(GetCardsFromBoard(board), sourceId, sourceCode, mapping.updateExisting, taskName, out bool updatingCard);
+                if (updatingCard)
+                {
+                    foreach (TaskColumn oldColumn in board.columns) oldColumn?.cards?.Remove(card);
+                    destination.cards.Add(card);
+                    report.updated++;
+                }
+                else
+                {
+                    card = new TaskCard(taskName);
+                    destination.cards.Add(card);
+                    report.created++;
+                }
 
-                targetCol.cards.Add(card);
+                BoardImportExport.MapRowToCard(card, values, status, mapping, _data, report);
+                if (!updatingCard && card.taskNumber <= 0) card.taskNumber = _data.nextTaskNumber++;
+                var rowInfo = new BoardImportExport.ImportedRowInfo
+                {
+                    sourceId = sourceId,
+                    taskCode = sourceCode,
+                    parentId = GetMappedValue(values, mapping.parentIdIndex),
+                    card = card
+                };
+                rowInfo.subtaskIds.AddRange(BoardImportExport.ParseList(GetMappedValue(values, mapping.subtaskIdsIndex)));
+                rowInfo.subtaskIds.AddRange(BoardImportExport.ParseList(GetMappedValue(values, mapping.checklistLinksIndex)));
+                rowInfo.subtaskIds = rowInfo.subtaskIds.Distinct(StringComparer.OrdinalIgnoreCase).ToList();
+                rowInfos.Add(rowInfo);
+                AddImportedCardKey(importedBySourceId, sourceId, card);
+                AddImportedCardKey(importedBySourceId, sourceCode, card);
             }
 
+            BoardImportExport.ResolveSubtaskLinks(importedBySourceId, rowInfos);
             ResetFilters();
             _data.Normalize();
             Save();
-            TriggerSuccessNotification(successMessage);
+            RefreshAfterImport();
+            ShowImportReport(report, successMessage);
             GUIUtility.ExitGUI();
         }
 
@@ -5341,14 +5246,14 @@ namespace AwesomeTaskManager.Editor
 
             try
             {
-                string[] lines = File.ReadAllLines(path, Encoding.UTF8);
-                if (lines.Length < 2)
+                List<string[]> rows = BoardImportExport.ParseCsv(File.ReadAllText(path, Encoding.UTF8));
+                if (rows.Count < 2)
                 {
                     TriggerErrorNotification("CSV file is empty or missing header");
                     return;
                 }
 
-                string[] headers = ParseCSVLine(lines[0]);
+                string[] headers = rows[0];
                 string suggestedProfileId;
                 var suggested = GetSuggestedImportMapping(path, headers, ImportMappingScope.Card, out suggestedProfileId);
                 ImportFieldMappingWindow.Open("Import Card Mapping (CSV)", ImportMappingScope.Card, path, headers, suggested, _data?.importMappingProfiles, suggestedProfileId, result =>
@@ -5362,12 +5267,13 @@ namespace AwesomeTaskManager.Editor
                             return;
                         }
 
-                        var rows = new List<string[]>(lines.Length);
-                        foreach (var line in lines)
-                            rows.Add(ParseCSVLine(line));
-
                         ApplyImportMappingPreferences(result, ImportMappingScope.Card, path, headers);
-                        ImportCardRowsWithMapping(targetCol, rows, path, result.mapping, "Card(s) imported from CSV successfully");
+                        OpenRowsImportPreview(rows, path, result.mapping, ImportMappingScope.Card, Board, targetCol.title, previewResult =>
+                        {
+                            result.mapping.updateExisting = previewResult.mode == BoardImportExport.ImportConflictMode.Merge;
+                            string variantName = previewResult.mode == BoardImportExport.ImportConflictMode.CreateNew ? previewResult.newName : null;
+                            ImportCardRowsWithMapping(targetCol, rows, path, result.mapping, "Card(s) imported from CSV successfully", variantName);
+                        });
                     }
                     catch (ExitGUIException)
                     {
@@ -5378,7 +5284,7 @@ namespace AwesomeTaskManager.Editor
                         Debug.LogError("[AwesomeTaskManager] CSV Card Import failed: " + e.Message);
                         TriggerErrorNotification("CSV Card Import failed.");
                     }
-                });
+                }, rows, GetCurrentBoardImportKeys());
             }
             catch (ExitGUIException)
             {
@@ -5437,7 +5343,12 @@ namespace AwesomeTaskManager.Editor
                         }
 
                         ApplyImportMappingPreferences(result, ImportMappingScope.Card, path, headers);
-                        ImportCardRowsWithMapping(targetCol, rows, path, result.mapping, "Card(s) imported from Excel successfully");
+                        OpenRowsImportPreview(rows, path, result.mapping, ImportMappingScope.Card, Board, targetCol.title, previewResult =>
+                        {
+                            result.mapping.updateExisting = previewResult.mode == BoardImportExport.ImportConflictMode.Merge;
+                            string variantName = previewResult.mode == BoardImportExport.ImportConflictMode.CreateNew ? previewResult.newName : null;
+                            ImportCardRowsWithMapping(targetCol, rows, path, result.mapping, "Card(s) imported from Excel successfully", variantName);
+                        });
                     }
                     catch (ExitGUIException)
                     {
@@ -5448,7 +5359,7 @@ namespace AwesomeTaskManager.Editor
                         Debug.LogError("[AwesomeTaskManager] Excel Card Import failed: " + e.Message);
                         TriggerErrorNotification("Excel Card Import failed.");
                     }
-                });
+                }, rows, GetCurrentBoardImportKeys());
             }
             catch (ExitGUIException)
             {
@@ -5499,8 +5410,7 @@ namespace AwesomeTaskManager.Editor
                 _selectedNote = 0;
                 ResetFilters();
                 Save();
-                ThemedDialog.Show("Imported",
-                    $"Imported \"{note.title}\" ({note.WordCount} words) from:\n{path}", "OK");
+                TriggerSuccessNotification("Note imported successfully: " + note.title);
                 GUIUtility.ExitGUI();
             }
             catch (ExitGUIException) { }
@@ -5596,18 +5506,32 @@ namespace AwesomeTaskManager.Editor
         private void TriggerSuccessNotification(string message)
         {
             _successNotificationMessage = message;
-            _successNotificationEndTime = EditorApplication.timeSinceStartup + 2.0; //2 seconds
+            _successNotificationEndTime = 0;
+            _successNotificationPending = true;
+            _errorNotificationPending = false;
+            _errorNotificationEndTime = 0;
             Repaint();
+            EditorApplication.delayCall += Repaint;
         }
 
         private void TriggerErrorNotification(string message)
         {
             _errorNotificationMessage = message;
-            _errorNotificationEndTime = EditorApplication.timeSinceStartup + 2.0; // 2 seconds
+            _errorNotificationEndTime = 0;
+            _errorNotificationPending = true;
+            _successNotificationPending = false;
+            _successNotificationEndTime = 0;
             Repaint();
+            EditorApplication.delayCall += Repaint;
         }
         private void DrawErrorNotification()
         {
+            if (_errorNotificationPending)
+            {
+                _errorNotificationEndTime = EditorApplication.timeSinceStartup + 3.5;
+                _errorNotificationPending = false;
+            }
+            if (string.IsNullOrWhiteSpace(_errorNotificationMessage)) return;
             if (EditorApplication.timeSinceStartup > _errorNotificationEndTime) return;
 
             // Fade out in last 0.5s
@@ -5615,7 +5539,14 @@ namespace AwesomeTaskManager.Editor
             double timeLeft = _errorNotificationEndTime - EditorApplication.timeSinceStartup;
             if (timeLeft < 0.5) alpha = (float)(timeLeft / 0.5);
 
-            var rect = new Rect(position.width * 0.5f - 120, position.height - 80, 350, 36);
+            var labelStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(1, 1, 1, alpha) },
+                fontSize = 13
+            };
+            var content = new GUIContent("" + _errorNotificationMessage);
+            var rect = GetNotificationRect(content, labelStyle, 350f);
             
             // Draw background
             EditorGUI.DrawRect(rect, new Color(139f, 0f, 0f, 0.9f * alpha)); // Dark red
@@ -5625,20 +5556,19 @@ namespace AwesomeTaskManager.Editor
             borderRect.height = 1; EditorGUI.DrawRect(borderRect, new Color(1,1,1, 0.2f * alpha));
             borderRect.y += rect.height - 1; EditorGUI.DrawRect(borderRect, new Color(1,1,1, 0.2f * alpha));
             
-            var labelStyle = new GUIStyle(EditorStyles.boldLabel)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = new Color(1, 1, 1, alpha) },
-                fontSize = 13
-            };
-            
-            GUI.Label(rect, "" + _errorNotificationMessage, labelStyle);
+            GUI.Label(rect, content, labelStyle);
             
             // Force repaints while notification is active for smooth fade
             EditorApplication.delayCall += Repaint;
         }
         private void DrawSuccessNotification()
         {
+            if (_successNotificationPending)
+            {
+                _successNotificationEndTime = EditorApplication.timeSinceStartup + 3.5;
+                _successNotificationPending = false;
+            }
+            if (string.IsNullOrWhiteSpace(_successNotificationMessage)) return;
             if (EditorApplication.timeSinceStartup > _successNotificationEndTime) return;
 
             // Fade out in last 0.5s
@@ -5646,7 +5576,14 @@ namespace AwesomeTaskManager.Editor
             double timeLeft = _successNotificationEndTime - EditorApplication.timeSinceStartup;
             if (timeLeft < 0.5) alpha = (float)(timeLeft / 0.5);
 
-            var rect = new Rect(position.width * 0.5f - 120, position.height - 80, 240, 36);
+            var labelStyle = new GUIStyle(EditorStyles.boldLabel)
+            {
+                alignment = TextAnchor.MiddleCenter,
+                normal = { textColor = new Color(1, 1, 1, alpha) },
+                fontSize = 13
+            };
+            var content = new GUIContent("✓ " + _successNotificationMessage);
+            var rect = GetNotificationRect(content, labelStyle, 240f);
             
             // Draw background
             EditorGUI.DrawRect(rect, new Color(0.15f, 0.45f, 0.15f, 0.9f * alpha)); // Dark green
@@ -5656,17 +5593,19 @@ namespace AwesomeTaskManager.Editor
             borderRect.height = 1; EditorGUI.DrawRect(borderRect, new Color(1,1,1, 0.2f * alpha));
             borderRect.y += rect.height - 1; EditorGUI.DrawRect(borderRect, new Color(1,1,1, 0.2f * alpha));
             
-            var labelStyle = new GUIStyle(EditorStyles.boldLabel)
-            {
-                alignment = TextAnchor.MiddleCenter,
-                normal = { textColor = new Color(1, 1, 1, alpha) },
-                fontSize = 13
-            };
-            
-            GUI.Label(rect, "✓ " + _successNotificationMessage, labelStyle);
+            GUI.Label(rect, content, labelStyle);
             
             // Force repaints while notification is active for smooth fade
             EditorApplication.delayCall += Repaint;
+        }
+
+        private Rect GetNotificationRect(GUIContent content, GUIStyle style, float minWidth)
+        {
+            const float horizontalPadding = 32f;
+            const float height = 36f;
+            float maxWidth = Mathf.Max(minWidth, position.width - 20f);
+            float width = Mathf.Clamp(style.CalcSize(content).x + horizontalPadding, minWidth, maxWidth);
+            return new Rect(position.width * 0.5f - width * 0.5f, position.height - 80, width, height);
         }
 
         private void CreateBoard(TaskBoard template)
@@ -5729,6 +5668,8 @@ namespace AwesomeTaskManager.Editor
         private void DrawStyleView()
         {
             if (_data == null) return;
+            _styleNarrow = position.width < 560f;
+            _styleContentWidth = Mathf.Max(120f, position.width - 36f);
             _data.themes ??= new List<ThemeData>();
             if (_data.themes.Count == 0)
             {
@@ -5740,16 +5681,25 @@ namespace AwesomeTaskManager.Editor
             currentTheme.Normalize();
 
             // ── Top Toolbar ──
-            using (var tbScope = new EditorGUILayout.HorizontalScope(GUILayout.Height(24)))
+            float styleToolbarHeight = ToolbarScrollHeight(_styleToolbarOverflow);
+            float styleToolbarContentWidth = 0f;
+            using (var tbScope = new EditorGUILayout.VerticalScope(GUILayout.Height(styleToolbarHeight + 8f)))
             {
                 if (Event.current.type == EventType.Repaint)
                 {
                     EditorGUI.DrawRect(tbScope.rect, TBStyles.TopBarBg);
                 }
 
-                ThemedTooltip.Label("Theme:", "Select or switch the active visual theme", EditorStyles.miniLabel, GUILayout.Width(48));
+                using (var toolbarScroll = new EditorGUILayout.ScrollViewScope(_styleToolbarScroll, false, false, GUI.skin.horizontalScrollbar, GUIStyle.none, GUIStyle.none, GUILayout.Height(styleToolbarHeight)))
+                {
+                    _styleToolbarScroll = toolbarScroll.scrollPosition;
+                    using (var toolbarRow = new EditorGUILayout.HorizontalScope())
+                    {
+                styleToolbarContentWidth = toolbarRow.rect.width;
+                ThemedTooltip.Label(_styleNarrow ? "🎨" : "Theme:", "Select or switch the active visual theme", EditorStyles.miniLabel, GUILayout.Width(_styleNarrow ? 22 : 48));
 
                 string[] themeNames = _data.themes.Select(t => t.name).ToArray();
+                float themeDropdownWidth = Mathf.Clamp(position.width - 90f, 50f, 160f);
                 TBStyles.DrawThemedDropdown(_data.currentThemeIndex, themeNames, (newThemeIdx) =>
                 {
                     if (newThemeIdx != _data.currentThemeIndex)
@@ -5759,7 +5709,7 @@ namespace AwesomeTaskManager.Editor
                         SaveTheme();
                         GUIUtility.ExitGUI();
                     }
-                }, TBStyles.ToolbarPopup, "Select active theme", GUILayout.Width(160));
+                }, TBStyles.ToolbarPopup, "Select active theme", GUILayout.Width(themeDropdownWidth));
 
                 // Theme Options Menu (+)
                 if (ThemedContextMenu.DropdownButton("+", "Theme Options (Create, Duplicate, Apply Preset, Reset, Import, Export, Delete)", TBStyles.ToolbarButton, out Rect themeBtnRect, GUILayout.Width(24)))
@@ -5932,6 +5882,10 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 GUILayout.FlexibleSpace();
+                    }
+                }
+
+                UpdateToolbarOverflow(ref _styleToolbarOverflow, styleToolbarContentWidth, tbScope.rect.width);
             }
 
             // ── Style View Body ──
@@ -5948,9 +5902,9 @@ namespace AwesomeTaskManager.Editor
 
                 GUILayout.Space(12);
 
-                using (new EditorGUILayout.HorizontalScope("box"))
+                using (BeginStyleRow("box"))
                 {
-                    ThemedTooltip.Label("🔍 Style Search", "Filter style options by label, tooltip text, or current value", null, GUILayout.Width(95));
+                    ThemedTooltip.Label(_styleNarrow ? "🔍" : "🔍 Style Search", "Filter style options by label, tooltip text, or current value", null, GUILayout.Width(_styleNarrow ? 22 : 95));
                     _styleSearchFilter = TBStyles.DrawThemedTextField(_styleSearchFilter, TBStyles.ThemedSearchField, GUILayout.Height(20));
 
                     if (ThemedTooltip.Button("Clear", "Clear the current style search and show all style options", TBStyles.ToolbarButton, GUILayout.Width(52), GUILayout.Height(18)))
@@ -6004,6 +5958,71 @@ namespace AwesomeTaskManager.Editor
             }
         }
 
+        private static float ToolbarScrollHeight(bool overflowing, float baseHeight = 22f)
+        {
+            if (!overflowing) return baseHeight;
+            GUIStyle bar = GUI.skin.horizontalScrollbar;
+            float barHeight = bar.fixedHeight > 0f ? bar.fixedHeight : 13f;
+            return baseHeight + barHeight + bar.margin.top + 1f;
+        }
+
+        private void UpdateToolbarOverflow(ref bool overflowing, float contentWidth, float viewWidth)
+        {
+            if (Event.current.type != EventType.Repaint || contentWidth <= 0f || viewWidth <= 0f) return;
+            bool nowOverflowing = contentWidth > viewWidth + 0.5f;
+            if (nowOverflowing == overflowing) return;
+            overflowing = nowOverflowing;
+            Repaint();
+        }
+
+        private IDisposable BeginStyleRow(string style = null, float minimumWidth = 0f)
+        {
+            bool useVertical = _styleNarrow || (_styleContentWidth > 0f && _styleContentWidth < minimumWidth);
+            if (string.IsNullOrEmpty(style))
+            {
+                return useVertical ? (IDisposable)new EditorGUILayout.VerticalScope() : new EditorGUILayout.HorizontalScope();
+            }
+
+            return useVertical ? (IDisposable)new EditorGUILayout.VerticalScope(style) : new EditorGUILayout.HorizontalScope(style);
+        }
+
+        private IDisposable BeginStyleColumns(float minimumWidth)
+        {
+            return BeginStyleRow(null, minimumWidth);
+        }
+
+        private float StyleLabelWidth(float preferredWidth, float reservedWidth)
+        {
+            return _styleNarrow ? Mathf.Clamp(_styleContentWidth - reservedWidth, 40f, preferredWidth) : preferredWidth;
+        }
+
+        private void DrawStyleLabel(string label, string tooltip, float preferredWidth)
+        {
+            if (_styleNarrow)
+            {
+                EditorGUILayout.LabelField(label, EditorStyles.wordWrappedMiniLabel, GUILayout.MinWidth(0), GUILayout.ExpandWidth(true));
+            }
+            else
+            {
+                ThemedTooltip.Label(label, tooltip, null, GUILayout.Width(preferredWidth));
+            }
+
+            if (!string.IsNullOrEmpty(tooltip)) ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+        }
+
+        private void DrawStyleSectionTitle(string title)
+        {
+            if (_styleNarrow)
+            {
+                var wrappedStyle = new GUIStyle(EditorStyles.boldLabel) { wordWrap = true };
+                EditorGUILayout.LabelField(title, wrappedStyle, GUILayout.MinWidth(0), GUILayout.ExpandWidth(true));
+            }
+            else
+            {
+                EditorGUILayout.LabelField(title, EditorStyles.boldLabel);
+            }
+        }
+
         private void DrawStyleHeaderAndPreview(ThemeData theme)
         {
             using (new EditorGUILayout.VerticalScope("box"))
@@ -6012,7 +6031,7 @@ namespace AwesomeTaskManager.Editor
                 EditorGUILayout.HelpBox("Customize theme name, colors, and icons. All changes apply live to your workspace in real-time.", MessageType.None);
                 GUILayout.Space(4);
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleRow())
                 {
                     ThemedTooltip.Label("Theme Name", "The display name identifying this visual theme preset in the theme selector and export packages", null, GUILayout.Width(90));
                     theme.name = TBStyles.DrawThemedTextField(theme.name, TBStyles.ThemedTextField, GUILayout.Height(20));
@@ -6048,31 +6067,36 @@ namespace AwesomeTaskManager.Editor
                 TBStyles.DrawGlassPanel(topBarRect, topBarBgColor, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), false);
 
                 // Draw mock tab bar inside preview (Active Tab)
-                var tabRect = new Rect(previewRect.x + 8, previewRect.y + 4, 85, 24);
+                float previewTabWidth = Mathf.Clamp((previewRect.width - 32f) / 2f, 26f, 85f);
+                var tabRect = new Rect(previewRect.x + 8, previewRect.y + 4, previewTabWidth, 24);
                 Color tabActiveBg = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabActiveBg : theme.personal_HeaderTabActiveBg;
                 Color tabActiveText = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabActiveText : theme.personal_HeaderTabActiveText;
                 TBStyles.DrawGlassPanel(tabRect, tabActiveBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.20f) : new Color(1f, 1f, 1f, 0.60f), true);
                 var tabStyle = new GUIStyle(EditorStyles.boldLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = tabActiveText }, fontSize = 11 };
-                GUI.Label(tabRect, $"{theme.boardTabIcon} Board", tabStyle);
+                GUI.Label(tabRect, previewTabWidth < 54f ? theme.boardTabIcon : $"{theme.boardTabIcon} Board", tabStyle);
 
                 // Inactive Tab
-                var noteTabRect = new Rect(tabRect.xMax + 4, previewRect.y + 4, 85, 24);
+                var noteTabRect = new Rect(tabRect.xMax + 4, previewRect.y + 4, previewTabWidth, 24);
                 Color tabInactiveBg = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabInactiveBg : theme.personal_HeaderTabInactiveBg;
                 Color tabInactiveText = EditorGUIUtility.isProSkin ? theme.pro_HeaderTabInactiveText : theme.personal_HeaderTabInactiveText;
                 TBStyles.DrawGlassPanel(noteTabRect, tabInactiveBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.10f) : new Color(1f, 1f, 1f, 0.40f), true);
                 var inactiveTabStyle = new GUIStyle(EditorStyles.label) { alignment = TextAnchor.MiddleCenter, normal = { textColor = tabInactiveText }, fontSize = 11 };
-                GUI.Label(noteTabRect, $"{theme.notesTabIcon} Notes", inactiveTabStyle);
+                GUI.Label(noteTabRect, previewTabWidth < 54f ? theme.notesTabIcon : $"{theme.notesTabIcon} Notes", inactiveTabStyle);
 
                 // Mock Dropdown in top bar
-                var dropRect = new Rect(noteTabRect.xMax + 8, previewRect.y + 6, 90, 20);
-                Color dropBg = EditorGUIUtility.isProSkin ? theme.pro_DropdownBg : theme.personal_DropdownBg;
-                Color dropText = EditorGUIUtility.isProSkin ? theme.pro_DropdownText : theme.personal_DropdownText;
-                TBStyles.DrawGlassPanel(dropRect, dropBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.10f) : new Color(1f, 1f, 1f, 0.40f), true);
-                var dropStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleLeft, padding = new RectOffset(4, 4, 0, 0), normal = { textColor = dropText }, fontSize = 10 };
-                GUI.Label(dropRect, $"{theme.categoryIcon} All Categories ▾", dropStyle);
+                if (previewRect.width > 330f)
+                {
+                    var dropRect = new Rect(noteTabRect.xMax + 8, previewRect.y + 6, 90, 20);
+                    Color dropBg = EditorGUIUtility.isProSkin ? theme.pro_DropdownBg : theme.personal_DropdownBg;
+                    Color dropText = EditorGUIUtility.isProSkin ? theme.pro_DropdownText : theme.personal_DropdownText;
+                    TBStyles.DrawGlassPanel(dropRect, dropBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.10f) : new Color(1f, 1f, 1f, 0.40f), true);
+                    var dropStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleLeft, padding = new RectOffset(4, 4, 0, 0), normal = { textColor = dropText }, fontSize = 10 };
+                    GUI.Label(dropRect, $"{theme.categoryIcon} All Categories ▾", dropStyle);
+                }
 
                 // Draw mock column inside preview
-                float colWidth = Mathf.Min(260, (previewRect.width - 24) * 0.55f);
+                bool showNotePreview = previewRect.width > 330f;
+                float colWidth = showNotePreview ? Mathf.Min(260, (previewRect.width - 24) * 0.55f) : Mathf.Max(0f, previewRect.width - 16f);
                 var colRect = new Rect(previewRect.x + 8, previewRect.y + 38, colWidth, 94);
                 Color colBg = EditorGUIUtility.isProSkin ? theme.pro_ColumnBg : theme.personal_ColumnBg;
                 TBStyles.DrawGlassPanel(colRect, colBg, EditorGUIUtility.isProSkin ? new Color(1f, 1f, 1f, 0.08f) : new Color(1f, 1f, 1f, 0.35f), true);
@@ -6131,7 +6155,7 @@ namespace AwesomeTaskManager.Editor
                 // Draw mock note inside preview
                 float noteX = colRect.xMax + 12;
                 float noteWidth = previewRect.xMax - noteX - 8;
-                if (noteWidth > 120)
+                if (showNotePreview && noteWidth > 120)
                 {
                     var noteRect = new Rect(noteX, previewRect.y + 38, noteWidth, 94);
                     Color noteEdBg = EditorGUIUtility.isProSkin ? theme.pro_NoteEditorBg : theme.personal_NoteEditorBg;
@@ -6179,15 +6203,18 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 // Draw mock floating tooltip inside preview
-                var tooltipMockRect = new Rect(previewRect.xMax - 116, previewRect.y + 4, 108, 18);
-                Color ttBg = EditorGUIUtility.isProSkin ? theme.pro_TooltipBg : theme.personal_TooltipBg;
-                Color ttBorder = EditorGUIUtility.isProSkin ? theme.pro_TooltipBorder : theme.personal_TooltipBorder;
-                Color ttText = EditorGUIUtility.isProSkin ? theme.pro_TooltipText : theme.personal_TooltipText;
-                EditorGUI.DrawRect(new Rect(tooltipMockRect.x + 1, tooltipMockRect.y + 1, tooltipMockRect.width, tooltipMockRect.height), new Color(0, 0, 0, 0.35f));
-                EditorGUI.DrawRect(tooltipMockRect, ttBg);
-                TBStyles.DrawBorderRect(tooltipMockRect, ttBorder, 1f);
-                var ttMockStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = ttText }, fontSize = 9 };
-                GUI.Label(tooltipMockRect, "💬 Themed Tooltip", ttMockStyle);
+                if (previewRect.width > 420f)
+                {
+                    var tooltipMockRect = new Rect(previewRect.xMax - 116, previewRect.y + 4, 108, 18);
+                    Color ttBg = EditorGUIUtility.isProSkin ? theme.pro_TooltipBg : theme.personal_TooltipBg;
+                    Color ttBorder = EditorGUIUtility.isProSkin ? theme.pro_TooltipBorder : theme.personal_TooltipBorder;
+                    Color ttText = EditorGUIUtility.isProSkin ? theme.pro_TooltipText : theme.personal_TooltipText;
+                    EditorGUI.DrawRect(new Rect(tooltipMockRect.x + 1, tooltipMockRect.y + 1, tooltipMockRect.width, tooltipMockRect.height), new Color(0, 0, 0, 0.35f));
+                    EditorGUI.DrawRect(tooltipMockRect, ttBg);
+                    TBStyles.DrawBorderRect(tooltipMockRect, ttBorder, 1f);
+                    var ttMockStyle = new GUIStyle(EditorStyles.miniLabel) { alignment = TextAnchor.MiddleCenter, normal = { textColor = ttText }, fontSize = 9 };
+                    GUI.Label(tooltipMockRect, "💬 Themed Tooltip", ttMockStyle);
+                }
 
                 // Draw mock status bar inside preview
                 var mockStatusRect = new Rect(previewRect.x, previewRect.yMax - 18, previewRect.width, 18);
@@ -6207,11 +6234,11 @@ namespace AwesomeTaskManager.Editor
             {
                 _styleSectionHasVisibleAttribute = false;
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleRow())
                 {
-                    EditorGUILayout.LabelField("🚩 Priority Icons", EditorStyles.boldLabel);
-                    GUILayout.FlexibleSpace();
-                    if (ThemedTooltip.Button("Reset Priority Icons", "Reset all priority icons (None, Low, Medium, High, Urgent) to their default symbols", GUI.skin.button, GUILayout.Width(135)))
+                    DrawStyleSectionTitle("🚩 Priority Icons");
+                    if (!_styleNarrow) GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset Priority Icons", "Reset all priority icons (None, Low, Medium, High, Urgent) to their default symbols", GUI.skin.button, GUILayout.Width(_styleNarrow ? Mathf.Min(135f, _styleContentWidth) : 135f)))
                     {
                         theme.priorityIcons = new List<string>(ThemeData.DefaultPriorityIcons);
                         theme.Normalize();
@@ -6244,14 +6271,17 @@ namespace AwesomeTaskManager.Editor
 
                     _styleSectionHasVisibleAttribute = true;
 
-                    using (new EditorGUILayout.HorizontalScope())
+                    using (BeginStyleRow(null, 260f))
                     {
-                        ThemedTooltip.Label(priorityLabels[i], priorityTooltips[i], null, GUILayout.Width(110));
-                        theme.priorityIcons[i] = TBStyles.DrawThemedTextField(theme.priorityIcons[i], GUILayout.Width(100), GUILayout.Height(20));
+                        DrawStyleLabel(priorityLabels[i], priorityTooltips[i], 110f);
+                        using (new EditorGUILayout.HorizontalScope())
+                        {
+                        theme.priorityIcons[i] = TBStyles.DrawThemedTextField(theme.priorityIcons[i], GUILayout.Width(_styleNarrow ? 80 : 100), GUILayout.Height(20));
                         ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), priorityTooltips[i]);
 
                         string preview = string.IsNullOrEmpty(theme.priorityIcons[i]) ? TBStyles.PriorityNames[i] : $"{theme.priorityIcons[i]} {TBStyles.PriorityNames[i]}";
-                        EditorGUILayout.LabelField($"Preview: {preview}", EditorStyles.miniBoldLabel);
+                            EditorGUILayout.LabelField($"Preview: {preview}", EditorStyles.miniBoldLabel, GUILayout.MinWidth(0), GUILayout.ExpandWidth(true));
+                        }
                     }
                 }
 
@@ -6267,11 +6297,11 @@ namespace AwesomeTaskManager.Editor
             {
                 _styleSectionHasVisibleAttribute = false;
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleRow())
                 {
-                    EditorGUILayout.LabelField("🏷 Interface & Status Icons", EditorStyles.boldLabel);
-                    GUILayout.FlexibleSpace();
-                    if (ThemedTooltip.Button("Reset Interface Icons", "Reset all navigation tabs, headers, status indicators, and action icons to their default symbols", GUI.skin.button, GUILayout.Width(145)))
+                    DrawStyleSectionTitle("🏷 Interface & Status Icons");
+                    if (!_styleNarrow) GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset Interface Icons", "Reset all navigation tabs, headers, status indicators, and action icons to their default symbols", GUI.skin.button, GUILayout.Width(_styleNarrow ? Mathf.Min(145f, _styleContentWidth) : 145f)))
                     {
                         var def = ThemeData.CreateDefault();
                         theme.boardTabIcon = def.boardTabIcon;
@@ -6312,7 +6342,7 @@ namespace AwesomeTaskManager.Editor
                 EditorGUILayout.HelpBox("Customize icons used across navigation tabs, headers, buttons, cards, status tags, dialogs, and archival actions.", MessageType.None);
                 GUILayout.Space(4);
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleColumns(760f))
                 {
                     using (new EditorGUILayout.VerticalScope())
                     {
@@ -6364,20 +6394,23 @@ namespace AwesomeTaskManager.Editor
                 return currentVal;
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (BeginStyleRow(null, 250f))
             {
                 _styleSectionHasVisibleAttribute = true;
 
-                if (!string.IsNullOrEmpty(tooltip))
+                if (_styleNarrow)
                 {
-                    ThemedTooltip.Label(label, tooltip, null, GUILayout.Width(130));
+                    DrawStyleLabel(label, tooltip, 130f);
+                    using (new EditorGUILayout.HorizontalScope())
+                    {
+                        string narrowValue = TBStyles.DrawThemedTextField(currentVal ?? "", GUILayout.Width(StyleLabelWidth(60f, 60f)), GUILayout.Height(20));
+                        if (!string.IsNullOrEmpty(tooltip)) ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+                        EditorGUILayout.LabelField($" {narrowValue}", EditorStyles.boldLabel, GUILayout.MinWidth(0), GUILayout.ExpandWidth(true));
+                        return narrowValue;
+                    }
                 }
-                else
-                {
-                    EditorGUILayout.LabelField(label, GUILayout.Width(130));
-                }
-
-                string newVal = TBStyles.DrawThemedTextField(currentVal ?? "", GUILayout.Width(60), GUILayout.Height(20));
+                DrawStyleLabel(label, tooltip, StyleLabelWidth(130f, 100f));
+                string newVal = TBStyles.DrawThemedTextField(currentVal ?? "", GUILayout.Width(StyleLabelWidth(60f, 60f)), GUILayout.Height(20));
                 if (!string.IsNullOrEmpty(tooltip))
                 {
                     ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
@@ -6396,11 +6429,11 @@ namespace AwesomeTaskManager.Editor
             {
                 _styleSectionHasVisibleAttribute = false;
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleRow())
                 {
-                    EditorGUILayout.LabelField("🏷 Card & Note Label Colors", EditorStyles.boldLabel);
-                    GUILayout.FlexibleSpace();
-                    if (ThemedTooltip.Button("Reset Label Colors", "Reset all 17 card and note label category colors to their default palette", GUI.skin.button, GUILayout.Width(130)))
+                    DrawStyleSectionTitle("🏷 Card & Note Label Colors");
+                    if (!_styleNarrow) GUILayout.FlexibleSpace();
+                    if (ThemedTooltip.Button("Reset Label Colors", "Reset all 17 card and note label category colors to their default palette", GUI.skin.button, GUILayout.Width(_styleNarrow ? Mathf.Min(130f, _styleContentWidth) : 130f)))
                     {
                         theme.labelColors = new List<Color>(ThemeData.DefaultLabelColors);
                         theme.Normalize();
@@ -6421,7 +6454,7 @@ namespace AwesomeTaskManager.Editor
                 }
 
                 int half = Mathf.CeilToInt(TBStyles.LabelNames.Length / 2f);
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleColumns(700f))
                 {
                     using (new EditorGUILayout.VerticalScope())
                     {
@@ -6455,17 +6488,20 @@ namespace AwesomeTaskManager.Editor
                 return;
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (BeginStyleRow(null, 250f))
             {
                 _styleSectionHasVisibleAttribute = true;
 
-                ThemedTooltip.Label($"[{index}] {labelName}", tooltip, null, GUILayout.Width(120));
-                theme.labelColors[index] = EditorGUILayout.ColorField(GUIContent.none, theme.labelColors[index], false, true, false, GUILayout.Width(65));
-                ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
+                DrawStyleLabel($"[{index}] {labelName}", tooltip, 120f);
+                using (new EditorGUILayout.HorizontalScope())
+                {
+                    theme.labelColors[index] = EditorGUILayout.ColorField(GUIContent.none, theme.labelColors[index], false, true, false, GUILayout.Width(65));
+                    ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
 
-                var swatchRect = GUILayoutUtility.GetRect(24, 18, GUILayout.Width(24));
-                EditorGUI.DrawRect(swatchRect, theme.labelColors[index]);
-                ThemedTooltip.SetTooltip(swatchRect, tooltip);
+                    var swatchRect = GUILayoutUtility.GetRect(24, 18, GUILayout.Width(24));
+                    EditorGUI.DrawRect(swatchRect, theme.labelColors[index]);
+                    ThemedTooltip.SetTooltip(swatchRect, tooltip);
+                }
             }
         }
 
@@ -6476,12 +6512,19 @@ namespace AwesomeTaskManager.Editor
                 return current;
             }
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (BeginStyleRow(null, labelWidth + fieldWidth + 12f))
             {
                 _styleSectionHasVisibleAttribute = true;
 
-                ThemedTooltip.Label(label, tooltip, null, GUILayout.Width(labelWidth));
-                current = EditorGUILayout.ColorField(GUIContent.none, current, false, true, false, GUILayout.Width(fieldWidth));
+                if (_styleNarrow)
+                {
+                    DrawStyleLabel(label, tooltip, labelWidth);
+                }
+                else
+                {
+                    DrawStyleLabel(label, tooltip, StyleLabelWidth(labelWidth, fieldWidth + 12f));
+                }
+                current = EditorGUILayout.ColorField(GUIContent.none, current, false, true, false, GUILayout.Width(Mathf.Min(fieldWidth, _styleNarrow ? 70f : fieldWidth)));
                 ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), tooltip);
             }
 
@@ -6629,11 +6672,18 @@ namespace AwesomeTaskManager.Editor
             {
                 _styleSectionHasVisibleAttribute = false;
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleRow())
                 {
-                    EditorGUILayout.LabelField("🎨 Board, Notes, Buttons & UI Colors", EditorStyles.boldLabel, GUILayout.Width(250));
-                    GUILayout.FlexibleSpace();
-                    if (ThemedTooltip.Button("Reset All Theme Colors", "Reset all workspace and element colors to the default palette values", GUI.skin.button, GUILayout.Width(160)))
+                    if (_styleNarrow)
+                    {
+                        EditorGUILayout.LabelField("🎨 Board, Notes, Buttons & UI Colors", EditorStyles.wordWrappedMiniLabel, GUILayout.MinWidth(0), GUILayout.ExpandWidth(true));
+                    }
+                    else
+                    {
+                        EditorGUILayout.LabelField("🎨 Board, Notes, Buttons & UI Colors", EditorStyles.boldLabel, GUILayout.Width(250));
+                        GUILayout.FlexibleSpace();
+                    }
+                    if (ThemedTooltip.Button("Reset All Theme Colors", "Reset all workspace and element colors to the default palette values", GUI.skin.button, GUILayout.Width(_styleNarrow ? Mathf.Min(160f, _styleContentWidth) : 160f)))
                     {
                         var def = ThemeData.CreateDefault();
                         theme.tabActive = def.tabActive;
@@ -6815,7 +6865,7 @@ namespace AwesomeTaskManager.Editor
 
                 GUILayout.Space(8);
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleColumns(1150f))
                 {
                     // Dark Theme (Unity Pro Skin)
                     using (new EditorGUILayout.VerticalScope("box"))
@@ -7103,9 +7153,19 @@ namespace AwesomeTaskManager.Editor
 
             _styleSectionHasVisibleAttribute = true;
 
-            using (new EditorGUILayout.HorizontalScope())
+            using (BeginStyleRow(null, 400f))
             {
-                ThemedTooltip.Label("Checkmark Icon Style", tooltip, null, GUILayout.Width(140f));
+                if (_styleNarrow)
+                {
+                    DrawStyleLabel("Checkmark Icon Style", tooltip, 140f);
+                }
+                else
+                {
+                    ThemedTooltip.Label("Checkmark Icon Style", tooltip, null, GUILayout.Width(140f));
+                }
+
+                using (new EditorGUILayout.HorizontalScope())
+                {
 
                 string[] tickStyleDisplayNames = {
                     "Vector Line Check (Crisp)",
@@ -7139,8 +7199,8 @@ namespace AwesomeTaskManager.Editor
                     },
                     TBStyles.StandardDropdown,
                     tooltip,
-                    GUILayout.MinWidth(120),
-                    GUILayout.MaxWidth(200),
+                    GUILayout.MinWidth(_styleNarrow ? 65 : 120),
+                    GUILayout.MaxWidth(_styleNarrow ? Mathf.Max(65f, _styleContentWidth - 42f) : 200f),
                     GUILayout.Height(18)
                 );
 
@@ -7157,14 +7217,15 @@ namespace AwesomeTaskManager.Editor
                 ThemedTooltip.SetTooltip(prevRect, $"{skinMode} preview of checked tick box with {theme.checklistTickStyle} icon");
 
                 GUILayout.FlexibleSpace();
+                }
             }
 
             if (theme.checklistTickStyle == ChecklistTickStyle.Custom)
             {
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleRow(null, 300f))
                 {
                     string customTooltip = BuildThemeOptionTooltip(skinMode, "Type any custom character, emoji, or symbol to use as the checked glyph");
-                    ThemedTooltip.Label("Custom Glyph / Symbol", customTooltip, null, GUILayout.Width(140f));
+                    DrawStyleLabel("Custom Glyph / Symbol", customTooltip, 140f);
                     string newChar = TBStyles.DrawThemedTextField(theme.customChecklistTickChar ?? "", GUILayout.Width(60), GUILayout.Height(18));
                     ThemedTooltip.SetTooltip(GUILayoutUtility.GetLastRect(), customTooltip);
                     if (newChar != theme.customChecklistTickChar)
@@ -7178,7 +7239,7 @@ namespace AwesomeTaskManager.Editor
                         Repaint();
                     }
 
-                    GUILayout.FlexibleSpace();
+                    if (!_styleNarrow) GUILayout.FlexibleSpace();
                 }
             }
         }
@@ -7193,7 +7254,7 @@ namespace AwesomeTaskManager.Editor
                 EditorGUILayout.HelpBox("Export custom styles to share with your teammates, or import style JSON files created by others.", MessageType.None);
                 GUILayout.Space(4);
 
-                using (new EditorGUILayout.HorizontalScope())
+                using (BeginStyleColumns(600f))
                 {
                     if (GUILayout.Button(new GUIContent("💾 Export Active Theme...", "Export active theme to a JSON file"), GUILayout.Height(24)))
                     {

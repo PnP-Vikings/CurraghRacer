@@ -212,13 +212,13 @@ public class TeamMemberSaveData
         }
         
         // Deep copy happiness
-        if (member.Happiness != null)
+        if (member.happiness != null)
         {
             happiness = new Happiness
             {
-                currentHappiness = member.Happiness.currentHappiness,
-                maxHappiness = member.Happiness.maxHappiness,
-                currentMood = member.Happiness.currentMood
+                currentHappiness = member.happiness.currentHappiness,
+                maxHappiness = member.happiness.maxHappiness,
+                currentMood = member.happiness.currentMood
             };
         }
     }
@@ -1298,6 +1298,8 @@ public class SaveSystem : MonoBehaviour
         {
             TimeManager.Instance.SetTimeOfDay(saveData.timeData.timeOfDay);
         }
+
+       
     }
 
     private TeamSaveData CreateTeamSaveData(Team team)
@@ -1400,7 +1402,7 @@ public class SaveSystem : MonoBehaviour
         // Restore happiness
         if (saveData.happiness != null)
         {
-            member.Happiness = new Happiness
+            member.happiness = new Happiness
             {
                 currentHappiness = saveData.happiness.currentHappiness,
                 maxHappiness = saveData.happiness.maxHappiness,
